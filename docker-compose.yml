@@ -5,6 +5,8 @@ services:
     container_name: "nutfes-finansu-view"
     volumes:
       - ./view:/app
-    command: sh -c "cd next-project && npm run dev"
+        #command: sh -c "cd next-project && npm run dev"
     ports:
       - "3000:3000"
+    stdin_open: true
+    tty: true
