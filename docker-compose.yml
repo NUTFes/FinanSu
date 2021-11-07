@@ -10,3 +10,14 @@ services:
       - "3000:3000"
     stdin_open: true
     tty: true
+
+  api:
+    build: ./api
+    container_name: "nutfes-finansu-api"
+    volumes:
+      - ./api:/app
+    command: go run cmd/main.go
+    ports:
+      - "1323:1323"
+    stdin_open: true
+    tty: true
