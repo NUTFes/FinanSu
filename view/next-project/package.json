@@ -5,7 +5,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint --dir src",
+    "lint:fix": "eslint src --ext .js,jsx,.ts,.tsx --fix",
+    "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'"
   },
   "dependencies": {
     "next": "12.0.2",
@@ -13,10 +15,20 @@
     "react-dom": "17.0.2"
   },
   "devDependencies": {
-    "@types/node": "16.11.6",
-    "@types/react": "17.0.34",
+    "@types/node": "^16.11.6",
+    "@types/react": "^17.0.34",
     "eslint": "7",
     "eslint-config-next": "12.0.2",
-    "typescript": "4.4.4"
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "printWidth": 100
   }
 }
