@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { Center } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
-import Header from 'src/components/Header';
+import Header from '@components/Header';
 
 const BudgetList: NextPage = () => {
   const budgetList = [
