@@ -95,7 +95,7 @@ const BudgetList: NextPage = () => {
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
-              <Center mr='5' fontSize='2xl' fontWeight='100'>
+              <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
                 予算一覧
               </Center>
               <Select variant='flushed' w='100'>
@@ -121,30 +121,36 @@ const BudgetList: NextPage = () => {
               <Thead>
                 <Tr>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm'>ID</Center>
+                    <Center fontSize='sm' color='black.600'>
+                      ID
+                    </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1'>
+                    <Center fontSize='sm' mr='1' color='black.600'>
                       項目
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm'>年度</Center>
+                    <Center fontSize='sm' color='black.600'>
+                      年度
+                    </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7' isNumeric>
-                    <Center fontSize='sm'>金額</Center>
+                    <Center fontSize='sm' color='black.600'>
+                      金額
+                    </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center></Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center>作成日時</Center>
+                    <Center color='black.600'>作成日時</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center>更新日時</Center>
+                    <Center color='black.600'>更新日時</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center>最終更新者</Center>
+                    <Center color='black.600'>最終更新者</Center>
                   </Th>
                 </Tr>
               </Thead>
@@ -152,15 +158,17 @@ const BudgetList: NextPage = () => {
                 {budgetList.map((budgetItem) => (
                   <Tr key={budgetItem.id}>
                     <Td>
-                      <Center>{budgetItem.id}</Center>
+                      <Center color='black.300'>{budgetItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center>{budgetItem.name}</Center>
+                      <Center color='black.300'>{budgetItem.name}</Center>
                     </Td>
                     <Td>
-                      <Center>{budgetItem.year}</Center>
+                      <Center color='black.300'>{budgetItem.year}</Center>
                     </Td>
-                    <Td isNumeric>{budgetItem.value}</Td>
+                    <Td isNumeric color='black.300'>
+                      {budgetItem.value}
+                    </Td>
                     <Td>
                       <Center>
                         <Button
@@ -174,13 +182,13 @@ const BudgetList: NextPage = () => {
                       </Center>
                     </Td>
                     <Td>
-                      <Center>{budgetItem.createDate}</Center>
+                      <Center color='black.300'>{budgetItem.createDate}</Center>
                     </Td>
                     <Td>
-                      <Center>{budgetItem.updateDate}</Center>
+                      <Center color='black.300'>{budgetItem.updateDate}</Center>
                     </Td>
                     <Td>
-                      <Center>{budgetItem.lastUpdatedBy}</Center>
+                      <Center color='black.300'>{budgetItem.lastUpdatedBy}</Center>
                     </Td>
                   </Tr>
                 ))}
@@ -190,11 +198,11 @@ const BudgetList: NextPage = () => {
                   <Th></Th>
                   <Th></Th>
                   <Th>
-                    <Center fontSize='sm' fontWeight='500'>
+                    <Center fontSize='sm' fontWeight='500' color='black.600'>
                       合計
                     </Center>
                   </Th>
-                  <Th isNumeric fontSize='sm' fontWeight='500'>
+                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
                     2400000
                   </Th>
                 </Tr>
