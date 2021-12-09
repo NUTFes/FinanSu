@@ -22,17 +22,21 @@ const theme = extendTheme({
       0: '#fff',
       100: '#f2f2f2',
     },
-    blue: {
-      50: '#32f3ff',
-      100: '#1dbac5',
-      200: '#18c4fb',
-      300: '#3bdbff',
-      400: '#63daff',
-      500: '#00c1ed',
-    },
     gray: {
       50: '#f7fafc',
       900: '#171923',
+    },
+    base: {
+      1: '#2E373F',
+      2: '#FFFFFF',
+    },
+    primary: {
+      1: '#56DAFF',
+      2: '#1DBCC5',
+    },
+    accent: {
+      1: '#E4434E',
+      2: '#FF5B6C',
     },
   },
 });
