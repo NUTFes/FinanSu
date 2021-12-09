@@ -18,7 +18,7 @@ import {
   Text,
   createIcon,
 } from '@chakra-ui/react';
-import theme from '../theme';
+import theme from '../../assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
