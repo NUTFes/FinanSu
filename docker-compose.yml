@@ -5,7 +5,7 @@ services:
     container_name: "nutfes-finansu-db"
     volumes:
       - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
-      - ./mysql/data:/var/lib/mysql
+      # - ./mysql/data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: finansu_db
       MYSQL_USER: finansu
@@ -32,13 +32,13 @@ services:
     container_name: "nutfes-finansu-api"
     volumes:
       - ./api:/app
-    # command: go run cmd/main.go
-    command: "air"
+    command: go run main.go
+      # command: "air"
     ports:
       - "1323:1323"
     stdin_open: true
     tty: true
-    depends_on:
-      db:
-        condition: service_started
+      # depends_on:
+      #   db:
+      #     condition: service_started
 
