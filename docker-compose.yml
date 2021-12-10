@@ -32,7 +32,7 @@ services:
     container_name: "nutfes-finansu-api"
     volumes:
       - ./api:/app
-    command: go run main.go
+    command: go run cmd/main.go
       # command: "air"
     ports:
       - "1323:1323"
