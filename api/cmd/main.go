@@ -86,6 +86,12 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	// CORS対策
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000"}, // ドメイン
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
+
 	// Routes
 	e.GET("/", healthcheck)
 	e.GET("/budgets", GetBudgets())
