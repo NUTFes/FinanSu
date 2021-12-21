@@ -11,3 +11,4 @@ ENV GOOS=linux
 ENV GOARCH=amd64
 
 RUN go get -u github.com/cosmtrek/air
+RUN go get -u github.com/google/wire/cmd/wire

@@ -4,13 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"net/http"
-	"time"
 
+	"github.com/NUTFes/finansu/api/internal/di"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/pkg/errors"
 )
 
 var DB *sql.DB
@@ -35,67 +31,52 @@ func connect() {
 	}
 }
 
-// Handler
-func healthcheck(c echo.Context) error {
-	// 接続確認
-	return c.String(http.StatusOK, "healthcheck: ok")
-}
-
 // Budgetsの取得
-func GetBudgets() echo.HandlerFunc {
-	return func(c echo.Context) error {
-
-		budget := Budget{}
-		var budgets []Budget
-
-		// クエリー実行
-		rows, err := DB.Query("select * from budgets")
-		if err != nil {
-			return errors.Wrapf(err, "cannot connect SQL")
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			err := rows.Scan(&budget.ID, &budget.Price, &budget.YearID, &budget.SourceID, &budget.CreatedAt, &budget.UpdatedAt)
-			if err != nil {
-				return errors.Wrapf(err, "cannot connect SQL")
-			}
-			budgets = append(budgets, budget)
-		}
-		return c.JSON(http.StatusOK, budgets)
-	}
-}
-
-type Budget struct {
-	ID        int       `json:"id"`
-	Price     int       `json:"price"`
-	YearID    int       `json:"year_id"`
-	SourceID  int       `json:"source_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
+// func GetBudgets() echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+//
+// 		budget := Budget{}
+// 		var budgets []Budget
+//
+// 		// クエリー実行
+// 		rows, err := DB.Query("select * from budgets")
+// 		if err != nil {
+// 			return errors.Wrapf(err, "cannot connect SQL")
+// 		}
+// 		defer rows.Close()
+//
+// 		for rows.Next() {
+// 			err := rows.Scan(&budget.ID, &budget.Price, &budget.YearID, &budget.SourceID, &budget.CreatedAt, &budget.UpdatedAt)
+// 			if err != nil {
+// 				return errors.Wrapf(err, "cannot connect SQL")
+// 			}
+// 			budgets = append(budgets, budget)
+// 		}
+// 		return c.JSON(http.StatusOK, budgets)
+// 	}
+// }
+//
+// type Budget struct {
+// 	ID        int       `json:"id"`
+// 	Price     int       `json:"price"`
+// 	YearID    int       `json:"year_id"`
+// 	SourceID  int       `json:"source_id"`
+// 	CreatedAt time.Time `json:"created_at"`
+// 	UpdatedAt time.Time `json:"updated_at"`
+// }
 
 func main() {
-	// Echo instance
-	e := echo.New()
+
+	// - echoのinstanceのpackage + DI
+
+	s, err := di.InitializeServer()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	// サーバー起動
+	s.Run()
 
 	// データベースに接続
 	connect()
-
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	// CORS対策
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000"}, // ドメイン
-		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
-	}))
-
-	// Routes
-	e.GET("/", healthcheck)
-	e.GET("/budgets", GetBudgets())
-
-	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
 }
