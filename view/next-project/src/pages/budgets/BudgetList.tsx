@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
+import EditButton from '../../components/General/EditButton';
 import {
   Table,
   Thead,
@@ -171,14 +172,7 @@ const BudgetList: NextPage = () => {
                     </Td>
                     <Td>
                       <Center>
-                        <Button
-                          w='40px'
-                          h='40px'
-                          borderRadius='full'
-                          background='linear-gradient(117.83deg, #18C4FB -42.15%, #3BDBFF 15.38%, #63DAFF 20.61%, #00C1ED 100.91%)'
-                        >
-                          <RiPencilFill color={'white'} />
-                        </Button>
+                        <EditButton />
                       </Center>
                     </Td>
                     <Td>
