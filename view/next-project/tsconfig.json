@@ -17,7 +17,8 @@
     "paths": {
       "@assets/*": ["src/assets/*"],
       "@images/*": ["public/*"],
-      "@components/*": ["src/components/*"]
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "incremental": true
   },
