@@ -5,7 +5,7 @@ import {
   Text,
   ChakraProvider
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import PulldownButton from '../components/General/PulldownButton';
 import { Avatar } from '@chakra-ui/react'
 import theme from "@assets/theme";
 
@@ -53,8 +53,10 @@ const Header = () => {
               小林諒大
               </Text>
             </Box>
-            <Box marginRight="5">
-              <ChevronDownIcon />
+            <Box 
+              marginRight="5"
+            >
+              <PulldownButton />
             </Box>
           </Flex>
       </Flex>
