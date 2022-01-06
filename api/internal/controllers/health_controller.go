@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
+// 接続確認
 func Healthcheck(c echo.Context) error {
-	// 接続確認
 	return c.String(http.StatusOK, "healthcheck: ok")
 }

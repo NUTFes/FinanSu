@@ -39,7 +39,7 @@ func (server *server) Run() error {
 
 	err := server.e.Start(":1323")
 	if err != nil {
-		fmt.Errorf("%w", err)
+		fmt.Println(err)
 	}
 	return nil
 }
