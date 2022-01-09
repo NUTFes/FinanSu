@@ -28,7 +28,6 @@ const PurchaseList: NextPage = () => {
       number: '60',
       unitCost: 240,
       value: 14400,
-      difference: 2000000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
       notes: '',
@@ -39,7 +38,6 @@ const PurchaseList: NextPage = () => {
       number: '100',
       unitCost: 110,
       value: 11000,
-      difference: 2000000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
       notes: '',
@@ -50,7 +48,6 @@ const PurchaseList: NextPage = () => {
       number: '5',
       unitCost: 90,
       value: 450,
-      difference: 2000000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
       notes: '',
@@ -61,7 +58,6 @@ const PurchaseList: NextPage = () => {
       number: '1',
       unitCost: 15000,
       value: 15000,
-      difference: 2000000,
       purchaseDate: '2021/11/12',
       buyer: '齋藤博起',
       notes: '',
@@ -72,7 +68,6 @@ const PurchaseList: NextPage = () => {
       number: '50',
       unitCost: 500,
       value: 25000,
-      difference: 2000000,
       purchaseDate: '2021/11/12',
       buyer: '杉本真実',
       notes: '',
@@ -83,7 +78,6 @@ const PurchaseList: NextPage = () => {
       number: '1',
       unitCost: 8000,
       value: 8000,
-      difference: 2000000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
       notes: '',
@@ -158,9 +152,6 @@ const PurchaseList: NextPage = () => {
                     <Center></Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>差額</Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
                     <Center color='black.600'>購入日</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -193,9 +184,6 @@ const PurchaseList: NextPage = () => {
                       <Center>
                         <EditButton />
                       </Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.difference}</Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{purchaseItem.purchaseDate}</Center>
