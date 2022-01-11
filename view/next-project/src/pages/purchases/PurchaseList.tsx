@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '../../components/General/EditButton';
+import EditButton from '@components/General/EditButton';
 import {
   Table,
   Thead,
