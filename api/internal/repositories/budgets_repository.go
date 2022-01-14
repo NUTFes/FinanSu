@@ -2,29 +2,25 @@ package repositories
 
 import (
 	"fmt"
+	"github.com/NUTFes/finansu/api/internal/entities/budget"
 	"github.com/NUTFes/finansu/api/internal/externals/db"
-
-	"time"
 )
 
-type Budget struct {
-	ID        int       `json:"id"`
-	Price     int       `json:"price"`
-	YearID    int       `json:"year_id"`
-	SourceID  int       `json:"source_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
+// Query
 const (
 	getBudgetQuery = "select * from budgets where id = 1"
 )
 
-func GetBudget(id int) (*Budget, error) {
-	budget, err := db.GetBudget(getBudgetQuery)
+// Budgetを1つ取得する
+func GetBudgetByID(id budget.ID) (*budget.Budget, error) {
+	var query string = getBudgetQuery
+	rows, err := db.DB.client.Query(query)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w cannot connect SQL", err)
 	}
+	budget := budget.Budget{}
+	err = rows.Scan(&budget.ID, &budget.Price, &budget.YearID, &budget.SourceID, &budget.CreatedAt, &budget.UpdatedAt)
+	defer rows.Close()
 
-	return budget, nil
+	return &budget, nil
 }

@@ -34,8 +34,9 @@ func (server *server) Run() error {
 	}))
 
 	// Routes
-	server.e.GET("/", contorllers.Healthcheck)
-	//	server.e.GET("/budgets", main.GetBudgets())
+	server.e.GET("/", controllers.Healthcheck)
+	// budgets
+	server.e.GET("/budgets", controllers.GetBudgets())
 
 	err := server.e.Start(":1323")
 	if err != nil {

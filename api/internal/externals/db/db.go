@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	// ほんとはentityに書きたい奴
-	// entity "github.com/NUTFes/finansu/api/internal/repositories"
 )
 
 type db struct {
@@ -13,13 +11,11 @@ type db struct {
 }
 
 type DB interface {
-	getDB()
-	// GetBudget(string) (*entity.Budget, error)
+	GetClient() *sql.DB
 }
 
-// テスト
-func (db db) getDB() {
-	fmt.Println(db.client)
+func (db *db) GetClient() *sql.DB {
+	return db.client
 }
 
 // データベース接続部分
@@ -42,15 +38,3 @@ func InitializeDB() *db {
 
 	return &db{client: client}
 }
-
-// func (db *db) GetBudget(query string) (*entity.Budget, error) {
-// 	rows, err := db.client.Query(query)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("%w cannot connect SQL", err)
-// 	}
-// 	budget := entity.Budget{}
-// 	err = rows.Scan(&budget.ID, &budget.Price, &budget.YearID, &budget.SourceID, &budget.CreatedAt, &budget.UpdatedAt)
-// 	defer rows.Close()
-//
-// 	return &budget, nil
-// }
