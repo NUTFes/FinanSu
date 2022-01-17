@@ -109,7 +109,14 @@ const BudgetList: NextPage = () => {
               <Box>
                 <Button
                   textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
+                  leftIcon={
+                    <RiAddCircleLine
+                      color={'white'}
+                      style={{
+                        marginRight: 10,
+                      }}
+                    />
+                  }
                   bgGradient='linear(to-br, primary.1, primary.2)'
                 >
                   予算登録
