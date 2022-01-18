@@ -22,13 +22,10 @@ export const get_with_token = async (url: string) => {
 };
 
 export const post = async (url: string, data: any) => {
-  console.log(data.price, data.year_id, data.source_id);
   const price = data.price;
   const year_id = data.year_id;
   const source_id = data.source_id;
   const postUrl = url + '?price=' + price + '&year_id=' + year_id + '&source_id=' + source_id;
-  console.log(url, data);
-  console.log(postUrl, data.price, data.year_id, data.source_id);
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -41,8 +38,14 @@ export const post = async (url: string, data: any) => {
 };
 
 export const put = async (url: string, data: any) => {
-  const res = await fetch(url, {
+  const price = data.price;
+  const year_id = data.year_id;
+  const source_id = data.source_id;
+  const putUrl = url + '?price=' + price + '&year_id=' + year_id + '&source_id=' + source_id;
+  console.log(putUrl, data.price, data.year_id, data.source_id);
+  const res = await fetch(putUrl, {
     method: 'PUT',
+    mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
     },
