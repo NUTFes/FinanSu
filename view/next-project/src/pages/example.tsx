@@ -1,21 +1,5 @@
 import { get, post, put, del } from '@utils/api_methods';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  Button,
-  Flex,
-  Spacer,
-  Select,
-  Icon,
-  Text,
-  createIcon,
-} from '@chakra-ui/react';
+import { Table, Tr, Td, Button } from '@chakra-ui/react';
 type Budget = {
   id: number;
   price: number;
@@ -48,12 +32,8 @@ export async function postBudget() {
 export async function putBudget() {
   const Url = 'http://localhost:1323/budgets';
   const getRes = await get(Url);
-  console.log(getRes);
   const putUrl = Url + '/' + getRes.slice(-1)[0].id;
-  console.log(putUrl);
-  const putData = { price: 2000, year_id: 2, source_id: 2 };
-  console.log(putData);
-  console.log(getRes.slice(-1)[0].id);
+  const putData = { price: 200000, year_id: 2, source_id: 2 };
   const putReq = await put(putUrl, putData);
 }
 
