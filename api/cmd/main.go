@@ -121,6 +121,8 @@ func DestroyBudget() echo.HandlerFunc {
 	}
 }
 
+
+
 // Budgetの定義
 type ID int
 type Price int
@@ -134,6 +136,23 @@ type Budget struct {
 	SourceID  SourceID  `json:"source_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// PurchaseOrderの定義
+type ID int
+type Price int
+type DepartmentID int
+type Detail string
+type Url string
+
+type ParchaseOrder struct {
+	ID           ID           `json:"id"`
+	Price        Price        `json:"price"`
+	DepartmentID DepartmentID `json:"department_id"`
+	Detail       Detail       `json:"detail"`
+	Url          Url          `json:"url"`
+	CreatedAt    time.Time    `json:"created_at"`
+	UpdatedAt    time.Time    `json:"updated_at"`
 }
 
 func main() {
