@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '../../components/General/EditButton';
+import RegistButton from '../../components/General/RegistButton';
 import {
   Table,
   Thead,
@@ -10,7 +11,6 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   Button,
   Flex,
   Spacer,
@@ -107,20 +107,15 @@ const BudgetList: NextPage = () => {
             <Flex>
               <Spacer />
               <Box>
-                <Button
-                  textColor='white'
-                  leftIcon={
-                    <RiAddCircleLine
-                      color={'white'}
-                      style={{
-                        marginRight: 10,
-                      }}
-                    />
-                  }
-                  bgGradient='linear(to-br, primary.1, primary.2)'
-                >
+                <RegistButton>
+                  <RiAddCircleLine
+                    size={20}
+                    style={{
+                      marginRight: 5,
+                    }}
+                  />
                   予算登録
-                </Button>
+                </RegistButton>
               </Box>
             </Flex>
           </Box>
