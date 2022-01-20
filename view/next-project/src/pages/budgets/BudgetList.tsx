@@ -11,7 +11,6 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   Button,
   Flex,
   Spacer,
