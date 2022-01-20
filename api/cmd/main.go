@@ -66,11 +66,72 @@ func GetBudgets() echo.HandlerFunc {
 	}
 }
 
+// Budgetの取得
+func GetBudgetByID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		budget := Budget{}
+		id := c.Param("id")
+		err := DB.QueryRow("select * from budgets where id="+id).Scan(&budget.ID, &budget.Price, &budget.YearID, &budget.SourceID, &budget.CreatedAt, &budget.UpdatedAt)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+		return c.JSON(http.StatusOK, budget)
+	}
+}
+
+// Budgetの作成
+func CreateBudget() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		price := c.QueryParam("price")
+		yearID := c.QueryParam("year_id")
+		sourceID := c.QueryParam("source_id")
+		_, err := DB.Exec("insert into budgets (price, year_id, source_id) values (" + price + "," + yearID + "," + sourceID + ")")
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated, "Created Budget")
+	}
+}
+
+// Budgetの修正
+func UpdateBudget() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		price := c.QueryParam("price")
+		yearID := c.QueryParam("year_id")
+		sourceID := c.QueryParam("source_id")
+		_, err := DB.Exec("update budgets set price = " + price + ", year_id = " + yearID + ", source_id = " + sourceID + " where id = " + string(id))
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated, "Updated Budget")
+	}
+}
+
+// Budgetの削除
+func DestroyBudget() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		_, err := DB.Exec("delete from budgets where id = " + id)
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated, "Destroy Budget")
+	}
+}
+
+// Budgetの定義
+type ID int
+type Price int
+type YearID int
+type SourceID int
+
 type Budget struct {
-	ID        int       `json:"id"`
-	Price     int       `json:"price"`
-	YearID    int       `json:"year_id"`
-	SourceID  int       `json:"source_id"`
+	ID        ID        `json:"id"`
+	Price     Price     `json:"price"`
+	YearID    YearID    `json:"year_id"`
+	SourceID  SourceID  `json:"source_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -86,9 +147,19 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	// CORS対策
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000"}, // ドメイン
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
+
 	// Routes
 	e.GET("/", healthcheck)
 	e.GET("/budgets", GetBudgets())
+	e.GET("/budgets/:id", GetBudgetByID())
+	e.POST("/budgets", CreateBudget())
+	e.PUT("/budgets/:id", UpdateBudget())
+	e.DELETE("/budgets/:id", DestroyBudget())
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
