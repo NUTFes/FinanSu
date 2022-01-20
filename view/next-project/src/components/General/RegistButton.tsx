@@ -1,6 +1,6 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import * as React from 'react';
 import theme from '@assets/theme';
+import * as React from 'react';
 
 interface Props {
   width?: string;
