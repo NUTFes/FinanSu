@@ -157,7 +157,7 @@ func GetPurchaseOrders() echo.HandlerFunc{
 	}
 }
 
-//PurchaseOrderの取得
+//PurchaseOrderの取得(Get)
 func GetPurchaseOrder() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		purchaseorder := PurchaseOrder{}
@@ -180,7 +180,7 @@ func GetPurchaseOrder() echo.HandlerFunc {
 	}
 }
 
-//PurchaseOrderの作成
+//PurchaseOrderの作成(Create)
 func CreatePurchaseOrder() echo.HandlerFunc{
 	return func (c echo.Context) error {
 		item := c.QueryParam("item")
@@ -212,6 +212,20 @@ func UpdatePurchaseOrder() echo.HandlerFunc{
 		return c.String(http.StatusCreated, "Update PurchaseOrder")
 	}
 }
+
+//PurchaseOrderの消去(Delete)
+func DeletePurchaseOrder() echo.HandlerFunc{
+	return func (c echo.Context) error {
+		id := c.Param("id")
+		_, err := DB.Exec("delete from purchase_orders where id = " + id)
+		if err != nil{
+			return err
+		}
+		return c.String(http.StatusOK, "Delete PurchaseOrder")
+	}
+}
+
+
 
 //value Object
 type ID int
@@ -274,6 +288,7 @@ func main() {
 	e.GET("/purchaseorders/:id", GetPurchaseOrder())
 	e.POST("/purchaseorders", CreatePurchaseOrder())
 	e.PUT("/purchaseorders/:id" , UpdatePurchaseOrder())
+	e.DELETE("/purchaseorders/:id" , DeletePurchaseOrder())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
