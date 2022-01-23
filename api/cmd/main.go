@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"time"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -56,7 +55,12 @@ func GetBudgets() echo.HandlerFunc {
 		defer rows.Close()
 
 		for rows.Next() {
-			err := rows.Scan(&budget.ID, &budget.Price, &budget.YearID, &budget.SourceID, &budget.CreatedAt, &budget.UpdatedAt)
+			err := rows.Scan(&budget.ID, 
+				               &budget.Price, 
+											 &budget.YearID, 
+											 &budget.SourceID, 
+											 &budget.CreatedAt, 
+											 &budget.UpdatedAt)
 			if err != nil {
 				return errors.Wrapf(err, "cannot connect SQL")
 			}
@@ -121,13 +125,48 @@ func DestroyBudget() echo.HandlerFunc {
 	}
 }
 
+//PurchaseOrdersの取得
+func GetPurchaseOrders() echo.HandlerFunc{
+	return func(c echo.Context) error {
+		parchaseorder := ParchaseOrder{}
+		var parchaseorders []ParchaseOrder
+		//クエリ実行
+		rows,err := DB.Query("select* from purchase_orders")
+		
+		if err != nil {
+			return errors.Wrapf(err,"can not connect SQL")
+		}
+		defer rows.Close()
+		
+		for rows.Next() {
+			err :=rows.Scan(
+				&parchaseorder.ID,
+				&parchaseorder.Item,
+				&parchaseorder.Price,
+				&parchaseorder.DepartmentID, 
+				&parchaseorder.Detail, 
+				&parchaseorder.Url,
+			  &parchaseorder.CreatedAt,
+				&parchaseorder.UpdatedAt)
+				if err != nil {
+				return errors.Wrapf(err,"cannot connect SQL")
+			}
+			parchaseorders = append(parchaseorders, parchaseorder)
+		}
+		return c.JSON(http.StatusOK,parchaseorders)
+	}
+}
 
-
-// Budgetの定義
+//value Object
 type ID int
 type Price int
 type YearID int
 type SourceID int
+
+type Item string
+type DepartmentID int
+type Detail string
+type Url string
 
 type Budget struct {
 	ID        ID        `json:"id"`
@@ -138,15 +177,9 @@ type Budget struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// PurchaseOrderの定義
-type ID int
-type Price int
-type DepartmentID int
-type Detail string
-type Url string
-
 type ParchaseOrder struct {
 	ID           ID           `json:"id"`
+	Item         Item         `json:"item"`
 	Price        Price        `json:"price"`
 	DepartmentID DepartmentID `json:"department_id"`
 	Detail       Detail       `json:"detail"`
@@ -173,12 +206,15 @@ func main() {
 	}))
 
 	// Routes
+	//budgetsのRoute
 	e.GET("/", healthcheck)
 	e.GET("/budgets", GetBudgets())
 	e.GET("/budgets/:id", GetBudgetByID())
 	e.POST("/budgets", CreateBudget())
 	e.PUT("/budgets/:id", UpdateBudget())
 	e.DELETE("/budgets/:id", DestroyBudget())
+	//parcahseordersのRoute
+	e.GET("/parchaseorders", GetPurchaseOrders())
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
