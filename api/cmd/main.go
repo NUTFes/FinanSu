@@ -196,6 +196,23 @@ func CreatePurchaseOrder() echo.HandlerFunc{
 	}
 }
 
+//PurchaseOrderの修正(Update)
+func UpdatePurchaseOrder() echo.HandlerFunc{
+	return func (c echo.Context) error {
+		id := c.Param("id")
+		item := c.QueryParam("item")
+		price := c.QueryParam("price")
+		departmentID := c.QueryParam("department_id")
+		detail := c.QueryParam("detail")
+		url := c.QueryParam("url")
+		_, err := DB.Exec("update purchase_orders set item = " + item + ", price = " + price + ", department_id = " + departmentID + " , detail = " + detail + " , url = " + url + " where id = " + string(id))
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated, "Update PurchaseOrder")
+	}
+}
+
 //value Object
 type ID int
 type Price int
@@ -256,6 +273,7 @@ func main() {
 	e.GET("/purchaseorders", GetPurchaseOrders())
 	e.GET("/purchaseorders/:id", GetPurchaseOrder())
 	e.POST("/purchaseorders", CreatePurchaseOrder())
+	e.PUT("/purchaseorders/:id" , UpdatePurchaseOrder())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
