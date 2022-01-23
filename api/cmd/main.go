@@ -158,7 +158,7 @@ func GetPurchaseOrders() echo.HandlerFunc{
 }
 
 //PurchaseOrderの取得
-func GetPurchaseOrder() echo.HandlerFunc{
+func GetPurchaseOrder() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		purchaseorder := PurchaseOrder{}
 		id := c.Param("id")
@@ -177,6 +177,22 @@ func GetPurchaseOrder() echo.HandlerFunc{
 			return err
 		}
 		return c.JSON(http.StatusOK, purchaseorder)
+	}
+}
+
+//PurchaseOrderの作成
+func CreatePurchaseOrder() echo.HandlerFunc{
+	return func (c echo.Context) error {
+		item := c.QueryParam("item")
+		price := c.QueryParam("price")
+		departmentID := c.QueryParam("department_id")
+		detail := c.QueryParam("detail")
+		url := c.QueryParam("url")
+		_, err := DB.Exec("insert into purchase_orders (item, price, department_id, detail, url) values ("+ item + "," + price + "," + departmentID + "," + detail + "," + url + ")")
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated, "Created PurchaseOrders")
 	}
 }
 
@@ -239,6 +255,7 @@ func main() {
 	//parcahseordersのRoute
 	e.GET("/purchaseorders", GetPurchaseOrders())
 	e.GET("/purchaseorders/:id", GetPurchaseOrder())
+	e.POST("/purchaseorders", CreatePurchaseOrder())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
