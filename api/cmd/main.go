@@ -128,8 +128,8 @@ func DestroyBudget() echo.HandlerFunc {
 //PurchaseOrdersの取得
 func GetPurchaseOrders() echo.HandlerFunc{
 	return func(c echo.Context) error {
-		parchaseorder := ParchaseOrder{}
-		var parchaseorders []ParchaseOrder
+		purchaseorder := PurchaseOrder{}
+		var purchaseorders []PurchaseOrder
 		//クエリ実行
 		rows,err := DB.Query("select* from purchase_orders")
 		
@@ -140,20 +140,43 @@ func GetPurchaseOrders() echo.HandlerFunc{
 		
 		for rows.Next() {
 			err :=rows.Scan(
-				&parchaseorder.ID,
-				&parchaseorder.Item,
-				&parchaseorder.Price,
-				&parchaseorder.DepartmentID, 
-				&parchaseorder.Detail, 
-				&parchaseorder.Url,
-			  &parchaseorder.CreatedAt,
-				&parchaseorder.UpdatedAt)
+				&purchaseorder.ID,
+				&purchaseorder.Item,
+				&purchaseorder.Price,
+				&purchaseorder.DepartmentID, 
+				&purchaseorder.Detail, 
+				&purchaseorder.Url,
+			  &purchaseorder.CreatedAt,
+				&purchaseorder.UpdatedAt)
 				if err != nil {
 				return errors.Wrapf(err,"cannot connect SQL")
 			}
-			parchaseorders = append(parchaseorders, parchaseorder)
+			purchaseorders = append(purchaseorders, purchaseorder)
 		}
-		return c.JSON(http.StatusOK,parchaseorders)
+		return c.JSON(http.StatusOK,purchaseorders)
+	}
+}
+
+//PurchaseOrderの取得
+func GetPurchaseOrder() echo.HandlerFunc{
+	return func(c echo.Context) error {
+		purchaseorder := PurchaseOrder{}
+		id := c.Param("id")
+		err := DB.QueryRow("select * from purchase_orders where id = "+id).Scan(
+			&purchaseorder.ID,
+			&purchaseorder.Item,
+			&purchaseorder.Price,
+			&purchaseorder.DepartmentID,
+			&purchaseorder.Detail,
+			&purchaseorder.Url,
+			&purchaseorder.CreatedAt,
+			&purchaseorder.UpdatedAt,
+		)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+		return c.JSON(http.StatusOK, purchaseorder)
 	}
 }
 
@@ -177,7 +200,7 @@ type Budget struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type ParchaseOrder struct {
+type PurchaseOrder struct {
 	ID           ID           `json:"id"`
 	Item         Item         `json:"item"`
 	Price        Price        `json:"price"`
@@ -214,8 +237,8 @@ func main() {
 	e.PUT("/budgets/:id", UpdateBudget())
 	e.DELETE("/budgets/:id", DestroyBudget())
 	//parcahseordersのRoute
-	e.GET("/parchaseorders", GetPurchaseOrders())
-
+	e.GET("/purchaseorders", GetPurchaseOrders())
+	e.GET("/purchaseorders/:id", GetPurchaseOrder())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
