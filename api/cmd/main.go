@@ -225,6 +225,37 @@ func DeletePurchaseOrder() echo.HandlerFunc{
 	}
 }
 
+//PurchaseReportsの取得
+func GetPurchaseReports() echo.HandlerFunc{
+	return func (c echo.Context) error {
+		purchasereport := PurchaseReport{}
+		var purchasereports []PurchaseReport
+
+		rows ,err := DB.Query("select * from purchase_reports")
+		if err != nil {
+			return errors.Wrapf(err , "can not connect SQL")
+		}
+		defer rows.Close()
+
+		for rows.Next(){
+			err := rows.Scan(
+				&purchasereport.ID,
+				&purchasereport.Item,
+				&purchasereport.Price,
+				&purchasereport.DepartmentID,
+				&purchasereport.PurchaseOrderID,
+				&purchasereport.CreatedAt,
+				&purchasereport.UpdatedAt,
+			)
+			if err != nil {
+				return errors.Wrapf(err , "can not connect SQL")
+			}
+			purchasereports = append(purchasereports,purchasereport)
+		}
+		return c.JSON(http.StatusOK,purchasereports)
+	}
+}
+
 
 
 //value Object
@@ -265,9 +296,12 @@ type PurchaseOrder struct {
 // PurchaseRepoer構造体定義
 type PurchaseReport struct {
 	ID              ID              `json:"id"`
+	Item            Item            `json:"item"`
 	Price           Price           `json:"price"`
 	DepartmentID    DepartmentID    `json:"department_id"`
   PurchaseOrderID PurchaseOrderID `json:"purchase_order_id"`
+	CreatedAt    time.Time          `json:"created_at"`
+	UpdatedAt    time.Time          `json:"updated_at"`
 }
 
 func main() {
@@ -301,6 +335,8 @@ func main() {
 	e.POST("/purchaseorders", CreatePurchaseOrder())
 	e.PUT("/purchaseorders/:id" , UpdatePurchaseOrder())
 	e.DELETE("/purchaseorders/:id" , DeletePurchaseOrder())
+	//purchasereportsのRoute
+	e.GET("/purcahsereports", GetPurchaseReports())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
