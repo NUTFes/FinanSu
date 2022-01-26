@@ -225,7 +225,7 @@ func DeletePurchaseOrder() echo.HandlerFunc{
 	}
 }
 
-//PurchaseReportsの取得
+//PurchaseReportsの取得(Get)
 func GetPurchaseReports() echo.HandlerFunc{
 	return func (c echo.Context) error {
 		purchasereport := PurchaseReport{}
@@ -253,6 +253,27 @@ func GetPurchaseReports() echo.HandlerFunc{
 			purchasereports = append(purchasereports,purchasereport)
 		}
 		return c.JSON(http.StatusOK,purchasereports)
+	}
+}
+//PurchaseReportの取得(Get)
+func GetPurchaseReport() echo.HandlerFunc{
+	return func (c echo.Context) error{
+		purchasereport := PurchaseReport{}
+		id := c.Param("id")
+		err := DB.QueryRow("select * from purchase_reports where id =" + id).Scan(
+			&purchasereport.ID,
+			&purchasereport.Item,
+			&purchasereport.Price,
+			&purchasereport.DepartmentID,
+			&purchasereport.PurchaseOrderID,
+			&purchasereport.CreatedAt,
+			&purchasereport.UpdatedAt,
+		)
+		if err != nil {
+			fmt.Println("error")
+			return err
+		}
+		return c.JSON(http.StatusOK , purchasereport)
 	}
 }
 
@@ -337,6 +358,7 @@ func main() {
 	e.DELETE("/purchaseorders/:id" , DeletePurchaseOrder())
 	//purchasereportsのRoute
 	e.GET("/purcahsereports", GetPurchaseReports())
+	e.GET("/purchasereports/:id", GetPurchaseReport())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
