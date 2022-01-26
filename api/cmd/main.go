@@ -238,6 +238,9 @@ type DepartmentID int
 type Detail string
 type Url string
 
+type PurchaseOrderID int
+
+//Budget構造体定義
 type Budget struct {
 	ID        ID        `json:"id"`
 	Price     Price     `json:"price"`
@@ -247,6 +250,7 @@ type Budget struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// PurchaseOrder構造体定義
 type PurchaseOrder struct {
 	ID           ID           `json:"id"`
 	Item         Item         `json:"item"`
@@ -256,6 +260,14 @@ type PurchaseOrder struct {
 	Url          Url          `json:"url"`
 	CreatedAt    time.Time    `json:"created_at"`
 	UpdatedAt    time.Time    `json:"updated_at"`
+}
+
+// PurchaseRepoer構造体定義
+type PurchaseReport struct {
+	ID              ID              `json:"id"`
+	Price           Price           `json:"price"`
+	DepartmentID    DepartmentID    `json:"department_id"`
+  PurchaseOrderID PurchaseOrderID `json:"purchase_order_id"`
 }
 
 func main() {
