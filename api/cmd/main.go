@@ -276,7 +276,20 @@ func GetPurchaseReport() echo.HandlerFunc{
 		return c.JSON(http.StatusOK , purchasereport)
 	}
 }
-
+//PurchaseReportの作成(Create)
+func CreatePurchaseReport() echo.HandlerFunc{
+	return func (c echo.Context) error {
+		item := c.QueryParam("item")
+		price := c.QueryParam("price")
+		departmentID := c.QueryParam("department_id")
+		PurchaseOrderID := c.QueryParam("purchase_order_id")
+		_, err := DB.Exec("insert into purchase_reports (item, price, department_id, purchase_order_id ) values ("+ item + "," + price + "," + departmentID + "," + PurchaseOrderID + ")" )
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated,"Create PurchaseReport")
+  }
+}
 
 
 //value Object
@@ -316,13 +329,13 @@ type PurchaseOrder struct {
 
 // PurchaseRepoer構造体定義
 type PurchaseReport struct {
-	ID              ID              `json:"id"`
-	Item            Item            `json:"item"`
-	Price           Price           `json:"price"`
-	DepartmentID    DepartmentID    `json:"department_id"`
-  PurchaseOrderID PurchaseOrderID `json:"purchase_order_id"`
-	CreatedAt    time.Time          `json:"created_at"`
-	UpdatedAt    time.Time          `json:"updated_at"`
+	ID              ID                 `json:"id"`
+	Item            Item               `json:"item"`
+	Price           Price              `json:"price"`
+	DepartmentID    DepartmentID       `json:"department_id"`
+  PurchaseOrderID PurchaseOrderID    `json:"purchase_order_id"`
+	CreatedAt       time.Time          `json:"created_at"`
+	UpdatedAt       time.Time          `json:"updated_at"`
 }
 
 func main() {
@@ -357,8 +370,11 @@ func main() {
 	e.PUT("/purchaseorders/:id" , UpdatePurchaseOrder())
 	e.DELETE("/purchaseorders/:id" , DeletePurchaseOrder())
 	//purchasereportsのRoute
-	e.GET("/purcahsereports", GetPurchaseReports())
+	e.GET("/purchasereports", GetPurchaseReports())
 	e.GET("/purchasereports/:id", GetPurchaseReport())
+	e.POST("/purchasereports" , CreatePurchaseReport())
+	e.PUT("/purchasereports/:id", GetPurchaseReport())
+	e.DELETE("/purchasereports/:id", GetPurchaseReport())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
