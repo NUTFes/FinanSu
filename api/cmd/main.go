@@ -281,14 +281,29 @@ func CreatePurchaseReport() echo.HandlerFunc{
 	return func (c echo.Context) error {
 		item := c.QueryParam("item")
 		price := c.QueryParam("price")
-		departmentID := c.QueryParam("department_id")
+		DepartmentID := c.QueryParam("department_id")
 		PurchaseOrderID := c.QueryParam("purchase_order_id")
-		_, err := DB.Exec("insert into purchase_reports (item, price, department_id, purchase_order_id ) values ("+ item + "," + price + "," + departmentID + "," + PurchaseOrderID + ")" )
+		_, err := DB.Exec("insert into purchase_reports (item, price, department_id, purchase_order_id ) values ("+ item + "," + price + "," + DepartmentID + "," + PurchaseOrderID + ")" )
 		if err != nil {
 			return err
 		}
 		return c.String(http.StatusCreated,"Create PurchaseReport")
   }
+}
+//PurchaseReportの修正(Update)
+func UpdatePurchaseReport() echo.HandlerFunc{
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		item := c.QueryParam("item")
+		price := c.QueryParam("price")
+		DepartmentID := c.QueryParam("department_id")
+		PurchaseOrderID := c.QueryParam("purchase_order_id")
+		_, err := DB.Exec("update purchase_reports set item =" + item + ", price = " + price + " , department_id = " + DepartmentID + ", purchase_order_id = " + PurchaseOrderID + " where id = " + string(id))
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated,"Update PurchaseReport")
+	}
 }
 
 
@@ -373,8 +388,8 @@ func main() {
 	e.GET("/purchasereports", GetPurchaseReports())
 	e.GET("/purchasereports/:id", GetPurchaseReport())
 	e.POST("/purchasereports" , CreatePurchaseReport())
-	e.PUT("/purchasereports/:id", GetPurchaseReport())
-	e.DELETE("/purchasereports/:id", GetPurchaseReport())
+	e.PUT("/purchasereports/:id", UpdatePurchaseReport())
+	
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
