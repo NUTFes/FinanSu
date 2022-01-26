@@ -11,4 +11,4 @@ CREATE TABLE purchase_reports (
   PRIMARY KEY (id)
 );
 
-INSERT into purchase_reports (item, price, department_id, purchase_order_id) values ('テスト購入品', 10000, 1, 1);
+INSERT into purchase_reports (item, price, department_id, purchase_order_id) values ('purchase-test', 10000, 1, 1);
