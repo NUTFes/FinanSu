@@ -305,6 +305,17 @@ func UpdatePurchaseReport() echo.HandlerFunc{
 		return c.String(http.StatusCreated,"Update PurchaseReport")
 	}
 }
+//PurchaseReportの削除(delete)
+func DeletePurchaseReport() echo.HandlerFunc {
+	return func (c echo.Context) error {
+		id := c.Param("id")
+		_, err := DB.Exec("delete from purchase_reports where id =" + id)
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated,"Delete PurchaseReport")
+	}
+}
 
 
 //value Object
@@ -389,7 +400,7 @@ func main() {
 	e.GET("/purchasereports/:id", GetPurchaseReport())
 	e.POST("/purchasereports" , CreatePurchaseReport())
 	e.PUT("/purchasereports/:id", UpdatePurchaseReport())
-	
+	e.DELETE("/purchasereports/:id", DeletePurchaseReport())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
