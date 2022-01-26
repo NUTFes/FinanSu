@@ -1,4 +1,4 @@
-import { get, post, put, del } from '@utils/api_methods';
+import { get, post, put, del } from '@api/budget';
 import { Table, Tr, Td, Button } from '@chakra-ui/react';
 type Budget = {
   id: number;
