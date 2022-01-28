@@ -1,7 +1,7 @@
 use finansu_db;
 
 -- 
-CREATE TABLE fundraising (
+CREATE TABLE fund_informations (
   id int(10) unsigned not null auto_increment,
   contact_person varchar(255) not null, 
   fund_date date not null,
@@ -16,4 +16,4 @@ CREATE TABLE fundraising (
   PRIMARY KEY (id)
 );
 
-INSERT into fundraising (contact_person, fund_date, fund_time, price, detail, report_person, report_price, report_date) values ('test-person','2022-1-28','15:56',1000,'test-detail','test-report_person',1000,'2022-1-28');
+INSERT into fund_informations (contact_person, fund_date, fund_time, price, detail, report_person, report_price, report_date) values ('test-person','2022-1-28','15:56',1000,'test-detail','test-report_person',1000,'2022-1-28');

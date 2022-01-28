@@ -1,6 +1,6 @@
 use finansu_db;
 
-CREATE TABLE teacher(
+CREATE TABLE teachers(
   id int(10) unsigned not null auto_increment,
   name varchar(255) not null,
   position varchar(255) not null,
@@ -11,4 +11,4 @@ CREATE TABLE teacher(
   PRIMARY KEY (id)
 );
 
-INSERT into teacher (name,position,department_id,room) values ('test-name','test-position', 1,'605');
+INSERT into teachers (name,position,department_id,room) values ('test-name','test-position', 1,'605');
