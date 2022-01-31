@@ -407,7 +407,18 @@ func UpdateFundInformation() echo.HandlerFunc {
 		if err != nil {
 			return err 
 		} 
-		return c.JSON(http.StatusCreated,"Update FundInformation")
+		return c.String(http.StatusCreated,"Update FundInformation")
+	}
+}
+//funcInformationの削除(delete)
+func DeleteFundInformation() echo.HandlerFunc{
+	return func (c echo.Context) error {
+		id := c.Param("id")
+		_, err :=  DB.Exec("Delete from fund_informations where id = " + id)
+		if err != nil {
+			return err 
+		}
+		return c.String(http.StatusCreated, "Delete fundInformation")
 	}
 }
 
@@ -523,6 +534,7 @@ func main() {
 	e.GET("/fundinformation/:id",GetFundInformation())
 	e.POST("/fundinformations", CreateFundInformations())
 	e.PUT("/fundinformations/:id",UpdateFundInformation())
+  e.DELETE("/fundinformations/:id" , DeleteFundInformation())
 	
 
 	// Start server
