@@ -316,6 +316,39 @@ func DeletePurchaseReport() echo.HandlerFunc {
 		return c.String(http.StatusCreated,"Delete PurchaseReport")
 	}
 }
+//GetFundInformationsの取得(Get)
+func GetFundInformations() echo.HandlerFunc {
+	return func (c echo.Context)  error {
+		fundinformation := FundInformation{}
+		var fundinformations []FundInformation
+		rows ,err :=DB.Query("select * from fund_informations")
+		if err != nil {
+			return errors.Wrapf(err,"can not connect SQL")
+		}
+		defer rows.Close()
+		for rows.Next(){
+			err := rows.Scan(
+				&fundinformation.ID,
+				&fundinformation.ContactPerson,
+				&fundinformation.FundDate,
+				&fundinformation.FundTime,
+				&fundinformation.Price,
+				&fundinformation.Detail,
+				&fundinformation.ReportPerson,
+				&fundinformation.ReportPrice,
+				&fundinformation.ReportDate,
+				&fundinformation.CreatedAt,
+				&fundinformation.UpdatedAt,
+			)
+			if err != nil {
+				fmt.Println("error")
+				return err
+			}
+			fundinformations = append(fundinformations,fundinformation)
+		}
+		return c.JSON(http.StatusOK,fundinformations)
+	}
+}
 
 
 //value Object
@@ -330,6 +363,14 @@ type Detail string
 type Url string
 
 type PurchaseOrderID int
+
+type ContactPerson string
+type FundDate string
+type FundTime string
+type ReportPerson string
+type ReportPrice int
+type ReportDate string
+
 
 //Budget構造体定義
 type Budget struct {
@@ -363,6 +404,22 @@ type PurchaseReport struct {
 	CreatedAt       time.Time          `json:"created_at"`
 	UpdatedAt       time.Time          `json:"updated_at"`
 }
+
+//FundInformationsの構造体定義
+type FundInformation struct {
+	ID            ID            `json:"id"`
+	ContactPerson ContactPerson `json:"contact_person"`
+	FundDate      FundDate      `json:"fund_date"`
+	FundTime      FundTime      `json:"fund_time"`
+	Price         Price         `json:"price"`
+	Detail        Detail        `json:"detail"`
+	ReportPerson  ReportPerson  `json:"report_person"`
+	ReportPrice   ReportPrice   `json:"report_price"`
+	ReportDate    ReportDate    `json:"report_date"`
+	CreatedAt     time.Time     `json:"created_at"`
+	UpdatedAt     time.Time     `json:"updated_at"`
+}
+
 
 func main() {
 	// Echo instance
@@ -401,6 +458,8 @@ func main() {
 	e.POST("/purchasereports" , CreatePurchaseReport())
 	e.PUT("/purchasereports/:id", UpdatePurchaseReport())
 	e.DELETE("/purchasereports/:id", DeletePurchaseReport())
+	//fundinformationsのroute
+	e.GET("/fundinformations", GetFundInformations())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
