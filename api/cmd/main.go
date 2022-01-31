@@ -349,6 +349,30 @@ func GetFundInformations() echo.HandlerFunc {
 		return c.JSON(http.StatusOK,fundinformations)
 	}
 }
+//GetFundInfomationの取得(Get)
+func GetFundInformation() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		fundinformation := FundInformation{}
+		id := c.Param("id")
+		err := DB.QueryRow("select * from fund_informations where id = "+ id).Scan(
+			&fundinformation.ID,
+				&fundinformation.ContactPerson,
+				&fundinformation.FundDate,
+				&fundinformation.FundTime,
+				&fundinformation.Price,
+				&fundinformation.Detail,
+				&fundinformation.ReportPerson,
+				&fundinformation.ReportPrice,
+				&fundinformation.ReportDate,
+				&fundinformation.CreatedAt,
+				&fundinformation.UpdatedAt,
+		)
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, fundinformation)
+	}
+}
 
 
 //value Object
@@ -460,6 +484,7 @@ func main() {
 	e.DELETE("/purchasereports/:id", DeletePurchaseReport())
 	//fundinformationsのroute
 	e.GET("/fundinformations", GetFundInformations())
+	e.GET("/fundinformation/:id",GetFundInformation())
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
