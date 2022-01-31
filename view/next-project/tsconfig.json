@@ -18,6 +18,7 @@
       "@assets/*": ["src/assets/*"],
       "@images/*": ["public/*"],
       "@components/*": ["src/components/*"],
+      "@api/*": ["src/pages/api/*"],
       "@utils/*": ["src/utils/*"]
     },
     "incremental": true
