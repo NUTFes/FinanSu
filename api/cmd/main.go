@@ -316,7 +316,7 @@ func DeletePurchaseReport() echo.HandlerFunc {
 		return c.String(http.StatusCreated,"Delete PurchaseReport")
 	}
 }
-//GetFundInformationsの取得(Get)
+//FundInformationsの取得(Get)
 func GetFundInformations() echo.HandlerFunc {
 	return func (c echo.Context)  error {
 		fundinformation := FundInformation{}
@@ -349,7 +349,7 @@ func GetFundInformations() echo.HandlerFunc {
 		return c.JSON(http.StatusOK,fundinformations)
 	}
 }
-//GetFundInfomationの取得(Get)
+//FundInfomationの取得(Get)
 func GetFundInformation() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		fundinformation := FundInformation{}
@@ -371,6 +371,24 @@ func GetFundInformation() echo.HandlerFunc {
 			return err
 		}
 		return c.JSON(http.StatusOK, fundinformation)
+	}
+}
+//FundInfomationの作成(Create)
+func CreateFundInformations() echo.HandlerFunc {
+	return func (c echo.Context) error {
+		ContactPerson := c.QueryParam("contact_person")
+		FundDate := c.QueryParam("fund_date")
+		FundTime := c.QueryParam("fund_time")
+		price := c.QueryParam("price")
+		detail := c.QueryParam("detail")
+		ReportPerson := c.QueryParam("report_person")
+		ReportPrice := c.QueryParam("report_price")
+		ReportDate := c.QueryParam("report_date")
+		_, err := DB.Exec("Insert into fund_informations (contact_person, fund_date, fund_time, price, detail, report_person, report_price, report_date) values ( " + ContactPerson + "," + FundDate + "," + FundTime + "," + price + "," + detail + "," + ReportPerson + "," + ReportPrice + "," + ReportDate + ")")
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusCreated,"Create FundInformation")
 	}
 }
 
@@ -485,6 +503,8 @@ func main() {
 	//fundinformationsのroute
 	e.GET("/fundinformations", GetFundInformations())
 	e.GET("/fundinformation/:id",GetFundInformation())
+	e.POST("/fundinformations", CreateFundInformations())
+
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
