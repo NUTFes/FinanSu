@@ -391,7 +391,25 @@ func CreateFundInformations() echo.HandlerFunc {
 		return c.String(http.StatusCreated,"Create FundInformation")
 	}
 }
-
+//FundInformationの修正(Update)
+func UpdateFundInformation() echo.HandlerFunc {
+	return func (c echo.Context) error {
+		id := c.Param("id")
+		ContactPerson := c.QueryParam("contact_person")
+		FundDate := c.QueryParam("fund_date")
+		FundTime := c.QueryParam("fund_time")
+		price := c.QueryParam("price")
+		detail := c.QueryParam("detail")
+		ReportPerson := c.QueryParam("report_person")
+		ReportPrice := c.QueryParam("report_price")
+		ReportDate := c.QueryParam("report_date")
+		_, err := DB.Exec("Update fund_informations set contact_person = " + ContactPerson + " , fund_date = " + FundDate + ", fund_time = " + FundTime + ", price =" + price + ", detail = " + detail + ", report_person = " + ReportPerson + ", report_price =" + ReportPrice + ", report_date =" +ReportDate + " where id = " + string(id))  
+		if err != nil {
+			return err 
+		} 
+		return c.JSON(http.StatusCreated,"Update FundInformation")
+	}
+}
 
 //value Object
 type ID int
@@ -504,6 +522,8 @@ func main() {
 	e.GET("/fundinformations", GetFundInformations())
 	e.GET("/fundinformation/:id",GetFundInformation())
 	e.POST("/fundinformations", CreateFundInformations())
+	e.PUT("/fundinformations/:id",UpdateFundInformation())
+	
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
