@@ -30,7 +30,6 @@ const PurchaseReport: NextPage = () => {
       value: 14400,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      note: '',
       documentNumber: '総-1',
     },
     {
@@ -41,7 +40,6 @@ const PurchaseReport: NextPage = () => {
       value: 11000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      note: '',
       documentNumber: '',
     },
     {
@@ -52,7 +50,6 @@ const PurchaseReport: NextPage = () => {
       value: 450,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      note: '',
       documentNumber: '',
     },
     {
@@ -63,7 +60,6 @@ const PurchaseReport: NextPage = () => {
       value: 15000,
       purchaseDate: '2021/11/12',
       buyer: '齋藤博起',
-      note: '',
       documentNumber: '',
     },
     {
@@ -74,7 +70,6 @@ const PurchaseReport: NextPage = () => {
       value: 25000,
       purchaseDate: '2021/11/12',
       buyer: '杉本真実',
-      note: '',
       documentNumber: '',
     },
     {
@@ -85,7 +80,6 @@ const PurchaseReport: NextPage = () => {
       value: 8000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-            note: '',
       documentNumber: '',
     },
   ];
