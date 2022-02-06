@@ -30,7 +30,7 @@ const PurchaseReport: NextPage = () => {
       value: 14400,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      notes: '',
+      documentNumber: '総-1',
     },
     {
       id: 2,
@@ -40,7 +40,7 @@ const PurchaseReport: NextPage = () => {
       value: 11000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      notes: '',
+      documentNumber: '',
     },
     {
       id: 3,
@@ -50,7 +50,7 @@ const PurchaseReport: NextPage = () => {
       value: 450,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      notes: '',
+      documentNumber: '',
     },
     {
       id: 4,
@@ -60,7 +60,7 @@ const PurchaseReport: NextPage = () => {
       value: 15000,
       purchaseDate: '2021/11/12',
       buyer: '齋藤博起',
-      notes: '',
+      documentNumber: '',
     },
     {
       id: 5,
@@ -70,7 +70,7 @@ const PurchaseReport: NextPage = () => {
       value: 25000,
       purchaseDate: '2021/11/12',
       buyer: '杉本真実',
-      notes: '',
+      documentNumber: '',
     },
     {
       id: 6,
@@ -80,7 +80,7 @@ const PurchaseReport: NextPage = () => {
       value: 8000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      notes: '',
+      documentNumber: '',
     },
   ];
 
@@ -152,13 +152,19 @@ const PurchaseReport: NextPage = () => {
                     <Center></Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>購入日</Center>
+                    <Center color='black.600'>
+                      購入日
+                    </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>購入者</Center>
+                    <Center color='black.600'>
+                      購入者
+                    </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>備考</Center>
+                    <Center color='black.600'>
+                      資料番号
+                    </Center>
                   </Th>
                 </Tr>
               </Thead>
@@ -192,7 +198,7 @@ const PurchaseReport: NextPage = () => {
                       <Center color='black.300'>{purchaseItem.buyer}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.notes}</Center>
+                      <Center color='black.300'>{purchaseItem.documentNumber}</Center>
                     </Td>
                   </Tr>
                 ))}
