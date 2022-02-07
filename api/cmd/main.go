@@ -336,7 +336,6 @@ func GetFundInformations() echo.HandlerFunc {
 				&fundinformation.Detail,
 				&fundinformation.ReportPerson,
 				&fundinformation.ReportPrice,
-				&fundinformation.ReportDate,
 				&fundinformation.CreatedAt,
 				&fundinformation.UpdatedAt,
 			)
@@ -363,7 +362,6 @@ func GetFundInformation() echo.HandlerFunc {
 				&fundinformation.Detail,
 				&fundinformation.ReportPerson,
 				&fundinformation.ReportPrice,
-				&fundinformation.ReportDate,
 				&fundinformation.CreatedAt,
 				&fundinformation.UpdatedAt,
 		)
@@ -383,8 +381,7 @@ func CreateFundInformations() echo.HandlerFunc {
 		detail := c.QueryParam("detail")
 		ReportPerson := c.QueryParam("report_person")
 		ReportPrice := c.QueryParam("report_price")
-		ReportDate := c.QueryParam("report_date")
-		_, err := DB.Exec("Insert into fund_informations (contact_person, fund_date, fund_time, price, detail, report_person, report_price, report_date) values ( " + ContactPerson + "," + FundDate + "," + FundTime + "," + price + "," + detail + "," + ReportPerson + "," + ReportPrice + "," + ReportDate + ")")
+		_, err := DB.Exec("Insert into fund_informations (contact_person, fund_date, fund_time, price, detail, report_person, report_price) values ( " + ContactPerson + "," + FundDate + "," + FundTime + "," + price + "," + detail + "," + ReportPerson + "," + ReportPrice + ")")
 		if err != nil {
 			return err
 		}
@@ -402,8 +399,7 @@ func UpdateFundInformation() echo.HandlerFunc {
 		detail := c.QueryParam("detail")
 		ReportPerson := c.QueryParam("report_person")
 		ReportPrice := c.QueryParam("report_price")
-		ReportDate := c.QueryParam("report_date")
-		_, err := DB.Exec("Update fund_informations set contact_person = " + ContactPerson + " , fund_date = " + FundDate + ", fund_time = " + FundTime + ", price =" + price + ", detail = " + detail + ", report_person = " + ReportPerson + ", report_price =" + ReportPrice + ", report_date =" +ReportDate + " where id = " + string(id))  
+		_, err := DB.Exec("Update fund_informations set contact_person = " + ContactPerson + " , fund_date = " + FundDate + ", fund_time = " + FundTime + ", price =" + price + ", detail = " + detail + ", report_person = " + ReportPerson + ", report_price =" + ReportPrice + " where id = " + string(id))  
 		if err != nil {
 			return err 
 		} 
@@ -440,7 +436,6 @@ type FundDate string
 type FundTime string
 type ReportPerson string
 type ReportPrice int
-type ReportDate string
 
 
 //Budget構造体定義
@@ -486,7 +481,6 @@ type FundInformation struct {
 	Detail        Detail        `json:"detail"`
 	ReportPerson  ReportPerson  `json:"report_person"`
 	ReportPrice   ReportPrice   `json:"report_price"`
-	ReportDate    ReportDate    `json:"report_date"`
 	CreatedAt     time.Time     `json:"created_at"`
 	UpdatedAt     time.Time     `json:"updated_at"`
 }
