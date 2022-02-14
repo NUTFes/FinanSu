@@ -1,4 +1,4 @@
-module github.com/NUTFes/finansu/api
+module github.com/NUTFes/FinanSu/api
 
 go 1.16
 
