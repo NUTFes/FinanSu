@@ -22,73 +22,67 @@ import Header from '@components/Header';
 
 const PurchaseOrder: NextPage = () => {
   const purchaseOrder = [
-  {
-    id: 1,
-    name: '荷締めベルト',
-    number: '60',
-    unitCost: 240,
-    value: 14400,
-    notes:'',
-    purchaseDeadline: '2021/11/12',
-    buyer: '政木架',
-    documentNumber: '総-1',
-  },
-  {
-    id: 2,
-    name: 'ボールペン',
-    number: '100',
-    unitCost: 110,
-    value: 11000,
-    notes:'',
-    purchaseDeadline: '2021/11/12',
-    buyer: '政木架',
-    documentNumber: '',
-  },
-  {
-    id: 3,
-    name: 'スティックのり',
-    number: '5',
-    unitCost: 90,
-    value: 450,
-    notes:'',
-    purchaseDeadline: '2021/11/12',
-    buyer: '政木架',
-    documentNumber: '',
-  },
-  {
-    id: 4,
-    name: '保険',
-    number: '1',
-    unitCost: 15000,
-    value: 15000,
-    notes:'',
-    purchaseDeadline: '2021/11/12',
-    buyer: '齋藤博起',
-    documentNumber: '',
-  },
-  {
-    id: 5,
-    name: '検便',
-    number: '50',
-    unitCost: 500,
-    value: 25000,
-    notes:'',
-    purchaseDeadline: '2021/11/12',
-    buyer: '杉本真実',
-    documentNumber: '',
-  },
-  {
-    id: 6,
-    name: 'トラックレンタル代',
-    number: '1',
-    unitCost: 8000,
-    value: 8000,
-    notes:'',
-    purchaseDeadline: '2021/11/12',
-    buyer: '政木架',
-    documentNumber: '',
-  },
-];
+    {
+      id: 1,
+      name: '荷締めベルト',
+      number: '60',
+      unitCost: 240,
+      value: 14400,
+      notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
+    },
+    {
+      id: 2,
+      name: 'ボールペン',
+      number: '100',
+      unitCost: 110,
+      value: 11000,
+      notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
+    },
+    {
+      id: 3,
+      name: 'スティックのり',
+      number: '5',
+      unitCost: 90,
+      value: 450,
+      notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
+    },
+    {
+      id: 4,
+      name: '保険',
+      number: '1',
+      unitCost: 15000,
+      value: 15000,
+      notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '齋藤博起',
+    },
+    {
+      id: 5,
+      name: '検便',
+      number: '50',
+      unitCost: 500,
+      value: 25000,
+      notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '杉本真実',
+    },
+    {
+      id: 6,
+      name: 'トラックレンタル代',
+      number: '1',
+      unitCost: 8000,
+      value: 8000,
+      notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
+    },
+  ];
 
   return (
     <ChakraProvider theme={theme}>
@@ -168,9 +162,6 @@ const PurchaseOrder: NextPage = () => {
                   <Th borderBottomColor='#76E4F7'>
                     <Center color='black.600'>申請者</Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>資料番号</Center>
-                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -204,9 +195,6 @@ const PurchaseOrder: NextPage = () => {
                     </Td>
                     <Td>
                       <Center color='black.300'>{purchaseItem.buyer}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.documentNumber}</Center>
                     </Td>
                   </Tr>
                 ))}
