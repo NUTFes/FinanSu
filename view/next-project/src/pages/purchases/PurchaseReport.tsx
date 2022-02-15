@@ -24,63 +24,63 @@ const PurchaseReport: NextPage = () => {
   const purchaseReport = [
     {
       id: 1,
-      name: '荷締めベルト',
-      number: '60',
-      unitCost: 240,
+      item: '荷締めベルト',
+      quantity: '60',
+      price: 240,
       value: 14400,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      documentNumber: '総-1',
+      remarks: '',
     },
     {
       id: 2,
-      name: 'ボールペン',
-      number: '100',
-      unitCost: 110,
+      item: 'ボールペン',
+      quantity: '100',
+      price: 110,
       value: 11000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      documentNumber: '',
+      remarks: '',
     },
     {
       id: 3,
-      name: 'スティックのり',
-      number: '5',
-      unitCost: 90,
+      item: 'スティックのり',
+      quantity: '5',
+      price: 90,
       value: 450,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      documentNumber: '',
+      remarks: '',
     },
     {
       id: 4,
-      name: '保険',
-      number: '1',
-      unitCost: 15000,
+      item: '保険',
+      quantity: '1',
+      price: 15000,
       value: 15000,
       purchaseDate: '2021/11/12',
       buyer: '齋藤博起',
-      documentNumber: '',
+      remarks: '',
     },
     {
       id: 5,
-      name: '検便',
-      number: '50',
-      unitCost: 500,
+      item: '検便',
+      quantity: '50',
+      price: 500,
       value: 25000,
       purchaseDate: '2021/11/12',
       buyer: '杉本真実',
-      documentNumber: '',
+      remarks: '',
     },
     {
       id: 6,
-      name: 'トラックレンタル代',
-      number: '1',
-      unitCost: 8000,
+      item: 'トラックレンタル代',
+      quantity: '1',
+      price: 8000,
       value: 8000,
       purchaseDate: '2021/11/12',
       buyer: '政木架',
-      documentNumber: '',
+      remarks: '',
     },
   ];
 
@@ -152,19 +152,13 @@ const PurchaseReport: NextPage = () => {
                     <Center></Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>
-                      購入日
-                    </Center>
+                    <Center color='black.600'>購入日</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>
-                      購入者
-                    </Center>
+                    <Center color='black.600'>購入者</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>
-                      資料番号
-                    </Center>
+                    <Center color='black.600'>備考</Center>
                   </Th>
                 </Tr>
               </Thead>
@@ -175,13 +169,13 @@ const PurchaseReport: NextPage = () => {
                       <Center color='black.300'>{purchaseItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.name}</Center>
+                      <Center color='black.300'>{purchaseItem.item}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.number}</Center>
+                      <Center color='black.300'>{purchaseItem.quantity}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.unitCost}</Center>
+                      <Center color='black.300'>{purchaseItem.price}</Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{purchaseItem.value}</Center>
@@ -198,7 +192,7 @@ const PurchaseReport: NextPage = () => {
                       <Center color='black.300'>{purchaseItem.buyer}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.documentNumber}</Center>
+                      <Center color='black.300'>{purchaseItem.remarks}</Center>
                     </Td>
                   </Tr>
                 ))}
