@@ -20,17 +20,17 @@ import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 
-const PurchaseList: NextPage = () => {
-  const purchaseList = [
+const PurchaseOrder: NextPage = () => {
+  const purchaseOrder = [
     {
       id: 1,
       name: '荷締めベルト',
       number: '60',
       unitCost: 240,
       value: 14400,
-      purchaseDate: '2021/11/12',
-      buyer: '政木架',
       notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
     },
     {
       id: 2,
@@ -38,9 +38,9 @@ const PurchaseList: NextPage = () => {
       number: '100',
       unitCost: 110,
       value: 11000,
-      purchaseDate: '2021/11/12',
-      buyer: '政木架',
       notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
     },
     {
       id: 3,
@@ -48,9 +48,9 @@ const PurchaseList: NextPage = () => {
       number: '5',
       unitCost: 90,
       value: 450,
-      purchaseDate: '2021/11/12',
-      buyer: '政木架',
       notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
     },
     {
       id: 4,
@@ -58,9 +58,9 @@ const PurchaseList: NextPage = () => {
       number: '1',
       unitCost: 15000,
       value: 15000,
-      purchaseDate: '2021/11/12',
-      buyer: '齋藤博起',
       notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '齋藤博起',
     },
     {
       id: 5,
@@ -68,9 +68,9 @@ const PurchaseList: NextPage = () => {
       number: '50',
       unitCost: 500,
       value: 25000,
-      purchaseDate: '2021/11/12',
-      buyer: '杉本真実',
       notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '杉本真実',
     },
     {
       id: 6,
@@ -78,9 +78,9 @@ const PurchaseList: NextPage = () => {
       number: '1',
       unitCost: 8000,
       value: 8000,
-      purchaseDate: '2021/11/12',
-      buyer: '政木架',
       notes: '',
+      purchaseDeadline: '2021/11/12',
+      buyer: '政木架',
     },
   ];
 
@@ -149,21 +149,23 @@ const PurchaseList: NextPage = () => {
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
+                    <Center fontSize='sm' color='black.600'>
+                      備考
+                    </Center>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
                     <Center></Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>購入日</Center>
+                    <Center color='black.600'>購入期限日</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>購入者</Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>備考</Center>
+                    <Center color='black.600'>申請者</Center>
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {purchaseList.map((purchaseItem) => (
+                {purchaseOrder.map((purchaseItem) => (
                   <Tr key={purchaseItem.id}>
                     <Td>
                       <Center color='black.300'>{purchaseItem.id}</Center>
@@ -181,18 +183,18 @@ const PurchaseList: NextPage = () => {
                       <Center color='black.300'>{purchaseItem.value}</Center>
                     </Td>
                     <Td>
+                      <Center color='black.300'>{purchaseItem.notes}</Center>
+                    </Td>
+                    <Td>
                       <Center>
                         <EditButton />
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.purchaseDate}</Center>
+                      <Center color='black.300'>{purchaseItem.purchaseDeadline}</Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{purchaseItem.buyer}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.notes}</Center>
                     </Td>
                   </Tr>
                 ))}
@@ -220,4 +222,4 @@ const PurchaseList: NextPage = () => {
   );
 };
 
-export default PurchaseList;
+export default PurchaseOrder;
