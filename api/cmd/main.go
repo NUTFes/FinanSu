@@ -3,13 +3,15 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/server"
+	"github.com/NUTFes/FinanSu/api/router"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
 	"log"
 	"net/http"
 	"time"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/pkg/errors"
 )
 
 var DB *sql.DB
@@ -34,126 +36,35 @@ func connect() {
 	}
 }
 
-// Handler
-func healthcheck(c echo.Context) error {
-	// 接続確認
-	return c.String(http.StatusOK, "healthcheck: ok")
-}
-
-// Budgetsの取得
-func GetBudgets() echo.HandlerFunc {
-	return func(c echo.Context) error {
-
-		budget := Budget{}
-		var budgets []Budget
-
-		// クエリー実行
-		rows, err := DB.Query("select * from budgets")
-		if err != nil {
-			return errors.Wrapf(err, "cannot connect SQL")
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			err := rows.Scan(&budget.ID, 
-				               &budget.Price, 
-											 &budget.YearID, 
-											 &budget.SourceID, 
-											 &budget.CreatedAt, 
-											 &budget.UpdatedAt)
-			if err != nil {
-				return errors.Wrapf(err, "cannot connect SQL")
-			}
-			budgets = append(budgets, budget)
-		}
-		return c.JSON(http.StatusOK, budgets)
-	}
-}
-
-// Budgetの取得
-func GetBudgetByID() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		budget := Budget{}
-		id := c.Param("id")
-		err := DB.QueryRow("select * from budgets where id="+id).Scan(&budget.ID, &budget.Price, &budget.YearID, &budget.SourceID, &budget.CreatedAt, &budget.UpdatedAt)
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
-		return c.JSON(http.StatusOK, budget)
-	}
-}
-
-// Budgetの作成
-func CreateBudget() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		price := c.QueryParam("price")
-		yearID := c.QueryParam("year_id")
-		sourceID := c.QueryParam("source_id")
-		_, err := DB.Exec("insert into budgets (price, year_id, source_id) values (" + price + "," + yearID + "," + sourceID + ")")
-		if err != nil {
-			return err
-		}
-		return c.String(http.StatusCreated, "Created Budget")
-	}
-}
-
-// Budgetの修正
-func UpdateBudget() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id := c.Param("id")
-		price := c.QueryParam("price")
-		yearID := c.QueryParam("year_id")
-		sourceID := c.QueryParam("source_id")
-		_, err := DB.Exec("update budgets set price = " + price + ", year_id = " + yearID + ", source_id = " + sourceID + " where id = " + string(id))
-		if err != nil {
-			return err
-		}
-		return c.String(http.StatusCreated, "Updated Budget")
-	}
-}
-
-// Budgetの削除
-func DestroyBudget() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id := c.Param("id")
-		_, err := DB.Exec("delete from budgets where id = " + id)
-		if err != nil {
-			return err
-		}
-		return c.String(http.StatusCreated, "Destroy Budget")
-	}
-}
-
 //PurchaseOrdersの取得
-func GetPurchaseOrders() echo.HandlerFunc{
+func GetPurchaseOrders() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		purchaseorder := PurchaseOrder{}
 		var purchaseorders []PurchaseOrder
 		//クエリ実行
-		rows,err := DB.Query("select* from purchase_orders")
-		
+		rows, err := DB.Query("select* from purchase_orders")
+
 		if err != nil {
-			return errors.Wrapf(err,"can not connect SQL")
+			return errors.Wrapf(err, "can not connect SQL")
 		}
 		defer rows.Close()
-		
+
 		for rows.Next() {
-			err :=rows.Scan(
+			err := rows.Scan(
 				&purchaseorder.ID,
 				&purchaseorder.Item,
 				&purchaseorder.Price,
-				&purchaseorder.DepartmentID, 
-				&purchaseorder.Detail, 
+				&purchaseorder.DepartmentID,
+				&purchaseorder.Detail,
 				&purchaseorder.Url,
-			  &purchaseorder.CreatedAt,
+				&purchaseorder.CreatedAt,
 				&purchaseorder.UpdatedAt)
-				if err != nil {
-				return errors.Wrapf(err,"cannot connect SQL")
+			if err != nil {
+				return errors.Wrapf(err, "cannot connect SQL")
 			}
 			purchaseorders = append(purchaseorders, purchaseorder)
 		}
-		return c.JSON(http.StatusOK,purchaseorders)
+		return c.JSON(http.StatusOK, purchaseorders)
 	}
 }
 
@@ -181,14 +92,14 @@ func GetPurchaseOrder() echo.HandlerFunc {
 }
 
 //PurchaseOrderの作成(Create)
-func CreatePurchaseOrder() echo.HandlerFunc{
-	return func (c echo.Context) error {
+func CreatePurchaseOrder() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		item := c.QueryParam("item")
 		price := c.QueryParam("price")
 		departmentID := c.QueryParam("department_id")
 		detail := c.QueryParam("detail")
 		url := c.QueryParam("url")
-		_, err := DB.Exec("insert into purchase_orders (item, price, department_id, detail, url) values ("+ item + "," + price + "," + departmentID + "," + detail + "," + url + ")")
+		_, err := DB.Exec("insert into purchase_orders (item, price, department_id, detail, url) values (" + item + "," + price + "," + departmentID + "," + detail + "," + url + ")")
 		if err != nil {
 			return err
 		}
@@ -197,8 +108,8 @@ func CreatePurchaseOrder() echo.HandlerFunc{
 }
 
 //PurchaseOrderの修正(Update)
-func UpdatePurchaseOrder() echo.HandlerFunc{
-	return func (c echo.Context) error {
+func UpdatePurchaseOrder() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		id := c.Param("id")
 		item := c.QueryParam("item")
 		price := c.QueryParam("price")
@@ -214,11 +125,11 @@ func UpdatePurchaseOrder() echo.HandlerFunc{
 }
 
 //PurchaseOrderの消去(Delete)
-func DeletePurchaseOrder() echo.HandlerFunc{
-	return func (c echo.Context) error {
+func DeletePurchaseOrder() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		id := c.Param("id")
 		_, err := DB.Exec("delete from purchase_orders where id = " + id)
-		if err != nil{
+		if err != nil {
 			return err
 		}
 		return c.String(http.StatusOK, "Delete PurchaseOrder")
@@ -226,18 +137,18 @@ func DeletePurchaseOrder() echo.HandlerFunc{
 }
 
 //PurchaseReportsの取得(Get)
-func GetPurchaseReports() echo.HandlerFunc{
-	return func (c echo.Context) error {
+func GetPurchaseReports() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		purchasereport := PurchaseReport{}
 		var purchasereports []PurchaseReport
 
-		rows ,err := DB.Query("select * from purchase_reports")
+		rows, err := DB.Query("select * from purchase_reports")
 		if err != nil {
-			return errors.Wrapf(err , "can not connect SQL")
+			return errors.Wrapf(err, "can not connect SQL")
 		}
 		defer rows.Close()
 
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&purchasereport.ID,
 				&purchasereport.Item,
@@ -248,19 +159,20 @@ func GetPurchaseReports() echo.HandlerFunc{
 				&purchasereport.UpdatedAt,
 			)
 			if err != nil {
-				return errors.Wrapf(err , "can not connect SQL")
+				return errors.Wrapf(err, "can not connect SQL")
 			}
-			purchasereports = append(purchasereports,purchasereport)
+			purchasereports = append(purchasereports, purchasereport)
 		}
-		return c.JSON(http.StatusOK,purchasereports)
+		return c.JSON(http.StatusOK, purchasereports)
 	}
 }
+
 //PurchaseReportの取得(Get)
-func GetPurchaseReport() echo.HandlerFunc{
-	return func (c echo.Context) error{
+func GetPurchaseReport() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		purchasereport := PurchaseReport{}
 		id := c.Param("id")
-		err := DB.QueryRow("select * from purchase_reports where id =" + id).Scan(
+		err := DB.QueryRow("select * from purchase_reports where id ="+id).Scan(
 			&purchasereport.ID,
 			&purchasereport.Item,
 			&purchasereport.Price,
@@ -273,25 +185,27 @@ func GetPurchaseReport() echo.HandlerFunc{
 			fmt.Println("error")
 			return err
 		}
-		return c.JSON(http.StatusOK , purchasereport)
+		return c.JSON(http.StatusOK, purchasereport)
 	}
 }
+
 //PurchaseReportの作成(Create)
-func CreatePurchaseReport() echo.HandlerFunc{
-	return func (c echo.Context) error {
+func CreatePurchaseReport() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		item := c.QueryParam("item")
 		price := c.QueryParam("price")
 		DepartmentID := c.QueryParam("department_id")
 		PurchaseOrderID := c.QueryParam("purchase_order_id")
-		_, err := DB.Exec("insert into purchase_reports (item, price, department_id, purchase_order_id ) values ("+ item + "," + price + "," + DepartmentID + "," + PurchaseOrderID + ")" )
+		_, err := DB.Exec("insert into purchase_reports (item, price, department_id, purchase_order_id ) values (" + item + "," + price + "," + DepartmentID + "," + PurchaseOrderID + ")")
 		if err != nil {
 			return err
 		}
-		return c.String(http.StatusCreated,"Create PurchaseReport")
-  }
+		return c.String(http.StatusCreated, "Create PurchaseReport")
+	}
 }
+
 //PurchaseReportの修正(Update)
-func UpdatePurchaseReport() echo.HandlerFunc{
+func UpdatePurchaseReport() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
 		item := c.QueryParam("item")
@@ -302,18 +216,19 @@ func UpdatePurchaseReport() echo.HandlerFunc{
 		if err != nil {
 			return err
 		}
-		return c.String(http.StatusCreated,"Update PurchaseReport")
+		return c.String(http.StatusCreated, "Update PurchaseReport")
 	}
 }
+
 //PurchaseReportの削除(delete)
 func DeletePurchaseReport() echo.HandlerFunc {
-	return func (c echo.Context) error {
+	return func(c echo.Context) error {
 		id := c.Param("id")
 		_, err := DB.Exec("delete from purchase_reports where id =" + id)
 		if err != nil {
 			return err
 		}
-		return c.String(http.StatusCreated,"Delete PurchaseReport")
+		return c.String(http.StatusCreated, "Delete PurchaseReport")
 	}
 }
 //FundInformationsの取得(Get)
@@ -399,10 +314,10 @@ func UpdateFundInformation() echo.HandlerFunc {
 		detail := c.QueryParam("detail")
 		ReportPerson := c.QueryParam("report_person")
 		ReportPrice := c.QueryParam("report_price")
-		_, err := DB.Exec("Update fund_informations set contact_person = " + ContactPerson + " , fund_date = " + FundDate + ", fund_time = " + FundTime + ", price =" + price + ", detail = " + detail + ", report_person = " + ReportPerson + ", report_price =" + ReportPrice + " where id = " + string(id))  
+		_, err := DB.Exec("Update fund_informations set contact_person = " + ContactPerson + " , fund_date = " + FundDate + ", fund_time = " + FundTime + ", price =" + price + ", detail = " + detail + ", report_person = " + ReportPerson + ", report_price =" + ReportPrice + " where id = " + string(id))
 		if err != nil {
-			return err 
-		} 
+			return err
+		}
 		return c.String(http.StatusCreated,"Update FundInformation")
 	}
 }
@@ -412,7 +327,7 @@ func DeleteFundInformation() echo.HandlerFunc{
 		id := c.Param("id")
 		_, err :=  DB.Exec("Delete from fund_informations where id = " + id)
 		if err != nil {
-			return err 
+			return err
 		}
 		return c.String(http.StatusCreated, "Delete fundInformation")
 	}
@@ -438,15 +353,15 @@ type ReportPerson string
 type ReportPrice int
 
 
-//Budget構造体定義
-type Budget struct {
-	ID        ID        `json:"id"`
-	Price     Price     `json:"price"`
-	YearID    YearID    `json:"year_id"`
-	SourceID  SourceID  `json:"source_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
+// //Budget構造体定義
+// type Budget struct {
+// 	ID        ID        `json:"id"`
+// 	Price     Price     `json:"price"`
+// 	YearID    YearID    `json:"year_id"`
+// 	SourceID  SourceID  `json:"source_id"`
+// 	CreatedAt time.Time `json:"created_at"`
+// 	UpdatedAt time.Time `json:"updated_at"`
+// }
 
 // PurchaseOrder構造体定義
 type PurchaseOrder struct {
@@ -462,13 +377,13 @@ type PurchaseOrder struct {
 
 // PurchaseRepoer構造体定義
 type PurchaseReport struct {
-	ID              ID                 `json:"id"`
-	Item            Item               `json:"item"`
-	Price           Price              `json:"price"`
-	DepartmentID    DepartmentID       `json:"department_id"`
-  PurchaseOrderID PurchaseOrderID    `json:"purchase_order_id"`
-	CreatedAt       time.Time          `json:"created_at"`
-	UpdatedAt       time.Time          `json:"updated_at"`
+	ID              ID              `json:"id"`
+	Item            Item            `json:"item"`
+	Price           Price           `json:"price"`
+	DepartmentID    DepartmentID    `json:"department_id"`
+	PurchaseOrderID PurchaseOrderID `json:"purchase_order_id"`
+	CreatedAt       time.Time       `json:"created_at"`
+	UpdatedAt       time.Time       `json:"updated_at"`
 }
 
 //FundInformationsの構造体定義
@@ -488,29 +403,28 @@ type FundInformation struct {
 
 func main() {
 	// Echo instance
-	e := echo.New()
+	server := server.RunServer()
+	e := server.GetEchoInstance()
 
 	// データベースに接続
-	connect()
+	// connect()
+	_, err := db.GetClient()
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.CloseDB()
 
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	// CORS対策
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000"}, // ドメイン
-		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
-	}))
+	// ルーティング
+	router.ProvideRouter(e)
 
 	// Routes
-	//budgetsのRoute
-	e.GET("/", healthcheck)
-	e.GET("/budgets", GetBudgets())
-	e.GET("/budgets/:id", GetBudgetByID())
-	e.POST("/budgets", CreateBudget())
-	e.PUT("/budgets/:id", UpdateBudget())
-	e.DELETE("/budgets/:id", DestroyBudget())
+	// //budgetsのRoute
+	// e.GET("/", healthcheck)
+	// e.GET("/budgets", GetBudgets())
+	// e.GET("/budgets/:id", GetBudgetByID())
+	// e.POST("/budgets", CreateBudget())
+	// e.PUT("/budgets/:id", UpdateBudget())
+	// e.DELETE("/budgets/:id", DestroyBudget())
 	//parcahseordersのRoute
 	e.GET("/purchaseorders", GetPurchaseOrders())
 	e.GET("/purchaseorders/:id", GetPurchaseOrder())
@@ -529,7 +443,7 @@ func main() {
 	e.POST("/fundinformations", CreateFundInformations())
 	e.PUT("/fundinformations/:id",UpdateFundInformation())
   e.DELETE("/fundinformations/:id" , DeleteFundInformation())
-	
+
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
