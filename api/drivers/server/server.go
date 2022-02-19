@@ -1,21 +1,13 @@
 package server
 
 import (
+	"github.com/NUTFes/FinanSu/api/router"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 )
 
-type Server struct {
-	E *echo.Echo
-}
-
-type ServerInterface interface {
-	GetEchoInstance() *echo.Echo
-}
-
-// サーバー起動
-func RunServer() *Server {
+func RunServer(router router.Router) {
 	// echoのインスタンス
 	e := echo.New()
 
@@ -29,11 +21,9 @@ func RunServer() *Server {
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
-	server := &Server{e}
+	// ルーティング
+	router.ProvideRouter(e)
 
-	return server
-}
-
-func (s *Server) GetEchoInstance() *echo.Echo {
-	return s.E
+	// サーバー起動
+	e.Logger.Fatal(e.Start(":1323"))
 }

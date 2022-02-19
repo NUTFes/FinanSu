@@ -1,20 +1,39 @@
 package router
 
 import (
-	. "github.com/NUTFes/FinanSu/api/externals/controller"
+	"github.com/NUTFes/FinanSu/api/externals/controller"
 	"github.com/labstack/echo/v4"
 )
 
-func ProvideRouter(e *echo.Echo) {
+type router struct {
+	healthcheckController controller.HealthcheckController
+	budgetController      controller.BudgetController
+}
+
+type Router interface {
+	ProvideRouter(*echo.Echo)
+}
+
+func NewRouter(
+	healthController controller.HealthcheckController,
+	budgetController controller.BudgetController,
+) Router {
+	return router{
+		healthController,
+		budgetController,
+	}
+}
+
+func (r router) ProvideRouter(e *echo.Echo) {
 	// Healthcheck
-	e.GET("/", IndexHealthcheck)
+	e.GET("/", r.healthcheckController.IndexHealthcheck)
 
 	// budgetsのRoute
-	e.GET("/budgets", IndexBudget)
-	e.GET("/budgets/:id", ShowBudget)
-	e.POST("/budgets", CreateBudget)
-	e.PUT("/budgets/:id", UpdateBudget)
-	e.DELETE("/budgets/:id", DestroyBudget)
+	e.GET("/budgets", r.budgetController.IndexBudget)
+	e.GET("/budgets/:id", r.budgetController.ShowBudget)
+	e.POST("/budgets", r.budgetController.CreateBudget)
+	e.PUT("/budgets/:id", r.budgetController.UpdateBudget)
+	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
 
 	// parcahseordersのRoute
 	// e.GET("/purchaseorders", GetPurchaseOrders())

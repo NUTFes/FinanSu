@@ -3,9 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/NUTFes/FinanSu/api/drivers/db"
-	"github.com/NUTFes/FinanSu/api/drivers/server"
-	"github.com/NUTFes/FinanSu/api/router"
+	"github.com/NUTFes/FinanSu/api/internals/di"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
@@ -231,17 +229,18 @@ func DeletePurchaseReport() echo.HandlerFunc {
 		return c.String(http.StatusCreated, "Delete PurchaseReport")
 	}
 }
+
 //FundInformationsの取得(Get)
 func GetFundInformations() echo.HandlerFunc {
-	return func (c echo.Context)  error {
+	return func(c echo.Context) error {
 		fundinformation := FundInformation{}
 		var fundinformations []FundInformation
-		rows ,err :=DB.Query("select * from fund_informations")
+		rows, err := DB.Query("select * from fund_informations")
 		if err != nil {
-			return errors.Wrapf(err,"can not connect SQL")
+			return errors.Wrapf(err, "can not connect SQL")
 		}
 		defer rows.Close()
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&fundinformation.ID,
 				&fundinformation.ContactPerson,
@@ -258,27 +257,28 @@ func GetFundInformations() echo.HandlerFunc {
 				fmt.Println("error")
 				return err
 			}
-			fundinformations = append(fundinformations,fundinformation)
+			fundinformations = append(fundinformations, fundinformation)
 		}
-		return c.JSON(http.StatusOK,fundinformations)
+		return c.JSON(http.StatusOK, fundinformations)
 	}
 }
+
 //FundInfomationの取得(Get)
 func GetFundInformation() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		fundinformation := FundInformation{}
 		id := c.Param("id")
-		err := DB.QueryRow("select * from fund_informations where id = "+ id).Scan(
+		err := DB.QueryRow("select * from fund_informations where id = "+id).Scan(
 			&fundinformation.ID,
-				&fundinformation.ContactPerson,
-				&fundinformation.FundDate,
-				&fundinformation.FundTime,
-				&fundinformation.Price,
-				&fundinformation.Detail,
-				&fundinformation.ReportPerson,
-				&fundinformation.ReportPrice,
-				&fundinformation.CreatedAt,
-				&fundinformation.UpdatedAt,
+			&fundinformation.ContactPerson,
+			&fundinformation.FundDate,
+			&fundinformation.FundTime,
+			&fundinformation.Price,
+			&fundinformation.Detail,
+			&fundinformation.ReportPerson,
+			&fundinformation.ReportPrice,
+			&fundinformation.CreatedAt,
+			&fundinformation.UpdatedAt,
 		)
 		if err != nil {
 			return err
@@ -286,9 +286,10 @@ func GetFundInformation() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, fundinformation)
 	}
 }
+
 //FundInfomationの作成(Create)
 func CreateFundInformations() echo.HandlerFunc {
-	return func (c echo.Context) error {
+	return func(c echo.Context) error {
 		ContactPerson := c.QueryParam("contact_person")
 		FundDate := c.QueryParam("fund_date")
 		FundTime := c.QueryParam("fund_time")
@@ -300,12 +301,13 @@ func CreateFundInformations() echo.HandlerFunc {
 		if err != nil {
 			return err
 		}
-		return c.String(http.StatusCreated,"Create FundInformation")
+		return c.String(http.StatusCreated, "Create FundInformation")
 	}
 }
+
 //FundInformationの修正(Update)
 func UpdateFundInformation() echo.HandlerFunc {
-	return func (c echo.Context) error {
+	return func(c echo.Context) error {
 		id := c.Param("id")
 		ContactPerson := c.QueryParam("contact_person")
 		FundDate := c.QueryParam("fund_date")
@@ -318,14 +320,15 @@ func UpdateFundInformation() echo.HandlerFunc {
 		if err != nil {
 			return err
 		}
-		return c.String(http.StatusCreated,"Update FundInformation")
+		return c.String(http.StatusCreated, "Update FundInformation")
 	}
 }
+
 //funcInformationの削除(delete)
-func DeleteFundInformation() echo.HandlerFunc{
-	return func (c echo.Context) error {
+func DeleteFundInformation() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		id := c.Param("id")
-		_, err :=  DB.Exec("Delete from fund_informations where id = " + id)
+		_, err := DB.Exec("Delete from fund_informations where id = " + id)
 		if err != nil {
 			return err
 		}
@@ -351,7 +354,6 @@ type FundDate string
 type FundTime string
 type ReportPerson string
 type ReportPrice int
-
 
 // //Budget構造体定義
 // type Budget struct {
@@ -400,51 +402,6 @@ type FundInformation struct {
 	UpdatedAt     time.Time     `json:"updated_at"`
 }
 
-
 func main() {
-	// Echo instance
-	server := server.RunServer()
-	e := server.GetEchoInstance()
-
-	// データベースに接続
-	// connect()
-	_, err := db.GetClient()
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer db.CloseDB()
-
-	// ルーティング
-	router.ProvideRouter(e)
-
-	// Routes
-	// //budgetsのRoute
-	// e.GET("/", healthcheck)
-	// e.GET("/budgets", GetBudgets())
-	// e.GET("/budgets/:id", GetBudgetByID())
-	// e.POST("/budgets", CreateBudget())
-	// e.PUT("/budgets/:id", UpdateBudget())
-	// e.DELETE("/budgets/:id", DestroyBudget())
-	//parcahseordersのRoute
-	e.GET("/purchaseorders", GetPurchaseOrders())
-	e.GET("/purchaseorders/:id", GetPurchaseOrder())
-	e.POST("/purchaseorders", CreatePurchaseOrder())
-	e.PUT("/purchaseorders/:id" , UpdatePurchaseOrder())
-	e.DELETE("/purchaseorders/:id" , DeletePurchaseOrder())
-	//purchasereportsのRoute
-	e.GET("/purchasereports", GetPurchaseReports())
-	e.GET("/purchasereports/:id", GetPurchaseReport())
-	e.POST("/purchasereports" , CreatePurchaseReport())
-	e.PUT("/purchasereports/:id", UpdatePurchaseReport())
-	e.DELETE("/purchasereports/:id", DeletePurchaseReport())
-	//fundinformationsのroute
-	e.GET("/fundinformations", GetFundInformations())
-	e.GET("/fundinformation/:id",GetFundInformation())
-	e.POST("/fundinformations", CreateFundInformations())
-	e.PUT("/fundinformations/:id",UpdateFundInformation())
-  e.DELETE("/fundinformations/:id" , DeleteFundInformation())
-
-
-	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	di.InitializeServer()
 }
