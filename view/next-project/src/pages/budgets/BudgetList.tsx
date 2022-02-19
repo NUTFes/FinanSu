@@ -23,64 +23,89 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
+import { get, post, put, del } from '@api/budget';
 
-const BudgetList: NextPage = () => {
-  const budgetList = [
+type Budget = {
+  id: number;
+  price: number;
+  year_id: number;
+  source_id: number;
+  source: string;
+};
+
+type Props = {
+  budget: Budget[];
+};
+
+export async function getStaticProps() {
+  const getUrl = 'http://nutfes-finansu-api:1323/budgets';
+  const json = await get(getUrl);
+  return {
+    props: {
+      budget: json,
+    },
+  };
+}
+
+export default function BudgetList(props: Props) {
+  const sourceList = [
     {
       id: 1,
       name: '教育振興会費',
-      year: '2021',
-      value: 1200000,
-      createDate: '2021/11/12/12:00',
-      updateDate: '2021/11/12/12:00',
-      lastUpdatedBy: '田中日菜',
     },
     {
       id: 2,
       name: '同窓会費',
-      year: '2021',
-      value: 200000,
-      createDate: '2021/11/12/12:00',
-      updateDate: '2021/11/12/12:00',
-      lastUpdatedBy: '田中日菜',
     },
     {
       id: 3,
       name: '企業協賛金',
-      year: '2021',
-      value: 420000,
-      createDate: '2021/11/12/12:00',
-      updateDate: '2021/11/12/12:00',
-      lastUpdatedBy: '熊谷優希',
     },
     {
       id: 4,
-      name: '裏予算',
-      year: '2021',
-      value: 30000,
-      createDate: '2021/11/12/12:00',
-      updateDate: '2021/11/12/12:00',
-      lastUpdatedBy: '齋藤博起',
-    },
-    {
-      id: 5,
-      name: '教育振興会費',
-      year: '2021',
-      value: 3000000,
-      createDate: '2021/11/12/12:00',
-      updateDate: '2021/11/12/12:00',
-      lastUpdatedBy: '齋藤博起',
-    },
-    {
-      id: 6,
       name: '学内募金',
-      year: '2021',
-      value: 250000,
-      createDate: '2021/11/12/12:00',
-      updateDate: '2021/11/12/12:00',
-      lastUpdatedBy: '齋藤博起',
     },
   ];
+
+  const yearList = [
+    {
+      id: 1,
+      year: 2020,
+    },
+    {
+      id: 2,
+      year: 2021,
+    },
+    {
+      id: 3,
+      year: 2022,
+    },
+    {
+      id: 4,
+      year: 2023,
+    },
+  ];
+
+  // 合計金額用の変数
+  let totalFee = 0;
+
+  // year_idからyearを取得するための処理（後々APIから取得する）
+  // 合計金額を計算するための処理
+  for (let i = 0; i < props.budget.length; i++) {
+    for (let j = 0; j < yearList.length; j++) {
+      if (props.budget[i].year_id == yearList[j].id) {
+        props.budget[i].year_id = yearList[j].year;
+      }
+    }
+
+    for (let j = 0; j < sourceList.length; j++) {
+      if (props.budget[i].source_id == sourceList[j].id) {
+        props.budget[i].source = sourceList[j].name;
+      }
+    }
+    // 合計金額を計算
+    totalFee += props.budget[i].price;
+  }
 
   return (
     <ChakraProvider theme={theme}>
@@ -128,8 +153,8 @@ const BudgetList: NextPage = () => {
                       ID
                     </Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
+                  <Th borderBottomColor='#76E4F7' isNumeric>
+                    <Center fontSize='sm' color='black.600'>
                       項目
                     </Center>
                   </Th>
@@ -152,25 +177,22 @@ const BudgetList: NextPage = () => {
                   <Th borderBottomColor='#76E4F7'>
                     <Center color='black.600'>更新日時</Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>最終更新者</Center>
-                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {budgetList.map((budgetItem) => (
-                  <Tr key={budgetItem.id}>
+                {props.budget.map((budget) => (
+                  <Tr key={budget.id}>
                     <Td>
-                      <Center color='black.300'>{budgetItem.id}</Center>
+                      <Center color='black.300'>{budget.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budgetItem.name}</Center>
+                      <Center color='black.300'>{budget.source}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budgetItem.year}</Center>
+                      <Center color='black.300'>{budget.year_id}</Center>
                     </Td>
                     <Td isNumeric color='black.300'>
-                      {budgetItem.value}
+                      {budget.price}
                     </Td>
                     <Td>
                       <Center>
@@ -178,28 +200,25 @@ const BudgetList: NextPage = () => {
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budgetItem.createDate}</Center>
+                      <Center color='black.300'>{budget.created_at}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budgetItem.updateDate}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{budgetItem.lastUpdatedBy}</Center>
+                      <Center color='black.300'>{budget.updated_at}</Center>
                     </Td>
                   </Tr>
                 ))}
               </Tbody>
               <Tfoot>
                 <Tr>
-                  <Th></Th>
-                  <Th></Th>
+                  <Th />
+                  <Th />
                   <Th>
                     <Center fontSize='sm' fontWeight='500' color='black.600'>
-                      合計
+                      合計金額
                     </Center>
                   </Th>
                   <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
-                    2400000
+                    {totalFee}
                   </Th>
                 </Tr>
               </Tfoot>
@@ -209,6 +228,4 @@ const BudgetList: NextPage = () => {
       </Center>
     </ChakraProvider>
   );
-};
-
-export default BudgetList;
+}
