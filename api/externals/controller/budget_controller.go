@@ -6,9 +6,25 @@ import (
 	"net/http"
 )
 
+type budgetController struct {
+	u usecase.BudgetUseCase
+}
+
+type BudgetController interface {
+	IndexBudget(echo.Context) error
+	ShowBudget(echo.Context) error
+	CreateBudget(echo.Context) error
+	UpdateBudget(echo.Context) error
+	DestroyBudget(echo.Context) error
+}
+
+func NewBudgetController(u usecase.BudgetUseCase) BudgetController {
+	return &budgetController{u}
+}
+
 // Index
-func IndexBudget(c echo.Context) error {
-	budgets, err := usecase.GetBudgets()
+func (b *budgetController) IndexBudget(c echo.Context) error {
+	budgets, err := b.u.GetBudgets(c.Request().Context())
 	if err != nil {
 		return err
 	}
@@ -16,9 +32,9 @@ func IndexBudget(c echo.Context) error {
 }
 
 // Show
-func ShowBudget(c echo.Context) error {
+func (b budgetController) ShowBudget(c echo.Context) error {
 	id := c.Param("id")
-	budget, err := usecase.GetBudgetByID(id)
+	budget, err := b.u.GetBudgetByID(c.Request().Context(), id)
 	if err != nil {
 		return err
 	}
@@ -26,11 +42,11 @@ func ShowBudget(c echo.Context) error {
 }
 
 // Create
-func CreateBudget(c echo.Context) error {
+func (b *budgetController) CreateBudget(c echo.Context) error {
 	price := c.QueryParam("price")
 	yearID := c.QueryParam("year_id")
 	sourceID := c.QueryParam("source_id")
-	err := usecase.CreateBudget(price, yearID, sourceID)
+	err := b.u.CreateBudget(c.Request().Context(), price, yearID, sourceID)
 	if err != nil {
 		return err
 	}
@@ -38,12 +54,12 @@ func CreateBudget(c echo.Context) error {
 }
 
 // Update
-func UpdateBudget(c echo.Context) error {
+func (b *budgetController) UpdateBudget(c echo.Context) error {
 	id := c.Param("id")
 	price := c.QueryParam("price")
 	yearID := c.QueryParam("year_id")
 	sourceID := c.QueryParam("source_id")
-	err := usecase.UpdateBudget(id, price, yearID, sourceID)
+	err := b.u.UpdateBudget(c.Request().Context(), id, price, yearID, sourceID)
 	if err != nil {
 		return err
 	}
@@ -54,9 +70,9 @@ func UpdateBudget(c echo.Context) error {
 }
 
 // Destroy
-func DestroyBudget(c echo.Context) error {
+func (b *budgetController) DestroyBudget(c echo.Context) error {
 	id := c.Param("id")
-	err := usecase.DestroyBudget(id)
+	err := b.u.DestroyBudget(c.Request().Context(), id)
 	if err != nil {
 		return err
 	}

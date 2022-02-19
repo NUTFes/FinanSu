@@ -3,15 +3,22 @@ package budget
 import (
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/internals/usecase/repository"
 	"github.com/pkg/errors"
 )
 
-// 全件取得
-func All() (*sql.Rows, error) {
-	// データベース接続
-	db := db.GetDB()
+type budgetRepository struct {
+	client db.Client
+}
 
-	rows, err := db.Query("select * from budgets")
+func NewBudgetRepository(c db.Client) repository.BudgetRepository {
+	return &budgetRepository{c}
+}
+
+// 全件取得
+func (br *budgetRepository) All() (*sql.Rows, error) {
+	// データベース接続
+	rows, err := br.client.DB().Query("select * from budgets")
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
@@ -19,31 +26,27 @@ func All() (*sql.Rows, error) {
 }
 
 // 1件取得
-func Find(id string) *sql.Row {
+func (br *budgetRepository) Find(id string) (*sql.Row, error) {
 	// データベース接続
-	db := db.GetDB()
 
-	row := db.QueryRow("select * from budgets where id = " + id)
-	return row
+	row := br.client.DB().QueryRow("select * from budgets where id = " + id)
+	return row, nil
 }
 
 // 作成
-func Create(price string, yearID string, sourceID string) error {
-	db := db.GetDB()
-	_, err := db.Exec("insert into budgets (price, year_id, source_id) values (" + price + "," + yearID + "," + sourceID + ")")
+func (br *budgetRepository) Create(price string, yearID string, sourceID string) error {
+	_, err := br.client.DB().Exec("insert into budgets (price, year_id, source_id) values (" + price + "," + yearID + "," + sourceID + ")")
 	return err
 }
 
 // 編集
-func Update(id string, price string, yearID string, sourceID string) error {
-	db := db.GetDB()
-	_, err := db.Exec("update budgets set price = " + price + ", year_id = " + yearID + ", source_id = " + sourceID + " where id = " + id)
+func (br *budgetRepository) Update(id string, price string, yearID string, sourceID string) error {
+	_, err := br.client.DB().Exec("update budgets set price = " + price + ", year_id = " + yearID + ", source_id = " + sourceID + " where id = " + id)
 	return err
 }
 
 // 削除
-func Destroy(id string) error {
-	db := db.GetDB()
-	_, err := db.Exec("delete from budgets where id = " + id)
+func (br *budgetRepository) Destroy(id string) error {
+	_, err := br.client.DB().Exec("delete from budgets where id = " + id)
 	return err
 }

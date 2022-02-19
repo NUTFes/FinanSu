@@ -5,6 +5,17 @@ import (
 	"net/http"
 )
 
-func IndexHealthcheck(c echo.Context) error {
+type healthcheckController struct {
+}
+
+type HealthcheckController interface {
+	IndexHealthcheck(echo.Context) error
+}
+
+func NewHealthCheckController() HealthcheckController {
+	return &healthcheckController{}
+}
+
+func (hc healthcheckController) IndexHealthcheck(c echo.Context) error {
 	return c.String(http.StatusOK, "healthcheck: ok")
 }
