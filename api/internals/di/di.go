@@ -10,13 +10,12 @@ import (
 	"log"
 )
 
-func InitializeServer() {
+func InitializeServer() db.Client {
 	// DB接続
 	client, err := db.ConnectMySQL()
 	if err != nil {
 		log.Fatal("db error")
 	}
-	defer client.CloseDB()
 
 	// ↓
 
@@ -46,4 +45,6 @@ func InitializeServer() {
 
 	// Server
 	server.RunServer(router)
+
+	return client
 }

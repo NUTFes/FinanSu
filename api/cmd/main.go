@@ -403,5 +403,6 @@ type FundInformation struct {
 }
 
 func main() {
-	di.InitializeServer()
+	client := di.InitializeServer()
+	defer client.CloseDB()
 }
