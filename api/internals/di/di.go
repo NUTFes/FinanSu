@@ -4,7 +4,7 @@ import (
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
-	"github.com/NUTFes/FinanSu/api/externals/repository/budget"
+	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/NUTFes/FinanSu/api/router"
 	"log"
@@ -21,7 +21,7 @@ func InitializeServer() {
 	// ↓
 
 	// Repository
-	budgetRepository := budget.NewBudgetRepository(client)
+	budgetRepository := repository.NewBudgetRepository(client)
 
 	// ↓
 
