@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"context"
+	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
-	rep "github.com/NUTFes/FinanSu/api/internals/usecase/repository"
 	"github.com/pkg/errors"
 )
 
@@ -29,7 +29,7 @@ func (b *budgetUseCase) GetBudgets(c context.Context) ([]domain.Budget, error) {
 	var budgets []domain.Budget
 
 	// クエリー実行
-	rows, err := b.rep.All()
+	rows, err := b.rep.All(c)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (b *budgetUseCase) GetBudgets(c context.Context) ([]domain.Budget, error) {
 func (b *budgetUseCase) GetBudgetByID(c context.Context, id string) (domain.Budget, error) {
 	var budget domain.Budget
 
-	row, err := b.rep.Find(id)
+	row, err := b.rep.Find(c, id)
 	err = row.Scan(
 		&budget.ID,
 		&budget.Price,
@@ -75,16 +75,16 @@ func (b *budgetUseCase) GetBudgetByID(c context.Context, id string) (domain.Budg
 }
 
 func (b *budgetUseCase) CreateBudget(c context.Context, price string, yearID string, sourceID string) error {
-	err := b.rep.Create(price, yearID, sourceID)
+	err := b.rep.Create(c, price, yearID, sourceID)
 	return err
 }
 
 func (b *budgetUseCase) UpdateBudget(c context.Context, id string, price string, yearID string, sourceID string) error {
-	err := b.rep.Update(id, price, yearID, sourceID)
+	err := b.rep.Update(c, id, price, yearID, sourceID)
 	return err
 }
 
 func (b *budgetUseCase) DestroyBudget(c context.Context, id string) error {
-	err := b.rep.Destroy(id)
+	err := b.rep.Destroy(c, id)
 	return err
 }

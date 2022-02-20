@@ -32,7 +32,7 @@ func (b *budgetController) IndexBudget(c echo.Context) error {
 }
 
 // Show
-func (b budgetController) ShowBudget(c echo.Context) error {
+func (b *budgetController) ShowBudget(c echo.Context) error {
 	id := c.Param("id")
 	budget, err := b.u.GetBudgetByID(c.Request().Context(), id)
 	if err != nil {
