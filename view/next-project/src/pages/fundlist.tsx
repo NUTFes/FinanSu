@@ -158,21 +158,6 @@ export default function FundList(props: Props) {
                   </Tr>
                 ))}
               </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th>
-                    <Center fontSize='sm' fontWeight='500' color='black.600'>
-                      合計
-                    </Center>
-                  </Th>
-                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
-                    2400000
-                  </Th>
-                </Tr>
-              </Tfoot>
             </Table>
           </Box>
         </Box>
