@@ -6,8 +6,9 @@ import (
 )
 
 type router struct {
-	healthcheckController controller.HealthcheckController
-	budgetController      controller.BudgetController
+	healthcheckController     controller.HealthcheckController
+	budgetController          controller.BudgetController
+	fundInformationController controller.FundInformationController
 }
 
 type Router interface {
@@ -17,10 +18,12 @@ type Router interface {
 func NewRouter(
 	healthController controller.HealthcheckController,
 	budgetController controller.BudgetController,
+	fundInformationController controller.FundInformationController,
 ) Router {
 	return router{
 		healthController,
 		budgetController,
+		fundInformationController,
 	}
 }
 
@@ -28,12 +31,19 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// Healthcheck
 	e.GET("/", r.healthcheckController.IndexHealthcheck)
 
-	// budgetsのRoute
+	// budgets
 	e.GET("/budgets", r.budgetController.IndexBudget)
 	e.GET("/budgets/:id", r.budgetController.ShowBudget)
 	e.POST("/budgets", r.budgetController.CreateBudget)
 	e.PUT("/budgets/:id", r.budgetController.UpdateBudget)
 	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
+
+	// fund informations
+	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)
+	e.GET("/fund_informations/:id", r.fundInformationController.ShowFundInformation)
+	e.POST("/fund_informations", r.fundInformationController.CreateFundInformation)
+	e.PUT("/fund_informations/:id", r.fundInformationController.UpdateFundInformation)
+	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
 
 	// parcahseordersのRoute
 	// e.GET("/purchaseorders", GetPurchaseOrders())
