@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 )
 
@@ -50,7 +49,6 @@ func (fir *fundInformationRepository) Create(
 ) error {
 	var query = "insert into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check) values ( " + userID + "," + teacherID + "," + price + ",'" + remark + "'," + isFirstCheck + "," + isLastCheck + ")"
 	_, err := fir.client.DB().ExecContext(c, query)
-	fmt.Println(err)
 	return err
 }
 

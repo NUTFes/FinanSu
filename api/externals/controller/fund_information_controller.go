@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -29,7 +28,6 @@ func (f *fundInformationController) IndexFundInformation(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("controller ok")
 	return c.JSON(http.StatusOK, fundInformations)
 }
 
@@ -51,7 +49,6 @@ func (f *fundInformationController) CreateFundInformation(c echo.Context) error 
 	remark := c.QueryParam("remark")
 	isFirstCheck := c.QueryParam("is_first_check")
 	isLastCheck := c.QueryParam("is_last_check")
-	fmt.Println(userID, teacherID, price, remark, isFirstCheck, isLastCheck)
 
 	err := f.u.CreateFundInformation(c.Request().Context(), userID, teacherID, price, remark, isFirstCheck, isLastCheck)
 	if err != nil {
@@ -69,7 +66,6 @@ func (f *fundInformationController) UpdateFundInformation(c echo.Context) error 
 	remark := c.QueryParam("remark")
 	isFirstCheck := c.QueryParam("is_first_check")
 	isLastCheck := c.QueryParam("is_last_check")
-	fmt.Println(userID, teacherID, price, remark, isFirstCheck, isLastCheck)
 
 	err := f.u.UpdateFundInformation(c.Request().Context(), id, userID, teacherID, price, remark, isFirstCheck, isLastCheck)
 	if err != nil {
