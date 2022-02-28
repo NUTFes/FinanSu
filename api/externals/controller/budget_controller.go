@@ -63,9 +63,6 @@ func (b *budgetController) UpdateBudget(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	if err != nil {
-		return err
-	}
 	return c.String(http.StatusOK, "Updated Budget")
 }
 
