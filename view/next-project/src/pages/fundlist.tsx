@@ -126,7 +126,6 @@ export default function FundList(props: Props) {
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center></Center>
                   </Th>
                 </Tr>
               </Thead>
