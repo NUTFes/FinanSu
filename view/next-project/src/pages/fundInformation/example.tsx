@@ -66,6 +66,7 @@ export async function deletePurchaseOrders() {
 }
 
 export default function Example(props: Props) {
+  console.log(props.fundInformation);
   return (
     <div>
       <Button onClick={postPurchaseOrders}>POST</Button>
