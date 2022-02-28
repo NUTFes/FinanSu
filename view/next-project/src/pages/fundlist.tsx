@@ -24,20 +24,20 @@ import { useEffect } from 'react';
 
 interface FundInformations {
   id: number;
-  contact_person: string;
-  fund_date: string;
-  fund_time: string;
+  teacher_id: number;
+  user_id: number;
   price: number;
-  detail: string;
-  report_person: string;
-  report_price: string;
+  remark: string;
+  is_first_check: boolean;
+  is_last_check: boolean;
   created_at: string;
+  updated_at: string;
 }
 interface Props {
   fundinformations: FundInformations[]
 }
 export const getStaticProps = async() => {
- const fundinformationsUrl = "http://nutfes-finansu-api:1323/fundinformations"
+ const fundinformationsUrl = "http://nutfes-finansu-api:1323/fund_informations"
  const fundinformationsRes = await get(fundinformationsUrl)
  return {
    props: {
@@ -46,7 +46,6 @@ export const getStaticProps = async() => {
  }
 }
 export default function FundList(props: Props) {
-  console.log(props.fundinformations[0].contact_person)
   const fundList = props.fundinformations
   return (
     <ChakraProvider theme={theme}>
@@ -89,7 +88,7 @@ export default function FundList(props: Props) {
                 <Tr>
                 <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      氏名
+                      教員名
                     </Center>
                   </Th><Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
@@ -101,19 +100,24 @@ export default function FundList(props: Props) {
                       担当者
                     </Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
-                      受領日
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      受領時間
-                    </Center>
-                  </Th>
                   <Th borderBottomColor='#76E4F7' isNumeric>
                     <Center fontSize='sm' color='black.600'>
                       金額
+                    </Center>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
+                    <Center fontSize='sm' color='black.600'>
+                      受領日時
+                    </Center>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
+                    <Center fontSize='sm' color='black.600'>
+                      局長チェック
+                    </Center>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
+                    <Center fontSize='sm' color='black.600'>
+                      財務局長チェック
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -136,19 +140,24 @@ export default function FundList(props: Props) {
                       <Center color='black.300'>機械・建設1号棟629</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.contact_person}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundItem.fund_date}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundItem.fund_time}</Center>
+                      <Center color='black.300'>{fundItem.user_id}</Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{fundItem.price}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.detail}</Center>
+                      <Center color='black.300'>{fundItem.created_at}</Center>
+                    </Td>
+                    <Td>
+                      {fundItem.is_first_check && <Center color='black.300'>確認済み</Center>}
+                      {!fundItem.is_first_check && <Center color='black.300'>未確認</Center>}
+                    </Td>
+                    <Td>
+                        {fundItem.is_first_check && <Center color='black.300'>確認済み</Center>}
+                        {!fundItem.is_first_check && <Center color='black.300'>未確認</Center>}
+                    </Td>
+                    <Td>
+                      <Center color='black.300'>{fundItem.remark}</Center>
                     </Td>
                     <Td>
                       <Center>
