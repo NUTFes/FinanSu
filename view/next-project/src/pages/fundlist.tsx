@@ -19,35 +19,59 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import { get } from '@api/fundInformations';
-import { useEffect } from 'react';
+import { get, put } from '@api/fundInformations';
+import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
+import { useState } from 'react';
 
 interface FundInformations {
-  id: number;
-  contact_person: string;
-  fund_date: string;
-  fund_time: string;
+  user_id: number;
+  teacher_id: number;
   price: number;
-  detail: string;
-  report_person: string;
-  report_price: string;
+  remark: string;
+  is_first_check: boolean;
+  is_last_check: boolean;
   created_at: string;
 }
 interface Props {
   fundinformations: FundInformations[]
 }
 export const getStaticProps = async() => {
- const fundinformationsUrl = "http://nutfes-finansu-api:1323/fundinformations"
- const fundinformationsRes = await get(fundinformationsUrl)
- return {
+  const fundinformationsUrl = "http://nutfes-finansu-api:1323/fund_informations"
+  const fundinformationsRes = await get(fundinformationsUrl)
+  return {
    props: {
      fundinformations: fundinformationsRes
    }
  }
 }
 export default function FundList(props: Props) {
-  console.log(props.fundinformations[0].contact_person)
-  const fundList = props.fundinformations
+  const [fundList, setFundList] = useState<FundInformations[]>(props.fundinformations)
+  const switchCheck = (isChecked: boolean, id: number, input: string) => {
+    setFundList(
+      fundList.map((fundItem: any) =>(
+        fundItem.id === id ? {...fundItem, [input]: !isChecked}: fundItem
+      ))
+    )
+    console.log(fundList[id-1])
+  }
+  const submit = async(id: number) => {
+    await put("http://localhost:1323/fund_informations/"+id, fundList[id-1])
+    
+  }
+  const checkboxContent = (isChecked: boolean, id: number, input: string) => {
+    {if (isChecked){
+      return(
+        <>
+          <Checkbox defaultChecked onChange={() => {switchCheck(isChecked, id, input)}}></Checkbox>
+        </>
+      )
+    }else{
+      return(
+        <>
+          <Checkbox onChange={() => {switchCheck(isChecked, id, input)}}></Checkbox>
+        </>  
+      )
+    }}}
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -87,7 +111,17 @@ export default function FundList(props: Props) {
             <Table>
               <Thead>
                 <Tr>
-                <Th borderBottomColor='#76E4F7'>
+                  <Th borderBottomColor='#76E4F7'>
+                    <Center fontSize='sm' color='black.600'>
+                      自局長確認
+                    </Center>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
+                    <Center fontSize='sm' color='black.600'>
+                      財務局長確認
+                    </Center>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
                       氏名
                     </Center>
@@ -99,16 +133,6 @@ export default function FundList(props: Props) {
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
                       担当者
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
-                      受領日
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      受領時間
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7' isNumeric>
@@ -128,7 +152,17 @@ export default function FundList(props: Props) {
               </Thead>
               <Tbody>
                 {fundList.map((fundItem) => (
-                  <Tr key={fundItem.id}>
+                  <Tr key={fundItem.teacher_id} onUnload={submit(fundItem.teacher_id)}>
+                    <Td>
+                      <Center color='black.300'>
+                      {checkboxContent(fundItem.is_first_check, fundItem.teacher_id, 'is_first_check')}
+                      </Center>
+                    </Td>
+                    <Td>
+                      <Center color='black.300'>
+                        {checkboxContent(fundItem.is_last_check, fundItem.teacher_id, 'is_last_check')}
+                      </Center>
+                    </Td>
                     <Td>
                       <Center color='black.300'>會田英雄</Center>
                     </Td>
@@ -136,19 +170,13 @@ export default function FundList(props: Props) {
                       <Center color='black.300'>機械・建設1号棟629</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.contact_person}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundItem.fund_date}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundItem.fund_time}</Center>
+                      <Center color='black.300'>{fundItem.user_id}</Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{fundItem.price}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.detail}</Center>
+                      <Center color='black.300'>{fundItem.remark}</Center>
                     </Td>
                     <Td>
                       <Center>
