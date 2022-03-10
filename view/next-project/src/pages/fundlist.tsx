@@ -31,6 +31,7 @@ interface FundInformations {
   is_first_check: boolean;
   is_last_check: boolean;
   created_at: string;
+  updated_at: string;
 }
 interface Props {
   fundinformations: FundInformations[]
@@ -135,7 +136,7 @@ export default function FundList(props: Props) {
                       担当者
                     </Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7' isNumeric>
+                  <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
                       金額
                     </Center>
@@ -146,7 +147,6 @@ export default function FundList(props: Props) {
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center></Center>
                   </Th>
                 </Tr>
               </Thead>
