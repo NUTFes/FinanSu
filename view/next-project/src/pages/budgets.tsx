@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
-import RegistButton from '@components/General/RegistButton';
+import OpenModalButton from '@components/General/OpenModalButton';
 import {
   Table,
   Thead,
@@ -31,6 +31,8 @@ type Budget = {
   year_id: number;
   source_id: number;
   source: string;
+  created_at: string;
+  updated_at: string;
 };
 
 type Props = {
@@ -132,7 +134,7 @@ export default function BudgetList(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <RegistButton>
+                <OpenModalButton>
                   <RiAddCircleLine
                     size={20}
                     style={{
@@ -140,7 +142,7 @@ export default function BudgetList(props: Props) {
                     }}
                   />
                   予算登録
-                </RegistButton>
+                </OpenModalButton>
               </Box>
             </Flex>
           </Box>
