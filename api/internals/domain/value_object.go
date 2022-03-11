@@ -13,4 +13,6 @@ type DepartmentID int
 type Detail string
 type Url string
 
+type DeadLine string
+
 type PurchaseOrderID int
