@@ -46,7 +46,7 @@ func (por * purchaseOrderRepository) Create(
 	deadLine string,
 	userId string,
 ) error {
-		var query = "insert into purchase_orders (deadline, user_id) values ( " + deadLine + "," + userId + ")"
+		var query = "insert into purchase_orders (deadline, user_id) values ( '" + deadLine + "'," + userId + ")"
 		_, err := por.client.DB().ExecContext(c, query)
 		return err
 }
@@ -58,7 +58,7 @@ func (por * purchaseOrderRepository) Update (
 	deadLine string,
 	userId string,
 ) error {
-	var query = "update * purchase_orders set deadline =" + deadLine + ",user_id " + userId + "where id = " + id 
+	var query = "update purchase_orders set deadline ='" + deadLine + "', user_id = " + userId + " where id = " + id 
 	_, err := por.client.DB().ExecContext(c, query)
 	return err 
 }
@@ -67,6 +67,6 @@ func (por * purchaseOrderRepository) Delete(
 	c context.Context,
 	id string,
 )error {
-	_, err := por.client.DB().ExecContext(c, "Delete purchase_orders where id =" + id)
+	_, err := por.client.DB().ExecContext(c, "Delete from purchase_orders where id =" + id)
 	return err
 }
