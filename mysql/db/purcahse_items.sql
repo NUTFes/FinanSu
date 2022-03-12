@@ -2,8 +2,8 @@ use finansu_db;
 
 CREATE TABLE purchase_items (
   id int(10) unsigned not null auto_increment,
-  price int(10)
   item varchar(255),
+  price int(10),
   quantity int(10),
   detail varchar(255),
   url varchar(255),
@@ -13,4 +13,4 @@ CREATE TABLE purchase_items (
   PRIMARY KEY (id)
 );
 
-INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id )values ('test-item1',10000 , 1, 'test-detail', 'https://nutfes.net', 1);
+INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id )values ('test-item1', 10000, 1, 'test-detail', 'https://nutfes.net', 1);
