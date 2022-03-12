@@ -36,7 +36,7 @@ func (por *purchaseOrderRepository) All(c context.Context) (*sql.Rows, error) {
 
 //1件取得
 func (por * purchaseOrderRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	row := por.client.DB().QueryRowContext(c ,"select * from puchase_orders where id = "+ id)
+	row := por.client.DB().QueryRowContext(c ,"select * from purchase_orders where id = "+ id)
 	return row, nil
 } 
 
@@ -67,6 +67,6 @@ func (por * purchaseOrderRepository) Delete(
 	c context.Context,
 	id string,
 )error {
-	_, err := por.client.DB().ExecContext(c, "Delete purcahse_orders where id =" + id)
+	_, err := por.client.DB().ExecContext(c, "Delete purchase_orders where id =" + id)
 	return err
 }
