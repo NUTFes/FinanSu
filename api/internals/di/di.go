@@ -22,20 +22,20 @@ func InitializeServer() db.Client {
 	// Repository
 	budgetRepository := repository.NewBudgetRepository(client)
 	fundInformationRepository := repository.NewFundInformationRepository(client)
-
+	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
 	// ↓
 
 	// UseCase
 	budgetUseCase := usecase.NewBudgetUsecase(budgetRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
-
+  purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	// ↓
 
 	// Controller
 	healthcheckController := controller.NewHealthCheckController()
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
-
+//	purcahseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	// ↓
 
 	// router
@@ -43,6 +43,7 @@ func InitializeServer() db.Client {
 		healthcheckController,
 		budgetController,
 		fundInformationController,
+//		purcahseOrderController,
 	)
 
 	// ↓
