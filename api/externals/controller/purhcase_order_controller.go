@@ -43,10 +43,10 @@ func (p *purchaseOrderController) ShowPurchaseOrder(c echo.Context) error{
 
 //Create
 func (p *purchaseOrderController) CreatePurchaseOrder(c echo.Context) error{
-	userID := c.QueryParam("user_id")
 	deadLine := c.QueryParam("deadline")
+	userID := c.QueryParam("user_id")
 
-	err := p.u.CreatePurchaseOrder(c.Request().Context(), userID, deadLine )
+	err := p.u.CreatePurchaseOrder(c.Request().Context(), deadLine, userID )
 	if err != nil {
 		return err
 	}
@@ -56,10 +56,10 @@ func (p *purchaseOrderController) CreatePurchaseOrder(c echo.Context) error{
 //Update
 func (p *purchaseOrderController) UpdatePurchaseOrder(c echo.Context) error{
 	id := c.Param("id")
-	userID := c.QueryParam("user_id")
 	deadLine := c.QueryParam("deadline")
+	userID := c.QueryParam("user_id")
 
-	err := p.u.UpdatePurchaseOrder(c.Request().Context(), id, userID, deadLine)
+	err := p.u.UpdatePurchaseOrder(c.Request().Context(), id, deadLine, userID)
 	if err != nil {
 		return err
 	}
