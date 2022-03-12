@@ -35,7 +35,7 @@ func InitializeServer() db.Client {
 	healthcheckController := controller.NewHealthCheckController()
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
-  purcahseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
+  purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	// ↓
 
 	// router
@@ -43,7 +43,7 @@ func InitializeServer() db.Client {
 		healthcheckController,
 		budgetController,
 		fundInformationController,
-   	purcahseOrderController,
+		purchaseOrderController,
 	)
 
 	// ↓
