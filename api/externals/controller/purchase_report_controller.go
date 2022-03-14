@@ -11,7 +11,7 @@ type purchaseReportController struct {
 }
 
 type PurchaseReportController interface {
-	IndexPurcahseReport(echo.Context) error
+	IndexPurchaseReport(echo.Context) error
 	ShowPurchaseReport(echo.Context) error
 	CreatePurchaseReport(echo.Context) error
 	UpdatePurchaseReport(echo.Context) error
@@ -23,7 +23,7 @@ func NewPurchaseReportController(u usecase.PurchaseReportUseCase) PurchaseReport
 }
 
 //Index
-func (p *purchaseReportController) IndexPurcahseReport(c echo.Context)error{
+func (p *purchaseReportController) IndexPurchaseReport(c echo.Context)error{
 	purchaseReports , err :=p.u.GetPurchaseReports(c.Request().Context())
 	if err != nil {
 		return err

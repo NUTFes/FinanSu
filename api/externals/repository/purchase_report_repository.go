@@ -62,16 +62,16 @@ func (ppr *purchaseReportRepository) Update(
 	userId string,
 	purchaseOrderId string,
 )error {
-	var query = "update purchase_reports set price = '" + item + "'," + price + "," + userId + "," + purchaseOrderId + "where id = " + id
+	var query = "update purchase_reports set item = '" + item + "', price = " + price + ", user_id = " + userId + ", purchase_order_id =" + purchaseOrderId + " where id = " + id
 	_, err := ppr.client.DB().ExecContext(c, query) 
 	return err
 }
 
 //削除
-	func (ppr *purchaseReportRepository) Delete (
-		c context.Context,
-		id string,
-	)error {
-		_, err := ppr.client.DB().ExecContext(c, "Delete from purchaase_reports where id =" + id)
-		return err
-	}
+func (ppr *purchaseReportRepository) Delete (
+	c context.Context,
+	id string,
+)error {
+	_, err := ppr.client.DB().ExecContext(c, "Delete from purchase_reports where id =" + id)
+	return err
+}
