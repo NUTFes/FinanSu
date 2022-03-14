@@ -52,7 +52,7 @@ func (por * purchaseOrderRepository) Create(
 }
 
 //編集
-func (por * purchaseOrderRepository) Update (
+func (por * purchaseOrderRepository) Update(
 	c context.Context,
 	id string,
 	deadLine string,
