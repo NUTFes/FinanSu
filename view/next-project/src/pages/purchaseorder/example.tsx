@@ -1,16 +1,13 @@
 import { get, post, put, del } from '@api/purchaseOrder';
 import { Table, Tr, Td, Button } from '@chakra-ui/react';
-type PurchaseOrders = {
+type PurchaseOrder= {
   id: number;
-  item: string;
-  price: number;
-  department_id: number;
-  detail: string;
-  url: string;
+  deadline: string;
+  user_id: number;
 };
 
 type Props = {
-  purchaseOrder: PurchaseOrders[];
+  purchaseOrder: PurchaseOrder[];
 };
 
 export async function getStaticProps() {
@@ -26,11 +23,8 @@ export async function getStaticProps() {
 export async function postPurchaseOrders() {
   const postUrl = 'http://localhost:1323/purchaseorders';
   const postData = {
-    item: 'item',
-    price: 100000,
-    department_id: 1,
-    detail: 'detail',
-    url: 'https://nutfes.net',
+    deadline: '2020',
+    user_id: 1,
   };
   const getRes = await get(postUrl);
   console.log(getRes.slice(-1)[0].id);
@@ -42,11 +36,8 @@ export async function putPurchaseOrders() {
   const getRes = await get(Url);
   const putUrl = Url + '/' + getRes.slice(-1)[0].id;
   const putData = {
-    item: 'change item',
-    price: 1000,
-    department_id: 2,
-    detail: 'change item detail',
-    url: 'https://nutneg.net',
+    deadline: '2022',
+    user_id: 1,
   };
   const putReq = await put(putUrl, putData);
 }
@@ -69,10 +60,8 @@ export default function Example(props: Props) {
         {props.purchaseOrder.map((purchaseOrder) => (
           <Tr key={purchaseOrder.toString()}>
             <Td>{purchaseOrder.id}</Td>
-            <Td>{purchaseOrder.price}</Td>
-            <Td>{purchaseOrder.department_id}</Td>
-            <Td>{purchaseOrder.detail}</Td>
-            <Td>{purchaseOrder.url}</Td>
+            <Td>{purchaseOrder.user_id}</Td>
+            <Td>{purchaseOrder.deadline}</Td>
           </Tr>
         ))}
       </Table>

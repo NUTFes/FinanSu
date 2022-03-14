@@ -9,6 +9,7 @@ type router struct {
 	healthcheckController     controller.HealthcheckController
 	budgetController          controller.BudgetController
 	fundInformationController controller.FundInformationController
+	purchaseOrderController		controller.PurchaseOrderController
 }
 
 type Router interface {
@@ -19,11 +20,14 @@ func NewRouter(
 	healthController controller.HealthcheckController,
 	budgetController controller.BudgetController,
 	fundInformationController controller.FundInformationController,
+	purchaseOrderController controller.PurchaseOrderController,
+
 ) Router {
 	return router{
 		healthController,
 		budgetController,
 		fundInformationController,
+		purchaseOrderController,
 	}
 }
 
@@ -46,11 +50,11 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
 
 	// parcahseordersのRoute
-	// e.GET("/purchaseorders", GetPurchaseOrders())
-	// e.GET("/purchaseorders/:id", GetPurchaseOrder())
-	// e.POST("/purchaseorders", CreatePurchaseOrder())
-	// e.PUT("/purchaseorders/:id", UpdatePurchaseOrder())
-	// e.DELETE("/purchaseorders/:id", DeletePurchaseOrder())
+	e.GET("/purchaseorders", r.purchaseOrderController.IndexPurchaseOrder)
+	e.GET("/purchaseorders/:id", r.purchaseOrderController.ShowPurchaseOrder)
+	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
+	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
+	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
 
 	// purchasereportsのRoute
 	// e.GET("/purchasereports", GetPurchaseReports())
