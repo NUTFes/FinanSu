@@ -22,24 +22,15 @@ export const get_with_token = async (url: string) => {
 };
 
 export const post = async (url: string, data: any) => {
-  const item = data.item;
-  const price = data.price;
-  const department_id = data.department_id;
-  const detail = data.detail;
-  const itemUrl = data.url;
+  const deadline = data.deadline;
+  const userId = data.user_id;
   const postUrl =
     url +
-    '?item="' +
-    item +
-    '"&price=' +
-    price +
-    '&department_id=' +
-    department_id +
-    '&detail="' +
-    detail +
-    '"&url="' +
-    itemUrl +
-    '"';
+    '?deadline=' +
+    deadline +
+    '&user_id=' +
+    userId;
+
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -52,25 +43,14 @@ export const post = async (url: string, data: any) => {
 };
 
 export const put = async (url: string, data: any) => {
-  const item = data.item;
-  const price = data.price;
-  const department_id = data.department_id;
-  const detail = data.detail;
-  const itemUrl = data.url;
+  const deadline = data.deadline;
+  const userId = data.user_id;
   const putUrl =
     url +
-    '?item="' +
-    item +
-    '"&price=' +
-    price +
-    '&department_id=' +
-    department_id +
-    '&detail="' +
-    detail +
-    '"&url="' +
-    itemUrl +
-    '"';
-  console.log(putUrl, data.item, data.price, data.department_id, data.detail, data.url);
+    '?deadline=' +
+    deadline +
+    '&user_id=' +
+    userId;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
