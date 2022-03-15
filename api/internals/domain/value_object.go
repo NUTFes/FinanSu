@@ -16,3 +16,5 @@ type Url string
 type DeadLine string
 
 type PurchaseOrderID int
+
+type Quanity int
