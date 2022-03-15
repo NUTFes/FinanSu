@@ -27,7 +27,6 @@ func NewPurchaseOrderRepository(client db.Client) PurchaseOrderRepository {
 //全件取得
 func (por *purchaseOrderRepository) All(c context.Context) (*sql.Rows, error) {
 	rows, err := por.client.DB().QueryContext(c, "select * from purchase_orders")
-	fmt.Println(rows)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
