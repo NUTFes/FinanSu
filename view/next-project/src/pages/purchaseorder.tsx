@@ -20,13 +20,14 @@ import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, post, put, del } from '@api/purchaseOrder';
+import OpenEditModalButton from '@components/General/OpenEditModalButton';
 
 interface User {
   id: number;
   name: string;
 }
 
-interface PurchaseOrder {
+interface PurchaseOrder{
   id: number;
   deadline: string;
   user_id: number;
@@ -143,8 +144,7 @@ export default function PurchaseOrder(props: Props){
                     </Td>
                     <Td>
                       <Center>
-                        <EditButton />
-                      </Center>
+                        <OpenEditModalButton id={purchaseOrderItem.id}/> </Center>
                     </Td>
                   </Tr>
                 ))}
