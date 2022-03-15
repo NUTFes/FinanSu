@@ -17,4 +17,4 @@ type DeadLine string
 
 type PurchaseOrderID int
 
-type Quanity int
+type Quantity int
