@@ -6,7 +6,7 @@ type PurchaseItem struct {
 	ID              ID              `json:"id"`
 	Item            Item            `json:"item"`
 	Price           Price           `json:"price"`
-	Quanity         Quanity         `json:"quantity"`
+	Quantity        Quantity        `json:"quantity"`
 	Detail          Detail          `json:"detail"`
 	Url             Url             `json:"url"`
 	PurchaseOrderID PurchaseOrderID `json:"purchase_order_id"`
