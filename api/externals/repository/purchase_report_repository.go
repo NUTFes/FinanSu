@@ -27,7 +27,6 @@ func NewPurchaseReportRepository(client db.Client) PurchaseReportRepository {
 //全件取得
 func (prr *purchaseReportRepository) All(c context.Context) (*sql.Rows, error) {
 	rows , err := prr.client.DB().QueryContext(c, "select * from purchase_reports")
-	fmt.Println(rows)
 	if err != nil {
 		return nil, errors.Wrapf(err, "connenct SQL")
 	}

@@ -19,7 +19,7 @@ type PurchaseOrderController interface {
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
-	return & purchaseOrderController{u}
+	return &purchaseOrderController{u}
 }
 
 //Index
