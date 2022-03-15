@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
 )
@@ -27,7 +26,6 @@ func NewPurchaseOrderRepository(client db.Client) PurchaseOrderRepository {
 //全件取得
 func (por *purchaseOrderRepository) All(c context.Context) (*sql.Rows, error) {
 	rows, err := por.client.DB().QueryContext(c, "select * from purchase_orders")
-	fmt.Println(rows)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
@@ -52,7 +50,7 @@ func (por * purchaseOrderRepository) Create(
 }
 
 //編集
-func (por * purchaseOrderRepository) Update (
+func (por * purchaseOrderRepository) Update(
 	c context.Context,
 	id string,
 	deadLine string,
