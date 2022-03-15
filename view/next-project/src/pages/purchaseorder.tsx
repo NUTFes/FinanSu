@@ -19,70 +19,41 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
+import { get, post, put, del } from '@api/purchaseOrder';
 
-const PurchaseOrder: NextPage = () => {
-  const purchaseOrder = [
-    {
-      id: 1,
-      name: '荷締めベルト',
-      number: '60',
-      unitCost: 240,
-      value: 14400,
-      notes: '',
-      purchaseDeadline: '2021/11/12',
-      buyer: '政木架',
-    },
-    {
-      id: 2,
-      name: 'ボールペン',
-      number: '100',
-      unitCost: 110,
-      value: 11000,
-      notes: '',
-      purchaseDeadline: '2021/11/12',
-      buyer: '政木架',
-    },
-    {
-      id: 3,
-      name: 'スティックのり',
-      number: '5',
-      unitCost: 90,
-      value: 450,
-      notes: '',
-      purchaseDeadline: '2021/11/12',
-      buyer: '政木架',
-    },
-    {
-      id: 4,
-      name: '保険',
-      number: '1',
-      unitCost: 15000,
-      value: 15000,
-      notes: '',
-      purchaseDeadline: '2021/11/12',
-      buyer: '齋藤博起',
-    },
-    {
-      id: 5,
-      name: '検便',
-      number: '50',
-      unitCost: 500,
-      value: 25000,
-      notes: '',
-      purchaseDeadline: '2021/11/12',
-      buyer: '杉本真実',
-    },
-    {
-      id: 6,
-      name: 'トラックレンタル代',
-      number: '1',
-      unitCost: 8000,
-      value: 8000,
-      notes: '',
-      purchaseDeadline: '2021/11/12',
-      buyer: '政木架',
-    },
-  ];
+interface User {
+  id: number;
+  name: string;
+}
+
+interface PurchaseOrder {
+  id: number;
+  deadline: string;
+  user_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Props {
+  user: User;
+  purchaseOrder: PurchaseOrder[];
+}
+export async function getServerSideProps({params}: any) {
+  const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
+  const purchaseOrderRes = await get(getPurchaseOrderUrl);
+  return {
+    props:{
+      purchaseOrder: purchaseOrderRes,
+    }
+  };
+}
+
+export default function PurchaseOrder(props: Props){
+  const formatDate = (date: string) => {
+    let datetime = date.replace('T', ' ');
+    const datetime2 = datetime.substring(0, datetime.length - 4);
+    return datetime2;
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -99,7 +70,7 @@ const PurchaseOrder: NextPage = () => {
           <Box mt='10' mx='5'>
             <Flex>
               <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                購入物品一覧
+                購入申請一覧
               </Center>
               <Select variant='flushed' w='100'>
                 <option value='2021'>2021</option>
@@ -114,7 +85,7 @@ const PurchaseOrder: NextPage = () => {
                   leftIcon={<RiAddCircleLine color={'white'} />}
                   bgGradient='linear(to-br, primary.1, primary.2)'
                 >
-                  購入物品登録
+                  購入申請
                 </Button>
               </Box>
             </Flex>
@@ -130,17 +101,17 @@ const PurchaseOrder: NextPage = () => {
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' mr='1' color='black.600'>
-                      購入物品名
+                      購入期限日
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      個数
+                      申請者
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7' isNumeric>
                     <Center fontSize='sm' color='black.600'>
-                      単価
+                      申請日
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -149,71 +120,35 @@ const PurchaseOrder: NextPage = () => {
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      備考
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
                     <Center></Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>購入期限日</Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>申請者</Center>
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {purchaseOrder.map((purchaseItem) => (
-                  <Tr key={purchaseItem.id}>
+                {props.purchaseOrder.map((purchaseOrderItem) => (
+                  <Tr key={purchaseOrderItem.id}>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.id}</Center>
+                      <Center color='black.300'>{purchaseOrderItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.name}</Center>
+                      <Center color='black.300'>{purchaseOrderItem.deadline}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.number}</Center>
+                      <Center color='black.300'>{purchaseOrderItem.user_id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.unitCost}</Center>
+                      <Center color='black.300'>{formatDate(purchaseOrderItem.created_at)}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.value}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.notes}</Center>
                     </Td>
                     <Td>
                       <Center>
                         <EditButton />
                       </Center>
                     </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.purchaseDeadline}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.buyer}</Center>
-                    </Td>
                   </Tr>
                 ))}
               </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th>
-                    <Center fontSize='sm' fontWeight='500' color='black.600'>
-                      合計
-                    </Center>
-                  </Th>
-                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
-                    2400000
-                  </Th>
-                </Tr>
-              </Tfoot>
             </Table>
           </Box>
         </Box>
@@ -221,5 +156,3 @@ const PurchaseOrder: NextPage = () => {
     </ChakraProvider>
   );
 };
-
-export default PurchaseOrder;
