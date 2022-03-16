@@ -20,6 +20,8 @@ func InitializeServer() db.Client {
 	// ↓
 
 	// Repository
+	userRepository := repository.NewUserRepository(client)
+	departmentRepository := repository.NewDepartmentRepository(client)
 	sourceRepository := repository.NewSourceRepository(client)
 	yearRepository := repository.NewYearRepository(client)
 	budgetRepository := repository.NewBudgetRepository(client)
@@ -30,6 +32,8 @@ func InitializeServer() db.Client {
 	// ↓
 
 	// UseCase
+	userUseCase := usecase.NewUserUsecase(userRepository)
+	departmentUseCase := usecase.NewDepartmentUsecase(departmentRepository)
 	sourceUseCase := usecase.NewSourceUsecase(sourceRepository)
 	yearUseCase := usecase.NewYearUsecase(yearRepository)
 	budgetUseCase := usecase.NewBudgetUsecase(budgetRepository)
@@ -41,6 +45,8 @@ func InitializeServer() db.Client {
 
 	// Controller
 	healthcheckController := controller.NewHealthCheckController()
+	userController := controller.NewUserController(userUseCase)
+	departmentController := controller.NewDepartmentController(departmentUseCase)
 	sourceController := controller.NewSourceController(sourceUseCase)
 	yearController := controller.NewYearController(yearUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
@@ -53,6 +59,8 @@ func InitializeServer() db.Client {
 	// router
 	router := router.NewRouter(
 		healthcheckController,
+		userController,
+		departmentController,
 		sourceController,
 		yearController,
 		budgetController,

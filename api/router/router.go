@@ -7,6 +7,8 @@ import (
 
 type router struct {
 	healthcheckController     controller.HealthcheckController
+	userController            controller.UserController
+	departmentController      controller.DepartmentController
 	sourceController          controller.SourceController
 	yearController            controller.YearController
 	budgetController          controller.BudgetController
@@ -21,6 +23,8 @@ type Router interface {
 
 func NewRouter(
 	healthController controller.HealthcheckController,
+	userController controller.UserController,
+	departmentController controller.DepartmentController,
 	sourceController controller.SourceController,
 	yearController controller.YearController,
 	budgetController controller.BudgetController,
@@ -31,6 +35,8 @@ func NewRouter(
 ) Router {
 	return router{
 		healthController,
+		userController,
+		departmentController,
 		sourceController,
 		yearController,
 		budgetController,
@@ -43,6 +49,20 @@ func NewRouter(
 func (r router) ProvideRouter(e *echo.Echo) {
 	// Healthcheck
 	e.GET("/", r.healthcheckController.IndexHealthcheck)
+
+	// users
+	e.GET("/users", r.userController.IndexUser)
+	e.GET("/users/:id", r.userController.ShowUser)
+	e.POST("/users", r.userController.CreateUser)
+	e.PUT("/users/:id", r.userController.UpdateUser)
+	e.DELETE("/users/:id", r.userController.DestroyUser)
+
+	// departments
+	e.GET("/departments", r.departmentController.IndexDepartment)
+	e.GET("/departments/:id", r.departmentController.ShowDepartment)
+	e.POST("/departments", r.departmentController.CreateDepartment)
+	e.PUT("/departments/:id", r.departmentController.UpdateDepartment)
+	e.DELETE("/departments/:id", r.departmentController.DestroyDepartment)
 
 	// sources
 	e.GET("/sources", r.sourceController.IndexSource)
