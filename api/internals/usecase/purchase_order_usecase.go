@@ -84,7 +84,7 @@ func (p *purchaseOrderUseCase) UpdatePurchaseOrder(
 	return err
 }
 
-//funcPurchaseOrderの削除(delete)
+//PurchaseOrderの削除(delete)
 func (p *purchaseOrderUseCase) DestroyPurchaseOrder(
 	c context.Context,
 	id string,
