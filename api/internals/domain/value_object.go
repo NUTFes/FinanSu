@@ -13,8 +13,10 @@ type DepartmentID int
 type Detail string
 type Url string
 
+//purchaseorder
 type DeadLine string
 
+//purchasereport
 type PurchaseOrderID int
 
 type Quantity int
@@ -27,3 +29,9 @@ type Room string
 type SuponserStyleID int
 type UserID int
 type SuponserID int
+
+//purchaseItem
+type Quantity int
+
+//sponserstyle
+type Scale string
