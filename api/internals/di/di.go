@@ -35,14 +35,14 @@ func InitializeServer() db.Client {
 	// ↓
 
 	// UseCase
-	userUseCase := usecase.NewUserUsecase(userRepository)
-	departmentUseCase := usecase.NewDepartmentUsecase(departmentRepository)
-	sourceUseCase := usecase.NewSourceUsecase(sourceRepository)
-	yearUseCase := usecase.NewYearUsecase(yearRepository)
-	budgetUseCase := usecase.NewBudgetUsecase(budgetRepository)
+	userUseCase := usecase.NewUserUseCase(userRepository)
+	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
+	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
+	yearUseCase := usecase.NewYearUseCase(yearRepository)
+	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
-	purchaseReportUseCase := usecase.NewPurchaseReportUsecase(purchaseReportRepository)
+	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)

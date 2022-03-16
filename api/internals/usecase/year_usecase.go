@@ -19,7 +19,7 @@ type YearUseCase interface {
 	DestroyYear(context.Context, string) error
 }
 
-func NewYearUsecase(rep rep.YearRepository) YearUseCase {
+func NewYearUseCase(rep rep.YearRepository) YearUseCase {
 	return &yearUseCase{rep}
 }
 

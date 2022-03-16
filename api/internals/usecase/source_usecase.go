@@ -19,7 +19,7 @@ type SourceUseCase interface {
 	DestroySource(context.Context, string) error
 }
 
-func NewSourceUsecase(rep rep.SourceRepository) SourceUseCase {
+func NewSourceUseCase(rep rep.SourceRepository) SourceUseCase {
 	return &sourceUseCase{rep}
 }
 
