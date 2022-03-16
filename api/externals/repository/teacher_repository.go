@@ -46,7 +46,8 @@ func (tr *teacherRepository) Create(c context.Context, name string, position str
 
 // 編集
 func (tr *teacherRepository) Update(c context.Context, id string, name string, position string, departmentID string, room string, isBlack string, remark string) error {
-	_, err := tr.client.DB().ExecContext(c, "update teachers set name = "+name+", position = "+position+", department_id = "+departmentID+", room = "+room+", is_black = '"+isBlack+"', remark = "+remark+" where id = "+id)
+	query := "update teachers set name = '" + name + "', position = '" + position + "', department_id = " + departmentID + ", room = '" + room + "', is_black = " + isBlack + ", remark = '" + remark + "' where id = " + id
+	_, err := tr.client.DB().ExecContext(c, query)
 	return err
 }
 
