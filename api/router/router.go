@@ -17,6 +17,7 @@ type router struct {
 	purchaseReportController  controller.PurchaseReportController
 	purchaseItemController    controller.PurchaseItemController
 	teacherController         controller.TeacherController
+	activityController    controller.ActivityController
 }
 
 type Router interface {
@@ -35,6 +36,7 @@ func NewRouter(
 	purchaseReportController controller.PurchaseReportController,
 	purchaseItemController controller.PurchaseItemController,
 	teacherController controller.TeacherController,
+	activityController controller.ActivityController,
 
 ) Router {
 	return router{
@@ -49,6 +51,7 @@ func NewRouter(
 		purchaseReportController,
 		purchaseItemController,
 		teacherController,
+		activityController,
 	}
 }
 
@@ -118,6 +121,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
+<<<<<<< HEAD
 
 	// teacherのRoute
 	e.GET("/teachers", r.teacherController.IndexTeacher)
@@ -125,4 +129,14 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/teachers", r.teacherController.CreateTeacher)
 	e.PUT("/teachers/:id", r.teacherController.UpdateTeacher)
 	e.DELETE("/teachers/:id", r.teacherController.DestroyTeacher)
+=======
+	
+	// purchaseitemsのRoute
+	e.GET("/activities", r.activityController.IndexActivity)
+	e.GET("/activities/:id", r.activityController.ShowActivity)
+	e.POST("/activities", r.activityController.CreateActivity)
+	e.PUT("/activities/:id", r.activityController.UpdateActivity)
+	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
+
+>>>>>>> 7d6b523702c6ae2be502d0a63fcdd096dbaa8aa8
 }

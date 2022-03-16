@@ -30,6 +30,7 @@ func InitializeServer() db.Client {
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client)
 	teacherRepository := repository.NewTeacherRepository(client)
+	activityRepository := repository.NewActivityRepository(client)
 
 	// ↓
 
@@ -44,6 +45,7 @@ func InitializeServer() db.Client {
 	purchaseReportUseCase := usecase.NewPurchaseReportUsecase(purchaseReportRepository)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
+	activityUseCase := usecase.NewActivityUseCase(activityRepository)
 
 	// ↓
 
@@ -59,6 +61,7 @@ func InitializeServer() db.Client {
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
 	teacherController := controller.NewTeacherController(teacherUseCase)
+	activityController := controller.NewActivityController(activityUseCase)
 
 	// ↓
 
@@ -75,6 +78,7 @@ func InitializeServer() db.Client {
 		purchaseReportController,
 		purchaseItemController,
 		teacherController,
+		activityController,
 	)
 
 	// ↓
