@@ -23,3 +23,7 @@ type Position string
 
 type Room string
 
+// activity
+type SuponserStyleID int
+type UserID int
+type SuponserID int
