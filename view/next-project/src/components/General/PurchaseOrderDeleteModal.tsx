@@ -18,7 +18,7 @@ import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import RegistButton from './RegistButton';
 import {useRouter} from 'next/router';
-import {get, put} from '@api/purchaseOrder';
+import {get, del} from '@api/purchaseOrder';
 
 interface ModalProps {
   setShowModal: any;
@@ -35,7 +35,7 @@ interface PurchaseOrder {
   updated_at: string;
 }
 
-const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
+const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
@@ -82,9 +82,9 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
       setFormData({...formData, [input]: e.target.value});
     };
 
-  const submitPurchaseOrder = async (data: any, id: number | string) => {
-    const submitPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
-    await put(submitPurchaseOrderUrl, data);
+  const deletePurchaseOrder = async (id: number | string) => {
+    const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
+    await del(deletePurchaseOrderUrl);
   };
 
   return (
@@ -101,20 +101,13 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
             </Flex>
             <VStack spacing='30px'>
               <Text fontSize='xl' color='black.600'>
-                購入申請の編集
+                購入申請の削除
               </Text>
               <VStack spacing='15px'>
                 <Flex>
                   <Center color='black.600' mr='3'>
-                    購入期限日
+                    削除してもよいですか？
                   </Center>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.deadline} onChange={handler('deadline')} />
-                </Flex>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    申請者
-                  </Center>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.user_id} onChange={handler('user_id')} />
                 </Flex>
               </VStack>
             </VStack>
@@ -126,11 +119,11 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
                 color='white'
                 bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
-                  submitPurchaseOrder(formData, props.id);
+                  deletePurchaseOrder(props.id);
                   router.reload();
                 }}
               >
-                編集する
+                削除する
               </RegistButton>
             </ModalFooter>
           </Center>
@@ -140,5 +133,5 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
   );
 };
 
-export default PurchaseOrderEditModal;
+export default PurchaseOrderDeleteModal;
 
