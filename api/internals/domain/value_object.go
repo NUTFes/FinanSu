@@ -21,6 +21,10 @@ type PurchaseOrderID int
 
 type Quantity int
 
+type Position string
+
+type Room string
+
 // activity
 type SuponserStyleID int
 type UserID int
