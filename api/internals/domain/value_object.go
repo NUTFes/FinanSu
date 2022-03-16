@@ -31,3 +31,9 @@ type Tel string
 type Email string
 type Address string
 type Representative string
+type Quantity int
+
+// activity
+type SuponserStyleID int
+type UserID int
+type SuponserID int

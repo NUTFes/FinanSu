@@ -31,6 +31,8 @@ type Budget = {
   year_id: number;
   source_id: number;
   source: string;
+  created_at: string;
+  updated_at: string;
 };
 
 type Props = {
