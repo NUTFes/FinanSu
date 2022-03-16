@@ -19,8 +19,6 @@ type DeadLine string
 //purchasereport
 type PurchaseOrderID int
 
-type Quantity int
-
 type Position string
 
 type Room string

@@ -17,7 +17,7 @@ type router struct {
 	purchaseReportController  controller.PurchaseReportController
 	purchaseItemController    controller.PurchaseItemController
 	teacherController         controller.TeacherController
-	activityController    controller.ActivityController
+	activityController        controller.ActivityController
 	sponsorStyleController    controller.SponsorStyleController
 }
 
@@ -145,4 +145,11 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/sponsorstyles", r.sponsorStyleController.CreateSponsorStyle)
 	e.PUT("/sponsorstyles/:id", r.sponsorStyleController.UpdateSponsorStyle)
 	e.DELETE("/sponsorstyles/:id", r.sponsorStyleController.DestroySponsorStyle)
+
+	//activityのroute
+	e.GET("/activities", r.activityController.IndexActivity)
+	e.GET("/activities/:id", r.activityController.ShowActivity)
+	e.POST("/activities", r.activityController.CreateActivity)
+	e.PUT("/activities/:id", r.activityController.UpdateActivity)
+	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 }
