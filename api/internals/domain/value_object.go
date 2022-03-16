@@ -18,3 +18,8 @@ type DeadLine string
 type PurchaseOrderID int
 
 type Quantity int
+
+type Position string
+
+type Room string
+
