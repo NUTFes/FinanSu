@@ -7,9 +7,11 @@ import (
 
 type router struct {
 	healthcheckController     controller.HealthcheckController
+	sourceController          controller.SourceController
+	yearController            controller.YearController
 	budgetController          controller.BudgetController
 	fundInformationController controller.FundInformationController
-	purchaseOrderController		controller.PurchaseOrderController
+	purchaseOrderController   controller.PurchaseOrderController
 	purchaseReportController  controller.PurchaseReportController
 }
 
@@ -19,6 +21,8 @@ type Router interface {
 
 func NewRouter(
 	healthController controller.HealthcheckController,
+	sourceController controller.SourceController,
+	yearController controller.YearController,
 	budgetController controller.BudgetController,
 	fundInformationController controller.FundInformationController,
 	purchaseOrderController controller.PurchaseOrderController,
@@ -27,6 +31,8 @@ func NewRouter(
 ) Router {
 	return router{
 		healthController,
+		sourceController,
+		yearController,
 		budgetController,
 		fundInformationController,
 		purchaseOrderController,
@@ -37,6 +43,20 @@ func NewRouter(
 func (r router) ProvideRouter(e *echo.Echo) {
 	// Healthcheck
 	e.GET("/", r.healthcheckController.IndexHealthcheck)
+
+	// sources
+	e.GET("/sources", r.sourceController.IndexSource)
+	e.GET("/sources/:id", r.sourceController.ShowSource)
+	e.POST("/sources", r.sourceController.CreateSource)
+	e.PUT("/sources/:id", r.sourceController.UpdateSource)
+	e.DELETE("/sources/:id", r.sourceController.DestroySource)
+
+	// years
+	e.GET("/years", r.yearController.IndexYear)
+	e.GET("/years/:id", r.yearController.ShowYear)
+	e.POST("/years", r.yearController.CreateYear)
+	e.PUT("/years/:id", r.yearController.UpdateYear)
+	e.DELETE("/years/:id", r.yearController.DestroyYear)
 
 	// budgets
 	e.GET("/budgets", r.budgetController.IndexBudget)
