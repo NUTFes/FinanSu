@@ -6,75 +6,75 @@ import(
 	"net/http"
 )
 
-type sponserStyleController struct {
-	u usecase.SponserStyleUseCase
+type sponsorStyleController struct {
+	u usecase.SponsorStyleUseCase
 }
 
-type SponserStyleController interface {
-	IndexSponserStyle(echo.Context) error
-	ShowSponserStyle(echo.Context) error
-	CreateSponserStyle(echo.Context) error
-	UpdateSponserStyle(echo.Context) error
-	DestroySponserStyle(echo.Context) error
+type SponsorStyleController interface {
+	IndexSponsorStyle(echo.Context) error
+	ShowSponsorStyle(echo.Context) error
+	CreateSponsorStyle(echo.Context) error
+	UpdateSponsorStyle(echo.Context) error
+	DestroySponsorStyle(echo.Context) error
 }
 
-func NewSponserStyleController(u usecase.SponserStyleUseCase) SponserStyleController {
-	return &sponserStyleController{u}
+func NewSponsorStyleController(u usecase.SponsorStyleUseCase) SponsorStyleController {
+	return &sponsorStyleController{u}
 }
 
 //Index
-func (s *sponserStyleController) IndexSponserStyle(c echo.Context) error {
-	sponserStyles, err := s.u.GetSponserStyles(c.Request().Context())
+func (s *sponsorStyleController) IndexSponsorStyle(c echo.Context) error {
+	sponsorStyles, err := s.u.GetSponsorStyles(c.Request().Context())
 	if err!= nil{
 		return err
 	}
-	return c.JSON(http.StatusOK, sponserStyles)
+	return c.JSON(http.StatusOK, sponsorStyles)
 }
 
 //show
-func(s *sponserStyleController) ShowSponserStyle(c echo.Context)error {
+func(s *sponsorStyleController) ShowSponsorStyle(c echo.Context)error {
 	id := c.Param("id") 
-	sponserStyle, err := s.u.GetSponserStylesByID(c.Request().Context(), id)
+	sponsorStyle, err := s.u.GetSponsorStylesByID(c.Request().Context(), id)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, sponserStyle)
+	return c.JSON(http.StatusOK, sponsorStyle)
 }
 
 //Create
-func (s *sponserStyleController) CreateSponserStyle(c echo.Context)error {
+func (s *sponsorStyleController) CreateSponsorStyle(c echo.Context)error {
 	Scale := c.QueryParam("scale")
 	IsColor := c.QueryParam("is_color")
 	price := c.QueryParam("price")
 	
-	err := s.u.CreateSponserStyle(c.Request().Context(), Scale, IsColor, price)
+	err := s.u.CreateSponsorStyle(c.Request().Context(), Scale, IsColor, price)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Create SponserStyle")
+	return c.String(http.StatusOK, "Create SponsorStyle")
 }
 
 //Update
-func (s *sponserStyleController) UpdateSponserStyle(c echo.Context)error {
+func (s *sponsorStyleController) UpdateSponsorStyle(c echo.Context)error {
 	id := c.Param("id")
 	Scale := c.QueryParam("scale")
 	IsColor := c.QueryParam("is_color")
 	price := c.QueryParam("price")
 
-	err := s.u.UpdateSponserStyle(c.Request().Context(), id, Scale, IsColor, price)
+	err := s.u.UpdateSponsorStyle(c.Request().Context(), id, Scale, IsColor, price)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Update SponserStyle")
+	return c.String(http.StatusOK, "Update SponsorStyle")
 }
 
 //Destory
-func (s *sponserStyleController) DestroySponserStyle(c echo.Context)error {
+func (s *sponsorStyleController) DestroySponsorStyle(c echo.Context)error {
 	id :=c.Param("id")
 	
-	err := s.u.DestroySponserStyle(c.Request().Context(), id) 
+	err := s.u.DestroySponsorStyle(c.Request().Context(), id) 
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Destroy SponserStyle")
+	return c.String(http.StatusOK, "Destroy SponsorStyle")
 }
