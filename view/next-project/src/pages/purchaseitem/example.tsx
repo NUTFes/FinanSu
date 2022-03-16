@@ -7,6 +7,7 @@ type PurchaseItem = {
   quantity: number;
   detail: string;
   url: string;
+  purchase_order_id: number;
 };
 
 type Props = {
@@ -31,6 +32,7 @@ export async function postPurchaseItems() {
     quantity: 1,
     detail: 'detail',
     url: 'https://nutfes.net',
+    purchase_order_id: 1,
   };
   const getRes = await get(postUrl);
   console.log(getRes.slice(-1)[0].id);
@@ -47,6 +49,7 @@ export async function putPurchaseItems() {
     quantity: 2,
     detail: 'change item detail',
     url: 'https://nutneg.net',
+    purchase_order_id: 2,
   };
   const putReq = await put(putUrl, putData);
 }
