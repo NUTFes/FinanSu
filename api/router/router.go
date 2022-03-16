@@ -12,6 +12,7 @@ type router struct {
 	purchaseOrderController		controller.PurchaseOrderController
 	purchaseReportController  controller.PurchaseReportController
 	purchaseItemController    controller.PurchaseItemController
+	activityController    controller.ActivityController
 }
 
 type Router interface {
@@ -25,6 +26,7 @@ func NewRouter(
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
 	purchaseItemController controller.PurchaseItemController,
+	activityController controller.ActivityController,
 
 ) Router {
 	return router{
@@ -34,6 +36,7 @@ func NewRouter(
 		purchaseOrderController,
 		purchaseReportController,
 		purchaseItemController,
+		activityController,
 	}
 }
 
@@ -69,10 +72,18 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/purchasereports/:id", r.purchaseReportController.UpdatePurchaseReport)
 	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
 
-		// purchaseitemsのRoute
+	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)
 	e.GET("/purchaseitems/:id", r.purchaseItemController.ShowPurchaseItem)
 	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
+	
+	// purchaseitemsのRoute
+	e.GET("/activities", r.activityController.IndexActivity)
+	e.GET("/activities/:id", r.activityController.ShowActivity)
+	e.POST("/activities", r.activityController.CreateActivity)
+	e.PUT("/activities/:id", r.activityController.UpdateActivity)
+	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
+
 }
