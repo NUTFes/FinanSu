@@ -19,10 +19,15 @@ type DeadLine string
 //purchasereport
 type PurchaseOrderID int
 
+type Quantity int
+
+// activity
+type SuponserStyleID int
+type UserID int
+type SuponserID int
+
 //purchaseItem
 type Quantity int
 
 //sponserstyle
 type Scale string
-
-
