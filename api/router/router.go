@@ -15,6 +15,7 @@ type router struct {
 	fundInformationController controller.FundInformationController
 	purchaseOrderController   controller.PurchaseOrderController
 	purchaseReportController  controller.PurchaseReportController
+	purchaseItemController    controller.PurchaseItemController
 }
 
 type Router interface {
@@ -31,6 +32,7 @@ func NewRouter(
 	fundInformationController controller.FundInformationController,
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
+	purchaseItemController controller.PurchaseItemController,
 
 ) Router {
 	return router{
@@ -43,6 +45,7 @@ func NewRouter(
 		fundInformationController,
 		purchaseOrderController,
 		purchaseReportController,
+		purchaseItemController,
 	}
 }
 
@@ -105,4 +108,11 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchasereports", r.purchaseReportController.CreatePurchaseReport)
 	e.PUT("/purchasereports/:id", r.purchaseReportController.UpdatePurchaseReport)
 	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
+
+		// purchaseitemsのRoute
+	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)
+	e.GET("/purchaseitems/:id", r.purchaseItemController.ShowPurchaseItem)
+	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
+	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
+	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
 }

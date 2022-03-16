@@ -22,17 +22,11 @@ export const get_with_token = async (url: string) => {
 };
 
 export const post = async (url: string, data: any) => {
-  const item = data.item;
-  const price = data.price;
   const department_id = data.department_id;
   const purchase_order_id = data.purchase_order_id;
   const postUrl =
     url +
-    '?item="' +
-    item +
-    '"&price=' +
-    price +
-    '&department_id=' +
+    '?department_id=' +
     department_id +
     '&purchase_order_id=' +
     purchase_order_id;
@@ -48,17 +42,11 @@ export const post = async (url: string, data: any) => {
 };
 
 export const put = async (url: string, data: any) => {
-  const item = data.item;
-  const price = data.price;
   const department_id = data.department_id;
   const purchase_order_id = data.purchase_order_id;
   const putUrl =
     url +
-    '?item="' +
-    item +
-    '"&price=' +
-    price +
-    '&department_id=' +
+    '?department_id=' +
     department_id +
     '&purchase_order_id=' +
     purchase_order_id;
