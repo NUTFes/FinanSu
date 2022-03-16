@@ -31,7 +31,10 @@ type Tel string
 type Email string
 type Address string
 type Representative string
-type Quantity int
+
+type Position string
+
+type Room string
 
 // activity
 type SuponserStyleID int

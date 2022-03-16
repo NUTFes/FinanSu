@@ -7,13 +7,18 @@ import (
 
 type router struct {
 	healthcheckController     controller.HealthcheckController
+	userController            controller.UserController
+	departmentController      controller.DepartmentController
+	sourceController          controller.SourceController
+	yearController            controller.YearController
 	budgetController          controller.BudgetController
 	fundInformationController controller.FundInformationController
-	purchaseOrderController		controller.PurchaseOrderController
+	purchaseOrderController   controller.PurchaseOrderController
 	purchaseReportController  controller.PurchaseReportController
 	purchaseItemController    controller.PurchaseItemController
 	sponsorStyleController    controller.SponsorStyleController
-	activityController    controller.ActivityController
+	teacherController         controller.TeacherController
+	activityController        controller.ActivityController
 }
 
 type Router interface {
@@ -22,23 +27,33 @@ type Router interface {
 
 func NewRouter(
 	healthController controller.HealthcheckController,
+	userController controller.UserController,
+	departmentController controller.DepartmentController,
+	sourceController controller.SourceController,
+	yearController controller.YearController,
 	budgetController controller.BudgetController,
 	fundInformationController controller.FundInformationController,
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
 	purchaseItemController controller.PurchaseItemController,
 	sponsorStyleController controller.SponsorStyleController,
+	teacherController controller.TeacherController,
 	activityController controller.ActivityController,
 
 ) Router {
 	return router{
 		healthController,
+		userController,
+		departmentController,
+		sourceController,
+		yearController,
 		budgetController,
 		fundInformationController,
 		purchaseOrderController,
 		purchaseReportController,
 		purchaseItemController,
 		sponsorStyleController,
+		teacherController,
 		activityController,
 	}
 }
@@ -46,6 +61,34 @@ func NewRouter(
 func (r router) ProvideRouter(e *echo.Echo) {
 	// Healthcheck
 	e.GET("/", r.healthcheckController.IndexHealthcheck)
+
+	// users
+	e.GET("/users", r.userController.IndexUser)
+	e.GET("/users/:id", r.userController.ShowUser)
+	e.POST("/users", r.userController.CreateUser)
+	e.PUT("/users/:id", r.userController.UpdateUser)
+	e.DELETE("/users/:id", r.userController.DestroyUser)
+
+	// departments
+	e.GET("/departments", r.departmentController.IndexDepartment)
+	e.GET("/departments/:id", r.departmentController.ShowDepartment)
+	e.POST("/departments", r.departmentController.CreateDepartment)
+	e.PUT("/departments/:id", r.departmentController.UpdateDepartment)
+	e.DELETE("/departments/:id", r.departmentController.DestroyDepartment)
+
+	// sources
+	e.GET("/sources", r.sourceController.IndexSource)
+	e.GET("/sources/:id", r.sourceController.ShowSource)
+	e.POST("/sources", r.sourceController.CreateSource)
+	e.PUT("/sources/:id", r.sourceController.UpdateSource)
+	e.DELETE("/sources/:id", r.sourceController.DestroySource)
+
+	// years
+	e.GET("/years", r.yearController.IndexYear)
+	e.GET("/years/:id", r.yearController.ShowYear)
+	e.POST("/years", r.yearController.CreateYear)
+	e.PUT("/years/:id", r.yearController.UpdateYear)
+	e.DELETE("/years/:id", r.yearController.DestroyYear)
 
 	// budgets
 	e.GET("/budgets", r.budgetController.IndexBudget)
@@ -89,6 +132,13 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/sponsorstyles/:id", r.sponsorStyleController.UpdateSponsorStyle)
 	e.DELETE("/sponsorstyles/:id", r.sponsorStyleController.DestroySponsorStyle)
 	
+	// teacherのRoute
+	e.GET("/teachers", r.teacherController.IndexTeacher)
+	e.GET("/teachers/:id", r.teacherController.ShowTeacher)
+	e.POST("/teachers", r.teacherController.CreateTeacher)
+	e.PUT("/teachers/:id", r.teacherController.UpdateTeacher)
+	e.DELETE("/teachers/:id", r.teacherController.DestroyTeacher)
+
 	// purchaseitemsのRoute
 	e.GET("/activities", r.activityController.IndexActivity)
 	e.GET("/activities/:id", r.activityController.ShowActivity)
