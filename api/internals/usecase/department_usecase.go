@@ -19,7 +19,7 @@ type DepartmentUseCase interface {
 	DestroyDepartment(context.Context, string) error
 }
 
-func NewDepartmentUsecase(rep rep.DepartmentRepository) DepartmentUseCase {
+func NewDepartmentUseCase(rep rep.DepartmentRepository) DepartmentUseCase {
 	return &departmentUseCase{rep}
 }
 

@@ -19,7 +19,7 @@ type UserUseCase interface {
 	DestroyUser(context.Context, string) error
 }
 
-func NewUserUsecase(rep rep.UserRepository) UserUseCase {
+func NewUserUseCase(rep rep.UserRepository) UserUseCase {
 	return &userUseCase{rep}
 }
 
