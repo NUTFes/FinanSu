@@ -2,7 +2,7 @@ package domain
 
 import ("time")
 
-type SposerStyle struct {
+type SponserStyle struct {
 	ID         ID        `json:"id"`
 	Scale      Scale     `json:"scale"`
 	IsColor    bool   	 `json:"is_color"`
