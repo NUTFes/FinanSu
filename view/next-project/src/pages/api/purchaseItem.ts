@@ -27,19 +27,21 @@ export const post = async (url: string, data: any) => {
   const quantity= data.quantity;
   const detail = data.detail;
   const itemUrl = data.url;
+  const purchaseOrderId = data.purchase_order_id;
   const postUrl =
     url +
-    '?item="' +
+    '?item=' +
     item +
-    '"&price=' +
+    '&price=' +
     price +
     '&quantity=' +
     quantity +
-    '&detail="' +
+    '&detail=' +
     detail +
-    '"&url="' +
+    '&url=' +
     itemUrl +
-    '"';
+    '&purchase_order_id=' +
+    purchaseOrderId;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -57,6 +59,7 @@ export const put = async (url: string, data: any) => {
   const quantity = data.quantity;
   const detail = data.detail;
   const itemUrl = data.url;
+  const purchaseOrderId = data.purchase_order_id;
   const putUrl =
     url +
     '?item="' +
@@ -69,7 +72,8 @@ export const put = async (url: string, data: any) => {
     detail +
     '"&url="' +
     itemUrl +
-    '"';
+    '&purchase_order_id=' +
+    purchaseOrderId;
   console.log(putUrl, data.item, data.price, data.quantity, data.detail, data.url);
   const res = await fetch(putUrl, {
     method: 'PUT',
