@@ -28,7 +28,8 @@ func InitializeServer() db.Client {
 	fundInformationRepository := repository.NewFundInformationRepository(client)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
-	PurchaseItemRepository := repository.NewPurchaseItemRepository(client)
+	purchaseItemRepository := repository.NewPurchaseItemRepository(client)
+	teacherRepository := repository.NewTeacherRepository(client)
 
 	// ↓
 
@@ -41,7 +42,8 @@ func InitializeServer() db.Client {
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUsecase(purchaseReportRepository)
-	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(PurchaseItemRepository)
+	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
+	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 
 	// ↓
 
@@ -56,6 +58,7 @@ func InitializeServer() db.Client {
 	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
+	teacherController := controller.NewTeacherController(teacherUseCase)
 
 	// ↓
 
@@ -71,6 +74,7 @@ func InitializeServer() db.Client {
 		purchaseOrderController,
 		purchaseReportController,
 		purchaseItemController,
+		teacherController,
 	)
 
 	// ↓
