@@ -29,8 +29,7 @@ interface PurchaseReport {
   updated_at: string;
 }
 
-interface User {
-  id: number;
+interface User {id: number;
   name: string;
 }
 
@@ -50,26 +49,21 @@ interface Props {
 
 export async function getServerSideProps({params}: any) {
   const getPurchaseReportUrl = process.env.SSR_API_URI + '/purchasereports';
-  const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
-  const getUserUrl= process.env.SSR_API_URI + '/users';
   const purchaseReportRes = await get(getPurchaseReportUrl);
-  const purchaseOrderRes = await get(getPurchaseOrderUrl);
-  const userRes = await get(getUserUrl);
   return {
     props:{
       purchaseReport: purchaseReportRes,
-      purchaseOrder: purchaseOrderRes,
-      user: userRes,
     }
   };
 }
 
-export default function Purchasereport(props: Props){
+export default function PurchaseReport(props: Props){
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 5);
     return datetime2;
   };
+  console.log(props)
 
   return (
     <ChakraProvider theme={theme}>
@@ -101,7 +95,7 @@ export default function Purchasereport(props: Props){
                   leftIcon={<RiAddCircleLine color={'white'} />}
                   bgGradient='linear(to-br, primary.1, primary.2)'
                 >
-                  購入物品登録
+                  購入報告登録
                 </Button>
               </Box>
             </Flex>
@@ -116,18 +110,13 @@ export default function Purchasereport(props: Props){
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
-                      購入物品名
+                    <Center fontSize='sm' color='black.600'>
+                      報告者
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      個数
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7' isNumeric>
-                    <Center fontSize='sm' color='black.600'>
-                      単価
+                    <Center fontSize='sm' mr='1' color='black.600'>
+                      報告日
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -138,67 +127,31 @@ export default function Purchasereport(props: Props){
                   <Th borderBottomColor='#76E4F7'>
                     <Center></Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>購入日</Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>購入者</Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>備考</Center>
-                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {props.purchaseOrder.map((purchaseItem) => (
+                {props.purchaseReport.map((purchaseItem) => (
                   <Tr key={purchaseItem.id}>
                     <Td>
                       <Center color='black.300'>{purchaseItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.item}</Center>
+                      <Center color='black.300'>{purchaseItem.user_id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.quantity}</Center>
+                      <Center color='black.300'>{formatDate(purchaseItem.created_at)}</Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{purchaseItem.price}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.value}</Center>
                     </Td>
                     <Td>
                       <Center>
                         <EditButton />
                       </Center>
                     </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.purchaseDate}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.buyer}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.remarks}</Center>
-                    </Td>
                   </Tr>
                 ))}
               </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th>
-                    <Center fontSize='sm' fontWeight='500' color='black.600'>
-                      合計
-                    </Center>
-                  </Th>
-                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
-                    2400000
-                  </Th>
-                </Tr>
-              </Tfoot>
             </Table>
           </Box>
         </Box>
