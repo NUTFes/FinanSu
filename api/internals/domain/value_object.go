@@ -18,3 +18,8 @@ type DeadLine string
 type PurchaseOrderID int
 
 type Quantity int
+
+// activity
+type SuponserStyleID int
+type UserID int
+type SuponserID int
