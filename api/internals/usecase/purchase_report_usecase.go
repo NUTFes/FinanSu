@@ -18,38 +18,38 @@ type PurchaseReportUseCase interface {
 	DestroyPurchaseReport(context.Context, string) error
 }
 
-func NewPurchaseReportUsecase(rep rep.PurchaseReportRepository) PurchaseReportUseCase {
+func NewPurchaseReportUseCase(rep rep.PurchaseReportRepository) PurchaseReportUseCase {
 	return &purchaseReportUseCase{rep}
 }
 
 //PurchaseReportsの取得(Gets)
-func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.PurchaseReport, error){
+func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.PurchaseReport, error) {
 	purchaseReport := domain.PurchaseReport{}
-		var purchaseReports []domain.PurchaseReport
-		rows , err := p.rep.All(c)
+	var purchaseReports []domain.PurchaseReport
+	rows, err := p.rep.All(c)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		err := rows.Scan(
+			&purchaseReport.ID,
+			&purchaseReport.Item,
+			&purchaseReport.Price,
+			&purchaseReport.UserID,
+			&purchaseReport.PurchaseOrderID,
+			&purchaseReport.CreatedAt,
+			&purchaseReport.UpdatedAt,
+		)
 		if err != nil {
 			return nil, err
 		}
-		for rows.Next(){
-			err := rows.Scan(
-				&purchaseReport.ID,
-				&purchaseReport.Item,
-				&purchaseReport.Price,
-				&purchaseReport.UserID,
-				&purchaseReport.PurchaseOrderID,
-				&purchaseReport.CreatedAt,
-				&purchaseReport.UpdatedAt,
-			)
-			if err != nil {
-				return nil, err
-			}
-			purchaseReports = append(purchaseReports, purchaseReport )
-		}
-		return purchaseReports, nil
+		purchaseReports = append(purchaseReports, purchaseReport)
+	}
+	return purchaseReports, nil
 }
 
 //purchaseReportの取得(Get)
-func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id string) (domain.PurchaseReport, error){
+func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id string) (domain.PurchaseReport, error) {
 	purchaseReport := domain.PurchaseReport{}
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
@@ -68,13 +68,13 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 }
 
 //PurchaseReportの作成(create)
-func (p * purchaseReportUseCase) CreatePurchaseReport(
+func (p *purchaseReportUseCase) CreatePurchaseReport(
 	c context.Context,
 	Item string,
 	Price string,
 	UserID string,
 	PurchaseOrderID string,
-)error {
+) error {
 	err := p.rep.Create(c, Item, Price, UserID, PurchaseOrderID)
 	return err
 }
@@ -88,15 +88,16 @@ func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	UserID string,
 	PurchaseOrderID string,
 ) error {
-	err := p.rep.Update(c, id ,Item , Price, UserID, PurchaseOrderID)
+	err := p.rep.Update(c, id, Item, Price, UserID, PurchaseOrderID)
 	return err
 }
 
 //PurchaseReportの削除(delate)
-func (p *purchaseReportUseCase)DestroyPurchaseReport(
+func (p *purchaseReportUseCase) DestroyPurchaseReport(
 	c context.Context,
 	id string,
-)error {
+) error {
 	err := p.rep.Delete(c, id)
 	return err
 }
+
