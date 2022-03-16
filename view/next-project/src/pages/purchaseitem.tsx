@@ -19,6 +19,7 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
+import {get} from "@api/purchaseOrder";
 
 interface PurchaseItem {
   id: number;
@@ -30,52 +31,20 @@ interface PurchaseItem {
   purchase_order_id: number;
 }
 
-const PurchaseItem: NextPage = () => {
-  const purchaseItem = [
-    {
-      id: 1,
-      item: '荷締めベルト',
-      quantity: 60,
-      price: 240,
-      detail: '',
-    },
-    {
-      id: 2,
-      item: 'ボールペン',
-      quantity: 100,
-      price: 110,
-      detail: '',
-    },
-    {
-      id: 3,
-      item: 'スティックのり',
-      quantity: 5,
-      price: 90,
-      detail: '',
-    },
-    {
-      id: 4,
-      item: '保険',
-      quantity: 1,
-      price: 15000,
-      detail: '',
-    },
-    {
-      id: 5,
-      item: '検便',
-      quantity: 50,
-      price: 500,
-      detail: '',
-    },
-    {
-      id: 6,
-      item: 'トラックレンタル代',
-      quantity: 1,
-      price: 8000,
-      detail: '',
-    },
-  ];
+interface Props {
+  purchaseItem: PurchaseItem[];
+}
+export async function getServerSideProps({params}: any) {
+  const getPurchaseItemUrl = process.env.SSR_API_URI + '/purchaseitems';
+  const purchaseItemRes = await get(getPurchaseItemUrl);
+  return {
+    props:{
+      purchaseItem: purchaseItemRes,
+    }
+  };
+}
 
+export default function PurchaseItem(props: Props){
   // 日付整形
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
@@ -177,7 +146,7 @@ const PurchaseItem: NextPage = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {purchaseItem.map((purchaseItem) => (
+                {props.purchaseItem.map((purchaseItem) => (
                   <Tr key={purchaseItem.id}>
                     <Td>
                       <Center color='black.300'>{purchaseItem.item}</Center>
@@ -226,5 +195,3 @@ const PurchaseItem: NextPage = () => {
     </ChakraProvider>
   );
 };
-
-export default PurchaseItem;
