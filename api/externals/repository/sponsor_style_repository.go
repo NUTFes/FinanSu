@@ -19,7 +19,7 @@ type SponserStyleRepository interface {
 	Delete(context.Context, string) error
 }
 
-func NewSponserRepository(client db.Client) SponserStyleRepository{
+func NewSponserStyleRepository(client db.Client) SponserStyleRepository{
 	return &sponserStyleRepository{client}
 }
 

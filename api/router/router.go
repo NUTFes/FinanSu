@@ -12,6 +12,7 @@ type router struct {
 	purchaseOrderController		controller.PurchaseOrderController
 	purchaseReportController  controller.PurchaseReportController
 	purchaseItemController    controller.PurchaseItemController
+	sponserStyleController    controller.SponserStyleController
 }
 
 type Router interface {
@@ -25,6 +26,7 @@ func NewRouter(
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
 	purchaseItemController controller.PurchaseItemController,
+	sponserStyleController controller.SponserStyleController,
 
 ) Router {
 	return router{
@@ -34,6 +36,7 @@ func NewRouter(
 		purchaseOrderController,
 		purchaseReportController,
 		purchaseItemController,
+		sponserStyleController,
 	}
 }
 
@@ -69,10 +72,17 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/purchasereports/:id", r.purchaseReportController.UpdatePurchaseReport)
 	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
 
-		// purchaseitemsのRoute
+	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)
 	e.GET("/purchaseitems/:id", r.purchaseItemController.ShowPurchaseItem)
 	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
+
+	//sponserstylesのroute
+	e.GET("/sponserstyles", r.sponserStyleController.IndexSponserStyle)
+	e.GET("/sponserstyles/:id", r.sponserStyleController.ShowSponserStyle)
+	e.POST("/sponserstyles", r.sponserStyleController.CreateSponserStyle)
+	e.PUT("/sponserstyles/:id", r.sponserStyleController.UpdateSponserStyle)
+	e.DELETE("/sponserstyles/:id", r.sponserStyleController.DestroySponserStyle)
 }
