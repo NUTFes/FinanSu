@@ -25,4 +25,9 @@ type Quantity int
 //sponserstyle
 type Scale string
 
-
+//sponsor
+type Name string
+type Tel string
+type Email string
+type Address string
+type Representative string
