@@ -6,7 +6,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -14,19 +13,23 @@ import {
   Flex,
   Spacer,
   Select,
+  Grid,
+  GridItem
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, post, put, del } from '@api/purchaseOrder';
+import OpenEditModalButton from '@components/General/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/General/OpenDeleteModalButton';
 
 interface User {
   id: number;
   name: string;
 }
 
-interface PurchaseOrder {
+interface PurchaseOrder{
   id: number;
   deadline: string;
   user_id: number;
@@ -142,9 +145,14 @@ export default function PurchaseOrder(props: Props){
                     <Td>
                     </Td>
                     <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center><OpenEditModalButton id={purchaseOrderItem.id}/></Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center><OpenDeleteModalButton id={purchaseOrderItem.id}/></Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
                   </Tr>
                 ))}
