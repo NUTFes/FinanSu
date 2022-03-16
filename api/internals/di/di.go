@@ -20,30 +20,41 @@ func InitializeServer() db.Client {
 	// ↓
 
 	// Repository
+	sourceRepository := repository.NewSourceRepository(client)
+	yearRepository := repository.NewYearRepository(client)
 	budgetRepository := repository.NewBudgetRepository(client)
 	fundInformationRepository := repository.NewFundInformationRepository(client)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
+
 	// ↓
 
 	// UseCase
+	sourceUseCase := usecase.NewSourceUsecase(sourceRepository)
+	yearUseCase := usecase.NewYearUsecase(yearRepository)
 	budgetUseCase := usecase.NewBudgetUsecase(budgetRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
-  purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
+	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUsecase(purchaseReportRepository)
+
 	// ↓
 
 	// Controller
 	healthcheckController := controller.NewHealthCheckController()
+	sourceController := controller.NewSourceController(sourceUseCase)
+	yearController := controller.NewYearController(yearUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
-  purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
+	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
+
 	// ↓
 
 	// router
 	router := router.NewRouter(
 		healthcheckController,
+		sourceController,
+		yearController,
 		budgetController,
 		fundInformationController,
 		purchaseOrderController,
