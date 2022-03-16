@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -70,7 +69,6 @@ func (t *teacherController) UpdateTeacher(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("controller")
 	return c.String(http.StatusOK, "Updated Budget")
 }
 
