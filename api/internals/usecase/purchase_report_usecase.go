@@ -22,7 +22,7 @@ func NewPurchaseReportUsecase(rep rep.PurchaseReportRepository) PurchaseReportUs
 	return &purchaseReportUseCase{rep}
 }
 
-//PurchaseReportsの取得
+//PurchaseReportsの取得(Gets)
 func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.PurchaseReport, error){
 	purchaseReport := domain.PurchaseReport{}
 		var purchaseReports []domain.PurchaseReport
@@ -48,7 +48,7 @@ func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.
 		return purchaseReports, nil
 }
 
-//purchaseReportsの取得(Get)
+//purchaseReportの取得(Get)
 func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id string) (domain.PurchaseReport, error){
 	purchaseReport := domain.PurchaseReport{}
 	row, err := p.rep.Find(c, id)
