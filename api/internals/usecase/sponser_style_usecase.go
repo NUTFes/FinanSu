@@ -15,7 +15,7 @@ type SponserStyleUseCase interface {
 	GetSponserStylesByID(context.Context, string) (domain.SponserStyle, error)
 	CreateSponserStyle(context.Context, string, string, string) error
 	UpdateSponserStyle(context.Context, string, string, string, string) error
-	DestorySponserStyle(context.Context, string) error
+	DestroySponserStyle(context.Context, string) error
 }
 
 func NewSponserStyleUseCase(rep rep.SponserStyleRepository) SponserStyleUseCase {
@@ -88,7 +88,7 @@ func (s *sponserStyleUseCase) UpdateSponserStyle(
 }
 
 //SponserStyleの削除(Delate)
-func (s *sponserStyleUseCase) DestorySponserStyle(
+func (s *sponserStyleUseCase) DestroySponserStyle(
 	c context.Context,
 	id string,
 )error{
