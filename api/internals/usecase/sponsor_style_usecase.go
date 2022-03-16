@@ -6,67 +6,67 @@ import (
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
 
-type sponserStyleUseCase struct{
-	rep rep.SponserStyleRepository
+type sponsorStyleUseCase struct{
+	rep rep.SponsorStyleRepository
 }
 
-type SponserStyleUseCase interface {
-	GetSponserStyles(context.Context) ([]domain.SponserStyle, error)
-	GetSponserStylesByID(context.Context, string) (domain.SponserStyle, error)
-	CreateSponserStyle(context.Context, string, string, string) error
-	UpdateSponserStyle(context.Context, string, string, string, string) error
-	DestroySponserStyle(context.Context, string) error
+type SponsorStyleUseCase interface {
+	GetSponsorStyles(context.Context) ([]domain.SponsorStyle, error)
+	GetSponsorStylesByID(context.Context, string) (domain.SponsorStyle, error)
+	CreateSponsorStyle(context.Context, string, string, string) error
+	UpdateSponsorStyle(context.Context, string, string, string, string) error
+	DestroySponsorStyle(context.Context, string) error
 }
 
-func NewSponserStyleUseCase(rep rep.SponserStyleRepository) SponserStyleUseCase {
-	return &sponserStyleUseCase{rep}
+func NewSponsorStyleUseCase(rep rep.SponsorStyleRepository) SponsorStyleUseCase {
+	return &sponsorStyleUseCase{rep}
 }
 
-//Sponserstylesの取得(Gets)
-func (s *sponserStyleUseCase) GetSponserStyles(c context.Context) ([]domain.SponserStyle, error) {
-	sponserStyle :=domain.SponserStyle{}
-	var sponserStyles []domain.SponserStyle
+//Sponsorstylesの取得(Gets)
+func (s *sponsorStyleUseCase) GetSponsorStyles(c context.Context) ([]domain.SponsorStyle, error) {
+	sponsorStyle :=domain.SponsorStyle{}
+	var sponsorStyles []domain.SponsorStyle
 	rows, err := s.rep.All(c)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		err := rows.Scan(
-			&sponserStyle.ID,
-			&sponserStyle.Scale,
-			&sponserStyle.IsColor,
-			&sponserStyle.Price,
-			&sponserStyle.CreatedAt,
-			&sponserStyle.UpdatedAt,
+			&sponsorStyle.ID,
+			&sponsorStyle.Scale,
+			&sponsorStyle.IsColor,
+			&sponsorStyle.Price,
+			&sponsorStyle.CreatedAt,
+			&sponsorStyle.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-		sponserStyles = append(sponserStyles, sponserStyle)
+		sponsorStyles = append(sponsorStyles, sponsorStyle)
 	}
-	return sponserStyles, nil
+	return sponsorStyles, nil
 }
 
-//SponserStyleの取得(Get)
-func (s *sponserStyleUseCase) GetSponserStylesByID(c context.Context, id string) (domain.SponserStyle, error){
-	sponserStyle := domain.SponserStyle{}
+//SponsorStyleの取得(Get)
+func (s *sponsorStyleUseCase) GetSponsorStylesByID(c context.Context, id string) (domain.SponsorStyle, error){
+	sponsorStyle := domain.SponsorStyle{}
 	row , err := s.rep.Find(c, id)
 	err = row.Scan(
-		&sponserStyle.ID,
-		&sponserStyle.Scale,
-		&sponserStyle.IsColor,
-		&sponserStyle.Price,
-		&sponserStyle.CreatedAt,
-		&sponserStyle.UpdatedAt,
+		&sponsorStyle.ID,
+		&sponsorStyle.Scale,
+		&sponsorStyle.IsColor,
+		&sponsorStyle.Price,
+		&sponsorStyle.CreatedAt,
+		&sponsorStyle.UpdatedAt,
 	)
 	if err != nil {
-		return sponserStyle, err
+		return sponsorStyle, err
 	}
-	return sponserStyle, nil
+	return sponsorStyle, nil
 }
 
-//SponserStyleの作成(Create)
-func (s *sponserStyleUseCase) CreateSponserStyle(
+//SponsorStyleの作成(Create)
+func (s *sponsorStyleUseCase) CreateSponsorStyle(
 	c context.Context, 
 	Scale string,
 	IsColor string,
@@ -75,8 +75,8 @@ func (s *sponserStyleUseCase) CreateSponserStyle(
 	err := s.rep.Create(c, Scale, IsColor, Price)
 	return err
 }
-//SponserStyleの編集(Update)
-func (s *sponserStyleUseCase) UpdateSponserStyle(
+//SponsorStyleの編集(Update)
+func (s *sponsorStyleUseCase) UpdateSponsorStyle(
 	c context.Context,
 	id string,
 	Scale string,
@@ -87,8 +87,8 @@ func (s *sponserStyleUseCase) UpdateSponserStyle(
 	return err
 }
 
-//SponserStyleの削除(Delate)
-func (s *sponserStyleUseCase) DestroySponserStyle(
+//SponsorStyleの削除(Delate)
+func (s *sponsorStyleUseCase) DestroySponsorStyle(
 	c context.Context,
 	id string,
 )error{

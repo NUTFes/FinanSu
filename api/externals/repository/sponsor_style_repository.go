@@ -7,11 +7,11 @@ import(
 	"github.com/pkg/errors"
 )
 
-type sponserStyleRepository struct {
+type sponsorStyleRepository struct {
 	client db.Client
 }
 
-type SponserStyleRepository interface {
+type SponsorStyleRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
 	Create(context.Context, string, string, string) error
@@ -19,13 +19,13 @@ type SponserStyleRepository interface {
 	Delete(context.Context, string) error
 }
 
-func NewSponserStyleRepository(client db.Client) SponserStyleRepository{
-	return &sponserStyleRepository{client}
+func NewSponsorStyleRepository(client db.Client) SponsorStyleRepository{
+	return &sponsorStyleRepository{client}
 }
 
 //全件取得
-func (ssr *sponserStyleRepository) All(c context.Context) (*sql.Rows, error){
-	rows , err := ssr.client.DB().QueryContext(c, "select * from sponser_styles")
+func (ssr *sponsorStyleRepository) All(c context.Context) (*sql.Rows, error){
+	rows , err := ssr.client.DB().QueryContext(c, "select * from sponsor_styles")
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
@@ -33,41 +33,41 @@ func (ssr *sponserStyleRepository) All(c context.Context) (*sql.Rows, error){
 }
 
 //１件取得
-func (ssr *sponserStyleRepository) Find(c context.Context, id string) (*sql.Row, error){
-	row := ssr.client.DB().QueryRowContext(c, "select *from sponser_styles where id = " + id)
+func (ssr *sponsorStyleRepository) Find(c context.Context, id string) (*sql.Row, error){
+	row := ssr.client.DB().QueryRowContext(c, "select *from sponsor_styles where id = " + id)
 	return row, nil
 }
 
 //作成
-func (ssr *sponserStyleRepository) Create(
+func (ssr *sponsorStyleRepository) Create(
 	c context.Context,
 	scale string,
 	isColor string,
 	price string,
 )error {
-	var query = "insert into sponser_styles (scale, is_color, price) values ('" + scale + "'," + isColor + "," + price + ")"
+	var query = "insert into sponsor_styles (scale, is_color, price) values ('" + scale + "'," + isColor + "," + price + ")"
 	_, err := ssr.client.DB().ExecContext(c, query)
 	return err
 }
 
 //編集
-func (ssr *sponserStyleRepository) Update(
+func (ssr *sponsorStyleRepository) Update(
 	c context.Context,
 	id string,
 	scale string,
 	isColor string,
 	price string,
 )error {
-	var query = "update sponser_styles set scale = '" + scale + "' , is_color = " + isColor + ", price = " + price + "where id = " + id
+	var query = "update sponsor_styles set scale = '" + scale + "' , is_color = " + isColor + ", price = " + price + " where id = " + id
 	_, err :=ssr.client.DB().ExecContext(c, query)
 	return err
 }
 
 //削除
-func (ssr *sponserStyleRepository) Delete(
+func (ssr *sponsorStyleRepository) Delete(
 	c context.Context,
 	id string,
 )error {
-	_, err := ssr.client.DB().ExecContext(c, "Delete from sponser_styles where id =" + id)
+	_, err := ssr.client.DB().ExecContext(c, "Delete from sponsor_styles where id =" + id)
 	return err
 }
