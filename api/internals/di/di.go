@@ -25,6 +25,7 @@ func InitializeServer() db.Client {
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
 	PurchaseItemRepository := repository.NewPurchaseItemRepository(client)
+	SponsorStyleRepository := repository.NewSponsorStyleRepository(client)
 	// ↓
 
 	// UseCase
@@ -33,6 +34,7 @@ func InitializeServer() db.Client {
   purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUsecase(purchaseReportRepository)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(PurchaseItemRepository)
+	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(SponsorStyleRepository)
 	// ↓
 
 	// Controller
@@ -42,6 +44,7 @@ func InitializeServer() db.Client {
   purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
+	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
 	// ↓
 
 	// router
@@ -52,6 +55,7 @@ func InitializeServer() db.Client {
 		purchaseOrderController,
 		purchaseReportController,
 		purchaseItemController,
+		sponsorStyleController,
 	)
 
 	// ↓

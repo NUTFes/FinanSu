@@ -13,8 +13,16 @@ type DepartmentID int
 type Detail string
 type Url string
 
+//purchaseorder
 type DeadLine string
 
+//purchasereport
 type PurchaseOrderID int
 
+//purchaseItem
 type Quantity int
+
+//sponserstyle
+type Scale string
+
+
