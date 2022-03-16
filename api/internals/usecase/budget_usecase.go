@@ -19,7 +19,7 @@ type BudgetUseCase interface {
 	DestroyBudget(context.Context, string) error
 }
 
-func NewBudgetUsecase(rep rep.BudgetRepository) BudgetUseCase {
+func NewBudgetUseCase(rep rep.BudgetRepository) BudgetUseCase {
 	return &budgetUseCase{rep}
 }
 

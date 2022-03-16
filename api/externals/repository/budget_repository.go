@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
 )
@@ -27,7 +26,6 @@ func NewBudgetRepository(client db.Client) BudgetRepository {
 // 全件取得
 func (br *budgetRepository) All(c context.Context) (*sql.Rows, error) {
 	rows, err := br.client.DB().QueryContext(c, "select * from budgets")
-	fmt.Println(rows)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
