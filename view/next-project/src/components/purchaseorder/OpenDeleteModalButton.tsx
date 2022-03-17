@@ -1,7 +1,7 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import PurchaseOrderDeleteModal from '@components/General/PurchaseOrderDeleteModal';
+import PurchaseOrderDeleteModal from '@components/purchaseorder/PurchaseOrderDeleteModal';
 import { useState } from 'react';
 import {RiDeleteBinLine} from 'react-icons/ri';
 
