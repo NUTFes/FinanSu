@@ -43,12 +43,10 @@ func (p *purchaseReportController) ShowPurchaseReport(c echo.Context)error{
 
 //Create
 func (p *purchaseReportController) CreatePurchaseReport(c echo.Context)error{
-	item :=c.QueryParam("item")
-	price :=c.QueryParam("price")
 	userID :=c.QueryParam("user_id")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
 	
-	err := p.u.CreatePurchaseReport(c.Request().Context(),item, price, userID, purchaseOrderID)
+	err := p.u.CreatePurchaseReport(c.Request().Context(),userID, purchaseOrderID)
 	if err != nil {
 		return err
 	}
@@ -58,12 +56,10 @@ func (p *purchaseReportController) CreatePurchaseReport(c echo.Context)error{
 //Update
 func (p *purchaseReportController) UpdatePurchaseReport(c echo.Context) error{
 	id := c.Param("id")
-	item :=c.QueryParam("item")
-	price :=c.QueryParam("price")
 	userID :=c.QueryParam("user_id")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
 	
-	err := p.u.UpdatePurchaseReport(c.Request().Context(), id, item, price, userID, purchaseOrderID)
+	err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, purchaseOrderID)
 	if err != nil {
 		return err
 	}
