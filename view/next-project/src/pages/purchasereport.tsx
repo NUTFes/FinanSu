@@ -1,13 +1,12 @@
 import type { NextPage } from 'next';
 import { get, post, put, del } from '@api/purchaseReport';
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
+import {Box, ChakraProvider, Grid, GridItem} from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -20,6 +19,8 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
+import OpenEditModalButton from "@components/purchasereport/OpenEditModalButton";
+import OpenDeleteModalButton from "@components/purchasereport/OpenDeleteModalButton";
 
 interface PurchaseReport {
   id: number;
@@ -63,7 +64,6 @@ export default function PurchaseReport(props: Props){
     const datetime2 = datetime.substring(0, datetime.length - 5);
     return datetime2;
   };
-  console.log(props)
 
   return (
     <ChakraProvider theme={theme}>
@@ -130,24 +130,29 @@ export default function PurchaseReport(props: Props){
                 </Tr>
               </Thead>
               <Tbody>
-                {props.purchaseReport.map((purchaseItem) => (
-                  <Tr key={purchaseItem.id}>
+                {props.purchaseReport.map((purchaseReportItem) => (
+                  <Tr key={purchaseReportItem.id}>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.id}</Center>
+                      <Center color='black.300'>{purchaseReportItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.user_id}</Center>
+                      <Center color='black.300'>{purchaseReportItem.user_id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{formatDate(purchaseItem.created_at)}</Center>
+                      <Center color='black.300'>{formatDate(purchaseReportItem.created_at)}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseItem.price}</Center>
+                      <Center color='black.300'>{purchaseReportItem.price}</Center>
                     </Td>
                     <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center><OpenEditModalButton id={purchaseReportItem.id} /></Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center><OpenDeleteModalButton id={purchaseReportItem.id}/></Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
                   </Tr>
                 ))}
