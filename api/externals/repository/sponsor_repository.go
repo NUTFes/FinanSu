@@ -25,7 +25,7 @@ func NewSponsorRepository(client db.Client) SponsorRepository {
 
 //全件取得
 func (sr *sponsorRepository) All(c context.Context) (*sql.Rows, error) {
-	rows, err := sr.client.DB().QueryContext(c, "select from * sponsor")
+	rows, err := sr.client.DB().QueryContext(c, "select * from sponsors")
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
@@ -34,7 +34,7 @@ func (sr *sponsorRepository) All(c context.Context) (*sql.Rows, error) {
 
 //1件取得
 func (sr *sponsorRepository) Find(c context.Context, id string) (*sql.Row, error){
-	row := sr.client.DB().QueryRowContext(c, "select * from *sponsor where id = " + id)
+	row := sr.client.DB().QueryRowContext(c, "select * from sponsors where id = " + id)
 	return row, nil
 }
 
@@ -47,7 +47,7 @@ func (sr *sponsorRepository) Create(
 	address string,
 	representative string,
 )error{
-	var query ="insert into sponsor (name, tel, email, address, representive) values ('" + name + "','" + tel + "','" + email + "','" + address + "','" +representative + ")"
+	var query ="insert into sponsors (name, tel, email, address, representative) values ('" + name + "','" + tel + "','" + email + "','" + address + "','" +representative + "')"
 	_, err := sr.client.DB().ExecContext(c, query)
 	return err
 }
@@ -62,7 +62,7 @@ func (sr *sponsorRepository) Update(
 	address string,
 	representative string,
 )error {
-	var query = "update sponsor set name = '" + name + "', tel='" + tel + "', email = '" + email + "', address = '" + address + "', representative = '" + representative + "' where id = " +id
+	var query = "update sponsors set name = '" + name + "', tel='" + tel + "', email = '" + email + "', address = '" + address + "', representative = '" + representative + "' where id = " +id
 	_, err := sr.client.DB().ExecContext(c, query)
 	return err 
 }
@@ -72,6 +72,6 @@ func (sr *sponsorRepository) Delete(
 	c context.Context,
 	id string,
 )error {
-	_, err := sr.client.DB().ExecContext(c, "Delete from sponsor where id =" + id)
+	_, err := sr.client.DB().ExecContext(c, "Delete from sponsors where id =" + id)
 	return err
 }

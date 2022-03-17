@@ -19,6 +19,7 @@ type router struct {
 	sponsorStyleController    controller.SponsorStyleController
 	teacherController         controller.TeacherController
 	activityController        controller.ActivityController
+	sponsorController					controller.SponsorController
 }
 
 type Router interface {
@@ -39,6 +40,7 @@ func NewRouter(
 	sponsorStyleController controller.SponsorStyleController,
 	teacherController controller.TeacherController,
 	activityController controller.ActivityController,
+	sponsorController controller.SponsorController,
 
 ) Router {
 	return router{
@@ -55,6 +57,7 @@ func NewRouter(
 		sponsorStyleController,
 		teacherController,
 		activityController,
+		sponsorController,
 	}
 }
 
@@ -145,5 +148,12 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/activities", r.activityController.CreateActivity)
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
+
+	//sponsorのroute
+	e.GET("/sponsors", r.sponsorController.IndexSponsor)
+	e.GET("/sponsors/:id", r.sponsorController.ShowSponsor)
+	e.POST("/sponsors", r.sponsorController.CreateSponsor)
+	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
+	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
 
 }
