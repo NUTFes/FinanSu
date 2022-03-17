@@ -16,9 +16,10 @@ type router struct {
 	purchaseOrderController   controller.PurchaseOrderController
 	purchaseReportController  controller.PurchaseReportController
 	purchaseItemController    controller.PurchaseItemController
+	sponsorStyleController    controller.SponsorStyleController
 	teacherController         controller.TeacherController
 	activityController        controller.ActivityController
-	sponsorStyleController    controller.SponsorStyleController
+	sponsorController					controller.SponsorController
 }
 
 type Router interface {
@@ -36,9 +37,10 @@ func NewRouter(
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
 	purchaseItemController controller.PurchaseItemController,
+	sponsorStyleController controller.SponsorStyleController,
 	teacherController controller.TeacherController,
 	activityController controller.ActivityController,
-	sponsorStyleController controller.SponsorStyleController,
+	sponsorController controller.SponsorController,
 
 ) Router {
 	return router{
@@ -52,9 +54,10 @@ func NewRouter(
 		purchaseOrderController,
 		purchaseReportController,
 		purchaseItemController,
+		sponsorStyleController,
 		teacherController,
 		activityController,
-		sponsorStyleController,
+		sponsorController,
 	}
 }
 
@@ -125,6 +128,13 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
 
+	//sponsorstylesのroute
+	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
+	e.GET("/sponsorstyles/:id", r.sponsorStyleController.ShowSponsorStyle)
+	e.POST("/sponsorstyles", r.sponsorStyleController.CreateSponsorStyle)
+	e.PUT("/sponsorstyles/:id", r.sponsorStyleController.UpdateSponsorStyle)
+	e.DELETE("/sponsorstyles/:id", r.sponsorStyleController.DestroySponsorStyle)
+	
 	// teacherのRoute
 	e.GET("/teachers", r.teacherController.IndexTeacher)
 	e.GET("/teachers/:id", r.teacherController.ShowTeacher)
@@ -139,17 +149,11 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 
-	//sponsorstylesのroute
-	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
-	e.GET("/sponsorstyles/:id", r.sponsorStyleController.ShowSponsorStyle)
-	e.POST("/sponsorstyles", r.sponsorStyleController.CreateSponsorStyle)
-	e.PUT("/sponsorstyles/:id", r.sponsorStyleController.UpdateSponsorStyle)
-	e.DELETE("/sponsorstyles/:id", r.sponsorStyleController.DestroySponsorStyle)
+	//sponsorのroute
+	e.GET("/sponsors", r.sponsorController.IndexSponsor)
+	e.GET("/sponsors/:id", r.sponsorController.ShowSponsor)
+	e.POST("/sponsors", r.sponsorController.CreateSponsor)
+	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
+	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
 
-	//activityのroute
-	e.GET("/activities", r.activityController.IndexActivity)
-	e.GET("/activities/:id", r.activityController.ShowActivity)
-	e.POST("/activities", r.activityController.CreateActivity)
-	e.PUT("/activities/:id", r.activityController.UpdateActivity)
-	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 }

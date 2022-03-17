@@ -29,10 +29,10 @@ func InitializeServer() db.Client {
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client)
+	sponsorStyleRepository := repository.NewSponsorStyleRepository(client)
 	teacherRepository := repository.NewTeacherRepository(client)
 	activityRepository := repository.NewActivityRepository(client)
-	SponsorStyleRepository := repository.NewSponsorStyleRepository(client)
-
+	sponsorRepository := repository.NewSponsorRepository(client)
 	// ↓
 
 	// UseCase
@@ -45,10 +45,10 @@ func InitializeServer() db.Client {
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
+	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
-	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(SponsorStyleRepository)
-
+	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
 	// ↓
 
 	// Controller
@@ -62,9 +62,10 @@ func InitializeServer() db.Client {
   purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
+	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
 	teacherController := controller.NewTeacherController(teacherUseCase)
 	activityController := controller.NewActivityController(activityUseCase)
-	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
+	sponsorController := controller.NewSponsorController(sponsorUseCase)
 
 	// ↓
 
@@ -80,9 +81,10 @@ func InitializeServer() db.Client {
 		purchaseOrderController,
 		purchaseReportController,
 		purchaseItemController,
+		sponsorStyleController,
 		teacherController,
 		activityController,
-		sponsorStyleController,
+		sponsorController,
 	)
 
 	// ↓
