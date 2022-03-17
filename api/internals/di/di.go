@@ -28,8 +28,8 @@ func InitializeServer() db.Client {
 	fundInformationRepository := repository.NewFundInformationRepository(client)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
-	SponsorStyleRepository := repository.NewSponsorStyleRepository(client)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client)
+	sponsorStyleRepository := repository.NewSponsorStyleRepository(client)
 	teacherRepository := repository.NewTeacherRepository(client)
 	activityRepository := repository.NewActivityRepository(client)
 	// ↓
@@ -41,12 +41,13 @@ func InitializeServer() db.Client {
 	yearUseCase := usecase.NewYearUseCase(yearRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
-	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(SponsorStyleRepository)
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
+	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
+
 	// ↓
 
 	// Controller
@@ -57,7 +58,7 @@ func InitializeServer() db.Client {
 	yearController := controller.NewYearController(yearUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
-	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
+  purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
 	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
