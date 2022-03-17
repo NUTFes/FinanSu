@@ -1,7 +1,7 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import PurchaseOrderEditModal from '@components/General/PurchaseOrderEditModal';
+import PurchaseReportEditModal from '@components/purchasereport/PurchaseReportEditModal';
 import { useState } from 'react';
 import {RiPencilFill} from "react-icons/ri";
 
@@ -31,7 +31,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         <RiPencilFill size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <PurchaseOrderEditModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
+      <PurchaseReportEditModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
     </ChakraProvider>
   );
 };
