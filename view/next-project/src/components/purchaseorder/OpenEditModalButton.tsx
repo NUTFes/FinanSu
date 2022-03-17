@@ -1,7 +1,7 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import PurchaseOrderEditModal from '@components/General/PurchaseOrderEditModal';
+import PurchaseOrderEditModal from '@components/purchaseorder/PurchaseOrderEditModal';
 import { useState } from 'react';
 import {RiPencilFill} from "react-icons/ri";
 

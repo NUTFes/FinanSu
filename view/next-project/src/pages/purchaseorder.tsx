@@ -1,4 +1,3 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
@@ -21,8 +20,8 @@ import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, post, put, del } from '@api/purchaseOrder';
-import OpenEditModalButton from '@components/General/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/General/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/purchaseorder/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/purchaseorder/OpenDeleteModalButton';
 
 interface User {
   id: number;
@@ -147,7 +146,7 @@ export default function PurchaseOrder(props: Props){
                     <Td>
                       <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                         <GridItem>
-                          <Center><OpenEditModalButton id={purchaseOrderItem.id}/></Center>
+                          <Center><OpenEditModalButton id={purchaseOrderItem.id} /></Center>
                         </GridItem>
                         <GridItem>
                           <Center><OpenDeleteModalButton id={purchaseOrderItem.id}/></Center>
