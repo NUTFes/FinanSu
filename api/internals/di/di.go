@@ -32,6 +32,7 @@ func InitializeServer() db.Client {
 	sponsorStyleRepository := repository.NewSponsorStyleRepository(client)
 	teacherRepository := repository.NewTeacherRepository(client)
 	activityRepository := repository.NewActivityRepository(client)
+	sponsorRepository := repository.NewSponsorRepository(client)
 	// ↓
 
 	// UseCase
@@ -47,7 +48,7 @@ func InitializeServer() db.Client {
 	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
-
+	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
 	// ↓
 
 	// Controller
@@ -64,6 +65,7 @@ func InitializeServer() db.Client {
 	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
 	teacherController := controller.NewTeacherController(teacherUseCase)
 	activityController := controller.NewActivityController(activityUseCase)
+	sponsorController := controller.NewSponsorController(sponsorUseCase)
 
 	// ↓
 
@@ -82,6 +84,7 @@ func InitializeServer() db.Client {
 		sponsorStyleController,
 		teacherController,
 		activityController,
+		sponsorController,
 	)
 
 	// ↓
