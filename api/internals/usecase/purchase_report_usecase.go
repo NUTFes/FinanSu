@@ -13,8 +13,8 @@ type purchaseReportUseCase struct {
 type PurchaseReportUseCase interface {
 	GetPurchaseReports(context.Context) ([]domain.PurchaseReport, error)
 	GetPurchaseReportByID(context.Context, string) (domain.PurchaseReport, error)
-	CreatePurchaseReport(context.Context, string, string, string, string) error
-	UpdatePurchaseReport(context.Context, string, string, string, string, string) error
+	CreatePurchaseReport(context.Context, string, string) error
+	UpdatePurchaseReport(context.Context, string, string, string) error
 	DestroyPurchaseReport(context.Context, string) error
 }
 
@@ -33,8 +33,6 @@ func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.
 	for rows.Next() {
 		err := rows.Scan(
 			&purchaseReport.ID,
-			&purchaseReport.Item,
-			&purchaseReport.Price,
 			&purchaseReport.UserID,
 			&purchaseReport.PurchaseOrderID,
 			&purchaseReport.CreatedAt,
@@ -54,8 +52,6 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
 		&purchaseReport.ID,
-		&purchaseReport.Item,
-		&purchaseReport.Price,
 		&purchaseReport.UserID,
 		&purchaseReport.PurchaseOrderID,
 		&purchaseReport.CreatedAt,
@@ -70,12 +66,10 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 //PurchaseReportの作成(create)
 func (p *purchaseReportUseCase) CreatePurchaseReport(
 	c context.Context,
-	Item string,
-	Price string,
 	UserID string,
 	PurchaseOrderID string,
 ) error {
-	err := p.rep.Create(c, Item, Price, UserID, PurchaseOrderID)
+	err := p.rep.Create(c, UserID, PurchaseOrderID)
 	return err
 }
 
@@ -83,12 +77,10 @@ func (p *purchaseReportUseCase) CreatePurchaseReport(
 func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	c context.Context,
 	id string,
-	Item string,
-	Price string,
 	UserID string,
 	PurchaseOrderID string,
 ) error {
-	err := p.rep.Update(c, id, Item, Price, UserID, PurchaseOrderID)
+	err := p.rep.Update(c, id, UserID, PurchaseOrderID)
 	return err
 }
 
