@@ -2,7 +2,6 @@ import {
   ChakraProvider,
   Center,
   Text,
-  Input,
   Flex,
   Box,
   Spacer,
@@ -16,9 +15,9 @@ import {
 import React, {FC, useEffect, useState} from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from './RegistButton';
+import RegistButton from '../General/RegistButton';
 import {useRouter} from 'next/router';
-import {get, put} from '@api/purchaseOrder';
+import {get, del} from '@api/purchaseReport';
 
 interface ModalProps {
   setShowModal: any;
@@ -27,15 +26,15 @@ interface ModalProps {
   id: number | string;
 }
 
-interface PurchaseOrder {
+interface PurchaseReport{
   id: number | string;
-  deadline: string;
   user_id: number | string;
+  purchase_order_id: number | string;
   created_at: string;
   updated_at: string;
 }
 
-const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
+const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
@@ -43,32 +42,32 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
   const router = useRouter();
   const query = router.query;
 
-  const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder>({
+  const [purchaseReport, setPurchaseReport] = useState<PurchaseReport>({
     id: '',
-    deadline: '',
     user_id: '',
+    purchase_order_id: '',
     created_at: '',
     updated_at: '',
   });
 
   const [formData, setFormData] = useState({
-    deadline: '',
     user_id: '',
+    purchase_order_id: '',
   });
 
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.id;
+      const getFormDataUrl = process.env.CSR_API_URI + '/purchasereports/' + props.id;
       const getFormData = async (url: string) => {
         setFormData(await get(url));
       };
       getFormData(getFormDataUrl);
 
-      const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.id;
-      const getPurchaseOrder = async (url: string) => {
-        setPurchaseOrder(await get(url));
+      const getPurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + props.id;
+      const getPurchaseReport = async (url: string) => {
+        setPurchaseReport(await get(url));
       };
-      getPurchaseOrder(getPurchaseOrderUrl);
+      getPurchaseReport(getPurchaseReportUrl);
     }
   }, [query, router]);
 
@@ -82,9 +81,9 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
       setFormData({...formData, [input]: e.target.value});
     };
 
-  const submitPurchaseOrder = async (data: any, id: number | string) => {
-    const submitPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
-    await put(submitPurchaseOrderUrl, data);
+  const deletePurchaseReport = async (id: number | string) => {
+    const deletePurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + id;
+    await del(deletePurchaseReportUrl);
   };
 
   return (
@@ -101,20 +100,13 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
             </Flex>
             <VStack spacing='30px'>
               <Text fontSize='xl' color='black.600'>
-                購入申請の編集
+                購入報告の削除
               </Text>
               <VStack spacing='15px'>
                 <Flex>
                   <Center color='black.600' mr='3'>
-                    購入期限日
+                    削除してもよいですか？
                   </Center>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.deadline} onChange={handler('deadline')} />
-                </Flex>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    申請者
-                  </Center>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.user_id} onChange={handler('user_id')} />
                 </Flex>
               </VStack>
             </VStack>
@@ -126,11 +118,11 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
                 color='white'
                 bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
-                  submitPurchaseOrder(formData, props.id);
+                  deletePurchaseReport(props.id);
                   router.reload();
                 }}
               >
-                編集する
+                削除する
               </RegistButton>
             </ModalFooter>
           </Center>
@@ -140,5 +132,5 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
   );
 };
 
-export default PurchaseOrderEditModal;
+export default PurchaseReportDeleteModal;
 

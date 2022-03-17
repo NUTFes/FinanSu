@@ -12,13 +12,15 @@ import {
   ModalContent,
   ModalFooter,
   ModalBody,
+  GridItem,
+  Grid,
 } from '@chakra-ui/react';
 import React, {FC, useEffect, useState} from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from './RegistButton';
+import RegistButton from '../General/RegistButton';
 import {useRouter} from 'next/router';
-import {get, del} from '@api/purchaseOrder';
+import {get, put} from '@api/purchaseReport';
 
 interface ModalProps {
   setShowModal: any;
@@ -27,7 +29,7 @@ interface ModalProps {
   id: number | string;
 }
 
-interface PurchaseOrder {
+interface PurchaseReport {
   id: number | string;
   deadline: string;
   user_id: number | string;
@@ -35,7 +37,7 @@ interface PurchaseOrder {
   updated_at: string;
 }
 
-const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
+const PurchaseReportEditModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
@@ -43,7 +45,7 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
   const router = useRouter();
   const query = router.query;
 
-  const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder>({
+  const [purchaseReport, setPurchaseOrder] = useState<PurchaseReport>({
     id: '',
     deadline: '',
     user_id: '',
@@ -52,19 +54,19 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
   });
 
   const [formData, setFormData] = useState({
-    deadline: '',
     user_id: '',
+    purchase_order_id: '',
   });
 
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.id;
+      const getFormDataUrl = process.env.CSR_API_URI + '/purchasereports/' + props.id;
       const getFormData = async (url: string) => {
         setFormData(await get(url));
       };
       getFormData(getFormDataUrl);
 
-      const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.id;
+      const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchasereports/' + props.id;
       const getPurchaseOrder = async (url: string) => {
         setPurchaseOrder(await get(url));
       };
@@ -82,9 +84,9 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
       setFormData({...formData, [input]: e.target.value});
     };
 
-  const deletePurchaseOrder = async (id: number | string) => {
-    const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
-    await del(deletePurchaseOrderUrl);
+  const submitPurchaseReport= async (data: any, id: number | string) => {
+    const submitPurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + id;
+    await put(submitPurchaseReportUrl, data);
   };
 
   return (
@@ -99,18 +101,39 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
                 <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
               </Box>
             </Flex>
-            <VStack spacing='30px'>
-              <Text fontSize='xl' color='black.600'>
-                購入申請の削除
-              </Text>
-              <VStack spacing='15px'>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    削除してもよいですか？
+              <Grid
+                templateRows='repeat(2, 1fr)'
+                templateColumns='repeat(12, 1fr)'
+                gap={4}
+              >
+                <GridItem rowSpan={1} colSpan={12}>
+                  <Center color='black.600' h="100%" fontSize="xl">
+                    購入報告の編集
                   </Center>
-                </Flex>
-              </VStack>
-            </VStack>
+                </GridItem>
+                <GridItem rowSpan={1} colSpan={1} />
+                <GridItem rowSpan={1} colSpan={3}>
+                  <Flex color='black.600' h="100%" justify="end" align="center">
+                    申請者
+                  </Flex>
+                </GridItem>
+                <GridItem rowSpan={1} colSpan={7}>
+                  <Input borderRadius='full' borderColor='primary.1' value={formData.user_id} onChange={handler('user_id')} />
+                </GridItem>
+                <GridItem rowSpan={1} colSpan={1} />
+                <GridItem rowSpan={1} colSpan={1} />
+                <GridItem rowSpan={1} colSpan={3}>
+                  <Flex color='black.600' h="100%" justify="end" align="center">
+                    購入報告
+                  </Flex>
+                </GridItem>
+                <GridItem rowSpan={1} colSpan={7}>
+                  <Flex>
+                    <Input borderRadius='full' borderColor='primary.1' value={formData.purchase_order_id} onChange={handler('purchase_order_id')} />
+                  </Flex>
+                </GridItem>
+                <GridItem rowSpan={1} colSpan={1} />
+              </Grid>
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
@@ -119,11 +142,11 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
                 color='white'
                 bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
-                  deletePurchaseOrder(props.id);
+                  submitPurchaseReport(formData, props.id);
                   router.reload();
                 }}
               >
-                削除する
+                編集する
               </RegistButton>
             </ModalFooter>
           </Center>
@@ -133,5 +156,5 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
   );
 };
 
-export default PurchaseOrderDeleteModal;
+export default PurchaseReportEditModal;
 
