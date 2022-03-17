@@ -1,6 +1,6 @@
 import {
   ChakraProvider,
-  Button,
+  Select,
   Center,
   Text,
   Input,
@@ -14,7 +14,9 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
+import { get, post, put, del } from '@api/budget';
 import * as React from 'react';
+import { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import RegistButton from './RegistButton';
@@ -23,6 +25,64 @@ const RegistModal = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
+
+  const [price, setText] = useState('');
+
+  const priceChange = (e) => setText(e.target.value);
+
+  const [yearID, setYear] = React.useState(1);
+
+  const yearChange = (e) => setYear(e.target.value);
+
+  const [sourceID, setSource] = React.useState(1);
+
+  const sourceChange = (e) => setSource(e.target.value);
+
+  const sourceList = [
+    {
+      id: 1,
+      name: '教育振興会費',
+    },
+    {
+      id: 2,
+      name: '同窓会費',
+    },
+    {
+      id: 3,
+      name: '企業協賛金',
+    },
+    {
+      id: 4,
+      name: '学内募金',
+    },
+  ];
+
+  const yearList = [
+    {
+      id: 1,
+      year: 2020,
+    },
+    {
+      id: 2,
+      year: 2021,
+    },
+    {
+      id: 3,
+      year: 2022,
+    },
+    {
+      id: 4,
+      year: 2023,
+    },
+  ];
+
+  async function postBudget() {
+    const postUrl = 'http://localhost:1323/budgets';
+    const postData = { price: price, year_id: yearID, source_id: sourceID };
+    const getRes = await get(postUrl);
+    console.log(getRes.slice(-1)[0].id);
+    const postReq = await post(postUrl, postData);
+  }
 
   return (
     <ChakraProvider theme={theme}>
@@ -45,19 +105,45 @@ const RegistModal = (props) => {
                   <Center color='black.600' mr='3'>
                     年度
                   </Center>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' />
+                  <Select
+                    value={yearID}
+                    onChange={yearChange}
+                    borderRadius='full'
+                    borderColor='primary.1'
+                    w='224px'
+                  >
+                    {yearList.map((data) => (
+                      <option value={data.id}>{data.year}</option>
+                    ))}
+                  </Select>
                 </Flex>
                 <Flex>
                   <Center color='black.600' mr='3'>
                     項目
                   </Center>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' />
+                  <Select
+                    value={sourceID}
+                    onChange={sourceChange}
+                    borderRadius='full'
+                    borderColor='primary.1'
+                    w='224px'
+                  >
+                    {sourceList.map((source) => (
+                      <option value={source.id}>{source.name}</option>
+                    ))}
+                  </Select>
                 </Flex>
                 <Flex>
                   <Center color='black.600' mr='3'>
                     金額
                   </Center>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' />
+                  <Input
+                    w='100'
+                    borderRadius='full'
+                    borderColor='primary.1'
+                    value={price}
+                    onChange={priceChange}
+                  />
                 </Flex>
               </VStack>
             </VStack>
@@ -68,6 +154,7 @@ const RegistModal = (props) => {
                 width='220px'
                 color='white'
                 bgGradient='linear(to-br, primary.1, primary.2)'
+                onClick={postBudget}
               >
                 登録する
               </RegistButton>
