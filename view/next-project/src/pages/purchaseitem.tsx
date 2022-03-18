@@ -29,7 +29,7 @@ interface PurchaseItem {
   detail: string;
   url: string;
   purchase_order_id: number;
-  finance_check: number;
+  finance_check: boolean;
 }
 
 interface Props {
