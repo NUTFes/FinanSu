@@ -30,7 +30,8 @@ interface PurchaseReport {
   updated_at: string;
 }
 
-interface User {id: number;
+interface User {
+  id: number;
   name: string;
 }
 
