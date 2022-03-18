@@ -1,15 +1,13 @@
 import { get, post, put, del } from '@api/purchaseReport';
 import { Table, Tr, Td, Button } from '@chakra-ui/react';
-type PurchaseReports = {
+interface PurchaseReport {
   id: number;
-  item: string;
-  price: number;
-  department_id: number;
+  user_id: number;
   purchase_order_id: number;
-};
+}
 
-type Props = {
-  purchaseOrder: PurchaseReports[];
+interface Props {
+  purchaseReport: PurchaseReport[];
 };
 
 export async function getStaticProps() {
@@ -17,17 +15,15 @@ export async function getStaticProps() {
   const json = await get(getUrl);
   return {
     props: {
-      purchaseOrder: json,
+      purchaseReport: json,
     },
   };
 }
 
-export async function postPurchaseOrders() {
+export async function postPurchaseReport() {
   const postUrl = 'http://localhost:1323/purchasereports';
   const postData = {
-    item: 'item',
-    price: 100000,
-    department_id: 1,
+    user_id: 1,
     purchase_order_id: 1,
   };
   const getRes = await get(postUrl);
@@ -35,20 +31,18 @@ export async function postPurchaseOrders() {
   const postReq = await post(postUrl, postData);
 }
 
-export async function putPurchaseOrders() {
+export async function putPurchaseReport() {
   const Url = 'http://localhost:1323/purchasereports';
   const getRes = await get(Url);
   const putUrl = Url + '/' + getRes.slice(-1)[0].id;
   const putData = {
-    item: 'change item',
-    price: 1000,
-    department_id: 2,
+    user_id: 2,
     purchase_order_id: 1,
   };
   const putReq = await put(putUrl, putData);
 }
 
-export async function deletePurchaseOrders() {
+export async function deletePurchaseReport() {
   const Url = 'http://localhost:1323/purchasereports';
   const getRes = await get(Url);
   const delUrl = Url + '/' + getRes.slice(-1)[0].id;
@@ -59,16 +53,15 @@ export async function deletePurchaseOrders() {
 export default function Example(props: Props) {
   return (
     <div>
-      <Button onClick={postPurchaseOrders}>POST</Button>
-      <Button onClick={putPurchaseOrders}>PUT</Button>
-      <Button onClick={deletePurchaseOrders}>DELETE</Button>
+      <Button onClick={postPurchaseReport}>POST</Button>
+      <Button onClick={putPurchaseReport}>PUT</Button>
+      <Button onClick={deletePurchaseReport}>DELETE</Button>
       <Table>
-        {props.purchaseOrder.map((purchaseOrder) => (
-          <Tr key={purchaseOrder.toString()}>
-            <Td>{purchaseOrder.id}</Td>
-            <Td>{purchaseOrder.price}</Td>
-            <Td>{purchaseOrder.department_id}</Td>
-            <Td>{purchaseOrder.purchase_order_id}</Td>
+        {props.purchaseReport.map((purchaseReportItem) => (
+          <Tr key={purchaseReportItem.toString()}>
+            <Td>{purchaseReportItem.id}</Td>
+            <Td>{purchaseReportItem.user_id}</Td>
+            <Td>{purchaseReportItem.purchase_order_id}</Td>
           </Tr>
         ))}
       </Table>
