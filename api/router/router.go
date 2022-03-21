@@ -7,6 +7,7 @@ import (
 
 type router struct {
 	healthcheckController     controller.HealthcheckController
+	mailAuthController        controller.MailAuthController
 	userController            controller.UserController
 	departmentController      controller.DepartmentController
 	sourceController          controller.SourceController
@@ -19,7 +20,7 @@ type router struct {
 	sponsorStyleController    controller.SponsorStyleController
 	teacherController         controller.TeacherController
 	activityController        controller.ActivityController
-	sponsorController					controller.SponsorController
+	sponsorController         controller.SponsorController
 }
 
 type Router interface {
@@ -28,6 +29,7 @@ type Router interface {
 
 func NewRouter(
 	healthController controller.HealthcheckController,
+	mailAuthController controller.MailAuthController,
 	userController controller.UserController,
 	departmentController controller.DepartmentController,
 	sourceController controller.SourceController,
@@ -45,6 +47,7 @@ func NewRouter(
 ) Router {
 	return router{
 		healthController,
+		mailAuthController,
 		userController,
 		departmentController,
 		sourceController,
@@ -64,6 +67,11 @@ func NewRouter(
 func (r router) ProvideRouter(e *echo.Echo) {
 	// Healthcheck
 	e.GET("/", r.healthcheckController.IndexHealthcheck)
+
+	// mail auth
+	e.POST("/signup", r.mailAuthController.SignUp)
+	e.POST("/signin", r.mailAuthController.SignIn)
+	e.DELETE("/signout", r.mailAuthController.SignOut)
 
 	// users
 	e.GET("/users", r.userController.IndexUser)
@@ -134,7 +142,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/sponsorstyles", r.sponsorStyleController.CreateSponsorStyle)
 	e.PUT("/sponsorstyles/:id", r.sponsorStyleController.UpdateSponsorStyle)
 	e.DELETE("/sponsorstyles/:id", r.sponsorStyleController.DestroySponsorStyle)
-	
+
 	// teacherのRoute
 	e.GET("/teachers", r.teacherController.IndexTeacher)
 	e.GET("/teachers/:id", r.teacherController.ShowTeacher)

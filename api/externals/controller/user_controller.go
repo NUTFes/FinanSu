@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -34,6 +35,7 @@ func (u *userController) IndexUser(c echo.Context) error {
 // Show
 func (u *userController) ShowUser(c echo.Context) error {
 	id := c.Param("id")
+	fmt.Println(c.Request().Header)
 	user, err := u.u.GetUserByID(c.Request().Context(), id)
 	if err != nil {
 		return err
