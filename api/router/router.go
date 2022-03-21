@@ -99,6 +99,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/budgets", r.budgetController.CreateBudget)
 	e.PUT("/budgets/:id", r.budgetController.UpdateBudget)
 	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
+	//budgetに紐づくyearとsourceの取得
+	e.GET("budgetyearsources/:id", r.budgetController.ShowBudgetWithYearAndSource)
 
 	// fund informations
 	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)
