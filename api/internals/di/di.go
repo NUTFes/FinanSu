@@ -21,6 +21,8 @@ func InitializeServer() db.Client {
 
 	// Repository
 	userRepository := repository.NewUserRepository(client)
+	mailAuthRepository := repository.NewMailAuthRepository(client)
+	sessionRepository := repository.NewSessionRepository(client)
 	departmentRepository := repository.NewDepartmentRepository(client)
 	sourceRepository := repository.NewSourceRepository(client)
 	yearRepository := repository.NewYearRepository(client)
@@ -37,6 +39,7 @@ func InitializeServer() db.Client {
 
 	// UseCase
 	userUseCase := usecase.NewUserUseCase(userRepository)
+	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
 	yearUseCase := usecase.NewYearUseCase(yearRepository)
@@ -53,13 +56,14 @@ func InitializeServer() db.Client {
 
 	// Controller
 	healthcheckController := controller.NewHealthCheckController()
+	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
 	userController := controller.NewUserController(userUseCase)
 	departmentController := controller.NewDepartmentController(departmentUseCase)
 	sourceController := controller.NewSourceController(sourceUseCase)
 	yearController := controller.NewYearController(yearUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
-  purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
+	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
 	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
@@ -72,6 +76,7 @@ func InitializeServer() db.Client {
 	// router
 	router := router.NewRouter(
 		healthcheckController,
+		mailAuthController,
 		userController,
 		departmentController,
 		sourceController,
