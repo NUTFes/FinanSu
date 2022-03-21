@@ -56,8 +56,7 @@ export default function FundList(props: Props) {
     console.log(fundList[id-1])
   }
   const submit = async(id: number) => {
-    await put("http://localhost:1323/fund_informations/"+id, fundList[id-1])
-    
+    await put("http://localhost:1323/fund_informations/"+id, fundList[id-1])  
   }
   const checkboxContent = (isChecked: boolean, id: number, input: string) => {
     {if (isChecked){
