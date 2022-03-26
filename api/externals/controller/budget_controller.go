@@ -16,6 +16,8 @@ type BudgetController interface {
 	CreateBudget(echo.Context) error
 	UpdateBudget(echo.Context) error
 	DestroyBudget(echo.Context) error
+	//budgetに紐づくyearとsourceの取得
+	ShowBudgetWithYearAndSource(echo.Context) error
 }
 
 func NewBudgetController(u usecase.BudgetUseCase) BudgetController {
@@ -75,3 +77,13 @@ func (b *budgetController) DestroyBudget(c echo.Context) error {
 	}
 	return c.String(http.StatusOK, "Destroy Budget")
 }
+
+//Show Budget with year and source 
+func (b *budgetController) ShowBudgetWithYearAndSource(c echo.Context) error {
+	id := c.Param("id")
+	budgetyearsource ,err :=b.u.GetBudgetWithYearAndSource(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, budgetyearsource)
+} 
