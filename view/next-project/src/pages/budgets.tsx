@@ -11,21 +11,18 @@ import {
   Tr,
   Th,
   Td,
-  Button,
   Flex,
   Spacer,
   Select,
-  Icon,
-  Text,
-  createIcon,
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, post, put, del } from '@api/budget';
+import {Source} from "postcss";
 
-type Budget = {
+interface Budget {
   id: number;
   price: number;
   year_id: number;
@@ -33,60 +30,47 @@ type Budget = {
   source: string;
   created_at: string;
   updated_at: string;
-};
+}
 
-type Props = {
+interface Source {
+  id: number;
+  name: string;
+}
+
+interface Year {
+  id: number;
+  year: number;
+}
+
+interface Props {
   budget: Budget[];
-};
+  source: Source[];
+  year: Year[];
+}
 
 export async function getServerSideProps() {
-  const getUrl = process.env.SSR_API_URI + '/budgets';
-  const json = await get(getUrl);
+  const getBudgetUrl = process.env.SSR_API_URI + '/budgets';
+  const getSourceUrl = process.env.SSR_API_URI + '/sources';
+  const getYearUrl = process.env.SSR_API_URI + '/years';
+  const getUrl = process.env.SSR_API_URI + '/budgetyearsources/1';
+
+  const budgetRes = await get(getBudgetUrl);
+  const sourceRes = await get(getSourceUrl);
+  const yearRes = await get(getYearUrl);
+  const getRes = await get(getUrl);
   return {
     props: {
-      budget: json,
+      budget: budgetRes,
+      source: sourceRes,
+      year: yearRes,
+      res: getRes,
     },
   };
 }
 
 export default function BudgetList(props: Props) {
-  const sourceList = [
-    {
-      id: 1,
-      name: '教育振興会費',
-    },
-    {
-      id: 2,
-      name: '同窓会費',
-    },
-    {
-      id: 3,
-      name: '企業協賛金',
-    },
-    {
-      id: 4,
-      name: '学内募金',
-    },
-  ];
-
-  const yearList = [
-    {
-      id: 1,
-      year: 2020,
-    },
-    {
-      id: 2,
-      year: 2021,
-    },
-    {
-      id: 3,
-      year: 2022,
-    },
-    {
-      id: 4,
-      year: 2023,
-    },
-  ];
+  const sourceList = props.source;
+  const yearList = props.year;
 
   // 合計金額用の変数
   let totalFee = 0;
