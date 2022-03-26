@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
@@ -99,7 +98,6 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 	var err error
 	// アクセストークンからmail_authを取得
 	row = u.sessionRep.FindSessionByAccessToken(c, accessToken)
-	fmt.Println(row)
 	err = row.Scan(
 		&session.ID,
 		&session.AuthID,
