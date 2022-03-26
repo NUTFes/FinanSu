@@ -10,8 +10,8 @@ type Props = {
   purchaseOrder: PurchaseOrder[];
 };
 
-export async function getStaticProps() {
-  const getUrl = 'http://nutfes-finansu-api:1323/purchaseorders';
+export async function getServerSideProps() {
+  const getUrl = process.env.SSR_API_URI + '/purchaseorders';
   const json = await get(getUrl);
   return {
     props: {
@@ -21,7 +21,7 @@ export async function getStaticProps() {
 }
 
 export async function postPurchaseOrders() {
-  const postUrl = 'http://localhost:1323/purchaseorders';
+  const postUrl = process.env.CSR_API_URI + '/purchaseorders';
   const postData = {
     deadline: '2020',
     user_id: 1,
@@ -32,9 +32,9 @@ export async function postPurchaseOrders() {
 }
 
 export async function putPurchaseOrders() {
-  const Url = 'http://localhost:1323/purchaseorders';
-  const getRes = await get(Url);
-  const putUrl = Url + '/' + getRes.slice(-1)[0].id;
+  const url = process.env.CSR_API_URI + '/purchaseorders';
+  const getRes = await get(url);
+  const putUrl = url + '/' + getRes.slice(-1)[0].id;
   const putData = {
     deadline: '2022',
     user_id: 1,
@@ -43,9 +43,9 @@ export async function putPurchaseOrders() {
 }
 
 export async function deletePurchaseOrders() {
-  const Url = 'http://localhost:1323/purchaseorders';
-  const getRes = await get(Url);
-  const delUrl = Url + '/' + getRes.slice(-1)[0].id;
+  const url = process.env.CSR_API_URI + '/purchaseorders';
+  const getRes = await get(url);
+  const delUrl = url + '/' + getRes.slice(-1)[0].id;
   console.log(getRes.slice(-1)[0].id);
   const delReq = await del(delUrl);
 }
