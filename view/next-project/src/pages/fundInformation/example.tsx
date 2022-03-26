@@ -15,8 +15,9 @@ type Props = {
   fundInformation: FundInformations[];
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const getUrl = 'http://nutfes-finansu-api:1323/fundinformations';
+  // const getUrl = process.env.SSR_API_URI + '/fundinformations';
   const json = await get(getUrl);
   return {
     props: {
@@ -27,6 +28,7 @@ export async function getStaticProps() {
 
 export async function postPurchaseOrders() {
   const postUrl = 'http://localhost:1323/fundinformations';
+  // const postUrl = process.env.CSR_API_URI + '/fundinformations';
   const postData = {
     contact_person: 'user',
     fund_date: '20220101',
@@ -43,6 +45,7 @@ export async function postPurchaseOrders() {
 
 export async function putPurchaseOrders() {
   const Url = 'http://localhost:1323/fundinformations';
+  // const Url = process.env.CSR_API_URI + '/fundinformations';
   const getRes = await get(Url);
   const putUrl = Url + '/' + getRes.slice(-1)[0].id;
   const putData = {
@@ -59,6 +62,7 @@ export async function putPurchaseOrders() {
 
 export async function deletePurchaseOrders() {
   const Url = 'http://localhost:1323/fundinformations';
+  // const Url = process.env.CSR_API_URI + '/fundinformations';
   const getRes = await get(Url);
   const delUrl = Url + '/' + getRes.slice(-1)[0].id;
   console.log(getRes.slice(-1)[0].id);
@@ -66,7 +70,6 @@ export async function deletePurchaseOrders() {
 }
 
 export default function Example(props: Props) {
-  console.log(props.fundInformation);
   return (
     <div>
       <Button onClick={postPurchaseOrders}>POST</Button>

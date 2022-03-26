@@ -143,7 +143,6 @@ export default function PurchaseReport(props: Props){
                       <Center color='black.300'>{formatDate(purchaseReportItem.created_at)}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{purchaseReportItem.price}</Center>
                     </Td>
                     <Td>
                       <Grid templateColumns='repeat(2, 1fr)' gap={3}>

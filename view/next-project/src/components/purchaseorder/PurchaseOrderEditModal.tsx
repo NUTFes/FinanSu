@@ -1,12 +1,10 @@
 import {
   ChakraProvider,
   Center,
-  Text,
   Input,
   Flex,
   Box,
   Spacer,
-  VStack,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -16,7 +14,7 @@ import {
 import React, {FC, useEffect, useState} from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from '../General/RegistButton';
+import Button from '../General/RegistButton';
 import {useRouter} from 'next/router';
 import {get, put} from '@api/purchaseOrder';
 
@@ -27,29 +25,12 @@ interface ModalProps {
   id: number | string;
 }
 
-interface PurchaseOrder {
-  id: number | string;
-  deadline: string;
-  user_id: number | string;
-  created_at: string;
-  updated_at: string;
-}
-
 const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
 
   const router = useRouter();
-  const query = router.query;
-
-  const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder>({
-    id: '',
-    deadline: '',
-    user_id: '',
-    created_at: '',
-    updated_at: '',
-  });
 
   const [formData, setFormData] = useState({
     deadline: '',
@@ -63,14 +44,8 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
         setFormData(await get(url));
       };
       getFormData(getFormDataUrl);
-
-      const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.id;
-      const getPurchaseOrder = async (url: string) => {
-        setPurchaseOrder(await get(url));
-      };
-      getPurchaseOrder(getPurchaseOrderUrl);
     }
-  }, [query, router]);
+  }, [router]);
 
   const handler =
     (input: string) => (
@@ -135,17 +110,15 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <RegistButton
+              <Button
                 width='220px'
-                color='white'
-                bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
                   submitPurchaseOrder(formData, props.id);
                   router.reload();
                 }}
               >
                 編集する
-              </RegistButton>
+              </Button>
             </ModalFooter>
           </Center>
         </ModalContent>
