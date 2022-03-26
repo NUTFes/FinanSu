@@ -54,7 +54,7 @@ export default function PurchaseItem(props: Props){
   };
 
   // 合計金額計算
-  let totalPriceArray = [];
+  let totalPriceArray: number[] = [];
   const calcItemTotalPrice = (quantity: number, price: number) => {
     // 合計金額の計算
     const totalPrice = quantity * price;
@@ -78,7 +78,7 @@ export default function PurchaseItem(props: Props){
     <ChakraProvider theme={theme}>
       <Head>
         <title>FinanSu | 購入物品一覧</title>
-        <meta item='description' content='ja' />
+        <meta content='ja' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
 

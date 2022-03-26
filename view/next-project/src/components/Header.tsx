@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Flex, Text, ChakraProvider } from '@chakra-ui/react';
-import PulldownButton from '../components/General/PulldownButton';
+import PulldownButton from '@components/General/PulldownButton';
 import { Avatar } from '@chakra-ui/react';
 import theme from '@assets/theme';
 
@@ -31,7 +31,7 @@ const Header = () => {
           justify='end'
           bgGradient='linear(to-br, primary.1, primary.2)'
           height='60px'
-          flexGrow='1'
+          flexGrow={1}
         >
           <Box>
             <Avatar size='xs' />

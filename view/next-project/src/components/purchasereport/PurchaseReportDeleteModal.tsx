@@ -12,10 +12,10 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from '../General/RegistButton';
+import Button from '../General/RegistButton';
 import {useRouter} from 'next/router';
 import {del} from '@api/purchaseReport';
 
@@ -65,17 +65,15 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <RegistButton
+              <Button
                 width='220px'
-                color='white'
-                bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
                   deletePurchaseReport(props.id);
                   router.reload();
                 }}
               >
                 削除する
-              </RegistButton>
+              </Button>
             </ModalFooter>
           </Center>
         </ModalContent>
