@@ -69,9 +69,10 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/", r.healthcheckController.IndexHealthcheck)
 
 	// mail auth
-	e.POST("/signup", r.mailAuthController.SignUp)
-	e.POST("/signin", r.mailAuthController.SignIn)
-	e.DELETE("/signout", r.mailAuthController.SignOut)
+	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)
+	e.POST("/mail_auth/signin", r.mailAuthController.SignIn)
+	e.DELETE("/mail_auth/signout", r.mailAuthController.SignOut)
+	e.GET("/mail_auth/is_signin", r.mailAuthController.IsSignIn)
 
 	// users
 	e.GET("/users", r.userController.IndexUser)
@@ -79,6 +80,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/users", r.userController.CreateUser)
 	e.PUT("/users/:id", r.userController.UpdateUser)
 	e.DELETE("/users/:id", r.userController.DestroyUser)
+
+	// current_user
+	e.GET("/current_user", r.userController.GetCurrentUser)
 
 	// departments
 	e.GET("/departments", r.departmentController.IndexDepartment)

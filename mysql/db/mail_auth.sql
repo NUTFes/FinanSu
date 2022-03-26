@@ -9,5 +9,3 @@ CREATE TABLE mail_auth (
   updated_at datetime not null default current_timestamp on update current_timestamp,
   PRIMARY KEY (id)
 );
-
-INSERT into mail_auth (email, password, user_id) values ('nutfes-taro@email.com', 'gidaifes', 1);

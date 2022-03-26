@@ -12,7 +12,8 @@ type mailAuthRepository struct {
 
 type MailAuthRepository interface {
 	CreateMailAuth(context.Context, string, string, string) (int64, error)
-	FindUserIDByEmail(context.Context, string) *sql.Row
+	FindMailAuthByEmail(context.Context, string) *sql.Row
+	FindMailAuthByID(context.Context, string) *sql.Row
 }
 
 func NewMailAuthRepository(client db.Client) MailAuthRepository {
@@ -26,9 +27,16 @@ func (r *mailAuthRepository) CreateMailAuth(c context.Context, email string, pas
 	return lastInsertID, err
 }
 
-// メールアドレスからユーザーを探してくる
-func (r *mailAuthRepository) FindUserIDByEmail(c context.Context, email string) *sql.Row {
+// メールアドレスからmail_authを探してくる
+func (r *mailAuthRepository) FindMailAuthByEmail(c context.Context, email string) *sql.Row {
 	query := "select * from mail_auth where email= '" + email + "'"
+	row := r.client.DB().QueryRowContext(c, query)
+	return row
+}
+
+// mail_auth_idからmail_authを探してくる
+func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) *sql.Row {
+	query := "select * from mail_auth where id= " + id
 	row := r.client.DB().QueryRowContext(c, query)
 	return row
 }

@@ -35,10 +35,11 @@ func InitializeServer() db.Client {
 	teacherRepository := repository.NewTeacherRepository(client)
 	activityRepository := repository.NewActivityRepository(client)
 	sponsorRepository := repository.NewSponsorRepository(client)
+
 	// ↓
 
 	// UseCase
-	userUseCase := usecase.NewUserUseCase(userRepository)
+	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
