@@ -11,8 +11,8 @@ type Props = {
   budget: Budget[];
 };
 
-export async function getStaticProps() {
-  const getUrl = 'http://nutfes-finansu-api:1323/budgets';
+export async function getServerSideProps() {
+  const getUrl = process.env.SSR_API_URI + '/budgets';
   const json = await get(getUrl);
   return {
     props: {
@@ -22,7 +22,7 @@ export async function getStaticProps() {
 }
 
 export async function postBudget() {
-  const postUrl = 'http://localhost:1323/budgets';
+  const postUrl = process.env.CSR_API_URI + '/budgets';
   const postData = { price: 100000, year_id: 1, source_id: 1 };
   const getRes = await get(postUrl);
   console.log(getRes.slice(-1)[0].id);
@@ -30,17 +30,17 @@ export async function postBudget() {
 }
 
 export async function putBudget() {
-  const Url = 'http://localhost:1323/budgets';
-  const getRes = await get(Url);
-  const putUrl = Url + '/' + getRes.slice(-1)[0].id;
+  const url = process.env.CSR_API_URI + '/budgets';
+  const getRes = await get(url);
+  const putUrl = url + '/' + getRes.slice(-1)[0].id;
   const putData = { price: 200000, year_id: 2, source_id: 2 };
   const putReq = await put(putUrl, putData);
 }
 
 export async function deleteBudget() {
-  const Url = 'http://localhost:1323/budgets';
-  const getRes = await get(Url);
-  const delUrl = Url + '/' + getRes.slice(-1)[0].id;
+  const url = process.env.CSR_API_URI + '/budgets';
+  const getRes = await get(url);
+  const delUrl = url + '/' + getRes.slice(-1)[0].id;
   console.log(getRes.slice(-1)[0].id);
   const delReq = await del(delUrl);
 }

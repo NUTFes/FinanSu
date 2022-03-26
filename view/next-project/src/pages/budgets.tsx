@@ -39,8 +39,8 @@ type Props = {
   budget: Budget[];
 };
 
-export async function getStaticProps() {
-  const getUrl = 'http://nutfes-finansu-api:1323/budgets';
+export async function getServerSideProps() {
+  const getUrl = process.env.SSR_API_URI + '/budgets';
   const json = await get(getUrl);
   return {
     props: {
