@@ -105,7 +105,7 @@ const sponsorship: NextPage = () => {
                     <Center>住所</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>担当者</Center>
+                    <Center color='black.600'>代表者</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center color='black.600'></Center>

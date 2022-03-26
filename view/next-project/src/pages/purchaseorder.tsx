@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
 import {
   Table,
   Thead,
@@ -19,9 +18,13 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import { get, post, put, del } from '@api/purchaseOrder';
+import { get } from '@api/purchaseOrder';
 import OpenEditModalButton from '@components/purchaseorder/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorder/OpenDeleteModalButton';
+import {useState} from "react";
+import PurchaseReportEditModal from "@components/purchasereport/PurchaseReportEditModal";
+import PurchaseOrderDetailModal from "@components/purchaseorder/PurchaseOrderDetailModal";
+import * as React from "react";
 
 interface User {
   id: number;
@@ -40,7 +43,7 @@ interface Props {
   user: User;
   purchaseOrder: PurchaseOrder[];
 }
-export async function getServerSideProps({params}: any) {
+export async function getServerSideProps() {
   const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
   const purchaseOrderRes = await get(getPurchaseOrderUrl);
   return {
@@ -55,6 +58,11 @@ export default function PurchaseOrder(props: Props){
     let datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 4);
     return datetime2;
+  };
+
+  const [showModal, setShowModal] = useState(false);
+  const ShowModal = () => {
+    setShowModal(true);
   };
 
   return (
@@ -129,19 +137,19 @@ export default function PurchaseOrder(props: Props){
               <Tbody>
                 {props.purchaseOrder.map((purchaseOrderItem) => (
                   <Tr key={purchaseOrderItem.id}>
-                    <Td>
+                    <Td onClick={()=> ShowModal()}>
                       <Center color='black.300'>{purchaseOrderItem.id}</Center>
                     </Td>
-                    <Td>
+                      <Td onClick={()=> ShowModal()}>
                       <Center color='black.300'>{purchaseOrderItem.deadline}</Center>
                     </Td>
-                    <Td>
+                    <Td onClick={()=> ShowModal()}>
                       <Center color='black.300'>{purchaseOrderItem.user_id}</Center>
                     </Td>
-                    <Td>
+                    <Td onClick={()=> ShowModal()}>
                       <Center color='black.300'>{formatDate(purchaseOrderItem.created_at)}</Center>
                     </Td>
-                    <Td>
+                    <Td onClick={()=> ShowModal()}>
                     </Td>
                     <Td>
                       <Grid templateColumns='repeat(2, 1fr)' gap={3}>
@@ -153,6 +161,7 @@ export default function PurchaseOrder(props: Props){
                         </GridItem>
                       </Grid>
                     </Td>
+                    <PurchaseOrderDetailModal id={purchaseOrderItem.id} openModal={showModal} setShowModal={setShowModal} />
                   </Tr>
                 ))}
               </Tbody>
