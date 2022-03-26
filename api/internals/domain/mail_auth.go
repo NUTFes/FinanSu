@@ -16,3 +16,7 @@ type MailAuth struct {
 type Token struct {
 	AccessToken string `json:"access_token"`
 }
+
+type IsSignIn struct {
+	IsSignIn bool `json:"is_sign_in"`
+}

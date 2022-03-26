@@ -14,6 +14,7 @@ type MailAuthController interface {
 	SignUp(echo.Context) error
 	SignIn(echo.Context) error
 	SignOut(echo.Context) error
+	IsSignIn(echo.Context) error
 }
 
 func NewMailAuthController(u usecase.MailAuthUseCase) MailAuthController {
@@ -54,5 +55,17 @@ func (auth *mailAuthController) SignOut(c echo.Context) error {
 		return err
 	}
 	c.String(http.StatusOK, "Success Sign Out")
+	return nil
+}
+
+// ログインしてるかを確認
+func (auth *mailAuthController) IsSignIn(c echo.Context) error {
+	// headerからトークンを取得する
+	accessToken := c.Request().Header["Access-Token"][0]
+	isSignIn, err := auth.u.IsSignIn(c.Request().Context(), accessToken)
+	if err != nil {
+		return nil
+	}
+	c.JSON(http.StatusOK, isSignIn)
 	return nil
 }

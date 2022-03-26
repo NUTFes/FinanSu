@@ -19,6 +19,7 @@ type MailAuthUseCase interface {
 	SignUp(context.Context, string, string, string) (domain.Token, error)
 	SignIn(context.Context, string, string) (domain.Token, error)
 	SignOut(context.Context, string) error
+	IsSignIn(context.Context, string) (domain.IsSignIn, error)
 }
 
 func NewMailAuthUseCase(mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository) MailAuthUseCase {
@@ -31,9 +32,12 @@ func (u *mailAuthUseCase) SignUp(c context.Context, email string, password strin
 	hashed, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
 	mailAuthID, err := u.mailAuthRep.CreateMailAuth(c, email, string(hashed), userID)
 	// トークン発行
-	accessToken, err := MakeRandomStr(10)
+	accessToken, err := _makeRandomStr(10)
+	if err != nil {
+		return token, err
+	}
 	// ログイン（セッション開始）
-	err = u.sessionRep.Create(c, strconv.FormatInt(mailAuthID, 10), accessToken)
+	err = u.sessionRep.Create(c, strconv.FormatInt(mailAuthID, 10), userID, accessToken)
 	if err != nil {
 		return token, err
 	}
@@ -45,7 +49,7 @@ func (u *mailAuthUseCase) SignIn(c context.Context, email string, password strin
 	var mailAuth = domain.MailAuth{}
 	var token domain.Token
 	// メールアドレスの存在確認
-	row := u.mailAuthRep.FindUserIDByEmail(c, email)
+	row := u.mailAuthRep.FindMailAuthByEmail(c, email)
 	err := row.Scan(
 		&mailAuth.ID,
 		&mailAuth.Email,
@@ -60,10 +64,10 @@ func (u *mailAuthUseCase) SignIn(c context.Context, email string, password strin
 		return token, err
 	}
 	// トークン発行
-	accessToken, err := MakeRandomStr(10)
+	accessToken, err := _makeRandomStr(10)
 
 	// ログイン (セッション開始)
-	err = u.sessionRep.Create(c, strconv.FormatInt(int64(mailAuth.ID), 10), accessToken)
+	err = u.sessionRep.Create(c, strconv.FormatInt(int64(mailAuth.ID), 10), strconv.Itoa(int(mailAuth.UserID)), accessToken)
 	if err != nil {
 		return token, err
 	}
@@ -79,7 +83,8 @@ func (u *mailAuthUseCase) SignOut(c context.Context, accessToken string) error {
 	return nil
 }
 
-func MakeRandomStr(digit uint32) (string, error) {
+// アクセストークンを生成
+func _makeRandomStr(digit uint32) (string, error) {
 	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 	// 乱数を生成
@@ -95,4 +100,24 @@ func MakeRandomStr(digit uint32) (string, error) {
 		result += string(letters[int(v)%len(letters)])
 	}
 	return result, nil
+}
+
+func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domain.IsSignIn, error) {
+	var session = domain.Session{}
+	var isSignIn domain.IsSignIn
+	row := u.sessionRep.FindSessionByAccessToken(c, accessToken)
+	_ = row.Scan(
+		&session.ID,
+		&session.AuthID,
+		&session.UserID,
+		&session.AccessToken,
+		&session.CreatedAt,
+		&session.UpdatedAt,
+	)
+	if session.ID != 0 {
+		isSignIn = domain.IsSignIn{IsSignIn: true}
+	} else {
+		isSignIn = domain.IsSignIn{IsSignIn: false}
+	}
+	return isSignIn, nil
 }
