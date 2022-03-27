@@ -14,7 +14,7 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
-import { get, post, put, del } from '@api/budget';
+import { post } from '@api/budget';
 import * as React from 'react';
 import { useState } from 'react';
 import theme from '@assets/theme';
@@ -26,17 +26,11 @@ const RegistModal = (props) => {
     props.setShowModal(false);
   };
 
-  const [price, setText] = useState('');
-
-  const priceChange = (e) => setText(e.target.value);
-
-  const [yearID, setYear] = React.useState(1);
-
-  const yearChange = (e) => setYear(e.target.value);
-
-  const [sourceID, setSource] = React.useState(1);
-
-  const sourceChange = (e) => setSource(e.target.value);
+  const [formData, setFormData] = useState({
+    price: '',
+    year_id: 1,
+    source_id: 1,
+  });
 
   const sourceList = [
     {
@@ -76,13 +70,21 @@ const RegistModal = (props) => {
     },
   ];
 
-  async function postBudget() {
-    const postUrl = 'http://localhost:1323/budgets';
-    const postData = { price: price, year_id: yearID, source_id: sourceID };
-    const getRes = await get(postUrl);
-    console.log(getRes.slice(-1)[0].id);
-    const postReq = await post(postUrl, postData);
-  }
+  const handler =
+    (input: string) =>
+    (
+      e:
+        | React.ChangeEvent<HTMLSelectElement>
+        | React.ChangeEvent<HTMLSelectElement>
+        | React.ChangeEvent<HTMLInputElement>,
+    ) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
+
+  const registBudget = async (data: any) => {
+    const registBudgetUrl = process.env.CSR_API_URI + '/budgets';
+    await post(registBudgetUrl, data);
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -106,8 +108,8 @@ const RegistModal = (props) => {
                     年度
                   </Center>
                   <Select
-                    value={yearID}
-                    onChange={yearChange}
+                    value={formData.year_id}
+                    onChange={handler('year_id')}
                     borderRadius='full'
                     borderColor='primary.1'
                     w='224px'
@@ -122,8 +124,8 @@ const RegistModal = (props) => {
                     項目
                   </Center>
                   <Select
-                    value={sourceID}
-                    onChange={sourceChange}
+                    value={formData.source_id}
+                    onChange={handler('source_id')}
                     borderRadius='full'
                     borderColor='primary.1'
                     w='224px'
@@ -141,8 +143,8 @@ const RegistModal = (props) => {
                     w='100'
                     borderRadius='full'
                     borderColor='primary.1'
-                    value={price}
-                    onChange={priceChange}
+                    value={formData.price}
+                    onChange={handler('price')}
                   />
                 </Flex>
               </VStack>
@@ -154,7 +156,9 @@ const RegistModal = (props) => {
                 width='220px'
                 color='white'
                 bgGradient='linear(to-br, primary.1, primary.2)'
-                onClick={postBudget}
+                onClick={() => {
+                  registBudget(formData);
+                }}
               >
                 登録する
               </RegistButton>
