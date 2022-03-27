@@ -37,8 +37,8 @@ interface Props {
   fundinformations: FundInformations[]
 }
 export const getStaticProps = async() => {
-  const fundinformationsUrl = "http://nutfes-finansu-api:1323/fund_informations"
-  const fundinformationsRes = await get(fundinformationsUrl)
+  const getFundinformationsUrl = process.env.SSR_API_URI + "/fund_informations";
+  const fundinformationsRes = await get(getFundinformationsUrl)
   return {
    props: {
      fundinformations: fundinformationsRes
