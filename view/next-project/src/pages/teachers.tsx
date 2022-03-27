@@ -39,8 +39,8 @@ interface Props {
   teachersinformations: TeachersInformations[]
 }
 export const getStaticProps = async () => {
-  const teachersinformationsUrl = "http://nutfes-finansu-api:1323/teachers"
-  const teachersinformationsRes = await get(teachersinformationsUrl)
+  const getTeachersinformationsUrl = process.env.SSR_API_URI + "/teachers";
+  const teachersinformationsRes = await get(getTeachersinformationsUrl)
   return {
     props: {
       teachersinformations: teachersinformationsRes
