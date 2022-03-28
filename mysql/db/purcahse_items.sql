@@ -15,3 +15,5 @@ CREATE TABLE purchase_items (
 );
 
 INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finansu_check )values ('test-item1', 10000, 1, 'test-detail', 'https://nutfes.net', 1, true);
+INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finansu_check )values ('test-item2', 20000, 2, 'test-detail2', 'https://nutfes.net', 2, false);
+INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finansu_check )values ('test-item3', 30000, 3, 'test-detail3', 'https://nutfes.net', 3, true);
