@@ -13,8 +13,8 @@ type purchaseItemUseCase struct {
 type PurchaseItemUseCase interface {
 	GetPurchaseItem(context.Context) ([]domain.PurchaseItem, error)
 	GetPurchaseItemByID(context.Context, string) (domain.PurchaseItem, error)
-	CreatePurchaseItem(context.Context, string, string, string, string, string, string) error
-	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string) error
+	CreatePurchaseItem(context.Context, string, string, string, string, string, string, string) error
+	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string, string) error
 	DestroyPurchaseItem(context.Context, string) error
 }
 
@@ -39,6 +39,7 @@ func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.Purch
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
+			&purchaseItem.FinansuCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 		)
@@ -62,6 +63,7 @@ func(p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) (
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
+			&purchaseItem.FinansuCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 	)
@@ -81,8 +83,9 @@ func(p *purchaseItemUseCase) CreatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
+	FinansuCheck string,
 )error {
-	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID)
+	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
 	return err
 }
 
@@ -96,8 +99,9 @@ func(p *purchaseItemUseCase) UpdatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
+	FinansuCheck string,
 )error {
-	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID)
+	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
 	return err
 }
 
