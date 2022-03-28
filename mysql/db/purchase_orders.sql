@@ -10,3 +10,5 @@ CREATE TABLE purchase_orders (
 );
 
 INSERT into purchase_orders (deadline, user_id) values ('2022-2-22', 1);
+INSERT into purchase_orders (deadline, user_id) values ('2022-3-28', 1);
+INSERT into purchase_orders (deadline, user_id) values ('2022-4-6', 1);
