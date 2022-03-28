@@ -14,8 +14,8 @@ type purchaseItemRepository struct {
 type PurchaseItemRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string, string, string) error
+	Create(context.Context, string, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
 }
 
@@ -47,8 +47,9 @@ func (pir *purchaseItemRepository) Create(
 	detail string,
 	url string,
 	purchaseOrderId string,
+	finansuCheck string,
 )error {
-	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + ")"
+	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id, finansu_check) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + finansuCheck + ")"
 	_, err := pir.client.DB().ExecContext(c, query)
 	return err
 }
@@ -63,8 +64,9 @@ func (pir *purchaseItemRepository) Update(
 	detail string,
 	url string,
 	purchaseOrderId string,
+	finansuCheck string,
 )error {
-	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + " where id = " + id
+	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + ", finansu_check =" + finansuCheck + " where id = " + id
 	_, err := pir.client.DB().ExecContext(c, query)
 	return err
 }

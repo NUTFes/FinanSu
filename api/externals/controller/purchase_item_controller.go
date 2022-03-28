@@ -49,8 +49,9 @@ func (p *purchaseItemController) CreatePurchaseItem(c echo.Context)error{
 	detail := c.QueryParam("detail")
 	url := c.QueryParam("url")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
-	
-	err := p.u.CreatePurchaseItem(c.Request().Context(),item, price, quantity, detail, url, purchaseOrderID)
+	finansuCheck := c.QueryParam("finansu_check")
+
+	err := p.u.CreatePurchaseItem(c.Request().Context(),item, price, quantity, detail, url, purchaseOrderID, finansuCheck)
 	if err != nil {
 		return err
 	} 
@@ -66,8 +67,9 @@ func(p *purchaseItemController) UpdatePurchaseItem(c echo.Context)error{
 	detail := c.QueryParam("detail")
 	url := c.QueryParam("url")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
+	finansuCheck := c.QueryParam("finansu_check")
 
-	err := p.u.UpdatePurchaseItem(c.Request().Context(), id, item, price, quantity, detail, url, purchaseOrderID)
+	err := p.u.UpdatePurchaseItem(c.Request().Context(), id, item, price, quantity, detail, url, purchaseOrderID,finansuCheck)
 	if err != nil {
 		return err
 	}

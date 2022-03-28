@@ -10,6 +10,7 @@ type PurchaseItem struct {
 	Detail          Detail          `json:"detail"`
 	Url             Url             `json:"url"`
 	PurchaseOrderID PurchaseOrderID `json:"purchase_order_id"`
+	FinansuCheck    bool            `json:"finansu_check"`
 	CreatedAt       time.Time       `json:"created_at"`
 	UpdatedAt       time.Time       `json:"updated_at"`
 }
