@@ -17,6 +17,7 @@ type PurchaseReportRepository interface {
 	Create(context.Context, string, string) error
 	Update(context.Context, string, string, string) error
 	Delete(context.Context, string) error
+	AllWithOrderItem(context.Context) (*sql.Rows, error)
 }
 
 func NewPurchaseReportRepository(client db.Client) PurchaseReportRepository {
@@ -62,10 +63,19 @@ func (ppr *purchaseReportRepository) Update(
 }
 
 //削除
-func (ppr *purchaseReportRepository) Delete (
+func (ppr *purchaseReportRepository) Delete(
 	c context.Context,
 	id string,
 )error {
 	_, err := ppr.client.DB().ExecContext(c, "Delete from purchase_reports where id =" + id)
 	return err
+}
+
+//Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得
+func (ppr *purchaseReportRepository) AllWithOrderItem(c context.Context) (*sql.Rows, error) {
+	rows, err := ppr.client.DB().QueryContext(c, "SELECT purchase_reports.id, users.name, purchase_items.item, purchase_items.price, purchase_items.quantity, purchase_items.detail, purchase_items.url, purchase_items.finansu_check, purchase_orders.deadline, purchase_reports.created_at, purchase_reports.updated_at FROM purchase_reports INNER JOIN users ON purchase_reports.user_id =users.id INNER JOIN  purchase_items ON purchase_reports.purchase_order_id = purchase_items.purchase_order_id INNER JOIN purchase_orders ON purchase_reports.purchase_order_id = purchase_orders.id ;")
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL")
+	}
+	return rows, nil
 }
