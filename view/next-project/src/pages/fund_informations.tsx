@@ -36,6 +36,7 @@ interface FundInformations {
 interface Props {
   fundinformations: FundInformations[]
 }
+
 export const getServerSideProps = async() => {
   const getUrl = process.env.SSR_API_URI + '/fund_informations';
   const fundinformationsRes = await get(getUrl)
@@ -57,7 +58,6 @@ export default function FundList(props: Props) {
   const submit = async(id: number) => {
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
     await put(putUrl, fundList[id-1])
-
   }
   const checkboxContent = (isChecked: boolean, id: number, input: string) => {
     {if (isChecked){
