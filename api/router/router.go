@@ -129,6 +129,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
+	e.GET("/get_purchaseitems_for_view", r.purchaseItemController.IndexPurchaseItemWithPurchaseOrder)
 
 	//sponsorstylesのroute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
