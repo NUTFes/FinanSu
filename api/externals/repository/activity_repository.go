@@ -18,6 +18,7 @@ type ActivityRepository interface {
 	Create(context.Context, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string) error
 	Destroy(context.Context, string) error
+	AllWithSponser(context,Context) (*sql.Rows, error)
 }
 
 func NewActivityRepository(client db.Client) ActivityRepository {
@@ -56,4 +57,13 @@ func (ar *activityRepository) Update(c context.Context, id string, suponserStyle
 func (ar *activityRepository) Destroy(c context.Context, id string) error {
 	_, err := ar.client.DB().ExecContext(c, "delete from activities where id = "+id)
 	return err
+}
+
+func (ar *activityRepository) AllWithSponser(c context.Context) (*sql.Rows, error) {
+	rows, err := ar.client.DB().QueryContext(c, "select * from activities inner join sponsors on activities.suponser_id = sponsors.id inner join sponsor_styles on activities.suponser_style_id = sponsor_styles.id inner join users on activities.user_id = users.id")
+	fmt.Println(rows)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL")
+	}
+	return rows, nil
 }
