@@ -12,3 +12,12 @@ type Budget struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type BudgetYearSource struct {
+	ID        ID        `json:"id"`
+	Price     Price     `json:"price"`
+	Year      int       `json:"year"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
