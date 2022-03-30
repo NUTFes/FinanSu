@@ -14,9 +14,10 @@ type purchaseItemRepository struct {
 type PurchaseItemRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string, string, string) error
+	Create(context.Context, string, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
+	AllWithPurchaseOrder(context.Context) (*sql.Rows, error)
 }
 
 func NewPurchaseItemRepository(client db.Client) PurchaseItemRepository{
@@ -47,8 +48,9 @@ func (pir *purchaseItemRepository) Create(
 	detail string,
 	url string,
 	purchaseOrderId string,
+	finansuCheck string,
 )error {
-	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + ")"
+	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id, finansu_check) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + finansuCheck + ")"
 	_, err := pir.client.DB().ExecContext(c, query)
 	return err
 }
@@ -63,16 +65,27 @@ func (pir *purchaseItemRepository) Update(
 	detail string,
 	url string,
 	purchaseOrderId string,
+	finansuCheck string,
 )error {
-	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + " where id = " + id
+	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + ", finansu_check =" + finansuCheck + " where id = " + id
 	_, err := pir.client.DB().ExecContext(c, query)
 	return err
 }
 
+//削除
 func (pir *purchaseItemRepository) Delete(
 	c context.Context,
 	id string,
 )error {
 	_, err := pir.client.DB().ExecContext(c, "Delete from purchase_items where id =" + id)
 	return err
+}
+
+//purchaseorderに紐づくpurchaseitemsを取得する(GETS)
+func (pir *purchaseItemRepository) AllWithPurchaseOrder(c context.Context) (*sql.Rows, error) {
+	rows, err := pir.client.DB().QueryContext(c, "select purchase_items.id, purchase_items.item, purchase_items.price, purchase_items.quantity , purchase_items.detail, purchase_items.url, purchase_orders.deadline, users.name, purchase_items.finansu_check, purchase_items.created_at, purchase_items.updated_at from purchase_items inner join purchase_orders on purchase_items.purchase_order_id  = purchase_orders.id inner join users on purchase_orders.user_id = users.id")
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL")
+	}
+	return rows, nil
 }

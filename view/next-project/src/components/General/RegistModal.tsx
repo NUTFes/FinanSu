@@ -19,9 +19,15 @@ import * as React from 'react';
 import { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from './RegistButton';
+import RegistButton from '@components/General/RegistButton';
+import {FC} from "react";
 
-const RegistModal = (props) => {
+interface ModalProps {
+  setShowModal: any;
+  openModal: any;
+}
+
+const RegistModal : FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };

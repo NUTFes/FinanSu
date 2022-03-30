@@ -139,8 +139,6 @@ const PurchaseReportEditModal: FC<ModalProps> = (props) => {
             <ModalFooter mt='5' mb='10'>
               <RegistButton
                 width='220px'
-                color='white'
-                bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
                   submitPurchaseReport(formData, props.id);
                   router.reload();

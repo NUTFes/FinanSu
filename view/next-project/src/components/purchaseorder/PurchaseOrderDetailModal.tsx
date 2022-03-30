@@ -1,22 +1,22 @@
 import {
   ChakraProvider,
   Center,
-  Input,
+  Text,
   Flex,
   Box,
   Spacer,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalFooter,
-  ModalBody, Grid, GridItem,
+  ModalBody,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import React, {FC, useEffect, useState} from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../General/RegistButton';
 import {useRouter} from 'next/router';
-import {get, put} from '@api/purchaseOrder';
+import {get} from '@api/purchaseOrder';
 
 interface ModalProps {
   setShowModal: any;
@@ -47,21 +47,6 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
     }
   }, [router]);
 
-  const handler =
-    (input: string) => (
-      e:
-        React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
-        | React.ChangeEvent<HTMLSelectElement>,
-    ) => {
-      setFormData({...formData, [input]: e.target.value});
-    };
-
-  const submitPurchaseOrder = async (data: any, id: number | string) => {
-    const submitPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
-    await put(submitPurchaseOrderUrl, data);
-  };
-
   return (
     <ChakraProvider theme={theme}>
       <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
@@ -75,52 +60,43 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
               </Box>
             </Flex>
             <Grid
-              templateRows='repeat(2, 1fr)'
               templateColumns='repeat(12, 1fr)'
               gap={4}
+              mb={10}
             >
-              <GridItem rowSpan={1} colSpan={12}>
-                <Center color='black.600' h="100%" fontSize="xl">
-                  購入報告の編集
+              <GridItem colSpan={12}>
+                <Center color='black.600' h="100%" fontSize="2xl">
+                  詳細
                 </Center>
               </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
+              <GridItem colSpan={1} />
+              <GridItem colSpan={3}>
                 <Flex color='black.600' h="100%" justify="end" align="center">
                   購入期限日
                 </Flex>
               </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.deadline} onChange={handler('deadline')} />
+              <GridItem colSpan={7} borderBottom="1px" borderBottomColor='primary.1'>
+                <Flex color='black.600' h="100%" justify="start" align="center">
+                <Text fontSize='lg' pl={2}>{formData.deadline}
+                </Text>
+                </Flex>
               </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
+              <GridItem colSpan={1} />
+              <GridItem colSpan={1} />
+              <GridItem colSpan={3}>
                 <Flex color='black.600' h="100%" justify="end" align="center">
                   申請者
                 </Flex>
               </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Flex>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.user_id} onChange={handler('user_id')} />
+              <GridItem colSpan={7} borderBottom="1px" borderBottomColor='primary.1'>
+                <Flex color='black.600' h="100%" justify="start" align="center">
+                  <Text fontSize='lg' pl={2}>{formData.user_id}
+                  </Text>
                 </Flex>
               </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem colSpan={1} />
             </Grid>
           </ModalBody>
-          <Center>
-            <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
-                onClick={() => {
-                  submitPurchaseOrder(formData, props.id);
-                  router.reload();
-                }}
-              >
-                編集する
-              </Button>
-            </ModalFooter>
-          </Center>
         </ModalContent>
       </Modal>
     </ChakraProvider>
