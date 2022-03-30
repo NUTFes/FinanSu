@@ -40,4 +40,3 @@ type Room string
 type SuponserStyleID int
 type UserID int
 type SuponserID int
-
