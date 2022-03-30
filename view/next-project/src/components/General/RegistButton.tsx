@@ -1,4 +1,4 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
+import { ChakraProvider, Button, propNames } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
 
@@ -7,6 +7,7 @@ interface Props {
   height?: string;
   onClick?: any;
   children?: React.ReactNode;
+  onClick: () => void;
 }
 
 const RegistButton: React.FC<Props> = ({ children, width, height, onClick }) => {
