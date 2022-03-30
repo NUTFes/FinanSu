@@ -16,6 +16,7 @@ type PurchaseItemController interface {
 	CreatePurchaseItem(echo.Context) error
 	UpdatePurchaseItem(echo.Context) error
 	DestroyPurchaseItem(echo.Context) error
+	IndexPurchaseItemWithPurchaseOrder(echo.Context) error
 }
 
 func NewPurchaseItemController(u usecase.PurchaseItemUseCase) PurchaseItemController{
@@ -28,7 +29,7 @@ func (p *purchaseItemController) IndexPurchaseItem(c echo.Context)error{
 	if err != nil {
 		return err
 	}
-	return c. JSON(http.StatusOK, purchaseItems)
+	return c.JSON(http.StatusOK, purchaseItems)
 }
 
 //show
@@ -84,4 +85,13 @@ func (p *purchaseItemController) DestroyPurchaseItem(c echo.Context) error{
 		return err
 	}
 	return c.String(http.StatusOK, "Destory PurchaseItem")
+}
+
+//IndexPurchaseItemWithPurchaseOrder
+func (p *purchaseItemController) IndexPurchaseItemWithPurchaseOrder(c echo.Context) error {
+	purchaseItemWithPurchaseOrders, err := p.u.GetPurchaseItemWithPurchaseOrder(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, purchaseItemWithPurchaseOrders)
 }
