@@ -21,6 +21,7 @@ import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import RegistButton from '@components/General/RegistButton';
 import {FC} from "react";
+import {useRouter} from "next/router";
 
 interface ModalProps {
   setShowModal: any;
@@ -75,6 +76,8 @@ const RegistModal : FC<ModalProps> = (props) => {
       year: 2023,
     },
   ];
+
+  const router = useRouter();
 
   const handler =
     (input: string) =>
@@ -164,6 +167,7 @@ const RegistModal : FC<ModalProps> = (props) => {
                 bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
                   registBudget(formData);
+                  router.reload();
                 }}
               >
                 登録する
