@@ -16,6 +16,7 @@ type PurchaseItemController interface {
 	CreatePurchaseItem(echo.Context) error
 	UpdatePurchaseItem(echo.Context) error
 	DestroyPurchaseItem(echo.Context) error
+	IndexPurchaseItemWithPurchaseOrder(echo.Context) error
 }
 
 func NewPurchaseItemController(u usecase.PurchaseItemUseCase) PurchaseItemController{
@@ -28,7 +29,7 @@ func (p *purchaseItemController) IndexPurchaseItem(c echo.Context)error{
 	if err != nil {
 		return err
 	}
-	return c. JSON(http.StatusOK, purchaseItems)
+	return c.JSON(http.StatusOK, purchaseItems)
 }
 
 //show
@@ -49,8 +50,9 @@ func (p *purchaseItemController) CreatePurchaseItem(c echo.Context)error{
 	detail := c.QueryParam("detail")
 	url := c.QueryParam("url")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
-	
-	err := p.u.CreatePurchaseItem(c.Request().Context(),item, price, quantity, detail, url, purchaseOrderID)
+	finansuCheck := c.QueryParam("finansu_check")
+
+	err := p.u.CreatePurchaseItem(c.Request().Context(),item, price, quantity, detail, url, purchaseOrderID, finansuCheck)
 	if err != nil {
 		return err
 	} 
@@ -66,8 +68,9 @@ func(p *purchaseItemController) UpdatePurchaseItem(c echo.Context)error{
 	detail := c.QueryParam("detail")
 	url := c.QueryParam("url")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
+	finansuCheck := c.QueryParam("finansu_check")
 
-	err := p.u.UpdatePurchaseItem(c.Request().Context(), id, item, price, quantity, detail, url, purchaseOrderID)
+	err := p.u.UpdatePurchaseItem(c.Request().Context(), id, item, price, quantity, detail, url, purchaseOrderID,finansuCheck)
 	if err != nil {
 		return err
 	}
@@ -82,4 +85,13 @@ func (p *purchaseItemController) DestroyPurchaseItem(c echo.Context) error{
 		return err
 	}
 	return c.String(http.StatusOK, "Destory PurchaseItem")
+}
+
+//IndexPurchaseItemWithPurchaseOrder
+func (p *purchaseItemController) IndexPurchaseItemWithPurchaseOrder(c echo.Context) error {
+	purchaseItemWithPurchaseOrders, err := p.u.GetPurchaseItemWithPurchaseOrder(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, purchaseItemWithPurchaseOrders)
 }

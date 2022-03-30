@@ -4,6 +4,7 @@ import (
 	"context"
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"github.com/pkg/errors"
 )
 
 type purchaseItemUseCase struct {
@@ -13,9 +14,10 @@ type purchaseItemUseCase struct {
 type PurchaseItemUseCase interface {
 	GetPurchaseItem(context.Context) ([]domain.PurchaseItem, error)
 	GetPurchaseItemByID(context.Context, string) (domain.PurchaseItem, error)
-	CreatePurchaseItem(context.Context, string, string, string, string, string, string) error
-	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string) error
+	CreatePurchaseItem(context.Context, string, string, string, string, string, string, string) error
+	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string, string) error
 	DestroyPurchaseItem(context.Context, string) error
+	GetPurchaseItemWithPurchaseOrder(context.Context) ([]domain.PurchaseItemWithOrder, error)
 }
 
 func NewPurchaseItemUseCase(rep rep.PurchaseItemRepository) PurchaseItemUseCase {
@@ -39,6 +41,7 @@ func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.Purch
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
+			&purchaseItem.FinansuCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 		)
@@ -62,6 +65,7 @@ func(p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) (
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
+			&purchaseItem.FinansuCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 	)
@@ -81,8 +85,9 @@ func(p *purchaseItemUseCase) CreatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
+	FinansuCheck string,
 )error {
-	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID)
+	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
 	return err
 }
 
@@ -96,8 +101,9 @@ func(p *purchaseItemUseCase) UpdatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
+	FinansuCheck string,
 )error {
-	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID)
+	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
 	return err
 }
 
@@ -108,4 +114,39 @@ func(p *purchaseItemUseCase) DestroyPurchaseItem(
 )error {
 	err := p.rep.Delete(c, id)
 	return err
+}
+
+//purchaseOrderに紐づくPurchaseItemの取得(Gets)
+func (p *purchaseItemUseCase) GetPurchaseItemWithPurchaseOrder(c context.Context) ([]domain.PurchaseItemWithOrder, error) {
+
+	purchaseItemwithpurchaseorder := domain.PurchaseItemWithOrder{}
+	var purchaseItemwithpurchaseorders []domain.PurchaseItemWithOrder
+
+	//クエリ実行
+	rows, err := p.rep.AllWithPurchaseOrder(c)
+	if err != nil {
+		return nil,err
+	}
+	defer rows.Close()
+
+	for rows.Next(){
+		err := rows.Scan(
+			&purchaseItemwithpurchaseorder.ID,
+			&purchaseItemwithpurchaseorder.Item,
+			&purchaseItemwithpurchaseorder.Price,
+			&purchaseItemwithpurchaseorder.Quantity,
+			&purchaseItemwithpurchaseorder.Detail,
+			&purchaseItemwithpurchaseorder.Url,
+			&purchaseItemwithpurchaseorder.DeadLine,
+			&purchaseItemwithpurchaseorder.Name,
+			&purchaseItemwithpurchaseorder.FinansuCheck,
+			&purchaseItemwithpurchaseorder.CreatedAt,
+			&purchaseItemwithpurchaseorder.UpdatedAt,
+		)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+		purchaseItemwithpurchaseorders = append(purchaseItemwithpurchaseorders, purchaseItemwithpurchaseorder)
+	}
+	return purchaseItemwithpurchaseorders, nil
 }

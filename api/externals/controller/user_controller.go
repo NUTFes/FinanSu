@@ -16,6 +16,7 @@ type UserController interface {
 	CreateUser(echo.Context) error
 	UpdateUser(echo.Context) error
 	DestroyUser(echo.Context) error
+	GetCurrentUser(echo.Context) error
 }
 
 func NewUserController(u usecase.UserUseCase) UserController {
@@ -72,4 +73,18 @@ func (u *userController) DestroyUser(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy User")
+}
+
+// ログインユーザーの取得
+func (auth *userController) GetCurrentUser(c echo.Context) error {
+	// headerからトークンを取得する
+	accessToken := c.Request().Header["Access-Token"][0]
+	user, err := auth.u.GetCurrentUser(c.Request().Context(), accessToken)
+	if err != nil {
+		c.JSON(http.StatusNotFound, user)
+		return err
+	} else {
+		c.JSON(http.StatusOK, user)
+		return nil
+	}
 }
