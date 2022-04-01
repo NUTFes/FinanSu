@@ -18,6 +18,7 @@ type PurchaseItemRepository interface {
 	Update(context.Context, string, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
 	AllWithPurchaseOrder(context.Context) (*sql.Rows, error)
+	FindWithPurchaseOrder(context.Context, string) (*sql.Row, error)
 }
 
 func NewPurchaseItemRepository(client db.Client) PurchaseItemRepository{
@@ -33,7 +34,7 @@ func (pir *purchaseItemRepository) All(c context.Context) (*sql.Rows, error){
 	return rows, nil
 }
 
-//1権取得
+//1件取得
 func (pir *purchaseItemRepository) Find(c context.Context, id string) (*sql.Row, error){
 	row := pir.client.DB().QueryRowContext(c, "select * from purchase_items where id = " + id)
 	return row, nil
@@ -88,4 +89,9 @@ func (pir *purchaseItemRepository) AllWithPurchaseOrder(c context.Context) (*sql
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
 	return rows, nil
+}
+
+func (pir *purchaseItemRepository) FindWithPurchaseOrder(c context.Context, id string) (*sql.Row, error) {
+	row:= pir.client.DB().QueryRowContext(c, "select purchase_items.id, purchase_items.item, purchase_items.price, purchase_items.quantity , purchase_items.detail, purchase_items.url, purchase_orders.deadline, users.name, purchase_items.finansu_check, purchase_items.created_at, purchase_items.updated_at from purchase_items inner join purchase_orders on purchase_items.purchase_order_id= purchase_orders.id inner join users on purchase_orders.user_id = users.id where purchase_items.id ="+id)
+	return row, nil
 }
