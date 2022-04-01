@@ -16,6 +16,7 @@ type FundInformationRepository interface {
 	Create(context.Context, string, string, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
+	AllWithUAndT(context.Context) (*sql.Rows, error)
 }
 
 func NewFundInformationRepository(client db.Client) FundInformationRepository {
@@ -68,7 +69,17 @@ func (fir *fundInformationRepository) Update(
 	return err
 }
 
+//削除
 func (fir *fundInformationRepository) Delete(c context.Context, id string) error {
 	_, err := fir.client.DB().ExecContext(c, "Delete from fund_informations where id = "+id)
 	return err
+}
+
+//user.name teacher.nameを含めたfund_informationの取得
+func (fir *fundInformationRepository) AllWithUAndT(c context.Context) (*sql.Rows, error) {
+	rows , err := fir.client.DB().QueryContext(c,"SELECT fund_informations.id, users.name, teachers.name, fund_informations.price, fund_informations.remark, fund_informations.is_first_check, fund_informations.is_last_check, fund_informations.created_at, fund_informations.updated_at FROM fund_informations INNER JOIN users ON fund_informations.id = users.id INNER JOIN teachers ON fund_informations.teacher_id = teachers.id;")
+	if err != nil {
+		return nil, err
+	}
+	return rows, nil
 }
