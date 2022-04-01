@@ -18,6 +18,7 @@ type PurchaseItemUseCase interface {
 	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string, string) error
 	DestroyPurchaseItem(context.Context, string) error
 	GetPurchaseItemWithPurchaseOrder(context.Context) ([]domain.PurchaseItemWithOrder, error)
+	GetPurchaseItemWithPurchaseOrderByID(context.Context, string) (domain.PurchaseItemWithOrder, error)
 }
 
 func NewPurchaseItemUseCase(rep rep.PurchaseItemRepository) PurchaseItemUseCase {
@@ -150,3 +151,29 @@ func (p *purchaseItemUseCase) GetPurchaseItemWithPurchaseOrder(c context.Context
 	}
 	return purchaseItemwithpurchaseorders, nil
 }
+
+//purchaseOrderに紐づくPurchaseItemの取得(Get)
+func (p *purchaseItemUseCase) GetPurchaseItemWithPurchaseOrderByID(c context.Context, id string) (domain.PurchaseItemWithOrder, error){
+	purchaseItemwithpurchaseorder := domain.PurchaseItemWithOrder{}
+
+	row, err := p.rep.FindWithPurchaseOrder(c, id)
+	err = row.Scan(
+		&purchaseItemwithpurchaseorder.ID,
+		&purchaseItemwithpurchaseorder.Item,
+		&purchaseItemwithpurchaseorder.Price,
+		&purchaseItemwithpurchaseorder.Quantity,
+		&purchaseItemwithpurchaseorder.Detail,
+		&purchaseItemwithpurchaseorder.Url,
+		&purchaseItemwithpurchaseorder.DeadLine,
+		&purchaseItemwithpurchaseorder.Name,
+		&purchaseItemwithpurchaseorder.FinansuCheck,
+		&purchaseItemwithpurchaseorder.CreatedAt,
+		&purchaseItemwithpurchaseorder.UpdatedAt,
+	)
+	if err != nil {
+		return purchaseItemwithpurchaseorder, err
+	}
+	return purchaseItemwithpurchaseorder, nil
+
+}
+
