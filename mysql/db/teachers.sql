@@ -14,3 +14,4 @@ CREATE TABLE teachers(
 );
 
 INSERT into teachers (name, position, department_id, room,  is_black, remark) values ('test-name', 'test-position', 1, '605', false, "test-remark" );
+INSERT into teachers (name, position, department_id, room,  is_black, remark) values ('test-teacher', 'test-position2', 1, '605', false, "test-remark" );

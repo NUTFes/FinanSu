@@ -10,3 +10,4 @@ CREATE TABLE users (
 );
 
 INSERT into users (name, department_id) values ('技大太郎', 1);
+INSERT into users (name, department_id) values ('test-user', 1);
