@@ -16,6 +16,7 @@ type FundInformationUseCase interface {
 	CreateFundInformation(context.Context, string, string, string, string, string, string) error
 	UpdateFundInformation(context.Context, string, string, string, string, string, string, string) error
 	DestroyFundInformation(context.Context, string) error
+	GetFundInforWithUserAndTeach(context.Context) ([]domain.FundInforWithUserAndTeacher, error)
 }
 
 func NewFundInformationUseCase(rep rep.FundInformationRepository) FundInformationUseCase {
@@ -106,4 +107,33 @@ func (f *fundInformationUseCase) UpdateFundInformation(
 func (f *fundInformationUseCase) DestroyFundInformation(c context.Context, id string) error {
 	err := f.rep.Delete(c, id)
 	return err
+}
+
+//teachernameとusernameを含めたfund_informationsの取得(GETS)
+func (f *fundInformationUseCase) GetFundInforWithUserAndTeach(c context.Context) ([]domain.FundInforWithUserAndTeacher, error) {
+	fundinforuserandteacher := domain.FundInforWithUserAndTeacher{}
+	var fundinforuserandteachers []domain.FundInforWithUserAndTeacher
+
+	rows ,err := f.rep.AllWithUAndT(c)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next(){
+		err := rows.Scan(
+			&fundinforuserandteacher.ID,
+			&fundinforuserandteacher.UName,
+			&fundinforuserandteacher.TName,
+			&fundinforuserandteacher.Price,
+			&fundinforuserandteacher.Remark,
+			&fundinforuserandteacher.IsFirstCheck,
+			&fundinforuserandteacher.IsLastCheck,
+			&fundinforuserandteacher.CreatedAt,
+			&fundinforuserandteacher.UpdatedAt,
+		) 
+		if err != nil {
+			return nil,err
+		}
+		fundinforuserandteachers = append(fundinforuserandteachers, fundinforuserandteacher)
+	}
+	return fundinforuserandteachers, nil
 }
