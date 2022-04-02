@@ -7,7 +7,6 @@ import {
   Tr,
   Th,
   Td,
-  Button,
   Flex,
   Spacer,
   Select,
@@ -22,9 +21,9 @@ import { get } from '@api/purchaseOrder';
 import OpenEditModalButton from '@components/purchaseorder/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorder/OpenDeleteModalButton';
 import {useState} from "react";
-import PurchaseReportEditModal from "@components/purchasereport/PurchaseReportEditModal";
 import PurchaseOrderDetailModal from "@components/purchaseorder/PurchaseOrderDetailModal";
 import * as React from "react";
+import OpenAddModalButton from "@components/purchaseorder/OpenAddModalButton";
 
 interface User {
   id: number;
@@ -90,13 +89,15 @@ export default function PurchaseOrder(props: Props){
             <Flex>
               <Spacer />
               <Box>
-                <Button
-                  textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
-                  bgGradient='linear(to-br, primary.1, primary.2)'
-                >
+                <OpenAddModalButton>
+                  <RiAddCircleLine
+                    size={20}
+                    style={{
+                      marginRight: 5,
+                    }}
+                  />
                   購入申請
-                </Button>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
