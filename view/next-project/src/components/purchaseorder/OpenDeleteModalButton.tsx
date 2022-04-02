@@ -25,7 +25,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
         p='0'
         minWidth='0'
         borderRadius='full'
-        bgGradient='linear(to-br, primary.1 ,primary.2)'
+        bgGradient='linear(to-br, red.500 ,red.600)'
         onClick={ShowModal}
       >
         <RiDeleteBinLine size={'15px'} color={'white'} />
