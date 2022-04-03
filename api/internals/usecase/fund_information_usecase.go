@@ -123,12 +123,17 @@ func (f *fundInformationUseCase) GetFundInforWithUserAndTeach(c context.Context)
 			&fundinforuserandteacher.ID,
 			&fundinforuserandteacher.UName,
 			&fundinforuserandteacher.TName,
+			&fundinforuserandteacher.Position,
+			&fundinforuserandteacher.DName,
+			&fundinforuserandteacher.Room,
+			&fundinforuserandteacher.IsBlack,
+			&fundinforuserandteacher.TRemark,
 			&fundinforuserandteacher.Price,
-			&fundinforuserandteacher.Remark,
+			&fundinforuserandteacher.FRemark,
 			&fundinforuserandteacher.IsFirstCheck,
 			&fundinforuserandteacher.IsLastCheck,
 			&fundinforuserandteacher.CreatedAt,
-			&fundinforuserandteacher.UpdatedAt,
+		  &fundinforuserandteacher.UpdatedAt,
 		) 
 		if err != nil {
 			return nil,err
