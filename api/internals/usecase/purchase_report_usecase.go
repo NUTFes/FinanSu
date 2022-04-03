@@ -17,6 +17,7 @@ type PurchaseReportUseCase interface {
 	UpdatePurchaseReport(context.Context, string, string, string) error
 	DestroyPurchaseReport(context.Context, string) error
 	GetPurchaseReportsWithOrderItem(context.Context) ([]domain.PurchaseReportWithOrderItem, error)
+	GetPurchaseReportWithOrderItemByID(context.Context, string) (domain.PurchaseReportWithOrderItem, error)
 }
 
 func NewPurchaseReportUseCase(rep rep.PurchaseReportRepository) PurchaseReportUseCase {
@@ -124,3 +125,25 @@ func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Contex
 	return purchaseReportwithorderitems, nil
 }
 
+//idで選択しPurchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
+func (p *purchaseReportUseCase) GetPurchaseReportWithOrderItemByID(c context.Context, id string) (domain.PurchaseReportWithOrderItem, error) {
+	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
+	row , err := p.rep.FindWithOrderItem(c,id)
+	err = row.Scan(
+		&purchaseReportwithorderitem.ID,
+			&purchaseReportwithorderitem.Name,
+			&purchaseReportwithorderitem.Item,
+			&purchaseReportwithorderitem.Price,
+			&purchaseReportwithorderitem.Quantity,
+			&purchaseReportwithorderitem.Detail,
+			&purchaseReportwithorderitem.Url,
+			&purchaseReportwithorderitem.FinansuCheck,
+			&purchaseReportwithorderitem.DeadLine,
+			&purchaseReportwithorderitem.CreatedAt,
+			&purchaseReportwithorderitem.UpdatedAt,
+	)
+	if err != nil {
+		return purchaseReportwithorderitem, err
+	}
+	return purchaseReportwithorderitem,nil
+}
