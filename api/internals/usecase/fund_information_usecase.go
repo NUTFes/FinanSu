@@ -17,6 +17,7 @@ type FundInformationUseCase interface {
 	UpdateFundInformation(context.Context, string, string, string, string, string, string, string) error
 	DestroyFundInformation(context.Context, string) error
 	GetFundInforWithUserAndTeach(context.Context) ([]domain.FundInforWithUserAndTeacher, error)
+	GetFundInforWithUserAndTeachByID(context.Context, string) (domain.FundInforWithUserAndTeacher,error)
 }
 
 func NewFundInformationUseCase(rep rep.FundInformationRepository) FundInformationUseCase {
@@ -109,7 +110,7 @@ func (f *fundInformationUseCase) DestroyFundInformation(c context.Context, id st
 	return err
 }
 
-//teachernameとusernameを含めたfund_informationsの取得(GETS)
+//fund_informations-api(GETS)
 func (f *fundInformationUseCase) GetFundInforWithUserAndTeach(c context.Context) ([]domain.FundInforWithUserAndTeacher, error) {
 	fundinforuserandteacher := domain.FundInforWithUserAndTeacher{}
 	var fundinforuserandteachers []domain.FundInforWithUserAndTeacher
@@ -141,4 +142,32 @@ func (f *fundInformationUseCase) GetFundInforWithUserAndTeach(c context.Context)
 		fundinforuserandteachers = append(fundinforuserandteachers, fundinforuserandteacher)
 	}
 	return fundinforuserandteachers, nil
+}
+
+//fund_information-api(GET)
+func (f *fundInformationUseCase) GetFundInforWithUserAndTeachByID(c context.Context, id string) (domain.FundInforWithUserAndTeacher,error) {
+	var fundinforuserandteacher domain.FundInforWithUserAndTeacher 
+
+	row ,err:= f.rep.FindWithUAndT(c,id)
+	
+	err  = row.Scan(
+		&fundinforuserandteacher.ID,
+		&fundinforuserandteacher.UName,
+		&fundinforuserandteacher.TName,
+		&fundinforuserandteacher.Position,
+		&fundinforuserandteacher.DName,
+		&fundinforuserandteacher.Room,
+		&fundinforuserandteacher.IsBlack,
+		&fundinforuserandteacher.TRemark,
+		&fundinforuserandteacher.Price,
+		&fundinforuserandteacher.FRemark,
+		&fundinforuserandteacher.IsFirstCheck,
+		&fundinforuserandteacher.IsLastCheck,
+		&fundinforuserandteacher.CreatedAt,
+		&fundinforuserandteacher.UpdatedAt,
+	)
+	if err != nil {
+		return fundinforuserandteacher, err
+	}
+	return fundinforuserandteacher,nil
 }
