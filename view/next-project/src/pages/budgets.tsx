@@ -45,7 +45,7 @@ interface Year {
 }
 
 interface Props {
-  budget: Budget[];
+  budgets: Budget[];
   sources: Source[];
   years: Year[];
 }
@@ -62,7 +62,7 @@ export async function getServerSideProps() {
   const getRes = await get(getUrl);
   return {
     props: {
-      budget: budgetRes,
+      budgets: budgetRes,
       sources: sourceRes,
       years: yearRes,
       res: getRes,
@@ -79,20 +79,20 @@ export default function BudgetList(props: Props) {
 
   // year_idからyearを取得するための処理（後々APIから取得する）
   // 合計金額を計算するための処理
-  for (let i = 0; i < props.budget.length; i++) {
+  for (let i = 0; i < props.budgets.length; i++) {
     for (let j = 0; j < years.length; j++) {
-      if (props.budget[i].year_id == years[j].id) {
-        props.budget[i].year_id = years[j].year;
+      if (props.budgets[i].year_id == years[j].id) {
+        props.budgets[i].year_id = years[j].year;
       }
     }
 
     for (let j = 0; j < sources.length; j++) {
-      if (props.budget[i].source_id == sources[j].id) {
-        props.budget[i].source = sources[j].name;
+      if (props.budgets[i].source_id == sources[j].id) {
+        props.budgets[i].source = sources[j].name;
       }
     }
     // 合計金額を計算
-    totalFee += props.budget[i].price;
+    totalFee += props.budgets[i].price;
   }
 
   return (
@@ -168,7 +168,7 @@ export default function BudgetList(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {props.budget.map((budgetItem) => (
+                {props.budgets.map((budgetItem) => (
                   <Tr key={budgetItem.id}>
                     <Td>
                       <Center color='black.300'>{budgetItem.id}</Center>
