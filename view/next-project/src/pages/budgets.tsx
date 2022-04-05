@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
 import OpenModalButton from '@components/General/OpenModalButton';
+import OpenDeleteModalButton from '@components/budget/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/budget/OpenEditModalButton';
 import {
   Table,
   Thead,
@@ -158,6 +160,9 @@ export default function BudgetList(props: Props) {
                     <Center></Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
+                    <Center></Center>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
                     <Center color='black.600'>作成日時</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -166,30 +171,35 @@ export default function BudgetList(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {props.budget.map((budget) => (
-                  <Tr key={budget.id}>
+                {props.budget.map((budgetItem) => (
+                  <Tr key={budgetItem.id}>
                     <Td>
-                      <Center color='black.300'>{budget.id}</Center>
+                      <Center color='black.300'>{budgetItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.source}</Center>
+                      <Center color='black.300'>{budgetItem.source}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.year_id}</Center>
+                      <Center color='black.300'>{budgetItem.year_id}</Center>
                     </Td>
                     <Td isNumeric color='black.300'>
-                      {budget.price}
+                      {budgetItem.price}
                     </Td>
                     <Td>
                       <Center>
-                        <EditButton />
+                        <OpenEditModalButton id={budgetItem.id} />
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.created_at}</Center>
+                      <Center>
+                        <OpenDeleteModalButton id={budgetItem.id} />
+                      </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.updated_at}</Center>
+                      <Center color='black.300'>{budgetItem.created_at}</Center>
+                    </Td>
+                    <Td>
+                      <Center color='black.300'>{budgetItem.updated_at}</Center>
                     </Td>
                   </Tr>
                 ))}
