@@ -10,7 +10,20 @@ interface Props {
   height?: string;
   children?: React.ReactNode;
   id: number;
+  sources: Source[];
+  years: Year[];
 }
+
+interface Source {
+  id: number;
+  name: string;
+}
+
+interface Year {
+  id: number;
+  year: number;
+}
+
 const OpenEditModalButton: React.FC<Props> = (props) => {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
@@ -30,7 +43,13 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         <RiPencilFill size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <BudgetEditModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
+      <BudgetEditModal
+        id={props.id}
+        openModal={showModal}
+        setShowModal={setShowModal}
+        sources={props.sources}
+        years={props.years}
+      />
     </ChakraProvider>
   );
 };

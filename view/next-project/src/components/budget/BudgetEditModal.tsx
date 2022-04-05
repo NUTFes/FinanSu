@@ -6,7 +6,6 @@ import {
   Flex,
   Box,
   Spacer,
-  VStack,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -18,7 +17,7 @@ import {
 import React, { FC, useEffect, useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from '../General/RegistButton';
+import RegistButton from '@components/General/RegistButton';
 import { useRouter } from 'next/router';
 import { get, put } from '@api/budget';
 
@@ -27,50 +26,24 @@ interface BudgetProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
+  sources: Source[];
+  years: Year[];
+}
+
+interface Source {
+  id: number;
+  name: string;
+}
+
+interface Year {
+  id: number;
+  year: number;
 }
 
 const BudgetEditModal: FC<BudgetProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
-
-  const sourceList = [
-    {
-      id: 1,
-      name: '教育振興会費',
-    },
-    {
-      id: 2,
-      name: '同窓会費',
-    },
-    {
-      id: 3,
-      name: '企業協賛金',
-    },
-    {
-      id: 4,
-      name: '学内募金',
-    },
-  ];
-
-  const yearList = [
-    {
-      id: 1,
-      year: 2020,
-    },
-    {
-      id: 2,
-      year: 2021,
-    },
-    {
-      id: 3,
-      year: 2022,
-    },
-    {
-      id: 4,
-      year: 2023,
-    },
-  ];
 
   const router = useRouter();
 
@@ -137,7 +110,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
                   value={formData.year_id}
                   onChange={handler('year_id')}
                 >
-                  {yearList.map((data) => (
+                  {props.years.map((data) => (
                     <option value={data.id}>{data.year}</option>
                   ))}
                 </Select>
@@ -156,7 +129,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
                   value={formData.source_id}
                   onChange={handler('source_id')}
                 >
-                  {sourceList.map((source) => (
+                  {props.sources.map((source) => (
                     <option value={source.id}>{source.name}</option>
                   ))}
                 </Select>
