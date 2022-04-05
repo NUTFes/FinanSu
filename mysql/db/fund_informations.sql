@@ -14,3 +14,4 @@ CREATE TABLE fund_informations (
 );
 
 INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check) values (1, 1, 2000, "nothing", false, false);
+INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check) values (2, 2, 2000, "nothing", false, false);

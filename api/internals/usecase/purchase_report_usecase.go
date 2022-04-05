@@ -16,6 +16,8 @@ type PurchaseReportUseCase interface {
 	CreatePurchaseReport(context.Context, string, string) error
 	UpdatePurchaseReport(context.Context, string, string, string) error
 	DestroyPurchaseReport(context.Context, string) error
+	GetPurchaseReportsWithOrderItem(context.Context) ([]domain.PurchaseReportWithOrderItem, error)
+	GetPurchaseReportWithOrderItemByID(context.Context, string) (domain.PurchaseReportWithOrderItem, error)
 }
 
 func NewPurchaseReportUseCase(rep rep.PurchaseReportRepository) PurchaseReportUseCase {
@@ -93,3 +95,55 @@ func (p *purchaseReportUseCase) DestroyPurchaseReport(
 	return err
 }
 
+//Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
+func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Context) ([]domain.PurchaseReportWithOrderItem,error) {
+	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
+	var purchaseReportwithorderitems []domain.PurchaseReportWithOrderItem
+	rows , err := p.rep.AllWithOrderItem(c)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		err := rows.Scan(
+			&purchaseReportwithorderitem.ID,
+			&purchaseReportwithorderitem.Name,
+			&purchaseReportwithorderitem.Item,
+			&purchaseReportwithorderitem.Price,
+			&purchaseReportwithorderitem.Quantity,
+			&purchaseReportwithorderitem.Detail,
+			&purchaseReportwithorderitem.Url,
+			&purchaseReportwithorderitem.FinansuCheck,
+			&purchaseReportwithorderitem.DeadLine,
+			&purchaseReportwithorderitem.CreatedAt,
+			&purchaseReportwithorderitem.UpdatedAt,
+		)
+		if err != nil {
+			return nil ,err
+		}
+		purchaseReportwithorderitems = append(purchaseReportwithorderitems, purchaseReportwithorderitem)
+	}
+	return purchaseReportwithorderitems, nil
+}
+
+//idで選択しPurchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
+func (p *purchaseReportUseCase) GetPurchaseReportWithOrderItemByID(c context.Context, id string) (domain.PurchaseReportWithOrderItem, error) {
+	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
+	row , err := p.rep.FindWithOrderItem(c,id)
+	err = row.Scan(
+		&purchaseReportwithorderitem.ID,
+			&purchaseReportwithorderitem.Name,
+			&purchaseReportwithorderitem.Item,
+			&purchaseReportwithorderitem.Price,
+			&purchaseReportwithorderitem.Quantity,
+			&purchaseReportwithorderitem.Detail,
+			&purchaseReportwithorderitem.Url,
+			&purchaseReportwithorderitem.FinansuCheck,
+			&purchaseReportwithorderitem.DeadLine,
+			&purchaseReportwithorderitem.CreatedAt,
+			&purchaseReportwithorderitem.UpdatedAt,
+	)
+	if err != nil {
+		return purchaseReportwithorderitem, err
+	}
+	return purchaseReportwithorderitem,nil
+}

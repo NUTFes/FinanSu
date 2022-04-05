@@ -16,6 +16,8 @@ type FundInformationController interface {
 	CreateFundInformation(echo.Context) error
 	UpdateFundInformation(echo.Context) error
 	DestroyFundInformation(echo.Context) error
+	IndexFundInforUserAndTeach(echo.Context) error
+	ShowFundInforUserAndTeach(echo.Context) error
 }
 
 func NewFundInformationController(u usecase.FundInformationUseCase) FundInformationController {
@@ -82,4 +84,22 @@ func (f *fundInformationController) DestroyFundInformation(c echo.Context) error
 		return err
 	}
 	return c.String(http.StatusCreated, "Destroy FundInformation")
+}
+
+//IndexFundInforUserAndTeach
+func (f *fundInformationController) IndexFundInforUserAndTeach(c echo.Context) error {
+	fundinforuserandteachers, err := f.u.GetFundInforWithUserAndTeach(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, fundinforuserandteachers)
+}
+
+func (f *fundInformationController) ShowFundInforUserAndTeach(c echo.Context) error {
+	id := c.Param("id")
+	fundinforuserandteacher, err:= f.u.GetFundInforWithUserAndTeachByID(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, fundinforuserandteacher)
 }

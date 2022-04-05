@@ -9,4 +9,6 @@ CREATE TABLE purchase_reports (
   PRIMARY KEY (id)
 );
 
-INSERT into purchase_reports (user_id, purchase_order_id) values (2, 1);
+INSERT into purchase_reports (user_id, purchase_order_id) values (1, 1);
+INSERT into purchase_reports (user_id, purchase_order_id) values (1, 2);
+
