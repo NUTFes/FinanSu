@@ -1,9 +1,7 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
-import OpenModalButton from '@components/General/OpenModalButton';
 import {
+  Box,
+  ChakraProvider,
   Table,
   Thead,
   Tbody,
@@ -14,13 +12,17 @@ import {
   Flex,
   Spacer,
   Select,
+  Center,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
+import OpenModalButton from '@components/General/OpenModalButton';
+import OpenDeleteModalButton from '@components/budget/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/budget/OpenEditModalButton';
 import theme from '@assets/theme';
-import { Center } from '@chakra-ui/react';
-import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
+import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, post, put, del } from '@api/budget';
-import {Source} from "postcss";
 
 interface Budget {
   id: number;
@@ -43,9 +45,9 @@ interface Year {
 }
 
 interface Props {
-  budget: Budget[];
-  source: Source[];
-  year: Year[];
+  budgets: Budget[];
+  sources: Source[];
+  years: Year[];
 }
 
 export async function getServerSideProps() {
@@ -60,37 +62,37 @@ export async function getServerSideProps() {
   const getRes = await get(getUrl);
   return {
     props: {
-      budget: budgetRes,
-      source: sourceRes,
-      year: yearRes,
+      budgets: budgetRes,
+      sources: sourceRes,
+      years: yearRes,
       res: getRes,
     },
   };
 }
 
 export default function BudgetList(props: Props) {
-  const sourceList = props.source;
-  const yearList = props.year;
+  const sources = props.sources;
+  const years = props.years;
 
   // 合計金額用の変数
   let totalFee = 0;
 
   // year_idからyearを取得するための処理（後々APIから取得する）
   // 合計金額を計算するための処理
-  for (let i = 0; i < props.budget.length; i++) {
-    for (let j = 0; j < yearList.length; j++) {
-      if (props.budget[i].year_id == yearList[j].id) {
-        props.budget[i].year_id = yearList[j].year;
+  for (let i = 0; i < props.budgets.length; i++) {
+    for (let j = 0; j < years.length; j++) {
+      if (props.budgets[i].year_id == years[j].id) {
+        props.budgets[i].year_id = years[j].year;
       }
     }
 
-    for (let j = 0; j < sourceList.length; j++) {
-      if (props.budget[i].source_id == sourceList[j].id) {
-        props.budget[i].source = sourceList[j].name;
+    for (let j = 0; j < sources.length; j++) {
+      if (props.budgets[i].source_id == sources[j].id) {
+        props.budgets[i].source = sources[j].name;
       }
     }
     // 合計金額を計算
-    totalFee += props.budget[i].price;
+    totalFee += props.budgets[i].price;
   }
 
   return (
@@ -166,30 +168,43 @@ export default function BudgetList(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {props.budget.map((budget) => (
-                  <Tr key={budget.id}>
+                {props.budgets.map((budgetItem) => (
+                  <Tr key={budgetItem.id}>
                     <Td>
-                      <Center color='black.300'>{budget.id}</Center>
+                      <Center color='black.300'>{budgetItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.source}</Center>
+                      <Center color='black.300'>{budgetItem.source}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.year_id}</Center>
+                      <Center color='black.300'>{budgetItem.year_id}</Center>
                     </Td>
                     <Td isNumeric color='black.300'>
-                      {budget.price}
+                      {budgetItem.price}
                     </Td>
                     <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center>
+                            <OpenEditModalButton
+                              id={budgetItem.id}
+                              sources={sources}
+                              years={years}
+                            />
+                          </Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center>
+                            <OpenDeleteModalButton id={budgetItem.id} />
+                          </Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.created_at}</Center>
+                      <Center color='black.300'>{budgetItem.created_at}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budget.updated_at}</Center>
+                      <Center color='black.300'>{budgetItem.updated_at}</Center>
                     </Td>
                   </Tr>
                 ))}
