@@ -39,7 +39,7 @@ export const post = async (url: string, data: any) => {
     },
     body: JSON.stringify(data),
   });
-  return await res.json();
+  return res;
 };
 
 export const put = async (url: string, data: any) => {

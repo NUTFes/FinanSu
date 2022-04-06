@@ -15,7 +15,7 @@ import {
 import React, {FC} from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../General/DeleteButton';
+import Button from '@components/General/DeleteButton';
 import {useRouter} from 'next/router';
 import {del} from '@api/purchaseOrder';
 
@@ -71,6 +71,7 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
                   deletePurchaseOrder(props.id);
                   router.reload();
                 }}
+                hover={{ background: 'red.600' }}
               >
                 削除する
               </Button>

@@ -12,37 +12,72 @@ import {
   ModalBody,
   Grid,
   GridItem,
+  Input,
 } from '@chakra-ui/react';
-import { post } from '@api/budget';
+import { get, post } from '@api/purchaseOrder';
 import * as React from 'react';
 import { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '@components/General/Button';
 import {FC} from "react";
-import {useRouter} from "next/router";
+import PurchaseOrderAddModal from "@components/purchaseorder/PurchaseOrderAddModal";
 
 interface ModalProps {
   setShowModal: any;
   openModal: any;
 }
 
+interface FormData {
+  deadline: string;
+  user_id: number;
+}
+
+interface PurchaseItem {
+  id: number | string,
+  item: string,
+  price: number | string,
+  quantity: number | string,
+  detail: string,
+  url: string,
+  purchaseOrderId: number,
+  finance_check: boolean,
+}
+
 const PurchaseItemNumModal : FC<ModalProps> = (props) => {
+  // 購入物品数用の配列
+  const purchaseItemNumArray = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ];
+
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    deadline: '',
+    user_id: 1,
+  });
+  const [purchaseItemNum, setPurchaseItemNum] = useState({
+    value: 1,
+  });
+  const [purchaseOrderId, setPurchaseOrderId] = useState(1);
+
+  const [formDataList, setFormDataList] = useState<PurchaseItem[]>([{
+    id: '',
+    item: '',
+    price: '',
+    quantity: '',
+    detail: '',
+    url: '',
+    purchaseOrderId: purchaseOrderId,
+    finance_check: false,
+  }]);
+
+  const ShowModal = () => {
+    setShowModal(true);
+  };
   const closeModal = () => {
     props.setShowModal(false);
   };
 
-  const [formData, setFormData] = useState({
-    price: '',
-    year_id: 1,
-    source_id: 1,
-  });
-
-  const yearList = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ];
-
-  const router = useRouter();
-
-  const handler =
+  // 購入申請用のhandler
+  const formDataHandler =
     (input: string) =>
     (
       e:
@@ -52,9 +87,39 @@ const PurchaseItemNumModal : FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const addPurchaseOrder = async (data: any) => {
+  // 購入物品数用のhandler
+  const purchaseItemNumHandler =
+    (input: string) =>
+      (
+        e:
+          | React.ChangeEvent<HTMLSelectElement>
+      ) => {
+        setPurchaseItemNum({ ...purchaseItemNum, [input]: e.target.value });
+      };
+
+  const addPurchaseOrder = async (data: FormData) => {
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     await post(addPurchaseOrderUrl, data);
+    const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
+    const getRes = await get(getPurchaseOrderUrl);
+    setPurchaseOrderId(getRes[getRes.length-1].id);
+  };
+
+  const initialPurchaseItemList = () => {
+    for (let i = 0; i < purchaseItemNum.value; i++){
+      let initialPurchaseItem = {
+        id: i+1,
+        item: '',
+        price: '',
+        quantity: '',
+        detail: '',
+        url: '',
+        purchaseOrderId: purchaseOrderId,
+        finance_check: false,
+      };
+      setFormDataList([...formDataList, initialPurchaseItem]);
+      console.log(formDataList)
+    }
   };
 
   return (
@@ -88,17 +153,27 @@ const PurchaseItemNumModal : FC<ModalProps> = (props) => {
               <GridItem rowSpan={1} colSpan={1} />
               <GridItem rowSpan={1} colSpan={3}>
                 <Flex color='black.600' h="100%" justify="end" align="center">
+                  購入期限
+                </Flex>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={7}>
+                <Input placeholder='yyyymmddで入力' borderRadius='full' borderColor='primary.1' value={formData.deadline} onChange={formDataHandler('deadline')} />
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={3}>
+                <Flex color='black.600' h="100%" justify="end" align="center">
                   購入物品数
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={7}>
                 <Select
-                  value={formData.year_id}
-                  onChange={handler('year_id')}
+                  value={purchaseItemNum.value}
+                  onChange={purchaseItemNumHandler('value')}
                   borderRadius='full'
                   borderColor='primary.1'
                 >
-                  {yearList.map((data) => (
+                  {purchaseItemNumArray.map((data) => (
                     <option value={data}>{data}</option>
                   ))}
                 </Select>
@@ -113,13 +188,15 @@ const PurchaseItemNumModal : FC<ModalProps> = (props) => {
                 color='white'
                 bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
-                  addPurchaseOrder(formData);
-                  router.reload();
+                  ShowModal();
+                  addPurchaseOrder(formData)
+                  initialPurchaseItemList();
                 }}
                 hover={{ background: 'primary.2' }}
               >
                 決定
               </Button>
+              <PurchaseOrderAddModal purchaseOrderId={purchaseOrderId} purchaseItemNum={purchaseItemNum} openModal={showModal} setShowModal={setShowModal} setFormDataList={setFormDataList} formDataList={formDataList} />
             </ModalFooter>
           </Center>
         </ModalContent>

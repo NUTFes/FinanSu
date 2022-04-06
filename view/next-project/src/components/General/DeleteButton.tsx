@@ -8,9 +8,10 @@ interface Props {
   onClick?: any;
   children?: React.ReactNode;
   onClick: () => void;
+  hover?: any;
 }
 
-const DeleteButton: React.FC<Props> = ({ children, width, height, onClick }) => {
+const DeleteButton: React.FC<Props> = ({ children, width, height, onClick, hover }) => {
   return (
     <ChakraProvider theme={theme}>
       <Button
@@ -18,6 +19,7 @@ const DeleteButton: React.FC<Props> = ({ children, width, height, onClick }) => 
         bgGradient='linear(to-br, red.500, red.600)'
         style={{ height, width }}
         onClick={onClick}
+        _hover={hover}
       >
         {children}
       </Button>

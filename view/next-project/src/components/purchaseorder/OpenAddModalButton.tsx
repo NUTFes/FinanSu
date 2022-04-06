@@ -1,7 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import RegistModal from '@components/purchaseorder/PurchaseItemNumModal';
+import PurchaseItemNumModal from '@components/purchaseorder/PurchaseItemNumModal';
 import Button from '@components/General/Button';
 import { useState } from 'react';
 
@@ -27,7 +27,7 @@ const OpenModalButton: React.FC<Props> = ({ children, width, height }) => {
       >
         {children}
       </Button>
-      <RegistModal openModal={showModal} setShowModal={setShowModal} />
+      <PurchaseItemNumModal openModal={showModal} setShowModal={setShowModal} />
     </ChakraProvider>
   );
 };
