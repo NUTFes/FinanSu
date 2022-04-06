@@ -2,7 +2,7 @@ import {
   ChakraProvider,
   Select,
   Center,
-  Text,
+  Button,
   Input,
   Flex,
   Box,
@@ -13,6 +13,8 @@ import {
   ModalContent,
   ModalFooter,
   ModalBody,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import { post } from '@api/budget';
 import * as React from 'react';
@@ -52,44 +54,6 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
     source_id: 1,
   });
 
-  const sourceList = [
-    {
-      id: 1,
-      name: '教育振興会費',
-    },
-    {
-      id: 2,
-      name: '同窓会費',
-    },
-    {
-      id: 3,
-      name: '企業協賛金',
-    },
-    {
-      id: 4,
-      name: '学内募金',
-    },
-  ];
-
-  const yearList = [
-    {
-      id: 1,
-      year: 2020,
-    },
-    {
-      id: 2,
-      year: 2021,
-    },
-    {
-      id: 3,
-      year: 2022,
-    },
-    {
-      id: 4,
-      year: 2023,
-    },
-  ];
-
   const router = useRouter();
 
   const handler =
@@ -120,61 +84,72 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                 <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
               </Box>
             </Flex>
-            <VStack spacing='30px'>
-              <Text fontSize='xl' color='black.600'>
-                予算の登録
-              </Text>
-              <VStack spacing='15px'>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    年度
-                  </Center>
-                  <Select
-                    value={formData.year_id}
-                    onChange={handler('year_id')}
-                    borderRadius='full'
-                    borderColor='primary.1'
-                    w='224px'
-                  >
-                    {props.years.map((data) => (
-                      <option value={data.id}>{data.year}</option>
-                    ))}
-                  </Select>
+            <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
+              <GridItem rowSpan={1} colSpan={12}>
+                <Center color='black.600' h='100%' fontSize='xl'>
+                  予算の登録
+                </Center>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={3}>
+                <Flex color='black.600' h='100%' justify='end' align='center'>
+                  年度
                 </Flex>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    項目
-                  </Center>
-                  <Select
-                    value={formData.source_id}
-                    onChange={handler('source_id')}
-                    borderRadius='full'
-                    borderColor='primary.1'
-                    w='224px'
-                  >
-                    {props.sources.map((source) => (
-                      <option value={source.id}>{source.name}</option>
-                    ))}
-                  </Select>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={7}>
+                <Select
+                  value={formData.year_id}
+                  onChange={handler('year_id')}
+                  borderRadius='full'
+                  borderColor='primary.1'
+                >
+                  {props.years.map((data) => (
+                    <option value={data.id}>{data.year}</option>
+                  ))}
+                </Select>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={3}>
+                <Flex color='black.600' h='100%' justify='end' align='center'>
+                  項目
                 </Flex>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={7}>
+                <Select
+                  borderRadius='full'
+                  borderColor='primary.1'
+                  value={formData.source_id}
+                  onChange={handler('source_id')}
+                >
+                  {props.sources.map((source) => (
+                    <option value={source.id}>{source.name}</option>
+                  ))}
+                </Select>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={3}>
+                <Flex color='black.600' h='100%' justify='end' align='center'>
+                  金額
+                </Flex>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={7}>
                 <Flex>
-                  <Center color='black.600' mr='3'>
-                    金額
-                  </Center>
                   <Input
-                    w='100'
                     borderRadius='full'
                     borderColor='primary.1'
                     value={formData.price}
                     onChange={handler('price')}
                   />
                 </Flex>
-              </VStack>
-            </VStack>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+            </Grid>
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <RegistButton
+              <Button
                 width='220px'
                 color='white'
                 bgGradient='linear(to-br, primary.1, primary.2)'
@@ -184,7 +159,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                 }}
               >
                 登録する
-              </RegistButton>
+              </Button>
             </ModalFooter>
           </Center>
         </ModalContent>
