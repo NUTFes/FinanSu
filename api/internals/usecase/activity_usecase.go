@@ -17,6 +17,7 @@ type ActivityUseCase interface {
 	CreateActivity(context.Context, string, string, string, string) error
 	UpdateActivity(context.Context, string, string, string, string, string) error
 	DestroyActivity(context.Context, string) error
+	GetActivitiesWithSponserAndStyle(context.Context) ([]domain.ActivityForAdminView, error) 
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
@@ -89,4 +90,56 @@ func (a *activityUseCase) UpdateActivity(c context.Context, id string, suponserS
 func (a *activityUseCase) DestroyActivity(c context.Context, id string) error {
 	err := a.rep.Destroy(c, id)
 	return err
+}
+
+func (a *activityUseCase) GetActivitiesWithSponserAndStyle(c context.Context) ([]domain.ActivityForAdminView, error) {
+
+	activity := domain.ActivityForAdminView{}
+	var activities []domain.ActivityForAdminView
+
+	// クエリー実行
+	rows, err := a.rep.AllWithSponser(c)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	fmt.Println(rows)
+
+	for rows.Next() {
+		err := rows.Scan(
+			&activity.Activity.ID,
+			&activity.Activity.SuponserStyleID,
+			&activity.Activity.UserID,
+			&activity.Activity.IsDone,
+			&activity.Activity.SuponserID,
+			&activity.Activity.CreatedAt,
+			&activity.Activity.UpdatedAt,
+			&activity.Sponser.ID,
+			&activity.Sponser.Name,
+			&activity.Sponser.Tel,
+			&activity.Sponser.Email,
+			&activity.Sponser.Address,
+			&activity.Sponser.Representative,
+			&activity.Sponser.CreatedAt,
+			&activity.Sponser.UpdateAt,
+			&activity.SponsorStyle.ID,
+			&activity.SponsorStyle.Scale,
+			&activity.SponsorStyle.IsColor,
+			&activity.SponsorStyle.Price,
+			&activity.SponsorStyle.CreatedAt,
+			&activity.SponsorStyle.UpdatedAt,
+			&activity.User.ID,
+			&activity.User.Name,
+			&activity.User.DepartmentID,
+			&activity.User.CreatedAt,
+			&activity.User.UpdateAt,
+		)
+
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+
+		activities = append(activities, activity)
+	}
+	return activities, nil
 }

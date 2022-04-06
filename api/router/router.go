@@ -163,12 +163,13 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/teachers/:id", r.teacherController.UpdateTeacher)
 	e.DELETE("/teachers/:id", r.teacherController.DestroyTeacher)
 
-	// purchaseitemsのRoute
+	// activitiesのRoute
 	e.GET("/activities", r.activityController.IndexActivity)
 	e.GET("/activities/:id", r.activityController.ShowActivity)
 	e.POST("/activities", r.activityController.CreateActivity)
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
+	e.GET("/get_activities_for_view", r.activityController.IndexActivityWithSponserAndStyle)
 
 	//sponsorのroute
 	e.GET("/sponsors", r.sponsorController.IndexSponsor)

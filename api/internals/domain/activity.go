@@ -13,3 +13,10 @@ type Activity struct {
 	CreatedAt 			time.Time			`json:"created_at"`
 	UpdatedAt 			time.Time			`json:"updated_at"`
 }
+
+type ActivityForAdminView struct {
+	Activity		Activity		`json:"sponser_activity"`
+	Sponser 		Sponser			`json:"sponser"`
+	Sponsorstyle	Sponsorstyle	`json:"sponser_style"`
+	User			User			`json:"user"`
+} 
