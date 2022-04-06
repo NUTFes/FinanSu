@@ -18,7 +18,7 @@ type ActivityRepository interface {
 	Create(context.Context, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string) error
 	Destroy(context.Context, string) error
-	AllWithSponsor(context,Context) (*sql.Rows, error)
+	AllWithSponsor(context.Context) (*sql.Rows, error)
 }
 
 func NewActivityRepository(client db.Client) ActivityRepository {
