@@ -163,7 +163,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/activities", r.activityController.CreateActivity)
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
-	e.GET("/get_activities_for_view", r.activityController.IndexActivityWithSponserAndStyle)
+	e.GET("/get_activities_for_view", r.activityController.IndexActivityWithSponsorAndStyle)
 
 	//sponsorのroute
 	e.GET("/sponsors", r.sponsorController.IndexSponsor)
