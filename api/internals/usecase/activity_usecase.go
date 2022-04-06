@@ -103,7 +103,6 @@ func (a *activityUseCase) GetActivitiesWithSponserAndStyle(c context.Context) ([
 		return nil, err
 	}
 	defer rows.Close()
-	fmt.Println(rows)
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -114,14 +113,14 @@ func (a *activityUseCase) GetActivitiesWithSponserAndStyle(c context.Context) ([
 			&activity.Activity.SuponserID,
 			&activity.Activity.CreatedAt,
 			&activity.Activity.UpdatedAt,
-			&activity.Sponser.ID,
-			&activity.Sponser.Name,
-			&activity.Sponser.Tel,
-			&activity.Sponser.Email,
-			&activity.Sponser.Address,
-			&activity.Sponser.Representative,
-			&activity.Sponser.CreatedAt,
-			&activity.Sponser.UpdateAt,
+			&activity.Sponsor.ID,
+			&activity.Sponsor.Name,
+			&activity.Sponsor.Tel,
+			&activity.Sponsor.Email,
+			&activity.Sponsor.Address,
+			&activity.Sponsor.Representative,
+			&activity.Sponsor.CreatedAt,
+			&activity.Sponsor.UpdatedAt,
 			&activity.SponsorStyle.ID,
 			&activity.SponsorStyle.Scale,
 			&activity.SponsorStyle.IsColor,
@@ -132,7 +131,7 @@ func (a *activityUseCase) GetActivitiesWithSponserAndStyle(c context.Context) ([
 			&activity.User.Name,
 			&activity.User.DepartmentID,
 			&activity.User.CreatedAt,
-			&activity.User.UpdateAt,
+			&activity.User.UpdatedAt,
 		)
 
 		if err != nil {

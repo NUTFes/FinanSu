@@ -79,7 +79,7 @@ func (a *activityController) DestroyActivity(c echo.Context) error {
 	return c.String(http.StatusOK, "Destroy Activity")
 }
 
-For admin view
+//For admin view
 func (a *activityController) IndexActivityWithSponserAndStyle(c echo.Context) error {
 	activities, err := a.u.GetActivitiesWithSponserAndStyle(c.Request().Context())
 	if err != nil {

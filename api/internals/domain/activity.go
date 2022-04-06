@@ -16,7 +16,7 @@ type Activity struct {
 
 type ActivityForAdminView struct {
 	Activity		Activity		`json:"sponser_activity"`
-	Sponser 		Sponser			`json:"sponser"`
-	Sponsorstyle	Sponsorstyle	`json:"sponser_style"`
+	Sponsor 		Sponsor			`json:"sponser"`
+	SponsorStyle	SponsorStyle	`json:"sponser_style"`
 	User			User			`json:"user"`
 } 
