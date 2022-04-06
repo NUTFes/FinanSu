@@ -6,17 +6,17 @@ import (
 
 type Activity struct {
 	ID        			ID        			`json:"id"`
-	SuponserStyleID     SuponserStyleID     `json:"suponser_style_id"`
+	SponsorStyleID     SponsorStyleID     `json:"sponsor_style_id"`
 	UserID    			UserID    			`json:"user_id"`
 	IsDone				bool  			`json:"is_done"`
-	SuponserID			SuponserID			`json:"suponser_id"`
+	SponsorID			SponsorID			`json:"sponsor_id"`
 	CreatedAt 			time.Time			`json:"created_at"`
 	UpdatedAt 			time.Time			`json:"updated_at"`
 }
 
 type ActivityForAdminView struct {
-	Activity		Activity		`json:"sponser_activity"`
-	Sponser 		Sponser			`json:"sponser"`
-	Sponsorstyle	Sponsorstyle	`json:"sponser_style"`
+	Activity		Activity		`json:"sponsor_activity"`
+	Sponsor 		Sponsor			`json:"sponsor"`
+	Sponsorstyle	Sponsorstyle	`json:"sponsor_style"`
 	User			User			`json:"user"`
 } 

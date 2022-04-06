@@ -17,7 +17,7 @@ type ActivityUseCase interface {
 	CreateActivity(context.Context, string, string, string, string) error
 	UpdateActivity(context.Context, string, string, string, string, string) error
 	DestroyActivity(context.Context, string) error
-	GetActivitiesWithSponserAndStyle(context.Context) ([]domain.ActivityForAdminView, error) 
+	GetActivitiesWithSponsorAndStyle(context.Context) ([]domain.ActivityForAdminView, error) 
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
@@ -39,10 +39,10 @@ func (a *activityUseCase) GetActivities(c context.Context) ([]domain.Activity, e
 	for rows.Next() {
 		err := rows.Scan(
 			&activity.ID,
-			&activity.SuponserStyleID,
+			&activity.SponsorStyleID,
 			&activity.UserID,
 			&activity.IsDone,
-			&activity.SuponserID,
+			&activity.SponsorID,
 			&activity.CreatedAt,
 			&activity.UpdatedAt,
 		)
@@ -62,10 +62,10 @@ func (a *activityUseCase) GetActivityByID(c context.Context, id string) (domain.
 	row, err := a.rep.Find(c, id)
 	err = row.Scan(
 		&activity.ID,
-		&activity.SuponserStyleID,
+		&activity.SponsorStyleID,
 		&activity.UserID,
 		&activity.IsDone,
-		&activity.SuponserID,
+		&activity.SponsorID,
 		&activity.CreatedAt,
 		&activity.UpdatedAt,
 	)
@@ -77,13 +77,13 @@ func (a *activityUseCase) GetActivityByID(c context.Context, id string) (domain.
 	return activity, nil
 }
 
-func (a *activityUseCase) CreateActivity(c context.Context, suponserStyleID string, userID string, isDone string, suponserID string) error {
-	err := a.rep.Create(c, suponserStyleID, userID, isDone, suponserID)
+func (a *activityUseCase) CreateActivity(c context.Context, sponsorStyleID string, userID string, isDone string, sponsorID string) error {
+	err := a.rep.Create(c, sponsorStyleID, userID, isDone, sponsorID)
 	return err
 }
 
-func (a *activityUseCase) UpdateActivity(c context.Context, id string, suponserStyleID string, userID string, isDone string, suponserID string) error {
-	err := a.rep.Update(c, id, suponserStyleID, userID, isDone, suponserID)
+func (a *activityUseCase) UpdateActivity(c context.Context, id string, sponsorStyleID string, userID string, isDone string, sponsorID string) error {
+	err := a.rep.Update(c, id, sponsorStyleID, userID, isDone, sponsorID)
 	return err
 }
 
@@ -92,13 +92,13 @@ func (a *activityUseCase) DestroyActivity(c context.Context, id string) error {
 	return err
 }
 
-func (a *activityUseCase) GetActivitiesWithSponserAndStyle(c context.Context) ([]domain.ActivityForAdminView, error) {
+func (a *activityUseCase) GetActivitiesWithSponsorAndStyle(c context.Context) ([]domain.ActivityForAdminView, error) {
 
 	activity := domain.ActivityForAdminView{}
 	var activities []domain.ActivityForAdminView
 
 	// クエリー実行
-	rows, err := a.rep.AllWithSponser(c)
+	rows, err := a.rep.AllWithSponsor(c)
 	if err != nil {
 		return nil, err
 	}
@@ -108,20 +108,20 @@ func (a *activityUseCase) GetActivitiesWithSponserAndStyle(c context.Context) ([
 	for rows.Next() {
 		err := rows.Scan(
 			&activity.Activity.ID,
-			&activity.Activity.SuponserStyleID,
+			&activity.Activity.SponsorStyleID,
 			&activity.Activity.UserID,
 			&activity.Activity.IsDone,
-			&activity.Activity.SuponserID,
+			&activity.Activity.SponsorID,
 			&activity.Activity.CreatedAt,
 			&activity.Activity.UpdatedAt,
-			&activity.Sponser.ID,
-			&activity.Sponser.Name,
-			&activity.Sponser.Tel,
-			&activity.Sponser.Email,
-			&activity.Sponser.Address,
-			&activity.Sponser.Representative,
-			&activity.Sponser.CreatedAt,
-			&activity.Sponser.UpdateAt,
+			&activity.Sponsor.ID,
+			&activity.Sponsor.Name,
+			&activity.Sponsor.Tel,
+			&activity.Sponsor.Email,
+			&activity.Sponsor.Address,
+			&activity.Sponsor.Representative,
+			&activity.Sponsor.CreatedAt,
+			&activity.Sponsor.UpdateAt,
 			&activity.SponsorStyle.ID,
 			&activity.SponsorStyle.Scale,
 			&activity.SponsorStyle.IsColor,

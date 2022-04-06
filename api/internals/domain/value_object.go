@@ -37,6 +37,6 @@ type Position string
 type Room string
 
 // activity
-type SuponserStyleID int
+type SponsorStyleID int
 type UserID int
-type SuponserID int
+type SponsorID int
