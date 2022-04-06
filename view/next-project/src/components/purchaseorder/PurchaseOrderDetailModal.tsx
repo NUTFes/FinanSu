@@ -56,7 +56,7 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
             <Flex mt='5'>
               <Spacer />
               <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
+                <RiCloseCircleLine size={'30px'} color={'gray'} onClick={closeModal} />
               </Box>
             </Flex>
             <Grid
