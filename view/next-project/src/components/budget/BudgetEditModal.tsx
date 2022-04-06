@@ -97,59 +97,61 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
                   予算の編集
                 </Center>
               </GridItem>
+            </Grid>
+            <Grid templateColumns='repeat(12, 1fr)' gap={4}>
               <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h='100%' justify='end' align='center'>
-                  年度
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Select
-                  borderRadius='full'
-                  borderColor='primary.1'
-                  value={formData.year_id}
-                  onChange={handler('year_id')}
-                >
-                  {props.years.map((data) => (
-                    <option value={data.id}>{data.year}</option>
-                  ))}
-                </Select>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h='100%' justify='end' align='center'>
-                  項目
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Select
-                  borderRadius='full'
-                  borderColor='primary.1'
-                  value={formData.source_id}
-                  onChange={handler('source_id')}
-                >
-                  {props.sources.map((source) => (
-                    <option value={source.id}>{source.name}</option>
-                  ))}
-                </Select>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h='100%' justify='end' align='center'>
-                  金額
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Flex>
-                  <Input
-                    borderRadius='full'
-                    borderColor='primary.1'
-                    value={formData.price}
-                    onChange={handler('price')}
-                  />
-                </Flex>
+              <GridItem rowSpan={1} colSpan={10}>
+                <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
+                  <GridItem rowSpan={1} colSpan={3}>
+                    <Flex color='black.600' h='100%' justify='end' align='center'>
+                      年度
+                    </Flex>
+                  </GridItem>
+                  <GridItem rowSpan={1} colSpan={9}>
+                    <Select
+                      value={formData.year_id}
+                      onChange={handler('year_id')}
+                      borderRadius='full'
+                      borderColor='primary.1'
+                    >
+                      {props.years.map((data) => (
+                        <option value={data.id}>{data.year}</option>
+                      ))}
+                    </Select>
+                  </GridItem>
+                  <GridItem rowSpan={1} colSpan={3}>
+                    <Flex color='black.600' h='100%' justify='end' align='center'>
+                      項目
+                    </Flex>
+                  </GridItem>
+                  <GridItem rowSpan={1} colSpan={9}>
+                    <Select
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      value={formData.source_id}
+                      onChange={handler('source_id')}
+                    >
+                      {props.sources.map((source) => (
+                        <option value={source.id}>{source.name}</option>
+                      ))}
+                    </Select>
+                  </GridItem>
+                  <GridItem rowSpan={1} colSpan={3}>
+                    <Flex color='black.600' h='100%' justify='end' align='center'>
+                      金額
+                    </Flex>
+                  </GridItem>
+                  <GridItem rowSpan={1} colSpan={9}>
+                    <Flex>
+                      <Input
+                        borderRadius='full'
+                        borderColor='primary.1'
+                        value={formData.price}
+                        onChange={handler('price')}
+                      />
+                    </Flex>
+                  </GridItem>
+                </Grid>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1} />
             </Grid>
