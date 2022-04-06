@@ -16,7 +16,7 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import OpenModalButton from '@components/General/OpenModalButton';
+import OpenAddModalButton from '@components/budget/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/budget/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/budget/OpenEditModalButton';
 import theme from '@assets/theme';
@@ -120,7 +120,7 @@ export default function BudgetList(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <OpenModalButton>
+                <OpenAddModalButton sources={sources} years={years}>
                   <RiAddCircleLine
                     size={20}
                     style={{
@@ -128,7 +128,7 @@ export default function BudgetList(props: Props) {
                     }}
                   />
                   予算登録
-                </OpenModalButton>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
