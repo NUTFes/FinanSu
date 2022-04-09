@@ -18,6 +18,7 @@ type ActivityRepository interface {
 	Create(context.Context, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string) error
 	Destroy(context.Context, string) error
+	AllWithSponsor(context.Context) (*sql.Rows, error)
 }
 
 func NewActivityRepository(client db.Client) ActivityRepository {
@@ -41,14 +42,14 @@ func (ar *activityRepository) Find(c context.Context, id string) (*sql.Row, erro
 }
 
 // 作成
-func (ar *activityRepository) Create(c context.Context,  suponserStyleID string, userID string, isDone string, suponserID string) error {
-	_, err := ar.client.DB().ExecContext(c, "insert into activities (suponser_style_id, user_id, is_done, suponser_id) values ("+suponserStyleID+","+userID+","+isDone+","+suponserID+")")
+func (ar *activityRepository) Create(c context.Context,  sponsorStyleID string, userID string, isDone string, sponsorID string) error {
+	_, err := ar.client.DB().ExecContext(c, "insert into activities (sponsor_style_id, user_id, is_done, sponsor_id) values ("+sponsorStyleID+","+userID+","+isDone+","+sponsorID+")")
 	return err
 }
 
 // 編集
-func (ar *activityRepository) Update(c context.Context, id string, suponserStyleID string, userID string, isDone string, suponserID string) error {
-	_, err := ar.client.DB().ExecContext(c, "update activities set suponser_style_id = "+suponserStyleID+", user_id = "+userID+", is_done = "+isDone+", suponser_id = "+suponserID+" where id = "+id)
+func (ar *activityRepository) Update(c context.Context, id string, sponsorStyleID string, userID string, isDone string, sponsorID string) error {
+	_, err := ar.client.DB().ExecContext(c, "update activities set sponsor_style_id = "+sponsorStyleID+", user_id = "+userID+", is_done = "+isDone+", sponsor_id = "+sponsorID+" where id = "+id)
 	return err
 }
 
@@ -56,4 +57,12 @@ func (ar *activityRepository) Update(c context.Context, id string, suponserStyle
 func (ar *activityRepository) Destroy(c context.Context, id string) error {
 	_, err := ar.client.DB().ExecContext(c, "delete from activities where id = "+id)
 	return err
+}
+
+func (ar *activityRepository) AllWithSponsor(c context.Context) (*sql.Rows, error) {
+	rows, err := ar.client.DB().QueryContext(c, "select * from activities inner join sponsors on activities.sponsor_id = sponsors.id inner join sponsor_styles on activities.sponsor_style_id = sponsor_styles.id inner join users on activities.user_id = users.id")
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL")
+	}
+	return rows, nil
 }

@@ -16,6 +16,7 @@ type ActivityController interface {
 	CreateActivity(echo.Context) error
 	UpdateActivity(echo.Context) error
 	DestroyActivity(echo.Context) error
+	IndexActivityWithSponsorAndStyle(echo.Context) error
 }
 
 func NewActivityController(u usecase.ActivityUseCase) ActivityController {
@@ -43,11 +44,11 @@ func (a *activityController) ShowActivity(c echo.Context) error {
 
 // Create
 func (a *activityController) CreateActivity(c echo.Context) error {
-	suponserStyleID := c.QueryParam("suponser_style_id")
+	sponsorStyleID := c.QueryParam("sponsor_style_id")
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
-	suponserID := c.QueryParam("suponser_id")
-	err := a.u.CreateActivity(c.Request().Context(), suponserStyleID, userID, isDone, suponserID)
+	sponsorID := c.QueryParam("sponsor_id")
+	err := a.u.CreateActivity(c.Request().Context(), sponsorStyleID, userID, isDone, sponsorID)
 	if err != nil {
 		return err
 	}
@@ -57,11 +58,11 @@ func (a *activityController) CreateActivity(c echo.Context) error {
 // Update
 func (a *activityController) UpdateActivity(c echo.Context) error {
 	id := c.Param("id")
-	suponserStyleID := c.QueryParam("suponser_style_id")
+	sponsorStyleID := c.QueryParam("sponsor_style_id")
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
-	suponserID := c.QueryParam("suponser_id")
-	err := a.u.UpdateActivity(c.Request().Context(), id, suponserStyleID, userID, isDone, suponserID)
+	sponsorID := c.QueryParam("sponsor_id")
+	err := a.u.UpdateActivity(c.Request().Context(), id, sponsorStyleID, userID, isDone, sponsorID)
 	if err != nil {
 		return err
 	}
@@ -76,4 +77,13 @@ func (a *activityController) DestroyActivity(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy Activity")
+}
+
+// For admin view
+func (a *activityController) IndexActivityWithSponsorAndStyle(c echo.Context) error {
+	activities, err := a.u.GetActivitiesWithSponsorAndStyle(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, activities)
 }
