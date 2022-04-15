@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
+import FundInformationsAddButton from '@components/fund_informations/FundInformationsAddButton';
 import {
   Table,
   Thead,
@@ -20,7 +21,7 @@ import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, put } from '@api/fundInformations';
-import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
+import { Checkbox, CheckboxGroup } from '@chakra-ui/react';
 import { useState } from 'react';
 
 interface FundInformations {
@@ -33,46 +34,76 @@ interface FundInformations {
   created_at: string;
   updated_at: string;
 }
+
+interface TeachersInformations {
+  id: number;
+  name: string;
+  position: string;
+  department_id: number;
+  room: string;
+  is_black: boolean;
+  remark: string;
+  created_at: string;
+  updated_at: string;
+}
 interface Props {
-  fundinformations: FundInformations[]
+  teachersinformations: TeachersInformations[];
+  fundinformations: FundInformations[];
 }
 
-export const getServerSideProps = async() => {
+export const getServerSideProps = async () => {
+  const getTeachersinformationsUrl = process.env.SSR_API_URI + '/teachers';
   const getUrl = process.env.SSR_API_URI + '/fund_informations';
-  const fundinformationsRes = await get(getUrl)
+  const teachersinformationsRes = await get(getTeachersinformationsUrl);
+  const fundinformationsRes = await get(getUrl);
   return {
-   props: {
-     fundinformations: fundinformationsRes
-   }
- }
-}
+    props: {
+      teachersinformations: teachersinformationsRes,
+      fundinformations: fundinformationsRes,
+    },
+  };
+};
+
 export default function FundList(props: Props) {
-  const [fundList, setFundList] = useState<FundInformations[]>(props.fundinformations)
+  const teachersinformations = props.teachersinformations;
+  const [fundList, setFundList] = useState<FundInformations[]>(props.fundinformations);
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
     setFundList(
-      fundList.map((fundItem: any) =>(
-        fundItem.id === id ? {...fundItem, [input]: !isChecked}: fundItem
-      ))
-    )
-  }
-  const submit = async(id: number) => {
+      fundList.map((fundItem: any) =>
+        fundItem.id === id ? { ...fundItem, [input]: !isChecked } : fundItem,
+      ),
+    );
+  };
+  const submit = async (id: number) => {
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await put(putUrl, fundList[id-1])
-  }
+    await put(putUrl, fundList[id - 1]);
+  };
   const checkboxContent = (isChecked: boolean, id: number, input: string) => {
-    {if (isChecked){
-      return(
-        <>
-          <Checkbox defaultChecked onChange={() => {switchCheck(isChecked, id, input)}}></Checkbox>
-        </>
-      )
-    }else{
-      return(
-        <>
-          <Checkbox onChange={() => {switchCheck(isChecked, id, input)}}></Checkbox>
-        </>
-      )
-    }}}
+    {
+      if (isChecked) {
+        return (
+          <>
+            <Checkbox
+              defaultChecked
+              onChange={() => {
+                switchCheck(isChecked, id, input);
+              }}
+            ></Checkbox>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Checkbox
+              onChange={() => {
+                switchCheck(isChecked, id, input);
+              }}
+            ></Checkbox>
+          </>
+        );
+      }
+    }
+  };
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -98,13 +129,14 @@ export default function FundList(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <Button
+                <FundInformationsAddButton
+                  teachersinformations={teachersinformations}
                   textColor='white'
                   leftIcon={<RiAddCircleLine color={'white'} />}
                   bgGradient='linear(to-br, primary.1, primary.2)'
                 >
                   学内募金登録
-                </Button>
+                </FundInformationsAddButton>
               </Box>
             </Flex>
           </Box>
@@ -126,7 +158,8 @@ export default function FundList(props: Props) {
                     <Center fontSize='sm' color='black.600'>
                       氏名
                     </Center>
-                  </Th><Th borderBottomColor='#76E4F7'>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
                       居室
                     </Center>
@@ -146,8 +179,7 @@ export default function FundList(props: Props) {
                       備考
                     </Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                  </Th>
+                  <Th borderBottomColor='#76E4F7'></Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -155,12 +187,20 @@ export default function FundList(props: Props) {
                   <Tr key={fundItem.teacher_id} onUnload={submit(fundItem.teacher_id)}>
                     <Td>
                       <Center color='black.300'>
-                      {checkboxContent(fundItem.is_first_check, fundItem.teacher_id, 'is_first_check')}
+                        {checkboxContent(
+                          fundItem.is_first_check,
+                          fundItem.teacher_id,
+                          'is_first_check',
+                        )}
                       </Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>
-                        {checkboxContent(fundItem.is_last_check, fundItem.teacher_id, 'is_last_check')}
+                        {checkboxContent(
+                          fundItem.is_last_check,
+                          fundItem.teacher_id,
+                          'is_last_check',
+                        )}
                       </Center>
                     </Td>
                     <Td>
@@ -192,4 +232,4 @@ export default function FundList(props: Props) {
       </Center>
     </ChakraProvider>
   );
-};
+}
