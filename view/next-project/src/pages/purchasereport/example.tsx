@@ -8,7 +8,7 @@ interface PurchaseReport {
 
 interface Props {
   purchaseReport: PurchaseReport[];
-};
+}
 
 export async function getServerSideProps() {
   const getUrl = process.env.SSR_API_URI + '/purchasereports';

@@ -22,7 +22,7 @@ import OpenEditModalButton from '@components/budget/OpenEditModalButton';
 import theme from '@assets/theme';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import { get, post, put, del } from '@api/budget';
+import { get } from '@api/budget';
 
 interface Budget {
   id: number;
