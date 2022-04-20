@@ -22,8 +22,8 @@ export const get_with_token = async (url: string) => {
 };
 
 export const post = async (url: string, data: any) => {
-  const name = data.name;
-  const department_id = data.department_id;
+  const name = data.userName;
+  const department_id = data.departmentId;
   const postUrl = url + '?name=' + name + '&department_id=' + department_id;
   const res = await fetch(postUrl, {
     method: 'POST',
@@ -38,8 +38,8 @@ export const post = async (url: string, data: any) => {
 };
 
 export const put = async (url: string, data: any) => {
-  const name = data.name;
-  const department_id = data.department_id;
+  const name = data.userName;
+  const department_id = data.departmentId;
   const putUrl = url + '?name=' + name + '&department_id=' + department_id;
   console.log(putUrl, data.price, data.year_id, data.source_id);
   const res = await fetch(putUrl, {

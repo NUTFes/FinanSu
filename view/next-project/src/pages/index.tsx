@@ -2,11 +2,32 @@ import { useState } from 'react';
 import LoginLayout from '@components/layout/LoginLayout';
 import LoginView from '@components/auth/LoginView';
 import SignUpView from '@components/auth/SignUpView';
-import type { NextPage } from 'next';
 import { ChakraProvider, Center, Flex, Box, Heading, Link, Spacer } from '@chakra-ui/react';
 import theme from '@assets/theme';
+import { get } from '@api/api_methods';
 
-const Home: NextPage = () => {
+interface Department {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Props {
+  departments: Department[];
+}
+
+export async function getServerSideProps() {
+  const getDepartmentsUrl: string = process.env.SSR_API_URI + '/departments';
+  const departmentsRes: Department = await get(getDepartmentsUrl);
+  return {
+    props: {
+      departments: departmentsRes,
+    },
+  };
+}
+
+export default function Home(props: Props) {
   let [isMember, setIsMember] = useState(true);
   const cardContent = (isMember: boolean) => {
     if (isMember) {
@@ -52,7 +73,7 @@ const Home: NextPage = () => {
               <Link onClick={() => setIsMember(!isMember)}>Log in</Link>
             </Center>
           </Flex>
-          <SignUpView />
+          <SignUpView departments={props.departments} />
         </>
       );
     }
@@ -68,6 +89,4 @@ const Home: NextPage = () => {
       </ChakraProvider>
     </LoginLayout>
   );
-};
-
-export default Home;
+}
