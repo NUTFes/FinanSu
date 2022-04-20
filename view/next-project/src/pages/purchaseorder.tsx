@@ -12,7 +12,7 @@ import {
   Spacer,
   Select,
   Grid,
-  GridItem
+  GridItem,
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
@@ -21,17 +21,16 @@ import Header from '@components/Header';
 import { get } from '@api/purchaseOrder';
 import OpenEditModalButton from '@components/purchaseorder/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorder/OpenDeleteModalButton';
-import {useState} from "react";
-import PurchaseReportEditModal from "@components/purchasereport/PurchaseReportEditModal";
-import PurchaseOrderDetailModal from "@components/purchaseorder/PurchaseOrderDetailModal";
-import * as React from "react";
+import { useState } from 'react';
+import PurchaseOrderDetailModal from '@components/purchaseorder/PurchaseOrderDetailModal';
+import * as React from 'react';
 
 interface User {
   id: number;
   name: string;
 }
 
-interface PurchaseOrder{
+interface PurchaseOrder {
   id: number;
   deadline: string;
   user_id: number;
@@ -47,13 +46,13 @@ export async function getServerSideProps() {
   const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
   const purchaseOrderRes = await get(getPurchaseOrderUrl);
   return {
-    props:{
+    props: {
       purchaseOrder: purchaseOrderRes,
-    }
+    },
   };
 }
 
-export default function PurchaseOrder(props: Props){
+export default function PurchaseOrder(props: Props) {
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 4);
@@ -137,31 +136,38 @@ export default function PurchaseOrder(props: Props){
               <Tbody>
                 {props.purchaseOrder.map((purchaseOrderItem) => (
                   <Tr key={purchaseOrderItem.id}>
-                    <Td onClick={()=> ShowModal()}>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{purchaseOrderItem.id}</Center>
                     </Td>
-                      <Td onClick={()=> ShowModal()}>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{purchaseOrderItem.deadline}</Center>
                     </Td>
-                    <Td onClick={()=> ShowModal()}>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{purchaseOrderItem.user_id}</Center>
                     </Td>
-                    <Td onClick={()=> ShowModal()}>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{formatDate(purchaseOrderItem.created_at)}</Center>
                     </Td>
-                    <Td onClick={()=> ShowModal()}>
-                    </Td>
+                    <Td onClick={() => ShowModal()}></Td>
                     <Td>
                       <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                         <GridItem>
-                          <Center><OpenEditModalButton id={purchaseOrderItem.id} /></Center>
+                          <Center>
+                            <OpenEditModalButton id={purchaseOrderItem.id} />
+                          </Center>
                         </GridItem>
                         <GridItem>
-                          <Center><OpenDeleteModalButton id={purchaseOrderItem.id}/></Center>
+                          <Center>
+                            <OpenDeleteModalButton id={purchaseOrderItem.id} />
+                          </Center>
                         </GridItem>
                       </Grid>
                     </Td>
-                    <PurchaseOrderDetailModal id={purchaseOrderItem.id} openModal={showModal} setShowModal={setShowModal} />
+                    <PurchaseOrderDetailModal
+                      id={purchaseOrderItem.id}
+                      openModal={showModal}
+                      setShowModal={setShowModal}
+                    />
                   </Tr>
                 ))}
               </Tbody>
@@ -171,4 +177,4 @@ export default function PurchaseOrder(props: Props){
       </Center>
     </ChakraProvider>
   );
-};
+}

@@ -9,14 +9,16 @@ import {
   ModalOverlay,
   ModalContent,
   ModalFooter,
-  ModalBody, Grid, GridItem,
+  ModalBody,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '../General/RegistButton';
-import {useRouter} from 'next/router';
-import {get, put} from '@api/purchaseOrder';
+import { useRouter } from 'next/router';
+import { get, put } from '@api/purchaseOrder';
 
 interface ModalProps {
   setShowModal: any;
@@ -48,13 +50,14 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
   }, [router]);
 
   const handler =
-    (input: string) => (
+    (input: string) =>
+    (
       e:
-        React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLInputElement>
         | React.ChangeEvent<HTMLTextAreaElement>
         | React.ChangeEvent<HTMLSelectElement>,
     ) => {
-      setFormData({...formData, [input]: e.target.value});
+      setFormData({ ...formData, [input]: e.target.value });
     };
 
   const submitPurchaseOrder = async (data: any, id: number | string) => {
@@ -74,35 +77,43 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
                 <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
               </Box>
             </Flex>
-            <Grid
-              templateRows='repeat(2, 1fr)'
-              templateColumns='repeat(12, 1fr)'
-              gap={4}
-            >
+            <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
               <GridItem rowSpan={1} colSpan={12}>
-                <Center color='black.600' h="100%" fontSize="xl">
+                <Center color='black.600' h='100%' fontSize='xl'>
                   購入報告の編集
                 </Center>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1} />
               <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h="100%" justify="end" align="center">
+                <Flex color='black.600' h='100%' justify='end' align='center'>
                   購入期限日
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={7}>
-                <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.deadline} onChange={handler('deadline')} />
+                <Input
+                  w='100'
+                  borderRadius='full'
+                  borderColor='primary.1'
+                  value={formData.deadline}
+                  onChange={handler('deadline')}
+                />
               </GridItem>
               <GridItem rowSpan={1} colSpan={1} />
               <GridItem rowSpan={1} colSpan={1} />
               <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h="100%" justify="end" align="center">
+                <Flex color='black.600' h='100%' justify='end' align='center'>
                   申請者
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={7}>
                 <Flex>
-                  <Input w='100' borderRadius='full' borderColor='primary.1' value={formData.user_id} onChange={handler('user_id')} />
+                  <Input
+                    w='100'
+                    borderRadius='full'
+                    borderColor='primary.1'
+                    value={formData.user_id}
+                    onChange={handler('user_id')}
+                  />
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1} />
@@ -128,4 +139,3 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
 };
 
 export default PurchaseOrderEditModal;
-
