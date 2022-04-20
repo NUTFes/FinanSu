@@ -149,7 +149,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/get_purchaseitems_for_view", r.purchaseItemController.IndexPurchaseItemWithPurchaseOrder)
 	e.GET("/get_purchaseitems_for_view/:id",r.purchaseItemController.ShowPurchaseItemWithPurchaseOrder)
 
-	//sponsorstylesのroute
+	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
 	e.GET("/sponsorstyles/:id", r.sponsorStyleController.ShowSponsorStyle)
 	e.POST("/sponsorstyles", r.sponsorStyleController.CreateSponsorStyle)
@@ -171,7 +171,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 	e.GET("/get_activities_for_view", r.activityController.IndexActivityWithSponsorAndStyle)
 
-	//sponsorのroute
+	// sponsorのRoute
 	e.GET("/sponsors", r.sponsorController.IndexSponsor)
 	e.GET("/sponsors/:id", r.sponsorController.ShowSponsor)
 	e.POST("/sponsors", r.sponsorController.CreateSponsor)
