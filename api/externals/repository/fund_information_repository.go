@@ -78,7 +78,7 @@ func (fir *fundInformationRepository) Delete(c context.Context, id string) error
 
 //fund_information-API
 func (fir *fundInformationRepository) AllWithUAndT(c context.Context) (*sql.Rows, error) {
-	rows , err := fir.client.DB().QueryContext(c," SELECT fund_informations.id, users.name, teachers.name, teachers.position ,departments.name, teachers.room, teachers.is_black, teachers.remark, fund_informations.price, fund_informations.remark, fund_informations.is_first_check, fund_informations.is_last_check, fund_informations.created_at, fund_informations.updated_at FROM fund_informations INNER JOIN users ON fund_informations.id = users.id INNER JOIN teachers ON fund_informations.teacher_id = teachers.id INNER JOIN departments ON teachers.department_id = departments.id;")
+	rows , err := fir.client.DB().QueryContext(c,"select * from fund_informations inner join users on fund_informations.user_id = users.id inner join teachers on fund_informations.teacher_id = teachers.id;")
 	if err != nil {
 		return nil, err
 	}
@@ -87,6 +87,6 @@ func (fir *fundInformationRepository) AllWithUAndT(c context.Context) (*sql.Rows
 
 //fund_infonformaton-API-ByID
 func (fir *fundInformationRepository) FindWithUAndT(c context.Context, id string) (*sql.Row, error) {
-	row:= fir.client.DB().QueryRowContext(c, " SELECT fund_informations.id, users.name, teachers.name, teachers.position ,departments.name, teachers.room, teachers.is_black, teachers.remark, fund_informations.price, fund_informations.remark, fund_informations.is_first_check, fund_informations.is_last_check, fund_informations.created_at, fund_informations.updated_at FROM fund_informations INNER JOIN users ON fund_informations.id = users.id INNER JOIN teachers ON fund_informations.teacher_id = teachers.id INNER JOIN departments ON teachers.department_id = departments.id where fund_informations.id = " + id)
+	row:= fir.client.DB().QueryRowContext(c, "select * from fund_informations inner join users on fund_informations.user_id = users.id inner join teachers on fund_informations.teacher_id = teachers.id where fund_informations.id = " + id)
 	return row, nil
 }
