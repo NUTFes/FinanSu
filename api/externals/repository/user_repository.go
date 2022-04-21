@@ -14,8 +14,8 @@ type userRepository struct {
 type UserRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string) error
-	Update(context.Context, string, string, string) error
+	Create(context.Context, string, string, string) error
+	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
 }
 
@@ -39,14 +39,14 @@ func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
 }
 
 // 作成
-func (ur *userRepository) Create(c context.Context, name string, departmentID string) error {
-	_, err := ur.client.DB().ExecContext(c, "insert into users (name, department_id) values ('"+name+"', "+departmentID+")")
+func (ur *userRepository) Create(c context.Context, name string, departmentID string, roleID string) error {
+	_, err := ur.client.DB().ExecContext(c, "insert into users (name, department_id, role_id) values ('"+name+"', "+departmentID+", "+roleID+")")
 	return err
 }
 
 // 編集
-func (ur *userRepository) Update(c context.Context, id string, name string, departmentID string) error {
-	_, err := ur.client.DB().ExecContext(c, "update users set name = '"+name+"', department_id = "+departmentID+" where id = "+id)
+func (ur *userRepository) Update(c context.Context, id string, name string, departmentID string, roleID string) error {
+	_, err := ur.client.DB().ExecContext(c, "update users set name = '"+name+"', department_id = "+departmentID+", role_id = "+roleID+" where id = "+id)
 	return err
 }
 
