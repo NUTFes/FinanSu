@@ -17,18 +17,7 @@ type FundInformation struct {
 }
 
 type FundInforWithUserAndTeacher struct {
-	ID           ID        `json:"id"`
-	UName        string    `json:"user_name"`
-	TName        string    `json:"teacher_name"`
-	Position		 string    `json:"teacher_position"`
-	DName				 string    `json:"department_name"`
-	Room				 string		 `json:"teacher_room"`
-	IsBlack			 bool			 `json:"teacher_is_black"`
-	TRemark			 string		 `json:"teacher_remark"`
-	Price        Price     `json:"price"`
-	FRemark			 string		 `json:"fund_information_remark"`
-	IsFirstCheck bool      `json:"is_first_check"`
-	IsLastCheck  bool      `json:"is_last_check"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	FundInformation FundInformation `json:"fund_information"`
+	User            User      `json:"user"`
+	Teacher         Teacher   `json:"teacher"`
 }
