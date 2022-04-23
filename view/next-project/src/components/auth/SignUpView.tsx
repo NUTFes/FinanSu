@@ -3,7 +3,17 @@ import Router from 'next/router';
 import { signUp } from '@api/signUp';
 import { get, post } from '@api/user';
 import SubmitButton from '@components/General/RegistButton';
-import { ChakraProvider, Center, Box, Heading, Input, Select } from '@chakra-ui/react';
+import {
+  ChakraProvider,
+  Center,
+  Box,
+  Heading,
+  Input,
+  Select,
+  Flex,
+  Grid,
+  GridItem,
+} from '@chakra-ui/react';
 import theme from '@assets/theme';
 
 interface PostData {
@@ -39,6 +49,7 @@ export const postUser = async (data: PostData, postUserData: User) => {
   const req: any = await signUp(signUpUrl, data, userID);
   const res: any = await req.json();
   if (req.status === 200) {
+    console.log(res.access_token);
     localStorage.setItem('access-token', res.access_token);
     localStorage.setItem('login', 'true');
     Router.push('/budgets');
@@ -70,63 +81,115 @@ export default function SignUpView(props: Props) {
     };
   return (
     <ChakraProvider theme={theme}>
+      <Flex mt='10' />
+      <Grid templateColumns='repeat(12, 1fr)' gap={4}>
+        <GridItem colSpan={1} />
+        <GridItem colSpan={10}>
+          <Grid templateColumns='repeat(12, 1fr)' gap={4}>
+            <GridItem rowSpan={1} colSpan={4}>
+              <Flex color='black.600' h='100%' justify='end' align='center'>
+                <Heading as='h4' size='md' my='2'>
+                  名前
+                </Heading>
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={8}>
+              <Input
+                minW='100'
+                borderRadius='full'
+                borderColor='primary.1'
+                type='text'
+                value={postUserData.userName}
+                onChange={userDataHandler('userName')}
+              />
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={4}>
+              <Flex color='black.600' h='100%' justify='end' align='center'>
+                <Heading as='h4' size='md' my='2'>
+                  学科
+                </Heading>
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={8}>
+              <Flex>
+                <Select
+                  minW='100'
+                  borderRadius='full'
+                  borderColor='primary.1'
+                  value={postUserData.departmentId}
+                  onChange={userDataHandler('departmentId')}
+                >
+                  {props.departments.map((department) => (
+                    <option value={department.id}>{department.name}</option>
+                  ))}
+                </Select>
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={4}>
+              <Flex color='black.600' h='100%' justify='end' align='center'>
+                <Heading as='h4' size='md' my='2'>
+                  メールアドレス
+                </Heading>
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={8}>
+              <Flex>
+                <Input
+                  minW='100'
+                  borderRadius='full'
+                  borderColor='primary.1'
+                  type='text'
+                  value={formData.email}
+                  onChange={formDataHandler('email')}
+                />
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={4}>
+              <Flex color='black.600' h='100%' justify='end' align='center'>
+                <Heading as='h4' size='md'>
+                  パスワード
+                </Heading>
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={8}>
+              <Flex>
+                <Input
+                  minW='100'
+                  borderRadius='full'
+                  borderColor='primary.1'
+                  type='password'
+                  value={formData.password}
+                  onChange={formDataHandler('password')}
+                />
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={4}>
+              <Flex color='black.600' h='100%' justify='end' align='center'>
+                <Heading as='h4' size='md'>
+                  パスワード確認
+                </Heading>
+              </Flex>
+            </GridItem>
+            <GridItem rowSpan={1} colSpan={8}>
+              <Flex>
+                <Input
+                  minW='100'
+                  borderRadius='full'
+                  borderColor='primary.1'
+                  type='password'
+                  value={formData.passwordConfirmation}
+                  onChange={formDataHandler('passwordConfirmation')}
+                />
+              </Flex>
+            </GridItem>
+          </Grid>
+        </GridItem>
+        <GridItem colSpan={1} />
+      </Grid>
+      <Flex mt='7' />
       <Center>
         <Box p='5' mb='2'>
-          <Box my='3'>
-            <Heading as='h4' size='md' my='2'>
-              Name
-            </Heading>
-            <Input
-              type='text'
-              value={postUserData.userName}
-              onChange={userDataHandler('userName')}
-            />
-            <p>例: 技大太郎</p>
-          </Box>
-          <Box my='3'>
-            <Heading as='h4' size='md' my='2'>
-              学科
-            </Heading>
-            <Select
-              value={postUserData.departmentId}
-              onChange={userDataHandler('departmentId')}
-              borderRadius='full'
-              borderColor='primary.1'
-              w='224px'
-            >
-              {props.departments.map((department) => (
-                <option value={department.id}>{department.name}</option>
-              ))}
-            </Select>
-          </Box>
-          <Box my='3'>
-            <Heading as='h4' size='md' my='2'>
-              Email
-            </Heading>
-            <Input type='text' value={formData.email} onChange={formDataHandler('email')} />
-            <p>例: gidai-taro@email.com</p>
-          </Box>
-          <Box my='3'>
-            <Heading as='h4' size='md' my='2'>
-              Password
-            </Heading>
-            <Input
-              type='password'
-              value={formData.password}
-              onChange={formDataHandler('password')}
-            />
-          </Box>
-          <Box my='3'>
-            <Heading as='h4' size='md' my='2'>
-              Password Confirmation
-            </Heading>
-            <Input
-              type='password'
-              value={formData.passwordConfirmation}
-              onChange={formDataHandler('passwordConfirmation')}
-            />
-          </Box>
-          <SubmitButton onClick={() => postUser(formData, postUserData)}>Next</SubmitButton>
+          <SubmitButton onClick={() => postUser(formData, postUserData)}>登録</SubmitButton>
         </Box>
       </Center>
     </ChakraProvider>

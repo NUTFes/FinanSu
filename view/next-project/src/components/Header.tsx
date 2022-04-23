@@ -1,8 +1,22 @@
 import React from 'react';
+import Router from 'next/router';
 import { Box, Flex, Text, ChakraProvider } from '@chakra-ui/react';
 import PulldownButton from '@components/General/PulldownButton';
 import { Avatar } from '@chakra-ui/react';
 import theme from '@assets/theme';
+import { signOut } from '@api/signOut';
+
+export const SignOut = async () => {
+  const logoutUrl: string = process.env.CSR_API_URI + '/mail_auth/signout';
+  const req: any = await signOut(logoutUrl);
+  if (req.status === 200) {
+    localStorage.setItem('login', 'false');
+    Router.push('/');
+  } else {
+    console.log('Error' + req.status);
+    console.log(req);
+  }
+};
 
 const Header = () => {
   return (
@@ -41,6 +55,11 @@ const Header = () => {
           </Box>
           <Box marginRight='5'>
             <PulldownButton />
+            <li style={{ margin: 10 }}>
+              <span style={{ color: '#fff', cursor: 'pointer' }} onClick={() => SignOut()}>
+                Logout
+              </span>
+            </li>
           </Box>
         </Flex>
       </Flex>
