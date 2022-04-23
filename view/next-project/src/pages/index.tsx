@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import LoginLayout from '@components/layout/LoginLayout';
-import LoginView from '@components/auth/LoginView';
+import SignInView from '@components/auth/SignInView';
 import SignUpView from '@components/auth/SignUpView';
 import { ChakraProvider, Center, Flex, Box, Heading, Link, Spacer } from '@chakra-ui/react';
 import theme from '@assets/theme';
@@ -37,7 +37,7 @@ export default function Home(props: Props) {
             <Center>
               <Link onClick={() => setIsMember(!isMember)}>
                 <Heading as='h3' size='md'>
-                  Log in
+                  ログイン
                 </Heading>
               </Link>
             </Center>
@@ -47,10 +47,10 @@ export default function Home(props: Props) {
               </Heading>
             </Center>
             <Center gap='2rem'>
-              <Link onClick={() => setIsMember(!isMember)}>Sign up</Link>
+              <Link onClick={() => setIsMember(!isMember)}>新規登録はこちら</Link>
             </Center>
           </Flex>
-          {/* <LoginView /> */}
+          <SignInView />
         </>
       );
     } else {
@@ -60,7 +60,7 @@ export default function Home(props: Props) {
             <Center>
               <Link onClick={() => setIsMember(!isMember)}>
                 <Heading as='h3' size='md'>
-                  Sign up
+                  新規登録
                 </Heading>
               </Link>
             </Center>
@@ -70,7 +70,7 @@ export default function Home(props: Props) {
               </Heading>
             </Center>
             <Center gap='2rem'>
-              <Link onClick={() => setIsMember(!isMember)}>Log in</Link>
+              <Link onClick={() => setIsMember(!isMember)}>ログインはこちら</Link>
             </Center>
           </Flex>
           <SignUpView departments={props.departments} />
