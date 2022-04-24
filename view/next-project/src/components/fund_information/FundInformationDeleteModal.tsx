@@ -55,6 +55,8 @@ interface ModalProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
+  teacher_id: number;
+  user_id: number;
 }
 
 export default function FundInformationDeleteModal(props: ModalProps) {
@@ -103,14 +105,14 @@ export default function FundInformationDeleteModal(props: ModalProps) {
       getFundInformation(getFundInformationURL);
 
       // teacher_idに紐づくteacherを取得
-      const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + fundInformation.teacher_id;
+      const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.teacher_id;
       const getTeacher = async (url: string) => {
         setTeacher(await get(url));
       };
       getTeacher(getTeacherURL);
 
       // user_idに紐づくuserを取得
-      const getUserURL = process.env.CSR_API_URI + '/users/' + fundInformation.user_id;
+      const getUserURL = process.env.CSR_API_URI + '/users/' + props.user_id;
       const getUser = async (url: string) => {
         setUser(await get(url));
       };
@@ -123,6 +125,9 @@ export default function FundInformationDeleteModal(props: ModalProps) {
     await del(deleteFundInformationURL);
   };
 
+  console.log(fundInformation);
+  console.log(teacher);
+  console.log(user);
   return (
     <ChakraProvider theme={theme}>
       <Modal isOpen={props.openModal} onClose={closeModal} isCentered>

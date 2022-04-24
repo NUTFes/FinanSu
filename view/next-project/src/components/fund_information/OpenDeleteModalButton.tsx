@@ -10,6 +10,8 @@ interface Props {
   height?: string;
   children?: React.ReactNode;
   id: number;
+  teacher_id: number;
+  user_id: number;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -32,7 +34,13 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
         <RiDeleteBinLine size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <FundInformationDeleteModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
+      <FundInformationDeleteModal
+        id={props.id}
+        teacher_id={props.teacher_id}
+        user_id={props.user_id}
+        openModal={showModal}
+        setShowModal={setShowModal}
+      />
     </ChakraProvider>
   );
 };
