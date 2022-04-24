@@ -50,7 +50,6 @@ export const postUser = async (data: PostData, postUserData: User) => {
   const req: any = await signUp(signUpUrl, data, userID);
   const res: any = await req.json();
   if (req.status === 200) {
-    console.log(res.access_token);
     localStorage.setItem('access-token', res.access_token);
     localStorage.setItem('login', 'true');
     Router.push('/budgets');
