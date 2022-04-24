@@ -4,13 +4,6 @@ import * as React from 'react';
 import OpenAddModal from '@components/fund_information/OpenAddModal';
 import { useState } from 'react';
 
-interface Props {
-  width?: string;
-  height?: string;
-  children?: React.ReactNode;
-  teachersInformation: TeachersInformation[];
-}
-
 interface TeachersInformation {
   id: number;
   name: string;
@@ -22,6 +15,22 @@ interface TeachersInformation {
   created_at: string;
   updated_at: string;
 }
+
+interface User {
+  id: number;
+  name: string;
+  department_id: number;
+  role_id: number;
+}
+
+interface Props {
+  width?: string;
+  height?: string;
+  children?: React.ReactNode;
+  teachersInformation: TeachersInformation[];
+  currentUser: User;
+}
+
 const FundInformationAddModalButton: React.FC<Props> = (props) => {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
@@ -42,6 +51,7 @@ const FundInformationAddModalButton: React.FC<Props> = (props) => {
         teachersInformation={props.teachersInformation}
         openModal={showModal}
         setShowModal={setShowModal}
+        currentUser={props.currentUser}
       />
     </ChakraProvider>
   );

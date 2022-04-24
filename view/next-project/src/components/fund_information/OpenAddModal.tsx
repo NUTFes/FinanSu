@@ -23,12 +23,6 @@ import RegistButton from '@components/General/RegistButton';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 
-interface ModalProps {
-  setShowModal: any;
-  openModal: any;
-  children?: React.ReactNode;
-  teachersInformation: TeachersInformation[];
-}
 interface TeachersInformation {
   id: number;
   name: string;
@@ -41,14 +35,29 @@ interface TeachersInformation {
   updated_at: string;
 }
 
+interface User {
+  id: number;
+  name: string;
+  department_id: number;
+  role_id: number;
+}
+
+interface ModalProps {
+  setShowModal: any;
+  openModal: any;
+  children?: React.ReactNode;
+  teachersInformation: TeachersInformation[];
+  currentUser: User;
+}
+
 const OpenAddModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
 
   const [formData, setFormData] = useState({
+    user_id: props.currentUser.id,
     teacher_id: 1,
-    user_id: 1,
     price: '',
     remark: '',
     is_first_check: false,
