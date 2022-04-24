@@ -17,8 +17,8 @@ type userUseCase struct {
 type UserUseCase interface {
 	GetUsers(context.Context) ([]domain.User, error)
 	GetUserByID(context.Context, string) (domain.User, error)
-	CreateUser(context.Context, string, string) error
-	UpdateUser(context.Context, string, string, string) error
+	CreateUser(context.Context, string, string, string) error
+	UpdateUser(context.Context, string, string, string, string) error
 	DestroyUser(context.Context, string) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
 }
@@ -44,6 +44,7 @@ func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
 			&user.ID,
 			&user.Name,
 			&user.DepartmentID,
+			&user.RoleID,
 			&user.CreatedAt,
 			&user.UpdatedAt,
 		)
@@ -65,6 +66,7 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 		&user.ID,
 		&user.Name,
 		&user.DepartmentID,
+		&user.RoleID,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
@@ -76,13 +78,13 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 	return user, nil
 }
 
-func (u *userUseCase) CreateUser(c context.Context, name string, departmentID string) error {
-	err := u.userRep.Create(c, name, departmentID)
+func (u *userUseCase) CreateUser(c context.Context, name string, departmentID string, roleID string) error {
+	err := u.userRep.Create(c, name, departmentID, roleID)
 	return err
 }
 
-func (u *userUseCase) UpdateUser(c context.Context, id string, name string, departmentID string) error {
-	err := u.userRep.Update(c, id, name, departmentID)
+func (u *userUseCase) UpdateUser(c context.Context, id string, name string, departmentID string, roleID string) error {
+	err := u.userRep.Update(c, id, name, departmentID, roleID)
 	return err
 }
 
@@ -116,6 +118,7 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 		&user.ID,
 		&user.Name,
 		&user.DepartmentID,
+		&user.RoleID,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
