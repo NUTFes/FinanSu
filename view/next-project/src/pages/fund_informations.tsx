@@ -1,14 +1,29 @@
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
-import FundInformationAddButton from '@components/fund_information/FundInformationAddButton';
-import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import {
+  Box,
+  ChakraProvider,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Flex,
+  Spacer,
+  Select,
+  Center,
+  Checkbox,
+  Grid,
+  GridItem,
+} from '@chakra-ui/react';
 import theme from '@assets/theme';
-import { Center } from '@chakra-ui/react';
 import Header from '@components/Header';
+import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
+import FundInformationAddButton from '@components/fund_information/FundInformationAddButton';
 import { get, put } from '@api/fundInformations';
-import { Checkbox } from '@chakra-ui/react';
-import { useState } from 'react';
 import { get_with_token } from '@api/api_methods';
 
 interface FundInformation {
@@ -61,7 +76,7 @@ export const getServerSideProps = async () => {
   };
 };
 
-export default function FundList(props: Props) {
+export default function FundInformations(props: Props) {
   const [currentUser, setCurrentUser] = useState<User>({
     id: 0,
     name: '',
@@ -69,40 +84,33 @@ export default function FundList(props: Props) {
     role_id: 1,
   });
 
+  const router = useRouter();
+
   // ページ読み込み時にcurrent_userを取得
-  if (typeof window !== 'undefined') {
-    window.onload = async function () {
-      // current_userを取得
-      const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
-      const currentUserRes = await get_with_token(getCurrentUserUrl);
-      const currentUserData: User = {
-        id: currentUserRes.id,
-        name: currentUserRes.name,
-        department_id: currentUserRes.department_id,
-        role_id: currentUserRes.role_id,
+  useEffect(() => {
+    if (router.isReady) {
+      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
+      const getCurrentUser = async (url: string) => {
+        setCurrentUser(await get_with_token(url));
       };
-      // current_userにセット
-      setCurrentUser({
-        id: currentUserData.id,
-        name: currentUserData.name,
-        department_id: currentUserData.department_id,
-        role_id: currentUserData.role_id,
-      });
-    };
-  }
+      getCurrentUser(getCurrentUserURL);
+    }
+  }, [router]);
 
   const teachersInformation = props.teachersInformation;
-  const [fundList, setFundList] = useState<FundInformation[]>(props.fundInformation);
+  const [fundInformations, setFundInformations] = useState<FundInformation[]>(
+    props.fundInformation,
+  );
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
-    setFundList(
-      fundList.map((fundItem: any) =>
+    setFundInformations(
+      fundInformations.map((fundItem: any) =>
         fundItem.id === id ? { ...fundItem, [input]: !isChecked } : fundItem,
       ),
     );
   };
   const submit = async (id: number) => {
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await put(putUrl, fundList[id - 1]);
+    await put(putUrl, fundInformations[id - 1]);
   };
   const checkboxContent = (isChecked: boolean, id: number, input: string) => {
     {
@@ -208,7 +216,7 @@ export default function FundList(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {fundList.map((fundItem) => (
+                {fundInformations.map((fundItem) => (
                   <Tr key={fundItem.teacher_id} onUnload={submit(fundItem.teacher_id)}>
                     <Td>
                       <Center color='black.300'>
@@ -244,13 +252,22 @@ export default function FundList(props: Props) {
                       <Center color='black.300'>{fundItem.remark}</Center>
                     </Td>
                     <Td>
-                      <Center>
-                        <OpenEditModalButton
-                          id={fundItem.id}
-                          teachersInformation={teachersInformation}
-                          currentUser={currentUser}
-                        />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center>
+                            <OpenEditModalButton
+                              id={fundItem.id}
+                              teachersInformation={teachersInformation}
+                              currentUser={currentUser}
+                            />
+                          </Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center>
+                            <OpenDeleteModalButton id={fundItem.id} />
+                          </Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
                   </Tr>
                 ))}
