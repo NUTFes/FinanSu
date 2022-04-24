@@ -27,7 +27,7 @@ export const SignIn = async (data: PostData) => {
   if (req.status === 200) {
     localStorage.setItem('access-token', res.access_token);
     localStorage.setItem('login', 'true');
-    Router.push('/budgets');
+    Router.push('/fund_informations');
   } else {
     console.log('Error' + res.status);
     console.log(res);
