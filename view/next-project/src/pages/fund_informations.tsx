@@ -1,17 +1,16 @@
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
-import FundInformationsAddButton from '@components/fund_informations/FundInformationsAddButton';
+import FundInformationAddButton from '@components/fund_information/FundInformationAddButton';
 import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, put } from '@api/fundInformations';
 import { Checkbox } from '@chakra-ui/react';
 import { useState } from 'react';
 
-interface FundInformations {
+interface FundInformation {
   user_id: number;
   teacher_id: number;
   price: number;
@@ -22,7 +21,7 @@ interface FundInformations {
   updated_at: string;
 }
 
-interface TeachersInformations {
+interface TeachersInformation {
   id: number;
   name: string;
   position: string;
@@ -34,26 +33,26 @@ interface TeachersInformations {
   updated_at: string;
 }
 interface Props {
-  teachersinformations: TeachersInformations[];
-  fundinformations: FundInformations[];
+  teachersInformation: TeachersInformation[];
+  fundInformation: FundInformation[];
 }
 
 export const getServerSideProps = async () => {
-  const getTeachersinformationsUrl = process.env.SSR_API_URI + '/teachers';
+  const getTeachersInformationUrl = process.env.SSR_API_URI + '/teachers';
   const getUrl = process.env.SSR_API_URI + '/fund_informations';
-  const teachersinformationsRes = await get(getTeachersinformationsUrl);
-  const fundinformationsRes = await get(getUrl);
+  const teachersInformationRes = await get(getTeachersInformationUrl);
+  const fundInformationRes = await get(getUrl);
   return {
     props: {
-      teachersinformations: teachersinformationsRes,
-      fundinformations: fundinformationsRes,
+      teachersInformation: teachersInformationRes,
+      fundInformation: fundInformationRes,
     },
   };
 };
 
 export default function FundList(props: Props) {
-  const teachersinformations = props.teachersinformations;
-  const [fundList, setFundList] = useState<FundInformations[]>(props.fundinformations);
+  const teachersInformation = props.teachersInformation;
+  const [fundList, setFundList] = useState<FundInformation[]>(props.fundInformation);
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
     setFundList(
       fundList.map((fundItem: any) =>
@@ -116,12 +115,12 @@ export default function FundList(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <FundInformationsAddButton
-                  teachersinformations={teachersinformations}
+                <FundInformationAddButton
+                  teachersInformation={teachersInformation}
                   // leftIcon={<RiAddCircleLine color={'white'} />}
                 >
                   学内募金登録
-                </FundInformationsAddButton>
+                </FundInformationAddButton>
               </Box>
             </Flex>
           </Box>

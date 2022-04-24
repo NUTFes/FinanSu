@@ -1,17 +1,17 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import FundInformationsAddModal from '@components/fund_informations/FundInformationsAddModal';
+import OpenAddModal from '@components/fund_information/OpenAddModal';
 import { useState } from 'react';
 
 interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
-  teachersinformations: TeachersInformations[];
+  teachersInformation: TeachersInformation[];
 }
 
-interface TeachersInformations {
+interface TeachersInformation {
   id: number;
   name: string;
   position: string;
@@ -22,7 +22,7 @@ interface TeachersInformations {
   created_at: string;
   updated_at: string;
 }
-const FundInformationsAddModalButton: React.FC<Props> = (props) => {
+const FundInformationAddModalButton: React.FC<Props> = (props) => {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
@@ -38,8 +38,8 @@ const FundInformationsAddModalButton: React.FC<Props> = (props) => {
       >
         {props.children}
       </Button>
-      <FundInformationsAddModal
-        teachersinformations={props.teachersinformations}
+      <OpenAddModal
+        teachersInformation={props.teachersInformation}
         openModal={showModal}
         setShowModal={setShowModal}
       />
@@ -47,4 +47,4 @@ const FundInformationsAddModalButton: React.FC<Props> = (props) => {
   );
 };
 
-export default FundInformationsAddModalButton;
+export default FundInformationAddModalButton;
