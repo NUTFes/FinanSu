@@ -1,30 +1,12 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
 import RegistButton from '@components/General/RegistButton';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Button,
-  Flex,
-  Spacer,
-  Select,
-  Icon,
-  Text,
-  createIcon,
-} from '@chakra-ui/react';
-
+import { Table, Thead, Tbody, Th, Td, Tr, Flex, Spacer, Select } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center, Box } from '@chakra-ui/react';
-import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
+import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import { getDomainLocale } from 'next/dist/shared/lib/router/router';
 import { get } from '@api/sponsorship';
 import { useState } from 'react';
 

@@ -12,11 +12,11 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import {useRouter} from 'next/router';
-import {get} from '@api/purchaseOrder';
+import { useRouter } from 'next/router';
+import { get } from '@api/purchaseOrder';
 
 interface ModalProps {
   setShowModal: any;
@@ -59,38 +59,36 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
                 <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
               </Box>
             </Flex>
-            <Grid
-              templateColumns='repeat(12, 1fr)'
-              gap={4}
-              mb={10}
-            >
+            <Grid templateColumns='repeat(12, 1fr)' gap={4} mb={10}>
               <GridItem colSpan={12}>
-                <Center color='black.600' h="100%" fontSize="2xl">
+                <Center color='black.600' h='100%' fontSize='2xl'>
                   詳細
                 </Center>
               </GridItem>
               <GridItem colSpan={1} />
               <GridItem colSpan={3}>
-                <Flex color='black.600' h="100%" justify="end" align="center">
+                <Flex color='black.600' h='100%' justify='end' align='center'>
                   購入期限日
                 </Flex>
               </GridItem>
-              <GridItem colSpan={7} borderBottom="1px" borderBottomColor='primary.1'>
-                <Flex color='black.600' h="100%" justify="start" align="center">
-                <Text fontSize='lg' pl={2}>{formData.deadline}
-                </Text>
+              <GridItem colSpan={7} borderBottom='1px' borderBottomColor='primary.1'>
+                <Flex color='black.600' h='100%' justify='start' align='center'>
+                  <Text fontSize='lg' pl={2}>
+                    {formData.deadline}
+                  </Text>
                 </Flex>
               </GridItem>
               <GridItem colSpan={1} />
               <GridItem colSpan={1} />
               <GridItem colSpan={3}>
-                <Flex color='black.600' h="100%" justify="end" align="center">
+                <Flex color='black.600' h='100%' justify='end' align='center'>
                   申請者
                 </Flex>
               </GridItem>
-              <GridItem colSpan={7} borderBottom="1px" borderBottomColor='primary.1'>
-                <Flex color='black.600' h="100%" justify="start" align="center">
-                  <Text fontSize='lg' pl={2}>{formData.user_id}
+              <GridItem colSpan={7} borderBottom='1px' borderBottomColor='primary.1'>
+                <Flex color='black.600' h='100%' justify='start' align='center'>
+                  <Text fontSize='lg' pl={2}>
+                    {formData.user_id}
                   </Text>
                 </Flex>
               </GridItem>
@@ -104,4 +102,3 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
 };
 
 export default PurchaseOrderEditModal;
-

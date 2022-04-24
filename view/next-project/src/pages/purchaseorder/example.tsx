@@ -1,6 +1,6 @@
 import { get, post, put, del } from '@api/purchaseOrder';
 import { Table, Tr, Td, Button } from '@chakra-ui/react';
-type PurchaseOrder= {
+type PurchaseOrder = {
   id: number;
   deadline: string;
   user_id: number;
