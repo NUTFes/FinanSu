@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
+import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import FundInformationAddButton from '@components/fund_information/FundInformationAddButton';
 import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
 import theme from '@assets/theme';
@@ -9,8 +9,10 @@ import Header from '@components/Header';
 import { get, put } from '@api/fundInformations';
 import { Checkbox } from '@chakra-ui/react';
 import { useState } from 'react';
+import { get_with_token } from '@api/api_methods';
 
 interface FundInformation {
+  id: number;
   user_id: number;
   teacher_id: number;
   price: number;
@@ -32,15 +34,24 @@ interface TeachersInformation {
   created_at: string;
   updated_at: string;
 }
+
+interface User {
+  id: number;
+  name: string;
+  department_id: number;
+  role_id: number;
+}
+
 interface Props {
   teachersInformation: TeachersInformation[];
   fundInformation: FundInformation[];
+  currentUser: User;
 }
 
 export const getServerSideProps = async () => {
-  const getTeachersInformationUrl = process.env.SSR_API_URI + '/teachers';
+  const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getUrl = process.env.SSR_API_URI + '/fund_informations';
-  const teachersInformationRes = await get(getTeachersInformationUrl);
+  const teachersInformationRes = await get(getTeachersInformationURL);
   const fundInformationRes = await get(getUrl);
   return {
     props: {
@@ -51,6 +62,35 @@ export const getServerSideProps = async () => {
 };
 
 export default function FundList(props: Props) {
+  const [currentUser, setCurrentUser] = useState<User>({
+    id: 0,
+    name: '',
+    department_id: 1,
+    role_id: 1,
+  });
+
+  // ページ読み込み時にcurrent_userを取得
+  if (typeof window !== 'undefined') {
+    window.onload = async function () {
+      // current_userを取得
+      const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
+      const currentUserRes = await get_with_token(getCurrentUserUrl);
+      const currentUserData: User = {
+        id: currentUserRes.id,
+        name: currentUserRes.name,
+        department_id: currentUserRes.department_id,
+        role_id: currentUserRes.role_id,
+      };
+      // current_userにセット
+      setCurrentUser({
+        id: currentUserData.id,
+        name: currentUserData.name,
+        department_id: currentUserData.department_id,
+        role_id: currentUserData.role_id,
+      });
+    };
+  }
+
   const teachersInformation = props.teachersInformation;
   const [fundList, setFundList] = useState<FundInformation[]>(props.fundInformation);
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
@@ -117,6 +157,7 @@ export default function FundList(props: Props) {
               <Box>
                 <FundInformationAddButton
                   teachersInformation={teachersInformation}
+                  currentUser={currentUser}
                   // leftIcon={<RiAddCircleLine color={'white'} />}
                 >
                   学内募金登録
@@ -204,7 +245,11 @@ export default function FundList(props: Props) {
                     </Td>
                     <Td>
                       <Center>
-                        <EditButton />
+                        <OpenEditModalButton
+                          id={fundItem.id}
+                          teachersInformation={teachersInformation}
+                          currentUser={currentUser}
+                        />
                       </Center>
                     </Td>
                   </Tr>
