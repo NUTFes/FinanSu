@@ -25,6 +25,7 @@ interface PostData {
 interface User {
   userName: string;
   departmentId: number;
+  roleId: number;
 }
 
 interface Department {
@@ -60,11 +61,12 @@ export const postUser = async (data: PostData, postUserData: User) => {
 };
 
 export default function SignUpView(props: Props) {
-  const [postUserData, setPostUserData] = useState({
+  const [postUserData, setPostUserData] = useState<User>({
     userName: '',
     departmentId: 1,
+    roleId: 1,
   });
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PostData>({
     email: '',
     password: '',
     passwordConfirmation: '',

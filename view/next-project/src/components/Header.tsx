@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Router from 'next/router';
-import { Box, Flex, Text, ChakraProvider } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  ChakraProvider,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react';
 import PulldownButton from '@components/General/PulldownButton';
 import { Avatar } from '@chakra-ui/react';
 import theme from '@assets/theme';
-import { signOut } from '@api/signOut';
+import { del } from '@api/signOut';
+import { get_with_token } from '@api/api_methods';
 
-export const SignOut = async () => {
-  const logoutUrl: string = process.env.CSR_API_URI + '/mail_auth/signout';
-  const req: any = await signOut(logoutUrl);
+interface User {
+  id: number | string;
+  name: string;
+  department_id: number | string;
+  role_id: number | string;
+}
+
+// sign out
+export const signOut = async () => {
+  const signOutUrl: string = process.env.CSR_API_URI + '/mail_auth/signout';
+  const req: any = await del(signOutUrl);
   if (req.status === 200) {
     localStorage.setItem('login', 'false');
     Router.push('/');
@@ -18,7 +37,36 @@ export const SignOut = async () => {
   }
 };
 
-const Header = () => {
+const Header = (props: any) => {
+  const [currentUser, setCurrentUser] = useState<User>({
+    id: '',
+    name: '',
+    department_id: '',
+    role_id: '',
+  });
+
+  // ページ読み込み時にcurrent_userを取得
+  if (typeof window !== 'undefined') {
+    window.onload = async function () {
+      // current_userを取得
+      const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
+      const currentUserRes = await get_with_token(getCurrentUserUrl);
+      const currentUserData: User = {
+        id: currentUserRes.id,
+        name: currentUserRes.name,
+        department_id: currentUserRes.department_id,
+        role_id: currentUserRes.role_id,
+      };
+      // current_userにセット
+      setCurrentUser({
+        id: currentUserData.id,
+        name: currentUserData.name,
+        department_id: currentUserData.department_id,
+        role_id: currentUserData.role_id,
+      });
+    };
+  }
+
   return (
     <ChakraProvider theme={theme}>
       <Flex
@@ -51,15 +99,19 @@ const Header = () => {
             <Avatar size='xs' />
           </Box>
           <Box>
-            <Text mx='3'>小林諒大</Text>
+            <Text mx='3'>{currentUser.name}</Text>
           </Box>
           <Box marginRight='5'>
-            <PulldownButton />
-            <li style={{ margin: 10 }}>
-              <span style={{ color: '#fff', cursor: 'pointer' }} onClick={() => SignOut()}>
-                Logout
-              </span>
-            </li>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<PulldownButton />} colorScheme='primary.1'>
+                Menu
+              </MenuButton>
+              <MenuList>
+                <MenuItem color='black' onClick={() => signOut()}>
+                  ログアウト
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Box>
         </Flex>
       </Flex>

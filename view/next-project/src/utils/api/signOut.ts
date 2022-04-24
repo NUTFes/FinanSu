@@ -1,4 +1,4 @@
-export const signOut = async (url: string) => {
+export const del = async (url: string) => {
   const res = await fetch(url, {
     method: 'DELETE',
     headers: {
