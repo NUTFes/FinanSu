@@ -27,9 +27,9 @@ interface ModalProps {
   setShowModal: any;
   openModal: any;
   children?: React.ReactNode;
-  teachersinformations: TeachersInformations[];
+  teachersInformation: TeachersInformation[];
 }
-interface TeachersInformations {
+interface TeachersInformation {
   id: number;
   name: string;
   position: string;
@@ -41,7 +41,7 @@ interface TeachersInformations {
   updated_at: string;
 }
 
-const FundInformationsAddModal: FC<ModalProps> = (props) => {
+const OpenAddModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
@@ -68,9 +68,9 @@ const FundInformationsAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const addFundInformations = async (data: any) => {
-    const addFundInformationsUrl = process.env.CSR_API_URI + '/fund_informations';
-    await post(addFundInformationsUrl, data);
+  const addFundInformation = async (data: any) => {
+    const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
+    await post(addFundInformationUrl, data);
   };
 
   return (
@@ -101,7 +101,7 @@ const FundInformationsAddModal: FC<ModalProps> = (props) => {
                     borderColor='primary.1'
                     w='224px'
                   >
-                    {props.teachersinformations.map((data) => (
+                    {props.teachersInformation.map((data) => (
                       <option value={data.id}>{data.name}</option>
                     ))}
                   </Select>
@@ -138,7 +138,7 @@ const FundInformationsAddModal: FC<ModalProps> = (props) => {
               <RegistButton
                 width='220px'
                 onClick={() => {
-                  addFundInformations(formData);
+                  addFundInformation(formData);
                   router.reload();
                 }}
               >
@@ -152,4 +152,4 @@ const FundInformationsAddModal: FC<ModalProps> = (props) => {
   );
 };
 
-export default FundInformationsAddModal;
+export default OpenAddModal;
