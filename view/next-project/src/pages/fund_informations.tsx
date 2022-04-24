@@ -264,7 +264,11 @@ export default function FundInformations(props: Props) {
                         </GridItem>
                         <GridItem>
                           <Center>
-                            <OpenDeleteModalButton id={fundItem.id} />
+                            <OpenDeleteModalButton
+                              id={fundItem.id}
+                              teacher_id={fundItem.teacher_id}
+                              user_id={fundItem.user_id}
+                            />
                           </Center>
                         </GridItem>
                       </Grid>
