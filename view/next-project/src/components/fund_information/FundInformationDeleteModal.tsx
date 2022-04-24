@@ -125,9 +125,6 @@ export default function FundInformationDeleteModal(props: ModalProps) {
     await del(deleteFundInformationURL);
   };
 
-  console.log(fundInformation);
-  console.log(teacher);
-  console.log(user);
   return (
     <ChakraProvider theme={theme}>
       <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
