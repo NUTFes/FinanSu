@@ -1,27 +1,14 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
 import FundInformationsAddButton from '@components/fund_informations/FundInformationsAddButton';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Button,
-  Flex,
-  Spacer,
-  Select,
-} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get, put } from '@api/fundInformations';
-import { Checkbox, CheckboxGroup } from '@chakra-ui/react';
+import { Checkbox } from '@chakra-ui/react';
 import { useState } from 'react';
 
 interface FundInformations {
@@ -131,9 +118,7 @@ export default function FundList(props: Props) {
               <Box>
                 <FundInformationsAddButton
                   teachersinformations={teachersinformations}
-                  textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
-                  bgGradient='linear(to-br, primary.1, primary.2)'
+                  // leftIcon={<RiAddCircleLine color={'white'} />}
                 >
                   学内募金登録
                 </FundInformationsAddButton>

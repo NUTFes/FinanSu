@@ -5,7 +5,6 @@ import * as React from 'react';
 interface Props {
   width?: string;
   height?: string;
-  onClick?: any;
   children?: React.ReactNode;
   onClick: () => void;
 }

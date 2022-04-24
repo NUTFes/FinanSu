@@ -15,12 +15,12 @@ import {
   GridItem,
   Grid,
 } from '@chakra-ui/react';
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import RegistButton from '../General/RegistButton';
-import {useRouter} from 'next/router';
-import {get, put} from '@api/purchaseReport';
+import { useRouter } from 'next/router';
+import { get, put } from '@api/purchaseReport';
 
 interface ModalProps {
   setShowModal: any;
@@ -75,16 +75,17 @@ const PurchaseReportEditModal: FC<ModalProps> = (props) => {
   }, [query, router]);
 
   const handler =
-    (input: string) => (
+    (input: string) =>
+    (
       e:
-        React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLInputElement>
         | React.ChangeEvent<HTMLTextAreaElement>
         | React.ChangeEvent<HTMLSelectElement>,
     ) => {
-      setFormData({...formData, [input]: e.target.value});
+      setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitPurchaseReport= async (data: any, id: number | string) => {
+  const submitPurchaseReport = async (data: any, id: number | string) => {
     const submitPurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + id;
     await put(submitPurchaseReportUrl, data);
   };
@@ -101,39 +102,45 @@ const PurchaseReportEditModal: FC<ModalProps> = (props) => {
                 <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
               </Box>
             </Flex>
-              <Grid
-                templateRows='repeat(2, 1fr)'
-                templateColumns='repeat(12, 1fr)'
-                gap={4}
-              >
-                <GridItem rowSpan={1} colSpan={12}>
-                  <Center color='black.600' h="100%" fontSize="xl">
-                    購入報告の編集
-                  </Center>
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={1} />
-                <GridItem rowSpan={1} colSpan={3}>
-                  <Flex color='black.600' h="100%" justify="end" align="center">
-                    申請者
-                  </Flex>
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={7}>
-                  <Input borderRadius='full' borderColor='primary.1' value={formData.user_id} onChange={handler('user_id')} />
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={1} />
-                <GridItem rowSpan={1} colSpan={1} />
-                <GridItem rowSpan={1} colSpan={3}>
-                  <Flex color='black.600' h="100%" justify="end" align="center">
-                    購入報告
-                  </Flex>
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={7}>
-                  <Flex>
-                    <Input borderRadius='full' borderColor='primary.1' value={formData.purchase_order_id} onChange={handler('purchase_order_id')} />
-                  </Flex>
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={1} />
-              </Grid>
+            <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
+              <GridItem rowSpan={1} colSpan={12}>
+                <Center color='black.600' h='100%' fontSize='xl'>
+                  購入報告の編集
+                </Center>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={3}>
+                <Flex color='black.600' h='100%' justify='end' align='center'>
+                  申請者
+                </Flex>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={7}>
+                <Input
+                  borderRadius='full'
+                  borderColor='primary.1'
+                  value={formData.user_id}
+                  onChange={handler('user_id')}
+                />
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={1} />
+              <GridItem rowSpan={1} colSpan={3}>
+                <Flex color='black.600' h='100%' justify='end' align='center'>
+                  購入報告
+                </Flex>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={7}>
+                <Flex>
+                  <Input
+                    borderRadius='full'
+                    borderColor='primary.1'
+                    value={formData.purchase_order_id}
+                    onChange={handler('purchase_order_id')}
+                  />
+                </Flex>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={1} />
+            </Grid>
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
@@ -155,4 +162,3 @@ const PurchaseReportEditModal: FC<ModalProps> = (props) => {
 };
 
 export default PurchaseReportEditModal;
-

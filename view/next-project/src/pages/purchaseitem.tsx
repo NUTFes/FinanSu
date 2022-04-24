@@ -1,4 +1,3 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
@@ -19,7 +18,7 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import {get} from "@api/purchaseOrder";
+import { get } from '@api/purchaseOrder';
 
 interface PurchaseItem {
   id: number;
@@ -35,17 +34,17 @@ interface PurchaseItem {
 interface Props {
   purchaseItem: PurchaseItem[];
 }
-export async function getServerSideProps({params}: any) {
+export async function getServerSideProps({ params }: any) {
   const getPurchaseItemUrl = process.env.SSR_API_URI + '/purchaseitems';
   const purchaseItemRes = await get(getPurchaseItemUrl);
   return {
-    props:{
+    props: {
       purchaseItem: purchaseItemRes,
-    }
+    },
   };
 }
 
-export default function PurchaseItem(props: Props){
+export default function PurchaseItem(props: Props) {
   // 日付整形
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
@@ -60,7 +59,7 @@ export default function PurchaseItem(props: Props){
     const totalPrice = quantity * price;
     totalPriceArray.push(totalPrice);
     return totalPrice;
-  }
+  };
 
   // 合計金額計算
   const calcTotalPrice = () => {
@@ -72,7 +71,7 @@ export default function PurchaseItem(props: Props){
       totalPrice += totalPriceArray[i];
     }
     return totalPrice;
-  }
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -159,13 +158,14 @@ export default function PurchaseItem(props: Props){
                       <Center color='black.300'>{purchaseItem.price}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{calcItemTotalPrice(purchaseItem.quantity, purchaseItem.price)}</Center>
+                      <Center color='black.300'>
+                        {calcItemTotalPrice(purchaseItem.quantity, purchaseItem.price)}
+                      </Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{purchaseItem.detail}</Center>
                     </Td>
-                    <Td>
-                    </Td>
+                    <Td></Td>
                     <Td>
                       <Center>
                         <EditButton />
@@ -195,4 +195,4 @@ export default function PurchaseItem(props: Props){
       </Center>
     </ChakraProvider>
   );
-};
+}
