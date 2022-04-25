@@ -20,9 +20,9 @@ import {
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import Header from '@components/Header';
+import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
-import FundInformationAddButton from '@components/fund_information/FundInformationAddButton';
 import { get, put } from '@api/fundInformations';
 import { get_with_token } from '@api/api_methods';
 
@@ -78,7 +78,7 @@ export const getServerSideProps = async () => {
 
 export default function FundInformations(props: Props) {
   const [currentUser, setCurrentUser] = useState<User>({
-    id: 0,
+    id: 1,
     name: '',
     department_id: 1,
     role_id: 1,
@@ -96,6 +96,7 @@ export default function FundInformations(props: Props) {
       getCurrentUser(getCurrentUserURL);
     }
   }, [router]);
+  const userID = currentUser.id;
 
   const teachersInformation = props.teachersInformation;
   const [fundInformations, setFundInformations] = useState<FundInformation[]>(
@@ -110,7 +111,12 @@ export default function FundInformations(props: Props) {
   };
   const submit = async (id: number) => {
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await put(putUrl, fundInformations[id - 1]);
+    for (let i = 0; i < fundInformations.length; i++) {
+      if (fundInformations[i].id == id) {
+        const fundInformation = fundInformations[i];
+        await put(putUrl, fundInformation);
+      }
+    }
   };
   const checkboxContent = (isChecked: boolean, id: number, input: string) => {
     {
@@ -163,13 +169,13 @@ export default function FundInformations(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <FundInformationAddButton
+                <OpenAddModalButton
                   teachersInformation={teachersInformation}
                   currentUser={currentUser}
-                  // leftIcon={<RiAddCircleLine color={'white'} />}
+                  userID={userID}
                 >
                   学内募金登録
-                </FundInformationAddButton>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
@@ -217,7 +223,7 @@ export default function FundInformations(props: Props) {
               </Thead>
               <Tbody>
                 {fundInformations.map((fundItem) => (
-                  <Tr key={fundItem.teacher_id} onUnload={submit(fundItem.teacher_id)}>
+                  <Tr key={fundItem.id} onUnload={submit(fundItem.id)}>
                     <Td>
                       <Center color='black.300'>
                         {checkboxContent(
