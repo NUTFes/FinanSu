@@ -23,8 +23,8 @@ import Header from '@components/Header';
 import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
-import { get, put } from '@api/fundInformations';
-import { get_with_token } from '@api/api_methods';
+import { put } from '@api/fundInformations';
+import { get, get_with_token } from '@api/api_methods';
 
 interface FundInformation {
   id: number;
@@ -38,7 +38,7 @@ interface FundInformation {
   updated_at: string;
 }
 
-interface TeachersInformation {
+interface Teachers {
   id: number;
   name: string;
   position: string;
@@ -58,19 +58,19 @@ interface User {
 }
 
 interface Props {
-  teachersInformation: TeachersInformation[];
+  teachers: Teachers[];
   fundInformation: FundInformation[];
   currentUser: User;
 }
 
 export const getServerSideProps = async () => {
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
-  const getUrl = process.env.SSR_API_URI + '/fund_informations';
+  const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
   const teachersInformationRes = await get(getTeachersInformationURL);
-  const fundInformationRes = await get(getUrl);
+  const fundInformationRes = await get(getFundInformationURL);
   return {
     props: {
-      teachersInformation: teachersInformationRes,
+      teachers: teachersInformationRes,
       fundInformation: fundInformationRes,
     },
   };
@@ -98,10 +98,14 @@ export default function FundInformations(props: Props) {
   }, [router]);
   const userID = currentUser.id;
 
-  const teachersInformation = props.teachersInformation;
+  // 教員一覧
+  const teachers = props.teachers;
+  // 募金一覧
   const [fundInformations, setFundInformations] = useState<FundInformation[]>(
     props.fundInformation,
   );
+
+  // チェックの切り替え
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
     setFundInformations(
       fundInformations.map((fundItem: any) =>
@@ -109,6 +113,8 @@ export default function FundInformations(props: Props) {
       ),
     );
   };
+
+  // checkboxの値が変わったときに更新
   const submit = async (id: number) => {
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
     for (let i = 0; i < fundInformations.length; i++) {
@@ -118,6 +124,8 @@ export default function FundInformations(props: Props) {
       }
     }
   };
+
+  // checkboxの描画
   const checkboxContent = (isChecked: boolean, id: number, input: string) => {
     {
       if (isChecked) {
@@ -144,6 +152,7 @@ export default function FundInformations(props: Props) {
       }
     }
   };
+
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -170,7 +179,7 @@ export default function FundInformations(props: Props) {
               <Spacer />
               <Box>
                 <OpenAddModalButton
-                  teachersInformation={teachersInformation}
+                  teachersInformation={teachers}
                   currentUser={currentUser}
                   userID={userID}
                 >
@@ -195,7 +204,7 @@ export default function FundInformations(props: Props) {
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      氏名
+                      教員名
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -243,10 +252,14 @@ export default function FundInformations(props: Props) {
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>會田英雄</Center>
+                      <Center color='black.300'>
+                        {props.teachers[fundItem.teacher_id - 1].name}
+                      </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>機械・建設1号棟629</Center>
+                      <Center color='black.300'>
+                        {props.teachers[fundItem.teacher_id - 1].room}
+                      </Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{fundItem.user_id}</Center>
@@ -263,7 +276,7 @@ export default function FundInformations(props: Props) {
                           <Center>
                             <OpenEditModalButton
                               id={fundItem.id}
-                              teachersInformation={teachersInformation}
+                              teachersInformation={teachers}
                               currentUser={currentUser}
                             />
                           </Center>
@@ -273,7 +286,7 @@ export default function FundInformations(props: Props) {
                             <OpenDeleteModalButton
                               id={fundItem.id}
                               teacher_id={fundItem.teacher_id}
-                              user_id={fundItem.user_id}
+                              user_id={Number(fundItem.user_id)}
                             />
                           </Center>
                         </GridItem>
