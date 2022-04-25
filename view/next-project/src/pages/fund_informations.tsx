@@ -1,17 +1,33 @@
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
-import FundInformationsAddButton from '@components/fund_informations/FundInformationsAddButton';
-import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import {
+  Box,
+  ChakraProvider,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Flex,
+  Spacer,
+  Select,
+  Center,
+  Checkbox,
+  Grid,
+  GridItem,
+} from '@chakra-ui/react';
 import theme from '@assets/theme';
-import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import { get, put } from '@api/fundInformations';
-import { Checkbox } from '@chakra-ui/react';
-import { useState } from 'react';
+import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
+import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
+import { put } from '@api/fundInformations';
+import { get, get_with_token } from '@api/api_methods';
 
-interface FundInformations {
+interface FundInformation {
+  id: number;
   user_id: number;
   teacher_id: number;
   price: number;
@@ -22,7 +38,7 @@ interface FundInformations {
   updated_at: string;
 }
 
-interface TeachersInformations {
+interface Teachers {
   id: number;
   name: string;
   position: string;
@@ -33,38 +49,83 @@ interface TeachersInformations {
   created_at: string;
   updated_at: string;
 }
+
+interface User {
+  id: number;
+  name: string;
+  department_id: number;
+  role_id: number;
+}
+
 interface Props {
-  teachersinformations: TeachersInformations[];
-  fundinformations: FundInformations[];
+  teachers: Teachers[];
+  fundInformation: FundInformation[];
+  currentUser: User;
 }
 
 export const getServerSideProps = async () => {
-  const getTeachersinformationsUrl = process.env.SSR_API_URI + '/teachers';
-  const getUrl = process.env.SSR_API_URI + '/fund_informations';
-  const teachersinformationsRes = await get(getTeachersinformationsUrl);
-  const fundinformationsRes = await get(getUrl);
+  const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
+  const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
+  const teachersInformationRes = await get(getTeachersInformationURL);
+  const fundInformationRes = await get(getFundInformationURL);
   return {
     props: {
-      teachersinformations: teachersinformationsRes,
-      fundinformations: fundinformationsRes,
+      teachers: teachersInformationRes,
+      fundInformation: fundInformationRes,
     },
   };
 };
 
-export default function FundList(props: Props) {
-  const teachersinformations = props.teachersinformations;
-  const [fundList, setFundList] = useState<FundInformations[]>(props.fundinformations);
+export default function FundInformations(props: Props) {
+  const [currentUser, setCurrentUser] = useState<User>({
+    id: 1,
+    name: '',
+    department_id: 1,
+    role_id: 1,
+  });
+
+  const router = useRouter();
+
+  // ページ読み込み時にcurrent_userを取得
+  useEffect(() => {
+    if (router.isReady) {
+      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
+      const getCurrentUser = async (url: string) => {
+        setCurrentUser(await get_with_token(url));
+      };
+      getCurrentUser(getCurrentUserURL);
+    }
+  }, [router]);
+  const userID = currentUser.id;
+
+  // 教員一覧
+  const teachers = props.teachers;
+  // 募金一覧
+  const [fundInformations, setFundInformations] = useState<FundInformation[]>(
+    props.fundInformation,
+  );
+
+  // チェックの切り替え
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
-    setFundList(
-      fundList.map((fundItem: any) =>
+    setFundInformations(
+      fundInformations.map((fundItem: any) =>
         fundItem.id === id ? { ...fundItem, [input]: !isChecked } : fundItem,
       ),
     );
   };
+
+  // checkboxの値が変わったときに更新
   const submit = async (id: number) => {
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await put(putUrl, fundList[id - 1]);
+    for (let i = 0; i < fundInformations.length; i++) {
+      if (fundInformations[i].id == id) {
+        const fundInformation = fundInformations[i];
+        await put(putUrl, fundInformation);
+      }
+    }
   };
+
+  // checkboxの描画
   const checkboxContent = (isChecked: boolean, id: number, input: string) => {
     {
       if (isChecked) {
@@ -91,6 +152,7 @@ export default function FundList(props: Props) {
       }
     }
   };
+
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -116,12 +178,13 @@ export default function FundList(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <FundInformationsAddButton
-                  teachersinformations={teachersinformations}
-                  // leftIcon={<RiAddCircleLine color={'white'} />}
+                <OpenAddModalButton
+                  teachersInformation={teachers}
+                  currentUser={currentUser}
+                  userID={userID}
                 >
                   学内募金登録
-                </FundInformationsAddButton>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
@@ -141,7 +204,7 @@ export default function FundList(props: Props) {
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      氏名
+                      教員名
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -168,8 +231,8 @@ export default function FundList(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {fundList.map((fundItem) => (
-                  <Tr key={fundItem.teacher_id} onUnload={submit(fundItem.teacher_id)}>
+                {fundInformations.map((fundItem) => (
+                  <Tr key={fundItem.id} onUnload={submit(fundItem.id)}>
                     <Td>
                       <Center color='black.300'>
                         {checkboxContent(
@@ -189,10 +252,14 @@ export default function FundList(props: Props) {
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>會田英雄</Center>
+                      <Center color='black.300'>
+                        {props.teachers[fundItem.teacher_id - 1].name}
+                      </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>機械・建設1号棟629</Center>
+                      <Center color='black.300'>
+                        {props.teachers[fundItem.teacher_id - 1].room}
+                      </Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{fundItem.user_id}</Center>
@@ -204,9 +271,26 @@ export default function FundList(props: Props) {
                       <Center color='black.300'>{fundItem.remark}</Center>
                     </Td>
                     <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center>
+                            <OpenEditModalButton
+                              id={fundItem.id}
+                              teachersInformation={teachers}
+                              currentUser={currentUser}
+                            />
+                          </Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center>
+                            <OpenDeleteModalButton
+                              id={fundItem.id}
+                              teacher_id={fundItem.teacher_id}
+                              user_id={Number(fundItem.user_id)}
+                            />
+                          </Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
                   </Tr>
                 ))}
