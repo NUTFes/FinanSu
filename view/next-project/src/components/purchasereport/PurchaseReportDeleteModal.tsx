@@ -12,12 +12,12 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../General/RegistButton';
-import {useRouter} from 'next/router';
-import {del} from '@api/purchaseReport';
+import Button from '@components/General/RegistButton';
+import { useRouter } from 'next/router';
+import { del } from '@api/purchaseReport';
 
 interface ModalProps {
   setShowModal: any;
@@ -83,4 +83,3 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
 };
 
 export default PurchaseReportDeleteModal;
-

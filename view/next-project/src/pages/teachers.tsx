@@ -1,4 +1,3 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/General/EditButton';
@@ -6,7 +5,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -15,13 +13,13 @@ import {
   Spacer,
   Stack,
   Radio,
-  RadioGroup
+  RadioGroup,
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import { get, put } from '@api/fundInformations';
+import { get } from '@api/fundInformations';
 import { useState } from 'react';
 
 interface TeachersInformations {
@@ -36,25 +34,27 @@ interface TeachersInformations {
   updated_at: string;
 }
 interface Props {
-  teachersinformations: TeachersInformations[]
+  teachersinformations: TeachersInformations[];
 }
 export const getStaticProps = async () => {
-  const getTeachersinformationsUrl = process.env.SSR_API_URI + "/teachers";
-  const teachersinformationsRes = await get(getTeachersinformationsUrl)
+  const getTeachersinformationsUrl = process.env.SSR_API_URI + '/teachers';
+  const teachersinformationsRes = await get(getTeachersinformationsUrl);
   return {
     props: {
-      teachersinformations: teachersinformationsRes
-    }
-  }
-}
+      teachersinformations: teachersinformationsRes,
+    },
+  };
+};
 export default function TeachersList(props: Props) {
-  const [teachersList, setTeachersList] = useState<TeachersInformations[]>(props.teachersinformations)
+  const [teachersList, setTeachersList] = useState<TeachersInformations[]>(
+    props.teachersinformations,
+  );
   const allTeachersList = () => {
-    setTeachersList(props.teachersinformations)
-  }
+    setTeachersList(props.teachersinformations);
+  };
   const investorList = () => {
-    setTeachersList(props.teachersinformations.filter(teacher => teacher.is_black == false))
-  }
+    setTeachersList(props.teachersinformations.filter((teacher) => teacher.is_black == false));
+  };
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -101,10 +101,11 @@ export default function TeachersList(props: Props) {
               <Thead>
                 <Tr>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600' >
+                    <Center fontSize='sm' color='black.600'>
                       氏名
                     </Center>
-                  </Th><Th borderBottomColor='#76E4F7'>
+                  </Th>
+                  <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
                       職位
                     </Center>
@@ -124,16 +125,19 @@ export default function TeachersList(props: Props) {
                       備考
                     </Center>
                   </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                  </Th>
+                  <Th borderBottomColor='#76E4F7'></Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {teachersList.map((teachersItem) => (
                   <Tr key={teachersItem.name}>
                     <Td>
-                      {teachersItem.is_black && <Center color='black.900'>{teachersItem.name}</Center>}
-                      {!teachersItem.is_black && <Center color='black.300'>{teachersItem.name}</Center>}
+                      {teachersItem.is_black && (
+                        <Center color='black.900'>{teachersItem.name}</Center>
+                      )}
+                      {!teachersItem.is_black && (
+                        <Center color='black.300'>{teachersItem.name}</Center>
+                      )}
                     </Td>
                     <Td>
                       <Center color='black.300'>{teachersItem.position}</Center>
@@ -161,4 +165,4 @@ export default function TeachersList(props: Props) {
       </Center>
     </ChakraProvider>
   );
-};
+}
