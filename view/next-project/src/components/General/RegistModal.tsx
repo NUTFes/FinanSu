@@ -20,15 +20,15 @@ import { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import RegistButton from '@components/General/RegistButton';
-import {FC} from "react";
-import {useRouter} from "next/router";
+import { FC } from 'react';
+import { useRouter } from 'next/router';
 
 interface ModalProps {
   setShowModal: any;
   openModal: any;
 }
 
-const RegistModal : FC<ModalProps> = (props) => {
+const RegistModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
@@ -163,8 +163,6 @@ const RegistModal : FC<ModalProps> = (props) => {
             <ModalFooter mt='5' mb='10'>
               <RegistButton
                 width='220px'
-                color='white'
-                bgGradient='linear(to-br, primary.1, primary.2)'
                 onClick={() => {
                   registBudget(formData);
                   router.reload();

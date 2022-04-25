@@ -7,3 +7,6 @@ run-api:
 	docker compose up api
 down:
 	docker compose down
+seed:
+	docker compose run --rm api go mod tidy
+	docker compose run --rm api go run /app/tools/seeds/teacher_seeds.go
