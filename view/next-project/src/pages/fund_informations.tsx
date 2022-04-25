@@ -60,18 +60,19 @@ interface User {
 interface Props {
   teachers: Teachers[];
   fundInformation: FundInformation[];
+  fundInformationView: any[];
   currentUser: User;
 }
 
 export const getServerSideProps = async () => {
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
-  const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
+  const getFundInformationViewURL = process.env.SSR_API_URI + '/get_fund_informations_for_view';
   const teachersInformationRes = await get(getTeachersInformationURL);
-  const fundInformationRes = await get(getFundInformationURL);
+  const fundInformationViewRes = await get(getFundInformationViewURL);
   return {
     props: {
       teachers: teachersInformationRes,
-      fundInformation: fundInformationRes,
+      fundInformationView: fundInformationViewRes,
     },
   };
 };
@@ -128,8 +129,8 @@ export default function FundInformations(props: Props) {
   // チェックの切り替え
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
     setFundInformations(
-      fundInformations.map((fundItem: any) =>
-        fundItem.id === id ? { ...fundItem, [input]: !isChecked } : fundItem,
+      fundInformations.map((fundViewItem: any) =>
+        fundViewItem.id === id ? { ...fundViewItem, [input]: !isChecked } : fundViewItem,
       ),
     );
   };
@@ -280,26 +281,29 @@ export default function FundInformations(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {fundInformations.map((fundItem) => (
-                  <Tr key={fundItem.id} onUnload={submit(fundItem.id)}>
+                {props.fundInformationView.map((fundViewItem) => (
+                  <Tr
+                    key={fundViewItem.fund_information.id}
+                    onUnload={submit(fundViewItem.fund_information.id)}
+                  >
                     <Td>
                       <Center color='black.300'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
-                            fundItem.is_first_check,
-                            fundItem.teacher_id,
+                            fundViewItem.fund_information.is_first_check,
+                            fundViewItem.fund_information.teacher_id,
                             'is_first_check',
                           )}
                         {isFinanceStaff &&
                           changeableCheckboxContent(
-                            fundItem.is_first_check,
-                            fundItem.teacher_id,
+                            fundViewItem.fund_information.is_first_check,
+                            fundViewItem.fund_information.teacher_id,
                             'is_first_check',
                           )}
                         {isUser &&
                           unChangeableCheckboxContent(
-                            fundItem.is_first_check,
-                            fundItem.teacher_id,
+                            fundViewItem.fund_information.is_first_check,
+                            fundViewItem.fund_information.teacher_id,
                             'is_first_check',
                           )}
                       </Center>
@@ -308,49 +312,45 @@ export default function FundInformations(props: Props) {
                       <Center color='black.300'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
-                            fundItem.is_first_check,
-                            fundItem.teacher_id,
+                            fundViewItem.fund_information.is_first_check,
+                            fundViewItem.fund_information.teacher_id,
                             'is_first_check',
                           )}
                         {isFinanceStaff &&
                           unChangeableCheckboxContent(
-                            fundItem.is_first_check,
-                            fundItem.teacher_id,
+                            fundViewItem.fund_information.is_first_check,
+                            fundViewItem.fund_information.teacher_id,
                             'is_first_check',
                           )}
                         {isUser &&
                           unChangeableCheckboxContent(
-                            fundItem.is_first_check,
-                            fundItem.teacher_id,
+                            fundViewItem.fund_information.is_first_check,
+                            fundViewItem.fund_information.teacher_id,
                             'is_first_check',
                           )}
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>
-                        {props.teachers[fundItem.teacher_id - 1].name}
-                      </Center>
+                      <Center color='black.300'>{fundViewItem.teacher.name}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>
-                        {props.teachers[fundItem.teacher_id - 1].room}
-                      </Center>
+                      <Center color='black.300'>{fundViewItem.teacher.room}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.user_id}</Center>
+                      <Center color='black.300'>{fundViewItem.user.name}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.price}</Center>
+                      <Center color='black.300'>{fundViewItem.fund_information.price}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.remark}</Center>
+                      <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
                     </Td>
                     <Td>
                       <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                         <GridItem>
                           <Center>
                             <OpenEditModalButton
-                              id={fundItem.id}
+                              id={fundViewItem.fund_information.id}
                               teachersInformation={teachers}
                               currentUser={currentUser}
                             />
@@ -359,9 +359,9 @@ export default function FundInformations(props: Props) {
                         <GridItem>
                           <Center>
                             <OpenDeleteModalButton
-                              id={fundItem.id}
-                              teacher_id={fundItem.teacher_id}
-                              user_id={Number(fundItem.user_id)}
+                              id={fundViewItem.fund_information.id}
+                              teacher_id={fundViewItem.fund_information.teacher_id}
+                              user_id={Number(fundViewItem.fund_information.user_id)}
                             />
                           </Center>
                         </GridItem>
