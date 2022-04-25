@@ -6,15 +6,25 @@ interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
-  onClick: () => void;
+  bgGradient?: string;
+  _hover?: any;
+  onClick?: () => void;
 }
 
-const RegistButton: React.FC<Props> = ({ children, width, height, onClick }) => {
+const RegistButton: React.FC<Props> = ({
+  children,
+  width,
+  height,
+  bgGradient,
+  _hover,
+  onClick,
+}) => {
   return (
     <ChakraProvider theme={theme}>
       <Button
         color='white'
-        bgGradient='linear(to-br, primary.1, primary.2)'
+        bgGradient={bgGradient}
+        _hover={{ _hover }}
         style={{ height, width }}
         onClick={onClick}
       >

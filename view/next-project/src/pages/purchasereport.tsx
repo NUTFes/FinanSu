@@ -1,26 +1,13 @@
-import type { NextPage } from 'next';
-import { get, post, put, del } from '@api/purchaseReport';
+import { get } from '@api/purchaseReport';
 import Head from 'next/head';
-import {Box, ChakraProvider, Grid, GridItem} from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  Flex,
-  Spacer,
-  Select,
-} from '@chakra-ui/react';
+import { Box, ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, Button, Flex, Spacer, Select } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import OpenEditModalButton from "@components/purchasereport/OpenEditModalButton";
-import OpenDeleteModalButton from "@components/purchasereport/OpenDeleteModalButton";
+import OpenEditModalButton from '@components/purchasereport/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/purchasereport/OpenDeleteModalButton';
 
 interface PurchaseReport {
   id: number;
@@ -49,17 +36,17 @@ interface Props {
   purchaseOrder: PurchaseOrder[];
 }
 
-export async function getServerSideProps({params}: any) {
+export async function getServerSideProps({ params }: any) {
   const getPurchaseReportUrl = process.env.SSR_API_URI + '/purchasereports';
   const purchaseReportRes = await get(getPurchaseReportUrl);
   return {
-    props:{
+    props: {
       purchaseReport: purchaseReportRes,
-    }
+    },
   };
 }
 
-export default function PurchaseReport(props: Props){
+export default function PurchaseReport(props: Props) {
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 5);
@@ -142,15 +129,18 @@ export default function PurchaseReport(props: Props){
                     <Td>
                       <Center color='black.300'>{formatDate(purchaseReportItem.created_at)}</Center>
                     </Td>
-                    <Td>
-                    </Td>
+                    <Td></Td>
                     <Td>
                       <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                         <GridItem>
-                          <Center><OpenEditModalButton id={purchaseReportItem.id} /></Center>
+                          <Center>
+                            <OpenEditModalButton id={purchaseReportItem.id} />
+                          </Center>
                         </GridItem>
                         <GridItem>
-                          <Center><OpenDeleteModalButton id={purchaseReportItem.id}/></Center>
+                          <Center>
+                            <OpenDeleteModalButton id={purchaseReportItem.id} />
+                          </Center>
                         </GridItem>
                       </Grid>
                     </Td>
@@ -163,4 +153,4 @@ export default function PurchaseReport(props: Props){
       </Center>
     </ChakraProvider>
   );
-};
+}
