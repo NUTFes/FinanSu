@@ -77,12 +77,18 @@ export const getServerSideProps = async () => {
 };
 
 export default function FundInformations(props: Props) {
+  // ログイン中のユーザ
   const [currentUser, setCurrentUser] = useState<User>({
     id: 1,
     name: '',
     department_id: 1,
     role_id: 1,
   });
+
+  // ログイン中のユーザの権限
+  const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
+  const [isFinanceStaff, setIsFinanceStaff] = useState<boolean>(false);
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -91,7 +97,21 @@ export default function FundInformations(props: Props) {
     if (router.isReady) {
       const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
       const getCurrentUser = async (url: string) => {
-        setCurrentUser(await get_with_token(url));
+        const res = await get_with_token(url);
+        setCurrentUser(res);
+
+        // current_userの権限をユーザに設定
+        if (res.role_id == 1) {
+          setIsUser(true);
+        }
+        // current_userの権限を財務局長に設定
+        else if (res.role_id == 3) {
+          setIsFinanceDirector(true);
+        }
+        // current_userの権限を財務局員に設定
+        else if (res.role_id == 4) {
+          setIsFinanceStaff(true);
+        }
       };
       getCurrentUser(getCurrentUserURL);
     }
@@ -125,14 +145,13 @@ export default function FundInformations(props: Props) {
     }
   };
 
-  // checkboxの描画
-  const checkboxContent = (isChecked: boolean, id: number, input: string) => {
+  // 変更不可能なcheckboxの描画
+  const changeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
     {
       if (isChecked) {
         return (
           <>
             <Checkbox
-              defaultChecked
               onChange={() => {
                 switchCheck(isChecked, id, input);
               }}
@@ -143,6 +162,36 @@ export default function FundInformations(props: Props) {
         return (
           <>
             <Checkbox
+              onChange={() => {
+                switchCheck(isChecked, id, input);
+              }}
+            ></Checkbox>
+          </>
+        );
+      }
+    }
+  };
+
+  // 変更不可能なcheckboxの描画
+  const unChangeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
+    {
+      if (isChecked) {
+        return (
+          <>
+            <Checkbox
+              defaultChecked
+              isDisabled
+              onChange={() => {
+                switchCheck(isChecked, id, input);
+              }}
+            ></Checkbox>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Checkbox
+              isDisabled
               onChange={() => {
                 switchCheck(isChecked, id, input);
               }}
@@ -194,7 +243,7 @@ export default function FundInformations(props: Props) {
                 <Tr>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      自局長確認
+                      財務局員確認
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -235,20 +284,46 @@ export default function FundInformations(props: Props) {
                   <Tr key={fundItem.id} onUnload={submit(fundItem.id)}>
                     <Td>
                       <Center color='black.300'>
-                        {checkboxContent(
-                          fundItem.is_first_check,
-                          fundItem.teacher_id,
-                          'is_first_check',
-                        )}
+                        {isFinanceDirector &&
+                          changeableCheckboxContent(
+                            fundItem.is_first_check,
+                            fundItem.teacher_id,
+                            'is_first_check',
+                          )}
+                        {isFinanceStaff &&
+                          changeableCheckboxContent(
+                            fundItem.is_first_check,
+                            fundItem.teacher_id,
+                            'is_first_check',
+                          )}
+                        {isUser &&
+                          unChangeableCheckboxContent(
+                            fundItem.is_first_check,
+                            fundItem.teacher_id,
+                            'is_first_check',
+                          )}
                       </Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>
-                        {checkboxContent(
-                          fundItem.is_last_check,
-                          fundItem.teacher_id,
-                          'is_last_check',
-                        )}
+                        {isFinanceDirector &&
+                          changeableCheckboxContent(
+                            fundItem.is_first_check,
+                            fundItem.teacher_id,
+                            'is_first_check',
+                          )}
+                        {isFinanceStaff &&
+                          unChangeableCheckboxContent(
+                            fundItem.is_first_check,
+                            fundItem.teacher_id,
+                            'is_first_check',
+                          )}
+                        {isUser &&
+                          unChangeableCheckboxContent(
+                            fundItem.is_first_check,
+                            fundItem.teacher_id,
+                            'is_first_check',
+                          )}
                       </Center>
                     </Td>
                     <Td>
