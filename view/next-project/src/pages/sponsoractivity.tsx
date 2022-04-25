@@ -25,8 +25,10 @@ import { Center, Box } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { getDomainLocale } from 'next/dist/shared/lib/router/router';
+import { get } from '@api/sponsoractivity';
+import { useState } from 'react';
 
-interface activity {
+interface SponsorActivity {
   id: number;
   sponsor_id: number;
   sponsor_style_id: number;
@@ -35,28 +37,21 @@ interface activity {
   created_at: string;
   updated_at: string;
 }
+interface Props {
+  sponsoractivities: SponsorActivity[];
+}
+export const getStaticProps = async () => {
+  const getSponsoractivitiesUrl = process.env.SSR_API_URI + '/get_activities_for_view';
+  const sponsoractivitiesRes = await get(getSponsoractivitiesUrl);
+  return {
+    props: {
+      sponsoractivities: sponsoractivitiesRes,
+    },
+  };
+};
 
-const activity: NextPage = () => {
-  const activity = [
-    {
-      id: 1,
-      sponsor_id: 1,
-      sponsor_style_id: 1,
-      user_id: 1,
-      is_done: true,
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
-    },
-    {
-      id: 2,
-      sponsor_id: 2,
-      sponsor_style_id: 2,
-      user_id: 2,
-      is_done: false,
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
-    },
-  ];
+export default function SponsorList(props: Props) {
+  const [sponsor, setSponsorList] = useState<SponsorActivity[]>(props.sponsoractivities);
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -140,7 +135,7 @@ const activity: NextPage = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {activity.map((activityItem) => (
+                {props.sponsoractivities.map((activityItem) => (
                   <Tr key={activityItem.id}>
                     <Td>
                       <Center color='black.300'>{activityItem.id}</Center>
@@ -178,6 +173,4 @@ const activity: NextPage = () => {
       </Center>
     </ChakraProvider>
   );
-};
-
-export default activity;
+}
