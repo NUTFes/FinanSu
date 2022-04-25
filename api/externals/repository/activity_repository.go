@@ -32,7 +32,7 @@ func (ar *activityRepository) All(c context.Context) (*sql.Rows, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
-	fmt.Printf("\x1b[31m%s\n", query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
 
@@ -40,7 +40,7 @@ func (ar *activityRepository) All(c context.Context) (*sql.Rows, error) {
 func (ar *activityRepository) Find(c context.Context, id string) (*sql.Row, error) {
 	query := "select * from activities where id = "+id
 	row := ar.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[31m%s\n", query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
 }
 
@@ -48,7 +48,7 @@ func (ar *activityRepository) Find(c context.Context, id string) (*sql.Row, erro
 func (ar *activityRepository) Create(c context.Context,  sponsorStyleID string, userID string, isDone string, sponsorID string) error {
 	query :="insert into activities (sponsor_style_id, user_id, is_done, sponsor_id) values ("+sponsorStyleID+","+userID+","+isDone+","+sponsorID+")"
 	_, err := ar.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[31m%s\n", query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
@@ -56,7 +56,7 @@ func (ar *activityRepository) Create(c context.Context,  sponsorStyleID string, 
 func (ar *activityRepository) Update(c context.Context, id string, sponsorStyleID string, userID string, isDone string, sponsorID string) error {
 	query := "update activities set sponsor_style_id = "+sponsorStyleID+", user_id = "+userID+", is_done = "+isDone+", sponsor_id = "+sponsorID+" where id = "+id
 	_, err := ar.client.DB().ExecContext(c,query)
-	fmt.Printf("\x1b[31m%s\n", query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
@@ -64,7 +64,7 @@ func (ar *activityRepository) Update(c context.Context, id string, sponsorStyleI
 func (ar *activityRepository) Destroy(c context.Context, id string) error {
 	query := "delete from activities where id = "+id
 	_, err := ar.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[31m%s\n", query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
@@ -74,6 +74,6 @@ func (ar *activityRepository) AllWithSponsor(c context.Context) (*sql.Rows, erro
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
-	fmt.Printf("\x1b[31m%s\n", query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
