@@ -130,6 +130,7 @@ func (a *activityUseCase) GetActivitiesWithSponsorAndStyle(c context.Context) ([
 			&activity.User.ID,
 			&activity.User.Name,
 			&activity.User.DepartmentID,
+			&activity.User.RoleID,
 			&activity.User.CreatedAt,
 			&activity.User.UpdatedAt,
 		)
