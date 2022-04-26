@@ -38,6 +38,11 @@ interface FundInformation {
   updated_at: string;
 }
 
+interface Department {
+  id: number;
+  name: string;
+}
+
 interface Teacher {
   id: number;
   name: string;
@@ -65,6 +70,7 @@ interface FundInformationView {
 
 interface Props {
   teachers: Teacher[];
+  departments: Department[];
   fundInformation: FundInformation[];
   fundInformationView: FundInformationView[];
   currentUser: User;
@@ -72,14 +78,17 @@ interface Props {
 
 export const getServerSideProps = async () => {
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
+  const getDepartmentURL = process.env.SSR_API_URI + '/departments';
   const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
   const getFundInformationViewURL = process.env.SSR_API_URI + '/get_fund_informations_for_view';
   const teachersInformationRes = await get(getTeachersInformationURL);
   const fundInformationRes = await get(getFundInformationURL);
+  const departmentRes = await get(getDepartmentURL);
   const fundInformationViewRes = await get(getFundInformationViewURL);
   return {
     props: {
       teachers: teachersInformationRes,
+      departments: departmentRes,
       fundInformation: fundInformationRes,
       fundInformationView: fundInformationViewRes,
     },
@@ -139,18 +148,15 @@ export default function FundInformations(props: Props) {
 
   // チェックの切り替え
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
-    console.log(isChecked, id, input);
     setFundInformation(
       fundInformation.map((fundViewItem: FundInformation) =>
         fundViewItem.id === id ? { ...fundViewItem, [input]: !isChecked } : fundViewItem,
       ),
     );
-    console.log(fundInformation);
   };
 
   // checkboxの値が変わったときに更新
   const submit = async (id: number) => {
-    console.log(id);
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
     for (let i = 0; i < fundInformation.length; i++) {
       if (fundInformation[i].id == id) {
@@ -244,6 +250,7 @@ export default function FundInformations(props: Props) {
               <Box>
                 <OpenAddModalButton
                   teachersInformation={teachers}
+                  departments={props.departments}
                   currentUser={currentUser}
                   userID={userID}
                 >
