@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type sourceRepository struct {
@@ -25,33 +26,42 @@ func NewSourceRepository(client db.Client) SourceRepository {
 
 // 全件取得
 func (sr *sourceRepository) All(c context.Context) (*sql.Rows, error) {
-	rows, err := sr.client.DB().QueryContext(c, "select * from sources")
+	query := "select * from sources"
+	rows, err := sr.client.DB().QueryContext(c, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
 
 // 1件取得
 func (sr *sourceRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	row := sr.client.DB().QueryRowContext(c, "select * from sources where id = "+id)
+	query := "select * from sources where id = "+id
+	row := sr.client.DB().QueryRowContext(c, query)
 	return row, nil
 }
 
 // 作成
 func (sr *sourceRepository) Create(c context.Context, name string) error {
-	_, err := sr.client.DB().ExecContext(c, "insert into sources (name) values ('"+name+"')")
+	query := "insert into sources (name) values ('"+name+"')"
+	_, err := sr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
 // 編集
 func (sr *sourceRepository) Update(c context.Context, id string, name string) error {
-	_, err := sr.client.DB().ExecContext(c, "update sources set name = '"+name+"' where id = "+id)
+	query := "update sources set name = '"+name+"' where id = "+id
+	_, err := sr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
 // 削除
 func (sr *sourceRepository) Destroy(c context.Context, id string) error {
-	_, err := sr.client.DB().ExecContext(c, "delete from sources where id = "+id)
+	query := "delete from sources where id = "+id
+	_, err := sr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
