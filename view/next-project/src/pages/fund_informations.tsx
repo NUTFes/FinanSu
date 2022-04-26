@@ -38,7 +38,7 @@ interface FundInformation {
   updated_at: string;
 }
 
-interface Teachers {
+interface Teacher {
   id: number;
   name: string;
   position: string;
@@ -57,27 +57,42 @@ interface User {
   role_id: number;
 }
 
+interface FundInformationView {
+  fund_information: FundInformation;
+  user: User;
+  teacher: Teacher;
+}
+
 interface Props {
-  teachers: Teachers[];
+  teachers: Teacher[];
   fundInformation: FundInformation[];
-  fundInformationView: any[];
+  fundInformationView: FundInformationView[];
   currentUser: User;
 }
 
 export const getServerSideProps = async () => {
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
+  const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
   const getFundInformationViewURL = process.env.SSR_API_URI + '/get_fund_informations_for_view';
   const teachersInformationRes = await get(getTeachersInformationURL);
+  const fundInformationRes = await get(getFundInformationURL);
   const fundInformationViewRes = await get(getFundInformationViewURL);
   return {
     props: {
       teachers: teachersInformationRes,
+      fundInformation: fundInformationRes,
       fundInformationView: fundInformationViewRes,
     },
   };
 };
 
 export default function FundInformations(props: Props) {
+  // 教員一覧
+  const teachers = props.teachers;
+
+  // 募金一覧
+  const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
+
   // ログイン中のユーザ
   const [currentUser, setCurrentUser] = useState<User>({
     id: 1,
@@ -96,63 +111,62 @@ export default function FundInformations(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
+      // current_userの取得とセット
       const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
       const getCurrentUser = async (url: string) => {
-        const res = await get_with_token(url);
-        setCurrentUser(res);
+        const currentUserRes = await get_with_token(url);
+        setCurrentUser(currentUserRes);
 
         // current_userの権限をユーザに設定
-        if (res.role_id == 1) {
+        if (currentUserRes.role_id == 1) {
           setIsUser(true);
         }
         // current_userの権限を財務局長に設定
-        else if (res.role_id == 3) {
+        else if (currentUserRes.role_id == 3) {
           setIsFinanceDirector(true);
         }
         // current_userの権限を財務局員に設定
-        else if (res.role_id == 4) {
+        else if (currentUserRes.role_id == 4) {
           setIsFinanceStaff(true);
         }
       };
       getCurrentUser(getCurrentUserURL);
     }
   }, [router]);
-  const userID = currentUser.id;
 
-  // 教員一覧
-  const teachers = props.teachers;
-  // 募金一覧
-  const [fundInformations, setFundInformations] = useState<FundInformation[]>(
-    props.fundInformation,
-  );
+  // Modal用にuserIDを設定
+  const userID = currentUser.id;
 
   // チェックの切り替え
   const switchCheck = (isChecked: boolean, id: number, input: string) => {
-    setFundInformations(
-      fundInformations.map((fundViewItem: any) =>
+    console.log(isChecked, id, input);
+    setFundInformation(
+      fundInformation.map((fundViewItem: FundInformation) =>
         fundViewItem.id === id ? { ...fundViewItem, [input]: !isChecked } : fundViewItem,
       ),
     );
+    console.log(fundInformation);
   };
 
   // checkboxの値が変わったときに更新
   const submit = async (id: number) => {
+    console.log(id);
     const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    for (let i = 0; i < fundInformations.length; i++) {
-      if (fundInformations[i].id == id) {
-        const fundInformation = fundInformations[i];
-        await put(putUrl, fundInformation);
+    for (let i = 0; i < fundInformation.length; i++) {
+      if (fundInformation[i].id == id) {
+        await put(putUrl, fundInformation[i]);
       }
     }
   };
 
-  // 変更不可能なcheckboxの描画
+  // 変更可能なcheckboxの描画
   const changeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
     {
       if (isChecked) {
         return (
           <>
             <Checkbox
+              defaultChecked
               onChange={() => {
                 switchCheck(isChecked, id, input);
               }}
@@ -291,19 +305,19 @@ export default function FundInformations(props: Props) {
                         {isFinanceDirector &&
                           changeableCheckboxContent(
                             fundViewItem.fund_information.is_first_check,
-                            fundViewItem.fund_information.teacher_id,
+                            fundViewItem.fund_information.id,
                             'is_first_check',
                           )}
                         {isFinanceStaff &&
                           changeableCheckboxContent(
                             fundViewItem.fund_information.is_first_check,
-                            fundViewItem.fund_information.teacher_id,
+                            fundViewItem.fund_information.id,
                             'is_first_check',
                           )}
                         {isUser &&
                           unChangeableCheckboxContent(
                             fundViewItem.fund_information.is_first_check,
-                            fundViewItem.fund_information.teacher_id,
+                            fundViewItem.fund_information.id,
                             'is_first_check',
                           )}
                       </Center>
@@ -312,21 +326,21 @@ export default function FundInformations(props: Props) {
                       <Center color='black.300'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
-                            fundViewItem.fund_information.is_first_check,
-                            fundViewItem.fund_information.teacher_id,
-                            'is_first_check',
+                            fundViewItem.fund_information.is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
                           )}
                         {isFinanceStaff &&
                           unChangeableCheckboxContent(
-                            fundViewItem.fund_information.is_first_check,
-                            fundViewItem.fund_information.teacher_id,
-                            'is_first_check',
+                            fundViewItem.fund_information.is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
                           )}
                         {isUser &&
                           unChangeableCheckboxContent(
-                            fundViewItem.fund_information.is_first_check,
-                            fundViewItem.fund_information.teacher_id,
-                            'is_first_check',
+                            fundViewItem.fund_information.is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
                           )}
                       </Center>
                     </Td>
