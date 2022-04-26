@@ -5,6 +5,7 @@ import(
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type sponsorStyleRepository struct {
@@ -25,16 +26,20 @@ func NewSponsorStyleRepository(client db.Client) SponsorStyleRepository{
 
 //全件取得
 func (ssr *sponsorStyleRepository) All(c context.Context) (*sql.Rows, error){
-	rows , err := ssr.client.DB().QueryContext(c, "select * from sponsor_styles")
+	query :=  "select * from sponsor_styles"
+	rows , err := ssr.client.DB().QueryContext(c,query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
 
 //１件取得
 func (ssr *sponsorStyleRepository) Find(c context.Context, id string) (*sql.Row, error){
-	row := ssr.client.DB().QueryRowContext(c, "select *from sponsor_styles where id = " + id)
+	query := "select *from sponsor_styles where id = " + id
+	row := ssr.client.DB().QueryRowContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
 }
 
@@ -47,6 +52,7 @@ func (ssr *sponsorStyleRepository) Create(
 )error {
 	var query = "insert into sponsor_styles (scale, is_color, price) values ('" + scale + "'," + isColor + "," + price + ")"
 	_, err := ssr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
@@ -60,6 +66,7 @@ func (ssr *sponsorStyleRepository) Update(
 )error {
 	var query = "update sponsor_styles set scale = '" + scale + "' , is_color = " + isColor + ", price = " + price + " where id = " + id
 	_, err :=ssr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
@@ -68,6 +75,8 @@ func (ssr *sponsorStyleRepository) Delete(
 	c context.Context,
 	id string,
 )error {
-	_, err := ssr.client.DB().ExecContext(c, "Delete from sponsor_styles where id =" + id)
+	query := "Delete from sponsor_styles where id =" + id
+	_, err := ssr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
