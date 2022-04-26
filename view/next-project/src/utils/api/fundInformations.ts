@@ -81,7 +81,7 @@ export const put = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
   });
-  return await res.json();
+  return await res;
 };
 
 export const del = async (url: string) => {
