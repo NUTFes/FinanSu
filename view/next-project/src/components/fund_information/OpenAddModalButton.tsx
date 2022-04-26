@@ -16,6 +16,11 @@ interface TeachersInformation {
   updated_at: string;
 }
 
+interface Department {
+  id: number;
+  name: string;
+}
+
 interface User {
   id: number;
   name: string;
@@ -28,6 +33,7 @@ interface Props {
   height?: string;
   children?: React.ReactNode;
   teachersInformation: TeachersInformation[];
+  departments: Department[];
   currentUser: User;
   userID: number | string;
 }
@@ -50,6 +56,7 @@ export default function OpenAddModalButton(props: Props) {
       </Button>
       <AddModal
         teachersInformation={props.teachersInformation}
+        departments={props.departments}
         openModal={showModal}
         setShowModal={setShowModal}
         currentUser={props.currentUser}
