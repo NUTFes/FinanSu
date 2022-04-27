@@ -4,7 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"fmt"
 )
+
 
 type sessionRepository struct {
 	client db.Client
@@ -27,6 +29,7 @@ func (r *sessionRepository) Create(c context.Context, authID string, userID stri
 	if err != nil {
 		return err
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return nil
 }
 
@@ -38,6 +41,7 @@ func (r *sessionRepository) Destroy(c context.Context, accessToken string) error
 	if err != nil {
 		return err
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return nil
 }
 
@@ -45,5 +49,6 @@ func (r *sessionRepository) Destroy(c context.Context, accessToken string) error
 func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessToken string) *sql.Row {
 	query := "select * from session where access_token = '" + accessToken + "'"
 	row := r.client.DB().QueryRowContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return row
 }
