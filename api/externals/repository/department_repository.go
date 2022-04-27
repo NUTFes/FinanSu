@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type departmentRepository struct {
@@ -25,33 +26,43 @@ func NewDepartmentRepository(client db.Client) DepartmentRepository {
 
 // 全件取得
 func (dr *departmentRepository) All(c context.Context) (*sql.Rows, error) {
-	rows, err := dr.client.DB().QueryContext(c, "select * from departments")
+	query := "select * from departments"
+	rows, err := dr.client.DB().QueryContext(c, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
 
 // 1件取得
 func (dr *departmentRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	row := dr.client.DB().QueryRowContext(c, "select * from departments where id = "+id)
+	query := "select * from departments where id = "+id
+	row := dr.client.DB().QueryRowContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
 }
 
 // 作成
 func (dr *departmentRepository) Create(c context.Context, name string) error {
-	_, err := dr.client.DB().ExecContext(c, "insert into departments (name) values ('"+name+"')")
+	query := "insert into departments (name) values ('"+name+"')"
+	_, err := dr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
 // 編集
 func (dr *departmentRepository) Update(c context.Context, id string, name string) error {
-	_, err := dr.client.DB().ExecContext(c, "update departments set name = '"+name+"' where id = "+id)
+	query := "update departments set name = '"+name+"' where id = "+id
+	_, err := dr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
 // 削除
 func (dr *departmentRepository) Destroy(c context.Context, id string) error {
-	_, err := dr.client.DB().ExecContext(c, "delete from departments where id = "+id)
+	query := "delete from departments where id = "+id
+	_, err := dr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }

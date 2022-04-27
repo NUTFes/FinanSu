@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type sponsorRepository struct {
@@ -25,16 +26,20 @@ func NewSponsorRepository(client db.Client) SponsorRepository {
 
 //全件取得
 func (sr *sponsorRepository) All(c context.Context) (*sql.Rows, error) {
-	rows, err := sr.client.DB().QueryContext(c, "select * from sponsors")
+	query := "select * from sponsors"
+	rows, err := sr.client.DB().QueryContext(c, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
 
 //1件取得
 func (sr *sponsorRepository) Find(c context.Context, id string) (*sql.Row, error){
-	row := sr.client.DB().QueryRowContext(c, "select * from sponsors where id = " + id)
+	query := "select * from sponsors where id = " + id
+	row := sr.client.DB().QueryRowContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
 }
 
@@ -49,6 +54,7 @@ func (sr *sponsorRepository) Create(
 )error{
 	var query ="insert into sponsors (name, tel, email, address, representative) values ('" + name + "','" + tel + "','" + email + "','" + address + "','" +representative + "')"
 	_, err := sr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
@@ -64,6 +70,7 @@ func (sr *sponsorRepository) Update(
 )error {
 	var query = "update sponsors set name = '" + name + "', tel='" + tel + "', email = '" + email + "', address = '" + address + "', representative = '" + representative + "' where id = " +id
 	_, err := sr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err 
 }
 
@@ -72,6 +79,8 @@ func (sr *sponsorRepository) Delete(
 	c context.Context,
 	id string,
 )error {
-	_, err := sr.client.DB().ExecContext(c, "Delete from sponsors where id =" + id)
+	query := "Delete from sponsors where id =" + id
+	_, err := sr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
