@@ -102,12 +102,20 @@ func (b *budgetUseCase) GetBudgetWithYearAndSource(c context.Context, id string)
 
 	row, err := b.rep.FindYearAndSource(c, id)
 	err = row.Scan(
-		&budgetyearsource.ID,
-		&budgetyearsource.Price,	
-		&budgetyearsource.Year,	
-		&budgetyearsource.Name,	
-		&budgetyearsource.CreatedAt,	
-		&budgetyearsource.UpdatedAt,	
+		&budgetyearsource.Budget.ID,
+		&budgetyearsource.Budget.Price,	
+		&budgetyearsource.Budget.YearID,	
+		&budgetyearsource.Budget.SourceID,	
+		&budgetyearsource.Budget.CreatedAt,
+		&budgetyearsource.Budget.UpdatedAt,
+		&budgetyearsource.Year.ID,
+		&budgetyearsource.Year.Year,
+		&budgetyearsource.Year.CreatedAt,
+		&budgetyearsource.Year.UpdatedAt,
+		&budgetyearsource.Source.ID,
+		&budgetyearsource.Source.Name,
+		&budgetyearsource.Source.CreatedAt,
+		&budgetyearsource.Source.UpdatedAt,
 	)
 	if err != nil {
 		return budgetyearsource, err
