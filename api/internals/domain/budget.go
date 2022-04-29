@@ -14,10 +14,7 @@ type Budget struct {
 }
 
 type BudgetYearSource struct {
-	ID        ID        `json:"id"`
-	Price     Price     `json:"price"`
-	Year      int       `json:"year"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Budget    Budget	`json:"budget"`
+	Year      Year      `json:"year"`
+	Source	  Source	`json:"source"`
 }
