@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type yearRepository struct {
@@ -25,33 +26,43 @@ func NewYearRepository(client db.Client) YearRepository {
 
 // 全件取得
 func (yr *yearRepository) All(c context.Context) (*sql.Rows, error) {
-	rows, err := yr.client.DB().QueryContext(c, "select * from years")
+	query := "select * from years"
+	rows, err := yr.client.DB().QueryContext(c,query )
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
 
 // 1件取得
 func (yr *yearRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	row := yr.client.DB().QueryRowContext(c, "select * from years where id = "+id)
+	query := "select * from years where id = "+id
+	row := yr.client.DB().QueryRowContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
 }
 
 // 作成
 func (yr *yearRepository) Create(c context.Context, year string) error {
-	_, err := yr.client.DB().ExecContext(c, "insert into years (year) values ('"+year+"')")
+	query := "insert into years (year) values ('"+year+"')"
+	_, err := yr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
 // 編集
 func (yr *yearRepository) Update(c context.Context, id string, year string) error {
-	_, err := yr.client.DB().ExecContext(c, "update years set year = '"+year+"' where id = "+id)
+	query := "update years set year = '"+year+"' where id = "+id
+	_, err := yr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
 // 削除
 func (yr *yearRepository) Destroy(c context.Context, id string) error {
-	_, err := yr.client.DB().ExecContext(c, "delete from years where id = "+id)
+	query :="delete from years where id = "+id
+	_, err := yr.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
