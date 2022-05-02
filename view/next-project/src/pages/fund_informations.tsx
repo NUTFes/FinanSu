@@ -7,6 +7,7 @@ import {
   Table,
   Thead,
   Tbody,
+  Tfoot,
   Tr,
   Th,
   Td,
@@ -74,6 +75,7 @@ interface Props {
   fundInformation: FundInformation[];
   fundInformationView: FundInformationView[];
   currentUser: User;
+  totalFee: number;
 }
 
 export const getServerSideProps = async () => {
@@ -85,12 +87,22 @@ export const getServerSideProps = async () => {
   const fundInformationRes = await get(getFundInformationURL);
   const departmentRes = await get(getDepartmentURL);
   const fundInformationViewRes = await get(getFundInformationViewURL);
+
+  // 合計金額の計算
+  let totalFee = 0;
+  fundInformationRes.map((fundItemRes: FundInformation) => {
+    if (fundItemRes.is_last_check) {
+      totalFee += fundItemRes.price;
+    }
+  });
+
   return {
     props: {
       teachers: teachersInformationRes,
       departments: departmentRes,
       fundInformation: fundInformationRes,
       fundInformationView: fundInformationViewRes,
+      totalFee: totalFee,
     },
   };
 };
@@ -101,6 +113,9 @@ export default function FundInformations(props: Props) {
 
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
+  const [fundInformationView, setFundInformationView] = useState<FundInformationView[]>(
+    props.fundInformationView,
+  );
 
   // ログイン中のユーザ
   const [currentUser, setCurrentUser] = useState<User>({
@@ -146,27 +161,58 @@ export default function FundInformations(props: Props) {
   // Modal用にuserIDを設定
   const userID = currentUser.id;
 
+  // チェック済みの合計金額用のステート
+  const [totalFee, setTotalFee] = useState(props.totalFee);
+
+  const calcTotalFee = (initFundInformation: FundInformation) => {
+    if (initFundInformation.is_last_check) {
+      setTotalFee(totalFee + initFundInformation.price);
+    } else {
+      setTotalFee(totalFee - initFundInformation.price);
+    }
+  };
+
   // チェックの切り替え
-  const switchCheck = (isChecked: boolean, id: number, input: string) => {
+  const switchCheck = async (
+    isChecked: boolean,
+    id: number,
+    input: string,
+    fundItem: FundInformation,
+  ) => {
+    if (input == 'is_last_check') {
+      const initFundInformation: FundInformation = {
+        id: id,
+        user_id: fundItem.user_id,
+        teacher_id: fundItem.teacher_id,
+        price: fundItem.price,
+        remark: fundItem.remark,
+        is_first_check: fundItem.is_first_check,
+        is_last_check: !isChecked,
+        created_at: fundItem.created_at,
+        updated_at: fundItem.updated_at,
+      };
+      calcTotalFee(initFundInformation);
+    }
     setFundInformation(
-      fundInformation.map((fundViewItem: FundInformation) =>
-        fundViewItem.id === id ? { ...fundViewItem, [input]: !isChecked } : fundViewItem,
+      fundInformation.map((fundItem: FundInformation) =>
+        fundItem.id === id ? { ...fundItem, [input]: !isChecked } : fundItem,
       ),
     );
   };
 
   // checkboxの値が変わったときに更新
-  const submit = async (id: number) => {
-    const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    for (let i = 0; i < fundInformation.length; i++) {
-      if (fundInformation[i].id == id) {
-        await put(putUrl, fundInformation[i]);
-      }
-    }
+  const submit = async (id: number, fundItem: FundInformation) => {
+    const putURL = process.env.CSR_API_URI + '/fund_informations/' + id;
+    await put(putURL, fundItem);
   };
 
   // 変更可能なcheckboxの描画
-  const changeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
+  const changeableCheckboxContent = (
+    isChecked: boolean,
+    id: number,
+    input: string,
+    fundItem: FundInformation,
+  ) => {
     {
       if (isChecked) {
         return (
@@ -174,7 +220,8 @@ export default function FundInformations(props: Props) {
             <Checkbox
               defaultChecked
               onChange={() => {
-                switchCheck(isChecked, id, input);
+                switchCheck(isChecked, id, input, fundItem);
+                submit(id, fundItem);
               }}
             ></Checkbox>
           </>
@@ -184,7 +231,8 @@ export default function FundInformations(props: Props) {
           <>
             <Checkbox
               onChange={() => {
-                switchCheck(isChecked, id, input);
+                switchCheck(isChecked, id, input, fundItem);
+                submit(id, fundItem);
               }}
             ></Checkbox>
           </>
@@ -199,24 +247,13 @@ export default function FundInformations(props: Props) {
       if (isChecked) {
         return (
           <>
-            <Checkbox
-              defaultChecked
-              isDisabled
-              onChange={() => {
-                switchCheck(isChecked, id, input);
-              }}
-            ></Checkbox>
+            <Checkbox defaultChecked isDisabled></Checkbox>
           </>
         );
       } else {
         return (
           <>
-            <Checkbox
-              isDisabled
-              onChange={() => {
-                switchCheck(isChecked, id, input);
-              }}
-            ></Checkbox>
+            <Checkbox isDisabled></Checkbox>
           </>
         );
       }
@@ -302,28 +339,30 @@ export default function FundInformations(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {props.fundInformationView.map((fundViewItem) => (
+                {fundInformationView.map((fundViewItem: FundInformationView, index) => (
                   <Tr
                     key={fundViewItem.fund_information.id}
-                    onUnload={submit(fundViewItem.fund_information.id)}
+                    onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
                   >
                     <Td>
                       <Center color='black.300'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
-                            fundViewItem.fund_information.is_first_check,
+                            fundInformation[index].is_first_check,
                             fundViewItem.fund_information.id,
                             'is_first_check',
+                            fundInformation[index],
                           )}
                         {isFinanceStaff &&
                           changeableCheckboxContent(
-                            fundViewItem.fund_information.is_first_check,
+                            fundInformation[index].is_first_check,
                             fundViewItem.fund_information.id,
                             'is_first_check',
+                            fundInformation[index],
                           )}
                         {isUser &&
                           unChangeableCheckboxContent(
-                            fundViewItem.fund_information.is_first_check,
+                            fundInformation[index].is_first_check,
                             fundViewItem.fund_information.id,
                             'is_first_check',
                           )}
@@ -333,19 +372,20 @@ export default function FundInformations(props: Props) {
                       <Center color='black.300'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
-                            fundViewItem.fund_information.is_last_check,
+                            fundInformation[index].is_last_check,
                             fundViewItem.fund_information.id,
                             'is_last_check',
+                            fundInformation[index],
                           )}
                         {isFinanceStaff &&
                           unChangeableCheckboxContent(
-                            fundViewItem.fund_information.is_last_check,
+                            fundInformation[index].is_last_check,
                             fundViewItem.fund_information.id,
                             'is_last_check',
                           )}
                         {isUser &&
                           unChangeableCheckboxContent(
-                            fundViewItem.fund_information.is_last_check,
+                            fundInformation[index].is_last_check,
                             fundViewItem.fund_information.id,
                             'is_last_check',
                           )}
@@ -391,6 +431,22 @@ export default function FundInformations(props: Props) {
                   </Tr>
                 ))}
               </Tbody>
+              <Tfoot>
+                <Tr>
+                  <Th />
+                  <Th />
+                  <Th />
+                  <Th />
+                  <Th>
+                    <Center fontSize='sm' fontWeight='500' color='black.600'>
+                      合計金額
+                    </Center>
+                  </Th>
+                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
+                    {totalFee}
+                  </Th>
+                </Tr>
+              </Tfoot>
             </Table>
           </Box>
         </Box>
