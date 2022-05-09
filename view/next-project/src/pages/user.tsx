@@ -21,7 +21,6 @@ import theme from '@assets/theme';
 import Header from '@components/Header';
 import OpenEditModalButton from '@components/user/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/user/OpenDeleteModalButton';
-import { put } from '@api/user';
 import { get, get_with_token } from '@api/api_methods';
 
 interface Department {
@@ -192,7 +191,7 @@ export default function Users(props: Props) {
                           </GridItem>
                           <GridItem>
                             <Center>
-                              <OpenDeleteModalButton id={user.id} />
+                              <OpenDeleteModalButton id={user.id} departments={departments} />
                             </Center>
                           </GridItem>
                         </Grid>
