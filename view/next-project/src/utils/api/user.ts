@@ -39,9 +39,9 @@ export const post = async (url: string, data: any) => {
 };
 
 export const put = async (url: string, data: any) => {
-  const name = data.userName;
-  const department_id = data.departmentId;
-  const role_id = data.roleId;
+  const name = data.name;
+  const department_id = data.department_id;
+  const role_id = data.role_id;
   const putUrl = url + '?name=' + name + '&department_id=' + department_id + '&role_id=' + role_id;
   console.log(putUrl, data.price, data.year_id, data.source_id);
   const res = await fetch(putUrl, {
