@@ -121,7 +121,9 @@ export default function SignUpView(props: Props) {
                   onChange={userDataHandler('departmentId')}
                 >
                   {props.departments.map((department) => (
-                    <option value={department.id}>{department.name}</option>
+                    <option key={department.id} value={department.id}>
+                      {department.name}
+                    </option>
                   ))}
                 </Select>
               </Flex>

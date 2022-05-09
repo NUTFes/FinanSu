@@ -135,7 +135,9 @@ export default function FundInformationEditModal(props: ModalProps) {
                       w='224px'
                     >
                       {props.teachersInformation.map((data) => (
-                        <option value={data.id}>{data.name}</option>
+                        <option key={data.id} value={data.id}>
+                          {data.name}
+                        </option>
                       ))}
                     </Select>
                   </GridItem>
