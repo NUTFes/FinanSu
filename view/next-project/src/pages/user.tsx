@@ -62,8 +62,8 @@ export const getServerSideProps = async () => {
 };
 
 export default function Users(props: Props) {
-  const [users, setUsers] = useState<User[]>(props.users);
-  const [departments, setDepartments] = useState<Department[]>(props.departments);
+  const users = props.users;
+  const departments = props.departments;
 
   // ログイン中のユーザ
   const [currentUser, setCurrentUser] = useState<User>({
@@ -75,9 +75,6 @@ export default function Users(props: Props) {
 
   // ログイン中のユーザの権限
   const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
-  const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
-  const [isFinanceStaff, setIsFinanceStaff] = useState<boolean>(false);
-  const [isUser, setIsUser] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -90,25 +87,16 @@ export default function Users(props: Props) {
         const currentUserRes = await get_with_token(url);
         setCurrentUser(currentUserRes);
 
-        // current_userの権限をユーザに設定
+        // current_userの権限を開発者に設定
         if (currentUserRes.role_id == 2) {
           setIsDeveloper(true);
-        }
-        // current_userの権限を財務局長に設定
-        else {
-          setIsFinanceDirector(false);
-          setIsFinanceStaff(false);
-          setIsFinanceStaff(false);
-          setIsUser(false);
+        } else {
           router.push('/budgets');
         }
       };
       getCurrentUser(getCurrentUserURL);
     }
   }, [router]);
-
-  // Modal用にuserIDを設定
-  const userID = currentUser.id;
 
   for (let i = 0; i < props.users.length; i++) {
     for (let j = 0; j < props.departments.length; j++) {
@@ -118,7 +106,6 @@ export default function Users(props: Props) {
     }
   }
 
-  // if (isDeveloper) {
   return (
     <ChakraProvider theme={theme}>
       <Head>
