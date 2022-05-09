@@ -220,7 +220,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
           w='100'
         >
           {teachers.map((data) => (
-            <option value={data.id}>{data.name}</option>
+            <option key={data.id} value={data.id}>
+              {data.name}
+            </option>
           ))}
         </Select>
       </>
@@ -262,7 +264,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                       w='100'
                     >
                       {props.departments.map((data) => (
-                        <option value={data.id}>{data.name}</option>
+                        <option key={data.id} value={data.id}>
+                          {data.name}
+                        </option>
                       ))}
                     </Select>
                   </GridItem>
