@@ -13,6 +13,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["src/assets/*"],
+      "@images/*": ["public/*"],
+      "@components/*": ["src/components/*"],
+      "@api/*": ["src/utils/api/*"],
+      "@utils/*": ["src/utils/*"]
+    },
     "incremental": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
