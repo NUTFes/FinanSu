@@ -26,6 +26,7 @@ import OpenEditModalButton from '@components/fund_information/OpenEditModalButto
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import { put } from '@api/fundInformations';
 import { get, get_with_token } from '@api/api_methods';
+import MainLayout from '@components/layout/MainLayout';
 
 interface FundInformation {
   id: number;
@@ -261,16 +262,8 @@ export default function FundInformations(props: Props) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>FinanSu | 募金一覧</title>
-        <meta name='description' content='ja' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-
-      <Header />
-      <hr />
-      <Center>
+    <MainLayout>
+      <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
@@ -450,7 +443,7 @@ export default function FundInformations(props: Props) {
             </Table>
           </Box>
         </Box>
-      </Center>
-    </ChakraProvider>
+      </Flex>
+    </MainLayout>
   );
 }
