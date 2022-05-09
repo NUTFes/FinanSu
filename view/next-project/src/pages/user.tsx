@@ -90,8 +90,6 @@ export default function Users(props: Props) {
         // current_userの権限を開発者に設定
         if (currentUserRes.role_id == 2) {
           setIsDeveloper(true);
-        } else {
-          router.push('/budgets');
         }
       };
       getCurrentUser(getCurrentUserURL);
