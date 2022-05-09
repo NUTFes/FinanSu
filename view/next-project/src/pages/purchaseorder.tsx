@@ -24,6 +24,7 @@ import OpenDeleteModalButton from '@components/purchaseorder/OpenDeleteModalButt
 import { useState } from 'react';
 import PurchaseOrderDetailModal from '@components/purchaseorder/PurchaseOrderDetailModal';
 import * as React from 'react';
+import MainLayout from '@components/layout/MainLayout';
 
 interface User {
   id: number;
@@ -65,16 +66,8 @@ export default function PurchaseOrder(props: Props) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>FinanSu | 購入物品一覧</title>
-        <meta name='description' content='ja' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-
-      <Header />
-      <hr />
-      <Center>
+    <MainLayout>
+      <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
@@ -174,7 +167,7 @@ export default function PurchaseOrder(props: Props) {
             </Table>
           </Box>
         </Box>
-      </Center>
-    </ChakraProvider>
+      </Flex>
+    </MainLayout>
   );
 }

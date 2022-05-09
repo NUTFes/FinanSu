@@ -8,6 +8,7 @@ import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import OpenEditModalButton from '@components/purchasereport/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchasereport/OpenDeleteModalButton';
+import MainLayout from '@components/layout/MainLayout';
 
 interface PurchaseReport {
   id: number;
@@ -54,16 +55,8 @@ export default function PurchaseReport(props: Props) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>FinanSu | 購入報告一覧</title>
-        <meta name='description' content='ja' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-
-      <Header />
-      <hr />
-      <Center>
+    <MainLayout>
+      <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
@@ -150,7 +143,7 @@ export default function PurchaseReport(props: Props) {
             </Table>
           </Box>
         </Box>
-      </Center>
-    </ChakraProvider>
+      </Flex>
+    </MainLayout>
   );
 }
