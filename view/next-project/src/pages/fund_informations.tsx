@@ -109,7 +109,33 @@ export const getServerSideProps = async () => {
 
 export default function FundInformations(props: Props) {
   // 教員一覧
-  const teachers = props.teachers;
+  const teachers: Teacher[] = props.teachers;
+  const departments: Department[] = [
+    {
+      id: 1,
+      name: '機械工学分野/機械創造工学課程・機械創造工学専攻',
+    },
+    {
+      id: 2,
+      name: '電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻',
+    },
+    {
+      id: 3,
+      name: '情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻',
+    },
+    {
+      id: 4,
+      name: '物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻',
+    },
+    {
+      id: 5,
+      name: '環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻',
+    },
+    {
+      id: 6,
+      name: '量子・原子力統合工学分野/原子力システム安全工学専攻',
+    },
+  ];
 
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
@@ -287,7 +313,7 @@ export default function FundInformations(props: Props) {
               <Box>
                 <OpenAddModalButton
                   teachersInformation={teachers}
-                  departments={props.departments}
+                  departments={departments}
                   currentUser={currentUser}
                   userID={userID}
                 >
