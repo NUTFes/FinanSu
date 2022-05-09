@@ -14,10 +14,10 @@ import {
   BoxProps,
   FlexProps,
 } from '@chakra-ui/react';
-import { MdOutlineDashboard, MdOutlineSchool } from 'react-icons/md'
-import { BiBuildings } from 'react-icons/bi'
-import{ HiCurrencyDollar, HiOutlineShoppingCart } from 'react-icons/hi'
-import{ RiNewspaperLine } from 'react-icons/ri'
+import { MdOutlineDashboard, MdOutlineSchool } from 'react-icons/md';
+import { BiBuildings } from 'react-icons/bi';
+import { HiCurrencyDollar, HiOutlineShoppingCart } from 'react-icons/hi';
+import { RiNewspaperLine } from 'react-icons/ri';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 // import Link from 'next/link';
@@ -28,11 +28,11 @@ interface LinkItemProps {
   href: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'ダッシュボード', icon: MdOutlineDashboard, href: '/' },
-  { name: '予算', icon: HiCurrencyDollar, href: '/budgets' },
-  { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
-  { name: '購入申請', icon: HiOutlineShoppingCart, href: '/purchaseorder' },
-  { name: '購入報告', icon: RiNewspaperLine, href: '/purchasereport' },
+  // { name: 'ダッシュボード', icon: MdOutlineDashboard, href: '/' },
+  // { name: '予算', icon: HiCurrencyDollar, href: '/budgets' },
+  // { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
+  // { name: '購入申請', icon: HiOutlineShoppingCart, href: '/purchaseorder' },
+  // { name: '購入報告', icon: RiNewspaperLine, href: '/purchasereport' },
   { name: '学内募金', icon: MdOutlineSchool, href: '/fund_informations' },
 ];
 
@@ -53,7 +53,8 @@ export default function SimpleSidebar({}: { children?: ReactNode }) {
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size='full'>
+        size='full'
+      >
         <DrawerContent>
           <SidebarContent onClose={onClose} />
         </DrawerContent>
@@ -76,7 +77,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       pos='fixed'
       h='full'
       textColor='white'
-      {...rest}>
+      {...rest}
+    >
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon} href={link.href}>
           {link.name}
@@ -104,7 +106,8 @@ const NavItem = ({ href, icon, children, ...rest }: NavItemProps) => {
           bg: 'white',
           color: '#2E373F',
         }}
-        {...rest}>
+        {...rest}
+      >
         {icon && (
           <Icon
             color='white'
