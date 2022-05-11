@@ -2,8 +2,9 @@ import React from 'react';
 import Head from 'next/head';
 import Header from '@components/Header';
 import theme from '@assets/theme';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 import { get_with_token } from '@api/api_methods';
+import SideNav from '@components/General/SideNav';
 
 interface User {
   id: number;
@@ -37,9 +38,17 @@ export default function MainLayout(props: LayoutProps) {
       </Head>
 
       <Header />
-      <section>
-        <main>{props.children}</main>
-      </section>
+      <Grid templateColumns='repeat(7,1fr)' gap={4}>
+        <GridItem colSpan={1}>
+          <SideNav />
+        </GridItem>
+        <GridItem colSpan={6}>
+          <section>
+            <main>{props.children}</main>
+          </section>
+        </GridItem>
+      </Grid>
+
     </ChakraProvider>
   );
 }
