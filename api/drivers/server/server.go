@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
+	"os"
 )
 
 func RunServer(router router.Router) {
@@ -12,8 +13,16 @@ func RunServer(router router.Router) {
 	e := echo.New()
 
 	// Middleware
-	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
+	// log
+	logger := middleware.LoggerWithConfig(
+		middleware.LoggerConfig{
+			Format: logFormat(),
+			Output: os.Stdout,
+		},
+	)
+	e.Use(logger)
 
 	// CORS対策
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -25,5 +34,5 @@ func RunServer(router router.Router) {
 	router.ProvideRouter(e)
 
 	// サーバー起動
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Start(":1323")
 }

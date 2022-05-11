@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type purchaseOrderRepository struct {
@@ -25,16 +26,20 @@ func NewPurchaseOrderRepository(client db.Client) PurchaseOrderRepository {
 
 //全件取得
 func (por *purchaseOrderRepository) All(c context.Context) (*sql.Rows, error) {
-	rows, err := por.client.DB().QueryContext(c, "select * from purchase_orders")
+	query := "select * from purchase_orders"
+	rows, err := por.client.DB().QueryContext(c, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
+	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
 }
 
 //1件取得
 func (por * purchaseOrderRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	row := por.client.DB().QueryRowContext(c ,"select * from purchase_orders where id = "+ id)
+	query := "select * from purchase_orders where id = "+ id
+	row := por.client.DB().QueryRowContext(c ,query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
 } 
 
@@ -46,6 +51,7 @@ func (por * purchaseOrderRepository) Create(
 ) error {
 		var query = "insert into purchase_orders (deadline, user_id) values ( '" + deadLine + "'," + userId + ")"
 		_, err := por.client.DB().ExecContext(c, query)
+		fmt.Printf("\x1b[36m%s\n", query)
 		return err
 }
 
@@ -58,6 +64,7 @@ func (por * purchaseOrderRepository) Update(
 ) error {
 	var query = "update purchase_orders set deadline ='" + deadLine + "', user_id = " + userId + " where id = " + id 
 	_, err := por.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err 
 }
 //削除
@@ -65,6 +72,8 @@ func (por * purchaseOrderRepository) Delete(
 	c context.Context,
 	id string,
 )error {
-	_, err := por.client.DB().ExecContext(c, "Delete from purchase_orders where id =" + id)
+	query := "Delete from purchase_orders where id =" + id
+	_, err := por.client.DB().ExecContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }

@@ -137,7 +137,9 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                     w='224px'
                   >
                     {props.years.map((data) => (
-                      <option value={data.id}>{data.year}</option>
+                      <option key={data.id} value={data.id}>
+                        {data.year}
+                      </option>
                     ))}
                   </Select>
                 </Flex>
@@ -153,7 +155,9 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                     w='224px'
                   >
                     {props.sources.map((source) => (
-                      <option value={source.id}>{source.name}</option>
+                      <option key={source.id} value={source.id}>
+                        {source.name}
+                      </option>
                     ))}
                   </Select>
                 </Flex>

@@ -87,3 +87,4 @@ func (a *activityController) IndexActivityWithSponsorAndStyle(c echo.Context) er
 	}
 	return c.JSON(http.StatusOK, activities)
 }
+

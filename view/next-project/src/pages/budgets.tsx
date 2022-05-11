@@ -95,7 +95,7 @@ export default function BudgetList(props: Props) {
 
   return (
     <MainLayout>
-      <Center>
+      <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
@@ -216,7 +216,7 @@ export default function BudgetList(props: Props) {
             </Table>
           </Box>
         </Box>
-      </Center>
+      </Flex>
     </MainLayout>
   );
 }
