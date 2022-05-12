@@ -27,7 +27,10 @@ services:
     stdin_open: true
     tty: true
     environment:
-      - NODE_ENV='production'
+      NEXT_PUBLIC_APP_ENV: production
+    depends_on:
+      - db
+      - api
 
   api:
     build: ./api
@@ -41,6 +44,6 @@ services:
     stdin_open: true
     tty:
       true
-      # depends_on:
-      #   db:
+    depends_on:
+      - db
       #     condition: service_started

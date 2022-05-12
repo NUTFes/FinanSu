@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NEXT_PUBLIC_APP_ENV === 'production';
 
 module.exports = {
   reactStrictMode: true,
