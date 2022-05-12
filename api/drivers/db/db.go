@@ -22,11 +22,11 @@ func ConnectMySQL() (client, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("NUTMEG_DB_USER")
+	dbPassword := os.Getenv("NUTMEG_DB_PASSWORD")
+	dbHost := os.Getenv("NUTMEG_DB_HOST")
+	dbPort := os.Getenv("NUTMEG_DB_PORT")
+	dbName := os.Getenv("NUTMEG_DB_NAME")
 	// MySQLに接続する
 	// データベース接続部分
 	// dbconf := "finansu:password@tcp(nutfes-finansu-db:3306)/finansu_db?charset=utf8mb4&parseTime=true"
