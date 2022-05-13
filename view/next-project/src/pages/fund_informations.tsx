@@ -155,6 +155,7 @@ export default function FundInformations(props: Props) {
   // ログイン中のユーザの権限
   const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
   const [isFinanceStaff, setIsFinanceStaff] = useState<boolean>(false);
+  const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
   const [isUser, setIsUser] = useState<boolean>(false);
 
   const router = useRouter();
@@ -171,6 +172,10 @@ export default function FundInformations(props: Props) {
         // current_userの権限をユーザに設定
         if (currentUserRes.role_id == 1) {
           setIsUser(true);
+        }
+        // current_userの権限を開発者に設定
+        else if (currentUserRes.role_id == 2) {
+          setIsDeveloper(true);
         }
         // current_userの権限を財務局長に設定
         else if (currentUserRes.role_id == 3) {
@@ -379,6 +384,12 @@ export default function FundInformations(props: Props) {
                             'is_first_check',
                             fundInformation[index],
                           )}
+                        {isDeveloper &&
+                          unChangeableCheckboxContent(
+                            fundInformation[index].is_first_check,
+                            fundViewItem.fund_information.id,
+                            'is_first_check',
+                          )}
                         {isUser &&
                           unChangeableCheckboxContent(
                             fundInformation[index].is_first_check,
@@ -397,6 +408,12 @@ export default function FundInformations(props: Props) {
                             fundInformation[index],
                           )}
                         {isFinanceStaff &&
+                          unChangeableCheckboxContent(
+                            fundInformation[index].is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
+                          )}
+                        {isDeveloper &&
                           unChangeableCheckboxContent(
                             fundInformation[index].is_last_check,
                             fundViewItem.fund_information.id,
