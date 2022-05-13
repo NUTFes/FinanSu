@@ -8,9 +8,11 @@ CREATE TABLE departments (
   PRIMARY KEY (id)
 );
 
-INSERT into departments (name) values ('総務局');
-INSERT into departments (name) values ('企画局');
-INSERT into departments (name) values ('渉外局');
-INSERT into departments (name) values ('制作局');
-INSERT into departments (name) values ('情報局');
-INSERT into departments (name) values ('財務局');
+INSERT into departments (name) values ('機械創造工学専攻');
+INSERT into departments (name) values ('電気電子情報工学専攻');
+INSERT into departments (name) values ('情報・経営システム工学専攻');
+INSERT into departments (name) values ('物質材料工学専攻');
+INSERT into departments (name) values ('環境社会基盤工学専攻');
+INSERT into departments (name) values ('生物機能工学専');
+INSERT into departments (name) values ('原子力安全工学専攻');
+

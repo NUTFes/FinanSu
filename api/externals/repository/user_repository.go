@@ -44,16 +44,16 @@ func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
 }
 
 // 作成
-func (ur *userRepository) Create(c context.Context, name string, departmentID string, roleID string) error {
-	query := "insert into users (name, department_id, role_id) values ('"+name+"', "+departmentID+", "+roleID+")"
+func (ur *userRepository) Create(c context.Context, name string, bureauID string, roleID string) error {
+	query := "insert into users (name, bureau_id, role_id) values ('"+name+"', "+bureauID+", "+roleID+")"
 	_, err := ur.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
 
 // 編集
-func (ur *userRepository) Update(c context.Context, id string, name string, departmentID string, roleID string) error {
-	query := "update users set name = '"+name+"', department_id = "+departmentID+", role_id = "+roleID+" where id = "+id
+func (ur *userRepository) Update(c context.Context, id string, name string, bureauID string, roleID string) error {
+	query := "update users set name = '"+name+"', bureau_id = "+bureauID+", role_id = "+roleID+" where id = "+id
 	_, err := ur.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
