@@ -23,9 +23,9 @@ export const get_with_token = async (url: string) => {
 
 export const post = async (url: string, data: any) => {
   const name = data.userName;
-  const department_id = data.departmentId;
+  const bureau_id = data.bureauId;
   const role_id = data.roleId;
-  const postUrl = url + '?name=' + name + '&department_id=' + department_id + '&role_id=' + role_id;
+  const postUrl = url + '?name=' + name + '&bureau_id=' + bureau_id + '&role_id=' + role_id;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
