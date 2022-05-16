@@ -17,8 +17,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  FormControl,
-  FormErrorMessage,
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
 
