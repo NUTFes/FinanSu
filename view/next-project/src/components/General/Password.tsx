@@ -15,7 +15,7 @@ export default function Password(props: Props) {
         borderColor='primary.1'
         type='password'
         {...props.register('password', {
-          required: 'メールアドレスは必須です。',
+          required: 'パスワードは必須です。',
           minLength: {
             value: 6,
             message: 'パスワードは6文字以上で入力してください',

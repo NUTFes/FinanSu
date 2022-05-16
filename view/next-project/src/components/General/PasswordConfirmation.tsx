@@ -17,13 +17,13 @@ export default function Password(props: Props) {
         type='password'
         {...props.register('passwordConfirmation', {
           validate: {
-            positive: (input: string) => input === props.password,
+            correct: (input: string) => input === props.password,
           },
         })}
       />
       <FormErrorMessage>
         {props.errors.passwordConfirmation &&
-          props.errors.passwordConfirmation.type === 'positive' && <p>パスワードが一致しません</p>}
+          props.errors.passwordConfirmation.type === 'correct' && <p>パスワードが一致しません</p>}
       </FormErrorMessage>
     </FormControl>
   );
