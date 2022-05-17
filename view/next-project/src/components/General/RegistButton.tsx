@@ -6,7 +6,7 @@ interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const RegistButton: React.FC<Props> = ({ children, width, height, onClick }) => {

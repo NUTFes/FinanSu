@@ -1,17 +1,10 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import FundInformationsAddModal from '@components/fund_informations/FundInformationsAddModal';
+import AddModal from '@components/fund_information/AddModal';
 import { useState } from 'react';
 
-interface Props {
-  width?: string;
-  height?: string;
-  children?: React.ReactNode;
-  teachersinformations: TeachersInformations[];
-}
-
-interface TeachersInformations {
+interface TeachersInformation {
   id: number;
   name: string;
   position: string;
@@ -22,7 +15,30 @@ interface TeachersInformations {
   created_at: string;
   updated_at: string;
 }
-const FundInformationsAddModalButton: React.FC<Props> = (props) => {
+
+interface Department {
+  id: number;
+  name: string;
+}
+
+interface User {
+  id: number;
+  name: string;
+  department_id: number;
+  role_id: number;
+}
+
+interface Props {
+  width?: string;
+  height?: string;
+  children?: React.ReactNode;
+  teachersInformation: TeachersInformation[];
+  departments: Department[];
+  currentUser: User;
+  userID: number | string;
+}
+
+export default function OpenAddModalButton(props: Props) {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
@@ -38,13 +54,14 @@ const FundInformationsAddModalButton: React.FC<Props> = (props) => {
       >
         {props.children}
       </Button>
-      <FundInformationsAddModal
-        teachersinformations={props.teachersinformations}
+      <AddModal
+        teachersInformation={props.teachersInformation}
+        departments={props.departments}
         openModal={showModal}
         setShowModal={setShowModal}
+        currentUser={props.currentUser}
+        userID={props.userID}
       />
     </ChakraProvider>
   );
-};
-
-export default FundInformationsAddModalButton;
+}

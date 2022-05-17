@@ -1,17 +1,35 @@
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
-import FundInformationsAddButton from '@components/fund_informations/FundInformationsAddButton';
-import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import {
+  Box,
+  ChakraProvider,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  Flex,
+  Spacer,
+  Select,
+  Center,
+  Checkbox,
+  Grid,
+  GridItem,
+} from '@chakra-ui/react';
 import theme from '@assets/theme';
-import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
-import { get, put } from '@api/fundInformations';
-import { Checkbox } from '@chakra-ui/react';
-import { useState } from 'react';
+import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
+import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
+import { put } from '@api/fundInformations';
+import { get, get_with_token } from '@api/api_methods';
+import MainLayout from '@components/layout/MainLayout';
 
-interface FundInformations {
+interface FundInformation {
+  id: number;
   user_id: number;
   teacher_id: number;
   price: number;
@@ -22,7 +40,12 @@ interface FundInformations {
   updated_at: string;
 }
 
-interface TeachersInformations {
+interface Department {
+  id: number;
+  name: string;
+}
+
+interface Teacher {
   id: number;
   name: string;
   position: string;
@@ -33,39 +56,195 @@ interface TeachersInformations {
   created_at: string;
   updated_at: string;
 }
+
+interface User {
+  id: number;
+  name: string;
+  department_id: number;
+  role_id: number;
+}
+
+interface FundInformationView {
+  fund_information: FundInformation;
+  user: User;
+  teacher: Teacher;
+}
+
 interface Props {
-  teachersinformations: TeachersInformations[];
-  fundinformations: FundInformations[];
+  teachers: Teacher[];
+  departments: Department[];
+  fundInformation: FundInformation[];
+  fundInformationView: FundInformationView[];
+  currentUser: User;
+  totalFee: number;
 }
 
 export const getServerSideProps = async () => {
-  const getTeachersinformationsUrl = process.env.SSR_API_URI + '/teachers';
-  const getUrl = process.env.SSR_API_URI + '/fund_informations';
-  const teachersinformationsRes = await get(getTeachersinformationsUrl);
-  const fundinformationsRes = await get(getUrl);
+  const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
+  const getDepartmentURL = process.env.SSR_API_URI + '/departments';
+  const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
+  const getFundInformationViewURL = process.env.SSR_API_URI + '/get_fund_informations_for_view';
+  const teachersInformationRes = await get(getTeachersInformationURL);
+  const fundInformationRes = await get(getFundInformationURL);
+  const departmentRes = await get(getDepartmentURL);
+  const fundInformationViewRes = await get(getFundInformationViewURL);
+
+  // 合計金額の計算
+  let totalFee = 0;
+  fundInformationRes.map((fundItemRes: FundInformation) => {
+    if (fundItemRes.is_last_check) {
+      totalFee += fundItemRes.price;
+    }
+  });
+
   return {
     props: {
-      teachersinformations: teachersinformationsRes,
-      fundinformations: fundinformationsRes,
+      teachers: teachersInformationRes,
+      departments: departmentRes,
+      fundInformation: fundInformationRes,
+      fundInformationView: fundInformationViewRes,
+      totalFee: totalFee,
     },
   };
 };
 
-export default function FundList(props: Props) {
-  const teachersinformations = props.teachersinformations;
-  const [fundList, setFundList] = useState<FundInformations[]>(props.fundinformations);
-  const switchCheck = (isChecked: boolean, id: number, input: string) => {
-    setFundList(
-      fundList.map((fundItem: any) =>
+export default function FundInformations(props: Props) {
+  // 教員一覧
+  const teachers: Teacher[] = props.teachers;
+  const departments: Department[] = [
+    {
+      id: 1,
+      name: '機械工学分野/機械創造工学課程・機械創造工学専攻',
+    },
+    {
+      id: 2,
+      name: '電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻',
+    },
+    {
+      id: 3,
+      name: '情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻',
+    },
+    {
+      id: 4,
+      name: '物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻',
+    },
+    {
+      id: 5,
+      name: '環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻',
+    },
+    {
+      id: 6,
+      name: '量子・原子力統合工学分野/原子力システム安全工学専攻',
+    },
+  ];
+
+  // 募金一覧
+  const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
+  const [fundInformationView, setFundInformationView] = useState<FundInformationView[]>(
+    props.fundInformationView,
+  );
+
+  // ログイン中のユーザ
+  const [currentUser, setCurrentUser] = useState<User>({
+    id: 1,
+    name: '',
+    department_id: 1,
+    role_id: 1,
+  });
+
+  // ログイン中のユーザの権限
+  const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
+  const [isFinanceStaff, setIsFinanceStaff] = useState<boolean>(false);
+  const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
+  const [isUser, setIsUser] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  // ページ読み込み時にcurrent_userを取得
+  useEffect(() => {
+    if (router.isReady) {
+      // current_userの取得とセット
+      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
+      const getCurrentUser = async (url: string) => {
+        const currentUserRes = await get_with_token(url);
+        setCurrentUser(currentUserRes);
+
+        // current_userの権限をユーザに設定
+        if (currentUserRes.role_id == 1) {
+          setIsUser(true);
+        }
+        // current_userの権限を開発者に設定
+        else if (currentUserRes.role_id == 2) {
+          setIsDeveloper(true);
+        }
+        // current_userの権限を財務局長に設定
+        else if (currentUserRes.role_id == 3) {
+          setIsFinanceDirector(true);
+        }
+        // current_userの権限を財務局員に設定
+        else if (currentUserRes.role_id == 4) {
+          setIsFinanceStaff(true);
+        }
+      };
+      getCurrentUser(getCurrentUserURL);
+    }
+  }, [router]);
+
+  // Modal用にuserIDを設定
+  const userID = currentUser.id;
+
+  // チェック済みの合計金額用のステート
+  const [totalFee, setTotalFee] = useState(props.totalFee);
+
+  const calcTotalFee = (initFundInformation: FundInformation) => {
+    if (initFundInformation.is_last_check) {
+      setTotalFee(totalFee + initFundInformation.price);
+    } else {
+      setTotalFee(totalFee - initFundInformation.price);
+    }
+  };
+
+  // チェックの切り替え
+  const switchCheck = async (
+    isChecked: boolean,
+    id: number,
+    input: string,
+    fundItem: FundInformation,
+  ) => {
+    if (input == 'is_last_check') {
+      const initFundInformation: FundInformation = {
+        id: id,
+        user_id: fundItem.user_id,
+        teacher_id: fundItem.teacher_id,
+        price: fundItem.price,
+        remark: fundItem.remark,
+        is_first_check: fundItem.is_first_check,
+        is_last_check: !isChecked,
+        created_at: fundItem.created_at,
+        updated_at: fundItem.updated_at,
+      };
+      calcTotalFee(initFundInformation);
+    }
+    setFundInformation(
+      fundInformation.map((fundItem: FundInformation) =>
         fundItem.id === id ? { ...fundItem, [input]: !isChecked } : fundItem,
       ),
     );
   };
-  const submit = async (id: number) => {
-    const putUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await put(putUrl, fundList[id - 1]);
+
+  // checkboxの値が変わったときに更新
+  const submit = async (id: number, fundItem: FundInformation) => {
+    const putURL = process.env.CSR_API_URI + '/fund_informations/' + id;
+    await put(putURL, fundItem);
   };
-  const checkboxContent = (isChecked: boolean, id: number, input: string) => {
+
+  // 変更可能なcheckboxの描画
+  const changeableCheckboxContent = (
+    isChecked: boolean,
+    id: number,
+    input: string,
+    fundItem: FundInformation,
+  ) => {
     {
       if (isChecked) {
         return (
@@ -73,7 +252,8 @@ export default function FundList(props: Props) {
             <Checkbox
               defaultChecked
               onChange={() => {
-                switchCheck(isChecked, id, input);
+                switchCheck(isChecked, id, input, fundItem);
+                submit(id, fundItem);
               }}
             ></Checkbox>
           </>
@@ -83,7 +263,8 @@ export default function FundList(props: Props) {
           <>
             <Checkbox
               onChange={() => {
-                switchCheck(isChecked, id, input);
+                switchCheck(isChecked, id, input, fundItem);
+                submit(id, fundItem);
               }}
             ></Checkbox>
           </>
@@ -91,17 +272,29 @@ export default function FundList(props: Props) {
       }
     }
   };
-  return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>FinanSu | 募金一覧</title>
-        <meta name='description' content='ja' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
 
-      <Header />
-      <hr />
-      <Center>
+  // 変更不可能なcheckboxの描画
+  const unChangeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
+    {
+      if (isChecked) {
+        return (
+          <>
+            <Checkbox defaultChecked isDisabled></Checkbox>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Checkbox isDisabled></Checkbox>
+          </>
+        );
+      }
+    }
+  };
+
+  return (
+    <MainLayout>
+      <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
@@ -116,12 +309,14 @@ export default function FundList(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <FundInformationsAddButton
-                  teachersinformations={teachersinformations}
-                  // leftIcon={<RiAddCircleLine color={'white'} />}
+                <OpenAddModalButton
+                  teachersInformation={teachers}
+                  departments={departments}
+                  currentUser={currentUser}
+                  userID={userID}
                 >
                   学内募金登録
-                </FundInformationsAddButton>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
@@ -131,7 +326,7 @@ export default function FundList(props: Props) {
                 <Tr>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      自局長確認
+                      財務局員確認
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -141,7 +336,7 @@ export default function FundList(props: Props) {
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      氏名
+                      教員名
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
@@ -168,53 +363,130 @@ export default function FundList(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {fundList.map((fundItem) => (
-                  <Tr key={fundItem.teacher_id} onUnload={submit(fundItem.teacher_id)}>
+                {fundInformationView.map((fundViewItem: FundInformationView, index) => (
+                  <Tr
+                    key={fundViewItem.fund_information.id}
+                    onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
+                  >
                     <Td>
                       <Center color='black.300'>
-                        {checkboxContent(
-                          fundItem.is_first_check,
-                          fundItem.teacher_id,
-                          'is_first_check',
-                        )}
+                        {isFinanceDirector &&
+                          changeableCheckboxContent(
+                            fundInformation[index].is_first_check,
+                            fundViewItem.fund_information.id,
+                            'is_first_check',
+                            fundInformation[index],
+                          )}
+                        {isFinanceStaff &&
+                          changeableCheckboxContent(
+                            fundInformation[index].is_first_check,
+                            fundViewItem.fund_information.id,
+                            'is_first_check',
+                            fundInformation[index],
+                          )}
+                        {isDeveloper &&
+                          unChangeableCheckboxContent(
+                            fundInformation[index].is_first_check,
+                            fundViewItem.fund_information.id,
+                            'is_first_check',
+                          )}
+                        {isUser &&
+                          unChangeableCheckboxContent(
+                            fundInformation[index].is_first_check,
+                            fundViewItem.fund_information.id,
+                            'is_first_check',
+                          )}
                       </Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>
-                        {checkboxContent(
-                          fundItem.is_last_check,
-                          fundItem.teacher_id,
-                          'is_last_check',
-                        )}
+                        {isFinanceDirector &&
+                          changeableCheckboxContent(
+                            fundInformation[index].is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
+                            fundInformation[index],
+                          )}
+                        {isFinanceStaff &&
+                          unChangeableCheckboxContent(
+                            fundInformation[index].is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
+                          )}
+                        {isDeveloper &&
+                          unChangeableCheckboxContent(
+                            fundInformation[index].is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
+                          )}
+                        {isUser &&
+                          unChangeableCheckboxContent(
+                            fundInformation[index].is_last_check,
+                            fundViewItem.fund_information.id,
+                            'is_last_check',
+                          )}
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>會田英雄</Center>
+                      <Center color='black.300'>{fundViewItem.teacher.name}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>機械・建設1号棟629</Center>
+                      <Center color='black.300'>{fundViewItem.teacher.room}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.user_id}</Center>
+                      <Center color='black.300'>{fundViewItem.user.name}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.price}</Center>
+                      <Center color='black.300'>{fundViewItem.fund_information.price}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{fundItem.remark}</Center>
+                      <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
                     </Td>
                     <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center>
+                            <OpenEditModalButton
+                              id={fundViewItem.fund_information.id}
+                              teachersInformation={teachers}
+                              currentUser={currentUser}
+                            />
+                          </Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center>
+                            <OpenDeleteModalButton
+                              id={fundViewItem.fund_information.id}
+                              teacher_id={fundViewItem.fund_information.teacher_id}
+                              user_id={Number(fundViewItem.fund_information.user_id)}
+                            />
+                          </Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
                   </Tr>
                 ))}
               </Tbody>
+              <Tfoot>
+                <Tr>
+                  <Th />
+                  <Th />
+                  <Th />
+                  <Th />
+                  <Th>
+                    <Center fontSize='sm' fontWeight='500' color='black.600'>
+                      合計金額
+                    </Center>
+                  </Th>
+                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
+                    {totalFee}
+                  </Th>
+                </Tr>
+              </Tfoot>
             </Table>
           </Box>
         </Box>
-      </Center>
-    </ChakraProvider>
+      </Flex>
+    </MainLayout>
   );
 }

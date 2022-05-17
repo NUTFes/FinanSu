@@ -3,7 +3,7 @@ import theme from '@assets/theme';
 import * as React from 'react';
 import PurchaseOrderDeleteModal from '@components/purchaseorder/PurchaseOrderDeleteModal';
 import { useState } from 'react';
-import {RiDeleteBinLine} from 'react-icons/ri';
+import { RiDeleteBinLine } from 'react-icons/ri';
 
 interface Props {
   width?: string;

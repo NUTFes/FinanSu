@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
+	"os"
 )
 
 type client struct {
@@ -16,9 +18,19 @@ type Client interface {
 }
 
 func ConnectMySQL() (client, error) {
+	err := godotenv.Load("env/dev.env")
+	if err != nil {
+		fmt.Println(err)
+	}
+	dbUser := os.Getenv("NUTMEG_DB_USER")
+	dbPassword := os.Getenv("NUTMEG_DB_PASSWORD")
+	dbHost := os.Getenv("NUTMEG_DB_HOST")
+	dbPort := os.Getenv("NUTMEG_DB_PORT")
+	dbName := os.Getenv("NUTMEG_DB_NAME")
 	// MySQLに接続する
 	// データベース接続部分
-	dbconf := "finansu:password@tcp(nutfes-finansu-db:3306)/finansu_db?charset=utf8mb4&parseTime=true"
+	// dbconf := "finansu:password@tcp(nutfes-finansu-db:3306)/finansu_db?charset=utf8mb4&parseTime=true"
+	dbconf := dbUser + ":" + dbPassword + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=true"
 	db, err := sql.Open("mysql", dbconf)
 
 	if err != nil {

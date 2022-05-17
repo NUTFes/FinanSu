@@ -19,6 +19,7 @@ import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { get } from '@api/purchaseOrder';
+import MainLayout from '@components/layout/MainLayout';
 
 interface PurchaseItem {
   id: number;
@@ -74,16 +75,10 @@ export default function PurchaseItem(props: Props) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>FinanSu | 購入物品一覧</title>
-        <meta content='ja' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-
-      <Header />
-      <hr />
-      <Center>
+    <>
+    <MainLayout>
+      <Flex justify='center' align='center'>
+        <Center>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
@@ -192,7 +187,9 @@ export default function PurchaseItem(props: Props) {
             </Table>
           </Box>
         </Box>
-      </Center>
-    </ChakraProvider>
+        </Center>
+      </Flex>
+      </MainLayout>
+    </>
   );
 }
