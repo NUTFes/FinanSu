@@ -25,7 +25,7 @@ import { Center, Box } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { getDomainLocale } from 'next/dist/shared/lib/router/router';
-import { get } from '@api/sponsoractivity';
+import { get } from '@api/api_methods';
 import { useState } from 'react';
 
 interface SponsorActivity {
@@ -40,7 +40,7 @@ interface SponsorActivity {
 interface Props {
   sponsoractivities: SponsorActivity[];
 }
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const getSponsoractivitiesUrl = process.env.SSR_API_URI + '/get_activities_for_view';
   const sponsoractivitiesRes = await get(getSponsoractivitiesUrl);
   return {
@@ -51,7 +51,7 @@ export const getStaticProps = async () => {
 };
 
 export default function SponsorList(props: Props) {
-  const [sponsor, setSponsorList] = useState<SponsorActivity[]>(props.sponsoractivities);
+  console.log(props);
   return (
     <ChakraProvider theme={theme}>
       <Head>
