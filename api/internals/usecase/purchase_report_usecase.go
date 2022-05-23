@@ -99,23 +99,40 @@ func (p *purchaseReportUseCase) DestroyPurchaseReport(
 func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Context) ([]domain.PurchaseReportWithOrderItem,error) {
 	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
 	var purchaseReportwithorderitems []domain.PurchaseReportWithOrderItem
-	rows , err := p.rep.AllWithOrderItem(c)
+	// PurchaseReportとそれに紐づいたPurchaseOrderとPurchaseUserを取得
+	rows, err := p.rep.AllWithOrderItem(c)
+	// PurchaseReportのPurchaseOrderIDに紐づいたPurchaseItemsを取得
+
+	// 合体
+	
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		err := rows.Scan(
-			&purchaseReportwithorderitem.ID,
-			&purchaseReportwithorderitem.Name,
-			&purchaseReportwithorderitem.Item,
-			&purchaseReportwithorderitem.Price,
-			&purchaseReportwithorderitem.Quantity,
-			&purchaseReportwithorderitem.Detail,
-			&purchaseReportwithorderitem.Url,
-			&purchaseReportwithorderitem.FinansuCheck,
-			&purchaseReportwithorderitem.DeadLine,
-			&purchaseReportwithorderitem.CreatedAt,
-			&purchaseReportwithorderitem.UpdatedAt,
+			&purchaseReportwithorderitem.PurchaseReport.ID,
+			&purchaseReportwithorderitem.PurchaseReport.UserID,
+			&purchaseReportwithorderitem.PurchaseReport.PurchaseOrderID,
+			&purchaseReportwithorderitem.PurchaseReport.CreatedAt,
+			&purchaseReportwithorderitem.PurchaseReport.UpdatedAt,
+			&PurchaseReportwithorderitem.ReportUser.ID,
+			&PurchaseReportwithorderitem.ReportUser.Name,
+			&PurchaseReportwithorderitem.ReportUser.DepartmentID,
+			&PurchaseReportwithorderitem.ReportUser.RoleID,
+			&PurchaseReportwithorderitem.ReportUser.CreatedAt,
+			&PurchaseReportwithorderitem.ReportUser.UpdatedAt,
+			&PurchaseReportwithorderitem.PurchaseOrder.ID,
+			&PurchaseReportwithorderitem.PurchaseOrder.DeadLine,
+			&PurchaseReportwithorderitem.PurchaseOrder.UserID,
+			&PurchaseReportwithorderitem.PurchaseOrder.CreatedAt,
+			&PurchaseReportwithorderitem.PurchaseOrder.UpdatedAt,
+			&PurchaseReportwithorderitem.OrderUser.ID,
+			&PurchaseReportwithorderitem.OrderUser.Name,
+			&PurchaseReportwithorderitem.OrderUser.DepartmentID,
+			&PurchaseReportwithorderitem.OrderUser.RoleID,
+			&PurchaseReportwithorderitem.OrderUser.CreatedAt,
+			&PurchaseReportwithorderitem.OrderUser.UpdatedAt,
+			&PurchaseReportwithorderitem.PurchaseItems,
 		)
 		if err != nil {
 			return nil ,err
