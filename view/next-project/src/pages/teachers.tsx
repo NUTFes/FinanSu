@@ -22,39 +22,85 @@ import Header from '@components/Header';
 import { get } from '@api/fundInformations';
 import { useState } from 'react';
 
-interface TeachersInformations {
+interface TeacherInformation {
   id: number;
   name: string;
   position: string;
-  department_id: number;
+  department_id: number | string;
   room: string;
   is_black: boolean;
   remark: string;
   created_at: string;
   updated_at: string;
 }
-interface Props {
-  teachersinformations: TeachersInformations[];
+
+interface Department {
+  id: number;
+  name: string;
 }
+
+interface Props {
+  teacherInformation: TeacherInformation[];
+}
+
 export const getStaticProps = async () => {
-  const getTeachersinformationsUrl = process.env.SSR_API_URI + '/teachers';
-  const teachersinformationsRes = await get(getTeachersinformationsUrl);
+  const getTeacherInformationURL = process.env.SSR_API_URI + '/teachers';
+  const teacherInformationRes = await get(getTeacherInformationURL);
   return {
     props: {
-      teachersinformations: teachersinformationsRes,
+      teacherInformation: teacherInformationRes,
     },
   };
 };
 export default function TeachersList(props: Props) {
-  const [teachersList, setTeachersList] = useState<TeachersInformations[]>(
-    props.teachersinformations,
-  );
+  const [teachersList, setTeachersList] = useState<TeacherInformation[]>(props.teacherInformation);
+  // 学科一覧
+  const departments: Department[] = [
+    {
+      id: 1,
+      name: '機械工学分野/機械創造工学課程・機械創造工学専攻',
+    },
+    {
+      id: 2,
+      name: '電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻',
+    },
+    {
+      id: 3,
+      name: '情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻',
+    },
+    {
+      id: 4,
+      name: '物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻',
+    },
+    {
+      id: 5,
+      name: '環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻',
+    },
+    {
+      id: 6,
+      name: '量子・原子力統合工学分野/原子力システム安全工学専攻',
+    },
+  ];
+
+  // department_idからdepartmentを取得するための処理（後々APIから取得する）
+  for (let i = 0; i < teachersList.length; i++) {
+    for (let j = 0; j < departments.length; j++) {
+      if (teachersList[i].department_id == departments[j].id) {
+        teachersList[i].department_id = departments[j].name;
+        // setTeachersList(teachersList[i].department_id)
+      }
+    }
+  }
+
+  // 全教員のラジオボタンが押されたときの処理
   const allTeachersList = () => {
-    setTeachersList(props.teachersinformations);
+    setTeachersList(props.teacherInformation);
   };
+  // 募金先教員のラジオボタンが押されたときの処理
   const investorList = () => {
-    setTeachersList(props.teachersinformations.filter((teacher) => teacher.is_black == false));
+    setTeachersList(props.teacherInformation.filter((teacher) => teacher.is_black == false));
   };
+
   return (
     <ChakraProvider theme={theme}>
       <Head>
