@@ -18,13 +18,12 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
 import { get } from '@api/fundInformations';
 import MainLayout from '@components/layout/MainLayout';
-import EditButton from '@components/General/EditButton';
 import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
 import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
+import DetailModal from '@components/teacher/DetailModal';
 
 interface Teacher {
   id: number;
@@ -97,6 +96,12 @@ export default function TeachersList(props: Props) {
       name: '量子・原子力統合工学分野/原子力システム安全工学専攻',
     },
   ];
+
+  // 詳細モーダル用の変数
+  const [showModal, setShowModal] = useState(false);
+  const ShowModal = () => {
+    setShowModal(true);
+  };
 
   // 全教員のラジオボタンが押されたときの処理
   const allTeachersList = () => {
@@ -171,7 +176,7 @@ export default function TeachersList(props: Props) {
               <Tbody>
                 {teachersList.map((teachersItem) => (
                   <Tr key={teachersItem.name}>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       {teachersItem.is_black && (
                         <Center color='black.900'>{teachersItem.name}</Center>
                       )}
@@ -179,10 +184,10 @@ export default function TeachersList(props: Props) {
                         <Center color='black.300'>{teachersItem.name}</Center>
                       )}
                     </Td>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{teachersItem.position}</Center>
                     </Td>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>
                         {teachersItem.department_id == 1 && (
                           <Text>機械工学分野/機械創造工学課程・機械創造工学専攻</Text>
@@ -212,10 +217,10 @@ export default function TeachersList(props: Props) {
                         )}
                       </Center>
                     </Td>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{teachersItem.room}</Center>
                     </Td>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{teachersItem.remark}</Center>
                     </Td>
                     <Td>
@@ -224,22 +229,27 @@ export default function TeachersList(props: Props) {
                           <Center>
                             <OpenEditModalButton
                               id={teachersItem.id}
-                              teachersInformation={teachersItem}
+                              teacher={teachersItem}
                               departments={departments}
                             />
                           </Center>
                         </GridItem>
                         <GridItem>
                           <Center>
-                            {/* <OpenDeleteModalButton
-                              id={fundViewItem.fund_information.id}
-                              teacher_id={fundViewItem.fund_information.teacher_id}
-                              user_id={Number(fundViewItem.fund_information.user_id)}
-                            /> */}
+                            <OpenDeleteModalButton
+                              id={teachersItem.id}
+                              teacher={teachersItem}
+                              departments={departments}
+                            />
                           </Center>
                         </GridItem>
                       </Grid>
                     </Td>
+                    <DetailModal
+                      teacher={teachersItem}
+                      openModal={showModal}
+                      setShowModal={setShowModal}
+                    />
                   </Tr>
                 ))}
               </Tbody>

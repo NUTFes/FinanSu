@@ -30,7 +30,7 @@ interface Department {
   name: string;
 }
 
-interface TeachersInformation {
+interface Teacher {
   id: number;
   name: string;
   position: string;
@@ -56,7 +56,7 @@ interface ModalProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
-  teachersInformation: TeachersInformation;
+  teacher: Teacher;
   departments: Department[];
 }
 
@@ -76,7 +76,7 @@ export default function FundInformationEditModal(props: ModalProps) {
     remark: '',
   };
   const [formData, setFormData] = useState<FormData>(initFormData);
-  const [isBlack, setIsBlack] = useState<string>(props.teachersInformation.is_black.toString());
+  const [isBlack, setIsBlack] = useState<string>(props.teacher.is_black.toString());
 
   useEffect(() => {
     if (router.isReady) {
