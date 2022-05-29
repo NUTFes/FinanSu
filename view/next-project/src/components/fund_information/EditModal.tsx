@@ -21,7 +21,7 @@ import Button from '../General/RegistButton';
 import { useRouter } from 'next/router';
 import { get, put } from '@api/fundInformations';
 
-interface TeachersInformation {
+interface Teacher {
   id: number;
   name: string;
   position: string;
@@ -36,7 +36,7 @@ interface TeachersInformation {
 interface User {
   id: number;
   name: string;
-  department_id: number;
+  bureau_id: number;
   role_id: number;
 }
 
@@ -54,7 +54,7 @@ interface ModalProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
-  teachersInformation: TeachersInformation[];
+  teachers: Teacher[];
   currentUser: User;
 }
 
@@ -134,7 +134,7 @@ export default function FundInformationEditModal(props: ModalProps) {
                       borderColor='primary.1'
                       w='224px'
                     >
-                      {props.teachersInformation.map((data) => (
+                      {props.teachers.map((data) => (
                         <option key={data.id} value={data.id}>
                           {data.name}
                         </option>
