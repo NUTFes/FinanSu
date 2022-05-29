@@ -99,7 +99,7 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const update = async (data: any, id: number | string, is_black) => {
+  const update = async (data: any, id: number | string, is_black: string) => {
     if (is_black == 'true') {
       data.is_black = true;
     } else {
