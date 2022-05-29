@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import {
   Box,
   Text,
@@ -18,7 +19,7 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import { Center } from '@chakra-ui/react';
-import { get } from '@api/fundInformations';
+import { get, get_with_token } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
 import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
@@ -37,16 +38,11 @@ interface Teacher {
   updated_at: string;
 }
 
-interface TeacherInformation {
+interface User {
   id: number;
   name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
+  bureau_id: number;
+  role_id: number;
 }
 
 interface Department {
@@ -55,20 +51,20 @@ interface Department {
 }
 
 interface Props {
-  teacherInformation: TeacherInformation[];
+  teachers: Teacher[];
 }
 
 export const getStaticProps = async () => {
-  const getTeacherInformationURL = process.env.SSR_API_URI + '/teachers';
-  const teacherInformationRes = await get(getTeacherInformationURL);
+  const getTeacherURL = process.env.SSR_API_URI + '/teachers';
+  const teacherRes = await get(getTeacherURL);
   return {
     props: {
-      teacherInformation: teacherInformationRes,
+      teachers: teacherRes,
     },
   };
 };
 export default function TeachersList(props: Props) {
-  const [teachersList, setTeachersList] = useState<TeacherInformation[]>(props.teacherInformation);
+  const [teachersList, setTeachersList] = useState<Teacher[]>(props.teachers);
   // 学科一覧
   const departments: Department[] = [
     {
@@ -103,13 +99,32 @@ export default function TeachersList(props: Props) {
     setShowModal(true);
   };
 
+  const router = useRouter();
+
+  // ページ読み込み時にcurrent_userを取得
+  useEffect(() => {
+    if (router.isReady) {
+      // current_userの取得とセット
+      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
+      const getCurrentUser = async (url: string) => {
+        const currentUserRes = await get_with_token(url);
+
+        // current_userの権限がユーザなら前のページに戻る
+        if (currentUserRes.role_id == 1) {
+          router.back();
+        }
+      };
+      getCurrentUser(getCurrentUserURL);
+    }
+  }, [router]);
+
   // 全教員のラジオボタンが押されたときの処理
   const allTeachersList = () => {
-    setTeachersList(props.teacherInformation);
+    setTeachersList(props.teachers);
   };
   // 募金先教員のラジオボタンが押されたときの処理
   const investorList = () => {
-    setTeachersList(props.teacherInformation.filter((teacher) => teacher.is_black == false));
+    setTeachersList(props.teachers.filter((teacher) => teacher.is_black == false));
   };
 
   return (
