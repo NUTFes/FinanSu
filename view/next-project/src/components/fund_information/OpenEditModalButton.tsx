@@ -1,11 +1,11 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import FundInformationEditModal from '@components/fund_information/FundInformationEditModal';
+import EditModal from '@components/fund_information/EditModal';
 import { useState } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
 
-interface TeachersInformation {
+interface Teacher {
   id: number;
   name: string;
   position: string;
@@ -20,7 +20,7 @@ interface TeachersInformation {
 interface User {
   id: number;
   name: string;
-  department_id: number;
+  bureau_id: number;
   role_id: number;
 }
 
@@ -29,7 +29,7 @@ interface Props {
   height?: string;
   children?: React.ReactNode;
   id: number;
-  teachersInformation: TeachersInformation[];
+  teachers: Teacher[];
   currentUser: User;
 }
 
@@ -52,11 +52,11 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         <RiPencilFill size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <FundInformationEditModal
+      <EditModal
         id={props.id}
         openModal={showModal}
         setShowModal={setShowModal}
-        teachersInformation={props.teachersInformation}
+        teachers={props.teachers}
         currentUser={props.currentUser}
       />
     </ChakraProvider>

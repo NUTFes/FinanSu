@@ -13,15 +13,24 @@ import {
   ModalBody,
   Grid,
   GridItem,
+  RadioGroup,
+  Radio,
+  Stack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import theme from '@assets/theme';
+import { get } from '@api/api_methods';
+import { put } from '@api/teachers';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../General/RegistButton';
+import Button from '@components/General/RegistButton';
 import { useRouter } from 'next/router';
-import { get, put } from '@api/fundInformations';
 
-interface TeachersInformation {
+interface Department {
+  id: number;
+  name: string;
+}
+
+interface Teacher {
   id: number;
   name: string;
   position: string;
@@ -33,20 +42,13 @@ interface TeachersInformation {
   updated_at: string;
 }
 
-interface User {
-  id: number;
+interface FormData {
   name: string;
+  position: string;
   department_id: number;
-  role_id: number;
-}
-
-interface FundInformation {
-  user_id: number;
-  teacher_id: number | string;
-  price: number;
+  room: string;
+  is_black: boolean;
   remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
 }
 
 interface ModalProps {
@@ -54,8 +56,8 @@ interface ModalProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
-  teachersInformation: TeachersInformation[];
-  currentUser: User;
+  teacher: Teacher;
+  departments: Department[];
 }
 
 export default function FundInformationEditModal(props: ModalProps) {
@@ -65,18 +67,20 @@ export default function FundInformationEditModal(props: ModalProps) {
 
   const router = useRouter();
 
-  const [formData, setFormData] = useState<FundInformation>({
-    user_id: 0,
-    teacher_id: '',
-    price: 0,
+  const initFormData: FormData = {
+    name: '',
+    position: '',
+    department_id: 1,
+    room: '',
+    is_black: false,
     remark: '',
-    is_first_check: false,
-    is_last_check: false,
-  });
+  };
+  const [formData, setFormData] = useState<FormData>(initFormData);
+  const [isBlack, setIsBlack] = useState<string>(props.teacher.is_black.toString());
 
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/fund_informations/' + props.id;
+      const getFormDataUrl = process.env.CSR_API_URI + '/teachers/' + props.id;
       const getFormData = async (url: string) => {
         setFormData(await get(url));
       };
@@ -95,14 +99,19 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitFundInformation = async (data: any, id: number | string) => {
-    const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await put(submitFundInformationURL, data);
+  const update = async (data: any, id: number | string, is_black: string) => {
+    if (is_black == 'true') {
+      data.is_black = true;
+    } else {
+      data.is_black = false;
+    }
+    const updateTeacherURL = process.env.CSR_API_URI + '/teachers/' + id;
+    await put(updateTeacherURL, data);
   };
 
   return (
     <ChakraProvider theme={theme}>
-      <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
+      <Modal closeOnOverlayClick={false} isOpen={props.openModal} onClose={closeModal} isCentered>
         <ModalOverlay />
         <ModalContent pb='5' borderRadius='3xl'>
           <ModalBody p='3'>
@@ -115,54 +124,105 @@ export default function FundInformationEditModal(props: ModalProps) {
             <Grid templateColumns='repeat(12, 1fr)' gap={4}>
               <GridItem rowSpan={1} colSpan={12}>
                 <Center color='black.600' h='100%' fontSize='xl'>
-                  募金の編集
+                  教員の編集
                 </Center>
               </GridItem>
               <GridItem colSpan={1} />
               <GridItem colSpan={10}>
                 <Grid templateColumns='repeat(12, 1fr)' gap={4}>
-                  <GridItem rowSpan={1} colSpan={4}>
+                  <GridItem colSpan={3}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
                       教員名
                     </Flex>
                   </GridItem>
-                  <GridItem rowSpan={1} colSpan={8}>
+                  <GridItem colSpan={9}>
+                    <Flex>
+                      <Input
+                        w='100'
+                        borderRadius='full'
+                        borderColor='primary.1'
+                        value={formData.name}
+                        onChange={handler('name')}
+                      />
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={3}>
+                    <Flex color='black.600' h='100%' justify='end' align='center'>
+                      職位
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={9}>
+                    <Flex>
+                      <Input
+                        w='100'
+                        borderRadius='full'
+                        borderColor='primary.1'
+                        value={formData.position}
+                        onChange={handler('position')}
+                      />
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={3}>
+                    <Flex color='black.600' h='100%' justify='end' align='center'>
+                      学科
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={9}>
                     <Select
-                      value={formData.teacher_id}
-                      onChange={handler('teacher_id')}
+                      value={formData.department_id}
+                      onChange={handler('department_id')}
                       borderRadius='full'
                       borderColor='primary.1'
-                      w='224px'
+                      w='100'
                     >
-                      {props.teachersInformation.map((data) => (
+                      {props.departments.map((data) => (
                         <option key={data.id} value={data.id}>
                           {data.name}
                         </option>
                       ))}
                     </Select>
                   </GridItem>
-                  <GridItem rowSpan={1} colSpan={4}>
+                  <GridItem colSpan={3}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
-                      金額
+                      居室
                     </Flex>
                   </GridItem>
-                  <GridItem rowSpan={1} colSpan={8}>
+                  <GridItem colSpan={9}>
                     <Flex>
                       <Input
                         w='100'
                         borderRadius='full'
                         borderColor='primary.1'
-                        value={formData.price}
-                        onChange={handler('price')}
+                        value={formData.room}
+                        onChange={handler('room')}
                       />
                     </Flex>
                   </GridItem>
-                  <GridItem rowSpan={1} colSpan={4}>
+                  <GridItem colSpan={3}>
+                    <Flex color='black.600' h='100%' justify='end' align='center'>
+                      ブラックリスト
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={9}>
+                    <Flex>
+                      <RadioGroup defaultValue={isBlack} onChange={setIsBlack}>
+                        <Stack spacing={5} direction='row'>
+                          <Radio color='primary.2' value='true'>
+                            追加する
+                          </Radio>
+                          <Radio color='primary.2' value='false'>
+                            追加しない
+                          </Radio>
+                        </Stack>
+                      </RadioGroup>
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={3}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
                       備考
                     </Flex>
                   </GridItem>
-                  <GridItem rowSpan={1} colSpan={8}>
+                  <GridItem colSpan={9}>
                     <Flex>
                       <Input
                         w='100'
@@ -183,7 +243,7 @@ export default function FundInformationEditModal(props: ModalProps) {
               <Button
                 width='220px'
                 onClick={() => {
-                  submitFundInformation(formData, props.id);
+                  update(formData, props.id, isBlack);
                   router.reload();
                 }}
               >
