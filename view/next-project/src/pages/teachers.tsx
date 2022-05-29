@@ -1,32 +1,46 @@
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
+import { useState } from 'react';
 import {
+  Box,
+  Text,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  Button,
   Flex,
   Spacer,
   Stack,
   Radio,
   RadioGroup,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/Header';
 import { get } from '@api/fundInformations';
-import { useState } from 'react';
+import MainLayout from '@components/layout/MainLayout';
+import EditButton from '@components/General/EditButton';
+import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
+import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
+
+interface Teacher {
+  id: number;
+  name: string;
+  position: string;
+  department_id: number;
+  room: string;
+  is_black: boolean;
+  remark: string;
+  created_at: string;
+  updated_at: string;
+}
 
 interface TeacherInformation {
   id: number;
   name: string;
   position: string;
-  department_id: number | string;
+  department_id: number;
   room: string;
   is_black: boolean;
   remark: string;
@@ -82,16 +96,6 @@ export default function TeachersList(props: Props) {
     },
   ];
 
-  // department_idからdepartmentを取得するための処理（後々APIから取得する）
-  for (let i = 0; i < teachersList.length; i++) {
-    for (let j = 0; j < departments.length; j++) {
-      if (teachersList[i].department_id == departments[j].id) {
-        teachersList[i].department_id = departments[j].name;
-        // setTeachersList(teachersList[i].department_id)
-      }
-    }
-  }
-
   // 全教員のラジオボタンが押されたときの処理
   const allTeachersList = () => {
     setTeachersList(props.teacherInformation);
@@ -102,15 +106,7 @@ export default function TeachersList(props: Props) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>FinanSu | 教員一覧</title>
-        <meta name='description' content='ja' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-
-      <Header />
-      <hr />
+    <MainLayout>
       <Center>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
@@ -132,13 +128,9 @@ export default function TeachersList(props: Props) {
               </RadioGroup>
               <Spacer />
               <Box>
-                <Button
-                  textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
-                  bgGradient='linear(to-br, primary.1, primary.2)'
-                >
+                <OpenAddModalButton teachersInformation={teachersList} departments={departments}>
                   教員登録
-                </Button>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
@@ -189,7 +181,34 @@ export default function TeachersList(props: Props) {
                       <Center color='black.300'>{teachersItem.position}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{teachersItem.department_id}</Center>
+                      <Center color='black.300'>
+                        {teachersItem.department_id == 1 && (
+                          <Text>機械工学分野/機械創造工学課程・機械創造工学専攻</Text>
+                        )}
+                        {teachersItem.department_id == 2 && (
+                          <Text>
+                            電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 3 && (
+                          <Text>
+                            情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 4 && (
+                          <Text>
+                            物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 5 && (
+                          <Text>
+                            環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 6 && (
+                          <Text>量子・原子力統合工学分野/原子力システム安全工学専攻</Text>
+                        )}
+                      </Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{teachersItem.room}</Center>
@@ -209,6 +228,6 @@ export default function TeachersList(props: Props) {
           </Box>
         </Box>
       </Center>
-    </ChakraProvider>
+    </MainLayout>
   );
 }
