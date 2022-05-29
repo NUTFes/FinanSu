@@ -14,6 +14,8 @@ import {
   Stack,
   Radio,
   RadioGroup,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
@@ -217,9 +219,26 @@ export default function TeachersList(props: Props) {
                       <Center color='black.300'>{teachersItem.remark}</Center>
                     </Td>
                     <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center>
+                            <OpenEditModalButton
+                              id={teachersItem.id}
+                              teachersInformation={teachersItem}
+                              departments={departments}
+                            />
+                          </Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center>
+                            {/* <OpenDeleteModalButton
+                              id={fundViewItem.fund_information.id}
+                              teacher_id={fundViewItem.fund_information.teacher_id}
+                              user_id={Number(fundViewItem.fund_information.user_id)}
+                            /> */}
+                          </Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
                   </Tr>
                 ))}
