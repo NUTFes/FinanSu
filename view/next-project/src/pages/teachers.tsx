@@ -93,6 +93,31 @@ export default function TeachersList(props: Props) {
     },
   ];
 
+  // 教員の初期データ
+  const initTeacherData: Teacher = {
+    id: 1,
+    name: '',
+    position: '',
+    department_id: 1,
+    room: '',
+    is_black: false,
+    remark: '',
+    created_at: '',
+    updated_at: '',
+  };
+  // 学科ごとに教員のリストを作成
+  const [machineTeacher, setMachineTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [electricalTeacher, setElectricalTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [informationManagementTeacher, setInformationManagementTeacher] = useState<Teacher[]>([
+    initTeacherData,
+  ]);
+  const [materialBiologicalTeacher, setMaterialBiologicalTeacher] = useState<Teacher[]>([
+    initTeacherData,
+  ]);
+  const [environmentalTeacher, setEnvironmentalTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [nuclearTeacher, setNuclearTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [otherTeacher, setOtherTeacher] = useState<Teacher[]>([initTeacherData]);
+
   // 詳細モーダル用の変数
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
@@ -111,10 +136,46 @@ export default function TeachersList(props: Props) {
 
         // current_userの権限がユーザなら前のページに戻る
         if (currentUserRes.role_id == 1) {
-          router.back();
+          // router.back();
         }
       };
       getCurrentUser(getCurrentUserURL);
+
+      // 学科別教員リストの用意
+      props.teachers.map((teacher) => {
+        // 機械
+        if (teacher.department_id == 1) {
+          setMachineTeacher((machineTeacher) => [...machineTeacher, teacher]);
+        }
+        // 電気電子情報
+        else if (teacher.department_id == 2) {
+          setElectricalTeacher((electricalTeacher) => [...electricalTeacher, teacher]);
+        }
+        // 情報・経営
+        else if (teacher.department_id == 3) {
+          setInformationManagementTeacher((informationManagementTeacher) => [
+            ...informationManagementTeacher,
+            teacher,
+          ]);
+        }
+        // 物質生物
+        else if (teacher.department_id == 4) {
+          setMaterialBiologicalTeacher((materialBiologicalTeacher) => [
+            ...materialBiologicalTeacher,
+            teacher,
+          ]);
+        }
+        // 環境社会基盤
+        else if (teacher.department_id == 5) {
+          setEnvironmentalTeacher((environmentalTeacher) => [...environmentalTeacher, teacher]);
+        }
+        // 原子力
+        else if (teacher.department_id == 6) {
+          setNuclearTeacher((nuclearTeacher) => [...nuclearTeacher, teacher]);
+        } else {
+          setOtherTeacher((otherTeacher) => [...otherTeacher, teacher]);
+        }
+      });
     }
   }, [router]);
 
@@ -125,6 +186,29 @@ export default function TeachersList(props: Props) {
   // 募金先教員のラジオボタンが押されたときの処理
   const investorList = () => {
     setTeachersList(props.teachers.filter((teacher) => teacher.is_black == false));
+  };
+
+  // 表示する教員リストを学科ごとに変更
+  const AllDepartmentTeacherList = () => {
+    setTeachersList(props.teachers);
+  };
+  const MachineTeacherList = () => {
+    setTeachersList(machineTeacher);
+  };
+  const ElectricalTeacherList = () => {
+    setTeachersList(electricalTeacher);
+  };
+  const InformationManagementTeacherList = () => {
+    setTeachersList(informationManagementTeacher);
+  };
+  const MaterialBiologicalTeacherList = () => {
+    setTeachersList(materialBiologicalTeacher);
+  };
+  const EnvironmentalTeacherList = () => {
+    setTeachersList(environmentalTeacher);
+  };
+  const NuclearTeacherList = () => {
+    setTeachersList(nuclearTeacher);
   };
 
   return (
@@ -154,6 +238,41 @@ export default function TeachersList(props: Props) {
                   教員登録
                 </OpenAddModalButton>
               </Box>
+            </Flex>
+            <Flex>
+              <RadioGroup defaultValue='all'>
+                <Stack spacing={5} direction='row'>
+                  <Radio color='primary.2' value='all' onClick={AllDepartmentTeacherList}>
+                    全学科
+                  </Radio>
+                  <Radio color='primary.2' value='machine' onClick={MachineTeacherList}>
+                    機械
+                  </Radio>
+                  <Radio color='primary.2' value='electrical' onClick={ElectricalTeacherList}>
+                    電気
+                  </Radio>
+                  <Radio
+                    color='primary.2'
+                    value='informationManagement'
+                    onClick={InformationManagementTeacherList}
+                  >
+                    情経
+                  </Radio>
+                  <Radio
+                    color='primary.2'
+                    value='materialBiological'
+                    onClick={MaterialBiologicalTeacherList}
+                  >
+                    物質/生物
+                  </Radio>
+                  <Radio color='primary.2' value='environmental' onClick={EnvironmentalTeacherList}>
+                    環社
+                  </Radio>
+                  <Radio color='primary.2' value='nuclear' onClick={NuclearTeacherList}>
+                    原子力
+                  </Radio>
+                </Stack>
+              </RadioGroup>
             </Flex>
           </Box>
           <Box p='5' mb='2'>
