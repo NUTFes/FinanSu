@@ -18,8 +18,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { post } from '@api/teachers';
-import { get_with_token } from '@api/api_methods';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import RegistButton from '@components/General/RegistButton';
@@ -91,7 +90,6 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     } else {
       data.is_black = false;
     }
-    console.log(data, is_black);
     const addTeacherURL = process.env.CSR_API_URI + '/teachers';
     await post(addTeacherURL, data);
   };
