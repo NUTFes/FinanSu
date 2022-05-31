@@ -4,6 +4,7 @@ import (
 	"context"
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"strconv"
 )
 
 type purchaseReportUseCase struct {
@@ -99,6 +100,8 @@ func (p *purchaseReportUseCase) DestroyPurchaseReport(
 func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Context) ([]domain.PurchaseReportWithOrderItem,error) {
 	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
 	var purchaseReportwithorderitems []domain.PurchaseReportWithOrderItem
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
 	// PurchaseReportとそれに紐づいたPurchaseOrderとPurchaseUserを取得
 	rows, err := p.rep.AllWithOrderItem(c)
 	// PurchaseReportのPurchaseOrderIDに紐づいたPurchaseItemsを取得
@@ -115,28 +118,47 @@ func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Contex
 			&purchaseReportwithorderitem.PurchaseReport.PurchaseOrderID,
 			&purchaseReportwithorderitem.PurchaseReport.CreatedAt,
 			&purchaseReportwithorderitem.PurchaseReport.UpdatedAt,
-			&PurchaseReportwithorderitem.ReportUser.ID,
-			&PurchaseReportwithorderitem.ReportUser.Name,
-			&PurchaseReportwithorderitem.ReportUser.DepartmentID,
-			&PurchaseReportwithorderitem.ReportUser.RoleID,
-			&PurchaseReportwithorderitem.ReportUser.CreatedAt,
-			&PurchaseReportwithorderitem.ReportUser.UpdatedAt,
-			&PurchaseReportwithorderitem.PurchaseOrder.ID,
-			&PurchaseReportwithorderitem.PurchaseOrder.DeadLine,
-			&PurchaseReportwithorderitem.PurchaseOrder.UserID,
-			&PurchaseReportwithorderitem.PurchaseOrder.CreatedAt,
-			&PurchaseReportwithorderitem.PurchaseOrder.UpdatedAt,
-			&PurchaseReportwithorderitem.OrderUser.ID,
-			&PurchaseReportwithorderitem.OrderUser.Name,
-			&PurchaseReportwithorderitem.OrderUser.DepartmentID,
-			&PurchaseReportwithorderitem.OrderUser.RoleID,
-			&PurchaseReportwithorderitem.OrderUser.CreatedAt,
-			&PurchaseReportwithorderitem.OrderUser.UpdatedAt,
-			&PurchaseReportwithorderitem.PurchaseItems,
+			&purchaseReportwithorderitem.ReportUser.ID,
+			&purchaseReportwithorderitem.ReportUser.Name,
+			&purchaseReportwithorderitem.ReportUser.DepartmentID,
+			&purchaseReportwithorderitem.ReportUser.RoleID,
+			&purchaseReportwithorderitem.ReportUser.CreatedAt,
+			&purchaseReportwithorderitem.ReportUser.UpdatedAt,
+			&purchaseReportwithorderitem.PurchaseOrder.ID,
+			&purchaseReportwithorderitem.PurchaseOrder.DeadLine,
+			&purchaseReportwithorderitem.PurchaseOrder.UserID,
+			&purchaseReportwithorderitem.PurchaseOrder.CreatedAt,
+			&purchaseReportwithorderitem.PurchaseOrder.UpdatedAt,
+			&purchaseReportwithorderitem.OrderUser.ID,
+			&purchaseReportwithorderitem.OrderUser.Name,
+			&purchaseReportwithorderitem.OrderUser.DepartmentID,
+			&purchaseReportwithorderitem.OrderUser.RoleID,
+			&purchaseReportwithorderitem.OrderUser.CreatedAt,
+			&purchaseReportwithorderitem.OrderUser.UpdatedAt,
 		)
 		if err != nil {
 			return nil ,err
 		}
+		rows, err := p.rep.GetPurchaseItemByPurchaseOrderID(c, strconv.Itoa(int(purchaseReportwithorderitem.PurchaseReport.PurchaseOrderID)))
+		for  rows.Next() {
+			err := rows.Scan(
+				&purchaseItem.ID,
+				&purchaseItem.Item,
+				&purchaseItem.Price,
+				&purchaseItem.Quantity,
+				&purchaseItem.Detail,
+				&purchaseItem.Url,
+				&purchaseItem.PurchaseOrderID,
+				&purchaseItem.FinansuCheck,
+				&purchaseItem.CreatedAt,
+				&purchaseItem.UpdatedAt,
+			)
+			if err != nil {
+				return nil ,err
+			}
+			purchaseItems = append(purchaseItems, purchaseItem)
+		}
+		purchaseReportwithorderitem.PurchaseItems = purchaseItems
 		purchaseReportwithorderitems = append(purchaseReportwithorderitems, purchaseReportwithorderitem)
 	}
 	return purchaseReportwithorderitems, nil
@@ -145,22 +167,22 @@ func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Contex
 //idで選択しPurchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
 func (p *purchaseReportUseCase) GetPurchaseReportWithOrderItemByID(c context.Context, id string) (domain.PurchaseReportWithOrderItem, error) {
 	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
-	row , err := p.rep.FindWithOrderItem(c,id)
-	err = row.Scan(
-		&purchaseReportwithorderitem.ID,
-			&purchaseReportwithorderitem.Name,
-			&purchaseReportwithorderitem.Item,
-			&purchaseReportwithorderitem.Price,
-			&purchaseReportwithorderitem.Quantity,
-			&purchaseReportwithorderitem.Detail,
-			&purchaseReportwithorderitem.Url,
-			&purchaseReportwithorderitem.FinansuCheck,
-			&purchaseReportwithorderitem.DeadLine,
-			&purchaseReportwithorderitem.CreatedAt,
-			&purchaseReportwithorderitem.UpdatedAt,
-	)
-	if err != nil {
-		return purchaseReportwithorderitem, err
-	}
+	// row , err := p.rep.FindWithOrderItem(c,id)
+	// err = row.Scan(
+	// 	&purchaseReportwithorderitem.ID,
+	// 		&purchaseReportwithorderitem.Name,
+	// 		&purchaseReportwithorderitem.Item,
+	// 		&purchaseReportwithorderitem.Price,
+	// 		&purchaseReportwithorderitem.Quantity,
+	// 		&purchaseReportwithorderitem.Detail,
+	// 		&purchaseReportwithorderitem.Url,
+	// 		&purchaseReportwithorderitem.FinansuCheck,
+	// 		&purchaseReportwithorderitem.DeadLine,
+	// 		&purchaseReportwithorderitem.CreatedAt,
+	// 		&purchaseReportwithorderitem.UpdatedAt,
+	// )
+	// if err != nil {
+	// 	return purchaseReportwithorderitem, err
+	// }
 	return purchaseReportwithorderitem,nil
 }

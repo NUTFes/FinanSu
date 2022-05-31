@@ -17,5 +17,5 @@ type PurchaseReportWithOrderItem struct {
 	ReportUser			User			`json:"report_user"`
 	PurchaseOrder		PurchaseOrder	`json:"purchaseorder"`
 	OrderUser			User			`json:"order_user"`
-	PurchaseItems		[]PurchaseItems	`json:"purchaseitems"`
+	PurchaseItems		[]PurchaseItem	`json:"purchaseitems"`
 }

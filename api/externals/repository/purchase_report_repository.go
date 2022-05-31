@@ -20,6 +20,7 @@ type PurchaseReportRepository interface {
 	Delete(context.Context, string) error
 	AllWithOrderItem(context.Context) (*sql.Rows, error)
 	FindWithOrderItem(context.Context, string) (*sql.Row, error)
+	GetPurchaseItemByPurchaseOrderID(context.Context, string) (*sql.Rows, error)
 }
 
 func NewPurchaseReportRepository(client db.Client) PurchaseReportRepository {
@@ -100,3 +101,13 @@ func (ppr *purchaseReportRepository) FindWithOrderItem(c context.Context, id str
 	return row, nil
 }
 
+//purchase_order_idに紐づいたpuchase_itemの取得
+func (ppr *purchaseReportRepository) GetPurchaseItemByPurchaseOrderID(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
+	query := "select * from purchase_items where purchase_order_id = " +purchaseOrderID
+	rows, err := ppr.client.DB().QueryContext(c, query)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL")
+	}
+	fmt.Printf("\x1b[36m%s\n", query)
+	return rows, nil
+}
