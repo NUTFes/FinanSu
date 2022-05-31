@@ -20,6 +20,7 @@ type PurchaseReportRepository interface {
 	Delete(context.Context, string) error
 	AllWithOrderItem(context.Context) (*sql.Rows, error)
 	FindWithOrderItem(context.Context, string) (*sql.Row, error)
+	GetPurchaseItemByPurchaseOrderID(context.Context, string) (*sql.Rows, error)
 }
 
 func NewPurchaseReportRepository(client db.Client) PurchaseReportRepository {
@@ -83,7 +84,7 @@ func (ppr *purchaseReportRepository) Delete(
 
 //Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得
 func (ppr *purchaseReportRepository) AllWithOrderItem(c context.Context) (*sql.Rows, error) {
-	query := "SELECT purchase_reports.id, users.name, purchase_items.item, purchase_items.price, purchase_items.quantity, purchase_items.detail, purchase_items.url, purchase_items.finansu_check, purchase_orders.deadline, purchase_reports.created_at, purchase_reports.updated_at FROM purchase_reports INNER JOIN users ON purchase_reports.user_id =users.id INNER JOIN  purchase_items ON purchase_reports.purchase_order_id = purchase_items.purchase_order_id INNER JOIN purchase_orders ON purchase_reports.purchase_order_id = purchase_orders.id ;"
+	query := "select * from purchase_reports inner join users as report_user on purchase_reports.user_id = report_user.id inner join purchase_orders on purchase_reports.purchase_order_id = purchase_orders.id inner join users as order_user on purchase_orders.user_id = order_user.id;"
 	rows, err := ppr.client.DB().QueryContext(c, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
@@ -100,3 +101,13 @@ func (ppr *purchaseReportRepository) FindWithOrderItem(c context.Context, id str
 	return row, nil
 }
 
+//purchase_order_idに紐づいたpuchase_itemの取得
+func (ppr *purchaseReportRepository) GetPurchaseItemByPurchaseOrderID(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
+	query := "select * from purchase_items where purchase_order_id = " +purchaseOrderID
+	rows, err := ppr.client.DB().QueryContext(c, query)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL")
+	}
+	fmt.Printf("\x1b[36m%s\n", query)
+	return rows, nil
+}
