@@ -1,28 +1,32 @@
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import {
+  Box,
+  Text,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  Button,
   Flex,
   Spacer,
   Stack,
   Radio,
   RadioGroup,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/Header';
-import { get } from '@api/fundInformations';
-import { useState } from 'react';
+import { get, get_with_token } from '@api/api_methods';
+import MainLayout from '@components/layout/MainLayout';
+import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
+import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
+import DetailModal from '@components/teacher/DetailModal';
 
-interface TeachersInformations {
+interface Teacher {
   id: number;
   name: string;
   position: string;
@@ -33,38 +37,98 @@ interface TeachersInformations {
   created_at: string;
   updated_at: string;
 }
-interface Props {
-  teachersinformations: TeachersInformations[];
+
+interface User {
+  id: number;
+  name: string;
+  bureau_id: number;
+  role_id: number;
 }
+
+interface Department {
+  id: number;
+  name: string;
+}
+
+interface Props {
+  teachers: Teacher[];
+}
+
 export const getStaticProps = async () => {
-  const getTeachersinformationsUrl = process.env.SSR_API_URI + '/teachers';
-  const teachersinformationsRes = await get(getTeachersinformationsUrl);
+  const getTeacherURL = process.env.SSR_API_URI + '/teachers';
+  const teacherRes = await get(getTeacherURL);
   return {
     props: {
-      teachersinformations: teachersinformationsRes,
+      teachers: teacherRes,
     },
   };
 };
 export default function TeachersList(props: Props) {
-  const [teachersList, setTeachersList] = useState<TeachersInformations[]>(
-    props.teachersinformations,
-  );
-  const allTeachersList = () => {
-    setTeachersList(props.teachersinformations);
-  };
-  const investorList = () => {
-    setTeachersList(props.teachersinformations.filter((teacher) => teacher.is_black == false));
-  };
-  return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>FinanSu | 教員一覧</title>
-        <meta name='description' content='ja' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
+  const [teachersList, setTeachersList] = useState<Teacher[]>(props.teachers);
+  // 学科一覧
+  const departments: Department[] = [
+    {
+      id: 1,
+      name: '機械工学分野/機械創造工学課程・機械創造工学専攻',
+    },
+    {
+      id: 2,
+      name: '電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻',
+    },
+    {
+      id: 3,
+      name: '情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻',
+    },
+    {
+      id: 4,
+      name: '物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻',
+    },
+    {
+      id: 5,
+      name: '環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻',
+    },
+    {
+      id: 6,
+      name: '量子・原子力統合工学分野/原子力システム安全工学専攻',
+    },
+  ];
 
-      <Header />
-      <hr />
+  // 詳細モーダル用の変数
+  const [showModal, setShowModal] = useState(false);
+  const ShowModal = () => {
+    setShowModal(true);
+  };
+
+  const router = useRouter();
+
+  // ページ読み込み時にcurrent_userを取得
+  useEffect(() => {
+    if (router.isReady) {
+      // current_userの取得とセット
+      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
+      const getCurrentUser = async (url: string) => {
+        const currentUserRes = await get_with_token(url);
+
+        // current_userの権限がユーザなら前のページに戻る
+        if (currentUserRes.role_id == 1) {
+          router.back();
+        }
+      };
+      getCurrentUser(getCurrentUserURL);
+    }
+  }, [router]);
+
+  // 全教員のラジオボタンが押されたときの処理
+  const allTeachersList = () => {
+    setTeachersList(props.teachers);
+  };
+  // 募金先教員のラジオボタンが押されたときの処理
+  const investorList = () => {
+    setTeachersList(props.teachers.filter((teacher) => teacher.is_black == false));
+  };
+
+  return (
+    <MainLayout>
       <Center>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
@@ -86,13 +150,9 @@ export default function TeachersList(props: Props) {
               </RadioGroup>
               <Spacer />
               <Box>
-                <Button
-                  textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
-                  bgGradient='linear(to-br, primary.1, primary.2)'
-                >
+                <OpenAddModalButton teachersInformation={teachersList} departments={departments}>
                   教員登録
-                </Button>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
@@ -131,7 +191,7 @@ export default function TeachersList(props: Props) {
               <Tbody>
                 {teachersList.map((teachersItem) => (
                   <Tr key={teachersItem.name}>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       {teachersItem.is_black && (
                         <Center color='black.900'>{teachersItem.name}</Center>
                       )}
@@ -139,23 +199,72 @@ export default function TeachersList(props: Props) {
                         <Center color='black.300'>{teachersItem.name}</Center>
                       )}
                     </Td>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{teachersItem.position}</Center>
                     </Td>
-                    <Td>
-                      <Center color='black.300'>{teachersItem.department_id}</Center>
+                    <Td onClick={() => ShowModal()}>
+                      <Center color='black.300'>
+                        {teachersItem.department_id == 1 && (
+                          <Text>機械工学分野/機械創造工学課程・機械創造工学専攻</Text>
+                        )}
+                        {teachersItem.department_id == 2 && (
+                          <Text>
+                            電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 3 && (
+                          <Text>
+                            情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 4 && (
+                          <Text>
+                            物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 5 && (
+                          <Text>
+                            環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻
+                          </Text>
+                        )}
+                        {teachersItem.department_id == 6 && (
+                          <Text>量子・原子力統合工学分野/原子力システム安全工学専攻</Text>
+                        )}
+                      </Center>
                     </Td>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{teachersItem.room}</Center>
                     </Td>
-                    <Td>
+                    <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>{teachersItem.remark}</Center>
                     </Td>
                     <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                        <GridItem>
+                          <Center>
+                            <OpenEditModalButton
+                              id={teachersItem.id}
+                              teacher={teachersItem}
+                              departments={departments}
+                            />
+                          </Center>
+                        </GridItem>
+                        <GridItem>
+                          <Center>
+                            <OpenDeleteModalButton
+                              id={teachersItem.id}
+                              teacher={teachersItem}
+                              departments={departments}
+                            />
+                          </Center>
+                        </GridItem>
+                      </Grid>
                     </Td>
+                    <DetailModal
+                      teacher={teachersItem}
+                      openModal={showModal}
+                      setShowModal={setShowModal}
+                    />
                   </Tr>
                 ))}
               </Tbody>
@@ -163,6 +272,6 @@ export default function TeachersList(props: Props) {
           </Box>
         </Box>
       </Center>
-    </ChakraProvider>
+    </MainLayout>
   );
 }

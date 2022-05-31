@@ -60,7 +60,7 @@ interface Teacher {
 interface User {
   id: number;
   name: string;
-  department_id: number;
+  bureau_id: number;
   role_id: number;
 }
 
@@ -148,7 +148,7 @@ export default function FundInformations(props: Props) {
   const [currentUser, setCurrentUser] = useState<User>({
     id: 1,
     name: '',
-    department_id: 1,
+    bureau_id: 1,
     role_id: 1,
   });
 
@@ -448,7 +448,7 @@ export default function FundInformations(props: Props) {
                           <Center>
                             <OpenEditModalButton
                               id={fundViewItem.fund_information.id}
-                              teachersInformation={teachers}
+                              teachers={teachers}
                               currentUser={currentUser}
                             />
                           </Center>
