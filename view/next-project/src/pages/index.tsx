@@ -18,7 +18,7 @@ interface Props {
 }
 
 export async function getServerSideProps() {
-  const getDepartmentsUrl: string = process.env.SSR_API_URI + '/departments';
+  const getDepartmentsUrl: string = process.env.SSR_API_URI + '/bureaus';
   const departmentsRes: Department = await get(getDepartmentsUrl);
   return {
     props: {
@@ -73,7 +73,7 @@ export default function Home(props: Props) {
               <Link onClick={() => setIsMember(!isMember)}>ログインはこちら</Link>
             </Center>
           </Flex>
-          <SignUpView departments={props.departments} />
+          <SignUpView />
         </>
       );
     }
