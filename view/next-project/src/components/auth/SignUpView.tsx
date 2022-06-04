@@ -40,7 +40,7 @@ interface Bureau {
 }
 
 interface Props {
-  bureaus: Bureau[];
+  // bureaus: Bureau[];
 }
 
 export default function SignUpView(props: Props) {
@@ -89,9 +89,9 @@ export default function SignUpView(props: Props) {
 
   const userDataHandler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setPostUserData({ ...postUserData, [input]: e.target.value });
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setPostUserData({ ...postUserData, [input]: e.target.value });
+      };
 
   const postUser = async (data: PostData) => {
     const getUrl: string = process.env.CSR_API_URI + '/users';
