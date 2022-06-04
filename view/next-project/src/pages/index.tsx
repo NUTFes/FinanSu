@@ -18,7 +18,7 @@ interface Props {
 }
 
 export async function getServerSideProps() {
-  const getDepartmentsUrl: string = process.env.SSR_API_URI + '/bureaus';
+  const getDepartmentsUrl: string = process.env.SSR_API_URI + '/departments';
   const departmentsRes: Department = await get(getDepartmentsUrl);
   return {
     props: {
