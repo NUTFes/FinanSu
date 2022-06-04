@@ -10,6 +10,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (localStorage.getItem('login') === 'false') {
       router.push('/');
+    } else if (localStorage.getItem('login') === 'true') {
+      router.push('/fund_informations');
     }
   }, []);
 
