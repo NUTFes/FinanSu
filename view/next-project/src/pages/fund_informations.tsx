@@ -293,6 +293,11 @@ export default function FundInformations(props: Props) {
 
   return (
     <MainLayout>
+      <Head>
+        <title>募金一覧</title>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      </Head>
+
       <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
@@ -487,30 +492,6 @@ export default function FundInformations(props: Props) {
                           );
                         }
                       })()}
-                      {/* {!isUser && fundViewItem.fund_information.user_id == currentUser.id && (
-                        <Td>
-                          <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                            <GridItem>
-                              <Center>
-                                <OpenEditModalButton
-                                  id={fundViewItem.fund_information.id}
-                                  teachers={teachers}
-                                  currentUser={currentUser}
-                                />
-                              </Center>
-                            </GridItem>
-                            <GridItem>
-                              <Center>
-                                <OpenDeleteModalButton
-                                  id={fundViewItem.fund_information.id}
-                                  teacher_id={fundViewItem.fund_information.teacher_id}
-                                  user_id={Number(fundViewItem.fund_information.user_id)}
-                                />
-                              </Center>
-                            </GridItem>
-                          </Grid>
-                        </Td>
-                      )} */}
                     </Tr>
                   ))}
               </Tbody>
