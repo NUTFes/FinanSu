@@ -363,109 +363,110 @@ export default function FundInformations(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {fundInformationView.map((fundViewItem: FundInformationView, index) => (
-                  <Tr
-                    key={fundViewItem.fund_information.id}
-                    onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
-                  >
-                    <Td>
-                      <Center color='black.300'>
-                        {isFinanceDirector &&
-                          changeableCheckboxContent(
-                            fundInformation[index].is_first_check,
-                            fundViewItem.fund_information.id,
-                            'is_first_check',
-                            fundInformation[index],
-                          )}
-                        {isFinanceStaff &&
-                          changeableCheckboxContent(
-                            fundInformation[index].is_first_check,
-                            fundViewItem.fund_information.id,
-                            'is_first_check',
-                            fundInformation[index],
-                          )}
-                        {isDeveloper &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_first_check,
-                            fundViewItem.fund_information.id,
-                            'is_first_check',
-                          )}
-                        {isUser &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_first_check,
-                            fundViewItem.fund_information.id,
-                            'is_first_check',
-                          )}
-                      </Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>
-                        {isFinanceDirector &&
-                          changeableCheckboxContent(
-                            fundInformation[index].is_last_check,
-                            fundViewItem.fund_information.id,
-                            'is_last_check',
-                            fundInformation[index],
-                          )}
-                        {isFinanceStaff &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_last_check,
-                            fundViewItem.fund_information.id,
-                            'is_last_check',
-                          )}
-                        {isDeveloper &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_last_check,
-                            fundViewItem.fund_information.id,
-                            'is_last_check',
-                          )}
-                        {isUser &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_last_check,
-                            fundViewItem.fund_information.id,
-                            'is_last_check',
-                          )}
-                      </Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.teacher.name}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.teacher.room}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.user.name}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.fund_information.price}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
-                    </Td>
-                    <Td>
-                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                        <GridItem>
-                          <Center>
-                            <OpenEditModalButton
-                              id={fundViewItem.fund_information.id}
-                              teachers={teachers}
-                              currentUser={currentUser}
-                            />
-                          </Center>
-                        </GridItem>
-                        <GridItem>
-                          <Center>
-                            <OpenDeleteModalButton
-                              id={fundViewItem.fund_information.id}
-                              teacher_id={fundViewItem.fund_information.teacher_id}
-                              user_id={Number(fundViewItem.fund_information.user_id)}
-                            />
-                          </Center>
-                        </GridItem>
-                      </Grid>
-                    </Td>
-                  </Tr>
-                ))}
+                {fundInformationView &&
+                  fundInformationView.map((fundViewItem: FundInformationView, index) => (
+                    <Tr
+                      key={fundViewItem.fund_information.id}
+                      onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
+                    >
+                      <Td>
+                        <Center color='black.300'>
+                          {isFinanceDirector &&
+                            changeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                              fundInformation[index],
+                            )}
+                          {isFinanceStaff &&
+                            changeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                              fundInformation[index],
+                            )}
+                          {isDeveloper &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                            )}
+                          {isUser &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                            )}
+                        </Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>
+                          {isFinanceDirector &&
+                            changeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                              fundInformation[index],
+                            )}
+                          {isFinanceStaff &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                            )}
+                          {isDeveloper &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                            )}
+                          {isUser &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                            )}
+                        </Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.teacher.name}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.teacher.room}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.user.name}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.fund_information.price}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
+                      </Td>
+                      <Td>
+                        <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                          <GridItem>
+                            <Center>
+                              <OpenEditModalButton
+                                id={fundViewItem.fund_information.id}
+                                teachers={teachers}
+                                currentUser={currentUser}
+                              />
+                            </Center>
+                          </GridItem>
+                          <GridItem>
+                            <Center>
+                              <OpenDeleteModalButton
+                                id={fundViewItem.fund_information.id}
+                                teacher_id={fundViewItem.fund_information.teacher_id}
+                                user_id={Number(fundViewItem.fund_information.user_id)}
+                              />
+                            </Center>
+                          </GridItem>
+                        </Grid>
+                      </Td>
+                    </Tr>
+                  ))}
               </Tbody>
               <Tfoot>
                 <Tr>
