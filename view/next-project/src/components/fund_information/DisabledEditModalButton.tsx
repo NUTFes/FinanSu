@@ -1,7 +1,6 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import { useState } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
 
 interface Props {

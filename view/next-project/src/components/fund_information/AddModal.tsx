@@ -124,14 +124,6 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     updated_at: '',
   };
 
-  // let machineTeacher: Teacher[] = new Array();
-  // let electricalTeacher: Teacher[] = new Array();
-  // let informationManagementTeacher: Teacher[] = new Array();
-  // let materialBiologicalTeacher: Teacher[] = new Array();
-  // let environmentalTeacher: Teacher[] = new Array();
-  // let nuclearTeacher: Teacher[] = new Array();
-  // let otherTeacher: Teacher[] = new Array();
-
   const [machineTeacher, setMachineTeacher] = useState<Teacher[]>([initTeacherData]);
   const [electricalTeacher, setElectricalTeacher] = useState<Teacher[]>([initTeacherData]);
   const [informationManagementTeacher, setInformationManagementTeacher] = useState<Teacher[]>([
