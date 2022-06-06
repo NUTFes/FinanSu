@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (localStorage.getItem('login') === 'false') {
       router.push('/');
-    } else if (localStorage.getItem('login') === 'true') {
+    } else if (localStorage.getItem('login') === 'true' && router.pathname == '/') {
       router.push('/fund_informations');
     }
   }, []);
