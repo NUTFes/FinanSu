@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
-  ChakraProvider,
   Table,
   Thead,
   Tbody,
@@ -19,11 +18,11 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import Header from '@components/Header';
 import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
+import DisabledEditModalButton from '@components/fund_information/DisabledEditModalButton';
+import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
 import { put } from '@api/fundInformations';
 import { get, get_with_token } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
@@ -359,7 +358,7 @@ export default function FundInformations(props: Props) {
                       備考
                     </Center>
                   </Th>
-                  {!isUser && <Th borderBottomColor='#76E4F7'></Th>}
+                  <Th borderBottomColor='#76E4F7'></Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -443,7 +442,52 @@ export default function FundInformations(props: Props) {
                       <Td>
                         <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
                       </Td>
-                      {!isUser && (
+                      {(() => {
+                        if (!isUser || fundViewItem.fund_information.user_id == currentUser.id) {
+                          return (
+                            <Td>
+                              <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                                <GridItem>
+                                  <Center>
+                                    <OpenEditModalButton
+                                      id={fundViewItem.fund_information.id}
+                                      teachers={teachers}
+                                      currentUser={currentUser}
+                                    />
+                                  </Center>
+                                </GridItem>
+                                <GridItem>
+                                  <Center>
+                                    <OpenDeleteModalButton
+                                      id={fundViewItem.fund_information.id}
+                                      teacher_id={fundViewItem.fund_information.teacher_id}
+                                      user_id={Number(fundViewItem.fund_information.user_id)}
+                                    />
+                                  </Center>
+                                </GridItem>
+                              </Grid>
+                            </Td>
+                          );
+                        } else {
+                          return (
+                            <Td>
+                              <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                                <GridItem>
+                                  <Center>
+                                    <DisabledEditModalButton />
+                                  </Center>
+                                </GridItem>
+                                <GridItem>
+                                  <Center>
+                                    <DisabledDeleteModalButton />
+                                  </Center>
+                                </GridItem>
+                              </Grid>
+                            </Td>
+                          );
+                        }
+                      })()}
+                      {/* {!isUser && fundViewItem.fund_information.user_id == currentUser.id && (
                         <Td>
                           <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                             <GridItem>
@@ -466,7 +510,7 @@ export default function FundInformations(props: Props) {
                             </GridItem>
                           </Grid>
                         </Td>
-                      )}
+                      )} */}
                     </Tr>
                   ))}
               </Tbody>
