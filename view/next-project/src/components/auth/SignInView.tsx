@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import { signIn } from '@api/signIn';
+import LoadingButton from '@components/General/LoadingButton';
 import Email from '@components/General/Email';
 import Password from '@components/General/Password';
 import {
@@ -22,6 +23,9 @@ interface PostData {
 }
 
 export default function SignInView() {
+  // ログイン中フラグ
+  const [isSignInNow, setIsSignInNow] = useState<boolean>(false);
+
   const {
     register,
     formState: { errors },
@@ -31,6 +35,7 @@ export default function SignInView() {
   });
 
   const SignIn = async (data: PostData) => {
+    setIsSignInNow(true);
     const loginUrl: string = process.env.CSR_API_URI + '/mail_auth/signin';
 
     const req: any = await signIn(loginUrl, data);
@@ -87,9 +92,13 @@ export default function SignInView() {
         <Flex mt='7' />
         <Center>
           <Box p='5' mb='2'>
-            <Button color='white' bgGradient='linear(to-br, primary.1, primary.2)' type='submit'>
-              ログイン
-            </Button>
+            {isSignInNow ? (
+              <LoadingButton loadingText='ログイン中' />
+            ) : (
+              <Button color='white' bgGradient='linear(to-br, primary.1, primary.2)' type='submit'>
+                ログイン
+              </Button>
+            )}
           </Box>
         </Center>
       </form>

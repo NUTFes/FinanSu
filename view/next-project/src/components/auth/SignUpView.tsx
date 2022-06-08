@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { signUp } from '@api/signUp';
 import { get } from '@api/api_methods';
 import { post } from '@api/user';
+import LoadingButton from '@components/General/LoadingButton';
 import Email from '@components/General/Email';
 import Password from '@components/General/Password';
 import PasswordConfirmation from '@components/General/PasswordConfirmation';
@@ -45,6 +46,9 @@ interface Props {
 }
 
 export default function SignUpView(props: Props) {
+  // 新規登録中フラグ
+  const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
+
   // 局（Bureau）をフロントで定義
   const bureaus = [
     {
@@ -95,6 +99,7 @@ export default function SignUpView(props: Props) {
     };
 
   const postUser = async (data: PostData) => {
+    setIsSignUpNow(true);
     const getUrl: string = process.env.CSR_API_URI + '/users';
     const postUserUrl: string = process.env.CSR_API_URI + '/users';
     const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
@@ -210,9 +215,13 @@ export default function SignUpView(props: Props) {
         <Flex mt='7' />
         <Center>
           <Box p='5' mb='2'>
-            <Button color='white' bgGradient='linear(to-br, primary.1, primary.2)' type='submit'>
-              登録
-            </Button>
+            {isSignUpNow ? (
+              <LoadingButton loadingText='登録中' />
+            ) : (
+              <Button color='white' bgGradient='linear(to-br, primary.1, primary.2)' type='submit'>
+                登録
+              </Button>
+            )}
           </Box>
         </Center>
       </form>
