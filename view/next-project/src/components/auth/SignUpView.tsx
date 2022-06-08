@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import { signUp } from '@api/signUp';
-import { get, post } from '@api/user';
+import { get } from '@api/api_methods';
+import { post } from '@api/user';
 import Email from '@components/General/Email';
 import Password from '@components/General/Password';
 import PasswordConfirmation from '@components/General/PasswordConfirmation';
@@ -89,9 +90,9 @@ export default function SignUpView(props: Props) {
 
   const userDataHandler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setPostUserData({ ...postUserData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setPostUserData({ ...postUserData, [input]: e.target.value });
+    };
 
   const postUser = async (data: PostData) => {
     const getUrl: string = process.env.CSR_API_URI + '/users';
