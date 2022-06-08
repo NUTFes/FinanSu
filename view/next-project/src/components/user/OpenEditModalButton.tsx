@@ -5,7 +5,7 @@ import EditModal from '@components/user/EditModal';
 import { useState } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
 
-interface Department {
+interface Bureau {
   id: number;
   name: string;
 }
@@ -15,7 +15,7 @@ interface Props {
   height?: string;
   children?: React.ReactNode;
   id: number;
-  departments: Department[];
+  bureaus: Bureau[];
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -39,7 +39,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
       </Button>
       <EditModal
         id={props.id}
-        departments={props.departments}
+        bureaus={props.bureaus}
         openModal={showModal}
         setShowModal={setShowModal}
       />

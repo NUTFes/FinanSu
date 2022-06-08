@@ -5,7 +5,7 @@ import DeleteModal from '@components/user/DeleteModal';
 import { useState } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
-interface Department {
+interface Bureau {
   id: number;
   name: string;
 }
@@ -15,7 +15,7 @@ interface Props {
   height?: string;
   children?: React.ReactNode;
   id: number;
-  departments: Department[];
+  bureaus: Bureau[];
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -40,7 +40,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
       </Button>
       <DeleteModal
         id={props.id}
-        departments={props.departments}
+        bureaus={props.bureaus}
         openModal={showModal}
         setShowModal={setShowModal}
       />

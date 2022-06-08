@@ -19,10 +19,9 @@ import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '@components/General/Button';
 import { useRouter } from 'next/router';
-import { del } from '@api/user';
-import { get } from '@api/api_methods';
+import { get, del } from '@api/api_methods';
 
-interface Department {
+interface Bureau {
   id: number;
   name: string;
 }
@@ -30,7 +29,7 @@ interface Department {
 interface User {
   id: number;
   name: string;
-  department_id: number;
+  bureau_id: number;
   role_id: number;
 }
 
@@ -39,7 +38,7 @@ interface ModalProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
-  departments: Department[];
+  bureaus: Bureau[];
 }
 
 export default function FundInformationDeleteModal(props: ModalProps) {
@@ -52,7 +51,7 @@ export default function FundInformationDeleteModal(props: ModalProps) {
   const [user, setUser] = useState<User>({
     id: 0,
     name: '',
-    department_id: 1,
+    bureau_id: 1,
     role_id: 1,
   });
 
@@ -111,7 +110,7 @@ export default function FundInformationDeleteModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Text fontSize='lg' pl={2}>
-                      {user.department_id}
+                      {user.bureau_id}
                     </Text>
                     <Divider />
                   </GridItem>
