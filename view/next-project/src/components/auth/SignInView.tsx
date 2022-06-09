@@ -50,6 +50,7 @@ export default function SignInView() {
       alert(
         'ログインに失敗しました。メールアドレスもしくはパスワードが間違っている可能性があります',
       );
+      setIsSignInNow(false);
     }
   };
 

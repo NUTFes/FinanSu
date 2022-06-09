@@ -116,6 +116,10 @@ export default function SignUpView(props: Props) {
     } else {
       console.log('Error' + res.status);
       console.log(res);
+      alert(
+        '新規登録に失敗しました。メールアドレスもしくはパスワードがすでに登録されている可能性があります',
+      );
+      setIsSignUpNow(false);
     }
   };
 
