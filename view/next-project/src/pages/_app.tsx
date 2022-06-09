@@ -3,16 +3,24 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
+import { get_with_token } from '@api/api_methods';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getItem('login') === 'false') {
-      router.push('/');
-    } else if (localStorage.getItem('login') === 'true' && router.pathname == '/') {
-      router.push('/fund_informations');
-    }
+    const getIsSignIn = async () => {
+      const isSignInURL: string = process.env.CSR_API_URI + '/mail_auth/is_signin';
+      const isSignInRes = await get_with_token(isSignInURL);
+      const isSignIn: boolean = isSignInRes.is_sign_in;
+      if (!isSignIn) {
+        router.push('/');
+        localStorage.clear();
+      } else if (isSignIn && router.pathname == '/') {
+        router.push('/fund_informations');
+      }
+    };
+    getIsSignIn();
   }, []);
 
   return (
