@@ -231,7 +231,7 @@ func seedData() []domain.Teacher {
 			Room:         "電気2号棟-451",
 			IsBlack:      false,
 			Remark:       "",
-		}
+		},
 		{
 			Name:         "渡辺 大貴",
 			Position:     "助教",
@@ -515,7 +515,7 @@ func seedData() []domain.Teacher {
 		{
 			Name:         "庄司 観",
 			Position:     "准教授",
-			DepartmentID: 3
+			DepartmentID: 3,
 			Room:         "機械・建設棟-408",
 			IsBlack:      false,
 			Remark:       "",
@@ -523,7 +523,7 @@ func seedData() []domain.Teacher {
 		{
 			Name:         "溝尻 瑞枝",
 			Position:     "准教授",
-			DepartmentID: 3
+			DepartmentID: 3,
 			Room:         "機械・建設棟-401",
 			IsBlack:      false,
 			Remark:       "",
@@ -531,7 +531,7 @@ func seedData() []domain.Teacher {
 		{
 			Name:         "韋 冬",
 			Position:     "准教授",
-			DepartmentID: 3
+			DepartmentID: 3,
 			Room:         "機械・建設棟-404",
 			IsBlack:      false,
 			Remark:       "",
@@ -539,7 +539,7 @@ func seedData() []domain.Teacher {
 		{
 			Name:         "NGUYEN THI PHUONG MAI ",
 			Position:     "准教授",
-			DepartmentID: 3
+			DepartmentID: 3,
 			Room:         "機械・建設棟-",
 			IsBlack:      false,
 			Remark:       "",
@@ -1449,7 +1449,7 @@ func seedData() []domain.Teacher {
 			Room:         "環境棟-304",
 			IsBlack:      false,
 			Remark:       "",
-		}
+		},
 		{
 			Name:         "大沼 清",
 			Position:     "准教授",
