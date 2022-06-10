@@ -124,16 +124,25 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     updated_at: '',
   };
 
-  const [machineTeacher, setMachineTeacher] = useState<Teacher[]>([initTeacherData]);
   const [electricalTeacher, setElectricalTeacher] = useState<Teacher[]>([initTeacherData]);
-  const [informationManagementTeacher, setInformationManagementTeacher] = useState<Teacher[]>([
+  const [biologicalTeacher, setBiologicalTeacher] = useState<Teacher[]>([
     initTeacherData,
   ]);
-  const [materialBiologicalTeacher, setMaterialBiologicalTeacher] = useState<Teacher[]>([
+  const [machineTeacher, setMachineTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [materialTeacher, setMaterialTeacher] = useState<Teacher[]>([
     initTeacherData,
   ]);
   const [environmentalTeacher, setEnvironmentalTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [informationManagementTeacher, setInformationManagementTeacher] = useState<Teacher[]>([
+    initTeacherData,
+  ]);
+  const [commonEducationTeacher, setCommonEducationTeacher] = useState<Teacher[]>([initTeacherData]);
   const [nuclearTeacher, setNuclearTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [technologyInovationTeacher, setTechnologyInovationTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [systemSafetyTeacher, setSystemSafetyTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [technologySupportTeacher, setTechnologySupportTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [industryAcademiaFusionTeacher, setIndustryAcademiaFusionTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [presidentClerical, setPresidentClerical] = useState<Teacher[]>([initTeacherData]);
   const [otherTeacher, setOtherTeacher] = useState<Teacher[]>([initTeacherData]);
 
   // formDataのuser_idに代入するために現在のUserを取得
@@ -153,25 +162,25 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
       // 学科別教員リストの用意
       props.teachersInformation.map((teacher) => {
-        // 機械
-        if (teacher.department_id == 1) {
-          setMachineTeacher((machineTeacher) => [...machineTeacher, teacher]);
-        }
         // 電気電子情報
-        else if (teacher.department_id == 2) {
+        if (teacher.department_id == 1) {
           setElectricalTeacher((electricalTeacher) => [...electricalTeacher, teacher]);
         }
-        // 情報・経営
-        else if (teacher.department_id == 3) {
-          setInformationManagementTeacher((informationManagementTeacher) => [
-            ...informationManagementTeacher,
+        // 生物
+        else if (teacher.department_id == 2) {
+          setBiologicalTeacher((biologicalTeacher) => [
+            ...biologicalTeacher,
             teacher,
           ]);
         }
-        // 物質生物
+        // 機械
+        else if (teacher.department_id == 3) {
+          setMachineTeacher((machineTeacher) => [...machineTeacher, teacher]);
+        }
+        // 物質
         else if (teacher.department_id == 4) {
-          setMaterialBiologicalTeacher((materialBiologicalTeacher) => [
-            ...materialBiologicalTeacher,
+          setMaterialTeacher((materialTeacher) => [
+            ...materialTeacher,
             teacher,
           ]);
         }
@@ -179,10 +188,42 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         else if (teacher.department_id == 5) {
           setEnvironmentalTeacher((environmentalTeacher) => [...environmentalTeacher, teacher]);
         }
-        // 原子力
+        // 情報・経営
         else if (teacher.department_id == 6) {
+          setInformationManagementTeacher((informationManagementTeacher) => [
+            ...informationManagementTeacher,
+            teacher,
+          ]);
+        }
+        // 基盤共通
+        else if (teacher.department_id == 7) {
+          setCommonEducationTeacher((commonEducationTeacher) => [...commonEducationTeacher, teacher]);
+        }
+        // 原子力
+        else if (teacher.department_id == 8) {
           setNuclearTeacher((nuclearTeacher) => [...nuclearTeacher, teacher]);
-        } else {
+        }
+        // 技学イノベ
+        else if (teacher.department_id == 9) {
+          setTechnologyInovationTeacher((technologyInovationTeacher) => [...technologyInovationTeacher, teacher]);
+        }
+        // システム安全
+        else if (teacher.department_id == 10) {
+          setSystemSafetyTeacher((systemSafetyTeacher) => [...systemSafetyTeacher, teacher]);
+        }
+        // 技術支援
+        else if (teacher.department_id == 11) {
+          setTechnologySupportTeacher((technologySupportTeacher) => [...technologySupportTeacher, teacher]);
+        }
+        // 産学融合
+        else if (teacher.department_id == 12) {
+          setIndustryAcademiaFusionTeacher((industryAcademiaFusionTeacher) => [...industryAcademiaFusionTeacher, teacher]);
+        }
+        // 学長・事務
+        else if (teacher.department_id == 13) {
+          setPresidentClerical((presidentClerical) => [...presidentClerical, teacher]);
+        }
+        else {
           setOtherTeacher((otherTeacher) => [...otherTeacher, teacher]);
         }
       });
@@ -191,9 +232,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const handler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
 
   const addFundInformation = async (data: any) => {
     const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
@@ -268,13 +309,19 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                     </Flex>
                   </GridItem>
                   <GridItem colSpan={9}>
-                    {formData.department_id == 1 && selectTeacherContent(machineTeacher)}
-                    {formData.department_id == 2 && selectTeacherContent(electricalTeacher)}
-                    {formData.department_id == 3 &&
-                      selectTeacherContent(informationManagementTeacher)}
-                    {formData.department_id == 4 && selectTeacherContent(materialBiologicalTeacher)}
+                    {formData.department_id == 1 && selectTeacherContent(electricalTeacher)}
+                    {formData.department_id == 2 && selectTeacherContent(biologicalTeacher)}
+                    {formData.department_id == 3 && selectTeacherContent(machineTeacher)}
+                    {formData.department_id == 4 && selectTeacherContent(materialTeacher)}
                     {formData.department_id == 5 && selectTeacherContent(environmentalTeacher)}
-                    {formData.department_id == 6 && selectTeacherContent(nuclearTeacher)}
+                    {formData.department_id == 6 && selectTeacherContent(informationManagementTeacher)}
+                    {formData.department_id == 7 && selectTeacherContent(commonEducationTeacher)}
+                    {formData.department_id == 8 && selectTeacherContent(nuclearTeacher)}
+                    {formData.department_id == 9 && selectTeacherContent(technologyInovationTeacher)}
+                    {formData.department_id == 10 && selectTeacherContent(systemSafetyTeacher)}
+                    {formData.department_id == 11 && selectTeacherContent(technologySupportTeacher)}
+                    {formData.department_id == 12 && selectTeacherContent(industryAcademiaFusionTeacher)}
+                    {formData.department_id == 13 && selectTeacherContent(presidentClerical)}
                   </GridItem>
                   <GridItem colSpan={3}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
