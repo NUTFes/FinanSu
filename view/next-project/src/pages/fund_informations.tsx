@@ -157,15 +157,11 @@ export default function FundInformations(props: Props) {
     },
     {
       id: 12,
-      name: 'その他',
+      name: '産学融合',
     },
     {
       id: 13,
       name: '学長・事務',
-    },
-    {
-      id: 14,
-      name: 'FL',
     },
   ];
 
