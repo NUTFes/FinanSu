@@ -45,6 +45,8 @@ export default function SimpleSidebar({}: { children?: ReactNode }) {
         display={{ base: 'none', md: 'block' }}
         position='fixed'
         mt='2px'
+        zIndex='1'
+        top='60px'
       />
       <Drawer
         autoFocus={false}
