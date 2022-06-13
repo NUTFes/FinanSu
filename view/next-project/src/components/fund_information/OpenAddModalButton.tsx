@@ -24,7 +24,7 @@ interface Department {
 interface User {
   id: number;
   name: string;
-  department_id: number;
+  bureau_id: number;
   role_id: number;
 }
 

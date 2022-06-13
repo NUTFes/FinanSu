@@ -1,21 +1,5 @@
-version: '3'
+version: "3"
 services:
-  db:
-    image: mysql:8.0
-    container_name: "nutfes-finansu-db"
-    volumes:
-      - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
-#      - ./mysql/data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: finansu_db
-      MYSQL_USER: finansu
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: root
-      TZ: 'Asia/Tokyo'
-    ports:
-      - "3306:3306"
-    restart: always
-
   view:
     build: ./view
     container_name: "nutfes-finansu-view"
@@ -23,9 +7,13 @@ services:
       - ./view:/app
     command: "npm run dev"
     ports:
-      - "3001:3000"
+      - "3000:3000"
     stdin_open: true
     tty: true
+    environment:
+      NEXT_PUBLIC_APP_ENV: production
+    depends_on:
+      - api
 
   api:
     build: ./api
@@ -33,12 +21,10 @@ services:
     volumes:
       - ./api:/app
     command: go run cmd/main.go
-#    command: "air"
+    env_file:
+      - ./finansu.env
     ports:
       - "1323:1323"
     stdin_open: true
-    tty: true
-      # depends_on:
-      #   db:
-      #     condition: service_started
-
+    tty:
+      true

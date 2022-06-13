@@ -1,4 +1,5 @@
-import { get, post, put, del } from '@api/fundInformations';
+import { get, del } from '@api/api_methods';
+import { post, put } from '@api/fundInformations';
 import { Table, Tr, Td, Button } from '@chakra-ui/react';
 type FundInformations = {
   id: number;

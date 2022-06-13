@@ -19,9 +19,10 @@ import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '../General/RegistButton';
 import { useRouter } from 'next/router';
-import { get, put } from '@api/user';
+import { get } from '@api/api_methods';
+import { put } from '@api/user';
 
-interface Department {
+interface Bureau {
   id: number;
   name: string;
 }
@@ -31,13 +32,13 @@ interface ModalProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
-  departments: Department[];
+  bureaus: Bureau[];
 }
 
 interface FormData {
   id: number;
   name: string;
-  department_id: number;
+  bureau_id: number;
   role_id: number;
 }
 
@@ -51,7 +52,7 @@ export default function FundInformationEditModal(props: ModalProps) {
   const [formData, setFormData] = useState<FormData>({
     id: 1,
     name: '',
-    department_id: 1,
+    bureau_id: 1,
     role_id: 1,
   });
 
@@ -125,14 +126,16 @@ export default function FundInformationEditModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Select
-                      value={formData.department_id}
-                      onChange={handler('department_id')}
+                      value={formData.bureau_id}
+                      onChange={handler('bureau_id')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='224px'
                     >
-                      {props.departments.map((data) => (
-                        <option value={data.id}>{data.name}</option>
+                      {props.bureaus.map((data) => (
+                        <option key={data.id} value={data.id}>
+                          {data.name}
+                        </option>
                       ))}
                     </Select>
                   </GridItem>
@@ -163,7 +166,7 @@ export default function FundInformationEditModal(props: ModalProps) {
                 width='220px'
                 onClick={() => {
                   submitUser(formData, props.id);
-                  // router.reload();
+                  router.reload();
                 }}
               >
                 編集する

@@ -73,7 +73,7 @@ export default function Home(props: Props) {
               <Link onClick={() => setIsMember(!isMember)}>ログインはこちら</Link>
             </Center>
           </Flex>
-          <SignUpView departments={props.departments} />
+          <SignUpView />
         </>
       );
     }

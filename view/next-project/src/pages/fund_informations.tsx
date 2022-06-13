@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
-  ChakraProvider,
   Table,
   Thead,
   Tbody,
@@ -19,13 +18,14 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import Header from '@components/Header';
 import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
+import DisabledEditModalButton from '@components/fund_information/DisabledEditModalButton';
+import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
 import { put } from '@api/fundInformations';
 import { get, get_with_token } from '@api/api_methods';
+import MainLayout from '@components/layout/MainLayout';
 
 interface FundInformation {
   id: number;
@@ -59,7 +59,7 @@ interface Teacher {
 interface User {
   id: number;
   name: string;
-  department_id: number;
+  bureau_id: number;
   role_id: number;
 }
 
@@ -109,7 +109,61 @@ export const getServerSideProps = async () => {
 
 export default function FundInformations(props: Props) {
   // 教員一覧
-  const teachers = props.teachers;
+  const teachers: Teacher[] = props.teachers;
+  const departments: Department[] = [
+    {
+      id: 1,
+      name: '電気電子情報',
+    },
+    {
+      id: 2,
+      name: '生物機能',
+    },
+    {
+      id: 3,
+      name: '機械創造',
+    },
+    {
+      id: 4,
+      name: '物質材料',
+    },
+    {
+      id: 5,
+      name: '環境社会基盤',
+    },
+    {
+      id: 6,
+      name: '情報・経営システム',
+    },
+    {
+      id: 7,
+      name: '基盤共通教育',
+    },
+    {
+      id: 8,
+      name: '原子力システム安全',
+    },
+    {
+      id: 9,
+      name: '技術科学イノベーション',
+    },
+    {
+      id: 10,
+      name: 'システム安全',
+    },
+    {
+      id: 11,
+      name: '技術支援',
+    },
+    {
+      id: 12,
+      name: '産学融合',
+    },
+    {
+      id: 13,
+      name: '学長・事務',
+    },
+  ];
 
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
@@ -121,13 +175,14 @@ export default function FundInformations(props: Props) {
   const [currentUser, setCurrentUser] = useState<User>({
     id: 1,
     name: '',
-    department_id: 1,
+    bureau_id: 1,
     role_id: 1,
   });
 
   // ログイン中のユーザの権限
   const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
   const [isFinanceStaff, setIsFinanceStaff] = useState<boolean>(false);
+  const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
   const [isUser, setIsUser] = useState<boolean>(false);
 
   const router = useRouter();
@@ -144,6 +199,10 @@ export default function FundInformations(props: Props) {
         // current_userの権限をユーザに設定
         if (currentUserRes.role_id == 1) {
           setIsUser(true);
+        }
+        // current_userの権限を開発者に設定
+        else if (currentUserRes.role_id == 2) {
+          setIsDeveloper(true);
         }
         // current_userの権限を財務局長に設定
         else if (currentUserRes.role_id == 3) {
@@ -261,16 +320,13 @@ export default function FundInformations(props: Props) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
+    <MainLayout>
       <Head>
-        <title>FinanSu | 募金一覧</title>
-        <meta name='description' content='ja' />
-        <link rel='icon' href='/favicon.ico' />
+        <title>募金一覧</title>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
 
-      <Header />
-      <hr />
-      <Center>
+      <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>
             <Flex>
@@ -287,7 +343,7 @@ export default function FundInformations(props: Props) {
               <Box>
                 <OpenAddModalButton
                   teachersInformation={teachers}
-                  departments={props.departments}
+                  departments={departments}
                   currentUser={currentUser}
                   userID={userID}
                 >
@@ -339,97 +395,133 @@ export default function FundInformations(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {fundInformationView.map((fundViewItem: FundInformationView, index) => (
-                  <Tr
-                    key={fundViewItem.fund_information.id}
-                    onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
-                  >
-                    <Td>
-                      <Center color='black.300'>
-                        {isFinanceDirector &&
-                          changeableCheckboxContent(
-                            fundInformation[index].is_first_check,
-                            fundViewItem.fund_information.id,
-                            'is_first_check',
-                            fundInformation[index],
-                          )}
-                        {isFinanceStaff &&
-                          changeableCheckboxContent(
-                            fundInformation[index].is_first_check,
-                            fundViewItem.fund_information.id,
-                            'is_first_check',
-                            fundInformation[index],
-                          )}
-                        {isUser &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_first_check,
-                            fundViewItem.fund_information.id,
-                            'is_first_check',
-                          )}
-                      </Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>
-                        {isFinanceDirector &&
-                          changeableCheckboxContent(
-                            fundInformation[index].is_last_check,
-                            fundViewItem.fund_information.id,
-                            'is_last_check',
-                            fundInformation[index],
-                          )}
-                        {isFinanceStaff &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_last_check,
-                            fundViewItem.fund_information.id,
-                            'is_last_check',
-                          )}
-                        {isUser &&
-                          unChangeableCheckboxContent(
-                            fundInformation[index].is_last_check,
-                            fundViewItem.fund_information.id,
-                            'is_last_check',
-                          )}
-                      </Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.teacher.name}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.teacher.room}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.user.name}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.fund_information.price}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
-                    </Td>
-                    <Td>
-                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                        <GridItem>
-                          <Center>
-                            <OpenEditModalButton
-                              id={fundViewItem.fund_information.id}
-                              teachersInformation={teachers}
-                              currentUser={currentUser}
-                            />
-                          </Center>
-                        </GridItem>
-                        <GridItem>
-                          <Center>
-                            <OpenDeleteModalButton
-                              id={fundViewItem.fund_information.id}
-                              teacher_id={fundViewItem.fund_information.teacher_id}
-                              user_id={Number(fundViewItem.fund_information.user_id)}
-                            />
-                          </Center>
-                        </GridItem>
-                      </Grid>
-                    </Td>
-                  </Tr>
-                ))}
+                {fundInformationView &&
+                  fundInformationView.map((fundViewItem: FundInformationView, index) => (
+                    <Tr
+                      key={fundViewItem.fund_information.id}
+                      onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
+                    >
+                      <Td>
+                        <Center color='black.300'>
+                          {isFinanceDirector &&
+                            changeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                              fundInformation[index],
+                            )}
+                          {isFinanceStaff &&
+                            changeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                              fundInformation[index],
+                            )}
+                          {isDeveloper &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                            )}
+                          {isUser &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_first_check,
+                              fundViewItem.fund_information.id,
+                              'is_first_check',
+                            )}
+                        </Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>
+                          {isFinanceDirector &&
+                            changeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                              fundInformation[index],
+                            )}
+                          {isFinanceStaff &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                            )}
+                          {isDeveloper &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                            )}
+                          {isUser &&
+                            unChangeableCheckboxContent(
+                              fundInformation[index].is_last_check,
+                              fundViewItem.fund_information.id,
+                              'is_last_check',
+                            )}
+                        </Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.teacher.name}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.teacher.room}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.user.name}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.fund_information.price}</Center>
+                      </Td>
+                      <Td>
+                        <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
+                      </Td>
+                      {(() => {
+                        if (!isUser || fundViewItem.fund_information.user_id == currentUser.id) {
+                          return (
+                            <Td>
+                              <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                                <GridItem>
+                                  <Center>
+                                    <OpenEditModalButton
+                                      id={fundViewItem.fund_information.id}
+                                      teachers={teachers}
+                                      currentUser={currentUser}
+                                    />
+                                  </Center>
+                                </GridItem>
+                                <GridItem>
+                                  <Center>
+                                    <OpenDeleteModalButton
+                                      id={fundViewItem.fund_information.id}
+                                      teacher_id={fundViewItem.fund_information.teacher_id}
+                                      user_id={Number(fundViewItem.fund_information.user_id)}
+                                    />
+                                  </Center>
+                                </GridItem>
+                              </Grid>
+                            </Td>
+                          );
+                        } else {
+                          return (
+                            <Td>
+                              <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+                                <GridItem>
+                                  <Center>
+                                    <DisabledEditModalButton />
+                                  </Center>
+                                </GridItem>
+                                <GridItem>
+                                  <Center>
+                                    <DisabledDeleteModalButton />
+                                  </Center>
+                                </GridItem>
+                              </Grid>
+                            </Td>
+                          );
+                        }
+                      })()}
+                    </Tr>
+                  ))}
               </Tbody>
               <Tfoot>
                 <Tr>
@@ -450,7 +542,7 @@ export default function FundInformations(props: Props) {
             </Table>
           </Box>
         </Box>
-      </Center>
-    </ChakraProvider>
+      </Flex>
+    </MainLayout>
   );
 }

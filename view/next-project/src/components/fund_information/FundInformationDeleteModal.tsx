@@ -19,8 +19,7 @@ import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '@components/General/Button';
 import { useRouter } from 'next/router';
-import { del } from '@api/fundInformations';
-import { get } from '@api/api_methods';
+import { get, del } from '@api/api_methods';
 
 interface Teacher {
   id: number;

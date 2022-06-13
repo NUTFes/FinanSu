@@ -23,11 +23,6 @@ import OpenEditModalButton from '@components/user/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/user/OpenDeleteModalButton';
 import { get, get_with_token } from '@api/api_methods';
 
-interface Department {
-  id: number;
-  name: string;
-}
-
 interface Role {
   id: number;
   name: string;
@@ -36,26 +31,28 @@ interface Role {
 interface User {
   id: number;
   name: string;
-  department_id: number | string;
+  bureau_id: number | string;
   role_id: number;
 }
 
+interface Bureau {
+  id: number;
+  name: string;
+}
+
 interface Props {
-  departments: Department[];
+  // bureaus: Bureau[];
   users: User[];
   currentUser: User;
   roles: Role[];
 }
 
 export const getServerSideProps = async () => {
-  const getDepartmentURL = process.env.SSR_API_URI + '/departments';
   const getUserURL = process.env.SSR_API_URI + '/users';
-  const departmentRes = await get(getDepartmentURL);
   const userRes = await get(getUserURL);
 
   return {
     props: {
-      departments: departmentRes,
       users: userRes,
     },
   };
@@ -63,13 +60,38 @@ export const getServerSideProps = async () => {
 
 export default function Users(props: Props) {
   const users = props.users;
-  const departments = props.departments;
+  const bureaus: Bureau[] = [
+    {
+      id: 1,
+      name: '総務局',
+    },
+    {
+      id: 2,
+      name: '渉外局',
+    },
+    {
+      id: 3,
+      name: '財務局',
+    },
+    {
+      id: 4,
+      name: '企画局',
+    },
+    {
+      id: 5,
+      name: '制作局',
+    },
+    {
+      id: 6,
+      name: '情報局',
+    },
+  ];
 
   // ログイン中のユーザ
   const [currentUser, setCurrentUser] = useState<User>({
     id: 1,
     name: '',
-    department_id: 1,
+    bureau_id: 1,
     role_id: 1,
   });
 
@@ -97,9 +119,9 @@ export default function Users(props: Props) {
   }, [router]);
 
   for (let i = 0; i < props.users.length; i++) {
-    for (let j = 0; j < props.departments.length; j++) {
-      if (props.users[i].department_id == props.departments[j].id) {
-        props.users[i].department_id = props.departments[j].name;
+    for (let j = 0; j < bureaus.length; j++) {
+      if (props.users[i].bureau_id == bureaus[j].id) {
+        props.users[i].bureau_id = bureaus[j].name;
       }
     }
   }
@@ -160,7 +182,7 @@ export default function Users(props: Props) {
                       <Center color='black.300'>{user.name}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{user.department_id}</Center>
+                      <Center color='black.300'>{user.bureau_id}</Center>
                     </Td>
                     <Td>
                       <Center color='black.300'>{user.role_id}</Center>
@@ -171,12 +193,12 @@ export default function Users(props: Props) {
                         <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                           <GridItem>
                             <Center>
-                              <OpenEditModalButton id={user.id} departments={departments} />
+                              <OpenEditModalButton id={user.id} bureaus={bureaus} />
                             </Center>
                           </GridItem>
                           <GridItem>
                             <Center>
-                              <OpenDeleteModalButton id={user.id} departments={departments} />
+                              <OpenDeleteModalButton id={user.id} bureaus={bureaus} />
                             </Center>
                           </GridItem>
                         </Grid>

@@ -43,7 +43,7 @@ func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
 		err := rows.Scan(
 			&user.ID,
 			&user.Name,
-			&user.DepartmentID,
+			&user.BureauID,
 			&user.RoleID,
 			&user.CreatedAt,
 			&user.UpdatedAt,
@@ -65,7 +65,7 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 	err = row.Scan(
 		&user.ID,
 		&user.Name,
-		&user.DepartmentID,
+		&user.BureauID,
 		&user.RoleID,
 		&user.CreatedAt,
 		&user.UpdatedAt,
@@ -78,13 +78,13 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 	return user, nil
 }
 
-func (u *userUseCase) CreateUser(c context.Context, name string, departmentID string, roleID string) error {
-	err := u.userRep.Create(c, name, departmentID, roleID)
+func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) error {
+	err := u.userRep.Create(c, name, bureauID, roleID)
 	return err
 }
 
-func (u *userUseCase) UpdateUser(c context.Context, id string, name string, departmentID string, roleID string) error {
-	err := u.userRep.Update(c, id, name, departmentID, roleID)
+func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bureauID string, roleID string) error {
+	err := u.userRep.Update(c, id, name, bureauID, roleID)
 	return err
 }
 
@@ -117,7 +117,7 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 	err = row.Scan(
 		&user.ID,
 		&user.Name,
-		&user.DepartmentID,
+		&user.BureauID,
 		&user.RoleID,
 		&user.CreatedAt,
 		&user.UpdatedAt,
