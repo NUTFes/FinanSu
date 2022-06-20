@@ -77,6 +77,8 @@ const Header = (props: any) => {
         color='white'
         flexDirection='row'
         width='100%'
+        position='fixed'
+        zIndex='2'
       >
         <Flex justify='center' bg='base.1' align='center' width='200px' height='60px' p='4'>
           <Text
