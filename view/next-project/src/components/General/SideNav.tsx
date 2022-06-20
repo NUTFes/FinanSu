@@ -1,27 +1,21 @@
 import React, { ReactNode } from 'react';
 import {
-  IconButton,
   Box,
-  CloseButton,
   Flex,
   Icon,
-  useColorModeValue,
   Link,
   Drawer,
   DrawerContent,
-  Text,
   useDisclosure,
   BoxProps,
   FlexProps,
 } from '@chakra-ui/react';
-import { MdOutlineDashboard, MdOutlineSchool } from 'react-icons/md';
+import { MdOutlineDashboard, MdOutlineSavings } from 'react-icons/md';
 import { BiBuildings } from 'react-icons/bi';
 import { HiCurrencyDollar, HiOutlineShoppingCart } from 'react-icons/hi';
-import { RiNewspaperLine } from 'react-icons/ri';
+import { GrDocumentText } from 'react-icons/gr';
 import { IconType } from 'react-icons';
-import { ReactText } from 'react';
 import { useRouter } from 'next/router';
-import link from 'next/link';
 
 interface LinkItemProps {
   name: string;
@@ -29,12 +23,12 @@ interface LinkItemProps {
   href: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'ダッシュボード', icon: MdOutlineDashboard, href: '/' },
-  { name: '予算', icon: HiCurrencyDollar, href: '/budgets' },
-  { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
+  // { name: 'ダッシュボード', icon: MdOutlineDashboard, href: '/' },
+  // { name: '予算', icon: HiCurrencyDollar, href: '/budgets' },
+  // { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
+  { name: '学内募金', icon: MdOutlineSavings, href: '/fund_informations' },
   { name: '購入申請', icon: HiOutlineShoppingCart, href: '/purchaseorder' },
-  { name: '購入報告', icon: RiNewspaperLine, href: '/purchasereport' },
-  { name: '学内募金', icon: MdOutlineSchool, href: '/fund_informations' },
+  { name: '購入報告', icon: GrDocumentText, href: '/purchasereport' },
 ];
 
 export default function SimpleSidebar({}: { children?: ReactNode }) {
@@ -69,7 +63,7 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <Box
       bg='#1F2428'
@@ -83,24 +77,23 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       {LinkItems.map((link) => (
         <>
-        {router.pathname == link.href ?(
+          {router.pathname == link.href ? (
             <OnNavItem key={link.name} icon={link.icon} href={link.href} name={link.name} />
-        ):(
+          ) : (
             <NavItem key={link.name} icon={link.icon} href={link.href} name={link.name} />
-        )}
+          )}
         </>
       ))}
     </Box>
-  )
-}
+  );
+};
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
-  children?: ReactText;
   href: string;
   name: string;
 }
-const NavItem = ({ href, icon, children, name, ...rest }: NavItemProps) => {
+const NavItem = ({ href, icon, name, ...rest }: NavItemProps) => {
   return (
     <Link href={href} _focus={{ boxShadow: 'none' }}>
       <Flex
@@ -131,18 +124,10 @@ const NavItem = ({ href, icon, children, name, ...rest }: NavItemProps) => {
     </Link>
   );
 };
-const OnNavItem = ({ href, icon, children, name, ...rest }: NavItemProps) => {
+const OnNavItem = ({ href, icon, name, ...rest }: NavItemProps) => {
   return (
     <Link href={href} _focus={{ boxShadow: 'none' }}>
-      <Flex
-        bg='white'
-        align='center'
-        p='4'
-        color='#2E373F'
-        role='group'
-        cursor='pointer'
-        {...rest}
-      >
+      <Flex bg='white' align='center' p='4' color='#2E373F' role='group' cursor='pointer' {...rest}>
         {icon && (
           <Icon
             color='#2E373F'
