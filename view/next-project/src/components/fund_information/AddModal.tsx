@@ -21,7 +21,7 @@ import { get_with_token } from '@api/api_methods';
 import React, { useState, useEffect } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from '@components/General/RegistButton';
+import RegistButton from '@components/common/RegistButton';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 
@@ -125,23 +125,27 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   };
 
   const [electricalTeacher, setElectricalTeacher] = useState<Teacher[]>([initTeacherData]);
-  const [biologicalTeacher, setBiologicalTeacher] = useState<Teacher[]>([
-    initTeacherData,
-  ]);
+  const [biologicalTeacher, setBiologicalTeacher] = useState<Teacher[]>([initTeacherData]);
   const [machineTeacher, setMachineTeacher] = useState<Teacher[]>([initTeacherData]);
-  const [materialTeacher, setMaterialTeacher] = useState<Teacher[]>([
-    initTeacherData,
-  ]);
+  const [materialTeacher, setMaterialTeacher] = useState<Teacher[]>([initTeacherData]);
   const [environmentalTeacher, setEnvironmentalTeacher] = useState<Teacher[]>([initTeacherData]);
   const [informationManagementTeacher, setInformationManagementTeacher] = useState<Teacher[]>([
     initTeacherData,
   ]);
-  const [commonEducationTeacher, setCommonEducationTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [commonEducationTeacher, setCommonEducationTeacher] = useState<Teacher[]>([
+    initTeacherData,
+  ]);
   const [nuclearTeacher, setNuclearTeacher] = useState<Teacher[]>([initTeacherData]);
-  const [technologyInovationTeacher, setTechnologyInovationTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [technologyInovationTeacher, setTechnologyInovationTeacher] = useState<Teacher[]>([
+    initTeacherData,
+  ]);
   const [systemSafetyTeacher, setSystemSafetyTeacher] = useState<Teacher[]>([initTeacherData]);
-  const [technologySupportTeacher, setTechnologySupportTeacher] = useState<Teacher[]>([initTeacherData]);
-  const [industryAcademiaFusionTeacher, setIndustryAcademiaFusionTeacher] = useState<Teacher[]>([initTeacherData]);
+  const [technologySupportTeacher, setTechnologySupportTeacher] = useState<Teacher[]>([
+    initTeacherData,
+  ]);
+  const [industryAcademiaFusionTeacher, setIndustryAcademiaFusionTeacher] = useState<Teacher[]>([
+    initTeacherData,
+  ]);
   const [presidentClerical, setPresidentClerical] = useState<Teacher[]>([initTeacherData]);
   const [otherTeacher, setOtherTeacher] = useState<Teacher[]>([initTeacherData]);
 
@@ -168,10 +172,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         }
         // 生物
         else if (teacher.department_id == 2) {
-          setBiologicalTeacher((biologicalTeacher) => [
-            ...biologicalTeacher,
-            teacher,
-          ]);
+          setBiologicalTeacher((biologicalTeacher) => [...biologicalTeacher, teacher]);
         }
         // 機械
         else if (teacher.department_id == 3) {
@@ -179,10 +180,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         }
         // 物質
         else if (teacher.department_id == 4) {
-          setMaterialTeacher((materialTeacher) => [
-            ...materialTeacher,
-            teacher,
-          ]);
+          setMaterialTeacher((materialTeacher) => [...materialTeacher, teacher]);
         }
         // 環境社会基盤
         else if (teacher.department_id == 5) {
@@ -197,7 +195,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         }
         // 基盤共通
         else if (teacher.department_id == 7) {
-          setCommonEducationTeacher((commonEducationTeacher) => [...commonEducationTeacher, teacher]);
+          setCommonEducationTeacher((commonEducationTeacher) => [
+            ...commonEducationTeacher,
+            teacher,
+          ]);
         }
         // 原子力
         else if (teacher.department_id == 8) {
@@ -205,7 +206,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         }
         // 技学イノベ
         else if (teacher.department_id == 9) {
-          setTechnologyInovationTeacher((technologyInovationTeacher) => [...technologyInovationTeacher, teacher]);
+          setTechnologyInovationTeacher((technologyInovationTeacher) => [
+            ...technologyInovationTeacher,
+            teacher,
+          ]);
         }
         // システム安全
         else if (teacher.department_id == 10) {
@@ -213,17 +217,22 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         }
         // 技術支援
         else if (teacher.department_id == 11) {
-          setTechnologySupportTeacher((technologySupportTeacher) => [...technologySupportTeacher, teacher]);
+          setTechnologySupportTeacher((technologySupportTeacher) => [
+            ...technologySupportTeacher,
+            teacher,
+          ]);
         }
         // 産学融合
         else if (teacher.department_id == 12) {
-          setIndustryAcademiaFusionTeacher((industryAcademiaFusionTeacher) => [...industryAcademiaFusionTeacher, teacher]);
+          setIndustryAcademiaFusionTeacher((industryAcademiaFusionTeacher) => [
+            ...industryAcademiaFusionTeacher,
+            teacher,
+          ]);
         }
         // 学長・事務
         else if (teacher.department_id == 13) {
           setPresidentClerical((presidentClerical) => [...presidentClerical, teacher]);
-        }
-        else {
+        } else {
           setOtherTeacher((otherTeacher) => [...otherTeacher, teacher]);
         }
       });
@@ -232,9 +241,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const handler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   const addFundInformation = async (data: any) => {
     const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
@@ -314,13 +323,16 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                     {formData.department_id == 3 && selectTeacherContent(machineTeacher)}
                     {formData.department_id == 4 && selectTeacherContent(materialTeacher)}
                     {formData.department_id == 5 && selectTeacherContent(environmentalTeacher)}
-                    {formData.department_id == 6 && selectTeacherContent(informationManagementTeacher)}
+                    {formData.department_id == 6 &&
+                      selectTeacherContent(informationManagementTeacher)}
                     {formData.department_id == 7 && selectTeacherContent(commonEducationTeacher)}
                     {formData.department_id == 8 && selectTeacherContent(nuclearTeacher)}
-                    {formData.department_id == 9 && selectTeacherContent(technologyInovationTeacher)}
+                    {formData.department_id == 9 &&
+                      selectTeacherContent(technologyInovationTeacher)}
                     {formData.department_id == 10 && selectTeacherContent(systemSafetyTeacher)}
                     {formData.department_id == 11 && selectTeacherContent(technologySupportTeacher)}
-                    {formData.department_id == 12 && selectTeacherContent(industryAcademiaFusionTeacher)}
+                    {formData.department_id == 12 &&
+                      selectTeacherContent(industryAcademiaFusionTeacher)}
                     {formData.department_id == 13 && selectTeacherContent(presidentClerical)}
                   </GridItem>
                   <GridItem colSpan={3}>

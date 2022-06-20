@@ -4,10 +4,10 @@ import { useForm } from 'react-hook-form';
 import { signUp } from '@api/signUp';
 import { get } from '@api/api_methods';
 import { post } from '@api/user';
-import LoadingButton from '@components/General/LoadingButton';
-import Email from '@components/General/Email';
-import Password from '@components/General/Password';
-import PasswordConfirmation from '@components/General/PasswordConfirmation';
+import LoadingButton from '@components/common/LoadingButton';
+import Email from '@components/common/Email';
+import Password from '@components/common/Password';
+import PasswordConfirmation from '@components/common/PasswordConfirmation';
 import {
   ChakraProvider,
   Center,
