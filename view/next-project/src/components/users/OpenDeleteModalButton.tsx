@@ -1,18 +1,24 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import PurchaseOrderEditModal from '@components/purchaseorder/PurchaseOrderEditModal';
+import DeleteModal from '@components/users/DeleteModal';
 import { useState } from 'react';
-import {RiPencilFill} from "react-icons/ri";
+import { RiDeleteBinLine } from 'react-icons/ri';
+
+interface Bureau {
+  id: number;
+  name: string;
+}
 
 interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
   id: number;
+  bureaus: Bureau[];
 }
 
-const OpenEditModalButton: React.FC<Props> = (props) => {
+const OpenDeleteModalButton: React.FC<Props> = (props) => {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
@@ -25,15 +31,21 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         p='0'
         minWidth='0'
         borderRadius='full'
-        bgGradient='linear(to-br, primary.1 ,primary.2)'
+        bgGradient='linear(to-br, red.500 ,red.600)'
+        _hover={{ bg: 'red.600' }}
         onClick={ShowModal}
       >
-        <RiPencilFill size={'15px'} color={'white'} />
+        <RiDeleteBinLine size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <PurchaseOrderEditModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
+      <DeleteModal
+        id={props.id}
+        bureaus={props.bureaus}
+        openModal={showModal}
+        setShowModal={setShowModal}
+      />
     </ChakraProvider>
   );
 };
 
-export default OpenEditModalButton;
+export default OpenDeleteModalButton;

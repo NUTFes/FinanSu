@@ -1,7 +1,7 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import BudgetAddModal from '@components/budget/BudgetAddModal';
+import AddModal from '@components/budgets/AddModal';
 import { useState } from 'react';
 
 interface Props {
@@ -38,7 +38,7 @@ const OpenAddModalButton: React.FC<Props> = (props) => {
       >
         {props.children}
       </Button>
-      <BudgetAddModal
+      <AddModal
         openModal={showModal}
         setShowModal={setShowModal}
         sources={props.sources}

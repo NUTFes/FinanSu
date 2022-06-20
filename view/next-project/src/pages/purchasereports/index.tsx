@@ -6,8 +6,8 @@ import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/common/Header';
-import OpenEditModalButton from '@components/purchasereport/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/purchasereport/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import MainLayout from '@components/layout/MainLayout';
 
 interface PurchaseReport {

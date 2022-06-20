@@ -58,7 +58,7 @@ interface ModalProps {
   user_id: number;
 }
 
-export default function FundInformationDeleteModal(props: ModalProps) {
+export default function DeleteModal(props: ModalProps) {
   const closeModal = () => {
     props.setShowModal(false);
   };

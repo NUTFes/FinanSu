@@ -19,10 +19,10 @@ import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/common/Header';
 import { get } from '@api/purchaseOrder';
-import OpenEditModalButton from '@components/purchaseorder/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/purchaseorder/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import { useState } from 'react';
-import PurchaseOrderDetailModal from '@components/purchaseorder/PurchaseOrderDetailModal';
+import DetailModal from '@components/purchaseorders/DetailModal';
 import * as React from 'react';
 import MainLayout from '@components/layout/MainLayout';
 
@@ -156,7 +156,7 @@ export default function PurchaseOrder(props: Props) {
                         </GridItem>
                       </Grid>
                     </Td>
-                    <PurchaseOrderDetailModal
+                    <DetailModal
                       id={purchaseOrderItem.id}
                       openModal={showModal}
                       setShowModal={setShowModal}

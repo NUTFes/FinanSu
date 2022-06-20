@@ -41,7 +41,7 @@ interface ModalProps {
   bureaus: Bureau[];
 }
 
-export default function FundInformationDeleteModal(props: ModalProps) {
+export default function DeleteModal(props: ModalProps) {
   const closeModal = () => {
     props.setShowModal(false);
   };

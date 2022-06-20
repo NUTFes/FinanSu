@@ -1,27 +1,34 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import { RiPencilFill } from 'react-icons/ri';
-import * as React from 'react';
-import { useState } from 'react';
 import theme from '@assets/theme';
-import BudgetEditModal from '@components/budget/BudgetEditModal';
+import * as React from 'react';
+import EditModal from '@components/teachers/EditModal';
+import { useState } from 'react';
+import { RiPencilFill } from 'react-icons/ri';
+
+interface Teacher {
+  id: number;
+  name: string;
+  position: string;
+  department_id: number;
+  room: string;
+  is_black: boolean;
+  remark: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Department {
+  id: number;
+  name: string;
+}
 
 interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
   id: number;
-  sources: Source[];
-  years: Year[];
-}
-
-interface Source {
-  id: number;
-  name: string;
-}
-
-interface Year {
-  id: number;
-  year: number;
+  teacher: Teacher;
+  departments: Department[];
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -43,14 +50,15 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         <RiPencilFill size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <BudgetEditModal
+      <EditModal
         id={props.id}
         openModal={showModal}
         setShowModal={setShowModal}
-        sources={props.sources}
-        years={props.years}
+        teacher={props.teacher}
+        departments={props.departments}
       />
     </ChakraProvider>
   );
 };
+
 export default OpenEditModalButton;

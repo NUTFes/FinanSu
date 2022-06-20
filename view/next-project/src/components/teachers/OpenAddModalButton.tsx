@@ -1,11 +1,10 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import EditModal from '@components/teacher/EditModal';
+import AddModal from '@components/teachers/AddModal';
 import { useState } from 'react';
-import { RiPencilFill } from 'react-icons/ri';
 
-interface Teacher {
+interface TeachersInformation {
   id: number;
   name: string;
   position: string;
@@ -26,12 +25,11 @@ interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
-  id: number;
-  teacher: Teacher;
+  teachersInformation: TeachersInformation[];
   departments: Department[];
 }
 
-const OpenEditModalButton: React.FC<Props> = (props) => {
+export default function OpenAddModalButton(props: Props) {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
@@ -39,26 +37,20 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   return (
     <ChakraProvider theme={theme}>
       <Button
-        w='25px'
-        h='25px'
-        p='0'
-        minWidth='0'
-        borderRadius='full'
-        bgGradient='linear(to-br, primary.1 ,primary.2)'
+        w={props.width}
+        h={props.height}
+        color='white'
+        bgGradient='linear(to-br, primary.1, primary.2)'
         onClick={ShowModal}
       >
-        <RiPencilFill size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <EditModal
-        id={props.id}
+      <AddModal
+        teachersInformation={props.teachersInformation}
+        departments={props.departments}
         openModal={showModal}
         setShowModal={setShowModal}
-        teacher={props.teacher}
-        departments={props.departments}
       />
     </ChakraProvider>
   );
-};
-
-export default OpenEditModalButton;
+}

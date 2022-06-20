@@ -15,9 +15,9 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import OpenAddModalButton from '@components/budget/OpenAddModalButton';
-import OpenDeleteModalButton from '@components/budget/OpenDeleteModalButton';
-import OpenEditModalButton from '@components/budget/OpenEditModalButton';
+import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/budgets/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/budgets/OpenEditModalButton';
 import { RiAddCircleLine } from 'react-icons/ri';
 import { get } from '@api/budget';
 import MainLayout from '@components/layout/MainLayout';

@@ -1,9 +1,9 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import PurchaseReportEditModal from '@components/purchasereport/PurchaseReportEditModal';
+import DeleteModal from '@components/purchaseorders/DeleteModal';
 import { useState } from 'react';
-import {RiPencilFill} from "react-icons/ri";
+import { RiDeleteBinLine } from 'react-icons/ri';
 
 interface Props {
   width?: string;
@@ -12,7 +12,7 @@ interface Props {
   id: number;
 }
 
-const OpenEditModalButton: React.FC<Props> = (props) => {
+const OpenDeleteModalButton: React.FC<Props> = (props) => {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
@@ -28,12 +28,12 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         bgGradient='linear(to-br, primary.1 ,primary.2)'
         onClick={ShowModal}
       >
-        <RiPencilFill size={'15px'} color={'white'} />
+        <RiDeleteBinLine size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <PurchaseReportEditModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
+      <DeleteModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
     </ChakraProvider>
   );
 };
 
-export default OpenEditModalButton;
+export default OpenDeleteModalButton;

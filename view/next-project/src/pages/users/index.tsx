@@ -19,8 +19,8 @@ import {
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import Header from '@components/common/Header';
-import OpenEditModalButton from '@components/user/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/user/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/users/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
 import { get, get_with_token } from '@api/api_methods';
 
 interface Role {
