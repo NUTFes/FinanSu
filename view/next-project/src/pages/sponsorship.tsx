@@ -25,20 +25,33 @@ import { Center, Box } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/Header';
 import { getDomainLocale } from 'next/dist/shared/lib/router/router';
+import { get } from '@api/sponsorship';
+import { useState } from 'react';
 
-const sponsorship: NextPage = () => {
-  const sponsorshipList = [
-    {
-      id: 1,
-      name: '海龍',
-      tel: '000-0000-0000',
-      email: 'kairyu@gmail.com',
-      address: '新潟県長岡市上富岡町2丁目280-1',
-      representative: '長岡太郎',
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
+interface SponsorShip {
+  id: number;
+  name: string;
+  tel: number;
+  email: string;
+  address: string;
+  representative: string;
+  created_at: string;
+  updated_at: string;
+}
+interface Props {
+  sponsorships: SponsorShip[];
+}
+export const getServerSideProps = async () => {
+  const getSponsorshipsUrl = process.env.SSR_API_URI + '/sponsors';
+  const sponsorshipsRes = await get(getSponsorshipsUrl);
+  return {
+    props: {
+      sponsorships: sponsorshipsRes,
     },
-  ];
+  };
+};
+export default function SponsorList(props: Props) {
+  const [sponsorList, setSponsorList] = useState<SponsorShip[]>(props.sponsorships);
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -119,25 +132,25 @@ const sponsorship: NextPage = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {sponsorshipList.map((sponsorshipItem) => (
-                  <Tr key={sponsorshipItem.id}>
+                {sponsorList.map((sponsorShipItem) => (
+                  <Tr key={sponsorShipItem.id}>
                     <Td>
-                      <Center color='black.300'>{sponsorshipItem.id}</Center>
+                      <Center color='black.300'>{sponsorShipItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{sponsorshipItem.name}</Center>
+                      <Center color='black.300'>{sponsorShipItem.name}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{sponsorshipItem.tel}</Center>
+                      <Center color='black.300'>{sponsorShipItem.tel}</Center>
                     </Td>
                     <Td isNumeric color='black.300'>
-                      {sponsorshipItem.email}
+                      {sponsorShipItem.email}
                     </Td>
                     <Td>
-                      <Center color='black.300'>{sponsorshipItem.address}</Center>
+                      <Center color='black.300'>{sponsorShipItem.address}</Center>
                     </Td>{' '}
                     <Td>
-                      <Center color='black.300'>{sponsorshipItem.representative}</Center>
+                      <Center color='black.300'>{sponsorShipItem.representative}</Center>
                     </Td>
                     <Td>
                       <Center>
@@ -145,10 +158,10 @@ const sponsorship: NextPage = () => {
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{sponsorshipItem.created_at}</Center>
+                      <Center color='black.300'>{sponsorShipItem.created_at}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{sponsorshipItem.updated_at}</Center>
+                      <Center color='black.300'>{sponsorShipItem.updated_at}</Center>
                     </Td>
                   </Tr>
                 ))}
@@ -159,6 +172,4 @@ const sponsorship: NextPage = () => {
       </Center>
     </ChakraProvider>
   );
-};
-
-export default sponsorship;
+}
