@@ -27,8 +27,8 @@ const LinkItems: Array<LinkItemProps> = [
   // { name: '予算', icon: HiCurrencyDollar, href: '/budgets' },
   // { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
   { name: '学内募金', icon: MdOutlineSavings, href: '/fund_informations' },
-  { name: '購入申請', icon: HiOutlineShoppingCart, href: '/purchaseorder' },
-  { name: '購入報告', icon: GrDocumentText, href: '/purchasereport' },
+  { name: '購入申請', icon: HiOutlineShoppingCart, href: '/purchaseorders' },
+  { name: '購入報告', icon: GrDocumentText, href: '/purchasereports' },
 ];
 
 export default function SimpleSidebar({}: { children?: ReactNode }) {
