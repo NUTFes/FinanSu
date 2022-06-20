@@ -1,10 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
-import Header from '@components/Header';
+import Header from '@components/common/Header';
 import theme from '@assets/theme';
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 import { get_with_token } from '@api/api_methods';
-import SideNav from '@components/General/SideNav';
+import SideNav from '@components/common/SideNav';
 
 interface User {
   id: number;
@@ -48,7 +48,6 @@ export default function MainLayout(props: LayoutProps) {
           </section>
         </GridItem>
       </Grid>
-
     </ChakraProvider>
   );
 }

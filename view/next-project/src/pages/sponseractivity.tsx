@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
-import RegistButton from '@components/General/RegistButton';
+import EditButton from '@components/common/EditButton';
+import RegistButton from '@components/common/RegistButton';
 import {
   Table,
   Thead,
@@ -23,7 +23,7 @@ import {
 import theme from '@assets/theme';
 import { Center, Box } from '@chakra-ui/react';
 import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/Header';
+import Header from '@components/common/Header';
 import { getDomainLocale } from 'next/dist/shared/lib/router/router';
 
 interface activity {

@@ -17,7 +17,7 @@ import {
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/Header';
+import Header from '@components/common/Header';
 import { get } from '@api/purchaseOrder';
 import OpenEditModalButton from '@components/purchaseorder/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorder/OpenDeleteModalButton';

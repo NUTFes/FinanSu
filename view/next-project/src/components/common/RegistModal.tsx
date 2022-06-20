@@ -19,7 +19,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from '@components/General/RegistButton';
+import RegistButton from '@components/common/RegistButton';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 

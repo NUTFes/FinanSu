@@ -11,7 +11,7 @@ import {
   MenuList,
   MenuItem,
 } from '@chakra-ui/react';
-import PulldownButton from '@components/General/PulldownButton';
+import PulldownButton from '@components/common/PulldownButton';
 import { Avatar } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { del } from '@api/signOut';

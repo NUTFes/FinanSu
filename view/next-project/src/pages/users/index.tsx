@@ -18,7 +18,7 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import theme from '@assets/theme';
-import Header from '@components/Header';
+import Header from '@components/common/Header';
 import OpenEditModalButton from '@components/user/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/user/OpenDeleteModalButton';
 import { get, get_with_token } from '@api/api_methods';

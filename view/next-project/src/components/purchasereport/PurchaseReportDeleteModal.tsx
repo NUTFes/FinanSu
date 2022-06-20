@@ -15,7 +15,7 @@ import {
 import React, { FC } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/General/RegistButton';
+import Button from '@components/common/RegistButton';
 import { useRouter } from 'next/router';
 import { del } from '@api/purchaseReport';
 

@@ -5,7 +5,7 @@ import { Table, Thead, Tbody, Tr, Th, Td, Button, Flex, Spacer, Select } from '@
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/Header';
+import Header from '@components/common/Header';
 import OpenEditModalButton from '@components/purchasereport/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchasereport/OpenDeleteModalButton';
 import MainLayout from '@components/layout/MainLayout';
