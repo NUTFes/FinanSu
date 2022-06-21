@@ -45,8 +45,9 @@ func (u *userController) ShowUser(c echo.Context) error {
 // Create
 func (u *userController) CreateUser(c echo.Context) error {
 	name := c.QueryParam("name")
-	departmentID := c.QueryParam("department_id")
-	err := u.u.CreateUser(c.Request().Context(), name, departmentID)
+	bureauID := c.QueryParam("bureau_id")
+	roleID := c.QueryParam("role_id")
+	err := u.u.CreateUser(c.Request().Context(), name, bureauID, roleID)
 	if err != nil {
 		return err
 	}
@@ -57,8 +58,9 @@ func (u *userController) CreateUser(c echo.Context) error {
 func (u *userController) UpdateUser(c echo.Context) error {
 	id := c.Param("id")
 	name := c.QueryParam("name")
-	departmentID := c.QueryParam("department_id")
-	err := u.u.UpdateUser(c.Request().Context(), id, name, departmentID)
+	bureauID := c.QueryParam("bureau_id")
+	roleID := c.QueryParam("role_id")
+	err := u.u.UpdateUser(c.Request().Context(), id, name, bureauID, roleID)
 	if err != nil {
 		return err
 	}
