@@ -12,8 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { MdOutlineDashboard, MdOutlineSavings } from 'react-icons/md';
 import { BiBuildings } from 'react-icons/bi';
-import { HiCurrencyDollar, HiOutlineShoppingCart } from 'react-icons/hi';
-import { GrDocumentText } from 'react-icons/gr';
+import { HiCurrencyDollar, HiOutlineShoppingCart, HiOutlineDocumentText } from 'react-icons/hi';
 import { IconType } from 'react-icons';
 import { useRouter } from 'next/router';
 
@@ -28,7 +27,7 @@ const LinkItems: Array<LinkItemProps> = [
   // { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
   { name: '学内募金', icon: MdOutlineSavings, href: '/fund_informations' },
   { name: '購入申請', icon: HiOutlineShoppingCart, href: '/purchaseorders' },
-  { name: '購入報告', icon: GrDocumentText, href: '/purchasereports' },
+  { name: '購入報告', icon: HiOutlineDocumentText, href: '/purchasereports' },
 ];
 
 export default function SimpleSidebar({}: { children?: ReactNode }) {
