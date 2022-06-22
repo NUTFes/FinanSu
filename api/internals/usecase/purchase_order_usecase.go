@@ -4,6 +4,7 @@ import (
 	"context"
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"github.com/pkg/errors"
 )
 
 type purchaseOrderUseCase struct {
@@ -16,6 +17,8 @@ type PurchaseOrderUseCase interface {
 	CreatePurchaseOrder(context.Context, string, string) error
 	UpdatePurchaseOrder(context.Context, string, string, string) error
 	DestroyPurchaseOrder(context.Context, string) error
+	GetOrdersTieOther(context.Context) ([]domain.OrderWithItemAndUser,error)
+	GetOrdersTieOtherByID(context.Context, string) (domain.OrderWithItemAndUser,error)
 }
 
 func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
@@ -91,4 +94,79 @@ func (p *purchaseOrderUseCase) DestroyPurchaseOrder(
 )error {
 	err := p.rep.Delete(c, id)
 	return err
+}
+
+//PurchaseOrderの紐づくPurchaseItemとUserの取得
+func (p *purchaseOrderUseCase) GetOrdersTieOther(c context.Context) ([]domain.OrderWithItemAndUser,error) {
+	
+	orderWithItemAndUser := domain.OrderWithItemAndUser{}
+	var orderWithItemAndUsers []domain.OrderWithItemAndUser
+	rows , err := p.rep.AllTieOther(c)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(
+			&orderWithItemAndUser.PurchaseItem.ID,
+			&orderWithItemAndUser.PurchaseItem.Item,
+			&orderWithItemAndUser.PurchaseItem.Price,
+			&orderWithItemAndUser.PurchaseItem.Quantity,
+			&orderWithItemAndUser.PurchaseItem.Detail,
+			&orderWithItemAndUser.PurchaseItem.Url,
+			&orderWithItemAndUser.PurchaseItem.PurchaseOrderID,
+			&orderWithItemAndUser.PurchaseItem.FinansuCheck,
+			&orderWithItemAndUser.PurchaseItem.CreatedAt,
+			&orderWithItemAndUser.PurchaseItem.UpdatedAt,
+			&orderWithItemAndUser.PurchaseOrder.ID,
+			&orderWithItemAndUser.PurchaseOrder.DeadLine,
+			&orderWithItemAndUser.PurchaseOrder.UserID,
+			&orderWithItemAndUser.PurchaseOrder.CreatedAt,
+			&orderWithItemAndUser.PurchaseOrder.UpdatedAt,
+			&orderWithItemAndUser.User.ID,
+			&orderWithItemAndUser.User.Name,
+			&orderWithItemAndUser.User.BureauID,
+			&orderWithItemAndUser.User.RoleID,
+			&orderWithItemAndUser.User.CreatedAt,
+			&orderWithItemAndUser.User.UpdatedAt,
+		)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+		orderWithItemAndUsers = append(orderWithItemAndUsers,orderWithItemAndUser)
+	}
+	return orderWithItemAndUsers, nil
+}
+
+func (p *purchaseOrderUseCase) GetOrdersTieOtherByID(c context.Context, id string) (domain.OrderWithItemAndUser, error) {
+	orderWithItemAndUser := domain.OrderWithItemAndUser{}
+	row ,err :=p.rep.FindTieOther(c, id)
+
+	err = row.Scan(
+			&orderWithItemAndUser.PurchaseItem.ID,
+			&orderWithItemAndUser.PurchaseItem.Item,
+			&orderWithItemAndUser.PurchaseItem.Price,
+			&orderWithItemAndUser.PurchaseItem.Quantity,
+			&orderWithItemAndUser.PurchaseItem.Detail,
+			&orderWithItemAndUser.PurchaseItem.Url,
+			&orderWithItemAndUser.PurchaseItem.PurchaseOrderID,
+			&orderWithItemAndUser.PurchaseItem.FinansuCheck,
+			&orderWithItemAndUser.PurchaseItem.CreatedAt,
+			&orderWithItemAndUser.PurchaseItem.UpdatedAt,
+			&orderWithItemAndUser.PurchaseOrder.ID,
+			&orderWithItemAndUser.PurchaseOrder.DeadLine,
+			&orderWithItemAndUser.PurchaseOrder.UserID,
+			&orderWithItemAndUser.PurchaseOrder.CreatedAt,
+			&orderWithItemAndUser.PurchaseOrder.UpdatedAt,
+			&orderWithItemAndUser.User.ID,
+			&orderWithItemAndUser.User.Name,
+			&orderWithItemAndUser.User.BureauID,
+			&orderWithItemAndUser.User.RoleID,
+			&orderWithItemAndUser.User.CreatedAt,
+			&orderWithItemAndUser.User.UpdatedAt,
+	)
+	if err != nil {
+		return orderWithItemAndUser, err
+	}
+	return orderWithItemAndUser, nil
 }

@@ -4,6 +4,7 @@ import(
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"net/http"
+
 )
 
 type purchaseOrderController struct {
@@ -16,6 +17,8 @@ type PurchaseOrderController interface {
 	CreatePurchaseOrder(echo.Context) error
 	UpdatePurchaseOrder(echo.Context) error
 	DestroyPurchaseOrder(echo.Context) error
+	IndexOrderTieOther(echo.Context) error
+	ShowOrderTieOther(echo.Context) error
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
@@ -75,3 +78,22 @@ func (p *purchaseOrderController) DestroyPurchaseOrder(c echo.Context) error{
 	}
 	return c.String(http.StatusOK, "Destroy PurchaseOrder")
 }
+
+//IndexGetTieOther
+func (p *purchaseOrderController) IndexOrderTieOther(c echo.Context) error{
+	orderTieOthers , err := p.u.GetOrdersTieOther(c.Request().Context())
+	if err != nil{
+		return err
+	}
+	return c.JSON(http.StatusOK, orderTieOthers)
+}
+
+//ShowGetTieOther
+func (p*purchaseOrderController) ShowOrderTieOther(c echo.Context) error {
+	id := c.Param("id")
+	otherTieOther , err := p.u.GetOrdersTieOtherByID(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, otherTieOther)
+} 
