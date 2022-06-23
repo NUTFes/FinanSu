@@ -40,7 +40,7 @@ func (b *bureauController) ShowBureau(c echo.Context) error{
 }
 
 func (b *bureauController) CreateBureau(c echo.Context) error{
-	name :=c.Param("name")
+	name :=c.QueryParam("name")
 	err := b.u.CreateBureau(c.Request().Context(),name)
 	if err != nil {
 		return err

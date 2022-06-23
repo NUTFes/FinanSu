@@ -45,7 +45,7 @@ func (b *bureauRepository) Find(c context.Context, id string) (*sql.Row,error) {
 
 //作成
 func (b *bureauRepository) Create(c context.Context, name string) error {
-	query := "Insert into bureaus (name) values (' "+name+"')"
+	query := "Insert into bureaus (name) values ('"+name+"')"
 	_, err := b.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n]",query)
 	return err
