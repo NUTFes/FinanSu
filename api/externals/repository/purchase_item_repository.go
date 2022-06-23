@@ -54,9 +54,9 @@ func (pir *purchaseItemRepository) Create(
 	detail string,
 	url string,
 	purchaseOrderId string,
-	finansuCheck string,
+	financeCheck string,
 )error {
-	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + finansuCheck + ")"
+	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + financeCheck + ")"
 	_, err := pir.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
@@ -72,9 +72,9 @@ func (pir *purchaseItemRepository) Update(
 	detail string,
 	url string,
 	purchaseOrderId string,
-	finansuCheck string,
+	financeCheck string,
 )error {
-	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + ", finance_check =" + finansuCheck + " where id = " + id
+	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + ", finance_check =" + financeCheck + " where id = " + id
 	_, err := pir.client.DB().ExecContext(c, query)
 	return err
 }
