@@ -35,7 +35,7 @@ func InitializeServer() db.Client {
 	teacherRepository := repository.NewTeacherRepository(client)
 	activityRepository := repository.NewActivityRepository(client)
 	sponsorRepository := repository.NewSponsorRepository(client)
-
+	bureauRepository := repository.NewBureauRepository(client)
 	// ↓
 
 	// UseCase
@@ -53,6 +53,7 @@ func InitializeServer() db.Client {
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
 	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
+	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
 	// ↓
 
 	// Controller
@@ -71,7 +72,7 @@ func InitializeServer() db.Client {
 	teacherController := controller.NewTeacherController(teacherUseCase)
 	activityController := controller.NewActivityController(activityUseCase)
 	sponsorController := controller.NewSponsorController(sponsorUseCase)
-
+	bureauController := controller.NewBureauController(bureauUseCase)
 	// ↓
 
 	// router
@@ -91,6 +92,7 @@ func InitializeServer() db.Client {
 		teacherController,
 		activityController,
 		sponsorController,
+		bureauController,
 	)
 
 	// ↓
