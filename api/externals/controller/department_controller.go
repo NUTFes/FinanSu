@@ -48,7 +48,7 @@ func (d *departmentController) CreateDepartment(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created User")
+	return c.String(http.StatusCreated, "Created Department")
 }
 
 // Update
