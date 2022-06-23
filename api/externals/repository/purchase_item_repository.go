@@ -56,7 +56,7 @@ func (pir *purchaseItemRepository) Create(
 	purchaseOrderId string,
 	finansuCheck string,
 )error {
-	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id, finansu_check) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + finansuCheck + ")"
+	var query = "insert into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check) values ( '" + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + finansuCheck + ")"
 	_, err := pir.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
@@ -74,7 +74,7 @@ func (pir *purchaseItemRepository) Update(
 	purchaseOrderId string,
 	finansuCheck string,
 )error {
-	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + ", finansu_check =" + finansuCheck + " where id = " + id
+	var query = "update purchase_items set item = '" + item + "' , price = " + price + ", quantity = " + quantity + ", detail ='" + detail + "', url = '" + url + "', purchase_order_id = " + purchaseOrderId + ", finance_check =" + finansuCheck + " where id = " + id
 	_, err := pir.client.DB().ExecContext(c, query)
 	return err
 }
@@ -92,7 +92,7 @@ func (pir *purchaseItemRepository) Delete(
 
 //purchaseorderに紐づくpurchaseitemsを取得する(GETS)
 func (pir *purchaseItemRepository) AllWithPurchaseOrder(c context.Context) (*sql.Rows, error) {
-	query := "select purchase_items.id, purchase_items.item, purchase_items.price, purchase_items.quantity , purchase_items.detail, purchase_items.url, purchase_orders.deadline, users.name, purchase_items.finansu_check, purchase_items.created_at, purchase_items.updated_at from purchase_items inner join purchase_orders on purchase_items.purchase_order_id  = purchase_orders.id inner join users on purchase_orders.user_id = users.id"
+	query := "select purchase_items.id, purchase_items.item, purchase_items.price, purchase_items.quantity , purchase_items.detail, purchase_items.url, purchase_orders.deadline, users.name, purchase_items.finance_check, purchase_items.created_at, purchase_items.updated_at from purchase_items inner join purchase_orders on purchase_items.purchase_order_id  = purchase_orders.id inner join users on purchase_orders.user_id = users.id"
 	rows, err := pir.client.DB().QueryContext(c, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
@@ -102,7 +102,7 @@ func (pir *purchaseItemRepository) AllWithPurchaseOrder(c context.Context) (*sql
 }
 
 func (pir *purchaseItemRepository) FindWithPurchaseOrder(c context.Context, id string) (*sql.Row, error) {
-	query :=  "select purchase_items.id, purchase_items.item, purchase_items.price, purchase_items.quantity , purchase_items.detail, purchase_items.url, purchase_orders.deadline, users.name, purchase_items.finansu_check, purchase_items.created_at, purchase_items.updated_at from purchase_items inner join purchase_orders on purchase_items.purchase_order_id= purchase_orders.id inner join users on purchase_orders.user_id = users.id where purchase_items.id ="+id
+	query :=  "select purchase_items.id, purchase_items.item, purchase_items.price, purchase_items.quantity , purchase_items.detail, purchase_items.url, purchase_orders.deadline, users.name, purchase_items.finance_check, purchase_items.created_at, purchase_items.updated_at from purchase_items inner join purchase_orders on purchase_items.purchase_order_id= purchase_orders.id inner join users on purchase_orders.user_id = users.id where purchase_items.id ="+id
 	row:= pir.client.DB().QueryRowContext(c,query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
