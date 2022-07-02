@@ -1,11 +1,8 @@
 import {
   ChakraProvider,
-  Select,
   Center,
   Flex,
   Box,
-  Button,
-  Text,
   Spacer,
   Modal,
   ModalOverlay,
@@ -17,20 +14,21 @@ import {
   Input,
 } from '@chakra-ui/react';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
-import { post } from '@api/budget';
-import * as React from 'react';
-import { useState } from 'react';
+import { post } from '@api/purchaseItem';
+import React from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
+import Button from '@components/common/Button';
+import DeleteButton from '@components/common/DeleteButton';
 import AddButton from '@components/common/Button';
-import { FC } from 'react';
 import { useRouter } from 'next/router';
 
 interface ModalProps {
   purchaseOrderId: number;
   purchaseItemNum: PurchaseItemNum;
-  setShowModal: Function;
-  openModal: any;
+  isOpen: boolean;
+  numModalOnClose: () => void;
+  onClose: () => void;
   setFormDataList: Function;
   formDataList: PurchaseItem[];
 }
@@ -50,33 +48,31 @@ interface PurchaseItem {
   finance_check: boolean;
 }
 
-const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
-  const closeModal = () => {
-    props.setShowModal(false);
-  };
-
+export default function AddModal(props: ModalProps) {
   const { nextStep, prevStep, reset, activeStep } = useSteps({
     initialStep: 0,
   });
   const router = useRouter();
 
   const handler =
-    (input: string) =>
+    (stepNumber: number, input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      props.setFormDataList({ ...props.formDataList, [input]: e.target.value });
+      props.setFormDataList(
+        props.formDataList.map((formData: PurchaseItem) =>
+          formData.id === stepNumber + 1 ? { ...formData, [input]: e.target.value } : formData,
+        ),
+      );
     };
 
-  const addPurchaseItem = async (data: any) => {
+  const addPurchaseItem = async (data: PurchaseItem[], purchaseOrderID: number) => {
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
-    await post(addPurchaseItemUrl, data);
-    // const newFormDataList = data;
-    // setFormDataList([...formDataList, newFormDataList])
+    data.map(async (item) => {
+      await post(addPurchaseItemUrl, item, purchaseOrderID);
+    });
   };
 
-  console.log(props.formDataList);
-
   // 購入物品の情報
-  const content = (
+  const content: Function = (index: number, data: PurchaseItem) => (
     <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
       <GridItem colSpan={12} />
       <GridItem colSpan={2}>
@@ -88,8 +84,8 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
         <Input
           borderRadius='full'
           borderColor='primary.1'
-          value={props.formDataList[0].item}
-          onChange={handler('item')}
+          value={data.item}
+          onChange={handler(index, 'item')}
         />
       </GridItem>
 
@@ -102,8 +98,8 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
         <Input
           borderRadius='full'
           borderColor='primary.1'
-          value={props.formDataList[0].price}
-          onChange={handler('price')}
+          value={data.price}
+          onChange={handler(index, 'price')}
         />
       </GridItem>
 
@@ -116,8 +112,8 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
         <Input
           borderRadius='full'
           borderColor='primary.1'
-          value={props.formDataList[0].quantity}
-          onChange={handler('quantity')}
+          value={data.quantity}
+          onChange={handler(index, 'quantity')}
         />
       </GridItem>
 
@@ -130,8 +126,8 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
         <Input
           borderRadius='full'
           borderColor='primary.1'
-          value={props.formDataList[0].detail}
-          onChange={handler('detail')}
+          value={data.detail}
+          onChange={handler(index, 'detail')}
         />
       </GridItem>
 
@@ -144,8 +140,8 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
         <Input
           borderRadius='full'
           borderColor='primary.1'
-          value={props.formDataList[0].url}
-          onChange={handler('url')}
+          value={data.url}
+          onChange={handler(index, 'url')}
         />
       </GridItem>
       <GridItem mt={5} colSpan={12} />
@@ -165,17 +161,15 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
       purchaseOrderId: props.purchaseOrderId,
       finance_check: false,
     };
-    console.log(initialFormData);
-    // setFormDataList(initialFormData);
-    steps.push({ content });
+    steps.push({ label: '' });
   }
 
   return (
     <ChakraProvider theme={theme}>
       <Modal
         closeOnOverlayClick={false}
-        isOpen={props.openModal}
-        onClose={closeModal}
+        isOpen={props.isOpen}
+        onClose={props.onClose}
         isCentered
         size='6xl'
       >
@@ -185,7 +179,14 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
             <Flex mt='5'>
               <Spacer />
               <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
+                <RiCloseCircleLine
+                  size={'23px'}
+                  color={'gray'}
+                  onClick={() => {
+                    props.onClose();
+                    props.numModalOnClose();
+                  }}
+                />
               </Box>
             </Flex>
             <Grid templateColumns='repeat(12, 1fr)' gap={4}>
@@ -198,31 +199,37 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
               <GridItem colSpan={1} />
               <GridItem rowSpan={1} colSpan={10}>
                 <Steps activeStep={activeStep}>
-                  {steps.map(({ label, content }) => (
-                    <Step label={label} key={label}>
-                      {content}
+                  {steps.map(({ label }, index: number) => (
+                    <Step label={label} key={index}>
+                      {content(index, props.formDataList[index])}
                     </Step>
                   ))}
                 </Steps>
                 {activeStep === steps.length ? (
                   <Flex p={4}>
-                    <Button mx='auto' size='sm' onClick={reset}>
+                    <Spacer />
+                    <DeleteButton mx='2' onClick={reset}>
                       Reset
-                    </Button>
+                    </DeleteButton>
+                    <AddButton
+                      width='220px'
+                      onClick={() => {
+                        addPurchaseItem(props.formDataList, props.purchaseOrderId);
+                        props.onClose();
+                        props.numModalOnClose();
+                        router.reload();
+                      }}
+                      hover={{ background: 'primary.2' }}
+                    >
+                      登録
+                    </AddButton>
                   </Flex>
                 ) : (
                   <Flex justify='flex-end'>
-                    <Button
-                      isDisabled={activeStep === 0}
-                      mr={4}
-                      onClick={prevStep}
-                      size='sm'
-                      variant='ghost'
-                    >
+                    <Button isDisabled={activeStep === 0} mx={4} onClick={prevStep} variant='ghost'>
                       Prev
                     </Button>
                     <Button
-                      size='sm'
                       onClick={() => {
                         nextStep();
                       }}
@@ -235,24 +242,8 @@ const PurchaseOrderAddModal: FC<ModalProps> = (props) => {
               <GridItem rowSpan={1} colSpan={1} />
             </Grid>
           </ModalBody>
-          <Center>
-            <ModalFooter mb='2'>
-              <AddButton
-                width='220px'
-                onClick={() => {
-                  addPurchaseItem(props.formDataList);
-                  router.reload();
-                }}
-                hover={{ background: 'primary.2' }}
-              >
-                決定
-              </AddButton>
-            </ModalFooter>
-          </Center>
         </ModalContent>
       </Modal>
     </ChakraProvider>
   );
-};
-
-export default PurchaseOrderAddModal;
+}

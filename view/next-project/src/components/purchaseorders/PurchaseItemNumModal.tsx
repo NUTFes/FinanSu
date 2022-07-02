@@ -13,19 +13,18 @@ import {
   Grid,
   GridItem,
   Input,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { get, post } from '@api/purchaseOrder';
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '@components/common/Button';
-import { FC } from 'react';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 interface FormData {
@@ -44,11 +43,12 @@ interface PurchaseItem {
   finance_check: boolean;
 }
 
-const PurchaseItemNumModal: FC<ModalProps> = (props) => {
+export default function PurchaseItemNumModal(props: ModalProps) {
   // 購入物品数用の配列
   const purchaseItemNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  const [showModal, setShowModal] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [formData, setFormData] = useState({
     deadline: '',
     user_id: 1,
@@ -58,25 +58,23 @@ const PurchaseItemNumModal: FC<ModalProps> = (props) => {
   });
   const [purchaseOrderId, setPurchaseOrderId] = useState(1);
 
-  const [formDataList, setFormDataList] = useState<PurchaseItem[]>([
-    {
-      id: '',
-      item: '',
-      price: '',
-      quantity: '',
-      detail: '',
-      url: '',
-      purchaseOrderId: purchaseOrderId,
-      finance_check: false,
-    },
-  ]);
-
-  const ShowModal = () => {
-    setShowModal(true);
-  };
-  const closeModal = () => {
-    props.setShowModal(false);
-  };
+  const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
+    let initFormDataList = [];
+    for (let i = 0; i < purchaseItemNumArray.length; i++) {
+      let initFormData: PurchaseItem = {
+        id: i + 1,
+        item: '',
+        price: '',
+        quantity: '',
+        detail: '',
+        url: '',
+        purchaseOrderId: purchaseOrderId,
+        finance_check: false,
+      };
+      initFormDataList.push(initFormData);
+    }
+    return initFormDataList;
+  });
 
   // 購入申請用のhandler
   const formDataHandler =
@@ -98,9 +96,10 @@ const PurchaseItemNumModal: FC<ModalProps> = (props) => {
     setPurchaseOrderId(getRes[getRes.length - 1].id);
   };
 
-  const initialPurchaseItemList = () => {
-    for (let i = 0; i < purchaseItemNum.value; i++) {
-      let initialPurchaseItem = {
+  const updateFormDataList = () => {
+    let initialPurchaseItemList = [];
+    for (let i = 0; i < Number(purchaseItemNum.value); i++) {
+      let initialPurchaseItem: PurchaseItem = {
         id: i + 1,
         item: '',
         price: '',
@@ -110,21 +109,21 @@ const PurchaseItemNumModal: FC<ModalProps> = (props) => {
         purchaseOrderId: purchaseOrderId,
         finance_check: false,
       };
-      setFormDataList([...formDataList, initialPurchaseItem]);
-      console.log(formDataList);
+      initialPurchaseItemList.push(initialPurchaseItem);
     }
+    setFormDataList(initialPurchaseItemList);
   };
 
   return (
     <ChakraProvider theme={theme}>
-      <Modal closeOnOverlayClick={false} isOpen={props.openModal} onClose={closeModal} isCentered>
+      <Modal closeOnOverlayClick={false} isOpen={props.isOpen} onClose={props.onClose} isCentered>
         <ModalOverlay />
         <ModalContent pb='5' borderRadius='3xl'>
           <ModalBody p='3'>
             <Flex mt='5'>
               <Spacer />
               <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
+                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={props.onClose} />
               </Box>
             </Flex>
             <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
@@ -177,28 +176,27 @@ const PurchaseItemNumModal: FC<ModalProps> = (props) => {
               <Button
                 width='220px'
                 onClick={() => {
-                  ShowModal();
+                  updateFormDataList();
+                  onOpen();
                   addPurchaseOrder(formData);
-                  initialPurchaseItemList();
                 }}
                 hover={{ background: 'primary.2' }}
               >
                 決定
               </Button>
-              <AddModal
-                purchaseOrderId={purchaseOrderId}
-                purchaseItemNum={purchaseItemNum}
-                openModal={showModal}
-                setShowModal={setShowModal}
-                setFormDataList={setFormDataList}
-                formDataList={formDataList}
-              />
             </ModalFooter>
           </Center>
         </ModalContent>
       </Modal>
+      <AddModal
+        purchaseOrderId={purchaseOrderId}
+        purchaseItemNum={purchaseItemNum}
+        isOpen={isOpen}
+        numModalOnClose={props.onClose}
+        onClose={onClose}
+        setFormDataList={setFormDataList}
+        formDataList={formDataList}
+      />
     </ChakraProvider>
   );
-};
-
-export default PurchaseItemNumModal;
+}

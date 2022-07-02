@@ -1,9 +1,8 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, useDisclosure } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
 import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModal';
 import Button from '@components/common/Button';
-import { useState } from 'react';
 
 interface Props {
   width?: string;
@@ -11,19 +10,14 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const OpenModalButton: React.FC<Props> = ({ children, width, height }) => {
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
-  };
+export default function OpenModalButton(props: Props) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <ChakraProvider theme={theme}>
-      <Button onClick={ShowModal} hover={{ background: 'primary.2' }}>
-        {children}
+      <Button onClick={onOpen} hover={{ background: 'primary.2' }}>
+        {props.children}
       </Button>
-      <PurchaseItemNumModal openModal={showModal} setShowModal={setShowModal} />
+      <PurchaseItemNumModal isOpen={isOpen} onClose={onClose} />
     </ChakraProvider>
   );
-};
-
-export default OpenModalButton;
+}

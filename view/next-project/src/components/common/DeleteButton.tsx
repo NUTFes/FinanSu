@@ -5,26 +5,26 @@ import * as React from 'react';
 interface Props {
   width?: string;
   height?: string;
-  onClick?: any;
+  mx?: string;
   children?: React.ReactNode;
   onClick: () => void;
   hover?: any;
 }
 
-const DeleteButton: React.FC<Props> = ({ children, width, height, onClick, hover }) => {
+export default function DeleteButton(props: Props) {
   return (
     <ChakraProvider theme={theme}>
       <Button
+        mx={props.mx}
         color='white'
         bgGradient='linear(to-br, red.500, red.600)'
-        style={{ height, width }}
-        onClick={onClick}
-        _hover={hover}
+        h={props.height}
+        w={props.width}
+        onClick={props.onClick}
+        _hover={props.hover}
       >
-        {children}
+        {props.children}
       </Button>
     </ChakraProvider>
   );
-};
-
-export default DeleteButton;
+}
