@@ -8,6 +8,7 @@ interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 
 export default function OpenModalButton(props: Props) {

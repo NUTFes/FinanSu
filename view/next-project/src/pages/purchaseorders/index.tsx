@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Box,
   Table,
@@ -7,26 +8,26 @@ import {
   Th,
   Td,
   Flex,
+  Center,
   Spacer,
   Select,
   Grid,
   GridItem,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import { get } from '@api/purchaseOrder';
+import MainLayout from '@components/layout/MainLayout';
+import { get, get_with_token } from '@api/api_methods';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
-import { useState } from 'react';
-import * as React from 'react';
-import MainLayout from '@components/layout/MainLayout';
 
 interface User {
   id: number;
   name: string;
+  bureau_id: number;
+  role_id: number;
 }
 
 interface PurchaseOrder {

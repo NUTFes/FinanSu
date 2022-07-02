@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import {
   ChakraProvider,
   Select,
@@ -15,8 +17,8 @@ import {
   Input,
   useDisclosure,
 } from '@chakra-ui/react';
-import { get, post } from '@api/purchaseOrder';
-import React, { useState } from 'react';
+import { get, get_with_token } from '@api/api_methods';
+import { post } from '@api/purchaseOrder';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '@components/common/Button';
@@ -25,6 +27,13 @@ import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface User {
+  id: number;
+  name: string;
+  bureau_id: number;
+  role_id: number;
 }
 
 interface FormData {
@@ -46,6 +55,8 @@ interface PurchaseItem {
 export default function PurchaseItemNumModal(props: ModalProps) {
   // 購入物品数用の配列
   const purchaseItemNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  const router = useRouter();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -76,6 +87,27 @@ export default function PurchaseItemNumModal(props: ModalProps) {
     return initFormDataList;
   });
 
+  // ログイン中のユーザ
+  const [currentUser, setCurrentUser] = useState<User>({
+    id: 1,
+    name: '',
+    bureau_id: 1,
+    role_id: 1,
+  });
+
+  // ページ読み込み時にcurrent_userを取得
+  useEffect(() => {
+    if (router.isReady) {
+      // current_userの取得とセット
+      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
+      const getCurrentUser = async (url: string) => {
+        const currentUserRes = await get_with_token(url);
+        setCurrentUser(currentUserRes);
+      };
+      getCurrentUser(getCurrentUserURL);
+    }
+  }, [router]);
+
   // 購入申請用のhandler
   const formDataHandler =
     (input: string) =>
@@ -88,9 +120,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
     setPurchaseItemNum({ ...purchaseItemNum, [input]: e.target.value });
   };
 
-  const addPurchaseOrder = async (data: FormData) => {
+  const addPurchaseOrder = async (data: FormData, user_id: number) => {
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
-    await post(addPurchaseOrderUrl, data);
+    await post(addPurchaseOrderUrl, data, user_id);
     const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     const getRes = await get(getPurchaseOrderUrl);
     setPurchaseOrderId(getRes[getRes.length - 1].id);
@@ -178,7 +210,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 onClick={() => {
                   updateFormDataList();
                   onOpen();
-                  addPurchaseOrder(formData);
+                  addPurchaseOrder(formData, currentUser.id);
                 }}
                 hover={{ background: 'primary.2' }}
               >
