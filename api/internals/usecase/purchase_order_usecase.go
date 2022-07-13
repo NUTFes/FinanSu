@@ -4,7 +4,8 @@ import (
 	"context"
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
-	"github.com/pkg/errors"
+	"strconv"
+	"fmt"
 )
 
 type purchaseOrderUseCase struct {
@@ -17,8 +18,7 @@ type PurchaseOrderUseCase interface {
 	CreatePurchaseOrder(context.Context, string, string) error
 	UpdatePurchaseOrder(context.Context, string, string, string) error
 	DestroyPurchaseOrder(context.Context, string) error
-	GetOrdersTieOther(context.Context) ([]domain.OrderWithItemAndUser,error)
-	GetOrdersTieOtherByID(context.Context, string) (domain.OrderWithItemAndUser,error)
+	GetOrderWithUserItem(context.Context) ([]domain.OrderWithItemAndUser,error)
 }
 
 func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
@@ -96,77 +96,58 @@ func (p *purchaseOrderUseCase) DestroyPurchaseOrder(
 	return err
 }
 
-//PurchaseOrderの紐づくPurchaseItemとUserの取得
-func (p *purchaseOrderUseCase) GetOrdersTieOther(c context.Context) ([]domain.OrderWithItemAndUser,error) {
-	
-	orderWithItemAndUser := domain.OrderWithItemAndUser{}
-	var orderWithItemAndUsers []domain.OrderWithItemAndUser
-	rows , err := p.rep.AllTieOther(c)
+func (p *purchaseOrderUseCase) GetOrderWithUserItem(c context.Context) ([]domain.OrderWithItemAndUser,error){
+	orderWithUserAndItem := domain.OrderWithItemAndUser{}
+	var orderWithUserAndItems []domain.OrderWithItemAndUser
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+	rows, err := p.rep.AllOrderWithUser(c)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	for rows.Next() {
+	for rows.Next(){
 		err := rows.Scan(
-			&orderWithItemAndUser.PurchaseItem.ID,
-			&orderWithItemAndUser.PurchaseItem.Item,
-			&orderWithItemAndUser.PurchaseItem.Price,
-			&orderWithItemAndUser.PurchaseItem.Quantity,
-			&orderWithItemAndUser.PurchaseItem.Detail,
-			&orderWithItemAndUser.PurchaseItem.Url,
-			&orderWithItemAndUser.PurchaseItem.PurchaseOrderID,
-			&orderWithItemAndUser.PurchaseItem.FinansuCheck,
-			&orderWithItemAndUser.PurchaseItem.CreatedAt,
-			&orderWithItemAndUser.PurchaseItem.UpdatedAt,
-			&orderWithItemAndUser.PurchaseOrder.ID,
-			&orderWithItemAndUser.PurchaseOrder.DeadLine,
-			&orderWithItemAndUser.PurchaseOrder.UserID,
-			&orderWithItemAndUser.PurchaseOrder.CreatedAt,
-			&orderWithItemAndUser.PurchaseOrder.UpdatedAt,
-			&orderWithItemAndUser.User.ID,
-			&orderWithItemAndUser.User.Name,
-			&orderWithItemAndUser.User.BureauID,
-			&orderWithItemAndUser.User.RoleID,
-			&orderWithItemAndUser.User.CreatedAt,
-			&orderWithItemAndUser.User.UpdatedAt,
+			&orderWithUserAndItem.PurchaseOrder.ID,
+			&orderWithUserAndItem.PurchaseOrder.DeadLine,
+			&orderWithUserAndItem.PurchaseOrder.UserID,
+			&orderWithUserAndItem.PurchaseOrder.CreatedAt,
+			&orderWithUserAndItem.PurchaseOrder.UpdatedAt,
+			&orderWithUserAndItem.User.ID,
+			&orderWithUserAndItem.User.Name,
+			&orderWithUserAndItem.User.BureauID,
+			&orderWithUserAndItem.User.RoleID,
+			&orderWithUserAndItem.User.CreatedAt,
+			&orderWithUserAndItem.User.UpdatedAt,
 		)
 		if err != nil {
-			return nil, errors.Wrapf(err, "cannot connect SQL")
+			return nil, err
 		}
-		orderWithItemAndUsers = append(orderWithItemAndUsers,orderWithItemAndUser)
+		rows, err := p.rep.GetPurchaseItemByOrderId(c, strconv.Itoa(int(orderWithUserAndItem.PurchaseOrder.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&purchaseItem.ID,
+				&purchaseItem.Item,
+				&purchaseItem.Price,
+				&purchaseItem.Quantity,
+				&purchaseItem.Detail,
+				&purchaseItem.Url,
+				&purchaseItem.PurchaseOrderID,
+				&purchaseItem.FinansuCheck,
+				&purchaseItem.CreatedAt,
+				&purchaseItem.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			purchaseItems = append(purchaseItems,purchaseItem)
+		}
+		orderWithUserAndItem.PurchaseItem = purchaseItems
+		orderWithUserAndItems = append(orderWithUserAndItems,orderWithUserAndItem)
+		fmt.Println(purchaseItems)
+		purchaseItems = nil
 	}
-	return orderWithItemAndUsers, nil
+	return orderWithUserAndItems,nil
 }
 
-func (p *purchaseOrderUseCase) GetOrdersTieOtherByID(c context.Context, id string) (domain.OrderWithItemAndUser, error) {
-	orderWithItemAndUser := domain.OrderWithItemAndUser{}
-	row ,err :=p.rep.FindTieOther(c, id)
 
-	err = row.Scan(
-			&orderWithItemAndUser.PurchaseItem.ID,
-			&orderWithItemAndUser.PurchaseItem.Item,
-			&orderWithItemAndUser.PurchaseItem.Price,
-			&orderWithItemAndUser.PurchaseItem.Quantity,
-			&orderWithItemAndUser.PurchaseItem.Detail,
-			&orderWithItemAndUser.PurchaseItem.Url,
-			&orderWithItemAndUser.PurchaseItem.PurchaseOrderID,
-			&orderWithItemAndUser.PurchaseItem.FinansuCheck,
-			&orderWithItemAndUser.PurchaseItem.CreatedAt,
-			&orderWithItemAndUser.PurchaseItem.UpdatedAt,
-			&orderWithItemAndUser.PurchaseOrder.ID,
-			&orderWithItemAndUser.PurchaseOrder.DeadLine,
-			&orderWithItemAndUser.PurchaseOrder.UserID,
-			&orderWithItemAndUser.PurchaseOrder.CreatedAt,
-			&orderWithItemAndUser.PurchaseOrder.UpdatedAt,
-			&orderWithItemAndUser.User.ID,
-			&orderWithItemAndUser.User.Name,
-			&orderWithItemAndUser.User.BureauID,
-			&orderWithItemAndUser.User.RoleID,
-			&orderWithItemAndUser.User.CreatedAt,
-			&orderWithItemAndUser.User.UpdatedAt,
-	)
-	if err != nil {
-		return orderWithItemAndUser, err
-	}
-	return orderWithItemAndUser, nil
-}
+

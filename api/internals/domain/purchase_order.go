@@ -12,7 +12,7 @@ type PurchaseOrder struct {
 }
 
 type OrderWithItemAndUser struct {
-	PurchaseItem 	PurchaseItem 	`json:"purchase_item"`
 	PurchaseOrder PurchaseOrder `json:"purchase_order"`
 	User 					User 					`json:"user"`
+	PurchaseItem 	[]PurchaseItem 	`json:"purchase_item"`
 }
