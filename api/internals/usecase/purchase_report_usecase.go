@@ -155,6 +155,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Contex
 		}
 		purchaseReportwithorderitem.PurchaseItems = purchaseItems
 		purchaseReportwithorderitems = append(purchaseReportwithorderitems, purchaseReportwithorderitem)
+		purchaseItems = nil
 	}
 	return purchaseReportwithorderitems, nil
 }
