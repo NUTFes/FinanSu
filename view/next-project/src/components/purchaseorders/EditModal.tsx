@@ -16,7 +16,7 @@ import {
 import React, { FC, useEffect, useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../common/RegistButton';
+import Button from '@components/common/Button';
 import { useRouter } from 'next/router';
 import { get, put } from '@api/purchaseOrder';
 
@@ -67,14 +67,14 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
+      <Modal closeOnOverlayClick={false} isOpen={props.openModal} onClose={closeModal} isCentered>
         <ModalOverlay />
         <ModalContent pb='5' borderRadius='3xl'>
           <ModalBody p='3'>
             <Flex mt='5'>
               <Spacer />
               <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
+                <RiCloseCircleLine size={'30px'} color={'gray'} onClick={closeModal} />
               </Box>
             </Flex>
             <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
@@ -127,6 +127,7 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
                   submitPurchaseOrder(formData, props.id);
                   router.reload();
                 }}
+                hover={{ background: 'primary.2' }}
               >
                 編集する
               </Button>

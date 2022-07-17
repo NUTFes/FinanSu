@@ -21,7 +21,7 @@ interface SponsorStyle {
 interface Props {
   sponsorstyles: SponsorStyle[];
 }
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const sponsorstylesRes = await get(getSponsorstylesUrl);
   return {

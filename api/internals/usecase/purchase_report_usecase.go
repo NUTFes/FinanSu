@@ -144,7 +144,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Contex
 				&purchaseItem.Detail,
 				&purchaseItem.Url,
 				&purchaseItem.PurchaseOrderID,
-				&purchaseItem.FinansuCheck,
+				&purchaseItem.FinanceCheck,
 				&purchaseItem.CreatedAt,
 				&purchaseItem.UpdatedAt,
 			)
@@ -203,7 +203,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportWithOrderItemByID(c context.Con
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinansuCheck,
+			&purchaseItem.FinanceCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 		)

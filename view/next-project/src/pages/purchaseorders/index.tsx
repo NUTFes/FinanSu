@@ -1,18 +1,21 @@
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
-import { get } from '@api/purchaseOrder';
+import React, { useState } from 'react';
+import { get, get_with_token } from '@api/api_methods';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
-import { useState } from 'react';
 import DetailModal from '@components/purchaseorders/DetailModal';
-import * as React from 'react';
 import MainLayout from '@components/layout/MainLayout';
 import clsx from 'clsx';
 import Button from '@components/common/Button';
+import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
+import { useDisclosure } from '@chakra-ui/react';
 
 interface User {
   id: number;
   name: string;
+  bureau_id: number;
+  role_id: number;
 }
 
 interface PurchaseOrder {
@@ -38,6 +41,8 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseOrder(props: Props) {
+  const { isOpen, onOpen } = useDisclosure();
+
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 4);
@@ -65,15 +70,24 @@ export default function PurchaseOrder(props: Props) {
               <select className={clsx('w-100 ')}>
                 <option value='2021'>2021</option>
                 <option value='2022'>2022</option>
-              </select>
-            </div>
+              </select >
+            </div >
             <div className={clsx('flex justify-end')}>
-              <Button>
+              {/* <Button>
                 <RiAddCircleLine className={clsx("text-white-0 mr-2")} />
                 購入申請
-              </Button>
+              </Button> */}
+              <OpenAddModalButton>
+                <RiAddCircleLine
+                  size={20}
+                  style={{
+                    marginRight: 5,
+                  }}
+                />
+                購入申請
+              </OpenAddModalButton>
             </div>
-          </div>
+          </div >
           <div className={clsx('mb-2 p-5 w-100')}>
             <table className={clsx('table-fixed border-collapse: collapse')}>
               <thead>
@@ -110,25 +124,25 @@ export default function PurchaseOrder(props: Props) {
               <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
                 {props.purchaseOrder.map((purchaseOrderItem) => (
                   <tr key={purchaseOrderItem.id} >
-                    <td className={clsx('px-4 py-2')} onClick={() => ShowModal()}>
+                    <td className={clsx('px-4 py-2')} onClick={onOpen}>
                       <div className={clsx('text-center text-sm text-black-600')}>{purchaseOrderItem.id}
                       </div>
                     </td>
-                    <td className={clsx('px-4 py-2')} onClick={() => ShowModal()}>
+                    <td className={clsx('px-4 py-2')} onClick={onOpen}>
                       <div className={clsx('text-center text-sm text-black-600')}>{purchaseOrderItem.deadline}
                       </div>
                     </td>
-                    <td className={clsx('px-4 py-2')} onClick={() => ShowModal()}>
+                    <td className={clsx('px-4 py-2')} onClick={onOpen}>
                       <div className={clsx('text-center text-sm text-black-600')}>
                         {purchaseOrderItem.user_id}
                       </div>
                     </td>
-                    <td className={clsx('px-4 py-2')} onClick={() => ShowModal()}>
+                    <td className={clsx('px-4 py-2')} onClick={onOpen}>
                       <div className={clsx('text-center text-sm text-black-600')}>
                         {formatDate(purchaseOrderItem.created_at)}
                       </div>
                     </td>
-                    <td className={clsx('px-4 py-2')} onClick={() => ShowModal()} />
+                    <td className={clsx('px-4 py-2')} onClick={onOpen} />
                     <td className={clsx('px-4 py-2')}>
                       <div className={clsx('grid grid-cols-2 gap-1')}>
                         <div className={clsx('text-center text-sm text-black-600')}>
@@ -141,7 +155,7 @@ export default function PurchaseOrder(props: Props) {
                     </td>
                     <DetailModal
                       id={purchaseOrderItem.id}
-                      openModal={showModal}
+                      openModal={isOpen}
                       setShowModal={setShowModal}
                     />
                   </tr>

@@ -42,12 +42,12 @@ func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.Purch
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinansuCheck,
+			&purchaseItem.FinanceCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 		)
 		if err != nil {
-			return nil , err 
+			return nil , err
 		}
 		purchaseItems = append(purchaseItems, purchaseItem)
 	}
@@ -66,7 +66,7 @@ func(p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) (
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinansuCheck,
+			&purchaseItem.FinanceCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 	)
@@ -86,9 +86,9 @@ func(p *purchaseItemUseCase) CreatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
-	FinansuCheck string,
+	FinanceCheck string,
 )error {
-	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
+	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
 	return err
 }
 
@@ -102,9 +102,9 @@ func(p *purchaseItemUseCase) UpdatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
-	FinansuCheck string,
+	FinanceCheck string,
 )error {
-	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
+	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
 	return err
 }
 
@@ -140,7 +140,7 @@ func (p *purchaseItemUseCase) GetPurchaseItemWithPurchaseOrder(c context.Context
 			&purchaseItemwithpurchaseorder.Url,
 			&purchaseItemwithpurchaseorder.DeadLine,
 			&purchaseItemwithpurchaseorder.Name,
-			&purchaseItemwithpurchaseorder.FinansuCheck,
+			&purchaseItemwithpurchaseorder.FinanceCheck,
 			&purchaseItemwithpurchaseorder.CreatedAt,
 			&purchaseItemwithpurchaseorder.UpdatedAt,
 		)
@@ -166,7 +166,7 @@ func (p *purchaseItemUseCase) GetPurchaseItemWithPurchaseOrderByID(c context.Con
 		&purchaseItemwithpurchaseorder.Url,
 		&purchaseItemwithpurchaseorder.DeadLine,
 		&purchaseItemwithpurchaseorder.Name,
-		&purchaseItemwithpurchaseorder.FinansuCheck,
+		&purchaseItemwithpurchaseorder.FinanceCheck,
 		&purchaseItemwithpurchaseorder.CreatedAt,
 		&purchaseItemwithpurchaseorder.UpdatedAt,
 	)

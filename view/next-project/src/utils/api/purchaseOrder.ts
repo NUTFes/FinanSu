@@ -21,15 +21,10 @@ export const get_with_token = async (url: string) => {
   return await res.json();
 };
 
-export const post = async (url: string, data: any) => {
+export const post = async (url: string, data: any, user_id: number) => {
   const deadline = data.deadline;
-  const userId = data.user_id;
-  const postUrl =
-    url +
-    '?deadline=' +
-    deadline +
-    '&user_id=' +
-    userId;
+  const userId = user_id;
+  const postUrl = url + '?deadline=' + deadline + '&user_id=' + userId;
 
   const res = await fetch(postUrl, {
     method: 'POST',
@@ -39,18 +34,13 @@ export const post = async (url: string, data: any) => {
     },
     body: JSON.stringify(data),
   });
-  return await res.json();
+  return res;
 };
 
 export const put = async (url: string, data: any) => {
   const deadline = data.deadline;
   const userId = data.user_id;
-  const putUrl =
-    url +
-    '?deadline=' +
-    deadline +
-    '&user_id=' +
-    userId;
+  const putUrl = url + '?deadline=' + deadline + '&user_id=' + userId;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',

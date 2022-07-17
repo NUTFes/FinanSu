@@ -21,10 +21,10 @@ import {
 import { Center } from '@chakra-ui/react';
 import { get, get_with_token } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
-import OpenAddModalButton from '@components/teachers/OpenAddModalButton';
-import OpenEditModalButton from '@components/teachers/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/teachers/OpenDeleteModalButton';
-import DetailModal from '@components/teachers/DetailModal';
+import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
+import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
+import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
+import DetailModal from '@components/teacher/DetailModal';
 
 interface Teacher {
   id: number;
@@ -54,8 +54,7 @@ interface Props {
   teachers: Teacher[];
 }
 
-export const getServerSideProps = async () => {
-  const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
+export const getStaticProps = async () => {
   const getTeacherURL = process.env.SSR_API_URI + '/teachers';
   const teacherRes = await get(getTeacherURL);
   return {
