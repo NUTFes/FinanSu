@@ -44,10 +44,7 @@ export default function MainLayout(props: LayoutProps) {
         <GridItem colSpan={2} w='160px'>
           <SideNav />
         </GridItem>
-        <GridItem colSpan={10}>
-          ""
-          {props.children}
-        </GridItem>
+        <GridItem colSpan={10}>{props.children}</GridItem>
       </Grid>
     </ChakraProvider>
   );
