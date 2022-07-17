@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import Header from '@components/common/Header';
 import theme from '@assets/theme';
-import { Center, ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 import { get_with_token } from '@api/api_methods';
 import SideNav from '@components/common/SideNav';
 
@@ -37,18 +37,16 @@ export default function MainLayout(props: LayoutProps) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <Grid
-      templateColumns='repeat(12 1fr)'
-      gap='1'
-      >
-        <GridItem colSpan={12} h="60px">
+      <Grid templateColumns='repeat(12 1fr)' gap='1'>
+        <GridItem colSpan={12} h='60px'>
           <Header />
         </GridItem>
-        <GridItem colSpan={2} w="160px">
+        <GridItem colSpan={2} w='160px'>
           <SideNav />
         </GridItem>
         <GridItem colSpan={10}>
-            {props.children}      
+          ""
+          {props.children}
         </GridItem>
       </Grid>
     </ChakraProvider>
