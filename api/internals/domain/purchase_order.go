@@ -10,3 +10,9 @@ type PurchaseOrder struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type OrderWithItemAndUser struct {
+	PurchaseOrder PurchaseOrder `json:"purchase_order"`
+	User 					User 					`json:"user"`
+	PurchaseItem 	[]PurchaseItem 	`json:"purchase_item"`
+}

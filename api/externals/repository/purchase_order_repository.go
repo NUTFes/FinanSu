@@ -18,6 +18,9 @@ type PurchaseOrderRepository interface {
 	Create(context.Context, string, string) error
 	Update(context.Context, string, string, string) error
 	Delete(context.Context, string) error
+	AllOrderWithUser(context.Context) (*sql.Rows,error)
+	FindWithOrderItem(context.Context,string) (*sql.Row,error)
+	GetPurchaseItemByOrderId(context.Context, string) (*sql.Rows,error)
 }
 
 func NewPurchaseOrderRepository(client db.Client) PurchaseOrderRepository {
@@ -76,4 +79,34 @@ func (por * purchaseOrderRepository) Delete(
 	_, err := por.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
+}
+
+//orderに紐づくuserの取得(All)
+func (p *purchaseOrderRepository) AllOrderWithUser(c context.Context) (*sql.Rows, error){
+	query := "select * from purchase_orders inner join users on purchase_orders.user_id = users.id;"
+	rows , err := p.client.DB().QueryContext(c,query)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL")
+	}
+	fmt.Printf("\x1b[36m%s\n", query)
+	return rows, nil
+}
+
+//orderに紐づくuserの取得(byID)
+func (p *purchaseOrderRepository) FindWithOrderItem(c context.Context, id string) (*sql.Row, error) {
+	query := " select * from purchase_orders inner join users on purchase_orders.user_id = users.id where purchase_orders.id =" +id
+	row := p.client.DB().QueryRowContext(c,query)
+	fmt.Printf("\x1b[36m%s\n", query)
+	return row,nil	
+}
+
+//指定したorder_idのitemを取得する
+func (p *purchaseOrderRepository) GetPurchaseItemByOrderId(c context.Context, purchaseOrderID string) (*sql.Rows,error) {
+	query := "select * from purchase_items where purchase_items.purchase_order_id ="+ purchaseOrderID
+	rows, err := p.client.DB().QueryContext(c, query)
+	if err!= nil {
+		return nil, errors.Wrapf(err, "cannot connect SQL") 
+	}
+	fmt.Printf("\x1b[36m%s\n", query)
+	return rows, nil
 }

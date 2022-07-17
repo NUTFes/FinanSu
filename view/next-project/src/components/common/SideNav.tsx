@@ -1,20 +1,26 @@
 import React, { ReactNode } from 'react';
 import {
+  IconButton,
   Box,
+  CloseButton,
   Flex,
   Icon,
+  useColorModeValue,
   Link,
   Drawer,
   DrawerContent,
+  Text,
   useDisclosure,
   BoxProps,
   FlexProps,
 } from '@chakra-ui/react';
-import { MdOutlineDashboard, MdOutlineSavings } from 'react-icons/md';
+import { MdOutlineDashboard, MdOutlineSchool } from 'react-icons/md';
 import { BiBuildings } from 'react-icons/bi';
-import { HiCurrencyDollar, HiOutlineShoppingCart, HiOutlineDocumentText } from 'react-icons/hi';
+import { HiCurrencyDollar, HiOutlineShoppingCart } from 'react-icons/hi';
+import { RiNewspaperLine } from 'react-icons/ri';
 import { IconType } from 'react-icons';
-import { useRouter } from 'next/router';
+import { ReactText } from 'react';
+// import Link from 'next/link';
 
 interface LinkItemProps {
   name: string;
@@ -39,8 +45,6 @@ export default function SimpleSidebar({}: { children?: ReactNode }) {
         display={{ base: 'none', md: 'block' }}
         position='fixed'
         mt='2px'
-        zIndex='1'
-        top='60px'
       />
       <Drawer
         autoFocus={false}
@@ -64,7 +68,6 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const router = useRouter();
   return (
     <Box
       bg='#1F2428'
@@ -77,13 +80,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       {LinkItems.map((link) => (
-        <>
-          {router.pathname == link.href ? (
-            <OnNavItem key={link.name} icon={link.icon} href={link.href} name={link.name} />
-          ) : (
-            <NavItem key={link.name} icon={link.icon} href={link.href} name={link.name} />
-          )}
-        </>
+        <NavItem key={link.name} icon={link.icon} href={link.href}>
+          {link.name}
+        </NavItem>
       ))}
     </Box>
   );
@@ -91,10 +90,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
+  children?: ReactText;
   href: string;
-  name: string;
 }
-const NavItem = ({ href, icon, name, ...rest }: NavItemProps) => {
+const NavItem = ({ href, icon, children, ...rest }: NavItemProps) => {
   return (
     <Link href={href} _focus={{ boxShadow: 'none' }}>
       <Flex
@@ -120,27 +119,7 @@ const NavItem = ({ href, icon, name, ...rest }: NavItemProps) => {
             as={icon}
           />
         )}
-        {name}
-      </Flex>
-    </Link>
-  );
-};
-const OnNavItem = ({ href, icon, name, ...rest }: NavItemProps) => {
-  return (
-    <Link href={href} _focus={{ boxShadow: 'none' }}>
-      <Flex bg='white' align='center' p='4' color='#2E373F' role='group' cursor='pointer' {...rest}>
-        {icon && (
-          <Icon
-            color='#2E373F'
-            mr='4'
-            fontSize='16'
-            _groupHover={{
-              color: '#2E373F',
-            }}
-            as={icon}
-          />
-        )}
-        {name}
+        {children}
       </Flex>
     </Link>
   );

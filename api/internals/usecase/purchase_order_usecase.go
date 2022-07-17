@@ -4,6 +4,7 @@ import (
 	"context"
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"strconv"
 )
 
 type purchaseOrderUseCase struct {
@@ -16,6 +17,8 @@ type PurchaseOrderUseCase interface {
 	CreatePurchaseOrder(context.Context, string, string) error
 	UpdatePurchaseOrder(context.Context, string, string, string) error
 	DestroyPurchaseOrder(context.Context, string) error
+	GetOrderWithUserItem(context.Context) ([]domain.OrderWithItemAndUser,error)
+	GetOrderWithUserItemByID(context.Context, string) (domain.OrderWithItemAndUser,error)
 }
 
 func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
@@ -91,4 +94,102 @@ func (p *purchaseOrderUseCase) DestroyPurchaseOrder(
 )error {
 	err := p.rep.Delete(c, id)
 	return err
+}
+
+//Purchase_orderに紐づくUserとItemの取得(All)
+func (p *purchaseOrderUseCase) GetOrderWithUserItem(c context.Context) ([]domain.OrderWithItemAndUser,error){
+	orderWithUserAndItem := domain.OrderWithItemAndUser{}
+	var orderWithUserAndItems []domain.OrderWithItemAndUser
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+	rows, err := p.rep.AllOrderWithUser(c)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next(){
+		err := rows.Scan(
+			&orderWithUserAndItem.PurchaseOrder.ID,
+			&orderWithUserAndItem.PurchaseOrder.DeadLine,
+			&orderWithUserAndItem.PurchaseOrder.UserID,
+			&orderWithUserAndItem.PurchaseOrder.CreatedAt,
+			&orderWithUserAndItem.PurchaseOrder.UpdatedAt,
+			&orderWithUserAndItem.User.ID,
+			&orderWithUserAndItem.User.Name,
+			&orderWithUserAndItem.User.BureauID,
+			&orderWithUserAndItem.User.RoleID,
+			&orderWithUserAndItem.User.CreatedAt,
+			&orderWithUserAndItem.User.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		rows, err := p.rep.GetPurchaseItemByOrderId(c, strconv.Itoa(int(orderWithUserAndItem.PurchaseOrder.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&purchaseItem.ID,
+				&purchaseItem.Item,
+				&purchaseItem.Price,
+				&purchaseItem.Quantity,
+				&purchaseItem.Detail,
+				&purchaseItem.Url,
+				&purchaseItem.PurchaseOrderID,
+				&purchaseItem.FinansuCheck,
+				&purchaseItem.CreatedAt,
+				&purchaseItem.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			purchaseItems = append(purchaseItems,purchaseItem)
+		}
+		orderWithUserAndItem.PurchaseItem = purchaseItems
+		orderWithUserAndItems = append(orderWithUserAndItems,orderWithUserAndItem)
+		purchaseItems = nil
+	}
+	return orderWithUserAndItems,nil
+}
+
+//Purchase_orderに紐づくUserとItemの取得(ByID)
+func (p *purchaseOrderUseCase) GetOrderWithUserItemByID(c context.Context, id string) (domain.OrderWithItemAndUser,error) {
+	orderWithUserAndItem := domain.OrderWithItemAndUser{}
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+	row ,err := p.rep.FindWithOrderItem(c, id)
+	err = row.Scan(
+		  &orderWithUserAndItem.PurchaseOrder.ID,
+			&orderWithUserAndItem.PurchaseOrder.DeadLine,
+			&orderWithUserAndItem.PurchaseOrder.UserID,
+			&orderWithUserAndItem.PurchaseOrder.CreatedAt,
+			&orderWithUserAndItem.PurchaseOrder.UpdatedAt,
+			&orderWithUserAndItem.User.ID,
+			&orderWithUserAndItem.User.Name,
+			&orderWithUserAndItem.User.BureauID,
+			&orderWithUserAndItem.User.RoleID,
+			&orderWithUserAndItem.User.CreatedAt,
+			&orderWithUserAndItem.User.UpdatedAt,
+	)
+	if err != nil {
+		return orderWithUserAndItem ,nil
+	}
+	rows, err := p.rep.GetPurchaseItemByOrderId(c, strconv.Itoa(int(orderWithUserAndItem.PurchaseOrder.ID)))
+	for rows.Next() {
+		err := rows.Scan(
+			&purchaseItem.ID,
+			&purchaseItem.Item,
+			&purchaseItem.Price,
+			&purchaseItem.Quantity,
+			&purchaseItem.Detail,
+			&purchaseItem.Url,
+			&purchaseItem.PurchaseOrderID,
+			&purchaseItem.FinansuCheck,
+			&purchaseItem.CreatedAt,
+			&purchaseItem.UpdatedAt,
+		)
+		if err != nil {
+			return orderWithUserAndItem ,nil
+		}
+		purchaseItems = append(purchaseItems,purchaseItem)
+	}
+	orderWithUserAndItem.PurchaseItem = purchaseItems
+	return orderWithUserAndItem, nil
 }
