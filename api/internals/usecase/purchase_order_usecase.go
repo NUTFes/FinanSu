@@ -133,7 +133,7 @@ func (p *purchaseOrderUseCase) GetOrderWithUserItem(c context.Context) ([]domain
 				&purchaseItem.Detail,
 				&purchaseItem.Url,
 				&purchaseItem.PurchaseOrderID,
-				&purchaseItem.FinansuCheck,
+				&purchaseItem.FinanceCheck,
 				&purchaseItem.CreatedAt,
 				&purchaseItem.UpdatedAt,
 			)
@@ -181,7 +181,7 @@ func (p *purchaseOrderUseCase) GetOrderWithUserItemByID(c context.Context, id st
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinansuCheck,
+			&purchaseItem.FinanceCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 		)
