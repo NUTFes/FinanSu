@@ -1,34 +1,33 @@
-import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
+import React, { useState } from 'react';
 import {
+  Box,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  Button,
   Flex,
+  Center,
   Spacer,
   Select,
   Grid,
   GridItem,
+  useDisclosure,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/common/Header';
-import { get } from '@api/purchaseOrder';
+import MainLayout from '@components/layout/MainLayout';
+import { get, get_with_token } from '@api/api_methods';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
-import { useState } from 'react';
 import DetailModal from '@components/purchaseorders/DetailModal';
-import * as React from 'react';
-import MainLayout from '@components/layout/MainLayout';
+import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 
 interface User {
   id: number;
   name: string;
+  bureau_id: number;
+  role_id: number;
 }
 
 interface PurchaseOrder {
@@ -54,6 +53,8 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseOrder(props: Props) {
+  const { isOpen, onOpen } = useDisclosure();
+
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 4);
@@ -82,13 +83,15 @@ export default function PurchaseOrder(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <Button
-                  textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
-                  bgGradient='linear(to-br, primary.1, primary.2)'
-                >
+                <OpenAddModalButton>
+                  <RiAddCircleLine
+                    size={20}
+                    style={{
+                      marginRight: 5,
+                    }}
+                  />
                   購入申請
-                </Button>
+                </OpenAddModalButton>
               </Box>
             </Flex>
           </Box>
@@ -129,19 +132,19 @@ export default function PurchaseOrder(props: Props) {
               <Tbody>
                 {props.purchaseOrder.map((purchaseOrderItem) => (
                   <Tr key={purchaseOrderItem.id}>
-                    <Td onClick={() => ShowModal()}>
+                    <Td onClick={onOpen}>
                       <Center color='black.300'>{purchaseOrderItem.id}</Center>
                     </Td>
-                    <Td onClick={() => ShowModal()}>
+                    <Td onClick={onOpen}>
                       <Center color='black.300'>{purchaseOrderItem.deadline}</Center>
                     </Td>
-                    <Td onClick={() => ShowModal()}>
+                    <Td onClick={onOpen}>
                       <Center color='black.300'>{purchaseOrderItem.user_id}</Center>
                     </Td>
-                    <Td onClick={() => ShowModal()}>
+                    <Td onClick={onOpen}>
                       <Center color='black.300'>{formatDate(purchaseOrderItem.created_at)}</Center>
                     </Td>
-                    <Td onClick={() => ShowModal()}></Td>
+                    <Td onClick={onOpen}></Td>
                     <Td>
                       <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                         <GridItem>
@@ -158,7 +161,7 @@ export default function PurchaseOrder(props: Props) {
                     </Td>
                     <DetailModal
                       id={purchaseOrderItem.id}
-                      openModal={showModal}
+                      openModal={isOpen}
                       setShowModal={setShowModal}
                     />
                   </Tr>

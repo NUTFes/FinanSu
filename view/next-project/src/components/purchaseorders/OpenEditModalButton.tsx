@@ -27,6 +27,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         borderRadius='full'
         bgGradient='linear(to-br, primary.1 ,primary.2)'
         onClick={ShowModal}
+        _hover={{ background: 'primary.2' }}
       >
         <RiPencilFill size={'15px'} color={'white'} />
         {props.children}

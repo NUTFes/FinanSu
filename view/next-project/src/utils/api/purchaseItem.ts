@@ -21,13 +21,14 @@ export const get_with_token = async (url: string) => {
   return await res.json();
 };
 
-export const post = async (url: string, data: any) => {
+export const post = async (url: string, data: any, purchase_order_id: number) => {
   const item = data.item;
   const price = data.price;
-  const quantity= data.quantity;
+  const quantity = data.quantity;
   const detail = data.detail;
   const itemUrl = data.url;
-  const purchaseOrderId = data.purchase_order_id;
+  const purchaseOrderId = purchase_order_id;
+  const finance_check = data.finance_check;
   const postUrl =
     url +
     '?item=' +
@@ -41,7 +42,9 @@ export const post = async (url: string, data: any) => {
     '&url=' +
     itemUrl +
     '&purchase_order_id=' +
-    purchaseOrderId;
+    purchaseOrderId +
+    '&finance_check=' +
+    finance_check;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -53,13 +56,14 @@ export const post = async (url: string, data: any) => {
   return await res.json();
 };
 
-export const put = async (url: string, data: any) => {
+export const put = async (url: string, data: any, purchase_order_id: number) => {
   const item = data.item;
   const price = data.price;
   const quantity = data.quantity;
   const detail = data.detail;
   const itemUrl = data.url;
-  const purchaseOrderId = data.purchase_order_id;
+  const purchaseOrderId = purchase_order_id;
+  const finance_check = data.finance_check;
   const putUrl =
     url +
     '?item="' +
@@ -73,8 +77,10 @@ export const put = async (url: string, data: any) => {
     '"&url="' +
     itemUrl +
     '&purchase_order_id=' +
-    purchaseOrderId;
-  console.log(putUrl, data.item, data.price, data.quantity, data.detail, data.url);
+    purchaseOrderId +
+    '&finance_check=' +
+    finance_check;
+  // console.log(putUrl, data.item, data.price, data.quantity, data.detail, data.url);
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',

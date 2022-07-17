@@ -5,22 +5,19 @@ import * as React from 'react';
 interface Props {
   width?: string;
   height?: string;
-  mx?: number | string;
-  isDisabled?: any;
-  variant?: any;
+  mx?: string;
   children?: React.ReactNode;
-  hover?: any;
   onClick: () => void;
+  hover?: any;
 }
 
-export default function CommonButton(props: Props) {
+export default function DeleteButton(props: Props) {
   return (
     <ChakraProvider theme={theme}>
       <Button
-        isDisabled={props.isDisabled}
         mx={props.mx}
         color='white'
-        bgGradient='linear(to-br, primary.1, primary.2)'
+        bgGradient='linear(to-br, red.500, red.600)'
         h={props.height}
         w={props.width}
         onClick={props.onClick}
