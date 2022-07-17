@@ -54,7 +54,8 @@ interface Props {
   teachers: Teacher[];
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
+  const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getTeacherURL = process.env.SSR_API_URI + '/teachers';
   const teacherRes = await get(getTeacherURL);
   return {
