@@ -1,37 +1,23 @@
-import { ChakraProvider, Button, propNames } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
+import clsx from 'clsx';
 
 interface Props {
-  width?: string;
-  height?: string;
-  children?: React.ReactNode;
-  bgGradient?: string;
-  _hover?: any;
   onClick?: () => void;
 }
 
-const RegistButton: React.FC<Props> = ({
+const Button: React.FC<Props> = ({
   children,
-  width,
-  height,
-  bgGradient,
-  _hover,
   onClick,
 }) => {
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        color='white'
-        bgGradient={bgGradient}
-        _hover={{ _hover }}
-        style={{ height, width }}
-        onClick={onClick}
-      >
+    <button className={clsx("px-4 py-2 text-white-0 font-bold text-md rounded-lg bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-primary-2")}
+      onClick={onClick}
+    >
+      <div className={clsx("flex items-center")}>
         {children}
-      </Button>
-    </ChakraProvider>
+      </div>
+    </button>
   );
 };
 
-export default RegistButton;
+export default Button;
