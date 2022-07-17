@@ -14,13 +14,11 @@ import {
   BoxProps,
   FlexProps,
 } from '@chakra-ui/react';
-import { MdOutlineDashboard, MdOutlineSchool } from 'react-icons/md';
+import { MdOutlineDashboard, MdOutlineSavings } from 'react-icons/md';
 import { BiBuildings } from 'react-icons/bi';
-import { HiCurrencyDollar, HiOutlineShoppingCart } from 'react-icons/hi';
-import { RiNewspaperLine } from 'react-icons/ri';
+import { HiCurrencyDollar, HiOutlineShoppingCart, HiOutlineDocumentText } from 'react-icons/hi';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
-// import Link from 'next/link';
 
 interface LinkItemProps {
   name: string;
