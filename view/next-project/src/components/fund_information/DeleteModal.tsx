@@ -1,8 +1,7 @@
 import {
   ChakraProvider,
   Center,
-  Input,
-  Select,
+  Text,
   Flex,
   Box,
   Spacer,
@@ -13,14 +12,14 @@ import {
   ModalBody,
   Grid,
   GridItem,
+  Divider,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../common/RegistButton';
+import Button from '@components/common/Button';
 import { useRouter } from 'next/router';
-import { get } from '@api/api_methods';
-import { put } from '@api/fundInformations';
+import { get, del } from '@api/api_methods';
 
 interface Teacher {
   id: number;
@@ -37,7 +36,7 @@ interface Teacher {
 interface User {
   id: number;
   name: string;
-  bureau_id: number;
+  department_id: number;
   role_id: number;
 }
 
@@ -55,18 +54,19 @@ interface ModalProps {
   openModal: any;
   children?: React.ReactNode;
   id: number | string;
-  teachers: Teacher[];
-  currentUser: User;
+  teacher_id: number;
+  user_id: number;
 }
 
-export default function FundInformationEditModal(props: ModalProps) {
+export default function DeleteModal(props: ModalProps) {
   const closeModal = () => {
     props.setShowModal(false);
   };
 
   const router = useRouter();
 
-  const [formData, setFormData] = useState<FundInformation>({
+  // モーダルに表示する用のfund_informationを定義
+  const [fundInformation, setFundInformation] = useState<FundInformation>({
     user_id: 0,
     teacher_id: '',
     price: 0,
@@ -75,30 +75,53 @@ export default function FundInformationEditModal(props: ModalProps) {
     is_last_check: false,
   });
 
+  const [teacher, setTeacher] = useState<Teacher>({
+    id: Number(fundInformation.teacher_id),
+    name: '',
+    position: '',
+    department_id: 1,
+    room: '',
+    is_black: false,
+    remark: '',
+    created_at: '',
+    updated_at: '',
+  });
+
+  const [user, setUser] = useState<User>({
+    id: 0,
+    name: '',
+    department_id: 1,
+    role_id: 1,
+  });
+
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/fund_informations/' + props.id;
-      const getFormData = async (url: string) => {
-        setFormData(await get(url));
+      // モーダルを開いているfund_informationを取得
+      const getFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + props.id;
+      const getFundInformation = async (url: string) => {
+        setFundInformation(await get(url));
       };
-      getFormData(getFormDataUrl);
+      getFundInformation(getFundInformationURL);
+
+      // teacher_idに紐づくteacherを取得
+      const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.teacher_id;
+      const getTeacher = async (url: string) => {
+        setTeacher(await get(url));
+      };
+      getTeacher(getTeacherURL);
+
+      // user_idに紐づくuserを取得
+      const getUserURL = process.env.CSR_API_URI + '/users/' + props.user_id;
+      const getUser = async (url: string) => {
+        setUser(await get(url));
+      };
+      getUser(getUserURL);
     }
   }, [router]);
 
-  const handler =
-    (input: string) =>
-    (
-      e:
-        | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
-        | React.ChangeEvent<HTMLSelectElement>,
-    ) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
-
-  const submitFundInformation = async (data: any, id: number | string) => {
-    const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await put(submitFundInformationURL, data);
+  const deleteFundInformation = async (id: number | string) => {
+    const deleteFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
+    await del(deleteFundInformationURL);
   };
 
   return (
@@ -116,7 +139,7 @@ export default function FundInformationEditModal(props: ModalProps) {
             <Grid templateColumns='repeat(12, 1fr)' gap={4}>
               <GridItem rowSpan={1} colSpan={12}>
                 <Center color='black.600' h='100%' fontSize='xl'>
-                  募金の編集
+                  募金の削除
                 </Center>
               </GridItem>
               <GridItem colSpan={1} />
@@ -124,23 +147,25 @@ export default function FundInformationEditModal(props: ModalProps) {
                 <Grid templateColumns='repeat(12, 1fr)' gap={4}>
                   <GridItem rowSpan={1} colSpan={4}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
+                      報告者名
+                    </Flex>
+                  </GridItem>
+                  <GridItem rowSpan={1} colSpan={8}>
+                    <Text fontSize='lg' pl={2}>
+                      {user.name}
+                    </Text>
+                    <Divider />
+                  </GridItem>
+                  <GridItem rowSpan={1} colSpan={4}>
+                    <Flex color='black.600' h='100%' justify='end' align='center'>
                       教員名
                     </Flex>
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
-                    <Select
-                      value={formData.teacher_id}
-                      onChange={handler('teacher_id')}
-                      borderRadius='full'
-                      borderColor='primary.1'
-                      w='224px'
-                    >
-                      {props.teachers.map((data) => (
-                        <option key={data.id} value={data.id}>
-                          {data.name}
-                        </option>
-                      ))}
-                    </Select>
+                    <Text fontSize='lg' pl={2}>
+                      {teacher.name}
+                    </Text>
+                    <Divider />
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={4}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
@@ -148,15 +173,10 @@ export default function FundInformationEditModal(props: ModalProps) {
                     </Flex>
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.price}
-                        onChange={handler('price')}
-                      />
-                    </Flex>
+                    <Text fontSize='lg' pl={2}>
+                      {fundInformation.price}
+                    </Text>
+                    <Divider />
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={4}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
@@ -164,15 +184,10 @@ export default function FundInformationEditModal(props: ModalProps) {
                     </Flex>
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.remark}
-                        onChange={handler('remark')}
-                      />
-                    </Flex>
+                    <Text fontSize='lg' pl={2}>
+                      {fundInformation.remark}
+                    </Text>
+                    <Divider />
                   </GridItem>
                 </Grid>
               </GridItem>
@@ -183,12 +198,14 @@ export default function FundInformationEditModal(props: ModalProps) {
             <ModalFooter mt='5' mb='10'>
               <Button
                 width='220px'
+                bgGradient='linear(to-br, red.500 ,red.600)'
+                _hover={{ bg: 'red.600' }}
                 onClick={() => {
-                  submitFundInformation(formData, props.id);
+                  deleteFundInformation(props.id);
                   router.reload();
                 }}
               >
-                編集する
+                削除する
               </Button>
             </ModalFooter>
           </Center>

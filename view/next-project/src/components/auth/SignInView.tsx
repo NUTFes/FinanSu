@@ -2,9 +2,9 @@ import React, { FC, useState } from 'react';
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import { signIn } from '@api/signIn';
-import LoadingButton from '@components/General/LoadingButton';
-import Email from '@components/General/Email';
-import Password from '@components/General/Password';
+import LoadingButton from '@components/common/LoadingButton';
+import Email from '@components/common/Email';
+import Password from '@components/common/Password';
 import {
   ChakraProvider,
   Center,

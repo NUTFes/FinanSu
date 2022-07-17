@@ -21,6 +21,7 @@ type router struct {
 	teacherController         controller.TeacherController
 	activityController        controller.ActivityController
 	sponsorController         controller.SponsorController
+	bureauController					controller.BureauController
 }
 
 type Router interface {
@@ -43,6 +44,7 @@ func NewRouter(
 	teacherController controller.TeacherController,
 	activityController controller.ActivityController,
 	sponsorController controller.SponsorController,
+	bureauController controller.BureauController,
 
 ) Router {
 	return router{
@@ -61,6 +63,7 @@ func NewRouter(
 		teacherController,
 		activityController,
 		sponsorController,
+		bureauController,
 	}
 }
 
@@ -129,6 +132,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
 	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
+	e.GET("/get_purchaseorders_for_view", r.purchaseOrderController.IndexOrderWithUserItem)
+	e.GET("/get_purchaseorders_for_view/:id", r.purchaseOrderController.ShowOrderWithUserItem)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
@@ -180,4 +185,10 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
 	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
 
+	//bureauのRoute
+	e.GET("/bureaus", r.bureauController.IndexBureau)
+	e.GET("/bureaus/:id",r.bureauController.ShowBureau)
+	e.POST("/bureaus", r.bureauController.CreateBureau)
+	e.PUT("/bureaus/:id", r.bureauController.UpdateBureau)
+	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
 }

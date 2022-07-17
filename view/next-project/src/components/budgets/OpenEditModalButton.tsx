@@ -1,20 +1,30 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
+import { RiPencilFill } from 'react-icons/ri';
 import * as React from 'react';
-import DeleteModal from '@components/fund_information/DeleteModal';
 import { useState } from 'react';
-import { RiDeleteBinLine } from 'react-icons/ri';
+import theme from '@assets/theme';
+import EditModal from '@components/budgets/EditModal';
 
 interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
   id: number;
-  teacher_id: number;
-  user_id: number;
+  sources: Source[];
+  years: Year[];
 }
 
-const OpenDeleteModalButton: React.FC<Props> = (props) => {
+interface Source {
+  id: number;
+  name: string;
+}
+
+interface Year {
+  id: number;
+  year: number;
+}
+
+const OpenEditModalButton: React.FC<Props> = (props) => {
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
@@ -27,22 +37,20 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
         p='0'
         minWidth='0'
         borderRadius='full'
-        bgGradient='linear(to-br, red.500 ,red.600)'
-        _hover={{ bg: 'red.600' }}
+        bgGradient='linear(to-br, primary.1 ,primary.2)'
         onClick={ShowModal}
       >
-        <RiDeleteBinLine size={'15px'} color={'white'} />
+        <RiPencilFill size={'15px'} color={'white'} />
         {props.children}
       </Button>
-      <DeleteModal
+      <EditModal
         id={props.id}
-        teacher_id={props.teacher_id}
-        user_id={props.user_id}
         openModal={showModal}
         setShowModal={setShowModal}
+        sources={props.sources}
+        years={props.years}
       />
     </ChakraProvider>
   );
 };
-
-export default OpenDeleteModalButton;
+export default OpenEditModalButton;

@@ -1,17 +1,21 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import * as React from 'react';
-import DeleteModal from '@components/fund_information/DeleteModal';
+import DeleteModal from '@components/users/DeleteModal';
 import { useState } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
+
+interface Bureau {
+  id: number;
+  name: string;
+}
 
 interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
   id: number;
-  teacher_id: number;
-  user_id: number;
+  bureaus: Bureau[];
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -36,8 +40,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
       </Button>
       <DeleteModal
         id={props.id}
-        teacher_id={props.teacher_id}
-        user_id={props.user_id}
+        bureaus={props.bureaus}
         openModal={showModal}
         setShowModal={setShowModal}
       />

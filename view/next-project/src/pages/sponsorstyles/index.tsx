@@ -1,62 +1,37 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import EditButton from '@components/common/EditButton';
 import RegistButton from '@components/common/RegistButton';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Button,
-  Flex,
-  Spacer,
-  Select,
-  Icon,
-  Text,
-  createIcon,
-} from '@chakra-ui/react';
-
+import { Table, Thead, Tbody, Th, Td, Tr, Flex, Spacer, Select } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { Center, Box } from '@chakra-ui/react';
-import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
+import { RiAddCircleLine } from 'react-icons/ri';
 import Header from '@components/common/Header';
-import { getDomainLocale } from 'next/dist/shared/lib/router/router';
+import { get } from '@api/sponsorship';
+import { useState } from 'react';
 
-interface activity {
+interface SponsorStyle {
   id: number;
-  sponsor_id: number;
-  sponsor_style_id: number;
-  user_id: number;
-  is_done: boolean;
+  scale: string;
+  is_color: boolean;
+  price: number;
   created_at: string;
   updated_at: string;
 }
-
-const activity: NextPage = () => {
-  const activity = [
-    {
-      id: 1,
-      sponsor_id: 1,
-      sponsor_style_id: 1,
-      user_id: 1,
-      is_done: true,
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
+interface Props {
+  sponsorstyles: SponsorStyle[];
+}
+export const getServerSideProps = async () => {
+  const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
+  const sponsorstylesRes = await get(getSponsorstylesUrl);
+  return {
+    props: {
+      sponsorstyles: sponsorstylesRes,
     },
-    {
-      id: 2,
-      sponsor_id: 2,
-      sponsor_style_id: 2,
-      user_id: 2,
-      is_done: false,
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
-    },
-  ];
+  };
+};
+export default function SponsorList(props: Props) {
+  const [sponsorList, setSponsorList] = useState<SponsorStyle[]>(props.sponsorstyles);
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -73,7 +48,7 @@ const activity: NextPage = () => {
           <Box mt='10' mx='5'>
             <Flex>
               <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                協賛金回収状況
+                協賛スタイル一覧
               </Center>
               <Select variant='flushed' w='100'>
                 <option value='2021'>2021</option>
@@ -106,57 +81,45 @@ const activity: NextPage = () => {
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      協賛ID
+                      広告サイズ
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' mr='1' color='black.600'>
-                      協賛スタイルID
+                      カラー，モノクロ
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center fontSize='sm' color='black.600'>
-                      ユーザーID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      回収状況
+                      金額
                     </Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
                     <Center color='black.600'></Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      作成日時
-                    </Center>
+                    <Center color='black.600'>作成日時</Center>
                   </Th>
                   <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      更新日時
-                    </Center>
+                    <Center color='black.600'>更新日時</Center>
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {activity.map((activityItem) => (
-                  <Tr key={activityItem.id}>
+                {sponsorList.map((sponsorStyleItem) => (
+                  <Tr key={sponsorStyleItem.id}>
                     <Td>
-                      <Center color='black.300'>{activityItem.id}</Center>
+                      <Center color='black.300'>{sponsorStyleItem.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{activityItem.sponsor_id}</Center>
+                      <Center color='black.300'>{sponsorStyleItem.scale}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{activityItem.sponsor_style_id}</Center>
+                      {sponsorStyleItem.is_color && <Center color='black.300'>カラー</Center>}
+                      {!sponsorStyleItem.is_color && <Center color='black.300'>モノクロ</Center>}
                     </Td>
-                    <Td>
-                      <Center color='black.300'>{activityItem.user_id}</Center>
-                    </Td>
-                    <Td>
-                      {activityItem.is_done && <Center color='black.300'>回収完了</Center>}
-                      {!activityItem.is_done && <Center color='black.300'>未回収</Center>}
+                    <Td isNumeric color='black.300'>
+                      {sponsorStyleItem.price}
                     </Td>
                     <Td>
                       <Center>
@@ -164,10 +127,10 @@ const activity: NextPage = () => {
                       </Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{activityItem.created_at}</Center>
+                      <Center color='black.300'>{sponsorStyleItem.created_at}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{activityItem.updated_at}</Center>
+                      <Center color='black.300'>{sponsorStyleItem.updated_at}</Center>
                     </Td>
                   </Tr>
                 ))}
@@ -178,6 +141,4 @@ const activity: NextPage = () => {
       </Center>
     </ChakraProvider>
   );
-};
-
-export default activity;
+}
