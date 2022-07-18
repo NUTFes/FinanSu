@@ -20,9 +20,9 @@ import * as React from 'react';
 import { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
+import { PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: any;
@@ -150,15 +150,14 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
+              <PrimaryButton
                 onClick={() => {
                   registBudget(formData);
                   router.reload();
                 }}
               >
                 登録する
-              </Button>
+              </PrimaryButton>
             </ModalFooter>
           </Center>
         </ModalContent>

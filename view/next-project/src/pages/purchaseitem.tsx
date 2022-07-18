@@ -1,6 +1,4 @@
-import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
+import { Box } from '@chakra-ui/react';
 import {
   Table,
   Thead,
@@ -9,17 +7,14 @@ import {
   Tr,
   Th,
   Td,
-  Button,
   Flex,
   Spacer,
   Select,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/Header';
-import { get } from '@api/purchaseOrder';
+import { get } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
+import { AddButton, EditButton } from '@components/common';
 
 interface PurchaseItem {
   id: number;
@@ -93,13 +88,9 @@ export default function PurchaseItem(props: Props) {
             <Flex>
               <Spacer />
               <Box>
-                <Button
-                  textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
-                  bgGradient='linear(to-br, primary.1, primary.2)'
-                >
+                <AddButton>
                   購入物品登録
-                </Button>
+                </AddButton>
               </Box>
             </Flex>
           </Box>

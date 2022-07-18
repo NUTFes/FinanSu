@@ -22,8 +22,8 @@ import theme from '@assets/theme';
 import { get } from '@api/api_methods';
 import { put } from '@api/teachers';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/General/RegistButton';
 import { useRouter } from 'next/router';
+import { PrimaryButton } from '@components/common';
 
 interface Department {
   id: number;
@@ -240,15 +240,14 @@ export default function FundInformationEditModal(props: ModalProps) {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
+              <PrimaryButton
                 onClick={() => {
                   update(formData, props.id, isBlack);
                   router.reload();
                 }}
               >
                 編集する
-              </Button>
+              </PrimaryButton>
             </ModalFooter>
           </Center>
         </ModalContent>

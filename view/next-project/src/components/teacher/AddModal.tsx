@@ -21,9 +21,9 @@ import { post } from '@api/teachers';
 import React, { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from '@components/General/RegistButton';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
+import { PrimaryButton } from '@components/common';
 
 interface Department {
   id: number;
@@ -225,15 +225,14 @@ const OpenAddModal: FC<ModalProps> = (props) => {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <RegistButton
-                width='220px'
+              <PrimaryButton
                 onClick={() => {
                   addTeacher(formData, isBlack);
                   router.reload();
                 }}
               >
                 登録する
-              </RegistButton>
+              </PrimaryButton>
             </ModalFooter>
           </Center>
         </ModalContent>

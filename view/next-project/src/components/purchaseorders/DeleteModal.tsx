@@ -15,9 +15,9 @@ import {
 import React, { FC } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import { useRouter } from 'next/router';
 import { del } from '@api/purchaseOrder';
+import { RedButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: any;
@@ -65,16 +65,14 @@ const PurchaseOrderDeleteModal: FC<ModalProps> = (props) => {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
+              <RedButton
                 onClick={() => {
                   deletePurchaseOrder(props.id);
                   router.reload();
                 }}
-                hover={{ background: 'red.600' }}
               >
                 削除する
-              </Button>
+              </RedButton>
             </ModalFooter>
           </Center>
         </ModalContent>

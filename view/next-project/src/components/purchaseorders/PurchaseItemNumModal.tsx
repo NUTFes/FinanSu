@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { get, get_with_token } from '@api/api_methods';
 import { post } from '@api/purchaseOrder';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { Modal, Input, Select, PrimaryButton } from '@components/common';
 

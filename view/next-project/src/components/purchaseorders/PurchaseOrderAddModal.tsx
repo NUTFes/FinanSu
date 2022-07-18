@@ -18,10 +18,9 @@ import { post } from '@api/purchaseItem';
 import React from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import DeleteButton from '@components/common/DeleteButton';
-import AddButton from '@components/common/Button';
 import { useRouter } from 'next/router';
+import { PrimaryButton, RedButton } from '@components/common';
 
 interface ModalProps {
   purchaseOrderId: number;
@@ -208,34 +207,32 @@ export default function AddModal(props: ModalProps) {
                 {activeStep === steps.length ? (
                   <Flex p={4}>
                     <Spacer />
-                    <DeleteButton mx='2' onClick={reset}>
+                    <RedButton onClick={reset}>
                       Reset
-                    </DeleteButton>
-                    <AddButton
-                      width='220px'
+                    </RedButton>
+                    <PrimaryButton
                       onClick={() => {
                         addPurchaseItem(props.formDataList, props.purchaseOrderId);
                         props.onClose();
                         props.numModalOnClose();
                         router.reload();
                       }}
-                      hover={{ background: 'primary.2' }}
                     >
                       登録
-                    </AddButton>
+                    </PrimaryButton>
                   </Flex>
                 ) : (
                   <Flex justify='flex-end'>
-                    <Button isDisabled={activeStep === 0} mx={4} onClick={prevStep} variant='ghost'>
+                    <RedButton onClick={prevStep}>
                       Prev
-                    </Button>
-                    <Button
+                    </RedButton>
+                    <PrimaryButton
                       onClick={() => {
                         nextStep();
                       }}
                     >
                       {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
+                    </PrimaryButton>
                   </Flex>
                 )}
               </GridItem>
