@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import s from './PrimaryButton.module.css';
-import { NewButton } from '@components/common';
+import { Button } from '@components/common';
 
 interface Props {
   className?: string;
@@ -14,9 +14,9 @@ function PrimaryButton(props: Props): JSX.Element {
     'bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-primary-2' +
     (props.className ? ` ${props.className}` : '');
   return (
-    <NewButton className={clsx(className)} onClick={props.onClick}>
+    <Button className={clsx(className)} onClick={props.onClick}>
       <div className={clsx('flex items-center')}>{props.children}</div>
-    </NewButton>
+    </Button>
   );
 }
 
