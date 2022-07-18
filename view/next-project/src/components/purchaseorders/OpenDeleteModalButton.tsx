@@ -1,39 +1,31 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import * as React from 'react';
+import React from 'react';
 import DeleteModal from '@components/purchaseorders/DeleteModal';
 import { useState } from 'react';
-import { RiDeleteBinLine } from 'react-icons/ri';
+import { DeleteButton } from '@components/common';
 
 interface Props {
-  width?: string;
-  height?: string;
   children?: React.ReactNode;
   id: number;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  const onClose= () => {
+    setIsOpen(false);
   };
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        w='25px'
-        h='25px'
-        p='0'
-        minWidth='0'
-        borderRadius='full'
-        bgGradient='linear(to-br, red.500 ,red.600)'
-        onClick={ShowModal}
-        _hover={{ background: 'red.600' }}
-      >
-        <RiDeleteBinLine size={'15px'} color={'white'} />
+    <>
+      <DeleteButton onClick={onOpen}>
         {props.children}
-      </Button>
-      <DeleteModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
-    </ChakraProvider>
+      </DeleteButton>
+      {
+      isOpen ? (
+        <DeleteModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} />
+      ) : null}
+    </>
   );
 };
 
