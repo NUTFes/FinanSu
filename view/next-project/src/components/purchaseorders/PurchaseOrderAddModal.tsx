@@ -18,7 +18,6 @@ import { post } from '@api/purchaseItem';
 import React from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import DeleteButton from '@components/common/DeleteButton';
 import { useRouter } from 'next/router';
 import { PrimaryButton, RedButton } from '@components/common';
 

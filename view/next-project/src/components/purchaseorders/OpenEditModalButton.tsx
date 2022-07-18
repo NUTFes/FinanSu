@@ -20,9 +20,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   };
   return (
     <>
-      <EditButton onClick={onOpen}>
-        {props.children}
-      </EditButton>
+      <EditButton onClick={onOpen}/>
       {
       isOpen ? (
         <EditModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} />

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { RiPencilFill } from 'react-icons/ri';
 
 interface Props {
-  onClick?: () => void;
+  onClick?: any;
 }
 
 function EditButton(props: Props): JSX.Element {

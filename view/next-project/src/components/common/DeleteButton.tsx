@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
 interface Props {
-  onClick?: () => void;
-  children?: React.ReactNode;
+  onClick?: any;
 }
 
 export default function DeleteButton(props: Props) {
