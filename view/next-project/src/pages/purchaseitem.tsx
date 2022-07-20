@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/General/EditButton';
+import EditButton from '@components/common/EditButton';
 import {
   Table,
   Thead,
@@ -17,7 +17,6 @@ import {
 import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/Header';
 import { get } from '@api/purchaseOrder';
 import MainLayout from '@components/layout/MainLayout';
 

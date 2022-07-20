@@ -20,7 +20,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/General/Button';
+import Button from '@components/common/Button';
 import { useRouter } from 'next/router';
 import { get, del } from '@api/api_methods';
 

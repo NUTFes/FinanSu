@@ -22,7 +22,7 @@ import theme from '@assets/theme';
 import { get } from '@api/api_methods';
 import { put } from '@api/teachers';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/General/RegistButton';
+import Button from '@components/common/RegistButton';
 import { useRouter } from 'next/router';
 
 interface Department {
