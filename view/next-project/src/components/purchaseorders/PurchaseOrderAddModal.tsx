@@ -1,25 +1,9 @@
-import {
-  ChakraProvider,
-  Center,
-  Flex,
-  Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  Grid,
-  GridItem,
-  Input,
-} from '@chakra-ui/react';
+import React from 'react';
+import { useRouter } from 'next/router';
+import clsx from 'clsx';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
 import { post } from '@api/purchaseItem';
-import React from 'react';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import { useRouter } from 'next/router';
-import { PrimaryButton, RedButton } from '@components/common';
+import { PrimaryButton, RedButton, CloseButton, Input, Modal } from '@components/common';
 
 interface ModalProps {
   purchaseOrderId: number;
@@ -71,79 +55,85 @@ export default function AddModal(props: ModalProps) {
 
   // 購入物品の情報
   const content: Function = (index: number, data: PurchaseItem) => (
-    <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
-      <GridItem colSpan={12} />
-      <GridItem colSpan={2}>
-        <Flex color='black.600' h='100%' justify='end' align='center'>
-          物品名
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={10}>
-        <Input
-          borderRadius='full'
-          borderColor='primary.1'
-          value={data.item}
-          onChange={handler(index, 'item')}
-        />
-      </GridItem>
-
-      <GridItem colSpan={2}>
-        <Flex color='black.600' h='100%' justify='end' align='center'>
-          単価
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={10}>
-        <Input
-          borderRadius='full'
-          borderColor='primary.1'
-          value={data.price}
-          onChange={handler(index, 'price')}
-        />
-      </GridItem>
-
-      <GridItem colSpan={2}>
-        <Flex color='black.600' h='100%' justify='end' align='center'>
-          個数
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={10}>
-        <Input
-          borderRadius='full'
-          borderColor='primary.1'
-          value={data.quantity}
-          onChange={handler(index, 'quantity')}
-        />
-      </GridItem>
-
-      <GridItem colSpan={2}>
-        <Flex color='black.600' h='100%' justify='end' align='center'>
-          詳細
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={10}>
-        <Input
-          borderRadius='full'
-          borderColor='primary.1'
-          value={data.detail}
-          onChange={handler(index, 'detail')}
-        />
-      </GridItem>
-
-      <GridItem colSpan={2}>
-        <Flex color='black.600' h='100%' justify='end' align='center'>
-          URL
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={10}>
-        <Input
-          borderRadius='full'
-          borderColor='primary.1'
-          value={data.url}
-          onChange={handler(index, 'url')}
-        />
-      </GridItem>
-      <GridItem mt={5} colSpan={12} />
-    </Grid>
+    <>
+      <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
+        <div className={clsx('grid col-span-2 mr-2')}>
+          <div
+            className={clsx(
+              'grid justify-items-end flex items-center text-black-600 text-md',
+            )}
+          >
+            物品名
+          </div>
+        </div>
+        <div className={clsx('grid col-span-10 w-full my-2')}>
+          <Input
+            value={data.item}
+            onChange={handler(index, 'item')}
+          />
+        </div>
+        <div className={clsx('grid col-span-2 mr-2')}>
+          <div
+            className={clsx(
+              'grid justify-items-end flex items-center text-black-600 text-md',
+            )}
+          >
+            単価
+          </div>
+        </div>
+        <div className={clsx('grid col-span-10 w-full')}>
+          <Input
+            value={data.price}
+            onChange={handler(index, 'price')}
+          />
+        </div>
+        <div className={clsx('grid col-span-2 mr-2')}>
+          <div
+            className={clsx(
+              'grid justify-items-end flex items-center text-black-600 text-md',
+            )}
+          >
+            個数
+          </div>
+        </div>
+        <div className={clsx('grid col-span-10 w-full')}>
+          <Input
+            value={data.quantity}
+            onChange={handler(index, 'quantity')}
+          />
+        </div>
+        <div className={clsx('grid col-span-2 mr-2')}>
+          <div
+            className={clsx(
+              'grid justify-items-end flex items-center text-black-600 text-md',
+            )}
+          >
+            詳細
+          </div>
+        </div>
+        <div className={clsx('grid col-span-10 w-full')}>
+          <Input
+            value={data.detail}
+            onChange={handler(index, 'detail')}
+          />
+        </div>
+        <div className={clsx('grid col-span-2 mr-2')}>
+          <div
+            className={clsx(
+              'grid justify-items-end flex items-center text-black-600 text-md',
+            )}
+          >
+            URL
+          </div>
+        </div>
+        <div className={clsx('grid col-span-10 w-full')}>
+          <Input
+            value={data.url}
+            onChange={handler(index, 'url')}
+          />
+        </div>
+      </div>
+    </>
   );
 
   // 購入物品数だけステップを用意
@@ -163,39 +153,25 @@ export default function AddModal(props: ModalProps) {
   }
 
   return (
-    <ChakraProvider theme={theme}>
-      <Modal
-        closeOnOverlayClick={false}
-        isOpen={props.isOpen}
-        onClose={props.onClose}
-        isCentered
-        size='6xl'
-      >
-        <ModalOverlay />
-        <ModalContent pb='5' borderRadius='3xl'>
-          <ModalBody p='3'>
-            <Flex mt='5'>
-              <Spacer />
-              <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine
-                  size={'23px'}
-                  color={'gray'}
-                  onClick={() => {
-                    props.onClose();
-                    props.numModalOnClose();
-                  }}
-                />
-              </Box>
-            </Flex>
-            <Grid templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem rowSpan={1} colSpan={12}>
-                <Center color='black.600' h='100%' fontSize='xl'>
-                  購入物品の登録
-                </Center>
-              </GridItem>
-              <GridItem colSpan={12} />
-              <GridItem colSpan={1} />
-              <GridItem rowSpan={1} colSpan={10}>
+    <>
+      {props.isOpen ? (
+        <>
+          <Modal className='!w-1/2'>
+            <div className={clsx('w-full')}>
+              <div className={clsx('mr-5 w-full grid justify-items-end')}>
+                <CloseButton onClick={() => {
+                  props.onClose();
+                  props.numModalOnClose();
+                }} />
+              </div>
+            </div>
+            <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+              購入物品の登録
+            </div>
+
+            <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
+              <div className={clsx('grid col-span-1')}/>
+              <div className={clsx('grid col-span-10 w-full')}>
                 <Steps activeStep={activeStep}>
                   {steps.map(({ label }, index: number) => (
                     <Step label={label} key={index}>
@@ -204,11 +180,14 @@ export default function AddModal(props: ModalProps) {
                   ))}
                 </Steps>
                 {activeStep === steps.length ? (
-                  <Flex p={4}>
-                    <Spacer />
+                  <div className={clsx('grid grid-cols-8 gap-4 my-10')}>
+                    <div className={clsx('grid col-span-3')}/>
+                    <div className={clsx('grid col-span-1 w-full')}>
                     <RedButton onClick={reset}>
                       Reset
                     </RedButton>
+                    </div>
+                    <div className={clsx('grid col-span-1 w-full')}>
                     <PrimaryButton
                       onClick={() => {
                         addPurchaseItem(props.formDataList, props.purchaseOrderId);
@@ -219,12 +198,19 @@ export default function AddModal(props: ModalProps) {
                     >
                       登録
                     </PrimaryButton>
-                  </Flex>
+                    </div>
+                    <div className={clsx('grid col-span-3')}/>
+                  </div>
+
                 ) : (
-                  <Flex justify='flex-end'>
+                  <div className={clsx('grid grid-cols-7 gap-4 my-10')}>
+                    <div className={clsx('grid col-span-5')}/>
+                    <div className={clsx('grid col-span-1 justify-items-center')}>
                     <RedButton onClick={prevStep}>
                       Prev
                     </RedButton>
+                    </div>
+                    <div className={clsx('grid col-span-1 justify-items-center')}>
                     <PrimaryButton
                       onClick={() => {
                         nextStep();
@@ -232,14 +218,15 @@ export default function AddModal(props: ModalProps) {
                     >
                       {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                     </PrimaryButton>
-                  </Flex>
+                    </div>
+                  </div>
                 )}
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-            </Grid>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </ChakraProvider>
+              </div>
+              <div className={clsx('grid col-span-1')}/>
+            </div>
+          </Modal>
+        </>
+      ) : null}
+    </>
   );
 }
