@@ -101,35 +101,35 @@ export default function PurchaseOrder(props: Props) {
               </tr>
             </thead>
             <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
-              {props.purchaseOrder.map((purchaseOrderItem) => (
+              {props.purchaseOrder.map((purchaseOrderItem, index) => (
                 <tr key={purchaseOrderItem.id}>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4 py-2')}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderItem.id}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4 py-2')}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderItem.deadline}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4 py-2')}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderItem.user_id}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4 py-2')}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {formatDate(purchaseOrderItem.created_at)}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen} /> */}
-                  <td className={clsx('px-4 py-2')} />
-                  <td className={clsx('px-4 py-2')}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}/>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
                         <OpenEditModalButton id={purchaseOrderItem.id} />
