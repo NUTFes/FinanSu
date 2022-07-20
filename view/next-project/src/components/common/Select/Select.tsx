@@ -18,7 +18,7 @@ function Select(props: Props): JSX.Element {
     <div className={clsx(s.customSelect)}>
       <select
         placeholder={props.placeholder}
-        className={clsx(className)}
+        className={clsx(s.select, className)}
         value={props.value}
         onChange={props.onChange}
       >
