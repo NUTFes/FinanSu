@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  purge: ["./src/**/*.{js,ts,jsx,tsx}"],
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  // content: [
+  //   "./src/pages/**/*.{js,ts,jsx,tsx}",
+  //   "./src/components/**/*.{js,ts,jsx,tsx}",
+  // ],
   theme: {
     colors: {
       'primary-1': '#56DAFF',
@@ -19,7 +24,19 @@ module.exports = {
       'red-500': '#ef4444',
       'red-600': '#dc2626',
     },
-    extend: {},
+    extend: {
+      width: {
+        '1/2': '50%',
+        '3/4': '75%',
+        '9/10': '90%',
+        '1/7': '14.2857143%',
+        '2/7': '28.5714286%',
+        '3/7': '42.8571429%',
+        '4/7': '57.1428571%',
+        '5/7': '71.4285714%',
+        '6/7': '85.7142857%',
+      }
+    },
   },
   plugins: [],
 }
