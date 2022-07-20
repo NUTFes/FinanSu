@@ -20,9 +20,9 @@ import {
 import React, { useState, useEffect } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/General/Button';
 import { useRouter } from 'next/router';
 import { get, del } from '@api/api_methods';
+import { RedButton } from '@components/common';
 
 interface Department {
   id: number;
@@ -213,17 +213,14 @@ export default function DeleteModal(props: ModalProps) {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
-                bgGradient='linear(to-br, red.500 ,red.600)'
-                _hover={{ bg: 'red.600' }}
+              <RedButton
                 onClick={() => {
                   deleteTeacher(props.id);
                   router.reload();
                 }}
               >
                 削除する
-              </Button>
+              </RedButton>
             </ModalFooter>
           </Center>
         </ModalContent>

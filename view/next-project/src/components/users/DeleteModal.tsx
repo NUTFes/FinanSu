@@ -17,9 +17,9 @@ import {
 import React, { useState, useEffect } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import { useRouter } from 'next/router';
 import { get, del } from '@api/api_methods';
+import { RedButton } from '@components/common';
 
 interface Bureau {
   id: number;
@@ -132,17 +132,14 @@ export default function DeleteModal(props: ModalProps) {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
-                bgGradient='linear(to-br, red.500 ,red.600)'
-                _hover={{ bg: 'red.600' }}
+              <RedButton
                 onClick={() => {
                   deleteUser(props.id);
                   router.reload();
                 }}
               >
                 削除する
-              </Button>
+              </RedButton>
             </ModalFooter>
           </Center>
         </ModalContent>

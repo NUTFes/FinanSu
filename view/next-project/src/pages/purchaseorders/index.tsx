@@ -1,27 +1,14 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Center,
-  Spacer,
-  Select,
-  Grid,
-  GridItem,
-  useDisclosure,
-} from '@chakra-ui/react';
+import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
-import MainLayout from '@components/layout/MainLayout';
+import React, { useState } from 'react';
 import { get, get_with_token } from '@api/api_methods';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import DetailModal from '@components/purchaseorders/DetailModal';
+import MainLayout from '@components/layout/MainLayout';
+import clsx from 'clsx';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
+import { Card } from '@components/common';
 
 interface User {
   id: number;
@@ -53,7 +40,7 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseOrder(props: Props) {
-  const { isOpen, onOpen } = useDisclosure();
+  // const { isOpen, onOpen } = useDisclosure();
 
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
@@ -68,109 +55,101 @@ export default function PurchaseOrder(props: Props) {
 
   return (
     <MainLayout>
-      <Flex justify='center' align='center'>
-        <Box m='10' px='10' boxShadow='base' rounded='lg'>
-          <Box mt='10' mx='5'>
-            <Flex>
-              <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                購入申請一覧
-              </Center>
-              <Select variant='flushed' w='100'>
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-              </Select>
-            </Flex>
-            <Flex>
-              <Spacer />
-              <Box>
-                <OpenAddModalButton>
-                  <RiAddCircleLine
-                    size={20}
-                    style={{
-                      marginRight: 5,
-                    }}
-                  />
-                  購入申請
-                </OpenAddModalButton>
-              </Box>
-            </Flex>
-          </Box>
-          <Box p='5' mb='2'>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      ID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
-                      購入期限日
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      申請者
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7' isNumeric>
-                    <Center fontSize='sm' color='black.600'>
-                      申請日
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      金額
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center></Center>
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {props.purchaseOrder.map((purchaseOrderItem) => (
-                  <Tr key={purchaseOrderItem.id}>
-                    <Td onClick={onOpen}>
-                      <Center color='black.300'>{purchaseOrderItem.id}</Center>
-                    </Td>
-                    <Td onClick={onOpen}>
-                      <Center color='black.300'>{purchaseOrderItem.deadline}</Center>
-                    </Td>
-                    <Td onClick={onOpen}>
-                      <Center color='black.300'>{purchaseOrderItem.user_id}</Center>
-                    </Td>
-                    <Td onClick={onOpen}>
-                      <Center color='black.300'>{formatDate(purchaseOrderItem.created_at)}</Center>
-                    </Td>
-                    <Td onClick={onOpen}></Td>
-                    <Td>
-                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                        <GridItem>
-                          <Center>
-                            <OpenEditModalButton id={purchaseOrderItem.id} />
-                          </Center>
-                        </GridItem>
-                        <GridItem>
-                          <Center>
-                            <OpenDeleteModalButton id={purchaseOrderItem.id} />
-                          </Center>
-                        </GridItem>
-                      </Grid>
-                    </Td>
-                    <DetailModal
+      <Head>
+        <title>購入申請一覧</title>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      </Head>
+      <Card>
+        <div className={clsx('mt-10 mx-5')}>
+          <div className={clsx('flex')}>
+            <h1 className={clsx('text-2xl font-thin mr-5 mt-1 text-gray-900 align-text-bottom')}>
+              購入申請一覧
+            </h1>
+            <select className={clsx('w-100 ')}>
+              <option value='2021'>2021</option>
+              <option value='2022'>2022</option>
+            </select>
+          </div>
+          <div className={clsx('flex justify-end')}>
+            <OpenAddModalButton>
+              申請登録
+            </OpenAddModalButton>
+          </div>
+        </div>
+        <div className={clsx('mb-2 p-5 w-100')}>
+          <table className={clsx('table-fixed border-collapse: collapse')}>
+            <thead>
+              <tr
+                className={clsx('py-3 border-b-primary-1 border border-t-white-0 border-x-white-0')}
+              >
+                <th className={clsx('px-6 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>ID</div>
+                </th>
+                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>購入期限日</div>
+                </th>
+                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>申請者</div>
+                </th>
+                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
+                </th>
+                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>金額</div>
+                </th>
+                <th className={clsx('px-6 pb-2 border-b-primary-1')}></th>
+              </tr>
+            </thead>
+            <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
+              {props.purchaseOrder.map((purchaseOrderItem, index) => (
+                <tr key={purchaseOrderItem.id}>
+                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {purchaseOrderItem.id}
+                    </div>
+                  </td>
+                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {purchaseOrderItem.deadline}
+                    </div>
+                  </td>
+                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {purchaseOrderItem.user_id}
+                    </div>
+                  </td>
+                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {formatDate(purchaseOrderItem.created_at)}
+                    </div>
+                  </td>
+                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen} /> */}
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}/>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <div className={clsx('grid grid-cols-2 gap-3')}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        <OpenEditModalButton id={purchaseOrderItem.id} />
+                      </div>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        <OpenDeleteModalButton id={purchaseOrderItem.id} />
+                      </div>
+                    </div>
+                  </td>
+                  {/* <DetailModal
                       id={purchaseOrderItem.id}
                       openModal={isOpen}
                       setShowModal={setShowModal}
-                    />
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
-        </Box>
-      </Flex>
+                    /> */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </MainLayout>
   );
 }

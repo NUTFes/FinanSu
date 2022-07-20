@@ -16,9 +16,9 @@ import {
 import React, { FC, useEffect, useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import { useRouter } from 'next/router';
 import { get, put } from '@api/purchaseOrder';
+import { PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: any;
@@ -121,16 +121,14 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
+              <PrimaryButton
                 onClick={() => {
                   submitPurchaseOrder(formData, props.id);
                   router.reload();
                 }}
-                hover={{ background: 'primary.2' }}
               >
                 編集する
-              </Button>
+              </PrimaryButton>
             </ModalFooter>
           </Center>
         </ModalContent>

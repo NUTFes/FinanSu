@@ -1,28 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import {
-  ChakraProvider,
-  Select,
-  Center,
-  Flex,
-  Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  Grid,
-  GridItem,
-  Input,
-  useDisclosure,
-} from '@chakra-ui/react';
+import clsx from 'clsx';
 import { get, get_with_token } from '@api/api_methods';
 import { post } from '@api/purchaseOrder';
-import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
+import { Modal, Input, Select, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -58,7 +41,14 @@ export default function PurchaseItemNumModal(props: ModalProps) {
 
   const router = useRouter();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   const [formData, setFormData] = useState({
     deadline: '',
@@ -147,88 +137,86 @@ export default function PurchaseItemNumModal(props: ModalProps) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Modal closeOnOverlayClick={false} isOpen={props.isOpen} onClose={props.onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent pb='5' borderRadius='3xl'>
-          <ModalBody p='3'>
-            <Flex mt='5'>
-              <Spacer />
-              <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
+    <>
+      {props.isOpen ? (
+        <>
+          <Modal>
+            <div className={clsx('w-full')}>
+              <div className={clsx('mr-5 w-full grid justify-items-end')}>
                 <RiCloseCircleLine size={'23px'} color={'gray'} onClick={props.onClose} />
-              </Box>
-            </Flex>
-            <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem rowSpan={1} colSpan={12}>
-                <Center color='black.600' h='100%' fontSize='xl'>
-                  購入申請の作成
-                </Center>
-              </GridItem>
-            </Grid>
-            <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h='100%' justify='end' align='center'>
-                  購入期限
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Input
-                  placeholder='yyyymmddで入力'
-                  borderRadius='full'
-                  borderColor='primary.1'
-                  value={formData.deadline}
-                  onChange={formDataHandler('deadline')}
-                />
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h='100%' justify='end' align='center'>
-                  購入物品数
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Select
-                  value={purchaseItemNum.value}
-                  onChange={purchaseItemNumHandler('value')}
-                  borderRadius='full'
-                  borderColor='primary.1'
-                >
-                  {purchaseItemNumArray.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))}
-                </Select>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-            </Grid>
-          </ModalBody>
-          <Center>
-            <ModalFooter mb='2'>
-              <Button
-                width='220px'
+              </div>
+            </div>
+            <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+              購入申請の作成
+            </div>
+            <div className={clsx('grid grid-cols-12 gap-4 mb-10')}>
+              <div className={clsx('grid col-span-1')} />
+              <div className={clsx('grid col-span-10')}>
+                <div className={clsx('grid grid-cols-12 w-full my-2')}>
+                  <div className={clsx('grid col-span-4 mr-2')}>
+                    <div
+                      className={clsx(
+                        'grid justify-items-end flex items-center text-black-600 text-md',
+                      )}
+                    >
+                      購入期限
+                    </div>
+                  </div>
+                  <div className={clsx('grid col-span-8 w-full my-2')}>
+                    <Input
+                      placeholder=' yyyymmddで入力'
+                      value={formData.deadline}
+                      onChange={formDataHandler('deadline')}
+                    />
+                  </div>
+                </div>
+                <div className={clsx('grid grid-cols-12 w-full')}>
+                  <div className={clsx('grid col-span-4 mr-2 h-100')}>
+                    <div
+                      className={clsx(
+                        'grid justify-items-end flex items-center text-black-600 text-md',
+                      )}
+                    >
+                      購入物品数
+                    </div>
+                  </div>
+                  <div className={clsx('grid col-span-8 w-full')}>
+                    <Select
+                      value={purchaseItemNum.value}
+                      onChange={purchaseItemNumHandler('value')}
+                    >
+                      {purchaseItemNumArray.map((data) => (
+                        <option key={data} value={data}>{data}</option>
+                      ))}
+                    </Select>
+                  </div>
+                </div>
+              </div>
+              <div className={clsx('grid col-span-1 ')} />
+            </div>
+            <div className={clsx('grid justify-items-center py-3')}>
+              <PrimaryButton
                 onClick={() => {
                   updateFormDataList();
                   onOpen();
                   addPurchaseOrder(formData, currentUser.id);
                 }}
-                hover={{ background: 'primary.2' }}
               >
-                決定
-              </Button>
-            </ModalFooter>
-          </Center>
-        </ModalContent>
-      </Modal>
-      <AddModal
-        purchaseOrderId={purchaseOrderId}
-        purchaseItemNum={purchaseItemNum}
-        isOpen={isOpen}
-        numModalOnClose={props.onClose}
-        onClose={onClose}
-        setFormDataList={setFormDataList}
-        formDataList={formDataList}
-      />
-    </ChakraProvider>
+                購入物品の詳細入力へ
+              </PrimaryButton>
+            </div>
+          </Modal>
+          <AddModal
+            purchaseOrderId={purchaseOrderId}
+            purchaseItemNum={purchaseItemNum}
+            isOpen={isOpen}
+            numModalOnClose={props.onClose}
+            onClose={onClose}
+            setFormDataList={setFormDataList}
+            formDataList={formDataList}
+          />
+        </>
+      ) : null}
+    </>
   );
 }

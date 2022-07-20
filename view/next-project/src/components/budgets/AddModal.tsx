@@ -20,9 +20,9 @@ import * as React from 'react';
 import { useState } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/Button';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
+import { PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: any;
@@ -107,7 +107,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                       borderColor='primary.1'
                     >
                       {props.years.map((data) => (
-                        <option value={data.id}>{data.year}</option>
+                        <option key={data.id} value={data.id}>{data.year}</option>
                       ))}
                     </Select>
                   </GridItem>
@@ -124,7 +124,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                       onChange={handler('source_id')}
                     >
                       {props.sources.map((source) => (
-                        <option value={source.id}>{source.name}</option>
+                        <option key={source.id} value={source.id}>{source.name}</option>
                       ))}
                     </Select>
                   </GridItem>
@@ -150,15 +150,14 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
+              <PrimaryButton
                 onClick={() => {
                   registBudget(formData);
                   router.reload();
                 }}
               >
                 登録する
-              </Button>
+              </PrimaryButton>
             </ModalFooter>
           </Center>
         </ModalContent>

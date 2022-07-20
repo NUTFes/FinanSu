@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
 import { get_with_token } from '@api/api_methods';
+import 'tailwindcss/tailwind.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
