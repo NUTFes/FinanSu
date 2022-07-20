@@ -1,19 +1,11 @@
 import { get } from '@api/purchaseReport';
 import Head from 'next/head';
-import { Box, ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { Box, Grid, GridItem } from '@chakra-ui/react';
 import { Table, Thead, Tbody, Tr, Th, Td, Button, Flex, Spacer, Select } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-<<<<<<< HEAD:view/next-project/src/pages/purchasereports/index.tsx
-import Header from '@components/common/Header';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
-=======
-import Header from '@components/Header';
-import OpenEditModalButton from '@components/purchasereport/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/purchasereport/OpenDeleteModalButton';
->>>>>>> main:view/next-project/src/pages/purchasereport.tsx
 import MainLayout from '@components/layout/MainLayout';
 
 interface PurchaseReport {
