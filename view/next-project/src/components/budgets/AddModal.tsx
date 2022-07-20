@@ -107,7 +107,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                       borderColor='primary.1'
                     >
                       {props.years.map((data) => (
-                        <option value={data.id}>{data.year}</option>
+                        <option key={data.id} value={data.id}>{data.year}</option>
                       ))}
                     </Select>
                   </GridItem>
@@ -124,7 +124,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                       onChange={handler('source_id')}
                     >
                       {props.sources.map((source) => (
-                        <option value={source.id}>{source.name}</option>
+                        <option key={source.id} value={source.id}>{source.name}</option>
                       ))}
                     </Select>
                   </GridItem>

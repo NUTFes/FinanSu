@@ -186,7 +186,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                       onChange={purchaseItemNumHandler('value')}
                     >
                       {purchaseItemNumArray.map((data) => (
-                        <option value={data}>{data}</option>
+                        <option key={data} value={data}>{data}</option>
                       ))}
                     </Select>
                   </div>
