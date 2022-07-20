@@ -56,7 +56,7 @@ export default function AddModal(props: ModalProps) {
   // 購入物品の情報
   const content: Function = (index: number, data: PurchaseItem) => (
     <>
-      <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
+      <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
         <div className={clsx('grid col-span-2 mr-2')}>
           <div
             className={clsx(
@@ -66,7 +66,7 @@ export default function AddModal(props: ModalProps) {
             物品名
           </div>
         </div>
-        <div className={clsx('grid col-span-10 w-full my-2')}>
+        <div className={clsx('grid col-span-10 w-full')}>
           <Input
             value={data.item}
             onChange={handler(index, 'item')}
@@ -139,16 +139,6 @@ export default function AddModal(props: ModalProps) {
   // 購入物品数だけステップを用意
   let steps = [];
   for (let i = 0; i < props.purchaseItemNum.value; i++) {
-    let initialFormData = {
-      id: i + 1,
-      item: '',
-      price: '',
-      quantity: '',
-      detail: '',
-      url: '',
-      purchaseOrderId: props.purchaseOrderId,
-      finance_check: false,
-    };
     steps.push({ label: '' });
   }
 
@@ -169,7 +159,7 @@ export default function AddModal(props: ModalProps) {
               購入物品の登録
             </div>
 
-            <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
+            <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
               <div className={clsx('grid col-span-1')}/>
               <div className={clsx('grid col-span-10 w-full')}>
                 <Steps activeStep={activeStep}>
@@ -203,7 +193,7 @@ export default function AddModal(props: ModalProps) {
                   </div>
 
                 ) : (
-                  <div className={clsx('grid grid-cols-7 gap-4 my-10')}>
+                  <div className={clsx('grid grid-cols-7 gap-4 mt-6')}>
                     <div className={clsx('grid col-span-5')}/>
                     <div className={clsx('grid col-span-1 justify-items-center')}>
                     <RedButton onClick={prevStep}>
