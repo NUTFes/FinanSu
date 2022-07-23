@@ -5,6 +5,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
 import { get_with_token } from '@api/api_methods';
 import 'tailwindcss/tailwind.css';
+import { ManagedUIContext } from '@components/ui/context';
+import Layout from '@components/layout/Layout';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -18,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         router.push('/');
         localStorage.clear();
       } else if (isSignIn && router.pathname == '/') {
-        router.push('/fund_informations');
+        router.push('/purchaseorders');
       }
     };
     getIsSignIn();
@@ -35,7 +37,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           href='https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap'
         />
       </Head>
-      <Component {...pageProps} />
+      <ManagedUIContext>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ManagedUIContext>
     </ChakraProvider>
   );
 }
