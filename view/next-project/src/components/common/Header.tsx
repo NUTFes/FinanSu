@@ -15,7 +15,7 @@ import PulldownButton from '@components/common/PulldownButton';
 import { Avatar } from '@chakra-ui/react';
 import theme from '@assets/theme';
 import { del } from '@api/signOut';
-import { get_with_token } from '@api/api_methods';
+import { useGlobalContext } from '@components/global/context';
 
 interface User {
   id: number | string;
@@ -38,34 +38,7 @@ export const signOut = async () => {
 };
 
 const Header = (props: any) => {
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: '',
-    name: '',
-    department_id: '',
-    role_id: '',
-  });
-
-  // ページ読み込み時にcurrent_userを取得
-  if (typeof window !== 'undefined') {
-    window.onload = async function () {
-      // current_userを取得
-      const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
-      const currentUserRes = await get_with_token(getCurrentUserUrl);
-      const currentUserData: User = {
-        id: currentUserRes.id,
-        name: currentUserRes.name,
-        department_id: currentUserRes.department_id,
-        role_id: currentUserRes.role_id,
-      };
-      // current_userにセット
-      setCurrentUser({
-        id: currentUserData.id,
-        name: currentUserData.name,
-        department_id: currentUserData.department_id,
-        role_id: currentUserData.role_id,
-      });
-    };
-  }
+  const state = useGlobalContext();
 
   return (
     <ChakraProvider theme={theme}>
@@ -101,7 +74,7 @@ const Header = (props: any) => {
             <Avatar size='xs' />
           </Box>
           <Box>
-            <Text mx='3'>{currentUser.name}</Text>
+            <Text mx='3'>{state.user.name}</Text>
           </Box>
           <Box marginRight='5'>
             <Menu>
