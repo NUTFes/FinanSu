@@ -9,3 +9,4 @@ export { default as EditButton} from './EditButton';
 export { default as DeleteButton} from './DeleteButton';
 export { default as CloseButton} from './CloseButton';
 export { default as Card } from './Card';
+export { default as Stepper } from './Stepper';
