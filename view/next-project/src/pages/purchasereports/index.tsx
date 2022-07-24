@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { get } from '@api/api_methods';
+import { put } from '@api/purchaseReport';
 import Head from 'next/head';
-import { Box, Grid, GridItem } from '@chakra-ui/react';
-import { Table, Thead, Tbody, Tr, Th, Td, Button, Flex, Spacer, Select } from '@chakra-ui/react';
-import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import clsx from 'clsx';
-import { Card } from '@components/common';
+import { Card, Checkbox } from '@components/common';
+import { useGlobalContext } from '@components/global/context';
 
 interface PurchaseReport {
+  [x: string]: any;
   id: number;
   user_id: number;
   purchase_order_id: number;
@@ -77,7 +76,9 @@ export async function getServerSideProps({ params }: any) {
   };
 }
 
+
 export default function PurchaseReport(props: Props) {
+  const state = useGlobalContext();
   // 購入報告
   const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(() => {
     let initPurchaseReportList = [];
@@ -117,6 +118,102 @@ export default function PurchaseReport(props: Props) {
     const datetime2 = datetime.substring(0, datetime.length - 4);
     return datetime2;
   };
+
+  // 合計金額
+  const [totalFee, setTotalFee] = useState<number>(0);
+
+  const calcTotalFee = (initPurchaseItems: PurchaseItem[]) => {
+    for (let i = 0; i < initPurchaseItems.length; i++) {
+      setTotalFee(totalFee + initPurchaseItems[i].price);
+    }
+  };
+
+  // // チェックの切り替え
+  // const switchCheck = async (
+  //   isChecked: boolean,
+  //   id: number,
+  //   input: string,
+  //   purchaseReportItem: PurchaseReport,
+  // ) => {
+  //   if (input == 'is_last_check') {
+  //     const initialPurchaseReport: PurchaseReport = {
+  //       id: id,
+  //       user_id: purchaseReportItem.user_id,
+  //       purchase_order_id: purchaseReportItem.teacher_id,
+  //       created_at: purchaseReportItem.created_at,
+  //       updated_at: purchaseReportItem.updated_at,
+  //     };
+  //     calcTotalFee(initialPurchaseReport);
+  //   }
+  //   setPurchaseReports(
+  //     purchaseReports.map((purchaseReportItem: PurchaseReport) =>
+  //       purchaseReportItem.id === id ? { ...purchaseReportItem, [input]: !isChecked } : purchaseReportItem,
+  //     ),
+  //   );
+  // };
+
+  // checkboxの値が変わったときに更新
+  const submit = async (id: number, purchaseReportItem: PurchaseReport) => {
+    const putURL = process.env.CSR_API_URI + '/purchasereports/' + id;
+    await put(putURL, purchaseReportItem);
+  };
+
+  // 変更可能なcheckboxの描画
+  const changeableCheckboxContent = (
+    isChecked: boolean,
+    id: number,
+    input: string,
+    purchaseReportItem: PurchaseReport,
+  ) => {
+    {
+      if (isChecked) {
+        return (
+          <>
+            <Checkbox
+              checked={true}
+              disabled={false}
+              onChange={() => {
+                // switchCheck(isChecked, id, input, purchaseReportItem);
+                // submit(id, purchaseReportItem);
+              }}
+            ></Checkbox>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Checkbox
+              disabled={false}
+              onChange={() => {
+                // switchCheck(isChecked, id, input, purchaseReportItem);
+                // submit(id, purchaseReportItem);
+              }}
+            ></Checkbox>
+          </>
+        );
+      }
+    }
+  };
+
+  // 変更不可能なcheckboxの描画
+  const unChangeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
+    {
+      if (isChecked) {
+        return (
+          <>
+            <Checkbox checked={isChecked} disabled={true}></Checkbox>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Checkbox disabled={true}></Checkbox>
+          </>
+        );
+      }
+    }
+  };
+
 
   return (
     <MainLayout>
@@ -171,7 +268,20 @@ export default function PurchaseReport(props: Props) {
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {purchaseReport.id}
+                      {state.user.role_id === 3 ? (
+                        changeableCheckboxContent(
+                          // purchaseReport.is_first_check,
+                          true,
+                          purchaseReport.id,
+                          'finance_check',
+                          purchaseReport[index],
+                        )) : (
+                        unChangeableCheckboxContent(
+                          // purchaseReport.is_first_check,
+                          true,
+                          purchaseReport.id,
+                          'finance_check',
+                        ))}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
