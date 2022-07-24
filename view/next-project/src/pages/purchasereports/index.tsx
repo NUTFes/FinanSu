@@ -119,77 +119,18 @@ export default function PurchaseReport(props: Props) {
     return datetime2;
   };
 
-  // 合計金額
-  const [totalFee, setTotalFee] = useState<number>(0);
-
-  const calcTotalFee = (initPurchaseItems: PurchaseItem[]) => {
-    for (let i = 0; i < initPurchaseItems.length; i++) {
-      setTotalFee(totalFee + initPurchaseItems[i].price);
-    }
-  };
-
-  // // チェックの切り替え
-  // const switchCheck = async (
-  //   isChecked: boolean,
-  //   id: number,
-  //   input: string,
-  //   purchaseReportItem: PurchaseReport,
-  // ) => {
-  //   if (input == 'is_last_check') {
-  //     const initialPurchaseReport: PurchaseReport = {
-  //       id: id,
-  //       user_id: purchaseReportItem.user_id,
-  //       purchase_order_id: purchaseReportItem.teacher_id,
-  //       created_at: purchaseReportItem.created_at,
-  //       updated_at: purchaseReportItem.updated_at,
-  //     };
-  //     calcTotalFee(initialPurchaseReport);
-  //   }
-  //   setPurchaseReports(
-  //     purchaseReports.map((purchaseReportItem: PurchaseReport) =>
-  //       purchaseReportItem.id === id ? { ...purchaseReportItem, [input]: !isChecked } : purchaseReportItem,
-  //     ),
-  //   );
-  // };
-
-  // checkboxの値が変わったときに更新
-  const submit = async (id: number, purchaseReportItem: PurchaseReport) => {
-    const putURL = process.env.CSR_API_URI + '/purchasereports/' + id;
-    await put(putURL, purchaseReportItem);
-  };
-
   // 変更可能なcheckboxの描画
   const changeableCheckboxContent = (
     isChecked: boolean,
-    id: number,
-    input: string,
-    purchaseReportItem: PurchaseReport,
   ) => {
     {
       if (isChecked) {
         return (
-          <>
-            <Checkbox
-              checked={true}
-              disabled={false}
-              onChange={() => {
-                // switchCheck(isChecked, id, input, purchaseReportItem);
-                // submit(id, purchaseReportItem);
-              }}
-            ></Checkbox>
-          </>
+          <Checkbox checked={true} disabled={false} />
         );
       } else {
         return (
-          <>
-            <Checkbox
-              disabled={false}
-              onChange={() => {
-                // switchCheck(isChecked, id, input, purchaseReportItem);
-                // submit(id, purchaseReportItem);
-              }}
-            ></Checkbox>
-          </>
+          <Checkbox disabled={false} />
         );
       }
     }
@@ -200,15 +141,11 @@ export default function PurchaseReport(props: Props) {
     {
       if (isChecked) {
         return (
-          <>
-            <Checkbox checked={isChecked} disabled={true}></Checkbox>
-          </>
+          <Checkbox checked={isChecked} disabled={true} />
         );
       } else {
         return (
-          <>
-            <Checkbox disabled={true}></Checkbox>
-          </>
+          <Checkbox disabled={true} />
         );
       }
     }
