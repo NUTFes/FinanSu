@@ -2,12 +2,16 @@ import React from 'react';
 import { useUI } from '@components/ui/context';
 import s from './Layout.module.css';
 import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModal';
+import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 
 const ModalView: React.FC<{ modalView: string; closeModal(): any }> = ({ modalView, closeModal }) => {
   return (
     <>
       {modalView === 'PURCHASE_ITEM_NUM_MODAL' && (
         <PurchaseItemNumModal />
+      )}
+      {modalView === 'PURCHASE_REPORT_ADD_MODAL' && (
+        <PurchaseReportAddModal />
       )}
     </>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { get } from '@api/api_methods';
 import { put } from '@api/purchaseReport';
 import Head from 'next/head';
+import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import MainLayout from '@components/layout/MainLayout';
@@ -137,7 +138,7 @@ export default function PurchaseReport(props: Props) {
   };
 
   // 変更不可能なcheckboxの描画
-  const unChangeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
+  const unChangeableCheckboxContent = (isChecked: boolean) => {
     {
       if (isChecked) {
         return (
@@ -170,9 +171,9 @@ export default function PurchaseReport(props: Props) {
             </select>
           </div>
           <div className={clsx('flex justify-end')}>
-            {/* <OpenAddModalButton>
-              申請登録
-            </OpenAddModalButton> */}
+            <OpenAddModalButton>
+              報告登録
+            </OpenAddModalButton>
           </div>
         </div>
         <div className={clsx('mb-2 p-5 w-100')}>
@@ -209,15 +210,10 @@ export default function PurchaseReport(props: Props) {
                         changeableCheckboxContent(
                           // purchaseReport.is_first_check,
                           true,
-                          purchaseReport.id,
-                          'finance_check',
-                          purchaseReport[index],
                         )) : (
                         unChangeableCheckboxContent(
                           // purchaseReport.is_first_check,
                           true,
-                          purchaseReport.id,
-                          'finance_check',
                         ))}
                     </div>
                   </td>
