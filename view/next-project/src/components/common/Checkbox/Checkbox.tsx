@@ -20,6 +20,7 @@ function Checkbox(props: Props): JSX.Element {
       {props.checked ? (
         <input
           type="checkbox"
+          checked
           disabled={props.disabled}
           className={clsx(className)}
           placeholder={props.placeholder}
