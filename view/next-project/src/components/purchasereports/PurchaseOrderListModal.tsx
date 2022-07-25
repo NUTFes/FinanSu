@@ -133,7 +133,7 @@ export default function PurchaseItemNumModal() {
                     <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                       {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
                       <div className={clsx('text-center text-sm text-black-600')} >
-                        <Radio value={purchaseOrderItem.purchase_order.id} onClick={handler(purchaseOrderItem.purchase_item.length)} />
+                        {purchaseOrderItem.purchase_item && <Radio value={purchaseOrderItem.purchase_order.id} onClick={handler(purchaseOrderItem.purchase_item.length)} />}
                       </div>
                     </td>
                     < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
@@ -148,7 +148,7 @@ export default function PurchaseItemNumModal() {
                     </td>
                     <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {calcTotalFee(purchaseOrderItem.purchase_item)}
+                        {purchaseOrderItem.purchase_item && calcTotalFee(purchaseOrderItem.purchase_item)}
                       </div>
                     </td>
                     <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
@@ -158,7 +158,7 @@ export default function PurchaseItemNumModal() {
                     </td>
                     < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchase_item.length}
+                        {purchaseOrderItem.purchase_item && purchaseOrderItem.purchase_item.length}
                       </div>
                     </td>
                     <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>

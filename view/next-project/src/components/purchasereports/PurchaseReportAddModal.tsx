@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { get } from '@api/api_methods';
-import { post } from '@api/purchaseItem';
-import { PrimaryButton, OutlinePrimaryButton, RedButton, CloseButton, Input, Modal, Stepper } from '@components/common';
+import { post } from '@api/purchaseReport';
+import { put } from '@api/purchaseItem';
+import { RiArrowDropRightLine } from 'react-icons/ri';
+import { PrimaryButton, OutlinePrimaryButton, UnderlinePrimaryButton, CloseButton, Input, Modal, Stepper } from '@components/common';
+import { useGlobalContext } from '@components/global/context';
 
 interface PurchaseOrder {
   id: number;
@@ -14,7 +17,7 @@ interface PurchaseOrder {
 }
 
 interface PurchaseItem {
-  id: number | string;
+  id: number;
   item: string;
   price: number | string;
   quantity: number | string;
@@ -47,11 +50,17 @@ interface ModalProps {
 }
 
 export default function PurchaseReportAddModal(props: ModalProps) {
-  const [activeStep, srtActiveStep] = useState<number>(1);
-  const nextStep = () => { srtActiveStep(activeStep + 1) }
-  const prevStep = () => { srtActiveStep(activeStep - 1) }
-  const reset = () => { srtActiveStep(1) }
+  const state = useGlobalContext();
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const nextStep = () => { setActiveStep(activeStep + 1) }
+  const prevStep = () => { setActiveStep(activeStep - 1) }
+  const reset = () => {
+    setActiveStep(1);
+    setIsDone(false);
+  }
 
+  const [isOpen, setIsOpen] = useState<boolean>(props.isOpen)
+  const onClose = () => { setIsOpen(false) }
   const [isDone, setIsDone] = useState<boolean>(false);
   const router = useRouter();
 
@@ -91,12 +100,11 @@ export default function PurchaseReportAddModal(props: ModalProps) {
             quantity: purchaseOrderViewRes.purchase_item[i].quantity,
             detail: purchaseOrderViewRes.purchase_item[i].detail,
             url: purchaseOrderViewRes.purchase_item[i].url,
-            purchaseOrderId: purchaseOrderViewRes.purchase_item[i].purchaseOrderId,
+            purchaseOrderId: props.purchaseOrderId,
             finance_check: purchaseOrderViewRes.purchase_item[i].finance_check,
           };
           initFormDataList.push(initFormData);
         }
-        console.log(initFormDataList)
         setFormDataList(initFormDataList)
       };
       getPurchaseOrderView(getPurchaseOrderViewUrl);
@@ -113,10 +121,33 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         );
       };
 
-  const addPurchaseItem = async (data: PurchaseItem[], purchaseOrderID: number) => {
-    const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
+  const isFinanceCheckHandler =
+    (purchaseItemId: number, finance_check: boolean) => {
+      setFormDataList(
+        formDataList.map((formData: PurchaseItem) =>
+          formData.id === purchaseItemId ? { ...formData, ["finance_check"]: finance_check } : formData,
+        ),
+      );
+    };
+
+  const submit = (data: PurchaseItem[]) => {
+    addPurchaseReport();
+    updatePurchaseItem(data);
+    router.reload();
+  }
+
+  const addPurchaseReport = async () => {
+    const purchaseReport = {
+      user_id: state.user.id,
+      purchase_order_id: props.purchaseOrderId,
+    }
+    const addPurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
+    await post(addPurchaseReportUrl, purchaseReport);
+  };
+  const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
-      await post(addPurchaseItemUrl, item, purchaseOrderID);
+      let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
+      await put(updatePurchaseItemUrl, item);
     });
   };
 
@@ -124,10 +155,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   const content: Function = (index: number, data: PurchaseItem) => (
     <>
       <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
-        <div className={clsx('grid col-span-2 mr-2')}>
+        <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
           <div
             className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
+              'flex items-center text-black-600 text-md',
             )}
           >
             物品名
@@ -139,10 +170,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
             onChange={handler(index, 'item')}
           />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
+        <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
           <div
             className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
+              'flex items-center text-black-600 text-md',
             )}
           >
             単価
@@ -154,10 +185,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
             onChange={handler(index, 'price')}
           />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
+        <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
           <div
             className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
+              'flex items-center text-black-600 text-md',
             )}
           >
             個数
@@ -169,10 +200,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
             onChange={handler(index, 'quantity')}
           />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
+        <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
           <div
             className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
+              'flex items-center text-black-600 text-md',
             )}
           >
             詳細
@@ -184,10 +215,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
             onChange={handler(index, 'detail')}
           />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
+        <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
           <div
             className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
+              'flex items-center text-black-600 text-md',
             )}
           >
             URL
@@ -211,13 +242,12 @@ export default function PurchaseReportAddModal(props: ModalProps) {
 
   return (
     <>
-      {props.isOpen ? (
+      {isOpen ? (
         <Modal className='!w-1/2'>
           <div className={clsx('w-full')}>
             <div className={clsx('mr-5 w-full grid justify-items-end')}>
               <CloseButton onClick={() => {
-                // props.onClose();
-                // props.numModalOnClose();
+                onClose();
               }} />
             </div>
           </div>
@@ -235,45 +265,69 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                 }
               </Stepper>
               {isDone ? (
-                <div className={clsx('grid grid-cols-8 gap-4 my-10')}>
-                  <div className={clsx('grid col-span-3')} />
-                  <div className={clsx('grid col-span-1 w-full')}>
-                    <RedButton onClick={reset}>
-                      Reset
-                    </RedButton>
+                <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
+                  <div className={clsx('grid col-span-1')} />
+                  <div className={clsx('grid col-span-10 justify-items-center w-full')}>
+                    <div className={clsx('flex')}>
+                      <OutlinePrimaryButton onClick={reset} className={'mx-2'}>
+                        戻る
+                      </OutlinePrimaryButton>
+                      <PrimaryButton
+                        className={'mx-2'}
+                        onClick={() => {
+                          submit(formDataList)
+                        }}
+                      >
+                        登録して終了
+                      </PrimaryButton>
+                    </div>
                   </div>
-                  <div className={clsx('grid col-span-1 w-full')}>
-                    <PrimaryButton
-                      onClick={() => {
-                        addPurchaseItem(formDataList, props.purchaseOrderId);
-                        // props.onClose();
-                        // props.numModalOnClose();
-                        router.reload();
-                      }}
-                    >
-                      登録
-                    </PrimaryButton>
-                  </div>
-                  <div className={clsx('grid col-span-3')} />
+                  <div className={clsx('grid col-span-1')} />
                 </div>
               ) : (
-                <div className={clsx('grid grid-cols-7 gap-4 mt-6')}>
-                  <div className={clsx('grid col-span-5')} />
-                  <div className={clsx('grid col-span-1 justify-items-center')}>
-                    <RedButton onClick={prevStep}>
-                      Prev
-                    </RedButton>
+                <>
+                  <div className={clsx('grid grid-cols-12 gap-4 mt-6')}>
+                    <div className={clsx('grid col-span-1')} />
+                    <div className={clsx('grid col-span-10 justify-items-center')}>
+                      <div className={clsx('flex')}>
+                        <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
+                          戻る
+                        </OutlinePrimaryButton>
+                        <PrimaryButton
+                          className={'mx-2 pl-4 pr-2'}
+                          onClick={() => {
+                            { activeStep === steps.length ? setIsDone(true) : nextStep(); }
+                            isFinanceCheckHandler(formDataList[activeStep - 1].id, true)
+                          }}
+                        >
+                          <div className={clsx('flex')}>
+                            {activeStep === steps.length ? '登録して確認' : '登録して次へ'}
+                            <RiArrowDropRightLine size={23} />
+                          </div>
+                        </PrimaryButton>
+                      </div>
+                    </div>
+                    <div className={clsx('grid col-span-1')} />
                   </div>
-                  <div className={clsx('grid col-span-1 justify-items-center')}>
-                    <PrimaryButton
-                      onClick={() => {
-                        { activeStep === steps.length ? setIsDone(true) : nextStep(); }
-                      }}
-                    >
-                      {activeStep === steps.length ? 'Finish' : 'Next'}
-                    </PrimaryButton>
+                  <div className={clsx('grid grid-cols-12 gap-4 mt-3')}>
+                    <div className={clsx('grid col-span-1')} />
+                    <div className={clsx('grid col-span-10 justify-items-center')}>
+                      <UnderlinePrimaryButton
+                        className={'pl-4 pr-2'}
+                        onClick={() => {
+                          { activeStep === steps.length ? setIsDone(true) : nextStep(); }
+                          isFinanceCheckHandler(formDataList[activeStep - 1].id, false)
+                        }}
+                      >
+                        <div className={clsx('flex')}>
+                          {activeStep === steps.length ? '登録せずに確認' : '登録せずに次へ'}
+                          <RiArrowDropRightLine size={23} />
+                        </div>
+                      </UnderlinePrimaryButton>
+                    </div>
+                    <div className={clsx('grid col-span-1')} />
                   </div>
-                </div>
+                </>
               )}
             </div>
             <div className={clsx('grid col-span-1')} />
