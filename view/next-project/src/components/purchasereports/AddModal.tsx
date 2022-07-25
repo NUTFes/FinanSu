@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { Modal, Select, PrimaryButton, CloseButton } from '@components/common';
+import { Modal, Select, PullDown, PrimaryButton, CloseButton } from '@components/common';
 import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
 
@@ -73,15 +73,15 @@ export default function PurchaseItemNumModal() {
             <div className={clsx('grid col-span-4 justify-items-end flex items-center text-right w-full text-black-600 text-md pr-3 h-100')}>
               申請する局
             </div>
-            <div className={clsx('grid col-span-4 justify-items-end text-right w-full text-black-600 text-md mr-2 h-100')}>
-              <Select
+            <div className={clsx('grid col-span-4 justify-items-start font-bold text-right w-full text-black-600 text-md mr-2 h-100')}>
+              <PullDown
                 value={bureauID}
                 onChange={bureauHandler()}
               >
                 {bureaus.map((data) => (
                   <option key={data.id} value={data.id}>{data.name}</option>
                 ))}
-              </Select>
+              </PullDown>
             </div>
             <div className={clsx('grid col-span-2 h-100')} />
           </div>
