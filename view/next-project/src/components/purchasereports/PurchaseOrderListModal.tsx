@@ -85,7 +85,7 @@ export default function PurchaseItemNumModal() {
       <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
         購入申請
       </div>
-      <div className={clsx('grid grid-cols-12 gap-4 mb-10')}>
+      <div className={clsx('grid grid-cols-12 gap-4 mb-4')}>
         <div className={clsx('grid col-span-1')} />
         <div className={clsx('grid col-span-10')}>
           <div className={clsx('mb-2 p-5 w-100')}>
@@ -164,6 +164,9 @@ export default function PurchaseItemNumModal() {
       <div className={clsx('grid grid-cols-12 w-full pb-5')}>
         <div className={clsx('grid col-span-1 h-100')} />
         <div className={clsx('grid col-span-10 justify-items-center w-full text-black-600 text-md pr-3 h-100')}>
+          <div className={clsx('grid justify-items-center w-full text-black-600 text-md pb-3 h-100')}>
+            申請を選択してください
+          </div>
           <div className={clsx('flex')}>
             <div className={clsx('mx-2')}>
               <OutlinePrimaryButton
