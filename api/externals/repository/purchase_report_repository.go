@@ -95,7 +95,7 @@ func (ppr *purchaseReportRepository) AllWithOrderItem(c context.Context) (*sql.R
 
 //idで選択しPurchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得
 func (ppr *purchaseReportRepository) FindWithOrderItem(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from purchase_reports inner join users as report_user on purchase_reports.user_id = report_user.id inner join purchase_orders on purchase_reports.purchase_order_id = purchase_orders.id inner join users as order_user on purchase_orders.user_id = order_user.id where purchase_orders.id = " + id
+	query := "select * from purchase_reports inner join users as report_user on purchase_reports.user_id = report_user.id inner join purchase_orders on purchase_reports.purchase_order_id = purchase_orders.id inner join users as order_user on purchase_orders.user_id = order_user.id where purchase_reports.id = " + id
 	row := ppr.client.DB().QueryRowContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return row, nil
