@@ -3,6 +3,7 @@ import { useUI } from '@components/ui/context';
 import s from './Layout.module.css';
 import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
+import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
 
 const ModalView: React.FC<{ modalView: string; closeModal(): any }> = ({ modalView, closeModal }) => {
   return (
@@ -12,6 +13,9 @@ const ModalView: React.FC<{ modalView: string; closeModal(): any }> = ({ modalVi
       )}
       {modalView === 'PURCHASE_REPORT_ADD_MODAL' && (
         <PurchaseReportAddModal />
+      )}
+      {modalView === 'PURCHASE_ORDER_LIST_MODAL' && (
+        <PurchaseOrderListModal />
       )}
     </>
   );

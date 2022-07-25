@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { Modal, Select, PullDown, PrimaryButton, CloseButton } from '@components/common';
+import { Modal, PullDown, PrimaryButton, CloseButton } from '@components/common';
 import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
 
 export default function PurchaseItemNumModal() {
   const state = useGlobalContext();
-  const router = useRouter();
   const { setModalView, openModal, closeModal } = useUI();
 
   // 局（Bureau）をフロントで定義
@@ -95,7 +93,7 @@ export default function PurchaseItemNumModal() {
             <div className={clsx('mx-2')}>
               <PrimaryButton
                 onClick={() => {
-                  setModalView('PURCHASE_REPORT_ADD_MODAL');
+                  setModalView('PURCHASE_ORDER_LIST_MODAL');
                   openModal();
                 }}
               >

@@ -1,0 +1,196 @@
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import clsx from 'clsx';
+import { get } from '@api/api_methods';
+import { Modal, Radio, PrimaryButton, OutlinePrimaryButton, CloseButton } from '@components/common';
+import { useUI } from '@components/ui/context';
+
+interface PurchaseOrder {
+  id: number;
+  deadline: string;
+  user_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+interface PurchaseItem {
+  id: number;
+  item: string;
+  price: number;
+  quantity: number;
+  detail: string;
+  url: string;
+  purchase_order_id: number;
+  finance_check: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface User {
+  id: number;
+  name: string;
+  bureau_id: number;
+  role_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+interface PurchaseOrderView {
+  purchase_order: PurchaseOrder;
+  user: User;
+  purchase_item: PurchaseItem[];
+}
+
+export default function PurchaseItemNumModal() {
+  const router = useRouter();
+  const { setModalView, openModal, closeModal } = useUI();
+
+  const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView[]>([])
+
+  useEffect(() => {
+    if (router.isReady) {
+      const getPurchaseOrderViewUrl = process.env.CSR_API_URI + '/get_purchaseorders_for_view';
+
+      const getPurchaseOrderView = async (url: string) => {
+        const purchaseOrderViewRes: PurchaseOrderView[] = await get(url)
+        setPurchaseOrderView(purchaseOrderViewRes);
+      };
+      getPurchaseOrderView(getPurchaseOrderViewUrl);
+    }
+  }, [router]);
+
+  // 日付のフォーマットを変更
+  const formatDate = (date: string) => {
+    let datetime = date.replace('T', ' ');
+    const datetime2 = datetime.substring(0, datetime.length - 4);
+    return datetime2;
+  };
+
+  // 合計金額を計算
+  const calcTotalFee = (purchaseItems: PurchaseItem[]) => {
+    let totalFee = 0;
+    for (let i: number = 0; i < purchaseItems.length; i++) {
+      totalFee += purchaseItems[i].price * purchaseItems[i].quantity;
+    }
+    return totalFee;
+  }
+
+  return (
+    <Modal>
+      <div className={clsx('w-full')}>
+        <div className={clsx('mr-5 w-full grid justify-items-end')}>
+          <CloseButton onClick={closeModal} />
+        </div>
+      </div>
+      <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+        購入申請
+      </div>
+      <div className={clsx('grid grid-cols-12 gap-4 mb-10')}>
+        <div className={clsx('grid col-span-1')} />
+        <div className={clsx('grid col-span-10')}>
+          <div className={clsx('mb-2 p-5 w-100')}>
+            <table className={clsx('table-fixed border-collapse: collapse')}>
+              <thead>
+                <tr
+                  className={clsx('py-3 border-b-primary-1 border border-t-white-0 border-x-white-0')}
+                >
+                  <th className={clsx('px-6 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>選択</div>
+                  </th>
+                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>局</div>
+                  </th>
+                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>金額</div>
+                  </th>
+                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>物品名</div>
+                  </th>
+                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>品数</div>
+                  </th>
+                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
+                {purchaseOrderView.map((purchaseOrderItem, index) => (
+                  <tr key={purchaseOrderItem.purchase_order.id}>
+                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        <Radio value={purchaseOrderItem.purchase_order.id} />
+                      </div>
+                    </td>
+                    < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        {purchaseOrderItem.user.bureau_id === 1 && '総務局'}
+                        {purchaseOrderItem.user.bureau_id === 2 && '渉外局'}
+                        {purchaseOrderItem.user.bureau_id === 3 && '財務局'}
+                        {purchaseOrderItem.user.bureau_id === 4 && '企画局'}
+                        {purchaseOrderItem.user.bureau_id === 5 && '政策局'}
+                        {purchaseOrderItem.user.bureau_id === 6 && '情報局'}
+                      </div>
+                    </td>
+                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        {calcTotalFee(purchaseOrderItem.purchase_item)}
+                      </div>
+                    </td>
+                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        {purchaseOrderView[index].purchase_order.deadline}
+                      </div>
+                    </td>
+                    < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        {purchaseOrderItem.purchase_item.length}
+                      </div>
+                    </td>
+                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        {formatDate(purchaseOrderItem.purchase_order.created_at)}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+                }
+              </tbody >
+            </table >
+          </div >
+        </div >
+        <div className={clsx('grid col-span-1 ')} />
+      </div >
+      <div className={clsx('grid grid-cols-12 w-full pb-5')}>
+        <div className={clsx('grid col-span-1 h-100')} />
+        <div className={clsx('grid col-span-10 justify-items-center w-full text-black-600 text-md pr-3 h-100')}>
+          <div className={clsx('flex')}>
+            <div className={clsx('mx-2')}>
+              <OutlinePrimaryButton
+                onClick={() => {
+                  setModalView('PURCHASE_REPORT_ADD_MODAL');
+                  openModal();
+                }}
+              >
+                戻る
+              </OutlinePrimaryButton>
+            </div>
+            <div className={clsx('mx-2')}>
+              <PrimaryButton
+                onClick={() => {
+                  setModalView('PURCHASE_REPORT_ADD_MODAL');
+                  openModal();
+                }}
+              >
+                報告へ進む
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+        <div className={clsx('grid col-span-1 h-100')} />
+      </div>
+      <div className={clsx('grid justify-items-center px-1')}>
+      </div>
+    </Modal >
+  );
+}
