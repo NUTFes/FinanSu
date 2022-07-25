@@ -4,7 +4,6 @@ import(
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"net/http"
-
 )
 
 type purchaseOrderController struct {
@@ -48,7 +47,6 @@ func (p *purchaseOrderController) ShowPurchaseOrder(c echo.Context) error{
 func (p *purchaseOrderController) CreatePurchaseOrder(c echo.Context) error{
 	deadLine := c.QueryParam("deadline")
 	userID := c.QueryParam("user_id")
-
 	err := p.u.CreatePurchaseOrder(c.Request().Context(), deadLine, userID )
 	if err != nil {
 		return err
