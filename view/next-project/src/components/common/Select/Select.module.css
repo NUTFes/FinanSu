@@ -27,4 +27,5 @@
   top: 50%;
   transform: translatey(-50%);
   width: 1rem;
+  pointer-events: none;
 }
