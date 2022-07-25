@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { get } from '@api/api_methods';
 import { Modal, Radio, PrimaryButton, OutlinePrimaryButton, CloseButton } from '@components/common';
 import { useUI } from '@components/ui/context';
+import PurchaseReportAddModal from './PurchaseReportAddModal';
 
 interface PurchaseOrder {
   id: number;
@@ -45,7 +46,13 @@ export default function PurchaseItemNumModal() {
   const router = useRouter();
   const { setModalView, openModal, closeModal } = useUI();
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onOpen = () => { setIsOpen(true) }
+
   const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView[]>([])
+
+  const [purchaseOrderId, setPurchaseOrderId] = useState<number>(1)
+  const [purchaseItemNum, setPurchaseItemNum] = useState<number>(0)
 
   useEffect(() => {
     if (router.isReady) {
@@ -74,6 +81,12 @@ export default function PurchaseItemNumModal() {
     }
     return totalFee;
   }
+
+  // 報告する申請のID
+  const handler = (purchaseItemNum: number) => (e: any) => {
+    setPurchaseOrderId(Number(e.target.value));
+    setPurchaseItemNum(Number(purchaseItemNum));
+  };
 
   return (
     <Modal>
@@ -118,8 +131,9 @@ export default function PurchaseItemNumModal() {
                 {purchaseOrderView.map((purchaseOrderItem, index) => (
                   <tr key={purchaseOrderItem.purchase_order.id}>
                     <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        <Radio value={purchaseOrderItem.purchase_order.id} />
+                      {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
+                      <div className={clsx('text-center text-sm text-black-600')} >
+                        <Radio value={purchaseOrderItem.purchase_order.id} onClick={handler(purchaseOrderItem.purchase_item.length)} />
                       </div>
                     </td>
                     < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
@@ -181,12 +195,14 @@ export default function PurchaseItemNumModal() {
             <div className={clsx('mx-2')}>
               <PrimaryButton
                 onClick={() => {
-                  setModalView('PURCHASE_REPORT_ADD_MODAL');
-                  openModal();
+                  onOpen();
                 }}
               >
                 報告へ進む
               </PrimaryButton>
+              {isOpen && (
+                <PurchaseReportAddModal purchaseOrderId={purchaseOrderId} purchaseItemNum={purchaseItemNum} isOpen={isOpen} setIsOpen={setIsOpen} />
+              )}
             </div>
           </div>
         </div>
