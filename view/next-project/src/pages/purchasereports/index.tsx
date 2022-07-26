@@ -163,7 +163,7 @@ export default function PurchaseReport(props: Props) {
         <div className={clsx('mt-10 mx-5')}>
           <div className={clsx('flex')}>
             <h1 className={clsx('text-2xl font-thin mr-5 mt-1 text-gray-900 align-text-bottom')}>
-              購入申請一覧
+              購入報告一覧
             </h1>
             <select className={clsx('w-100 ')}>
               <option value='2021'>2021</option>
@@ -208,11 +208,11 @@ export default function PurchaseReport(props: Props) {
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {state.user.role_id === 3 ? (
                         changeableCheckboxContent(
-                          // purchaseReport.is_first_check,
+                          // purchaseReport.finance_check,
                           true,
                         )) : (
                         unChangeableCheckboxContent(
-                          // purchaseReport.is_first_check,
+                          // purchaseReport.finance_check,
                           true,
                         ))}
                     </div>
