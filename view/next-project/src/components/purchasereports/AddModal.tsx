@@ -103,7 +103,7 @@ export default function PurchaseItemNumModal() {
             <div className={clsx('mx-2')}>
               <PrimaryButton
                 onClick={() => {
-                  setModalView('PURCHASE_REPORT_ADD_MODAL');
+                  setModalView('PURCHASE_REPORT_ITEM_NUM_MODAL');
                   openModal();
                 }}
               >

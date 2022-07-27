@@ -69,7 +69,7 @@ export default function PurchaseItemNumModal() {
   // 日付のフォーマットを変更
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 4);
+    const datetime2 = datetime.substring(0, datetime.length - 10);
     return datetime2;
   };
 
@@ -153,7 +153,15 @@ export default function PurchaseItemNumModal() {
                     </td>
                     <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderView[index].purchase_order.deadline}
+                        {purchaseOrderItem.purchase_item.length === 1 ? (
+                          <>
+                            {purchaseOrderItem.purchase_item && purchaseOrderItem.purchase_item[0].item}
+                          </>
+                        ) : (
+                          <>
+                            {purchaseOrderItem.purchase_item && purchaseOrderItem.purchase_item[0].item}, ...
+                          </>
+                        )}
                       </div>
                     </td>
                     < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
@@ -201,7 +209,7 @@ export default function PurchaseItemNumModal() {
                 報告へ進む
               </PrimaryButton>
               {isOpen && (
-                <PurchaseReportAddModal purchaseOrderId={purchaseOrderId} purchaseItemNum={purchaseItemNum} isOpen={isOpen} setIsOpen={setIsOpen} />
+                <PurchaseReportAddModal purchaseOrderId={purchaseOrderId} purchaseItemNum={purchaseItemNum} isOpen={isOpen} setIsOpen={setIsOpen} isOnlyReported={false} />
               )}
             </div>
           </div>

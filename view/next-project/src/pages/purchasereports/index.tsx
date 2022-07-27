@@ -243,7 +243,7 @@ export default function PurchaseReport(props: Props) {
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen} /> */}
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {purchaseItems[index][0].item}, ...
+                      {purchaseItems[index] && purchaseItems[index][0].item}, ...
                     </div>
                   </td>
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>

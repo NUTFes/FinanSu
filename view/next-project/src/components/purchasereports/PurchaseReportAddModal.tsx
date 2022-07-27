@@ -47,10 +47,13 @@ interface ModalProps {
   purchaseItemNum: number;
   isOpen: boolean;
   setIsOpen: Function;
+  isOnlyReported: boolean;
 }
 
 export default function PurchaseReportAddModal(props: ModalProps) {
   const state = useGlobalContext();
+  const router = useRouter();
+
   const [activeStep, setActiveStep] = useState<number>(1);
   const nextStep = () => { setActiveStep(activeStep + 1) }
   const prevStep = () => { setActiveStep(activeStep - 1) }
@@ -58,12 +61,20 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     setActiveStep(1);
     setIsDone(false);
   }
+  // 購入報告を登録するかどうかのフラグ
+  const [isDone, setIsDone] = useState<boolean>(false);
 
+  // 購入報告追加モーダルの開閉状態を管理
   const [isOpen, setIsOpen] = useState<boolean>(props.isOpen)
   const onClose = () => { setIsOpen(false) }
-  const [isDone, setIsDone] = useState<boolean>(false);
-  const router = useRouter();
 
+  // 購入物品数だけステップを用意
+  let steps = [];
+  for (let i = 0; i < props.purchaseItemNum; i++) {
+    steps.push({ label: '' });
+  }
+
+  // 購入物品のリスト
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
     let initFormDataList = [];
     for (let i = 0; i < props.purchaseItemNum; i++) {
@@ -82,15 +93,13 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     return initFormDataList;
   });
 
-  const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView>()
-
   useEffect(() => {
     if (router.isReady) {
       const getPurchaseOrderViewUrl = process.env.CSR_API_URI + '/get_purchaseorders_for_view/' + props.purchaseOrderId;
 
-      const getPurchaseOrderView = async (url: string) => {
+      // purchase_orderに紐づくpurchase_itemsを取得
+      const getPurchaseItems = async (url: string) => {
         const purchaseOrderViewRes: PurchaseOrderView = await get(url)
-        setPurchaseOrderView(purchaseOrderViewRes);
         let initFormDataList = [];
         for (let i = 0; i < purchaseOrderViewRes.purchase_item.length; i++) {
           let initFormData: PurchaseItem = {
@@ -107,20 +116,21 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         }
         setFormDataList(initFormDataList)
       };
-      getPurchaseOrderView(getPurchaseOrderViewUrl);
+      getPurchaseItems(getPurchaseOrderViewUrl);
     }
   }, [router]);
 
   const handler =
-    (stepNumber: number, input: string) =>
+    (input: string) =>
       (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
         setFormDataList(
           formDataList.map((formData: PurchaseItem) =>
-            formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
+            formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
           ),
         );
       };
 
+  // finance_checkのtrue,falseを切り替え
   const isFinanceCheckHandler =
     (purchaseItemId: number, finance_check: boolean) => {
       setFormDataList(
@@ -130,12 +140,14 @@ export default function PurchaseReportAddModal(props: ModalProps) {
       );
     };
 
+  // 購入報告の登録と購入物品の更新を行い、ページをリロード
   const submit = (data: PurchaseItem[]) => {
     addPurchaseReport();
     updatePurchaseItem(data);
     router.reload();
   }
 
+  // 購入報告の追加
   const addPurchaseReport = async () => {
     const purchaseReport = {
       user_id: state.user.id,
@@ -144,6 +156,8 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     const addPurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
     await post(addPurchaseReportUrl, purchaseReport);
   };
+
+  // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
       let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
@@ -152,7 +166,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   };
 
   // 購入物品の情報
-  const content: Function = (index: number, data: PurchaseItem) => (
+  const content: Function = (data: PurchaseItem) => (
     <>
       <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -166,8 +180,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         </div>
         <div className={clsx('grid col-span-10 w-full')}>
           <Input
+            id={String(data.id)}
             value={data.item}
-            onChange={handler(index, 'item')}
+            onChange={handler('item')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -181,8 +196,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         </div>
         <div className={clsx('grid col-span-10 w-full')}>
           <Input
+            id={String(data.id)}
             value={data.price}
-            onChange={handler(index, 'price')}
+            onChange={handler('price')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -196,8 +212,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         </div>
         <div className={clsx('grid col-span-10 w-full')}>
           <Input
+            id={String(data.id)}
             value={data.quantity}
-            onChange={handler(index, 'quantity')}
+            onChange={handler('quantity')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -211,8 +228,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         </div>
         <div className={clsx('grid col-span-10 w-full')}>
           <Input
+            id={String(data.id)}
             value={data.detail}
-            onChange={handler(index, 'detail')}
+            onChange={handler('detail')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -226,19 +244,14 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         </div>
         <div className={clsx('grid col-span-10 w-full')}>
           <Input
+            id={String(data.id)}
             value={data.url}
-            onChange={handler(index, 'url')}
+            onChange={handler('url')}
           />
         </div>
       </div>
     </>
   );
-
-  // 購入物品数だけステップを用意
-  let steps = [];
-  for (let i = 0; i < props.purchaseItemNum; i++) {
-    steps.push({ label: '' });
-  }
 
   return (
     <>
@@ -260,7 +273,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
               <Stepper stepNum={props.purchaseItemNum} activeStep={activeStep} isDone={isDone}>
                 {!isDone &&
                   <>
-                    {content(activeStep, formDataList[activeStep - 1])}
+                    {content(formDataList[activeStep - 1])}
                   </>
                 }
               </Stepper>
@@ -308,24 +321,20 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                       </div>
                     </div>
                     <div className={clsx('grid col-span-1')} />
-                  </div>
-                  <div className={clsx('grid grid-cols-12 gap-4 mt-3')}>
-                    <div className={clsx('grid col-span-1')} />
-                    <div className={clsx('grid col-span-10 justify-items-center')}>
-                      <UnderlinePrimaryButton
-                        className={'pl-4 pr-2'}
-                        onClick={() => {
-                          { activeStep === steps.length ? setIsDone(true) : nextStep(); }
-                          isFinanceCheckHandler(formDataList[activeStep - 1].id, false)
-                        }}
-                      >
-                        <div className={clsx('flex')}>
+                    {!props.isOnlyReported &&
+                      <div className={clsx('grid col-span-12 justify-items-center w-full')}>
+                        <UnderlinePrimaryButton
+                          className={'pr-1'}
+                          onClick={() => {
+                            { activeStep === steps.length ? setIsDone(true) : nextStep(); }
+                            isFinanceCheckHandler(formDataList[activeStep - 1].id, false)
+                          }}
+                        >
                           {activeStep === steps.length ? '登録せずに確認' : '登録せずに次へ'}
                           <RiArrowDropRightLine size={23} />
-                        </div>
-                      </UnderlinePrimaryButton>
-                    </div>
-                    <div className={clsx('grid col-span-1')} />
+                        </UnderlinePrimaryButton>
+                      </div>
+                    }
                   </div>
                 </>
               )}
