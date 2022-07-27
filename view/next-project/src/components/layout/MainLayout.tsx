@@ -5,6 +5,7 @@ import theme from '@assets/theme';
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 import { get_with_token } from '@api/api_methods';
 import SideNav from '@components/common/SideNav';
+import clsx from 'clsx';
 
 interface User {
   id: number;
@@ -30,22 +31,23 @@ export async function getServerSideProps() {
 
 export default function MainLayout(props: LayoutProps) {
   return (
-    <ChakraProvider theme={theme}>
+    <>
       <Head>
         <title>FinanSu</title>
         <meta name='' content='' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-
-      <Grid templateColumns='repeat(12 1fr)' gap='1'>
-        <GridItem colSpan={12} h='60px'>
+      <div className={clsx('grid grid-cols-9 grid-row-2 w-full gap-0')}>
+        <div className={clsx('grid col-span-9 row-span-1 h-auto')} >
           <Header />
-        </GridItem>
-        <GridItem colSpan={2} w='160px'>
+        </div>
+        <div className={clsx('grid col-span-1 row-span-1 justify-items-start w-full text-black-600 text-md h-100')}>
           <SideNav />
-        </GridItem>
-        <GridItem colSpan={10}>{props.children}</GridItem>
-      </Grid>
-    </ChakraProvider>
+        </div>
+        <div className={clsx('grid col-span-8 row-span-1 justify-items-center w-full text-black-600 text-md h-100')}>
+          {props.children}
+        </div>
+      </div>
+    </>
   );
 }
