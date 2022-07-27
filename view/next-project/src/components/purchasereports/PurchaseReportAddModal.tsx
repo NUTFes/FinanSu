@@ -7,6 +7,7 @@ import { put } from '@api/purchaseItem';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 import { PrimaryButton, OutlinePrimaryButton, UnderlinePrimaryButton, CloseButton, Input, Modal, Stepper } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
+import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal'
 
 interface PurchaseOrder {
   id: number;
@@ -65,7 +66,8 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   const [isDone, setIsDone] = useState<boolean>(false);
 
   // 購入報告追加モーダルの開閉状態を管理
-  const [isOpen, setIsOpen] = useState<boolean>(props.isOpen)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const onOpen = () => { setIsOpen(true) }
   const onClose = () => { setIsOpen(false) }
 
   // 購入物品数だけステップを用意
@@ -144,7 +146,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   const submit = (data: PurchaseItem[]) => {
     addPurchaseReport();
     updatePurchaseItem(data);
-    router.reload();
+    onOpen();
   }
 
   // 購入報告の追加
@@ -255,12 +257,12 @@ export default function PurchaseReportAddModal(props: ModalProps) {
 
   return (
     <>
-      {isOpen ? (
+      {props.isOpen ? (
         <Modal className='!w-1/2'>
           <div className={clsx('w-full')}>
             <div className={clsx('mr-5 w-full grid justify-items-end')}>
               <CloseButton onClick={() => {
-                onClose();
+                props.setIsOpen(false)
               }} />
             </div>
           </div>
@@ -291,8 +293,11 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                           submit(formDataList)
                         }}
                       >
-                        登録して終了
+                        登録して確認
                       </PrimaryButton>
+                      {isOpen &&
+                        <PurchaseReportConfirmModal formDataList={formDataList} isOpen={isOpen} setIsOpen={setIsOpen} />
+                      }
                     </div>
                   </div>
                   <div className={clsx('grid col-span-1')} />
