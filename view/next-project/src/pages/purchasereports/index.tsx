@@ -50,21 +50,21 @@ interface User {
 }
 
 interface PurchaseReportView {
-  purchaseReport: PurchaseReport;
-  reportUser: User;
-  purchaseOrder: PurchaseOrder;
-  orderUser: User;
-  purchaseItems: PurchaseItem[];
+  purchasereport: PurchaseReport;
+  report_user: User;
+  purchaseorder: PurchaseOrder;
+  order_user: User;
+  purchaseitems: PurchaseItem[];
 }
 
 interface Props {
   purchaseReport: PurchaseReport[];
-  purchaseReportView: PurchaseReport[];
+  purchaseReportView: PurchaseReportView[];
   user: User;
   purchaseOrder: PurchaseOrder[];
 }
 
-export async function getServerSideProps({ params }: any) {
+export async function getServerSideProps() {
   const getPurchaseReportUrl = process.env.SSR_API_URI + '/purchasereports';
   const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/get_purchasereports_for_view';
   const purchaseReportRes = await get(getPurchaseReportUrl);
@@ -243,7 +243,7 @@ export default function PurchaseReport(props: Props) {
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen} /> */}
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {purchaseItems[index] && purchaseItems[index][0].item}, ...
+                      {props.purchaseReportView[index].purchaseitems && props.purchaseReportView[index].purchaseitems[0].item}, ...
                     </div>
                   </td>
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
