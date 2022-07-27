@@ -3,14 +3,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
-
-interface PurchaseOrder {
-  id: number;
-  deadline: string;
-  user_id: number;
-  created_at: string;
-  updated_at: string;
-}
+import ReceiptModal from '@components/purchasereports/ReceiptModal'
 
 interface PurchaseItem {
   id: number;
@@ -23,16 +16,8 @@ interface PurchaseItem {
   finance_check: boolean;
 }
 
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
 interface ModalProps {
+  purchaseOrderId: number;
   formDataList: PurchaseItem[];
   isOpen: boolean;
   setIsOpen: Function;
@@ -41,6 +26,8 @@ interface ModalProps {
 export default function PurchaseItemNumModal(props: ModalProps) {
   const router = useRouter();
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onOpen = () => { setIsOpen(true) }
   const onClose = () => { props.setIsOpen(false) }
 
   // 購入報告した物品
@@ -170,12 +157,12 @@ export default function PurchaseItemNumModal(props: ModalProps) {
             <div className={clsx('mx-2')}>
               <PrimaryButton
                 onClick={() => {
-                  onClose();
-                  router.reload();
+                  onOpen();
                 }}
               >
                 確認を終了
               </PrimaryButton>
+              {isOpen && <ReceiptModal purchaseOrderId={props.purchaseOrderId} isOpen={isOpen} setIsOpen={setIsOpen} />}
             </div>
           </div>
         </div>

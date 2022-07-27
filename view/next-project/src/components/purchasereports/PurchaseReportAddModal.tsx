@@ -296,7 +296,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                         登録して確認
                       </PrimaryButton>
                       {isOpen &&
-                        <PurchaseReportConfirmModal formDataList={formDataList} isOpen={isOpen} setIsOpen={setIsOpen} />
+                        <PurchaseReportConfirmModal purchaseOrderId={props.purchaseOrderId} formDataList={formDataList} isOpen={isOpen} setIsOpen={setIsOpen} />
                       }
                     </div>
                   </div>
