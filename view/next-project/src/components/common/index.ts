@@ -4,6 +4,7 @@ export { default as Radio } from './Radio';
 export { default as Select } from './Select';
 export { default as PullDown } from './PullDown';
 export { default as Modal } from './Modal';
+export { default as Title } from './Title';
 export { default as Button } from './Button';
 export { default as PrimaryButton } from './PrimaryButton';
 export { default as OutlinePrimaryButton } from './OutlinePrimaryButton';

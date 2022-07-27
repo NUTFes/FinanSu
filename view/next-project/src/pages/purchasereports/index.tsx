@@ -4,7 +4,7 @@ import Head from 'next/head';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import clsx from 'clsx';
-import { Card, Checkbox, EditButton, DeleteButton } from '@components/common';
+import { Card, Title, Checkbox, EditButton, DeleteButton } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
 
 interface PurchaseReport {
@@ -151,9 +151,9 @@ export default function PurchaseReport(props: Props) {
       <Card>
         <div className={clsx('mt-10 mx-5')}>
           <div className={clsx('flex')}>
-            <h1 className={clsx('text-2xl font-thin mr-5 mt-1 text-gray-900 align-text-bottom')}>
-              購入報告一覧
-            </h1>
+            {/* <h1 className={clsx('text-2xl font-thin mr-5 mt-1 text-gray-900 align-text-bottom')}> */}
+            <Title title={'購入報告一覧'} />
+            {/* </h1> */}
             <select className={clsx('w-100 ')}>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
