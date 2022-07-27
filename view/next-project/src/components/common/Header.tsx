@@ -36,7 +36,9 @@ const Header = () => {
             <RiAccountCircleFill size={'21px'} />
             <div className={clsx('ml-2 text-white-0 text-lg font-light')}>
               <Dropdown title={state.user.name}>
-                <div className={clsx('text-black-0 text-sm py-2')}>
+                <div className={clsx('text-black-0 text-sm py-2')} onClick={() => {
+                  signOut();
+                }}>
                   ログアウト
                 </div>
               </Dropdown>
