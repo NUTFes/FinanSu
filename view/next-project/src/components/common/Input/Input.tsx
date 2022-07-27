@@ -5,6 +5,7 @@ import s from './Input.module.css';
 interface Props {
   className?: string;
   placeholder?: string;
+  id?: string;
   value?: string | number;
   onChange?: any;
   children?: React.ReactNode;
@@ -17,6 +18,7 @@ function Input(props: Props): JSX.Element {
     <input
       className={clsx(s.input, className)}
       placeholder={props.placeholder}
+      id={props.id}
       value={props.value}
       onChange={props.onChange}
     >
