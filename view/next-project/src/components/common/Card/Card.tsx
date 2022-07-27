@@ -8,7 +8,7 @@ interface Props {
 
 function Card(props: Props): JSX.Element {
   return (
-    <div className={clsx('flex justify-center align-center')}>
+    <div className={clsx('w-4/5 mx-auto')}>
       <div
         className={clsx(
           'm-10 px-10 shadow-md rounded-lg border border-opacity-10 border-black-300',

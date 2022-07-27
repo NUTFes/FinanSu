@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { get } from '@api/api_methods';
-import { put } from '@api/purchaseReport';
 import Head from 'next/head';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
-import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import clsx from 'clsx';
-import { Card, Checkbox } from '@components/common';
+import { Card, Checkbox, EditButton, DeleteButton } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
 
 interface PurchaseReport {
@@ -104,19 +101,11 @@ export default function PurchaseReport(props: Props) {
     }
     return initOederUserList;
   });
-  // 購入物品
-  const [purchaseItems, setPurchaseItems] = useState<PurchaseItem[]>(() => {
-    let initPurchaseItemList = [];
-    for (let i = 0; i < props.purchaseReportView.length; i++) {
-      initPurchaseItemList.push(props.purchaseReportView[i].purchaseitems);
-    }
-    return initPurchaseItemList;
-  });
 
   // 日付のフォーマットを変更
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 4);
+    const datetime2 = datetime.substring(5, datetime.length - 10).replace('-', '/');
     return datetime2;
   };
 
@@ -177,34 +166,33 @@ export default function PurchaseReport(props: Props) {
           </div>
         </div>
         <div className={clsx('mb-2 p-5 w-100')}>
-          <table className={clsx('table-fixed border-collapse: collapse')}>
+          <table className={clsx('table-fixed border-collapse: collapse w-full mb-5')}>
             <thead>
               <tr
                 className={clsx('py-3 border-b-primary-1 border border-t-white-0 border-x-white-0')}
               >
-                <th className={clsx('px-6 pb-2')}>
+                <th className={clsx('w-2/12 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
                 </th>
-                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-2/12 pb-2 border-b-primary-1')}>
                   <div className={clsx('text-center text-sm text-black-600')}>申請した局</div>
                 </th>
-                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
                   <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
                 </th>
-                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>購入期限日</div>
+                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>期限日</div>
                 </th>
-                <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-5/12 pb-2 border-b-primary-1')}>
                   <div className={clsx('text-center text-sm text-black-600')}>購入物品</div>
                 </th>
-                <th className={clsx('px-6 pb-2 border-b-primary-1')}></th>
+                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}></th>
               </tr>
             </thead>
             <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
               {purchaseReports.map((purchaseReport, index) => (
                 <tr key={purchaseReport.id}>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {state.user.role_id === 3 ? (
                         changeableCheckboxContent(
@@ -217,8 +205,7 @@ export default function PurchaseReport(props: Props) {
                         ))}
                     </div>
                   </td>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {orderUsers[index].bureau_id === 1 && '総務局'}
                       {orderUsers[index].bureau_id === 2 && '渉外局'}
@@ -228,39 +215,31 @@ export default function PurchaseReport(props: Props) {
                       {orderUsers[index].bureau_id === 6 && '情報局'}
                     </div>
                   </td>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {formatDate(purchaseOrders[index].created_at)}
                     </div>
                   </td>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrders[index].deadline}
                     </div>
                   </td>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen} /> */}
-                  <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {props.purchaseReportView[index].purchaseitems && props.purchaseReportView[index].purchaseitems[0].item}, ...
                     </div>
                   </td>
-                  <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
-                    <div className={clsx('grid grid-cols-2 gap-3')}>
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        <OpenEditModalButton id={purchaseReport.id} />
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <div className={clsx('flex')}>
+                      <div className={clsx('mx-1')}>
+                        <EditButton />
                       </div>
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        <OpenDeleteModalButton id={purchaseReport.id} />
+                      <div className={clsx('mx-1')}>
+                        <DeleteButton />
                       </div>
                     </div>
                   </td>
-                  {/* <DetailModal
-                      id={purchaseOrderItem.id}
-                      openModal={isOpen}
-                      setShowModal={setShowModal}
-                    /> */}
                 </tr>
               ))}
             </tbody>
