@@ -40,17 +40,18 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseOrder(props: Props) {
-  // const { isOpen, onOpen } = useDisclosure();
+  const [isOpen, setIsOpen]  = useState<boolean>(false);
+  const onOpen = () => {
+    setIsOpen(true);
+  }
+  const onClose = () => {
+    setIsOpen(false);
+  }
 
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 4);
     return datetime2;
-  };
-
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
   };
 
   return (
@@ -104,31 +105,31 @@ export default function PurchaseOrder(props: Props) {
               {props.purchaseOrder.map((purchaseOrderItem, index) => (
                 <tr key={purchaseOrderItem.id}>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={onOpen}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderItem.id}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={onOpen}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderItem.deadline}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={onOpen}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderItem.user_id}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={onOpen}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {formatDate(purchaseOrderItem.created_at)}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen} /> */}
-                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}/>
+                  <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={onOpen} />
                   <td className={clsx('px-4', (index===0 ? 'pt-4 pb-3' : 'py-3'), (index===props.purchaseOrder.length-1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
@@ -139,11 +140,14 @@ export default function PurchaseOrder(props: Props) {
                       </div>
                     </div>
                   </td>
-                  {/* <DetailModal
+                  {isOpen && 
+                    <DetailModal
                       id={purchaseOrderItem.id}
-                      openModal={isOpen}
-                      setShowModal={setShowModal}
-                    /> */}
+                      isOpen={isOpen}
+                      setIsOpen={setIsOpen}
+                    />
+                  }
+                  
                 </tr>
               ))}
             </tbody>
