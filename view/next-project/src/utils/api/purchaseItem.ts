@@ -56,13 +56,13 @@ export const post = async (url: string, data: any, purchase_order_id: number) =>
   return await res.json();
 };
 
-export const put = async (url: string, data: any, purchase_order_id: number) => {
+export const put = async (url: string, data: any) => {
   const item = data.item;
   const price = data.price;
   const quantity = data.quantity;
   const detail = data.detail;
   const itemUrl = data.url;
-  const purchaseOrderId = purchase_order_id;
+  const purchaseOrderId = data.purchaseOrderId;
   const finance_check = data.finance_check;
   const putUrl =
     url +

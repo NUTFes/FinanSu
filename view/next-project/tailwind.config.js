@@ -11,6 +11,8 @@ module.exports = {
       'primary-1': '#56DAFF',
       'primary-2': '#1DBCC5',
       'primary-3': '#E2E8F0',
+      'primary-4': '#023859',
+      'primary-5': '#04668C',
       'accent-1': '#E4434E',
       'accent-2': '#FF5B6C',
       'base-1': '#2E373F',
@@ -35,8 +37,34 @@ module.exports = {
         '4/7': '57.1428571%',
         '5/7': '71.4285714%',
         '6/7': '85.7142857%',
+        '1/8': '12.5%',
+        '2/8': '25%',
+        '3/8': '37.5%',
+        '4/8': '50%',
+        '5/8': '62.5%',
+        '6/8': '75%',
+        '7/8': '87.5%',
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      const newUtilities = {
+        ".text-shadow": {
+          textShadow: "0px 2px 3px darkgrey"
+        },
+        ".text-shadow-md": {
+          textShadow: "0px 3px 3px darkgrey"
+        },
+        ".text-shadow-logo": {
+          textShadow: "4px 2px 0px #333"
+        },
+        ".text-shadow-none": {
+          textShadow: "none"
+        }
+      };
+
+      addUtilities(newUtilities);
+    }
+  ]
 }

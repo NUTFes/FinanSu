@@ -1,28 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Router from 'next/router';
-import {
-  Box,
-  Flex,
-  Text,
-  ChakraProvider,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-} from '@chakra-ui/react';
-import PulldownButton from '@components/common/PulldownButton';
-import { Avatar } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import { del } from '@api/signOut';
 import { useGlobalContext } from '@components/global/context';
-
-interface User {
-  id: number | string;
-  name: string;
-  department_id: number | string;
-  role_id: number | string;
-}
+import clsx from 'clsx'
+import { RiAccountCircleFill } from 'react-icons/ri'
+import { Dropdown } from '@components/common'
 
 // sign out
 export const signOut = async () => {
@@ -37,60 +19,34 @@ export const signOut = async () => {
   }
 };
 
-const Header = (props: any) => {
+const Header = () => {
   const state = useGlobalContext();
 
   return (
-    <ChakraProvider theme={theme}>
-      <Flex
-        as='nav'
-        align='center'
-        wrap='wrap'
-        padding='0'
-        color='white'
-        flexDirection='row'
-        width='100%'
-        position='fixed'
-        zIndex='2'
-      >
-        <Flex justify='center' bg='base.1' align='center' width='200px' height='60px' p='4'>
-          <Text
-            color='white'
-            fontSize='24px'
-            textShadow='4px 2px 0px rgba(0, 0, 0, 0.66)'
-            letterSpacing={'tighter'}
-          >
+    <>
+      <div className={clsx('grid grid-cols-9 w-full bg-primary-4 h-16 border-b-2 border-primary-1')}>
+        <div className={clsx('grid col-span-1')}>
+          <div className={clsx('flex justify-center items-center w-full text-white-0 text-shadow-logo text-2xl')}>
             FinanSu
-          </Text>
-        </Flex>
-        <Flex
-          align='center'
-          justify='end'
-          bgGradient='linear(to-br, primary.1, primary.2)'
-          height='60px'
-          flexGrow={1}
-        >
-          <Box>
-            <Avatar size='xs' />
-          </Box>
-          <Box>
-            <Text mx='3'>{state.user.name}</Text>
-          </Box>
-          <Box marginRight='5'>
-            <Menu>
-              <MenuButton as={Button} rightIcon={<PulldownButton />} colorScheme='primary.1'>
-                Menu
-              </MenuButton>
-              <MenuList>
-                <MenuItem color='black' onClick={() => signOut()}>
+          </div>
+        </div>
+        <div className={clsx('grid col-span-7 justify-items-center w-full text-black-600 text-md')} />
+        <div className={clsx('grid col-span-1')}>
+          <div className={clsx('flex justify-center items-center w-full h-16 text-white-0')}>
+            <RiAccountCircleFill size={'21px'} />
+            <div className={clsx('ml-2 text-white-0 text-lg font-light')}>
+              <Dropdown title={state.user.name}>
+                <div className={clsx('text-black-0 text-sm py-2')} onClick={() => {
+                  signOut();
+                }}>
                   ログアウト
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          </Box>
-        </Flex>
-      </Flex>
-    </ChakraProvider>
+                </div>
+              </Dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

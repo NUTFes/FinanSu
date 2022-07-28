@@ -12,17 +12,17 @@ const initialState = {
 
 type Action =
   | {
-      type: 'OPEN_MODAL';
-    }
+    type: 'OPEN_MODAL';
+  }
   | {
-      type: 'CLOSE_MODAL';
-    }
+    type: 'CLOSE_MODAL';
+  }
   | {
-      type: 'SET_MODAL_VIEW';
-      view: MODAL_VIEWS;
-    };
+    type: 'SET_MODAL_VIEW';
+    view: MODAL_VIEWS;
+  };
 
-type MODAL_VIEWS = 'PURCHASE_ITEM_NUM_MODAL';
+type MODAL_VIEWS = 'PURCHASE_ITEM_NUM_MODAL' | 'PURCHASE_REPORT_ADD_MODAL' | 'PURCHASE_ORDER_LIST_MODAL' | 'PURCHASE_REPORT_ITEM_NUM_MODAL';
 
 export const UIContext = React.createContext<State | any>(initialState);
 
