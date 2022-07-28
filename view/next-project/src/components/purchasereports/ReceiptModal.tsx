@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
 
 interface ModalProps {
-  purchaseOrderId: number;
+  purchaseReportId: number;
   isOpen: boolean;
   setIsOpen: Function;
 }
@@ -33,7 +33,7 @@ export default function ReceiptModal(props: ModalProps) {
             購入の仕方によってはIDが二つ書かれることにかりますが問題ありません。
           </div>
           <div className={clsx('text-center my-6 w-full font-bold text-5xl text-black-300 h-100')}>
-            ID: {props.purchaseOrderId}
+            ID: {props.purchaseReportId}
           </div>
         </div >
         <div className={clsx('grid col-span-1 ')} />

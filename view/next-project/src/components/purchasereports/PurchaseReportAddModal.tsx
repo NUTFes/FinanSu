@@ -94,6 +94,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     }
     return initFormDataList;
   });
+  const [purchaseReportId, setPurchaseReportId] = useState<number>(1);
 
   useEffect(() => {
     if (router.isReady) {
@@ -145,6 +146,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入報告の登録と購入物品の更新を行い、ページをリロード
   const submit = (data: PurchaseItem[]) => {
     addPurchaseReport();
+    getPurchaseReport();
     updatePurchaseItem(data);
     onOpen();
   }
@@ -155,8 +157,15 @@ export default function PurchaseReportAddModal(props: ModalProps) {
       user_id: state.user.id,
       purchase_order_id: props.purchaseOrderId,
     }
-    const addPurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
-    await post(addPurchaseReportUrl, purchaseReport);
+    const purchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
+    await post(purchaseReportUrl, purchaseReport);
+  };
+
+// ReceiptModalで使うので、追加した購入報告のIDを取得
+  const getPurchaseReport = async () => {
+    const purchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
+    const getRes = await get(purchaseReportUrl);
+    setPurchaseReportId(getRes[getRes.length - 1].id);
   };
 
   // 購入物品を更新
@@ -296,7 +305,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                         登録して確認
                       </PrimaryButton>
                       {isOpen &&
-                        <PurchaseReportConfirmModal purchaseOrderId={props.purchaseOrderId} formDataList={formDataList} isOpen={isOpen} setIsOpen={setIsOpen} />
+                        <PurchaseReportConfirmModal purchaseReportId={purchaseReportId} formDataList={formDataList} isOpen={isOpen} setIsOpen={setIsOpen} />
                       }
                     </div>
                   </div>

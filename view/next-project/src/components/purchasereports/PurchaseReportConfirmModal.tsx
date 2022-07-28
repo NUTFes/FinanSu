@@ -17,7 +17,7 @@ interface PurchaseItem {
 }
 
 interface ModalProps {
-  purchaseOrderId: number;
+  purchaseReportId: number;
   formDataList: PurchaseItem[];
   isOpen: boolean;
   setIsOpen: Function;
@@ -162,7 +162,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               >
                 確認を終了
               </PrimaryButton>
-              {isOpen && <ReceiptModal purchaseOrderId={props.purchaseOrderId} isOpen={isOpen} setIsOpen={setIsOpen} />}
+              {isOpen && <ReceiptModal purchaseReportId={props.purchaseReportId} isOpen={isOpen} setIsOpen={setIsOpen} />}
             </div>
           </div>
         </div>
