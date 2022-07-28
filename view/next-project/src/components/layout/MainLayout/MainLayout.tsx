@@ -1,11 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
 import Header from '@components/common/Header';
-import theme from '@assets/theme';
-import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 import { get_with_token } from '@api/api_methods';
 import SideNav from '@components/common/SideNav';
 import clsx from 'clsx';
+import s from './MainLayout.module.css';
 
 interface User {
   id: number;
@@ -37,15 +36,17 @@ export default function MainLayout(props: LayoutProps) {
         <meta name='' content='' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div className={clsx('grid grid-cols-9 grid-row-2 w-full gap-0')}>
-        <div className={clsx('grid col-span-9 row-span-1 h-auto')} >
+      <div className={clsx('h-screen w-full')}>
+        <div className={clsx('w-full h-16')}>
           <Header />
         </div>
-        <div className={clsx('grid col-span-1 row-span-1 justify-items-start w-full text-black-600 text-md h-100')}>
-          <SideNav />
-        </div>
-        <div className={clsx('grid col-span-8 row-span-1 justify-items-center w-full text-black-600 text-md h-100')}>
-          {props.children}
+        <div className={clsx(s.parent)}>
+          <div className={clsx('w-1/8 bg-primary-4', s.sidenav)}>
+            <SideNav />
+          </div>
+          <div className={clsx('w-7/8 h-full', s.content)}>
+            {props.children}
+          </div>
         </div>
       </div>
     </>
