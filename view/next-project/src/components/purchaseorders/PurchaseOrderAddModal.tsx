@@ -31,10 +31,13 @@ interface PurchaseItem {
 
 
 export default function AddModal(props: ModalProps) {
-  const [activeStep, srtActiveStep] = useState<number>(1);
-  const nextStep = () => { srtActiveStep(activeStep + 1) }
-  const prevStep = () => { srtActiveStep(activeStep - 1) }
-  const reset = () => { srtActiveStep(1) }
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const nextStep = () => { setActiveStep(activeStep + 1) }
+  const prevStep = () => { setActiveStep(activeStep - 1) }
+  const reset = () => {
+    setActiveStep(1)
+    setIsDone(false);
+  }
 
   const [isDone, setIsDone] = useState<boolean>(false);
   const router = useRouter();
