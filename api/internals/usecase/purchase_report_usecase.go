@@ -14,8 +14,8 @@ type purchaseReportUseCase struct {
 type PurchaseReportUseCase interface {
 	GetPurchaseReports(context.Context) ([]domain.PurchaseReport, error)
 	GetPurchaseReportByID(context.Context, string) (domain.PurchaseReport, error)
-	CreatePurchaseReport(context.Context, string, string) error
-	UpdatePurchaseReport(context.Context, string, string, string) error
+	CreatePurchaseReport(context.Context, string, string, string, string, string,string) error
+	UpdatePurchaseReport(context.Context, string, string, string, string, string, string,string) error
 	DestroyPurchaseReport(context.Context, string) error
 	GetPurchaseReportsWithOrderItem(context.Context) ([]domain.PurchaseReportWithOrderItem, error)
 	GetPurchaseReportWithOrderItemByID(context.Context, string) (domain.PurchaseReportWithOrderItem, error)
@@ -37,7 +37,11 @@ func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.
 		err := rows.Scan(
 			&purchaseReport.ID,
 			&purchaseReport.UserID,
+			&purchaseReport.Discount,
+			&purchaseReport.Addition,
+			&purchaseReport.FinanceCheck,
 			&purchaseReport.PurchaseOrderID,
+			&purchaseReport.Remark,
 			&purchaseReport.CreatedAt,
 			&purchaseReport.UpdatedAt,
 		)
@@ -56,7 +60,11 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 	err = row.Scan(
 		&purchaseReport.ID,
 		&purchaseReport.UserID,
+		&purchaseReport.Discount,
+		&purchaseReport.Addition,
+		&purchaseReport.FinanceCheck,
 		&purchaseReport.PurchaseOrderID,
+		&purchaseReport.Remark,
 		&purchaseReport.CreatedAt,
 		&purchaseReport.UpdatedAt,
 	)
@@ -70,9 +78,13 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 func (p *purchaseReportUseCase) CreatePurchaseReport(
 	c context.Context,
 	UserID string,
+	Discount string,
+	Addition string,
+	FinanceCheck string,
 	PurchaseOrderID string,
+	Remark string,
 ) error {
-	err := p.rep.Create(c, UserID, PurchaseOrderID)
+	err := p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID,Remark)
 	return err
 }
 
@@ -81,9 +93,13 @@ func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	c context.Context,
 	id string,
 	UserID string,
+	Discount string,
+	Addition string,
+	FinanceCheck string,
 	PurchaseOrderID string,
+	Remark string,
 ) error {
-	err := p.rep.Update(c, id, UserID, PurchaseOrderID)
+	err := p.rep.Update(c, id, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID,Remark)
 	return err
 }
 
