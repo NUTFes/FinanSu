@@ -4,11 +4,12 @@ import (
 	"time"
 )
 type PurchaseOrder struct {
-	ID       ID        `json:"id"`
-	DeadLine DeadLine  `json:"deadline"`
-	UserID   ID        `json:"user_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID       		 ID        `json:"id"`
+	DeadLine 		 DeadLine  `json:"deadline"`
+	UserID   		 ID        `json:"user_id"`
+	FinanceCheck bool      `json:"finance_check"`
+	CreatedAt 	 time.Time `json:"created_at"`
+	UpdatedAt 	 time.Time `json:"updated_at"`
 }
 
 type OrderWithItemAndUser struct {
