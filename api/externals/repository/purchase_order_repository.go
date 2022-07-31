@@ -15,8 +15,8 @@ type purchaseOrderRepository struct {
 type PurchaseOrderRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string) error
-	Update(context.Context, string, string, string) error
+	Create(context.Context, string, string, string) error
+	Update(context.Context, string, string, string, string) error
 	Delete(context.Context, string) error
 	AllOrderWithUser(context.Context) (*sql.Rows,error)
 	FindWithOrderItem(context.Context,string) (*sql.Row,error)
@@ -51,8 +51,9 @@ func (por * purchaseOrderRepository) Create(
 	c context.Context,
 	deadLine string,
 	userId string,
+	financeCheck string,
 ) error {
-		var query = "insert into purchase_orders (deadline, user_id) values ( '" + deadLine + "'," + userId + ")"
+		var query = "insert into purchase_orders (deadline, user_id, finance_check) values ( " + deadLine + "," + userId + "," + financeCheck +")"
 		_, err := por.client.DB().ExecContext(c, query)
 		fmt.Printf("\x1b[36m%s\n", query)
 		return err
@@ -64,8 +65,9 @@ func (por * purchaseOrderRepository) Update(
 	id string,
 	deadLine string,
 	userId string,
+	financeCheck string,
 ) error {
-	var query = "update purchase_orders set deadline ='" + deadLine + "', user_id = " + userId + " where id = " + id 
+	var query = "update purchase_orders set deadline ='" + deadLine + "', user_id = " + userId + ",finance_check = " + financeCheck	+ " where id = " + id 
 	_, err := por.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err 
