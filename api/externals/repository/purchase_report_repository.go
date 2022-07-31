@@ -15,8 +15,8 @@ type purchaseReportRepository struct {
 type PurchaseReportRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string) error
-	Update(context.Context, string, string, string) error
+	Create(context.Context, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
 	AllWithOrderItem(context.Context) (*sql.Rows, error)
 	FindWithOrderItem(context.Context, string) (*sql.Row, error)
@@ -50,9 +50,13 @@ func (prr *purchaseReportRepository) Find(c context.Context, id string) (*sql.Ro
 func (ppr *purchaseReportRepository) Create(
 	c context.Context,
 	userId string,
+	discount string,
+	addition string,
+	finance_check string,
 	purchaseOrderId string,
+	remark string,
 ) error {
-	var query = "insert into purchase_reports (user_id, purchase_order_id) values (" + userId + "," + purchaseOrderId + ")"
+	var query = "insert into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (" + userId + "," + discount + "," + addition + "," + finance_check + "," + purchaseOrderId + "," + remark + ")"
 	_, err := ppr.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
@@ -63,9 +67,13 @@ func (ppr *purchaseReportRepository) Update(
 	c context.Context,
 	id string,
 	userId string,
+	discount string,
+	addition string,
+	finance_check string,
 	purchaseOrderId string,
+	remark string,
 ) error {
-	var query = "update purchase_reports set user_id =" + userId + ", purchase_order_id =" + purchaseOrderId + " where id = " + id
+	var query = "update purchase_reports set user_id =" + userId + ", discount =" + discount + ",addition =" + addition + ", finance_check =" + finance_check + ", purchase_order_id=" + purchaseOrderId + " where id = " + id 
 	_, err := ppr.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err

@@ -4,6 +4,7 @@ import(
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"fmt"
 )
 
 type purchaseReportController struct {
@@ -46,9 +47,13 @@ func (p *purchaseReportController) ShowPurchaseReport(c echo.Context)error{
 //Create
 func (p *purchaseReportController) CreatePurchaseReport(c echo.Context)error{
 	userID :=c.QueryParam("user_id")
+	discount :=c.QueryParam("discount")
+	addition :=c.QueryParam("addition")
+	financeCheck :=c.QueryParam("finance_check") 
 	purchaseOrderID := c.QueryParam("purchase_order_id")
-	
-	err := p.u.CreatePurchaseReport(c.Request().Context(),userID, purchaseOrderID)
+	remark :=c.QueryParam("remark")
+	fmt.Println("aaaaaaaaaaaaaaa")
+	err := p.u.CreatePurchaseReport(c.Request().Context(),userID, discount,addition,financeCheck,purchaseOrderID,remark)
 	if err != nil {
 		return err
 	}
@@ -59,9 +64,13 @@ func (p *purchaseReportController) CreatePurchaseReport(c echo.Context)error{
 func (p *purchaseReportController) UpdatePurchaseReport(c echo.Context) error{
 	id := c.Param("id")
 	userID :=c.QueryParam("user_id")
+	discount :=c.QueryParam("discount")
+	addition :=c.QueryParam("addition")
+	financeCheck :=c.QueryParam("finance_check") 
 	purchaseOrderID := c.QueryParam("purchase_order_id")
+	remark :=c.QueryParam("remark")
 	
-	err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, purchaseOrderID)
+	err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, discount, addition, financeCheck ,purchaseOrderID ,remark)
 	if err != nil {
 		return err
 	}

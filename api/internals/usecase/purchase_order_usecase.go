@@ -14,8 +14,8 @@ type purchaseOrderUseCase struct {
 type PurchaseOrderUseCase interface {
 	GetPurchaseOrders(context.Context) ([]domain.PurchaseOrder, error)
 	GetPurchaseOrderByID(context.Context, string) (domain.PurchaseOrder, error)
-	CreatePurchaseOrder(context.Context, string, string) error
-	UpdatePurchaseOrder(context.Context, string, string, string) error
+	CreatePurchaseOrder(context.Context, string, string, string) error
+	UpdatePurchaseOrder(context.Context, string, string, string, string) error
 	DestroyPurchaseOrder(context.Context, string) error
 	GetOrderWithUserItem(context.Context) ([]domain.OrderWithItemAndUser,error)
 	GetOrderWithUserItemByID(context.Context, string) (domain.OrderWithItemAndUser,error)
@@ -38,6 +38,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrders(c context.Context) ([]domain.Pu
 				&purchaseOrder.ID,
 				&purchaseOrder.DeadLine,
 				&purchaseOrder.UserID,
+				&purchaseOrder.FinanceCheck,
 				&purchaseOrder.CreatedAt,
 				&purchaseOrder.UpdatedAt,
 			)
@@ -57,6 +58,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderByID(c context.Context, id string
 		&purchaseOrder.ID,
 		&purchaseOrder.DeadLine,
 		&purchaseOrder.UserID,
+		&purchaseOrder.FinanceCheck,
 		&purchaseOrder.CreatedAt,
 		&purchaseOrder.UpdatedAt,
 	)
@@ -69,10 +71,11 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderByID(c context.Context, id string
 //PurcahseOrderの作成(create)
 func (p *purchaseOrderUseCase) CreatePurchaseOrder(
 	c context.Context, 
-	userID string,
 	DeadLine string,
+	userID string,
+	FinanceCheck string,
 ) error {
-	err := p.rep.Create(c, userID, DeadLine)
+	err := p.rep.Create(c, DeadLine, userID, FinanceCheck)
 	return err
 }
 
@@ -80,10 +83,11 @@ func (p *purchaseOrderUseCase) CreatePurchaseOrder(
 func (p *purchaseOrderUseCase) UpdatePurchaseOrder(
 	c context.Context,
 	id string,
-	userID string,
 	DeadLine string,
+	userID string,
+	FinanceCheck string,
 ) error {
-	err := p.rep.Update(c, id, userID, DeadLine)
+	err := p.rep.Update(c, id, DeadLine, userID, FinanceCheck)
 	return err
 }
 
@@ -111,6 +115,7 @@ func (p *purchaseOrderUseCase) GetOrderWithUserItem(c context.Context) ([]domain
 			&orderWithUserAndItem.PurchaseOrder.ID,
 			&orderWithUserAndItem.PurchaseOrder.DeadLine,
 			&orderWithUserAndItem.PurchaseOrder.UserID,
+			&orderWithUserAndItem.PurchaseOrder.FinanceCheck,
 			&orderWithUserAndItem.PurchaseOrder.CreatedAt,
 			&orderWithUserAndItem.PurchaseOrder.UpdatedAt,
 			&orderWithUserAndItem.User.ID,
@@ -159,6 +164,7 @@ func (p *purchaseOrderUseCase) GetOrderWithUserItemByID(c context.Context, id st
 		  &orderWithUserAndItem.PurchaseOrder.ID,
 			&orderWithUserAndItem.PurchaseOrder.DeadLine,
 			&orderWithUserAndItem.PurchaseOrder.UserID,
+			&orderWithUserAndItem.PurchaseOrder.FinanceCheck,
 			&orderWithUserAndItem.PurchaseOrder.CreatedAt,
 			&orderWithUserAndItem.PurchaseOrder.UpdatedAt,
 			&orderWithUserAndItem.User.ID,
