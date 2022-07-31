@@ -7,7 +7,7 @@ import (
 type PurchaseReport struct {
 	ID   						 	ID 							`json:"id"`
 	UserID 					 	ID 							`json:"user_id"	`
-  Discount				 	int 						`json:"dicount"`
+  Discount				 	int 						`json:"discount"`
 	Addition	 			 	int 						`json:"addition"`
 	FinanceCheck    	bool            `json:"finance_check"`
 	Remark						string          `json:"remark"`
