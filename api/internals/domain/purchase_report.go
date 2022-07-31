@@ -10,7 +10,7 @@ type PurchaseReport struct {
   Discount				 	int 						`json:"dicount"`
 	Addition	 			 	int 						`json:"addition"`
 	FinanceCheck    	bool            `json:"finance_check"`
-	Remark						string          `json:"remark`
+	Remark						string          `json:"remark"`
 	PurchaseOrderID 	PurchaseOrderID `json:"purchase_order_id"`
 	CreatedAt 			  time.Time 			`json:"created_at"`
 	UpdatedAt		 	    time.Time 			`json:"updated_at"`
