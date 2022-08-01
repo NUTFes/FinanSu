@@ -6,6 +6,7 @@ import { post } from '@api/purchaseOrder';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { Modal, Input, Select, PrimaryButton, CloseButton } from '@components/common';
 import { useUI } from '@components/ui/context';
+import { useGlobalContext } from '@components/global/context';
 
 interface User {
   id: number;
@@ -17,6 +18,7 @@ interface User {
 interface FormData {
   deadline: string;
   user_id: number;
+  finance_check: boolean;
 }
 
 interface PurchaseItem {
@@ -31,6 +33,7 @@ interface PurchaseItem {
 }
 
 export default function PurchaseItemNumModal() {
+  const state = useGlobalContext();
   // 購入物品数用の配列
   const purchaseItemNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -48,7 +51,8 @@ export default function PurchaseItemNumModal() {
 
   const [formData, setFormData] = useState({
     deadline: '',
-    user_id: 1,
+    user_id: state.user.id,
+    finance_check: false,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
@@ -73,42 +77,21 @@ export default function PurchaseItemNumModal() {
     return initFormDataList;
   });
 
-  // ログイン中のユーザ
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: 1,
-    name: '',
-    bureau_id: 1,
-    role_id: 1,
-  });
-
-  // ページ読み込み時にcurrent_userを取得
-  useEffect(() => {
-    if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-        setCurrentUser(currentUserRes);
-      };
-      getCurrentUser(getCurrentUserURL);
-    }
-  }, [router]);
-
   // 購入申請用のhandler
   const formDataHandler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
 
   // 購入物品数用のhandler
   const purchaseItemNumHandler = (input: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPurchaseItemNum({ ...purchaseItemNum, [input]: e.target.value });
   };
 
-  const addPurchaseOrder = async (data: FormData, user_id: number) => {
+  const addPurchaseOrder = async (data: FormData) => {
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
-    await post(addPurchaseOrderUrl, data, user_id);
+    await post(addPurchaseOrderUrl, data);
     const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     const getRes = await get(getPurchaseOrderUrl);
     setPurchaseOrderId(getRes[getRes.length - 1].id);
@@ -193,7 +176,7 @@ export default function PurchaseItemNumModal() {
             onClick={() => {
               updateFormDataList();
               onOpen();
-              addPurchaseOrder(formData, currentUser.id);
+              addPurchaseOrder(formData);
             }}
           >
             購入物品の詳細入力へ
@@ -202,16 +185,16 @@ export default function PurchaseItemNumModal() {
       </Modal>
 
       {isOpen ? (
-          <AddModal
-            purchaseOrderId={purchaseOrderId}
-            purchaseItemNum={purchaseItemNum}
-            isOpen={isOpen}
-            numModalOnClose={closeModal}
-            onClose={onClose}
-            setFormDataList={setFormDataList}
-            formDataList={formDataList}
-          />
-        ) : null}
+        <AddModal
+          purchaseOrderId={purchaseOrderId}
+          purchaseItemNum={purchaseItemNum}
+          isOpen={isOpen}
+          numModalOnClose={closeModal}
+          onClose={onClose}
+          setFormDataList={setFormDataList}
+          formDataList={formDataList}
+        />
+      ) : null}
     </>
   );
 }

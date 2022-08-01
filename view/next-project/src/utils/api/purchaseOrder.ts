@@ -21,10 +21,12 @@ export const get_with_token = async (url: string) => {
   return await res.json();
 };
 
-export const post = async (url: string, data: any, user_id: number) => {
+export const post = async (url: string, data: any) => {
   const deadline = data.deadline;
-  const userId = user_id;
-  const postUrl = url + '?deadline=' + deadline + '&user_id=' + userId;
+  const userId = data.user_id;
+  const financeCheck = data.finance_check;
+  const postUrl = url + '?deadline=' + deadline + '&user_id=' + userId + '&finance_check=' + financeCheck;
+  console.log(data)
 
   const res = await fetch(postUrl, {
     method: 'POST',
@@ -40,7 +42,8 @@ export const post = async (url: string, data: any, user_id: number) => {
 export const put = async (url: string, data: any) => {
   const deadline = data.deadline;
   const userId = data.user_id;
-  const putUrl = url + '?deadline=' + deadline + '&user_id=' + userId;
+  const financeCheck = data.finance_check;
+  const putUrl = url + '?deadline=' + deadline + '&user_id=' + userId + '&finance_check=' + financeCheck;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
