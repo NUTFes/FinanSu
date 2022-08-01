@@ -254,6 +254,7 @@ export default function EditModal(props: ModalProps) {
           <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
             <div className={clsx('grid col-span-1')} />
             <div className={clsx('grid col-span-10 w-full')}>
+              {/* 購入物品があればステッパで表示、なければないと表示  */}
               {formDataList.length > 0 ? (
                 <Stepper stepNum={formDataList.length} activeStep={activeStep} isDone={isDone}>
                   {!isDone &&
@@ -268,6 +269,7 @@ export default function EditModal(props: ModalProps) {
                 </div>
               )}
               {isDone ? (
+                // 編集完了した時に完了と戻るボタンを表示
                 <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
                   <div className={clsx('grid col-span-1')} />
                   <div className={clsx('grid col-span-10 justify-items-center w-full')}>
@@ -294,9 +296,12 @@ export default function EditModal(props: ModalProps) {
                     <div className={clsx('grid col-span-10 justify-items-center')}>
                       {formDataList.length > 0 ? (
                         <div className={clsx('flex')}>
-                          <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
-                            戻る
-                          </OutlinePrimaryButton>
+                          {/* stepが1より大きい時のみ戻るボタンを表示 */}
+                          {activeStep > 1 && (
+                            <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
+                              戻る
+                            </OutlinePrimaryButton>
+                          )}
                           <PrimaryButton
                             className={'mx-2 pl-4 pr-2'}
                             onClick={() => {
