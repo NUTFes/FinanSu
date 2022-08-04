@@ -4,7 +4,6 @@ import(
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"net/http"
-	"fmt"
 )
 
 type purchaseReportController struct {
@@ -52,7 +51,6 @@ func (p *purchaseReportController) CreatePurchaseReport(c echo.Context)error{
 	financeCheck :=c.QueryParam("finance_check") 
 	purchaseOrderID := c.QueryParam("purchase_order_id")
 	remark :=c.QueryParam("remark")
-	fmt.Println("aaaaaaaaaaaaaaa")
 	err := p.u.CreatePurchaseReport(c.Request().Context(),userID, discount,addition,financeCheck,purchaseOrderID,remark)
 	if err != nil {
 		return err
