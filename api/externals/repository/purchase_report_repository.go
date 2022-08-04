@@ -56,7 +56,7 @@ func (ppr *purchaseReportRepository) Create(
 	purchaseOrderId string,
 	remark string,
 ) error {
-	var query = "insert into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (" + userId + "," + discount + "," + addition + "," + finance_check + "," + purchaseOrderId + "," + remark + ")"
+	var query = "insert into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (" + userId + "," + discount + "," + addition + "," + finance_check + "," + purchaseOrderId + ",'" + remark + "')"
 	_, err := ppr.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
@@ -73,7 +73,7 @@ func (ppr *purchaseReportRepository) Update(
 	purchaseOrderId string,
 	remark string,
 ) error {
-	var query = "update purchase_reports set user_id =" + userId + ", discount =" + discount + ",addition =" + addition + ", finance_check =" + finance_check + ", purchase_order_id=" + purchaseOrderId + " where id = " + id 
+	var query = "update purchase_reports set user_id =" + userId + ", discount =" + discount + ",addition =" + addition + ", finance_check =" + finance_check +", purchase_order_id =" + purchaseOrderId + ", remark ='" + remark + "' where id = " + id 
 	_, err := ppr.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
