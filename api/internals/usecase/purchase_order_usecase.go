@@ -5,7 +5,6 @@ import (
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"strconv"
-	"fmt"
 )
 
 type purchaseOrderUseCase struct {
@@ -223,8 +222,6 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderNewRecord(
 		&purchaseOrder.UpdatedAt,
 	)
 	if err != nil {
-		fmt.Println("---------------------------")
-		fmt.Println(err)
 		return purchaseOrder, err
 	}	
 	return purchaseOrder,nil
