@@ -18,6 +18,7 @@ type UserRepository interface {
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
+	FindNewRecord(context.Context) (*sql.Row,error)
 }
 
 func NewUserRepository(client db.Client) UserRepository {
@@ -27,7 +28,7 @@ func NewUserRepository(client db.Client) UserRepository {
 // 全件取得
 func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "select * from users"
-	rows, err := ur.client.DB().QueryContext(c,query )
+	rows, err := ur.client.DB().QueryContext(c,query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
@@ -65,4 +66,11 @@ func (ur *userRepository) Destroy(c context.Context, id string) error {
 	_, err := ur.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
+}
+
+func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
+	query := "select * from users order by id desc limit 1"
+	row := ur.client.DB().QueryRowContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
+	return row, nil
 }

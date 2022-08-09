@@ -21,6 +21,8 @@ type UserUseCase interface {
 	UpdateUser(context.Context, string, string, string, string) error
 	DestroyUser(context.Context, string) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
+	GetUserPostRecord(context.Context,string, string, string) (domain.User,error)
+	GetUserPutRecord(context.Context,string, string, string, string) (domain.User, error)
 }
 
 func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository) UserUseCase {
@@ -122,6 +124,44 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+//postした時のできるuserレコードの取得
+func (u *userUseCase) GetUserPostRecord(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {
+	user := domain.User{}
+	u.userRep.Create(c,name,bureauID,roleID)
+	row , err :=u.userRep.FindNewRecord(c)
+	err = row.Scan(
+		&user.ID,
+		&user.Name,
+		&user.BureauID,
+		&user.RoleID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+//PUTした時に更新されるuserレコードの取得
+func (u *userUseCase) GetUserPutRecord(c context.Context, id string, name string, bureauID string, roleID string) (domain.User, error) {
+	user := domain.User{}
+	u.userRep.Update(c, id, name, bureauID, roleID)
+	row, err :=u.userRep.Find(c, id)
+	err = row.Scan(
+		&user.ID,
+		&user.Name,
+		&user.BureauID,
+		&user.RoleID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	) 
 	if err != nil {
 		return user, err
 	}
