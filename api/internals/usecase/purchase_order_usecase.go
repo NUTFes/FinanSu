@@ -19,7 +19,10 @@ type PurchaseOrderUseCase interface {
 	DestroyPurchaseOrder(context.Context, string) error
 	GetOrderWithUserItem(context.Context) ([]domain.OrderWithItemAndUser,error)
 	GetOrderWithUserItemByID(context.Context, string) (domain.OrderWithItemAndUser,error)
+	GetPurchaseOrderNewRecord(context.Context, string, string,string) (domain.PurchaseOrder,error)
+	GetPurchaseOrderEdit(context.Context,string,string,string,string) (domain.PurchaseOrder,error)
 }
+
 
 func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
 	return &purchaseOrderUseCase{rep}
@@ -198,4 +201,53 @@ func (p *purchaseOrderUseCase) GetOrderWithUserItemByID(c context.Context, id st
 	}
 	orderWithUserAndItem.PurchaseItem = purchaseItems
 	return orderWithUserAndItem, nil
+}
+
+//postした時に作成されたレコードの取得
+func (p *purchaseOrderUseCase) GetPurchaseOrderNewRecord(
+	c context.Context,
+	deadLine string,
+	userID string,
+	finansuCheck string,
+	)(domain.PurchaseOrder,error) {
+	purchaseOrder := domain.PurchaseOrder{}
+	p.rep.Create(c,deadLine,userID,finansuCheck)
+	row, err := p.rep.FindNewRecord(c)
+	err = row.Scan(
+		&purchaseOrder.ID,
+		&purchaseOrder.DeadLine,
+		&purchaseOrder.UserID,
+		&purchaseOrder.FinanceCheck,
+		&purchaseOrder.CreatedAt,
+		&purchaseOrder.UpdatedAt,
+	)
+	if err != nil {
+		return purchaseOrder, err
+	}	
+	return purchaseOrder,nil
+}
+
+//putした時に更新されたレコードの取得
+func (p *purchaseOrderUseCase) GetPurchaseOrderEdit(
+	c context.Context,
+	id string,
+	deadLine string,
+	userID string,
+	finansuCheck string,
+)(domain.PurchaseOrder,error){
+	purchaseOrder :=domain.PurchaseOrder{}
+	p.rep.Update(c,id,deadLine,userID,finansuCheck)
+	row, err := p.rep.Find(c, id)
+	err = row.Scan(
+		&purchaseOrder.ID,
+		&purchaseOrder.DeadLine,
+		&purchaseOrder.UserID,
+		&purchaseOrder.FinanceCheck,
+		&purchaseOrder.CreatedAt,
+		&purchaseOrder.UpdatedAt,
+	)
+	if err != nil {
+		return purchaseOrder, err
+	}
+	return purchaseOrder, nil
 }

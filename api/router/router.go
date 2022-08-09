@@ -134,6 +134,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
 	e.GET("/get_purchaseorders_for_view", r.purchaseOrderController.IndexOrderWithUserItem)
 	e.GET("/get_purchaseorders_for_view/:id", r.purchaseOrderController.ShowOrderWithUserItem)
+	e.POST("/get_post_purchaseorder_record", r.purchaseOrderController.ShowNewPurchaseOrder)
+	e.PUT("/get_put_purchaseorder_record/:id", r.purchaseOrderController.ShowEditPurchaseOrder)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)

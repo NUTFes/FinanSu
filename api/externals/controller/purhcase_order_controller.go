@@ -18,6 +18,8 @@ type PurchaseOrderController interface {
 	DestroyPurchaseOrder(echo.Context) error
 	IndexOrderWithUserItem(echo.Context) error
 	ShowOrderWithUserItem(echo.Context) error
+	ShowNewPurchaseOrder(echo.Context) error
+	ShowEditPurchaseOrder(echo.Context) error
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
@@ -95,4 +97,29 @@ func (p *purchaseOrderController) ShowOrderWithUserItem(c echo.Context) error{
 		return err
 	}
 	return c.JSON(http.StatusOK,orderWithUserAndItem)
+}
+
+//ShowNewPurchaseOrder
+func (p *purchaseOrderController) ShowNewPurchaseOrder(c echo.Context) error{
+	deadLine := c.QueryParam("deadline")
+	userID := c.QueryParam("user_id")
+	financeCheck := c.QueryParam("finance_check")
+	purchaseOrder, err := p.u.GetPurchaseOrderNewRecord(c.Request().Context(),deadLine, userID, financeCheck)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, purchaseOrder)
+}
+
+//ShowEditPurchaseOrder
+func (p *purchaseOrderController) ShowEditPurchaseOrder(c echo.Context) error{
+	id := c.Param("id")
+	deadLine := c.QueryParam("deadline")
+	userID := c.QueryParam("user_id")
+	financeCheck := c.QueryParam("finance_check")
+	purchaseOrder,err :=p.u.GetPurchaseOrderEdit(c.Request().Context(), id, deadLine, userID, financeCheck)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, purchaseOrder)
 }
