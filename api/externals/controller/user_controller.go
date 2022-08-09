@@ -17,6 +17,8 @@ type UserController interface {
 	UpdateUser(echo.Context) error
 	DestroyUser(echo.Context) error
 	GetCurrentUser(echo.Context) error
+	ShowPostUser(echo.Context) error
+	ShowPutUser(echo.Context) error
 }
 
 func NewUserController(u usecase.UserUseCase) UserController {
@@ -89,4 +91,29 @@ func (auth *userController) GetCurrentUser(c echo.Context) error {
 		c.JSON(http.StatusOK, user)
 		return nil
 	}
+}
+
+//postした際のuserレコード取得
+func (u *userController) ShowPostUser(c echo.Context) error {
+	name := c.QueryParam("name")
+	bureauID := c.QueryParam("bureau_id")
+	roleID := c.QueryParam("role_id")
+	user,err := u.u.GetUserPostRecord(c.Request().Context(),name,bureauID,roleID)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK,user)
+}
+
+//putした際のuserレコードの取得
+func (u *userController) ShowPutUser(c echo.Context) error {
+	id := c.Param("id")
+	name := c.QueryParam("name")
+	bureauID := c.QueryParam("bureau_id")
+	roleID := c.QueryParam("role_id")
+	user, err := u.u.GetUserPutRecord(c.Request().Context(),id ,name, bureauID, roleID)
+	if err != nil {
+		return err 
+	}
+	return c.JSON(http.StatusOK, user)
 }
