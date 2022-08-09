@@ -54,7 +54,7 @@ func (por * purchaseOrderRepository) Create(
 	userId string,
 	financeCheck string,
 ) error {
-		var query = "insert into purchase_orders (deadline, user_id, finance_check) values ( " + deadLine + "," + userId + "," + financeCheck +")"
+		var query = "insert into purchase_orders (deadline, user_id, finance_check) values ('" + deadLine + "'," + userId + "," + financeCheck +")"
 		_, err := por.client.DB().ExecContext(c, query)
 		fmt.Printf("\x1b[36m%s\n", query)
 		return err
