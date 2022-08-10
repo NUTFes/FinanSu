@@ -27,7 +27,7 @@ export const post = async (url: string, data: any) => {
   const addition = data.addition;
   const financeCheck = data.finance_check;
   const remark = data.remark;
-  const purchase_order_id = data.purchase_order_id;
+  const purchaseOrderId = data.purchase_order_id;
   const postUrl =
     url +
     '?user_id=' +
@@ -41,7 +41,7 @@ export const post = async (url: string, data: any) => {
     '&remark=' +
     remark +
     '&purchase_order_id=' +
-    purchase_order_id;
+    purchaseOrderId;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -55,13 +55,25 @@ export const post = async (url: string, data: any) => {
 
 export const put = async (url: string, data: any) => {
   const user_id = data.user_id;
-  const purchase_order_id = data.purchase_order_id;
+  const discount = data.discount;
+  const addition = data.addition;
+  const financeCheck = data.finance_check;
+  const remark = data.remark;
+  const purchaseOrderId = data.purchase_order_id;
   const putUrl =
     url +
     '?user_id=' +
     user_id +
+    '&discount=' +
+    discount +
+    '&addition=' +
+    addition +
+    '&finance_check=' +
+    financeCheck +
+    '&remark=' +
+    remark +
     '&purchase_order_id=' +
-    purchase_order_id;
+    purchaseOrderId;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
