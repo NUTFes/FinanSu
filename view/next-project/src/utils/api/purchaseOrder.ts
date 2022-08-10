@@ -26,7 +26,6 @@ export const post = async (url: string, data: any) => {
   const userId = data.user_id;
   const financeCheck = data.finance_check;
   const postUrl = url + '?deadline=' + deadline + '&user_id=' + userId + '&finance_check=' + financeCheck;
-  console.log(data)
 
   const res = await fetch(postUrl, {
     method: 'POST',

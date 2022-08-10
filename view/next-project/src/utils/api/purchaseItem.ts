@@ -80,7 +80,6 @@ export const put = async (url: string, data: any) => {
     purchaseOrderId +
     '&finance_check=' +
     finance_check;
-  // console.log(putUrl, data.item, data.price, data.quantity, data.detail, data.url);
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',

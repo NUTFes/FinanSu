@@ -62,7 +62,6 @@ export const put = async (url: string, data: any) => {
     user_id +
     '&purchase_order_id=' +
     purchase_order_id;
-  console.log(putUrl, data.item, data.price, data.user_id, data.purchase_order_id);
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
