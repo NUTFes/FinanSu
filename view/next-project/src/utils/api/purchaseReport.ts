@@ -23,11 +23,23 @@ export const get_with_token = async (url: string) => {
 
 export const post = async (url: string, data: any) => {
   const user_id = data.user_id;
+  const discount = data.discount;
+  const addition = data.addition;
+  const financeCheck = data.finance_check;
+  const remark = data.remark;
   const purchase_order_id = data.purchase_order_id;
   const postUrl =
     url +
     '?user_id=' +
     user_id +
+    '&discount=' +
+    discount +
+    '&addition=' +
+    addition +
+    '&finance_check=' +
+    financeCheck +
+    '&remark=' +
+    remark +
     '&purchase_order_id=' +
     purchase_order_id;
   const res = await fetch(postUrl, {
