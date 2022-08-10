@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { post } from '@api/purchaseItem';
 import { PrimaryButton, RedButton, CloseButton, Input, Modal, Stepper } from '@components/common';
+import { PurchaseItem } from '@pages/purchaseorders';
 
 interface ModalProps {
   purchaseItemNum: PurchaseItemNum;
@@ -17,20 +18,7 @@ interface PurchaseItemNum {
   value: number;
 }
 
-interface PurchaseItem {
-  id: number | string;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchase_order_id: number;
-  finance_check: boolean;
-}
-
-
 export default function AddModal(props: ModalProps) {
-  console.log(props)
   const [activeStep, setActiveStep] = useState<number>(1);
   const nextStep = () => { setActiveStep(activeStep + 1) }
   const prevStep = () => { setActiveStep(activeStep - 1) }

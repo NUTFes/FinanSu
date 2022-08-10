@@ -5,22 +5,11 @@ import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { Modal, Input, Select, PrimaryButton, CloseButton } from '@components/common';
 import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
-import { PurchaseOrder } from '@pages/purchaseorders';
+import { PurchaseOrder, PurchaseItem } from '@pages/purchaseorders';
 
 interface FormData {
   deadline: string;
   user_id: number;
-  finance_check: boolean;
-}
-
-interface PurchaseItem {
-  id: number | string;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchase_order_id: number;
   finance_check: boolean;
 }
 
@@ -56,12 +45,14 @@ export default function PurchaseItemNumModal() {
       let initFormData: PurchaseItem = {
         id: i + 1,
         item: '',
-        price: '',
-        quantity: '',
+        price: 0,
+        quantity: 0,
         detail: '',
         url: '',
         purchase_order_id: purchaseOrderId,
         finance_check: false,
+        created_at: '',
+        updated_at: '',
       };
       initFormDataList.push(initFormData);
     }
@@ -90,12 +81,14 @@ export default function PurchaseItemNumModal() {
       let initialPurchaseItem: PurchaseItem = {
         id: i + 1,
         item: '',
-        price: '',
-        quantity: '',
+        price: 0,
+        quantity: 0,
         detail: '',
         url: '',
         purchase_order_id: purchaseOrderId,
         finance_check: false,
+        created_at: '',
+        updated_at: '',
       };
       initialPurchaseItemList.push(initialPurchaseItem);
     }
