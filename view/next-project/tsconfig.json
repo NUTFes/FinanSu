@@ -19,7 +19,8 @@
       "@images/*": ["public/*"],
       "@components/*": ["src/components/*"],
       "@api/*": ["src/utils/api/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@pages/*": ["src/pages//*"]
     },
     "incremental": true
   },

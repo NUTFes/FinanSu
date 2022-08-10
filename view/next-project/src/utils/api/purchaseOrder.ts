@@ -35,7 +35,7 @@ export const post = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
+  }).then(response => response.json());
   return res;
 };
 
