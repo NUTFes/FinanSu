@@ -19,6 +19,8 @@ type PurchaseReportUseCase interface {
 	DestroyPurchaseReport(context.Context, string) error
 	GetPurchaseReportsWithOrderItem(context.Context) ([]domain.PurchaseReportWithOrderItem, error)
 	GetPurchaseReportWithOrderItemByID(context.Context, string) (domain.PurchaseReportWithOrderItem, error)
+	GetPurchaseReportPostRecord(context.Context, string, string, string, string, string, string) (domain.PurchaseReport, error)
+	GetPurchaseReportPutRecord(context.Context, string, string, string, string, string, string, string) (domain.PurchaseReport, error)
 }
 
 func NewPurchaseReportUseCase(rep rep.PurchaseReportRepository) PurchaseReportUseCase {
@@ -240,4 +242,65 @@ func (p *purchaseReportUseCase) GetPurchaseReportWithOrderItemByID(c context.Con
 	}
 	purchaseReportwithorderitem.PurchaseItems = purchaseItems
 	return purchaseReportwithorderitem, nil
+}
+
+//postした際に作成されるレコードの取得
+func (p *purchaseReportUseCase) GetPurchaseReportPostRecord(
+	c context.Context,
+	UserID string,
+	Discount string,
+	Addition string,
+	FinanceCheck string,
+	PurchaseOrderID string,
+	Remark string,
+)(domain.PurchaseReport,error){
+	p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID,Remark)
+	purchaseReport := domain.PurchaseReport{}
+	row, err := p.rep.FindNewRecord(c)
+	err = row.Scan(
+		&purchaseReport.ID,
+		&purchaseReport.UserID,
+		&purchaseReport.Discount,
+		&purchaseReport.Addition,
+		&purchaseReport.FinanceCheck,
+		&purchaseReport.PurchaseOrderID,
+		&purchaseReport.Remark,
+		&purchaseReport.CreatedAt,
+		&purchaseReport.UpdatedAt,
+	)
+	if err != nil {
+		return purchaseReport, err
+	}
+	return purchaseReport, nil
+}
+
+//putした際に更新されるレコードの取得
+func (p *purchaseReportUseCase) GetPurchaseReportPutRecord(
+	c context.Context,
+	id string,
+	UserID string,
+	Discount string,
+	Addition string,
+	FinanceCheck string,
+	PurchaseOrderID string,
+	Remark string,
+)(domain.PurchaseReport, error) {
+	p.rep.Update(c,id, UserID, Discount, Addition, FinanceCheck, PurchaseOrderID, Remark)
+	purchaseReport := domain.PurchaseReport{}
+	row, err := p.rep.Find(c, id)
+	err = row.Scan(
+		&purchaseReport.ID,
+		&purchaseReport.UserID,
+		&purchaseReport.Discount,
+		&purchaseReport.Addition,
+		&purchaseReport.FinanceCheck,
+		&purchaseReport.PurchaseOrderID,
+		&purchaseReport.Remark,
+		&purchaseReport.CreatedAt,
+		&purchaseReport.UpdatedAt,
+	)
+	if err != nil {
+		return purchaseReport, err
+	}
+	return purchaseReport, nil
 }
