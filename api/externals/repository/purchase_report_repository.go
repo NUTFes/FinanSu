@@ -21,7 +21,9 @@ type PurchaseReportRepository interface {
 	AllWithOrderItem(context.Context) (*sql.Rows, error)
 	FindWithOrderItem(context.Context, string) (*sql.Row, error)
 	GetPurchaseItemByPurchaseOrderID(context.Context, string) (*sql.Rows, error)
+	FindNewRecord(context.Context) (*sql.Row,error)
 }
+
 
 func NewPurchaseReportRepository(client db.Client) PurchaseReportRepository {
 	return &purchaseReportRepository{client}
@@ -118,4 +120,12 @@ func (ppr *purchaseReportRepository) GetPurchaseItemByPurchaseOrderID(c context.
 	}
 	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
+}
+
+//purchasereportの最新のレコード取得
+func (ppr *purchaseReportRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
+	query := "select * from purchase_reports order by id desc limit 1"
+	row := ppr.client.DB().QueryRowContext(c, query)
+	fmt.Printf("\x1b[36m%s\n", query)
+	return row, nil
 }
