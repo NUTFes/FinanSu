@@ -49,8 +49,8 @@ export const post = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
-  return await res.json();
+  }).then(response => response.json());
+  return res;
 };
 
 export const put = async (url: string, data: any) => {
@@ -81,8 +81,8 @@ export const put = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
-  return await res.json();
+  }).then(response => response.json());
+  return res;
 };
 
 export const del = async (url: string) => {
