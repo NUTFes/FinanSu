@@ -7,6 +7,7 @@ interface Props {
   children?: React.ReactNode;
   purchaseItems: PurchaseItem[];
   id: number;
+  isDisabled: boolean;
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -16,7 +17,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   };
   return (
     <>
-      <EditButton onClick={onOpen}/>
+      <EditButton onClick={onOpen} isDisabled={ props.isDisabled } />
       {
       isOpen ? (
         <EditModal purchaseOrderId={props.id} isOpen={isOpen} setIsOpen={setIsOpen} purchaseItems={props.purchaseItems} />

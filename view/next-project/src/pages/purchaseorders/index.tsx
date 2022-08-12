@@ -181,19 +181,16 @@ export default function PurchaseOrder(props: Props) {
                       {purchaseOrderViewItem.user.bureau_id === 6 && '情報局'}
                     </div>
                   </td>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
                   <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {formatDate(purchaseOrderViewItem.purchase_order.created_at)}
                     </div>
                   </td>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
                   <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderViewItem.purchase_order.deadline}
                     </div>
                   </td>
-                  {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
                   <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {props.purchaseOrderView[index].purchase_item && props.purchaseOrderView[index].purchase_item[0].item}, ...
@@ -202,10 +199,10 @@ export default function PurchaseOrder(props: Props) {
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        <OpenEditModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseItems={purchaseOrderViewItem.purchase_item} />
+                        <OpenEditModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseItems={purchaseOrderViewItem.purchase_item} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseOrderViewItem.purchase_order.user_id } />
                       </div>
                       <div className={clsx('mx-1')}>
-                        <OpenDeleteModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseOrderViewItem={purchaseOrderViewItem} />
+                        <OpenDeleteModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseOrderViewItem={purchaseOrderViewItem} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseOrderViewItem.purchase_order.user_id }/>
                       </div>
                     </div>
                   </td>
