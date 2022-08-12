@@ -8,9 +8,9 @@ import DetailModal from '@components/purchaseorders/DetailModal';
 import MainLayout from '@components/layout/MainLayout';
 import clsx from 'clsx';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
-import { Card, Title, Checkbox, EditButton, DeleteButton } from '@components/common';
+import { Card, Title, Checkbox } from '@components/common';
 
-interface User {
+export interface User {
   id: number;
   name: string;
   bureau_id: number;
@@ -209,10 +209,10 @@ export default function PurchaseOrder(props: Props) {
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        <EditButton />
+                        <OpenEditModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseItems={purchaseOrderViewItem.purchase_item} />
                       </div>
                       <div className={clsx('mx-1')}>
-                        <DeleteButton />
+                        <OpenDeleteModalButton id={purchaseOrderViewItem.purchase_order.id} />
                       </div>
                     </div>
                   </td>
