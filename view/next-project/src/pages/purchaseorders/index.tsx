@@ -21,6 +21,7 @@ export interface PurchaseOrder {
   id: number;
   deadline: string;
   user_id: number;
+  finance_check: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -72,9 +73,6 @@ export default function PurchaseOrder(props: Props) {
     setPurchaseOrderViewItem(purchaseOrderViewItem);
     setIsOpen(true);
   }
-  const onClose = () => {
-    setIsOpen(false);
-  }
 
   const formatDate = (date: string) => {
     let datetime = date.replace('T', ' ');
@@ -112,11 +110,6 @@ export default function PurchaseOrder(props: Props) {
         );
       }
     }
-  };
-
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
   };
 
   return (
@@ -171,12 +164,10 @@ export default function PurchaseOrder(props: Props) {
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {state.user.role_id === 3 ? (
                         changeableCheckboxContent(
-                          // purchaseOrderViewItem.finance_check,
-                          true,
+                          purchaseOrderViewItem.purchase_order.finance_check,
                         )) : (
                         unChangeableCheckboxContent(
-                          // purchaseOrderViewItem.finance_check,
-                          true,
+                          purchaseOrderViewItem.purchase_order.finance_check,
                         ))}
                     </div>
                   </td>
