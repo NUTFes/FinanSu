@@ -7,21 +7,12 @@ import { Modal, OutlinePrimaryButton, PullDown, PrimaryButton, CloseButton } fro
 import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
+import { PurchaseItem } from '@pages/purchasereports';
 
 interface FormData {
   deadline: string;
   user_id: number;
-}
-
-interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchaseOrderId: number;
-  finance_check: boolean;
+  finance_check: boolean,
 }
 
 export default function PurchaseReportItemNumModal() {
@@ -52,16 +43,34 @@ export default function PurchaseReportItemNumModal() {
 
   // 購入報告は購入申請に紐づいているので、購入申請を追加
   const addPurchaseOrder = async () => {
-    const data: FormData = {
-      deadline: '',
-      user_id: state.user.id
+    //年・月・日を取得する
+    var now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    let monthStr = ''
+    let dayStr = ''
+    if (month < 10) {
+      monthStr = '0' + String(month);
+    } else {
+      monthStr = String(month);
     }
-    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
-    await post(addPurchaseOrderUrl, data, state.user.id);
-    const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
-    const getRes = await get(getPurchaseOrderUrl);
-    const purchaseOrderID = getRes[getRes.length - 1].id;
-    setPurchaseOrderId(getRes[getRes.length - 1].id);
+    if (day < 10) {
+      dayStr = '0' + String(day);
+    } else {
+      dayStr = String(day);
+    }
+
+
+    const data: FormData = {
+      deadline: String(year) + monthStr + dayStr,
+      user_id: state.user.id,
+      finance_check: false,
+    }
+    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
+    const postRes = await post(addPurchaseOrderUrl, data);
+    const purchaseOrderID = postRes.id;
+    setPurchaseOrderId(purchaseOrderID);
 
     // 購入物品数のpurchaseItemのリストを作成
     const updatePurchaseItemList = [];
@@ -73,20 +82,22 @@ export default function PurchaseReportItemNumModal() {
         quantity: 0,
         detail: '',
         url: '',
-        purchaseOrderId: purchaseOrderId,
+        purchase_order_id: purchaseOrderID,
         finance_check: false,
+        created_at: '',
+        updated_at: '',
       };
       updatePurchaseItemList.push(initialPurchaseItem);
     }
     // 購入報告モーダルではすでにある購入物品を更新する処理なので、先に購入物品を登録しておく
-    addPurchaseItem(updatePurchaseItemList, purchaseOrderID);
+    addPurchaseItem(updatePurchaseItemList);
   };
 
   // 購入報告の追加モーダルではPutをするので、ここではPostして購入物品を追加
-  const addPurchaseItem = async (data: PurchaseItem[], purchaseOrderID: number) => {
+  const addPurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
       let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
-      await purchaseItemAPI.post(updatePurchaseItemUrl, item, purchaseOrderID);
+      await purchaseItemAPI.post(updatePurchaseItemUrl, item);
     });
     // 購入報告の追加モーダルを開く
     onOpen();

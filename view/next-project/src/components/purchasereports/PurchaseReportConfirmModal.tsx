@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
+import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
+import { PurchaseItem } from '@pages/purchasereports';
 import ReceiptModal from '@components/purchasereports/ReceiptModal'
-
-interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchaseOrderId: number;
-  finance_check: boolean;
-}
 
 interface ModalProps {
   purchaseReportId: number;

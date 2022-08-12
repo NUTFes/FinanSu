@@ -1,41 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { RiArrowDropRightLine } from 'react-icons/ri';
 import { get } from '@api/api_methods';
 import { post } from '@api/purchaseReport';
 import { put } from '@api/purchaseItem';
-import { RiArrowDropRightLine } from 'react-icons/ri';
-import { PrimaryButton, OutlinePrimaryButton, UnderlinePrimaryButton, CloseButton, Input, Modal, Stepper } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
+import { PrimaryButton, OutlinePrimaryButton, UnderlinePrimaryButton, CloseButton, Input, Textarea, Modal, Stepper } from '@components/common';
+import { PurchaseReport, PurchaseOrder, PurchaseItem, User } from '@pages/purchasereports';
 import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal'
-
-interface PurchaseOrder {
-  id: number;
-  deadline: string;
-  user_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchaseOrderId: number;
-  finance_check: boolean;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
-}
 
 interface PurchaseOrderView {
   purchase_order: PurchaseOrder;
@@ -68,7 +41,6 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入報告追加モーダルの開閉状態を管理
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const onOpen = () => { setIsOpen(true) }
-  const onClose = () => { setIsOpen(false) }
 
   // 購入物品数だけステップを用意
   let steps = [];
@@ -76,6 +48,18 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     steps.push({ label: '' });
   }
 
+  // 購入報告
+  const [formData, setFormData] = useState<PurchaseReport>({
+    id: 0,
+    user_id: state.user.id,
+    discount: 0,
+    addition: 0,
+    finance_check: false,
+    remark: '',
+    purchase_order_id: props.purchaseOrderId,
+    created_at: '',
+    updated_at: ''
+  });
   // 購入物品のリスト
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
     let initFormDataList = [];
@@ -83,12 +67,14 @@ export default function PurchaseReportAddModal(props: ModalProps) {
       let initFormData: PurchaseItem = {
         id: i + 1,
         item: '',
-        price: '',
-        quantity: '',
+        price: 0,
+        quantity: 0,
         detail: '',
         url: '',
-        purchaseOrderId: props.purchaseOrderId,
+        purchase_order_id: props.purchaseOrderId,
         finance_check: false,
+        created_at: '',
+        updated_at: '',
       };
       initFormDataList.push(initFormData);
     }
@@ -104,26 +90,37 @@ export default function PurchaseReportAddModal(props: ModalProps) {
       const getPurchaseItems = async (url: string) => {
         const purchaseOrderViewRes: PurchaseOrderView = await get(url)
         let initFormDataList = [];
-        for (let i = 0; i < purchaseOrderViewRes.purchase_item.length; i++) {
-          let initFormData: PurchaseItem = {
-            id: purchaseOrderViewRes.purchase_item[i].id,
-            item: purchaseOrderViewRes.purchase_item[i].item,
-            price: purchaseOrderViewRes.purchase_item[i].price,
-            quantity: purchaseOrderViewRes.purchase_item[i].quantity,
-            detail: purchaseOrderViewRes.purchase_item[i].detail,
-            url: purchaseOrderViewRes.purchase_item[i].url,
-            purchaseOrderId: props.purchaseOrderId,
-            finance_check: purchaseOrderViewRes.purchase_item[i].finance_check,
-          };
-          initFormDataList.push(initFormData);
-        }
+        if (purchaseOrderViewRes.purchase_item !== null) {
+          for (let i = 0; i < purchaseOrderViewRes.purchase_item.length; i++) {
+            let initFormData: PurchaseItem = {
+              id: purchaseOrderViewRes.purchase_item[i].id,
+              item: purchaseOrderViewRes.purchase_item[i].item,
+              price: purchaseOrderViewRes.purchase_item[i].price,
+              quantity: purchaseOrderViewRes.purchase_item[i].quantity,
+              detail: purchaseOrderViewRes.purchase_item[i].detail,
+              url: purchaseOrderViewRes.purchase_item[i].url,
+              purchase_order_id: props.purchaseOrderId,
+              finance_check: purchaseOrderViewRes.purchase_item[i].finance_check,
+              created_at: purchaseOrderViewRes.purchase_item[i].created_at,
+              updated_at: purchaseOrderViewRes.purchase_item[i].updated_at,
+            };
+            initFormDataList.push(initFormData);
+          }
         setFormDataList(initFormDataList)
+        }
       };
       getPurchaseItems(getPurchaseOrderViewUrl);
     }
   }, [router]);
 
-  const handler =
+  // 購入報告用のhandler
+  const formDataHandler =
+    (input: string) =>
+      (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
+  // 購入物品用のhandler
+  const formDataListHandler =
     (input: string) =>
       (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
         setFormDataList(
@@ -146,33 +143,22 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入報告の登録と購入物品の更新を行い、ページをリロード
   const submit = (data: PurchaseItem[]) => {
     addPurchaseReport();
-    getPurchaseReport();
     updatePurchaseItem(data);
     onOpen();
   }
 
   // 購入報告の追加
   const addPurchaseReport = async () => {
-    const purchaseReport = {
-      user_id: state.user.id,
-      purchase_order_id: props.purchaseOrderId,
-    }
-    const purchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
-    await post(purchaseReportUrl, purchaseReport);
-  };
-
-// ReceiptModalで使うので、追加した購入報告のIDを取得
-  const getPurchaseReport = async () => {
-    const purchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
-    const getRes = await get(purchaseReportUrl);
-    setPurchaseReportId(getRes[getRes.length - 1].id);
+    const purchaseReportUrl = process.env.CSR_API_URI + '/get_post_purchasereports_record';
+    const postRes = await post(purchaseReportUrl, formData);
+    setPurchaseReportId(postRes.id);
   };
 
   // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
       let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
-      await put(updatePurchaseItemUrl, item);
+      const res = await put(updatePurchaseItemUrl, item);
     });
   };
 
@@ -193,7 +179,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <Input
             id={String(data.id)}
             value={data.item}
-            onChange={handler('item')}
+            onChange={formDataListHandler('item')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -209,7 +195,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <Input
             id={String(data.id)}
             value={data.price}
-            onChange={handler('price')}
+            onChange={formDataListHandler('price')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -225,7 +211,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <Input
             id={String(data.id)}
             value={data.quantity}
-            onChange={handler('quantity')}
+            onChange={formDataListHandler('quantity')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -241,7 +227,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <Input
             id={String(data.id)}
             value={data.detail}
-            onChange={handler('detail')}
+            onChange={formDataListHandler('detail')}
           />
         </div>
         <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -257,7 +243,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <Input
             id={String(data.id)}
             value={data.url}
-            onChange={handler('url')}
+            onChange={formDataListHandler('url')}
           />
         </div>
       </div>
@@ -289,9 +275,61 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                 }
               </Stepper>
               {isDone ? (
+              <>
                 <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
                   <div className={clsx('grid col-span-1')} />
                   <div className={clsx('grid col-span-10 justify-items-center w-full')}>
+                    <div className={clsx('grid grid-cols-12 gap-4 my-6 w-full')}>
+                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
+                        <div
+                          className={clsx(
+                            'flex items-center text-black-600 text-md',
+                          )}
+                        >
+                          割引
+                        </div>
+                      </div>
+                      <div className={clsx('grid col-span-10 w-full')}>
+                        <Input
+                          value={formData.discount}
+                          onChange={formDataHandler('discount')}
+                        />
+                      </div>
+                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
+                        <div
+                          className={clsx(
+                            'flex items-center text-black-600 text-md',
+                          )}
+                        >
+                          加算
+                        </div>
+                      </div>
+                      <div className={clsx('grid col-span-10 w-full')}>
+                        <Input
+                          value={formData.addition}
+                          onChange={formDataHandler('addition')}
+                        />
+                      </div>
+                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
+                        <div
+                          className={clsx(
+                            'flex items-center text-black-600 text-md',
+                          )}
+                        >
+                          備考
+                        </div>
+                      </div>
+                      <div className={clsx('grid col-span-10 w-full')}>
+                        <Textarea
+                          value={formData.remark}
+                          onChange={formDataHandler('remark')}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  <div className={clsx('grid col-span-1')} />
+                  <div className={clsx('grid justify-items-center')}>
                     <div className={clsx('flex')}>
                       <OutlinePrimaryButton onClick={reset} className={'mx-2'}>
                         戻る
@@ -307,10 +345,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                       {isOpen &&
                         <PurchaseReportConfirmModal purchaseReportId={purchaseReportId} formDataList={formDataList} isOpen={isOpen} setIsOpen={setIsOpen} />
                       }
-                    </div>
+                      </div>
                   </div>
-                  <div className={clsx('grid col-span-1')} />
-                </div>
+                </>
               ) : (
                 <>
                   <div className={clsx('grid grid-cols-12 gap-4 mt-6')}>
