@@ -6,6 +6,7 @@ import { DeleteButton } from '@components/common';
 interface Props {
   children?: React.ReactNode;
   id: number;
+  isDisabled: boolean;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -18,7 +19,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   };
   return (
     <>
-      <DeleteButton onClick={onOpen} />
+      <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
       {
         isOpen ? (
           <DeleteModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} />
