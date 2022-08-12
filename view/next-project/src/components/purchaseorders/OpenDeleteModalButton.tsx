@@ -8,6 +8,7 @@ interface Props {
   children?: React.ReactNode;
   id: number;
   purchaseOrderViewItem: PurchaseOrderView;
+  isDisabled: boolean;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -17,7 +18,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   };
   return (
     <>
-      <DeleteButton onClick={onOpen}/>
+      <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
       {
       isOpen ? (
         <DetailModal id={props.id} isOpen={isOpen} setIsOpen={setIsOpen} purchaseOrderViewItem={props.purchaseOrderViewItem} isDelete={true} />
