@@ -2,45 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { get } from '@api/api_methods';
-import { put } from '@api/purchaseItem';
+import { put as putPurchaseReport } from '@api/purchaseReport';
+import { put as putPurchaseItem } from '@api/purchaseItem';
+import { useGlobalContext } from '@components/global/context';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Modal, Stepper, Title } from '@components/common';
-
-interface PurchaseReport {
-  id: number;
-  user_id: number;
-  purchase_order_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PurchaseOrder {
-  id: number;
-  deadline: string;
-  user_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchaseOrderId: number;
-  finance_check: boolean;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
-}
+import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Textarea, Modal, Stepper, Title } from '@components/common';
+import { PurchaseReport, PurchaseOrder, PurchaseItem, User } from '@pages/purchasereports';
 
 interface PurchaseRecordView {
   purchasereport: PurchaseReport;
@@ -57,6 +24,7 @@ interface ModalProps {
 }
 
 export default function EditModal(props: ModalProps) {
+  const state = useGlobalContext();
   const router = useRouter();
 
   const [activeStep, setActiveStep] = useState<number>(1);
@@ -76,16 +44,30 @@ export default function EditModal(props: ModalProps) {
     steps.push({ label: '' });
   }
 
+  // 購入報告
+  const [formData, setFormData] = useState<PurchaseReport>({
+    id: 0,
+    user_id: state.user.id,
+    discount: 0,
+    addition: 0,
+    finance_check: false,
+    remark: '',
+    purchase_order_id: 1,
+    created_at: '',
+    updated_at: ''
+  });
   // 購入物品のリスト
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>([{
     id: 1,
     item: '',
-    price: '',
-    quantity: '',
+    price: 0,
+    quantity: 0,
     detail: '',
     url: '',
-    purchaseOrderId: 1,
+    purchase_order_id: 1,
     finance_check: false,
+    created_at: '',
+    updated_at: '',
   }]);
 
   useEffect(() => {
@@ -95,7 +77,6 @@ export default function EditModal(props: ModalProps) {
       // purchase_orderに紐づくpurchase_itemsを取得
       const getPurchaseItems = async (url: string) => {
         const purchaseOrderViewRes: PurchaseRecordView = await get(url)
-        console.log(props.purchaseReportId, purchaseOrderViewRes)
         let initFormDataList = [];
         for (let i = 0; i < purchaseOrderViewRes.purchaseitems.length; i++) {
           if (purchaseOrderViewRes.purchaseitems[i].finance_check) {
@@ -106,19 +87,30 @@ export default function EditModal(props: ModalProps) {
               quantity: purchaseOrderViewRes.purchaseitems[i].quantity,
               detail: purchaseOrderViewRes.purchaseitems[i].detail,
               url: purchaseOrderViewRes.purchaseitems[i].url,
-              purchaseOrderId: purchaseOrderViewRes.purchaseorder.id,
+              purchase_order_id: purchaseOrderViewRes.purchaseorder.id,
               finance_check: purchaseOrderViewRes.purchaseitems[i].finance_check,
+              created_at: purchaseOrderViewRes.purchaseitems[i].created_at,
+              updated_at: purchaseOrderViewRes.purchaseitems[i].updated_at,
             };
             initFormDataList.push(initFormData);
           }
         }
+        setFormData(purchaseOrderViewRes.purchasereport);
         setFormDataList(initFormDataList)
       };
       getPurchaseItems(getPurchaseOrderViewUrl);
     }
   }, [router]);
 
-  const handler =
+  // 購入報告用のhandler
+  const formDataHandler =
+    (input: string) =>
+      (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
+
+  // 購入物品用のhandler
+  const formDataListHandler =
     (input: string) =>
       (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
         setFormDataList(
@@ -139,15 +131,23 @@ export default function EditModal(props: ModalProps) {
     };
 
   // 購入報告の登録と購入物品の更新を行い、ページをリロード
-  const submit = (data: PurchaseItem[]) => {
-    updatePurchaseItem(data);
+  const submit = (formDataList: PurchaseItem[], formData: PurchaseReport, purchaseReportId: number) => {
+    updatePurchaseReport(formData, purchaseReportId);
+    updatePurchaseItem(formDataList);
+    router.reload();
   }
+
+  // 購入物品を更新
+  const updatePurchaseReport = async (data: PurchaseReport, id: number) => {
+    const updatePurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + id;
+    await putPurchaseReport(updatePurchaseReportUrl, data);
+  };
 
   // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
       let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
-      await put(updatePurchaseItemUrl, item);
+      await putPurchaseItem(updatePurchaseItemUrl, item);
     });
   };
 
@@ -167,7 +167,7 @@ export default function EditModal(props: ModalProps) {
         <Input
           id={String(data.id)}
           value={data.item}
-          onChange={handler('item')}
+          onChange={formDataListHandler('item')}
         />
       </div>
       <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -183,7 +183,7 @@ export default function EditModal(props: ModalProps) {
         <Input
           id={String(data.id)}
           value={data.price}
-          onChange={handler('price')}
+          onChange={formDataListHandler('price')}
         />
       </div>
       <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -199,7 +199,7 @@ export default function EditModal(props: ModalProps) {
         <Input
           id={String(data.id)}
           value={data.quantity}
-          onChange={handler('quantity')}
+          onChange={formDataListHandler('quantity')}
         />
       </div>
       <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -215,7 +215,7 @@ export default function EditModal(props: ModalProps) {
         <Input
           id={String(data.id)}
           value={data.detail}
-          onChange={handler('detail')}
+          onChange={formDataListHandler('detail')}
         />
       </div>
       <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
@@ -231,7 +231,7 @@ export default function EditModal(props: ModalProps) {
         <Input
           id={String(data.id)}
           value={data.url}
-          onChange={handler('url')}
+          onChange={formDataListHandler('url')}
         />
       </div>
     </div>
@@ -273,6 +273,53 @@ export default function EditModal(props: ModalProps) {
                 <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
                   <div className={clsx('grid col-span-1')} />
                   <div className={clsx('grid col-span-10 justify-items-center w-full')}>
+                    <div className={clsx('grid grid-cols-12 gap-4 mb-6 w-full')}>
+                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
+                        <div
+                          className={clsx(
+                            'flex items-center text-black-600 text-md',
+                          )}
+                        >
+                          割引
+                        </div>
+                      </div>
+                      <div className={clsx('grid col-span-10 w-full')}>
+                        <Input
+                          value={formData.discount}
+                          onChange={formDataHandler('discount')}
+                        />
+                      </div>
+                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
+                        <div
+                          className={clsx(
+                            'flex items-center text-black-600 text-md',
+                          )}
+                        >
+                          加算
+                        </div>
+                      </div>
+                      <div className={clsx('grid col-span-10 w-full')}>
+                        <Input
+                          value={formData.addition}
+                          onChange={formDataHandler('addition')}
+                        />
+                      </div>
+                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
+                        <div
+                          className={clsx(
+                            'flex items-center text-black-600 text-md',
+                          )}
+                        >
+                          備考
+                        </div>
+                      </div>
+                      <div className={clsx('grid col-span-10 w-full')}>
+                        <Textarea
+                          value={formData.remark}
+                          onChange={formDataHandler('remark')}
+                        />
+                      </div>
+                    </div>
                     <div className={clsx('flex')}>
                       <OutlinePrimaryButton onClick={reset} className={'mx-2'}>
                         戻る
@@ -280,7 +327,7 @@ export default function EditModal(props: ModalProps) {
                       <PrimaryButton
                         className={'mx-2'}
                         onClick={() => {
-                          submit(formDataList)
+                          submit(formDataList, formData, props.purchaseReportId)
                         }}
                       >
                         編集完了
