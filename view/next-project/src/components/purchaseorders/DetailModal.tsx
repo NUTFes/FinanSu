@@ -1,55 +1,22 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
-import { get } from '@api/api_methods';
-import { Modal, Checkbox, Tooltip } from '@components/common';
+import { del } from '@api/api_methods';
+import { Modal, Checkbox, Tooltip, RedButton } from '@components/common';
 import clsx from 'clsx';
 import { useGlobalContext } from '@components/global/context'
+import { PurchaseOrderView } from '@pages/purchaseorders'
 
 interface ModalProps {
   isOpen: boolean;
   setIsOpen: Function;
   children?: React.ReactNode;
   id: number | string;
+  purchaseOrderViewItem: PurchaseOrderView;
+  isDelete: boolean;
 }
 
-interface PurchaseOrder {
-  id: number;
-  deadline: string;
-  user_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number;
-  quantity: number;
-  detail: string;
-  url: string;
-  purchase_order_id: number;
-  finance_check: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PurchaseOrderView {
-  purchase_order: PurchaseOrder;
-  user: User;
-  purchase_item: PurchaseItem[];
-}
-
-const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
+const DetailModal: FC<ModalProps> = (props) => {
   const state = useGlobalContext();
   const onClose = () => {
     props.setIsOpen(false);
@@ -63,34 +30,9 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
     return datetime2;
   };
 
-  const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView>()
-
-  useEffect(() => {
-    if (router.isReady) {
-      const getPurchaseOrderViewUrl = process.env.CSR_API_URI + '/get_purchaseorders_for_view/' + props.id;
-      const getPurchaseOrderView = async (url: string) => {
-        setPurchaseOrderView(await get(url));
-        console.log(await get(getPurchaseOrderViewUrl))
-      };
-      getPurchaseOrderView(getPurchaseOrderViewUrl);
-    }
-  }, [router]);
-
-  // 変更可能なcheckboxの描画
-  const changeableCheckboxContent = (
-    isChecked: boolean,
-  ) => {
-    {
-      if (isChecked) {
-        return (
-          <Checkbox checked={true} disabled={false} />
-        );
-      } else {
-        return (
-          <Checkbox disabled={false} />
-        );
-      }
-    }
+  const deletePurchaseOrders = async (id: number | string) => {
+    const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
+    await del(deletePurchaseOrderUrl);
   };
 
   return (
@@ -118,7 +60,7 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
               </div>
             </div>
             <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
-              {purchaseOrderView && purchaseOrderView.purchase_order.id}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchase_order.id}
             </div>
             <div className={clsx('grid col-span-3')} />
           </div>
@@ -135,12 +77,12 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
               </div>
             </div>
             <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
-              {purchaseOrderView && purchaseOrderView.user.bureau_id === 1 && '総務局'}
-              {purchaseOrderView && purchaseOrderView.user.bureau_id === 2 && '渉外局'}
-              {purchaseOrderView && purchaseOrderView.user.bureau_id === 3 && '財務局'}
-              {purchaseOrderView && purchaseOrderView.user.bureau_id === 4 && '企画局'}
-              {purchaseOrderView && purchaseOrderView.user.bureau_id === 5 && '政策局'}
-              {purchaseOrderView && purchaseOrderView.user.bureau_id === 6 && '情報局'}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.user.bureau_id === 1 && '総務局'}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.user.bureau_id === 2 && '渉外局'}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.user.bureau_id === 3 && '財務局'}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.user.bureau_id === 4 && '企画局'}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.user.bureau_id === 5 && '政策局'}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.user.bureau_id === 6 && '情報局'}
             </div>
             <div className={clsx('grid col-span-3')} />
           </div>
@@ -156,7 +98,7 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
               </div>
             </div>
             <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
-              {purchaseOrderView && formatDate(purchaseOrderView.purchase_order.created_at)}
+              {props.purchaseOrderViewItem && formatDate(props.purchaseOrderViewItem.purchase_order.created_at)}
             </div>
             <div className={clsx('grid col-span-3')} />
           </div>
@@ -172,7 +114,7 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
               </div>
             </div>
             <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
-              {purchaseOrderView && purchaseOrderView.purchase_order.deadline}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchase_order.deadline}
             </div>
             <div className={clsx('grid col-span-3')} />
           </div>
@@ -222,7 +164,7 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
             </thead>
             <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0 w-full')}>
               {/* <div className={clsx('flex items-start')}> */}
-              {purchaseOrderView?.purchase_item.map((purchaseItem, index) => (
+              {props.purchaseOrderViewItem?.purchase_item.map((purchaseItem, index) => (
                 <tr key={purchaseItem.id} className={clsx('w-full')}>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')} >
@@ -276,8 +218,18 @@ const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
           </table >
         </div>
       </div>
+      <div className={clsx('grid justify-items-center w-full mt-3')}>
+        {props.isDelete && (
+          <RedButton onClick={() => {
+            deletePurchaseOrders(props.id);
+            router.reload();
+          }}>
+            申請を削除する
+          </RedButton>
+        )}
+      </div>
     </Modal >
   );
 };
 
-export default PurchaseOrderEditModal;
+export default DetailModal;

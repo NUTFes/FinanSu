@@ -38,7 +38,7 @@ export interface PurchaseItem {
   updated_at: string;
 }
 
-interface PurchaseOrderView {
+export interface PurchaseOrderView {
   purchase_order: PurchaseOrder;
   user: User;
   purchase_item: PurchaseItem[];
@@ -65,9 +65,11 @@ export async function getServerSideProps() {
 export default function PurchaseOrder(props: Props) {
   const state = useGlobalContext();
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
+  const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const onOpen = (purchaseOrderID: number) => {
+  const onOpen = (purchaseOrderID: number, purchaseOrderViewItem: PurchaseOrderView) => {
     setPurchaseOrderID(purchaseOrderID);
+    setPurchaseOrderViewItem(purchaseOrderViewItem);
     setIsOpen(true);
   }
   const onClose = () => {
@@ -178,7 +180,7 @@ export default function PurchaseOrder(props: Props) {
                         ))}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id) }}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderViewItem.user.bureau_id === 1 && '総務局'}
                       {purchaseOrderViewItem.user.bureau_id === 2 && '渉外局'}
@@ -189,19 +191,19 @@ export default function PurchaseOrder(props: Props) {
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id) }}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {formatDate(purchaseOrderViewItem.purchase_order.created_at)}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id) }}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseOrderViewItem.purchase_order.deadline}
                     </div>
                   </td>
                   {/* <td className={clsx('px-4 py-2')} onClick={onOpen}> */}
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id) }}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {props.purchaseOrderView[index].purchase_item && props.purchaseOrderView[index].purchase_item[0].item}, ...
                     </div>
@@ -212,7 +214,7 @@ export default function PurchaseOrder(props: Props) {
                         <OpenEditModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseItems={purchaseOrderViewItem.purchase_item} />
                       </div>
                       <div className={clsx('mx-1')}>
-                        <OpenDeleteModalButton id={purchaseOrderViewItem.purchase_order.id} />
+                        <OpenDeleteModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseOrderViewItem={purchaseOrderViewItem} />
                       </div>
                     </div>
                   </td>
@@ -223,13 +225,15 @@ export default function PurchaseOrder(props: Props) {
           </table >
         </div >
       </Card >
-      {isOpen &&
+      {isOpen && purchaseOrderViewItem && (
         <DetailModal
           id={purchaseOrderID}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          purchaseOrderViewItem={purchaseOrderViewItem}
+          isDelete={false}
         />
-      }
+      )}
     </MainLayout >
   );
 }
