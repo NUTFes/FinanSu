@@ -354,9 +354,12 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                     <div className={clsx('grid col-span-1')} />
                     <div className={clsx('grid col-span-10 justify-items-center')}>
                       <div className={clsx('flex')}>
-                        <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
-                          戻る
-                        </OutlinePrimaryButton>
+                        {/* stepが1より大きい時のみ戻るボタンを表示 */}
+                        {activeStep > 1 && (
+                          <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
+                            戻る
+                          </OutlinePrimaryButton>
+                        )}
                         <PrimaryButton
                           className={'mx-2 pl-4 pr-2'}
                           onClick={() => {
