@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { post } from '@api/purchaseItem';
 import { PrimaryButton, RedButton, CloseButton, Input, Modal, Stepper } from '@components/common';
+import { PurchaseItem } from '@pages/purchaseorders';
 
 interface ModalProps {
-  purchaseOrderId: number;
   purchaseItemNum: PurchaseItemNum;
   isOpen: boolean;
   numModalOnClose: () => void;
@@ -17,18 +17,6 @@ interface ModalProps {
 interface PurchaseItemNum {
   value: number;
 }
-
-interface PurchaseItem {
-  id: number | string;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchaseOrderId: number;
-  finance_check: boolean;
-}
-
 
 export default function AddModal(props: ModalProps) {
   const [activeStep, setActiveStep] = useState<number>(1);
@@ -52,10 +40,10 @@ export default function AddModal(props: ModalProps) {
       );
     };
 
-  const addPurchaseItem = async (data: PurchaseItem[], purchaseOrderID: number) => {
+  const addPurchaseItem = async (data: PurchaseItem[]) => {
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
     data.map(async (item) => {
-      await post(addPurchaseItemUrl, item, purchaseOrderID);
+      await post(addPurchaseItemUrl, item);
     });
   };
 
@@ -183,7 +171,7 @@ export default function AddModal(props: ModalProps) {
                 <div className={clsx('grid col-span-1 w-full')}>
                 <PrimaryButton
                   onClick={() => {
-                    addPurchaseItem(props.formDataList, props.purchaseOrderId);
+                    addPurchaseItem(props.formDataList);
                     props.onClose();
                     props.numModalOnClose();
                     router.reload();

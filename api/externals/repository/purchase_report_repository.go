@@ -75,7 +75,7 @@ func (ppr *purchaseReportRepository) Update(
 	purchaseOrderId string,
 	remark string,
 ) error {
-	var query = "update purchase_reports set user_id =" + userId + ", discount =" + discount + ",addition =" + addition + ", finance_check =" + finance_check + ", purchase_order_id=" + purchaseOrderId + " where id = " + id 
+	var query = "update purchase_reports set user_id =" + userId + ", discount =" + discount + ",addition =" + addition + ", finance_check =" + finance_check +", purchase_order_id =" + purchaseOrderId + ", remark ='" + remark + "' where id = " + id 
 	_, err := ppr.client.DB().ExecContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err

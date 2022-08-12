@@ -9,24 +9,29 @@ import clsx from 'clsx';
 import { Card, Title, Checkbox } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
 
-interface PurchaseReport {
-  [x: string]: any;
+// 他コンポーネントで使うためにexport
+export interface PurchaseReport {
   id: number;
   user_id: number;
+  discount: number;
+  addition: number;
+  finance_check: boolean;
+  remark: string;
   purchase_order_id: number;
   created_at: string;
   updated_at: string;
 }
 
-interface PurchaseOrder {
+export interface PurchaseOrder {
   id: number;
   deadline: string;
   user_id: number;
+  finance_check: boolean;
   created_at: string;
   updated_at: string;
 }
 
-interface PurchaseItem {
+export interface PurchaseItem {
   id: number;
   item: string;
   price: number;
@@ -39,7 +44,7 @@ interface PurchaseItem {
   updated_at: string;
 }
 
-interface User {
+export interface User {
   id: number;
   name: string;
   bureau_id: number;

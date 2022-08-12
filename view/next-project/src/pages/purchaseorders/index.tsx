@@ -17,7 +17,7 @@ interface User {
   role_id: number;
 }
 
-interface PurchaseOrder {
+export interface PurchaseOrder {
   id: number;
   deadline: string;
   user_id: number;
@@ -25,7 +25,7 @@ interface PurchaseOrder {
   updated_at: string;
 }
 
-interface PurchaseItem {
+export interface PurchaseItem {
   id: number;
   item: string;
   price: number;

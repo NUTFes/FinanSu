@@ -21,14 +21,14 @@ export const get_with_token = async (url: string) => {
   return await res.json();
 };
 
-export const post = async (url: string, data: any, purchase_order_id: number) => {
-  const item = data.item;
-  const price = data.price;
-  const quantity = data.quantity;
-  const detail = data.detail;
-  const itemUrl = data.url;
-  const purchaseOrderId = purchase_order_id;
-  const finance_check = data.finance_check;
+export const post = async (url: string, data: any) => {
+  const item: String = data.item;
+  const price: number = data.price;
+  const quantity: number = data.quantity;
+  const detail: String = data.detail;
+  const itemUrl:String = data.url;
+  const purchaseOrderId: number = data.purchase_order_id;
+  const finance_check: boolean = data.finance_check;
   const postUrl =
     url +
     '?item=' +
@@ -52,35 +52,34 @@ export const post = async (url: string, data: any, purchase_order_id: number) =>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
-  return await res.json();
+  }).then(response => response.json());
+  return res;
 };
 
 export const put = async (url: string, data: any) => {
-  const item = data.item;
-  const price = data.price;
-  const quantity = data.quantity;
-  const detail = data.detail;
-  const itemUrl = data.url;
-  const purchaseOrderId = data.purchaseOrderId;
-  const finance_check = data.finance_check;
+  const item: String = data.item;
+  const price: number = data.price;
+  const quantity: number = data.quantity;
+  const detail: String = data.detail;
+  const itemUrl:String = data.url;
+  const purchaseOrderId: number = data.purchase_order_id;
+  const finance_check: boolean = data.finance_check;
   const putUrl =
     url +
-    '?item="' +
+    '?item=' +
     item +
-    '"&price=' +
+    '&price=' +
     price +
     '&quantity=' +
     quantity +
-    '&detail="' +
+    '&detail=' +
     detail +
-    '"&url="' +
+    '&url=' +
     itemUrl +
     '&purchase_order_id=' +
     purchaseOrderId +
     '&finance_check=' +
     finance_check;
-  // console.log(putUrl, data.item, data.price, data.quantity, data.detail, data.url);
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
@@ -88,8 +87,8 @@ export const put = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
-  return await res.json();
+  }).then(response => response.json());
+  return res;
 };
 
 export const del = async (url: string) => {

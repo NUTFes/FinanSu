@@ -1,40 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import clsx from 'clsx';
-import { get, get_with_token } from '@api/api_methods';
 import { post } from '@api/purchaseOrder';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { Modal, Input, Select, PrimaryButton, CloseButton } from '@components/common';
 import { useUI } from '@components/ui/context';
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import { useGlobalContext } from '@components/global/context';
+import { PurchaseOrder, PurchaseItem } from '@pages/purchaseorders';
 
 interface FormData {
   deadline: string;
   user_id: number;
-}
-
-interface PurchaseItem {
-  id: number | string;
-  item: string;
-  price: number | string;
-  quantity: number | string;
-  detail: string;
-  url: string;
-  purchaseOrderId: number;
   finance_check: boolean;
 }
 
 export default function PurchaseItemNumModal() {
+  const state = useGlobalContext();
   // 購入物品数用の配列
   const purchaseItemNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  const router = useRouter();
   const { closeModal } = useUI();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +31,8 @@ export default function PurchaseItemNumModal() {
 
   const [formData, setFormData] = useState({
     deadline: '',
-    user_id: 1,
+    user_id: state.user.id,
+    finance_check: false,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
@@ -61,71 +45,50 @@ export default function PurchaseItemNumModal() {
       let initFormData: PurchaseItem = {
         id: i + 1,
         item: '',
-        price: '',
-        quantity: '',
+        price: 0,
+        quantity: 0,
         detail: '',
         url: '',
-        purchaseOrderId: purchaseOrderId,
+        purchase_order_id: purchaseOrderId,
         finance_check: false,
+        created_at: '',
+        updated_at: '',
       };
       initFormDataList.push(initFormData);
     }
     return initFormDataList;
   });
 
-  // ログイン中のユーザ
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: 1,
-    name: '',
-    bureau_id: 1,
-    role_id: 1,
-  });
-
-  // ページ読み込み時にcurrent_userを取得
-  useEffect(() => {
-    if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-        setCurrentUser(currentUserRes);
-      };
-      getCurrentUser(getCurrentUserURL);
-    }
-  }, [router]);
-
   // 購入申請用のhandler
   const formDataHandler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
 
   // 購入物品数用のhandler
   const purchaseItemNumHandler = (input: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPurchaseItemNum({ ...purchaseItemNum, [input]: e.target.value });
   };
 
-  const addPurchaseOrder = async (data: FormData, user_id: number) => {
-    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
-    await post(addPurchaseOrderUrl, data, user_id);
-    const getPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
-    const getRes = await get(getPurchaseOrderUrl);
-    setPurchaseOrderId(getRes[getRes.length - 1].id);
-  };
-
-  const updateFormDataList = () => {
+  // 購入申請の登録と登録した購入申請のIDを使って購入物品を更新
+  const submit = async (data: FormData) => {
+    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
+    const postRes: PurchaseOrder = await post(addPurchaseOrderUrl, data);
+    const purchaseOrderId = postRes.id;
     let initialPurchaseItemList = [];
     for (let i = 0; i < Number(purchaseItemNum.value); i++) {
       let initialPurchaseItem: PurchaseItem = {
         id: i + 1,
         item: '',
-        price: '',
-        quantity: '',
+        price: 0,
+        quantity: 0,
         detail: '',
         url: '',
-        purchaseOrderId: purchaseOrderId,
+        purchase_order_id: purchaseOrderId,
         finance_check: false,
+        created_at: '',
+        updated_at: '',
       };
       initialPurchaseItemList.push(initialPurchaseItem);
     }
@@ -191,9 +154,8 @@ export default function PurchaseItemNumModal() {
         <div className={clsx('grid justify-items-center py-3')}>
           <PrimaryButton
             onClick={() => {
-              updateFormDataList();
+              submit(formData);
               onOpen();
-              addPurchaseOrder(formData, currentUser.id);
             }}
           >
             購入物品の詳細入力へ
@@ -201,17 +163,16 @@ export default function PurchaseItemNumModal() {
         </div>
       </Modal>
 
-      {isOpen ? (
-          <AddModal
-            purchaseOrderId={purchaseOrderId}
-            purchaseItemNum={purchaseItemNum}
-            isOpen={isOpen}
-            numModalOnClose={closeModal}
-            onClose={onClose}
-            setFormDataList={setFormDataList}
-            formDataList={formDataList}
-          />
-        ) : null}
+      {isOpen && (
+        <AddModal
+          purchaseItemNum={purchaseItemNum}
+          isOpen={isOpen}
+          numModalOnClose={closeModal}
+          onClose={onClose}
+          setFormDataList={setFormDataList}
+          formDataList={formDataList}
+        />
+      )}
     </>
   );
 }
