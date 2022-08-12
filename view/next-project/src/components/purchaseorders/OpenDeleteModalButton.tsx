@@ -1,11 +1,13 @@
 import React from 'react';
-import DeleteModal from '@components/purchaseorders/DeleteModal';
+import DetailModal from '@components/purchaseorders/DetailModal';
 import { useState } from 'react';
 import { DeleteButton } from '@components/common';
+import { PurchaseOrderView } from '@pages/purchaseorders'
 
 interface Props {
   children?: React.ReactNode;
   id: number;
+  purchaseOrderViewItem: PurchaseOrderView;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -13,15 +15,12 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   const onOpen = () => {
     setIsOpen(true);
   };
-  const onClose= () => {
-    setIsOpen(false);
-  };
   return (
     <>
       <DeleteButton onClick={onOpen}/>
       {
       isOpen ? (
-        <DeleteModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} />
+        <DetailModal id={props.id} isOpen={isOpen} setIsOpen={setIsOpen} purchaseOrderViewItem={props.purchaseOrderViewItem} isDelete={true} />
       ) : null}
     </>
   );
