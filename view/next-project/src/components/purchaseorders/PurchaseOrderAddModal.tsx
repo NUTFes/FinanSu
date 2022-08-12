@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { post } from '@api/purchaseItem';
-import { PrimaryButton, RedButton, CloseButton, Input, Modal, Stepper } from '@components/common';
+import { RiArrowDropRightLine } from 'react-icons/ri';
+import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Modal, Stepper } from '@components/common';
 import { PurchaseItem } from '@pages/purchaseorders';
 
 interface ModalProps {
@@ -46,6 +47,13 @@ export default function AddModal(props: ModalProps) {
       await post(addPurchaseItemUrl, item);
     });
   };
+
+  const submit = async (formDataList: PurchaseItem[]) => {
+    addPurchaseItem(formDataList);
+    props.onClose();
+    props.numModalOnClose();
+    router.reload();
+  }
 
   // 購入物品の情報
   const content: Function = (index: number, data: PurchaseItem) => (
@@ -161,45 +169,55 @@ export default function AddModal(props: ModalProps) {
               }
             </Stepper>
             {isDone ? (
-              <div className={clsx('grid grid-cols-8 gap-4 my-10')}>
-                <div className={clsx('grid col-span-3')}/>
-                <div className={clsx('grid col-span-1 w-full')}>
-                <RedButton onClick={reset}>
-                  Reset
-                </RedButton>
-                </div>
-                <div className={clsx('grid col-span-1 w-full')}>
-                <PrimaryButton
-                  onClick={() => {
-                    addPurchaseItem(props.formDataList);
-                    props.onClose();
-                    props.numModalOnClose();
-                    router.reload();
-                  }}
-                >
-                  登録
-                </PrimaryButton>
-                </div>
-                <div className={clsx('grid col-span-3')}/>
-              </div>
-            ): (
-              <div className={clsx('grid grid-cols-7 gap-4 mt-6')}>
-                <div className={clsx('grid col-span-5')}/>
-                <div className={clsx('grid col-span-1 justify-items-center')}>
-                <RedButton onClick={prevStep}>
-                  Prev
-                </RedButton>
-                </div>
-                <div className={clsx('grid col-span-1 justify-items-center')}>
-                <PrimaryButton
-                  onClick={() => {
-                    { activeStep === steps.length ? setIsDone(true) : nextStep(); }
-                  }}
-                >
-                  {activeStep === steps.length ? 'Finish' : 'Next'}
-                </PrimaryButton>
-                </div>
-              </div>
+              <>
+                <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
+                  <div className={clsx('grid col-span-1')} />
+                  <div className={clsx('grid col-span-10 justify-items-center w-full')}>
+                    <div className={clsx('flex')}>
+                      <OutlinePrimaryButton onClick={reset} className={'mx-2'}>
+                        戻る
+                      </OutlinePrimaryButton>
+                      <PrimaryButton
+                        className={'mx-2'}
+                        onClick={() => {
+                          submit(props.formDataList)
+
+                        }}
+                      >
+                        登録
+                      </PrimaryButton>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={clsx('grid grid-cols-12 gap-4 mt-6')}>
+                    <div className={clsx('grid col-span-1')} />
+                    <div className={clsx('grid col-span-10 justify-items-center')}>
+                      <div className={clsx('flex')}>
+                        {/* stepが1より大きい時のみ戻るボタンを表示 */}
+                        {activeStep > 1 && (
+                          <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
+                            戻る
+                          </OutlinePrimaryButton>
+                        )}
+                        <PrimaryButton
+                          className={'mx-2 pl-4 pr-2'}
+                          onClick={() => {
+                            { activeStep === steps.length ? setIsDone(true) : nextStep(); }
+                          }}
+                        >
+                          <div className={clsx('flex')}>
+                            {activeStep === steps.length ? '申請の確認' : '次へ'}
+                            <RiArrowDropRightLine size={23} />
+                          </div>
+                        </PrimaryButton>
+                      </div>
+                    </div>
+                    <div className={clsx('grid col-span-1')} />
+                  </div>
+                </>
             )}
           </div>
           <div className={clsx('grid col-span-1')}/>
