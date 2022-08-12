@@ -192,8 +192,22 @@ export default function PurchaseOrder(props: Props) {
                     </div>
                   </td>
                   <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseOrderViewItem.purchase_order.id, purchaseOrderViewItem) }}>
-                    <div className={clsx('text-center text-sm text-black-600')}>
-                      {props.purchaseOrderView[index].purchase_item && props.purchaseOrderView[index].purchase_item[0].item}, ...
+                    <div className={clsx('text-center text-sm text-black-600 text-ellipsis overflow-hidden whitespace-nowrap')}>
+                      {purchaseOrderViewItem.purchase_item && (
+                        purchaseOrderViewItem.purchase_item.map((purchaseItem: PurchaseItem, index: number) => (
+                          <>
+                            {purchaseOrderViewItem.purchase_item.length - 1 === index ? (
+                              <>
+                                {purchaseItem.item}
+                              </>
+                            ) : (
+                              <>
+                                {purchaseItem.item},
+                              </>
+                            )}
+                          </>
+                        ))
+                      )}
                     </div>
                   </td>
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrder.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
