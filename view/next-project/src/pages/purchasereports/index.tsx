@@ -4,6 +4,7 @@ import Head from 'next/head';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
+import DetailModal from '@components/purchasereports/DetailModal';
 import MainLayout from '@components/layout/MainLayout';
 import clsx from 'clsx';
 import { Card, Title, Checkbox } from '@components/common';
@@ -53,7 +54,7 @@ export interface User {
   updated_at: string;
 }
 
-interface PurchaseReportView {
+export interface PurchaseReportView {
   purchasereport: PurchaseReport;
   report_user: User;
   purchaseorder: PurchaseOrder;
@@ -84,6 +85,16 @@ export async function getServerSideProps() {
 
 export default function PurchaseReport(props: Props) {
   const state = useGlobalContext();
+  const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
+  const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onOpen = (purchaseOrderID: number, purchaseReportViewItem: PurchaseReportView) => {
+    setPurchaseReportID(purchaseOrderID);
+    setPurchaseReportViewItem(purchaseReportViewItem);
+    setIsOpen(true);
+  }
+
   // 購入報告
   const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(() => {
     let initPurchaseReportList = [];
@@ -180,10 +191,10 @@ export default function PurchaseReport(props: Props) {
                   <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
                 </th>
                 <th className={clsx('w-2/12 pb-2 border-b-primary-1')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>申請した局</div>
+                  <div className={clsx('text-center text-sm text-black-600')}>報告した局</div>
                 </th>
                 <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
+                  <div className={clsx('text-center text-sm text-black-600')}>報告日</div>
                 </th>
                 <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
                   <div className={clsx('text-center text-sm text-black-600')}>期限日</div>
@@ -195,53 +206,65 @@ export default function PurchaseReport(props: Props) {
               </tr>
             </thead>
             <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
-              {purchaseReports.map((purchaseReport, index) => (
-                <tr key={purchaseReport.id}>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+              {props.purchaseReportView.map((purchaseReportViewItem, index) => (
+                <tr key={purchaseReportViewItem.purchasereport.id}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {state.user.role_id === 3 ? (
                         changeableCheckboxContent(
-                          // purchaseReport.finance_check,
-                          true,
+                          purchaseReportViewItem.purchasereport.finance_check,
                         )) : (
                         unChangeableCheckboxContent(
-                          // purchaseReport.finance_check,
-                          true,
+                          purchaseReportViewItem.purchasereport.finance_check,
                         ))}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {orderUsers[index].bureau_id === 1 && '総務局'}
-                      {orderUsers[index].bureau_id === 2 && '渉外局'}
-                      {orderUsers[index].bureau_id === 3 && '財務局'}
-                      {orderUsers[index].bureau_id === 4 && '企画局'}
-                      {orderUsers[index].bureau_id === 5 && '政策局'}
-                      {orderUsers[index].bureau_id === 6 && '情報局'}
+                      {purchaseReportViewItem.order_user.bureau_id === 1 && '総務局'}
+                      {purchaseReportViewItem.order_user.bureau_id === 2 && '渉外局'}
+                      {purchaseReportViewItem.order_user.bureau_id === 3 && '財務局'}
+                      {purchaseReportViewItem.order_user.bureau_id === 4 && '企画局'}
+                      {purchaseReportViewItem.order_user.bureau_id === 5 && '政策局'}
+                      {purchaseReportViewItem.order_user.bureau_id === 6 && '情報局'}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {formatDate(purchaseOrders[index].created_at)}
+                      {formatDate(purchaseReportViewItem.purchasereport.created_at)}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {purchaseOrders[index].deadline}
+                      {purchaseReportViewItem.purchaseorder.deadline}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
-                    <div className={clsx('text-center text-sm text-black-600')}>
-                      {props.purchaseReportView[index].purchaseitems && props.purchaseReportView[index].purchaseitems[0].item}, ...
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
+                    <div className={clsx('text-center text-sm text-black-600 text-ellipsis overflow-hidden whitespace-nowrap')}>
+                      {purchaseReportViewItem.purchaseitems && (
+                        purchaseReportViewItem.purchaseitems.map((purchaseItem: PurchaseItem, index: number) => (
+                          <>
+                            {purchaseReportViewItem.purchaseitems.length - 1 === index ? (
+                              <>
+                                {purchaseItem.item}
+                              </>
+                            ) : (
+                              <>
+                                {purchaseItem.item},
+                              </>
+                            )}
+                          </>
+                        ))
+                      )}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
                     <div className={clsx('flex')}>
                       <div className={clsx('mx-1')}>
-                        <OpenEditModalButton id={purchaseReport.id} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReport.user_id } />
+                        <OpenEditModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id} />
                       </div>
                       <div className={clsx('mx-1')}>
-                        <OpenDeleteModalButton id={purchaseReport.id} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReport.user_id } />
+                        <OpenDeleteModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id } />
                       </div>
                     </div>
                   </td>
@@ -251,6 +274,15 @@ export default function PurchaseReport(props: Props) {
           </table>
         </div>
       </Card>
+      {isOpen && purchaseReportViewItem && (
+        <DetailModal
+          id={purchaseReportID}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          purchaseReportViewItem={purchaseReportViewItem}
+          isDelete={false}
+        />
+      )}
     </MainLayout >
   );
 }
