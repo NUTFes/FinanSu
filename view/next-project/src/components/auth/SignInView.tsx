@@ -43,7 +43,7 @@ export default function SignInView() {
     if (req.status === 200) {
       localStorage.setItem('access-token', res.access_token);
       localStorage.setItem('login', 'true');
-      Router.push('/fund_informations');
+      Router.push('/purchaseorders');
     } else {
       console.log('Error' + res.status);
       console.log(res);
