@@ -9,7 +9,7 @@ interface Props {
 
 const Dropdown = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef();
+  const dropdownRef = useRef<any>(null);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClick);
@@ -18,7 +18,7 @@ const Dropdown = (props: Props) => {
     };
   }, []);
 
-  const handleOutsideClick = (e: any) => {
+  const handleOutsideClick = (e: any) =>{
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
       setIsOpen(false);
     }
