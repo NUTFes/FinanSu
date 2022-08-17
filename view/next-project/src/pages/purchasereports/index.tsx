@@ -127,6 +127,18 @@ export default function PurchaseReport(props: Props) {
     return datetime2;
   };
 
+  // 購入報告の合計金額を計算
+  const TotalFee = (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
+    let totalFee = 0;
+    purchaseItems.map((purchaseItem: PurchaseItem) => {
+      if (purchaseItem.finance_check) {
+        totalFee += purchaseItem.price * purchaseItem.quantity;
+      }
+     })
+    totalFee += purchaseReport.addition - purchaseReport.discount;
+    return totalFee;
+  }
+
   // 変更可能なcheckboxの描画
   const changeableCheckboxContent = (
     isChecked: boolean,
@@ -199,8 +211,11 @@ export default function PurchaseReport(props: Props) {
                 <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
                   <div className={clsx('text-center text-sm text-black-600')}>期限日</div>
                 </th>
-                <th className={clsx('w-5/12 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-4/12 pb-2 border-b-primary-1')}>
                   <div className={clsx('text-center text-sm text-black-600')}>購入物品</div>
+                </th>
+                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>合計金額</div>
                 </th>
                 <th className={clsx('w-1/12 pb-2 border-b-primary-1')}></th>
               </tr>
@@ -259,6 +274,11 @@ export default function PurchaseReport(props: Props) {
                     </div>
                   </td>
                   <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {TotalFee(purchaseReportViewItem.purchasereport, purchaseReportViewItem.purchaseitems)}
+                    </div>
+                  </td>
+                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('flex')}>
                       <div className={clsx('mx-1')}>
                         <OpenEditModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id} />
