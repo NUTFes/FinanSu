@@ -231,10 +231,10 @@ export default function PurchaseOrder(props: Props) {
                   <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        <OpenEditModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseItems={purchaseOrderViewItem.purchase_item} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseOrderViewItem.purchase_order.user_id } />
+                        <OpenEditModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseItems={purchaseOrderViewItem.purchase_item} isDisabled={!purchaseOrderViewItem.purchase_order.finance_check && (state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseOrderViewItem.purchase_order.user_id)} />
                       </div>
                       <div className={clsx('mx-1')}>
-                        <OpenDeleteModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseOrderViewItem={purchaseOrderViewItem} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseOrderViewItem.purchase_order.user_id }/>
+                        <OpenDeleteModalButton id={purchaseOrderViewItem.purchase_order.id} purchaseOrderViewItem={purchaseOrderViewItem} isDisabled={!purchaseOrderViewItem.purchase_order.finance_check && (state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseOrderViewItem.purchase_order.user_id)}/>
                       </div>
                     </div>
                   </td>
