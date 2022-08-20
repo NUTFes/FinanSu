@@ -281,10 +281,10 @@ export default function PurchaseReport(props: Props) {
                   <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
                     <div className={clsx('flex')}>
                       <div className={clsx('mx-1')}>
-                        <OpenEditModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id} />
+                        <OpenEditModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={!purchaseReportViewItem.purchasereport.finance_check && (state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id)} />
                       </div>
                       <div className={clsx('mx-1')}>
-                        <OpenDeleteModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id } />
+                        <OpenDeleteModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={!purchaseReportViewItem.purchasereport.finance_check && (state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id)} />
                       </div>
                     </div>
                   </td>
