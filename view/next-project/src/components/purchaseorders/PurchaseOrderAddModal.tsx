@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
 import { post } from '@api/purchaseItem';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Modal, Stepper } from '@components/common';
+import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Modal, Stepper, Tooltip } from '@components/common';
 import { PurchaseItem } from '@pages/purchaseorders';
 
 interface ModalProps {
@@ -138,6 +139,72 @@ export default function AddModal(props: ModalProps) {
     </>
   );
 
+  // 購入物品テーブルのカラム
+  const tableColumns = ['物品名', '単価', '個数', '備考', 'URL']
+
+  // 購入物品の確認用テーブル
+  const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
+    return (
+      <table className={clsx('table-fixed border-collapse: collapse')}>
+        <thead>
+          <tr
+            className={clsx('py-3 border-b-primary-1 border border-t-white-0 border-x-white-0')}
+          >
+            {tableColumns.map((tableColumn: string) => (
+              <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                <div className={clsx('text-center text-sm text-black-600')}>{tableColumn}</div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
+          {purchaseItems.map((purchaseItem, index) => (
+            <tr key={purchaseItem.id}>
+              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                <div className={clsx('text-center text-sm text-black-300')} >
+                  {purchaseItem.item}
+                </div>
+              </td>
+              < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                <div className={clsx('text-center text-sm text-black-300')}>
+                  {purchaseItem.price}
+                </div>
+              </td>
+              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                <div className={clsx('text-center text-sm text-black-300')}>
+                  {purchaseItem.quantity}
+                </div>
+              </td>
+              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                <div className={clsx('text-center text-sm text-black-300')}>
+                  {purchaseItem.detail}
+                </div>
+              </td>
+              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                <div className={clsx('text-center text-sm text-black-300')}>
+                  <div className={clsx('flex')}>
+                    <a className={clsx('mx-1')} href={purchaseItem.url} target="_blank" rel="noopener noreferrer">
+                      <RiExternalLinkLine size={'16px'} />
+                    </a>
+                    <Tooltip text={'copy URL'}>
+                      <RiFileCopyLine className={clsx('mx-1')} size={'16px'}
+                        onClick={() => {
+                          navigator.clipboard.writeText(purchaseItem.url)
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))
+          }
+        </tbody >
+      </table >
+    )
+  }
+
+
   // 購入物品数だけステップを用意
   let steps = [];
   for (let i = 0; i < props.purchaseItemNum.value; i++) {
@@ -170,6 +237,12 @@ export default function AddModal(props: ModalProps) {
             </Stepper>
             {isDone ? (
               <>
+                <div className={clsx('grid justify-items-center w-full font-bold text-black-300 text-md h-100')}>
+                  購入物品
+                </div>
+                <div className={clsx('grid justify-items-center mb-2 p-5 w-full')}>
+                  {PurchaseItemTable(props.formDataList)}
+                </div >
                 <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
                   <div className={clsx('grid col-span-1')} />
                   <div className={clsx('grid col-span-10 justify-items-center w-full')}>
