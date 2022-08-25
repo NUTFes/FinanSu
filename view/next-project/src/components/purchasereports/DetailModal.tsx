@@ -5,7 +5,7 @@ import { del } from '@api/api_methods';
 import { Modal, Checkbox, Tooltip, RedButton } from '@components/common';
 import clsx from 'clsx';
 import { useGlobalContext } from '@components/global/context'
-import { PurchaseReportView } from '@pages/purchasereports'
+import { PurchaseReport, PurchaseItem, PurchaseReportView} from '@pages/purchasereports';
 
 interface ModalProps {
   isOpen: boolean;
@@ -36,6 +36,16 @@ const DetailModal: FC<ModalProps> = (props) => {
     router.reload();
   };
 
+  // 購入報告の合計金額を計算
+  const TotalFee = (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
+    let totalFee = 0;
+    purchaseItems.map((purchaseItem: PurchaseItem) => {
+      totalFee += purchaseItem.price * purchaseItem.quantity;
+    })
+    totalFee += purchaseReport.addition - purchaseReport.discount;
+    return totalFee;
+  }
+
   return (
     <Modal>
       <div className={clsx('w-full')}>
@@ -50,8 +60,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <div className={clsx('grid col-span-1')} />
         <div className={clsx('grid col-span-10')}>
           <div className={clsx('grid grid-cols-12 w-full my-2')}>
-            <div className={clsx('grid col-span-2')} />
-            <div className={clsx('grid col-span-4 justify-items-end mr-2')}>
+            <div className={clsx('grid col-span-3 justify-items-end mr-2')}>
               <div
                 className={clsx(
                   'flex items-center text-black-600 text-md',
@@ -63,12 +72,22 @@ const DetailModal: FC<ModalProps> = (props) => {
             <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
               {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.id}
             </div>
-            <div className={clsx('grid col-span-3')} />
+            <div className={clsx('grid col-span-3 justify-items-end mr-2')}>
+              <div
+                className={clsx(
+                  'flex items-center text-black-600 text-md',
+                )}
+              >
+                合計金額
+              </div>
+            </div>
+            <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
+              {props.purchaseReportViewItem && TotalFee(props.purchaseReportViewItem.purchasereport, props.purchaseReportViewItem.purchaseitems)}
+            </div>
           </div>
           <div className={clsx('grid col-span-1 ')} />
           <div className={clsx('grid grid-cols-12 w-full my-2')}>
-            <div className={clsx('grid col-span-2')} />
-            <div className={clsx('grid col-span-4 justify-items-end mr-2')}>
+            <div className={clsx('grid col-span-3 justify-items-end mr-2')}>
               <div
                 className={clsx(
                   'flex items-center text-black-600 text-md',
@@ -85,11 +104,7 @@ const DetailModal: FC<ModalProps> = (props) => {
               {props.purchaseReportViewItem && props.purchaseReportViewItem.report_user.bureau_id === 5 && '政策局'}
               {props.purchaseReportViewItem && props.purchaseReportViewItem.report_user.bureau_id === 6 && '情報局'}
             </div>
-            <div className={clsx('grid col-span-3')} />
-          </div>
-          <div className={clsx('grid grid-cols-12 w-full my-2')}>
-            <div className={clsx('grid col-span-2')} />
-            <div className={clsx('grid col-span-4 justify-items-end mr-2')}>
+            <div className={clsx('grid col-span-3 justify-items-end mr-2')}>
               <div
                 className={clsx(
                   'flex items-center text-black-600 text-md',
@@ -101,23 +116,38 @@ const DetailModal: FC<ModalProps> = (props) => {
             <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
               {props.purchaseReportViewItem && formatDate(props.purchaseReportViewItem.purchasereport.created_at)}
             </div>
-            <div className={clsx('grid col-span-3')} />
           </div>
           <div className={clsx('grid grid-cols-12 w-full my-2')}>
             <div className={clsx('grid col-span-2')} />
-            <div className={clsx('grid col-span-4 justify-items-end mr-2')}>
+            <div className={clsx('grid col-span-3')} />
+          </div>
+          <div className={clsx('grid grid-cols-12 w-full my-2')}>
+            <div className={clsx('grid col-span-3 justify-items-end mr-2')}>
               <div
                 className={clsx(
                   'flex items-center text-black-600 text-md',
                 )}
               >
-                購入期限
+                割引
               </div>
             </div>
             <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseorder.deadline}
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.discount}
             </div>
-            <div className={clsx('grid col-span-3')} />
+            <div className={clsx('grid col-span-3 justify-items-end mr-2')}>
+              <div
+                className={clsx(
+                  'flex items-center text-black-600 text-md',
+                )}
+              >
+                加算
+              </div>
+            </div>
+            <div className={clsx('grid col-span-3 w-full border-b-primary-1 border border-t-white-0 border-x-white-0 pl-1')}>
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.addition}
+            </div>
+          </div>
+          <div className={clsx('grid grid-cols-12 w-full my-2')}>
           </div>
           <div className={clsx('grid col-span-1 ')} />
         </div>
