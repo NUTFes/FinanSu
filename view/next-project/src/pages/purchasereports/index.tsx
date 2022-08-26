@@ -131,9 +131,7 @@ export default function PurchaseReport(props: Props) {
   const TotalFee = (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
     purchaseItems.map((purchaseItem: PurchaseItem) => {
-      if (purchaseItem.finance_check) {
-        totalFee += purchaseItem.price * purchaseItem.quantity;
-      }
+      totalFee += purchaseItem.price * purchaseItem.quantity;
      })
     totalFee += purchaseReport.addition - purchaseReport.discount;
     return totalFee;
