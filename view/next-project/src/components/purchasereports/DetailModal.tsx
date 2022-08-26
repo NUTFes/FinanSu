@@ -118,10 +118,6 @@ const DetailModal: FC<ModalProps> = (props) => {
             </div>
           </div>
           <div className={clsx('grid grid-cols-12 w-full my-2')}>
-            <div className={clsx('grid col-span-2')} />
-            <div className={clsx('grid col-span-3')} />
-          </div>
-          <div className={clsx('grid grid-cols-12 w-full my-2')}>
             <div className={clsx('grid col-span-3 justify-items-end mr-2')}>
               <div
                 className={clsx(
