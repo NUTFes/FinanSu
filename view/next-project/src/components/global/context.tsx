@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useReducer, useContext, createContext, useState, useEffect} from 'react'
+import React, { FC, useCallback, useMemo, useReducer, useContext, createContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { get_with_token } from '@api/api_methods';
 
@@ -22,16 +22,16 @@ type GlobalContextType = State & {
 
 type Action =
   | {
-      type: 'SET_USER'
-      user: User
-    }
+    type: 'SET_USER'
+    user: User
+  }
   | {
-      type: 'SET_IS_SIGN_IN'
-      isSignIn: boolean
-    }
+    type: 'SET_IS_SIGN_IN'
+    isSignIn: boolean
+  }
   | {
-      type: 'CLEAR_GLOBAL_FIELDS'
-    }
+    type: 'CLEAR_GLOBAL_FIELDS'
+  }
 
 const initialState: State = {
   user: {} as User,
@@ -95,14 +95,15 @@ export const GlobalStateProvider: FC = (props) => {
         const isSignInRes = await get_with_token(isSignInURL);
         const isSignIn: boolean = isSignInRes.is_sign_in;
         setIsSignIn(isSignIn);
-        if (!isSignIn) {
+        if (!isSignIn && router.pathname !== '/') {
           localStorage.clear();
+          router.push('/');
         }
       };
       getCurrentUser(getCurrentUserURL);
       getIsSignIn();
     }
-   }, [router])
+  }, [router])
 
 
   const user = useMemo(() => state.user, [state.user])
@@ -126,7 +127,7 @@ export const GlobalStateProvider: FC = (props) => {
 export const useGlobalContext = () => {
   const context = useContext<GlobalContextType>(GlobalContext)
   // if (context === undefined) {
-    // throw new Error(`useGlobalContext must be used within a GlobalStateProvider`)
+  // throw new Error(`useGlobalContext must be used within a GlobalStateProvider`)
   // }
   return context
 }
