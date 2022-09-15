@@ -22,15 +22,27 @@ const LinkItems: LinkItemProps[] = [
   // { name: 'ダッシュボード', icon: MdOutlineDashboard, href: '/' },
   // { name: '予算', icon: HiCurrencyDollar, href: '/budgets' },
   // { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
-  { name: '学内募金', icon: <MdOutlineSavings className={clsx("text-xl mr-4")} />, href: '/fund_informations' },
-  { name: '購入申請', icon: <HiOutlineShoppingCart className={clsx("text-xl mr-4")} />, href: '/purchaseorders' },
-  { name: '購入報告', icon: <HiOutlineDocumentText className={clsx("text-xl mr-4")} />, href: '/purchasereports' },
+  {
+    name: '学内募金',
+    icon: <MdOutlineSavings className={clsx('mr-4 text-xl')} />,
+    href: '/fund_informations',
+  },
+  {
+    name: '購入申請',
+    icon: <HiOutlineShoppingCart className={clsx('mr-4 text-xl')} />,
+    href: '/purchaseorders',
+  },
+  {
+    name: '購入報告',
+    icon: <HiOutlineDocumentText className={clsx('mr-4 text-xl')} />,
+    href: '/purchasereports',
+  },
 ];
 
 export default function SimpleSidebar() {
   const router = useRouter();
   return (
-    <div className={clsx('w-full h-full bg-primary-4')}>
+    <div className={clsx('h-full w-full bg-primary-4')}>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon} href={link.href} currentPath={router.pathname}>
           {link.name}

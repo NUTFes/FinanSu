@@ -12,17 +12,21 @@ const initialState = {
 
 type Action =
   | {
-    type: 'OPEN_MODAL';
-  }
+      type: 'OPEN_MODAL';
+    }
   | {
-    type: 'CLOSE_MODAL';
-  }
+      type: 'CLOSE_MODAL';
+    }
   | {
-    type: 'SET_MODAL_VIEW';
-    view: MODAL_VIEWS;
-  };
+      type: 'SET_MODAL_VIEW';
+      view: MODAL_VIEWS;
+    };
 
-type MODAL_VIEWS = 'PURCHASE_ITEM_NUM_MODAL' | 'PURCHASE_REPORT_ADD_MODAL' | 'PURCHASE_ORDER_LIST_MODAL' | 'PURCHASE_REPORT_ITEM_NUM_MODAL';
+type MODAL_VIEWS =
+  | 'PURCHASE_ITEM_NUM_MODAL'
+  | 'PURCHASE_REPORT_ADD_MODAL'
+  | 'PURCHASE_ORDER_LIST_MODAL'
+  | 'PURCHASE_REPORT_ITEM_NUM_MODAL';
 
 export const UIContext = React.createContext<State | any>(initialState);
 
@@ -57,7 +61,10 @@ export const UIProvider: FC = (props) => {
   const openModal = useCallback(() => dispatch({ type: 'OPEN_MODAL' }), [dispatch]);
   const closeModal = useCallback(() => dispatch({ type: 'CLOSE_MODAL' }), [dispatch]);
 
-  const setModalView = useCallback((view: MODAL_VIEWS) => dispatch({ type: 'SET_MODAL_VIEW', view }), [dispatch]);
+  const setModalView = useCallback(
+    (view: MODAL_VIEWS) => dispatch({ type: 'SET_MODAL_VIEW', view }),
+    [dispatch],
+  );
 
   const value = useMemo(
     () => ({

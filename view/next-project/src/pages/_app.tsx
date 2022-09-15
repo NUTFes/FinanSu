@@ -39,8 +39,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Layout>
             <Component {...pageProps} />
           </Layout>
-          </ManagedUIContext>
-        </GlobalStateProvider>
+        </ManagedUIContext>
+      </GlobalStateProvider>
     </ChakraProvider>
   );
 }

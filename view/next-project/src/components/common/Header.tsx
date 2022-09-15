@@ -2,9 +2,9 @@ import React from 'react';
 import Router from 'next/router';
 import { del } from '@api/signOut';
 import { useGlobalContext } from '@components/global/context';
-import clsx from 'clsx'
-import { RiAccountCircleFill } from 'react-icons/ri'
-import { Dropdown } from '@components/common'
+import clsx from 'clsx';
+import { RiAccountCircleFill } from 'react-icons/ri';
+import { Dropdown } from '@components/common';
 
 // sign out
 export const signOut = async () => {
@@ -24,21 +24,32 @@ const Header = () => {
 
   return (
     <>
-      <div className={clsx('grid grid-cols-9 w-full bg-primary-4 h-16 border-b-2 border-primary-1')}>
-        <div className={clsx('grid col-span-1')}>
-          <div className={clsx('flex justify-center items-center w-full text-white-0 text-shadow-logo text-2xl')}>
+      <div
+        className={clsx('grid h-16 w-full grid-cols-9 border-b-2 border-primary-1 bg-primary-4')}
+      >
+        <div className={clsx('col-span-1 grid')}>
+          <div
+            className={clsx(
+              'flex w-full items-center justify-center text-2xl text-white-0 text-shadow-logo',
+            )}
+          >
             FinanSu
           </div>
         </div>
-        <div className={clsx('grid col-span-7 justify-items-center w-full text-black-600 text-md')} />
-        <div className={clsx('grid col-span-1')}>
-          <div className={clsx('flex justify-center items-center w-full h-16 text-white-0')}>
+        <div
+          className={clsx('text-md col-span-7 grid w-full justify-items-center text-black-600')}
+        />
+        <div className={clsx('col-span-1 grid')}>
+          <div className={clsx('flex h-16 w-full items-center justify-center text-white-0')}>
             <RiAccountCircleFill size={'21px'} />
-            <div className={clsx('ml-2 text-white-0 text-lg font-light')}>
+            <div className={clsx('ml-2 text-lg font-light text-white-0')}>
               <Dropdown title={state.user.name}>
-                <div className={clsx('text-black-0 text-sm py-2')} onClick={() => {
-                  signOut();
-                }}>
+                <div
+                  className={clsx('py-2 text-sm text-black-0')}
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
                   ログアウト
                 </div>
               </Dropdown>

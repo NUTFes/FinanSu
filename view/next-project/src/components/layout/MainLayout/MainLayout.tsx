@@ -37,16 +37,14 @@ export default function MainLayout(props: LayoutProps) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div className={clsx('h-screen w-full')}>
-        <div className={clsx('w-full h-16')}>
+        <div className={clsx('h-16 w-full')}>
           <Header />
         </div>
         <div className={clsx(s.parent)}>
           <div className={clsx('w-1/8 bg-primary-4', s.sidenav)}>
             <SideNav />
           </div>
-          <div className={clsx('w-7/8 h-full', s.content)}>
-            {props.children}
-          </div>
+          <div className={clsx('h-full w-7/8', s.content)}>{props.children}</div>
         </div>
       </div>
     </>

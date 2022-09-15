@@ -1,16 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Spacer,
-  Select,
-} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
 import { Center } from '@chakra-ui/react';
 import { get } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
@@ -71,115 +60,113 @@ export default function PurchaseItem(props: Props) {
 
   return (
     <>
-    <MainLayout>
-      <Flex justify='center' align='center'>
-        <Center>
-        <Box m='10' px='10' boxShadow='base' rounded='lg'>
-          <Box mt='10' mx='5'>
-            <Flex>
-              <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                購入物品一覧
-              </Center>
-              <Select variant='flushed' w='100'>
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-              </Select>
-            </Flex>
-            <Flex>
-              <Spacer />
-              <Box>
-                <AddButton>
-                  購入物品登録
-                </AddButton>
+      <MainLayout>
+        <Flex justify='center' align='center'>
+          <Center>
+            <Box m='10' px='10' boxShadow='base' rounded='lg'>
+              <Box mt='10' mx='5'>
+                <Flex>
+                  <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
+                    購入物品一覧
+                  </Center>
+                  <Select variant='flushed' w='100'>
+                    <option value='2021'>2021</option>
+                    <option value='2022'>2022</option>
+                  </Select>
+                </Flex>
+                <Flex>
+                  <Spacer />
+                  <Box>
+                    <AddButton>購入物品登録</AddButton>
+                  </Box>
+                </Flex>
               </Box>
-            </Flex>
-          </Box>
-          <Box p='5' mb='2'>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
-                      購入物品名
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      個数
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7' isNumeric>
-                    <Center fontSize='sm' color='black.600'>
-                      単価
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      金額
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      備考
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>申請者</Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center></Center>
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {props.purchaseItem.map((purchaseItem) => (
-                  <Tr key={purchaseItem.id}>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.item}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.quantity}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.price}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>
-                        {calcItemTotalPrice(purchaseItem.quantity, purchaseItem.price)}
-                      </Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{purchaseItem.detail}</Center>
-                    </Td>
-                    <Td></Td>
-                    <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th>
-                    <Center fontSize='sm' fontWeight='500' color='black.600'>
-                      合計
-                    </Center>
-                  </Th>
-                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
-                    {calcTotalPrice()}
-                  </Th>
-                </Tr>
-              </Tfoot>
-            </Table>
-          </Box>
-        </Box>
-        </Center>
-      </Flex>
+              <Box p='5' mb='2'>
+                <Table>
+                  <Thead>
+                    <Tr>
+                      <Th borderBottomColor='#76E4F7'>
+                        <Center fontSize='sm' mr='1' color='black.600'>
+                          購入物品名
+                        </Center>
+                      </Th>
+                      <Th borderBottomColor='#76E4F7'>
+                        <Center fontSize='sm' color='black.600'>
+                          個数
+                        </Center>
+                      </Th>
+                      <Th borderBottomColor='#76E4F7' isNumeric>
+                        <Center fontSize='sm' color='black.600'>
+                          単価
+                        </Center>
+                      </Th>
+                      <Th borderBottomColor='#76E4F7'>
+                        <Center fontSize='sm' color='black.600'>
+                          金額
+                        </Center>
+                      </Th>
+                      <Th borderBottomColor='#76E4F7'>
+                        <Center fontSize='sm' color='black.600'>
+                          備考
+                        </Center>
+                      </Th>
+                      <Th borderBottomColor='#76E4F7'>
+                        <Center color='black.600'>申請者</Center>
+                      </Th>
+                      <Th borderBottomColor='#76E4F7'>
+                        <Center></Center>
+                      </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {props.purchaseItem.map((purchaseItem) => (
+                      <Tr key={purchaseItem.id}>
+                        <Td>
+                          <Center color='black.300'>{purchaseItem.item}</Center>
+                        </Td>
+                        <Td>
+                          <Center color='black.300'>{purchaseItem.quantity}</Center>
+                        </Td>
+                        <Td>
+                          <Center color='black.300'>{purchaseItem.price}</Center>
+                        </Td>
+                        <Td>
+                          <Center color='black.300'>
+                            {calcItemTotalPrice(purchaseItem.quantity, purchaseItem.price)}
+                          </Center>
+                        </Td>
+                        <Td>
+                          <Center color='black.300'>{purchaseItem.detail}</Center>
+                        </Td>
+                        <Td></Td>
+                        <Td>
+                          <Center>
+                            <EditButton />
+                          </Center>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                  <Tfoot>
+                    <Tr>
+                      <Th></Th>
+                      <Th></Th>
+                      <Th></Th>
+                      <Th>
+                        <Center fontSize='sm' fontWeight='500' color='black.600'>
+                          合計
+                        </Center>
+                      </Th>
+                      <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
+                        {calcTotalPrice()}
+                      </Th>
+                    </Tr>
+                  </Tfoot>
+                </Table>
+              </Box>
+            </Box>
+          </Center>
+        </Flex>
       </MainLayout>
     </>
   );

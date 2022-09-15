@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import EditModal from '@components/purchaseorders/EditModal';
 import { EditButton } from '@components/common';
-import { PurchaseItem } from '@pages/purchaseorders'
+import { PurchaseItem } from '@pages/purchaseorders';
 
 interface Props {
   children?: React.ReactNode;
@@ -17,10 +17,14 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   };
   return (
     <>
-      <EditButton onClick={onOpen} isDisabled={ props.isDisabled } />
-      {
-      isOpen ? (
-        <EditModal purchaseOrderId={props.id} isOpen={isOpen} setIsOpen={setIsOpen} purchaseItems={props.purchaseItems} />
+      <EditButton onClick={onOpen} isDisabled={props.isDisabled} />
+      {isOpen ? (
+        <EditModal
+          purchaseOrderId={props.id}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          purchaseItems={props.purchaseItems}
+        />
       ) : null}
     </>
   );

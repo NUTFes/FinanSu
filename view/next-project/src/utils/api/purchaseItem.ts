@@ -26,7 +26,7 @@ export const post = async (url: string, data: any) => {
   const price: number = data.price;
   const quantity: number = data.quantity;
   const detail: String = data.detail;
-  const itemUrl:String = data.url;
+  const itemUrl: String = data.url;
   const purchaseOrderId: number = data.purchase_order_id;
   const finance_check: boolean = data.finance_check;
   const postUrl =
@@ -52,7 +52,7 @@ export const post = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then(response => response.json());
+  }).then((response) => response.json());
   return res;
 };
 
@@ -61,7 +61,7 @@ export const put = async (url: string, data: any) => {
   const price: number = data.price;
   const quantity: number = data.quantity;
   const detail: String = data.detail;
-  const itemUrl:String = data.url;
+  const itemUrl: String = data.url;
   const purchaseOrderId: number = data.purchase_order_id;
   const finance_check: boolean = data.finance_check;
   const putUrl =
@@ -87,7 +87,7 @@ export const put = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then(response => response.json());
+  }).then((response) => response.json());
   return res;
 };
 

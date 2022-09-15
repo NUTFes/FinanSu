@@ -2214,15 +2214,15 @@
   "resolved" "https://registry.npmjs.org/@next/react-refresh-utils/-/react-refresh-utils-12.0.2.tgz"
   "version" "12.0.2"
 
-"@next/swc-linux-x64-gnu@12.0.2":
-  "integrity" "sha512-D1uk6BMz0W6BvJlkPEYX2FFkO/ENscjCBiyYUkbafrkHsthnN42yp4BHWc13QNl1Ohdn4ISBPPXk4oWT7BGDhw=="
-  "resolved" "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-12.0.2.tgz"
+"@next/swc-linux-arm64-gnu@12.0.2":
+  "integrity" "sha512-cza3ocE/LlnA40JILK6VrHehhMYMZoxE9D8+VQfqz4vbFm89tbZ0aM/97AxbDIcJK68Ej9RZ0XosN3cvMFGiBg=="
+  "resolved" "https://registry.npmjs.org/@next/swc-linux-arm64-gnu/-/swc-linux-arm64-gnu-12.0.2.tgz"
   "version" "12.0.2"
 
-"@next/swc-linux-x64-musl@12.0.1":
-  "integrity" "sha512-4SAmi7riavU6TFGX7wQFioFi/vx8uJ2/Cx7ZfrYiZzzKmmuu2eM8onW1kcKu+aQD777x/kvzW4+2pWkM2gyPOA=="
-  "resolved" "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-12.0.1.tgz"
-  "version" "12.0.1"
+"@next/swc-linux-arm64-musl@12.0.2":
+  "integrity" "sha512-r0fE9rEv+qffFlwSjOseHWFbRrpoEgiPiTMc/celUFDWQf61IFdBspT+HQyPefq2PATbUQsdHEgACmg07ERjSQ=="
+  "resolved" "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-12.0.2.tgz"
+  "version" "12.0.2"
 
 "@nodelib/fs.scandir@2.1.5":
   "integrity" "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="
@@ -6262,14 +6262,6 @@
     "locate-path" "^5.0.0"
     "path-exists" "^4.0.0"
 
-"find-up@^5.0.0":
-  "integrity" "sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng=="
-  "resolved" "https://registry.npmjs.org/find-up/-/find-up-5.0.0.tgz"
-  "version" "5.0.0"
-  dependencies:
-    "locate-path" "^6.0.0"
-    "path-exists" "^4.0.0"
-
 "find-up@4.1.0":
   "integrity" "sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw=="
   "resolved" "https://registry.npmjs.org/find-up/-/find-up-4.1.0.tgz"
@@ -8404,13 +8396,6 @@
   dependencies:
     "p-locate" "^4.1.0"
 
-"locate-path@^6.0.0":
-  "integrity" "sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw=="
-  "resolved" "https://registry.npmjs.org/locate-path/-/locate-path-6.0.0.tgz"
-  "version" "6.0.0"
-  dependencies:
-    "p-locate" "^5.0.0"
-
 "lodash._reinterpolate@^3.0.0":
   "integrity" "sha512-xYHt68QRoYGjeeM/XOE1uJtvXQAgvszfBhjV4yvsQH0u2i9I6cI6c6/eG4Hh3UAOVn0y/xAXwmTzEay49Q//HA=="
   "resolved" "https://registry.npmjs.org/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz"
@@ -9384,13 +9369,6 @@
   "version" "4.1.0"
   dependencies:
     "p-limit" "^2.2.0"
-
-"p-locate@^5.0.0":
-  "integrity" "sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw=="
-  "resolved" "https://registry.npmjs.org/p-locate/-/p-locate-5.0.0.tgz"
-  "version" "5.0.0"
-  dependencies:
-    "p-limit" "^3.0.2"
 
 "p-map@^2.0.0":
   "integrity" "sha512-y3b8Kpd8OAN444hxfBbFfj1FY/RjtTd8tzYwhUqNYXx0fXx2iX4maP4Qr6qhIKbQXI02wTLAda4fYUbDagTUFw=="
@@ -10498,14 +10476,12 @@
   "resolved" "https://registry.npmjs.org/prepend-http/-/prepend-http-1.0.4.tgz"
   "version" "1.0.4"
 
-"prettier-plugin-tailwind@^2.2.12":
-  "integrity" "sha512-2SvZxpsYme0g5MrxGsKM43rx28f9AVlJrbwMnx4a03svCfsHwVGtcN6oN1YlClnEwZbquu3IhVAMcawEMKTjuA=="
-  "resolved" "https://registry.npmjs.org/prettier-plugin-tailwind/-/prettier-plugin-tailwind-2.2.12.tgz"
-  "version" "2.2.12"
-  dependencies:
-    "tailwind-classes-sorter" "^0.2.5"
+"prettier-plugin-tailwindcss@^0.1.13":
+  "integrity" "sha512-/EKQURUrxLu66CMUg4+1LwGdxnz8of7IDvrSLqEtDqhLH61SAlNNUSr90UTvZaemujgl3OH/VHg+fyGltrNixw=="
+  "resolved" "https://registry.npmjs.org/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.1.13.tgz"
+  "version" "0.1.13"
 
-"prettier@^2.0.0", "prettier@^2.7.1":
+"prettier@^2.7.1", "prettier@>=2.2.0":
   "integrity" "sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g=="
   "resolved" "https://registry.npmjs.org/prettier/-/prettier-2.7.1.tgz"
   "version" "2.7.1"
@@ -12456,14 +12432,7 @@
     "string-width" "^4.2.3"
     "strip-ansi" "^6.0.1"
 
-"tailwind-classes-sorter@^0.2.5":
-  "integrity" "sha512-7S0AaDitt+Fjy9m3v0GrQ/KZrCswNDD25SSXX9U/HIB5h9lk0ImSkq/VVcnzu78cRQxR0fFfvHYFdfcqN3dCGA=="
-  "resolved" "https://registry.npmjs.org/tailwind-classes-sorter/-/tailwind-classes-sorter-0.2.5.tgz"
-  "version" "0.2.5"
-  dependencies:
-    "find-up" "^5.0.0"
-
-"tailwindcss@*", "tailwindcss@^3.1.6":
+"tailwindcss@^3.1.6":
   "integrity" "sha512-7skAOY56erZAFQssT1xkpk+kWt2NrO45kORlxFPXUt3CiGsVPhH1smuH5XoDH6sGPXLyBv+zgCKA2HWBsgCytg=="
   "resolved" "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.1.6.tgz"
   "version" "3.1.6"

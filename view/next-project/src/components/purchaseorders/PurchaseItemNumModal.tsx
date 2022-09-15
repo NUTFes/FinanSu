@@ -62,9 +62,9 @@ export default function PurchaseItemNumModal() {
   // 購入申請用のhandler
   const formDataHandler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   // 購入物品数用のhandler
   const purchaseItemNumHandler = (input: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -99,27 +99,27 @@ export default function PurchaseItemNumModal() {
     <>
       <Modal>
         <div className={clsx('w-full')}>
-          <div className={clsx('mr-5 w-full grid justify-items-end')}>
+          <div className={clsx('mr-5 grid w-full justify-items-end')}>
             <CloseButton onClick={closeModal} />
           </div>
         </div>
-        <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+        <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
           購入申請の作成
         </div>
-        <div className={clsx('grid grid-cols-12 gap-4 mb-10')}>
-          <div className={clsx('grid col-span-1')} />
-          <div className={clsx('grid col-span-10')}>
-            <div className={clsx('grid grid-cols-12 w-full my-2')}>
-              <div className={clsx('grid col-span-4 mr-2')}>
+        <div className={clsx('mb-10 grid grid-cols-12 gap-4')}>
+          <div className={clsx('col-span-1 grid')} />
+          <div className={clsx('col-span-10 grid')}>
+            <div className={clsx('my-2 grid w-full grid-cols-12')}>
+              <div className={clsx('col-span-4 mr-2 grid')}>
                 <div
                   className={clsx(
-                    'grid justify-items-end flex items-center text-black-600 text-md',
+                    'text-md flex grid items-center justify-items-end text-black-600',
                   )}
                 >
                   購入期限
                 </div>
               </div>
-              <div className={clsx('grid col-span-8 w-full my-2')}>
+              <div className={clsx('col-span-8 my-2 grid w-full')}>
                 <Input
                   placeholder=' yyyymmddで入力'
                   value={formData.deadline}
@@ -127,29 +127,28 @@ export default function PurchaseItemNumModal() {
                 />
               </div>
             </div>
-            <div className={clsx('grid grid-cols-12 w-full')}>
-              <div className={clsx('grid col-span-4 mr-2 h-100')}>
+            <div className={clsx('grid w-full grid-cols-12')}>
+              <div className={clsx('h-100 col-span-4 mr-2 grid')}>
                 <div
                   className={clsx(
-                    'grid justify-items-end flex items-center text-black-600 text-md',
+                    'text-md flex grid items-center justify-items-end text-black-600',
                   )}
                 >
                   購入物品数
                 </div>
               </div>
-              <div className={clsx('grid col-span-8 w-full')}>
-                <Select
-                  value={purchaseItemNum.value}
-                  onChange={purchaseItemNumHandler('value')}
-                >
+              <div className={clsx('col-span-8 grid w-full')}>
+                <Select value={purchaseItemNum.value} onChange={purchaseItemNumHandler('value')}>
                   {purchaseItemNumArray.map((data) => (
-                    <option key={data} value={data}>{data}</option>
+                    <option key={data} value={data}>
+                      {data}
+                    </option>
                   ))}
                 </Select>
               </div>
             </div>
           </div>
-          <div className={clsx('grid col-span-1 ')} />
+          <div className={clsx('col-span-1 grid ')} />
         </div>
         <div className={clsx('grid justify-items-center py-3')}>
           <PrimaryButton

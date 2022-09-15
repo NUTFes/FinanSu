@@ -82,7 +82,6 @@ export async function getServerSideProps() {
   };
 }
 
-
 export default function PurchaseReport(props: Props) {
   const state = useGlobalContext();
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
@@ -93,7 +92,7 @@ export default function PurchaseReport(props: Props) {
     setPurchaseReportID(purchaseOrderID);
     setPurchaseReportViewItem(purchaseReportViewItem);
     setIsOpen(true);
-  }
+  };
 
   // 購入報告
   const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(() => {
@@ -132,24 +131,18 @@ export default function PurchaseReport(props: Props) {
     let totalFee = 0;
     purchaseItems.map((purchaseItem: PurchaseItem) => {
       totalFee += purchaseItem.price * purchaseItem.quantity;
-     })
+    });
     totalFee += purchaseReport.addition - purchaseReport.discount;
     return totalFee;
-  }
+  };
 
   // 変更可能なcheckboxの描画
-  const changeableCheckboxContent = (
-    isChecked: boolean,
-  ) => {
+  const changeableCheckboxContent = (isChecked: boolean) => {
     {
       if (isChecked) {
-        return (
-          <Checkbox checked={true} disabled={false} />
-        );
+        return <Checkbox checked={true} disabled={false} />;
       } else {
-        return (
-          <Checkbox disabled={false} />
-        );
+        return <Checkbox disabled={false} />;
       }
     }
   };
@@ -158,17 +151,12 @@ export default function PurchaseReport(props: Props) {
   const unChangeableCheckboxContent = (isChecked: boolean) => {
     {
       if (isChecked) {
-        return (
-          <Checkbox checked={isChecked} disabled={true} />
-        );
+        return <Checkbox checked={isChecked} disabled={true} />;
       } else {
-        return (
-          <Checkbox disabled={true} />
-        );
+        return <Checkbox disabled={true} />;
       }
     }
   };
-
 
   return (
     <MainLayout>
@@ -177,7 +165,7 @@ export default function PurchaseReport(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className={clsx('mt-10 mx-5')}>
+        <div className={clsx('mx-5 mt-10')}>
           <div className={clsx('flex')}>
             <Title title={'購入報告一覧'} />
             <select className={clsx('w-100 ')}>
@@ -186,53 +174,69 @@ export default function PurchaseReport(props: Props) {
             </select>
           </div>
           <div className={clsx('flex justify-end')}>
-            <OpenAddModalButton>
-              報告登録
-            </OpenAddModalButton>
+            <OpenAddModalButton>報告登録</OpenAddModalButton>
           </div>
         </div>
-        <div className={clsx('mb-2 p-5 w-100')}>
-          <table className={clsx('table-fixed border-collapse: collapse w-full mb-5')}>
+        <div className={clsx('w-100 mb-2 p-5')}>
+          <table className={clsx('border-collapse: collapse mb-5 w-full table-fixed')}>
             <thead>
               <tr
-                className={clsx('py-3 border-b-primary-1 border border-t-white-0 border-x-white-0')}
+                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
               >
                 <th className={clsx('w-2/12 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
                 </th>
-                <th className={clsx('w-2/12 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>報告した局</div>
                 </th>
-                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>報告日</div>
                 </th>
-                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>期限日</div>
                 </th>
-                <th className={clsx('w-4/12 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-4/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>購入物品</div>
                 </th>
-                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}>
+                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>合計金額</div>
                 </th>
-                <th className={clsx('w-1/12 pb-2 border-b-primary-1')}></th>
+                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}></th>
               </tr>
             </thead>
-            <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
+            <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
               {props.purchaseReportView.map((purchaseReportViewItem, index) => (
                 <tr key={purchaseReportViewItem.purchasereport.id}>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                    }}
+                  >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {state.user.role_id === 3 ? (
-                        changeableCheckboxContent(
-                          purchaseReportViewItem.purchasereport.finance_check,
-                        )) : (
-                        unChangeableCheckboxContent(
-                          purchaseReportViewItem.purchasereport.finance_check,
-                        ))}
+                      {state.user.role_id === 3
+                        ? changeableCheckboxContent(
+                            purchaseReportViewItem.purchasereport.finance_check,
+                          )
+                        : unChangeableCheckboxContent(
+                            purchaseReportViewItem.purchasereport.finance_check,
+                          )}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                    }}
+                  >
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseReportViewItem.order_user.bureau_id === 1 && '総務局'}
                       {purchaseReportViewItem.order_user.bureau_id === 2 && '渉外局'}
@@ -242,47 +246,109 @@ export default function PurchaseReport(props: Props) {
                       {purchaseReportViewItem.order_user.bureau_id === 6 && '情報局'}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                    }}
+                  >
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {formatDate(purchaseReportViewItem.purchasereport.created_at)}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                    }}
+                  >
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {purchaseReportViewItem.purchaseorder.deadline}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
-                    <div className={clsx('text-center text-sm text-black-600 text-ellipsis overflow-hidden whitespace-nowrap')}>
-                      {purchaseReportViewItem.purchaseitems && (
-                        purchaseReportViewItem.purchaseitems.map((purchaseItem: PurchaseItem, index: number) => (
-                          <>
-                            {purchaseReportViewItem.purchaseitems.length - 1 === index ? (
-                              <>
-                                {purchaseItem.item}
-                              </>
-                            ) : (
-                              <>
-                                {purchaseItem.item},
-                              </>
-                            )}
-                          </>
-                        ))
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                    }}
+                  >
+                    <div
+                      className={clsx(
+                        'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
+                      )}
+                    >
+                      {purchaseReportViewItem.purchaseitems &&
+                        purchaseReportViewItem.purchaseitems.map(
+                          (purchaseItem: PurchaseItem, index: number) => (
+                            <>
+                              {purchaseReportViewItem.purchaseitems.length - 1 === index ? (
+                                <>{purchaseItem.item}</>
+                              ) : (
+                                <>{purchaseItem.item},</>
+                              )}
+                            </>
+                          ),
+                        )}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                    }}
+                  >
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {TotalFee(
+                        purchaseReportViewItem.purchasereport,
+                        purchaseReportViewItem.purchaseitems,
                       )}
                     </div>
                   </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))} onClick={() => { onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem) }}>
-                    <div className={clsx('text-center text-sm text-black-600')}>
-                      {TotalFee(purchaseReportViewItem.purchasereport, purchaseReportViewItem.purchaseitems)}
-                    </div>
-                  </td>
-                  <td className={clsx('px-1', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
                     <div className={clsx('flex')}>
                       <div className={clsx('mx-1')}>
-                        <OpenEditModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={!purchaseReportViewItem.purchasereport.finance_check && (state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id)} />
+                        <OpenEditModalButton
+                          id={purchaseReportViewItem.purchasereport.id}
+                          isDisabled={
+                            !purchaseReportViewItem.purchasereport.finance_check &&
+                            (state.user.bureau_id === 2 ||
+                              state.user.bureau_id === 3 ||
+                              state.user.id === purchaseReportViewItem.report_user.id)
+                          }
+                        />
                       </div>
                       <div className={clsx('mx-1')}>
-                        <OpenDeleteModalButton id={purchaseReportViewItem.purchasereport.id} isDisabled={!purchaseReportViewItem.purchasereport.finance_check && (state.user.bureau_id === 2 || state.user.bureau_id === 3 || state.user.id === purchaseReportViewItem.report_user.id)} />
+                        <OpenDeleteModalButton
+                          id={purchaseReportViewItem.purchasereport.id}
+                          isDisabled={
+                            !purchaseReportViewItem.purchasereport.finance_check &&
+                            (state.user.bureau_id === 2 ||
+                              state.user.bureau_id === 3 ||
+                              state.user.id === purchaseReportViewItem.report_user.id)
+                          }
+                        />
                       </div>
                     </div>
                   </td>
@@ -301,6 +367,6 @@ export default function PurchaseReport(props: Props) {
           isDelete={false}
         />
       )}
-    </MainLayout >
+    </MainLayout>
   );
 }

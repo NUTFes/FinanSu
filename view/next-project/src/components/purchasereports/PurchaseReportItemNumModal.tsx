@@ -3,7 +3,13 @@ import clsx from 'clsx';
 import { get } from '@api/api_methods';
 import { post } from '@api/purchaseOrder';
 import * as purchaseItemAPI from '@api/purchaseItem';
-import { Modal, OutlinePrimaryButton, PullDown, PrimaryButton, CloseButton } from '@components/common';
+import {
+  Modal,
+  OutlinePrimaryButton,
+  PullDown,
+  PrimaryButton,
+  CloseButton,
+} from '@components/common';
 import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
@@ -12,7 +18,7 @@ import { PurchaseItem } from '@pages/purchasereports';
 interface FormData {
   deadline: string;
   user_id: number;
-  finance_check: boolean,
+  finance_check: boolean;
 }
 
 export default function PurchaseReportItemNumModal() {
@@ -48,8 +54,8 @@ export default function PurchaseReportItemNumModal() {
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
     const day = now.getDate();
-    let monthStr = ''
-    let dayStr = ''
+    let monthStr = '';
+    let dayStr = '';
     if (month < 10) {
       monthStr = '0' + String(month);
     } else {
@@ -61,12 +67,11 @@ export default function PurchaseReportItemNumModal() {
       dayStr = String(day);
     }
 
-
     const data: FormData = {
       deadline: String(year) + monthStr + dayStr,
       user_id: state.user.id,
       finance_check: false,
-    }
+    };
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
     const postRes = await post(addPurchaseOrderUrl, data);
     const purchaseOrderID = postRes.id;
@@ -106,56 +111,45 @@ export default function PurchaseReportItemNumModal() {
   return (
     <Modal>
       <div className={clsx('w-full')}>
-        <div className={clsx('mr-5 w-full grid justify-items-end')}>
+        <div className={clsx('mr-5 grid w-full justify-items-end')}>
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+      <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
         購入報告単体で登録
       </div>
-      <div className={clsx('grid grid-cols-12 gap-4 mb-5')}>
-        <div className={clsx('grid col-span-1')} />
-        <div className={clsx('grid col-span-10')}>
-          <div className={clsx('grid grid-cols-12 w-full mb-5')}>
-            <div className={clsx('grid col-span-1')} />
-            <div className={clsx('grid col-span-10 justify-items-center mr-2')}>
-              <div
-                className={clsx(
-                  'flex items-center text-black-600 text-md',
-                )}
-              >
+      <div className={clsx('mb-5 grid grid-cols-12 gap-4')}>
+        <div className={clsx('col-span-1 grid')} />
+        <div className={clsx('col-span-10 grid')}>
+          <div className={clsx('mb-5 grid w-full grid-cols-12')}>
+            <div className={clsx('col-span-1 grid')} />
+            <div className={clsx('col-span-10 mr-2 grid justify-items-center')}>
+              <div className={clsx('text-md flex items-center text-black-600')}>
                 報告する物品の個数を入力してください
               </div>
             </div>
           </div>
-          <div className={clsx('grid col-span-1')} />
-          <div className={clsx('grid grid-cols-12 w-full')}>
-            <div className={clsx('grid col-span-3')} />
-            <div className={clsx('grid col-span-3 justify-items-center mr-2 h-100')}>
-              <div
-                className={clsx(
-                  'flex items-center text-black-600 text-md',
-                )}
-              >
-                購入物品数
-              </div>
+          <div className={clsx('col-span-1 grid')} />
+          <div className={clsx('grid w-full grid-cols-12')}>
+            <div className={clsx('col-span-3 grid')} />
+            <div className={clsx('h-100 col-span-3 mr-2 grid justify-items-center')}>
+              <div className={clsx('text-md flex items-center text-black-600')}>購入物品数</div>
             </div>
-            <div className={clsx('grid col-span-2 ml-2 w-full')}>
-              <PullDown
-                value={purchaseItemNum.value}
-                onChange={purchaseItemNumHandler('value')}
-              >
+            <div className={clsx('col-span-2 ml-2 grid w-full')}>
+              <PullDown value={purchaseItemNum.value} onChange={purchaseItemNumHandler('value')}>
                 {purchaseItemNumArray.map((data) => (
-                  <option key={data} value={data}>{data}</option>
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
                 ))}
               </PullDown>
             </div>
-            <div className={clsx('grid col-span-4')} />
+            <div className={clsx('col-span-4 grid')} />
           </div>
         </div>
-        <div className={clsx('grid col-span-1 ')} />
+        <div className={clsx('col-span-1 grid ')} />
       </div>
-      <div className={clsx('grid justify-items-center py-3 mb-3')}>
+      <div className={clsx('mb-3 grid justify-items-center py-3')}>
         <div className={clsx('flex')}>
           <div className={clsx('mx-2')}>
             <OutlinePrimaryButton
@@ -176,7 +170,13 @@ export default function PurchaseReportItemNumModal() {
               報告へ進む
             </PrimaryButton>
             {isOpen && (
-              <PurchaseReportAddModal purchaseOrderId={purchaseOrderId} purchaseItemNum={purchaseItemNum.value} isOpen={isOpen} setIsOpen={setIsOpen} isOnlyReported={true} />
+              <PurchaseReportAddModal
+                purchaseOrderId={purchaseOrderId}
+                purchaseItemNum={purchaseItemNum.value}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                isOnlyReported={true}
+              />
             )}
           </div>
         </div>

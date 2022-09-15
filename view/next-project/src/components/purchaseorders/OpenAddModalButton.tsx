@@ -19,7 +19,9 @@ export default function OpenModalButton(props: Props) {
           setModalView('PURCHASE_ITEM_NUM_MODAL');
           openModal();
         }}
-      >{props.children}</AddButton>
+      >
+        {props.children}
+      </AddButton>
     </>
   );
 }

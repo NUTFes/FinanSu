@@ -13,13 +13,12 @@ interface Props {
 }
 
 function Checkbox(props: Props): JSX.Element {
-  const className =
-    '' + (props.className ? ` ${props.className}` : '');
+  const className = '' + (props.className ? ` ${props.className}` : '');
   return (
     <>
       {props.checked ? (
         <input
-          type="checkbox"
+          type='checkbox'
           checked
           disabled={props.disabled}
           className={clsx(className)}
@@ -31,7 +30,7 @@ function Checkbox(props: Props): JSX.Element {
         </input>
       ) : (
         <input
-          type="checkbox"
+          type='checkbox'
           disabled={props.disabled}
           className={clsx(className)}
           placeholder={props.placeholder}

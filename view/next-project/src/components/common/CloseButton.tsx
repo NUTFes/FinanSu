@@ -7,8 +7,12 @@ interface Props {
 
 export default function CloseButton(props: Props) {
   return (
-    <RiCloseCircleLine size={'23px'} color={'gray'} onClick={() => {
-      props.onClick();
-    }} />
+    <RiCloseCircleLine
+      size={'23px'}
+      color={'gray'}
+      onClick={() => {
+        props.onClick();
+      }}
+    />
   );
 }
