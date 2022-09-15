@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { get } from '@api/api_methods';
@@ -6,7 +6,16 @@ import { put as putPurchaseReport } from '@api/purchaseReport';
 import { put as putPurchaseItem } from '@api/purchaseItem';
 import { useGlobalContext } from '@components/global/context';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Textarea, Modal, Stepper, Title } from '@components/common';
+import {
+  PrimaryButton,
+  OutlinePrimaryButton,
+  CloseButton,
+  Input,
+  Textarea,
+  Modal,
+  Stepper,
+  Title,
+} from '@components/common';
 import { PurchaseReport, PurchaseOrder, PurchaseItem, User } from '@pages/purchasereports';
 
 interface PurchaseRecordView {
@@ -28,12 +37,16 @@ export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
   const [activeStep, setActiveStep] = useState<number>(1);
-  const nextStep = () => { setActiveStep(activeStep + 1) }
-  const prevStep = () => { setActiveStep(activeStep - 1) }
+  const nextStep = () => {
+    setActiveStep(activeStep + 1);
+  };
+  const prevStep = () => {
+    setActiveStep(activeStep - 1);
+  };
   const reset = () => {
     setActiveStep(1);
     setIsDone(false);
-  }
+  };
 
   // 購入報告を登録するかどうかのフラグ
   const [isDone, setIsDone] = useState<boolean>(false);
@@ -54,88 +67,97 @@ export default function EditModal(props: ModalProps) {
     remark: '',
     purchase_order_id: 1,
     created_at: '',
-    updated_at: ''
+    updated_at: '',
   });
   // 購入物品のリスト
-  const [formDataList, setFormDataList] = useState<PurchaseItem[]>([{
-    id: 1,
-    item: '',
-    price: 0,
-    quantity: 0,
-    detail: '',
-    url: '',
-    purchase_order_id: 1,
-    finance_check: false,
-    created_at: '',
-    updated_at: '',
-  }]);
+  const [formDataList, setFormDataList] = useState<PurchaseItem[]>([
+    {
+      id: 1,
+      item: '',
+      price: 0,
+      quantity: 0,
+      detail: '',
+      url: '',
+      purchase_order_id: 1,
+      finance_check: false,
+      created_at: '',
+      updated_at: '',
+    },
+  ]);
+
+  // purchase_reportに紐づくpurchase_itemsを取得
+  const getPurchaseItems = useCallback(async () => {
+    const getPurchaseOrderViewURL =
+      process.env.CSR_API_URI + '/get_purchasereports_for_view/' + props.purchaseReportId;
+
+    const purchaseOrderViewRes: PurchaseRecordView = await get(getPurchaseOrderViewURL);
+    let initFormDataList = [];
+    for (let i = 0; i < purchaseOrderViewRes.purchaseitems.length; i++) {
+      if (purchaseOrderViewRes.purchaseitems[i].finance_check) {
+        let initFormData: PurchaseItem = {
+          id: purchaseOrderViewRes.purchaseitems[i].id,
+          item: purchaseOrderViewRes.purchaseitems[i].item,
+          price: purchaseOrderViewRes.purchaseitems[i].price,
+          quantity: purchaseOrderViewRes.purchaseitems[i].quantity,
+          detail: purchaseOrderViewRes.purchaseitems[i].detail,
+          url: purchaseOrderViewRes.purchaseitems[i].url,
+          purchase_order_id: purchaseOrderViewRes.purchaseorder.id,
+          finance_check: purchaseOrderViewRes.purchaseitems[i].finance_check,
+          created_at: purchaseOrderViewRes.purchaseitems[i].created_at,
+          updated_at: purchaseOrderViewRes.purchaseitems[i].updated_at,
+        };
+        initFormDataList.push(initFormData);
+      }
+    }
+    setFormData(purchaseOrderViewRes.purchasereport);
+    setFormDataList(initFormDataList);
+  }, [props.purchaseReportId, setFormData, setFormDataList]);
 
   useEffect(() => {
     if (router.isReady) {
-      const getPurchaseOrderViewUrl = process.env.CSR_API_URI + '/get_purchasereports_for_view/' + props.purchaseReportId;
-
-      // purchase_orderに紐づくpurchase_itemsを取得
-      const getPurchaseItems = async (url: string) => {
-        const purchaseOrderViewRes: PurchaseRecordView = await get(url)
-        let initFormDataList = [];
-        for (let i = 0; i < purchaseOrderViewRes.purchaseitems.length; i++) {
-          if (purchaseOrderViewRes.purchaseitems[i].finance_check) {
-            let initFormData: PurchaseItem = {
-              id: purchaseOrderViewRes.purchaseitems[i].id,
-              item: purchaseOrderViewRes.purchaseitems[i].item,
-              price: purchaseOrderViewRes.purchaseitems[i].price,
-              quantity: purchaseOrderViewRes.purchaseitems[i].quantity,
-              detail: purchaseOrderViewRes.purchaseitems[i].detail,
-              url: purchaseOrderViewRes.purchaseitems[i].url,
-              purchase_order_id: purchaseOrderViewRes.purchaseorder.id,
-              finance_check: purchaseOrderViewRes.purchaseitems[i].finance_check,
-              created_at: purchaseOrderViewRes.purchaseitems[i].created_at,
-              updated_at: purchaseOrderViewRes.purchaseitems[i].updated_at,
-            };
-            initFormDataList.push(initFormData);
-          }
-        }
-        setFormData(purchaseOrderViewRes.purchasereport);
-        setFormDataList(initFormDataList)
-      };
-      getPurchaseItems(getPurchaseOrderViewUrl);
+      getPurchaseItems();
     }
-  }, [router]);
+  }, [router, getPurchaseItems]);
 
   // 購入報告用のhandler
   const formDataHandler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   // 購入物品用のhandler
   const formDataListHandler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormDataList(
-          formDataList.map((formData: PurchaseItem) =>
-            formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
-          ),
-        );
-      };
-
-  // finance_checkのtrue,falseを切り替え
-  const isFinanceCheckHandler =
-    (purchaseItemId: number, finance_check: boolean) => {
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
       setFormDataList(
         formDataList.map((formData: PurchaseItem) =>
-          formData.id === purchaseItemId ? { ...formData, ["finance_check"]: finance_check } : formData,
+          formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
         ),
       );
     };
 
+  // finance_checkのtrue,falseを切り替え
+  const isFinanceCheckHandler = (purchaseItemId: number, finance_check: boolean) => {
+    setFormDataList(
+      formDataList.map((formData: PurchaseItem) =>
+        formData.id === purchaseItemId
+          ? { ...formData, ['finance_check']: finance_check }
+          : formData,
+      ),
+    );
+  };
+
   // 購入報告の登録と購入物品の更新を行い、ページをリロード
-  const submit = (formDataList: PurchaseItem[], formData: PurchaseReport, purchaseReportId: number) => {
+  const submit = (
+    formDataList: PurchaseItem[],
+    formData: PurchaseReport,
+    purchaseReportId: number,
+  ) => {
     updatePurchaseReport(formData, purchaseReportId);
     updatePurchaseItem(formDataList);
     router.reload();
-  }
+  };
 
   // 購入物品を更新
   const updatePurchaseReport = async (data: PurchaseReport, id: number) => {
@@ -153,86 +175,40 @@ export default function EditModal(props: ModalProps) {
 
   // 購入物品の情報
   const content: Function = (data: PurchaseItem) => (
-    <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
-      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-        <div
-          className={clsx(
-            'flex items-center text-black-600 text-md',
-          )}
-        >
-          物品名
-        </div>
+    <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>物品名</div>
       </div>
-      <div className={clsx('grid col-span-10 w-full')}>
-        <Input
-          id={String(data.id)}
-          value={data.item}
-          onChange={formDataListHandler('item')}
-        />
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.item} onChange={formDataListHandler('item')} />
       </div>
-      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-        <div
-          className={clsx(
-            'flex items-center text-black-600 text-md',
-          )}
-        >
-          単価
-        </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>単価</div>
       </div>
-      <div className={clsx('grid col-span-10 w-full')}>
-        <Input
-          id={String(data.id)}
-          value={data.price}
-          onChange={formDataListHandler('price')}
-        />
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.price} onChange={formDataListHandler('price')} />
       </div>
-      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-        <div
-          className={clsx(
-            'flex items-center text-black-600 text-md',
-          )}
-        >
-          個数
-        </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>個数</div>
       </div>
-      <div className={clsx('grid col-span-10 w-full')}>
+      <div className={clsx('col-span-10 grid w-full')}>
         <Input
           id={String(data.id)}
           value={data.quantity}
           onChange={formDataListHandler('quantity')}
         />
       </div>
-      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-        <div
-          className={clsx(
-            'flex items-center text-black-600 text-md',
-          )}
-        >
-          詳細
-        </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>詳細</div>
       </div>
-      <div className={clsx('grid col-span-10 w-full')}>
-        <Input
-          id={String(data.id)}
-          value={data.detail}
-          onChange={formDataListHandler('detail')}
-        />
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.detail} onChange={formDataListHandler('detail')} />
       </div>
-      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-        <div
-          className={clsx(
-            'flex items-center text-black-600 text-md',
-          )}
-        >
-          URL
-        </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>URL</div>
       </div>
-      <div className={clsx('grid col-span-10 w-full')}>
-        <Input
-          id={String(data.id)}
-          value={data.url}
-          onChange={formDataListHandler('url')}
-        />
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.url} onChange={formDataListHandler('url')} />
       </div>
     </div>
   );
@@ -242,82 +218,53 @@ export default function EditModal(props: ModalProps) {
       {props.isOpen ? (
         <Modal className='!w-1/2'>
           <div className={clsx('w-full')}>
-            <div className={clsx('mr-5 w-full grid justify-items-end')}>
-              <CloseButton onClick={() => {
-                props.setIsOpen(false)
-              }} />
+            <div className={clsx('mr-5 grid w-full justify-items-end')}>
+              <CloseButton
+                onClick={() => {
+                  props.setIsOpen(false);
+                }}
+              />
             </div>
           </div>
-          <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+          <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
             購入物品の修正
           </div>
-          <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
-            <div className={clsx('grid col-span-1')} />
-            <div className={clsx('grid col-span-10 w-full')}>
+          <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
+            <div className={clsx('col-span-1 grid')} />
+            <div className={clsx('col-span-10 grid w-full')}>
               {/* 購入物品があればステッパで表示、なければないと表示  */}
               {formDataList.length > 0 ? (
                 <Stepper stepNum={formDataList.length} activeStep={activeStep} isDone={isDone}>
-                  {!isDone &&
-                    <>
-                      {content(formDataList[activeStep - 1])}
-                    </>
-                  }
+                  {!isDone && <>{content(formDataList[activeStep - 1])}</>}
                 </Stepper>
               ) : (
-                <div className={clsx('grid justify-items-center ml-5')}>
+                <div className={clsx('ml-5 grid justify-items-center')}>
                   <Title>報告した物品はありません</Title>
                 </div>
               )}
               {isDone ? (
                 // 編集完了した時に完了と戻るボタンを表示
-                <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
-                  <div className={clsx('grid col-span-1')} />
-                  <div className={clsx('grid col-span-10 justify-items-center w-full')}>
-                    <div className={clsx('grid grid-cols-12 gap-4 mb-6 w-full')}>
-                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-                        <div
-                          className={clsx(
-                            'flex items-center text-black-600 text-md',
-                          )}
-                        >
-                          割引
-                        </div>
+                <div className={clsx('my-10 grid grid-cols-12 gap-4')}>
+                  <div className={clsx('col-span-1 grid')} />
+                  <div className={clsx('col-span-10 grid w-full justify-items-center')}>
+                    <div className={clsx('mb-6 grid w-full grid-cols-12 gap-4')}>
+                      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+                        <div className={clsx('text-md flex items-center text-black-600')}>割引</div>
                       </div>
-                      <div className={clsx('grid col-span-10 w-full')}>
-                        <Input
-                          value={formData.discount}
-                          onChange={formDataHandler('discount')}
-                        />
+                      <div className={clsx('col-span-10 grid w-full')}>
+                        <Input value={formData.discount} onChange={formDataHandler('discount')} />
                       </div>
-                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-                        <div
-                          className={clsx(
-                            'flex items-center text-black-600 text-md',
-                          )}
-                        >
-                          加算
-                        </div>
+                      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+                        <div className={clsx('text-md flex items-center text-black-600')}>加算</div>
                       </div>
-                      <div className={clsx('grid col-span-10 w-full')}>
-                        <Input
-                          value={formData.addition}
-                          onChange={formDataHandler('addition')}
-                        />
+                      <div className={clsx('col-span-10 grid w-full')}>
+                        <Input value={formData.addition} onChange={formDataHandler('addition')} />
                       </div>
-                      <div className={clsx('grid col-span-2 justify-items-end mr-2')}>
-                        <div
-                          className={clsx(
-                            'flex items-center text-black-600 text-md',
-                          )}
-                        >
-                          備考
-                        </div>
+                      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+                        <div className={clsx('text-md flex items-center text-black-600')}>備考</div>
                       </div>
-                      <div className={clsx('grid col-span-10 w-full')}>
-                        <Textarea
-                          value={formData.remark}
-                          onChange={formDataHandler('remark')}
-                        />
+                      <div className={clsx('col-span-10 grid w-full')}>
+                        <Textarea value={formData.remark} onChange={formDataHandler('remark')} />
                       </div>
                     </div>
                     <div className={clsx('flex')}>
@@ -327,20 +274,20 @@ export default function EditModal(props: ModalProps) {
                       <PrimaryButton
                         className={'mx-2'}
                         onClick={() => {
-                          submit(formDataList, formData, props.purchaseReportId)
+                          submit(formDataList, formData, props.purchaseReportId);
                         }}
                       >
                         編集完了
                       </PrimaryButton>
                     </div>
                   </div>
-                  <div className={clsx('grid col-span-1')} />
+                  <div className={clsx('col-span-1 grid')} />
                 </div>
               ) : (
                 <>
-                  <div className={clsx('grid grid-cols-12 gap-4 mt-6')}>
-                    <div className={clsx('grid col-span-1')} />
-                    <div className={clsx('grid col-span-10 justify-items-center')}>
+                  <div className={clsx('mt-6 grid grid-cols-12 gap-4')}>
+                    <div className={clsx('col-span-1 grid')} />
+                    <div className={clsx('col-span-10 grid justify-items-center')}>
                       {formDataList.length > 0 ? (
                         <div className={clsx('flex')}>
                           {/* stepが1より大きい時のみ戻るボタンを表示 */}
@@ -352,36 +299,42 @@ export default function EditModal(props: ModalProps) {
                           <PrimaryButton
                             className={'mx-2 pl-4 pr-2'}
                             onClick={() => {
-                              { activeStep === formDataList.length ? setIsDone(true) : nextStep(); }
-                              isFinanceCheckHandler(formDataList[activeStep - 1].id, true)
+                              {
+                                activeStep === formDataList.length ? setIsDone(true) : nextStep();
+                              }
+                              isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
                             }}
                           >
                             <div className={clsx('flex')}>
-                              {activeStep === formDataList.length ? '登録して編集を完了' : '登録して次へ'}
+                              {activeStep === formDataList.length
+                                ? '登録して編集を完了'
+                                : '登録して次へ'}
                               <RiArrowDropRightLine size={23} />
                             </div>
                           </PrimaryButton>
                         </div>
                       ) : (
                         <div className={clsx('flex')}>
-                          <OutlinePrimaryButton onClick={() => {
-                            props.setIsOpen(false)
-                          }} className={'mx-2'}>
+                          <OutlinePrimaryButton
+                            onClick={() => {
+                              props.setIsOpen(false);
+                            }}
+                            className={'mx-2'}
+                          >
                             閉じる
                           </OutlinePrimaryButton>
                         </div>
                       )}
                     </div>
-                    <div className={clsx('grid col-span-1')} />
+                    <div className={clsx('col-span-1 grid')} />
                   </div>
                 </>
               )}
             </div>
-            <div className={clsx('grid col-span-1')} />
+            <div className={clsx('col-span-1 grid')} />
           </div>
         </Modal>
-      ) : null
-      }
+      ) : null}
     </>
   );
 }

@@ -20,10 +20,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {
-        isOpen ? (
-          <DeleteModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} />
-        ) : null}
+      {isOpen ? <DeleteModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} /> : null}
     </>
   );
 };

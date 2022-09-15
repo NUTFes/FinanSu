@@ -12,12 +12,11 @@ interface Props {
 }
 
 function Radio(props: Props): JSX.Element {
-  const className =
-    '' + (props.className ? ` ${props.className}` : '');
+  const className = '' + (props.className ? ` ${props.className}` : '');
   return (
     <input
-      type="radio"
-      name="radio"
+      type='radio'
+      name='radio'
       checked={props.checked}
       className={clsx(className)}
       value={props.value}

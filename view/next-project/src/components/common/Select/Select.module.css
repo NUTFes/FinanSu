@@ -1,7 +1,7 @@
-.select:focus{
+.select:focus {
   border-color: #48b2cf;
   border-width: 1.75px;
-  outline:none;
+  outline: none;
 }
 
 .customSelect {

@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
+import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { post } from '@api/purchaseItem';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Modal, Stepper, Tooltip } from '@components/common';
+import {
+  PrimaryButton,
+  OutlinePrimaryButton,
+  CloseButton,
+  Input,
+  Modal,
+  Stepper,
+  Tooltip,
+} from '@components/common';
 import { PurchaseItem } from '@pages/purchaseorders';
 
 interface ModalProps {
@@ -22,12 +30,16 @@ interface PurchaseItemNum {
 
 export default function AddModal(props: ModalProps) {
   const [activeStep, setActiveStep] = useState<number>(1);
-  const nextStep = () => { setActiveStep(activeStep + 1) }
-  const prevStep = () => { setActiveStep(activeStep - 1) }
+  const nextStep = () => {
+    setActiveStep(activeStep + 1);
+  };
+  const prevStep = () => {
+    setActiveStep(activeStep - 1);
+  };
   const reset = () => {
-    setActiveStep(1)
+    setActiveStep(1);
     setIsDone(false);
-  }
+  };
 
   const [isDone, setIsDone] = useState<boolean>(false);
   const router = useRouter();
@@ -54,142 +66,142 @@ export default function AddModal(props: ModalProps) {
     props.onClose();
     props.numModalOnClose();
     router.reload();
-  }
+  };
 
   // 購入物品の情報
   const content: Function = (index: number, data: PurchaseItem) => (
     <>
-      <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
-        <div className={clsx('grid col-span-2 mr-2')}>
-          <div
-            className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
-            )}
-          >
+      <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
+        <div className={clsx('col-span-2 mr-2 grid')}>
+          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
             物品名
           </div>
         </div>
-        <div className={clsx('grid col-span-10 w-full')}>
-          <Input
-            value={data.item}
-            onChange={handler(index, 'item')}
-          />
+        <div className={clsx('col-span-10 grid w-full')}>
+          <Input value={data.item} onChange={handler(index, 'item')} />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
-          <div
-            className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
-            )}
-          >
+        <div className={clsx('col-span-2 mr-2 grid')}>
+          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
             単価
           </div>
         </div>
-        <div className={clsx('grid col-span-10 w-full')}>
-          <Input
-            value={data.price}
-            onChange={handler(index, 'price')}
-          />
+        <div className={clsx('col-span-10 grid w-full')}>
+          <Input value={data.price} onChange={handler(index, 'price')} />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
-          <div
-            className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
-            )}
-          >
+        <div className={clsx('col-span-2 mr-2 grid')}>
+          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
             個数
           </div>
         </div>
-        <div className={clsx('grid col-span-10 w-full')}>
-          <Input
-            value={data.quantity}
-            onChange={handler(index, 'quantity')}
-          />
+        <div className={clsx('col-span-10 grid w-full')}>
+          <Input value={data.quantity} onChange={handler(index, 'quantity')} />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
-          <div
-            className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
-            )}
-          >
+        <div className={clsx('col-span-2 mr-2 grid')}>
+          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
             詳細
           </div>
         </div>
-        <div className={clsx('grid col-span-10 w-full')}>
-          <Input
-            value={data.detail}
-            onChange={handler(index, 'detail')}
-          />
+        <div className={clsx('col-span-10 grid w-full')}>
+          <Input value={data.detail} onChange={handler(index, 'detail')} />
         </div>
-        <div className={clsx('grid col-span-2 mr-2')}>
-          <div
-            className={clsx(
-              'grid justify-items-end flex items-center text-black-600 text-md',
-            )}
-          >
+        <div className={clsx('col-span-2 mr-2 grid')}>
+          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
             URL
           </div>
         </div>
-        <div className={clsx('grid col-span-10 w-full')}>
-          <Input
-            value={data.url}
-            onChange={handler(index, 'url')}
-          />
+        <div className={clsx('col-span-10 grid w-full')}>
+          <Input value={data.url} onChange={handler(index, 'url')} />
         </div>
       </div>
     </>
   );
 
   // 購入物品テーブルのカラム
-  const tableColumns = ['物品名', '単価', '個数', '備考', 'URL']
+  const tableColumns = ['物品名', '単価', '個数', '備考', 'URL'];
 
   // 購入物品の確認用テーブル
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
     return (
-      <table className={clsx('table-fixed border-collapse: collapse')}>
+      <table className={clsx('border-collapse: collapse table-fixed')}>
         <thead>
-          <tr
-            className={clsx('py-3 border-b-primary-1 border border-t-white-0 border-x-white-0')}
-          >
+          <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
             {tableColumns.map((tableColumn: string) => (
-              <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+              <th key={tableColumn} className={clsx('border-b-primary-1 px-6 pb-2')}>
                 <div className={clsx('text-center text-sm text-black-600')}>{tableColumn}</div>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
+        <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
           {purchaseItems.map((purchaseItem, index) => (
             <tr key={purchaseItem.id}>
-              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
-                <div className={clsx('text-center text-sm text-black-300')} >
+              <td
+                className={clsx(
+                  'px-4',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                )}
+              >
+                <div className={clsx('text-center text-sm text-black-300')}>
                   {purchaseItem.item}
                 </div>
               </td>
-              < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+              <td
+                className={clsx(
+                  'px-4',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                )}
+              >
                 <div className={clsx('text-center text-sm text-black-300')}>
                   {purchaseItem.price}
                 </div>
               </td>
-              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+              <td
+                className={clsx(
+                  'px-4',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                )}
+              >
                 <div className={clsx('text-center text-sm text-black-300')}>
                   {purchaseItem.quantity}
                 </div>
               </td>
-              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+              <td
+                className={clsx(
+                  'px-4',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                )}
+              >
                 <div className={clsx('text-center text-sm text-black-300')}>
                   {purchaseItem.detail}
                 </div>
               </td>
-              <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+              <td
+                className={clsx(
+                  'px-4',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                )}
+              >
                 <div className={clsx('text-center text-sm text-black-300')}>
                   <div className={clsx('flex')}>
-                    <a className={clsx('mx-1')} href={purchaseItem.url} target="_blank" rel="noopener noreferrer">
+                    <a
+                      className={clsx('mx-1')}
+                      href={purchaseItem.url}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
                       <RiExternalLinkLine size={'16px'} />
                     </a>
                     <Tooltip text={'copy URL'}>
-                      <RiFileCopyLine className={clsx('mx-1')} size={'16px'}
+                      <RiFileCopyLine
+                        className={clsx('mx-1')}
+                        size={'16px'}
                         onClick={() => {
-                          navigator.clipboard.writeText(purchaseItem.url)
+                          navigator.clipboard.writeText(purchaseItem.url);
                         }}
                       />
                     </Tooltip>
@@ -197,13 +209,11 @@ export default function AddModal(props: ModalProps) {
                 </div>
               </td>
             </tr>
-          ))
-          }
-        </tbody >
-      </table >
-    )
-  }
-
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   // 購入物品数だけステップを用意
   let steps = [];
@@ -215,37 +225,39 @@ export default function AddModal(props: ModalProps) {
     <>
       <Modal className='!w-1/2'>
         <div className={clsx('w-full')}>
-          <div className={clsx('mr-5 w-full grid justify-items-end')}>
-            <CloseButton onClick={() => {
-              props.onClose();
-              props.numModalOnClose();
-            }} />
+          <div className={clsx('mr-5 grid w-full justify-items-end')}>
+            <CloseButton
+              onClick={() => {
+                props.onClose();
+                props.numModalOnClose();
+              }}
+            />
           </div>
         </div>
-        <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+        <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
           購入物品の登録
         </div>
-        <div className={clsx('grid grid-cols-12 gap-4 my-6')}>
-          <div className={clsx('grid col-span-1')}/>
-          <div className={clsx('grid col-span-10 w-full')}>
+        <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
+          <div className={clsx('col-span-1 grid')} />
+          <div className={clsx('col-span-10 grid w-full')}>
             <Stepper stepNum={props.purchaseItemNum.value} activeStep={activeStep} isDone={isDone}>
-              {!isDone &&
-                <>
-                  {content(activeStep, props.formDataList[activeStep-1])}
-                </>
-              }
+              {!isDone && <>{content(activeStep, props.formDataList[activeStep - 1])}</>}
             </Stepper>
             {isDone ? (
               <>
-                <div className={clsx('grid justify-items-center w-full font-bold text-black-300 text-md h-100')}>
+                <div
+                  className={clsx(
+                    'text-md h-100 grid w-full justify-items-center font-bold text-black-300',
+                  )}
+                >
                   購入物品
                 </div>
-                <div className={clsx('grid justify-items-center mb-2 p-5 w-full')}>
+                <div className={clsx('mb-2 grid w-full justify-items-center p-5')}>
                   {PurchaseItemTable(props.formDataList)}
-                </div >
-                <div className={clsx('grid grid-cols-12 gap-4 my-10')}>
-                  <div className={clsx('grid col-span-1')} />
-                  <div className={clsx('grid col-span-10 justify-items-center w-full')}>
+                </div>
+                <div className={clsx('my-10 grid grid-cols-12 gap-4')}>
+                  <div className={clsx('col-span-1 grid')} />
+                  <div className={clsx('col-span-10 grid w-full justify-items-center')}>
                     <div className={clsx('flex')}>
                       <OutlinePrimaryButton onClick={reset} className={'mx-2'}>
                         戻る
@@ -253,47 +265,48 @@ export default function AddModal(props: ModalProps) {
                       <PrimaryButton
                         className={'mx-2'}
                         onClick={() => {
-                          submit(props.formDataList)
-
+                          submit(props.formDataList);
                         }}
                       >
                         登録
                       </PrimaryButton>
-                      </div>
                     </div>
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className={clsx('grid grid-cols-12 gap-4 mt-6')}>
-                    <div className={clsx('grid col-span-1')} />
-                    <div className={clsx('grid col-span-10 justify-items-center')}>
-                      <div className={clsx('flex')}>
-                        {/* stepが1より大きい時のみ戻るボタンを表示 */}
-                        {activeStep > 1 && (
-                          <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
-                            戻る
-                          </OutlinePrimaryButton>
-                        )}
-                        <PrimaryButton
-                          className={'mx-2 pl-4 pr-2'}
-                          onClick={() => {
-                            { activeStep === steps.length ? setIsDone(true) : nextStep(); }
-                          }}
-                        >
-                          <div className={clsx('flex')}>
-                            {activeStep === steps.length ? '申請の確認' : '次へ'}
-                            <RiArrowDropRightLine size={23} />
-                          </div>
-                        </PrimaryButton>
-                      </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className={clsx('mt-6 grid grid-cols-12 gap-4')}>
+                  <div className={clsx('col-span-1 grid')} />
+                  <div className={clsx('col-span-10 grid justify-items-center')}>
+                    <div className={clsx('flex')}>
+                      {/* stepが1より大きい時のみ戻るボタンを表示 */}
+                      {activeStep > 1 && (
+                        <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
+                          戻る
+                        </OutlinePrimaryButton>
+                      )}
+                      <PrimaryButton
+                        className={'mx-2 pl-4 pr-2'}
+                        onClick={() => {
+                          {
+                            activeStep === steps.length ? setIsDone(true) : nextStep();
+                          }
+                        }}
+                      >
+                        <div className={clsx('flex')}>
+                          {activeStep === steps.length ? '申請の確認' : '次へ'}
+                          <RiArrowDropRightLine size={23} />
+                        </div>
+                      </PrimaryButton>
                     </div>
-                    <div className={clsx('grid col-span-1')} />
                   </div>
-                </>
+                  <div className={clsx('col-span-1 grid')} />
+                </div>
+              </>
             )}
           </div>
-          <div className={clsx('grid col-span-1')}/>
+          <div className={clsx('col-span-1 grid')} />
         </div>
       </Modal>
     </>

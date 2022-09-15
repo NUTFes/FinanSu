@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
-import { RiAccountCircleFill, RiArrowDropDownLine } from 'react-icons/ri'
-import clsx from 'clsx'
+import React, { useRef, useState, useEffect } from 'react';
+import { RiAccountCircleFill, RiArrowDropDownLine } from 'react-icons/ri';
+import clsx from 'clsx';
 
 interface Props {
   title: string;
@@ -12,13 +12,13 @@ const Dropdown = (props: Props) => {
   const dropdownRef = useRef<any>(null);
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener('mousedown', handleOutsideClick);
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
 
-  const handleOutsideClick = (e: any) =>{
+  const handleOutsideClick = (e: any) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
       setIsOpen(false);
     }
@@ -26,21 +26,33 @@ const Dropdown = (props: Props) => {
 
   return (
     <>
-      <div ref={dropdownRef} className="relative inline-block text-left">
+      <div ref={dropdownRef} className='relative inline-block text-left'>
         <span>
-          <button onClick={() => setIsOpen(!isOpen)} type="button" className="inline-flex justify-center w-full px-4 text-xl focus:outline-none transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" aria-expanded={isOpen}>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            type='button'
+            className='inline-flex w-full justify-center px-4 text-xl transition duration-150 ease-in-out focus:outline-none'
+            id='options-menu'
+            aria-haspopup='true'
+            aria-expanded={isOpen}
+          >
             <div className={clsx('flex items-center')}>
               {props.title}
-              <RiArrowDropDownLine className={clsx("ml-1")} size={'26px'} />
+              <RiArrowDropDownLine className={clsx('ml-1')} size={'26px'} />
             </div>
           </button>
         </span>
 
         {isOpen && (
           <>
-            <div className="origin-top-left absolute left-0 mt-2 px-3 pt-2 w-32 rounded-md shadow-lg z-50">
-              <div className="rounded-md bg-white shadow-xs">
-                <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+            <div className='absolute left-0 z-50 mt-2 w-32 origin-top-left rounded-md px-3 pt-2 shadow-lg'>
+              <div className='bg-white shadow-xs rounded-md'>
+                <div
+                  className='py-1'
+                  role='menu'
+                  aria-orientation='vertical'
+                  aria-labelledby='options-menu'
+                >
                   {props.children}
                 </div>
               </div>

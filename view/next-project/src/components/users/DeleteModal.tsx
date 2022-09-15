@@ -14,7 +14,7 @@ import {
   GridItem,
   Divider,
 } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -55,16 +55,17 @@ export default function DeleteModal(props: ModalProps) {
     role_id: 1,
   });
 
+  // モーダルを開いているuserを取得
+  const getUser = useCallback(async () => {
+    const getUserURL = process.env.CSR_API_URI + '/users/' + props.id;
+    setUser(await get(getUserURL));
+  }, [props.id, setUser]);
+
   useEffect(() => {
     if (router.isReady) {
-      // モーダルを開いているuserを取得
-      const getUserURL = process.env.CSR_API_URI + '/users/' + props.id;
-      const getUser = async (url: string) => {
-        setUser(await get(url));
-      };
-      getUser(getUserURL);
+      getUser();
     }
-  }, [router]);
+  }, [router, getUser]);
 
   const deleteUser = async (id: number | string) => {
     const deleteUserURL = process.env.CSR_API_URI + '/users/' + id;

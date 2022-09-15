@@ -1,10 +1,10 @@
-.parent{
+.parent {
   overflow: hidden;
   position: relative;
   min-height: 100%;
 }
 
-.sidenav{
+.sidenav {
   padding-bottom: 10000;
   margin-bottom: -10000px;
   z-index: 1000;
@@ -13,6 +13,6 @@
   float: left;
 }
 
-.content{
+.content {
   float: right;
 }

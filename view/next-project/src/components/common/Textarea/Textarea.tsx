@@ -12,7 +12,8 @@ interface Props {
 
 function Textarea(props: Props): JSX.Element {
   const className =
-    'rounded-3xl h-32 border border-primary-1 py-2 px-4' + (props.className ? ` ${props.className}` : '');
+    'rounded-3xl h-32 border border-primary-1 py-2 px-4' +
+    (props.className ? ` ${props.className}` : '');
   return (
     <textarea
       className={clsx(s.textarea, className)}

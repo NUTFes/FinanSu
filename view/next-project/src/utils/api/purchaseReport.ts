@@ -49,7 +49,7 @@ export const post = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then(response => response.json());
+  }).then((response) => response.json());
   return res;
 };
 
@@ -81,7 +81,7 @@ export const put = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then(response => response.json());
+  }).then((response) => response.json());
   return res;
 };
 

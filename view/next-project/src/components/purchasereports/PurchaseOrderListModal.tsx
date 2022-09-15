@@ -47,19 +47,21 @@ export default function PurchaseItemNumModal() {
   const { setModalView, openModal, closeModal } = useUI();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const onOpen = () => { setIsOpen(true) }
+  const onOpen = () => {
+    setIsOpen(true);
+  };
 
-  const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView[]>([])
+  const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView[]>([]);
 
-  const [purchaseOrderId, setPurchaseOrderId] = useState<number>(1)
-  const [purchaseItemNum, setPurchaseItemNum] = useState<number>(0)
+  const [purchaseOrderId, setPurchaseOrderId] = useState<number>(1);
+  const [purchaseItemNum, setPurchaseItemNum] = useState<number>(0);
 
   useEffect(() => {
     if (router.isReady) {
       const getPurchaseOrderViewUrl = process.env.CSR_API_URI + '/get_purchaseorders_for_view';
 
       const getPurchaseOrderView = async (url: string) => {
-        const purchaseOrderViewRes: PurchaseOrderView[] = await get(url)
+        const purchaseOrderViewRes: PurchaseOrderView[] = await get(url);
         setPurchaseOrderView(purchaseOrderViewRes);
       };
       getPurchaseOrderView(getPurchaseOrderViewUrl);
@@ -80,7 +82,7 @@ export default function PurchaseItemNumModal() {
       totalFee += purchaseItems[i].price * purchaseItems[i].quantity;
     }
     return totalFee;
-  }
+  };
 
   // 報告する申請のID
   const handler = (purchaseItemNum: number) => (e: any) => {
@@ -91,52 +93,73 @@ export default function PurchaseItemNumModal() {
   return (
     <Modal>
       <div className={clsx('w-full')}>
-        <div className={clsx('mr-5 w-full grid justify-items-end')}>
+        <div className={clsx('mr-5 grid w-full justify-items-end')}>
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <div className={clsx('grid justify-items-center w-full mb-10 text-black-600 text-xl')}>
+      <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
         購入申請
       </div>
-      <div className={clsx('grid grid-cols-12 gap-4 mb-4')}>
-        <div className={clsx('grid col-span-1')} />
-        <div className={clsx('grid col-span-10')}>
-          <div className={clsx('mb-2 p-5 w-100')}>
-            <table className={clsx('table-fixed border-collapse: collapse')}>
+      <div className={clsx('mb-4 grid grid-cols-12 gap-4')}>
+        <div className={clsx('col-span-1 grid')} />
+        <div className={clsx('col-span-10 grid')}>
+          <div className={clsx('w-100 mb-2 p-5')}>
+            <table className={clsx('border-collapse: collapse table-fixed')}>
               <thead>
                 <tr
-                  className={clsx('py-3 border-b-primary-1 border border-t-white-0 border-x-white-0')}
+                  className={clsx(
+                    'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
+                  )}
                 >
                   <th className={clsx('px-6 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>選択</div>
                   </th>
-                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <th className={clsx('border-b-primary-1 px-6 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>局</div>
                   </th>
-                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <th className={clsx('border-b-primary-1 px-6 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>金額</div>
                   </th>
-                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <th className={clsx('border-b-primary-1 px-6 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>物品名</div>
                   </th>
-                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <th className={clsx('border-b-primary-1 px-6 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>品数</div>
                   </th>
-                  <th className={clsx('px-6 pb-2 border-b-primary-1')}>
+                  <th className={clsx('border-b-primary-1 px-6 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
                   </th>
                 </tr>
               </thead>
-              <tbody className={clsx('border-b-primary-1 border border-t-white-0 border-x-white-0')}>
+              <tbody
+                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}
+              >
                 {purchaseOrderView.map((purchaseOrderItem, index) => (
                   <tr key={purchaseOrderItem.purchase_order.id}>
-                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <td
+                      className={clsx(
+                        'px-4',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
                       {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
-                      <div className={clsx('text-center text-sm text-black-600')} >
-                        {purchaseOrderItem.purchase_item && <Radio value={purchaseOrderItem.purchase_order.id} onClick={handler(purchaseOrderItem.purchase_item.length)} />}
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        {purchaseOrderItem.purchase_item && (
+                          <Radio
+                            value={purchaseOrderItem.purchase_order.id}
+                            onClick={handler(purchaseOrderItem.purchase_item.length)}
+                          />
+                        )}
                       </div>
                     </td>
-                    < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <td
+                      className={clsx(
+                        'px-4',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
                       <div className={clsx('text-center text-sm text-black-600')}>
                         {purchaseOrderItem.user.bureau_id === 1 && '総務局'}
                         {purchaseOrderItem.user.bureau_id === 2 && '渉外局'}
@@ -146,47 +169,80 @@ export default function PurchaseItemNumModal() {
                         {purchaseOrderItem.user.bureau_id === 6 && '情報局'}
                       </div>
                     </td>
-                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <td
+                      className={clsx(
+                        'px-4',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchase_item && calcTotalFee(purchaseOrderItem.purchase_item)}
+                        {purchaseOrderItem.purchase_item &&
+                          calcTotalFee(purchaseOrderItem.purchase_item)}
                       </div>
                     </td>
-                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <td
+                      className={clsx(
+                        'px-4',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
                       <div className={clsx('text-center text-sm text-black-600')}>
                         {purchaseOrderItem.purchase_item.length === 1 ? (
                           <>
-                            {purchaseOrderItem.purchase_item && purchaseOrderItem.purchase_item[0].item}
+                            {purchaseOrderItem.purchase_item &&
+                              purchaseOrderItem.purchase_item[0].item}
                           </>
                         ) : (
                           <>
-                            {purchaseOrderItem.purchase_item && purchaseOrderItem.purchase_item[0].item}, ...
+                            {purchaseOrderItem.purchase_item &&
+                              purchaseOrderItem.purchase_item[0].item}
+                            , ...
                           </>
                         )}
                       </div>
                     </td>
-                    < td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <td
+                      className={clsx(
+                        'px-4',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
                       <div className={clsx('text-center text-sm text-black-600')}>
                         {purchaseOrderItem.purchase_item && purchaseOrderItem.purchase_item.length}
                       </div>
                     </td>
-                    <td className={clsx('px-4', (index === 0 ? 'pt-4 pb-3' : 'py-3'), (index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'py-3 border-b'))}>
+                    <td
+                      className={clsx(
+                        'px-4',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
                       <div className={clsx('text-center text-sm text-black-600')}>
                         {formatDate(purchaseOrderItem.purchase_order.created_at)}
                       </div>
                     </td>
                   </tr>
-                ))
-                }
-              </tbody >
-            </table >
-          </div >
-        </div >
-        <div className={clsx('grid col-span-1 ')} />
-      </div >
-      <div className={clsx('grid grid-cols-12 w-full pb-5')}>
-        <div className={clsx('grid col-span-1 h-100')} />
-        <div className={clsx('grid col-span-10 justify-items-center w-full text-black-600 text-md pr-3 h-100')}>
-          <div className={clsx('grid justify-items-center w-full text-black-600 text-md pb-3 h-100')}>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className={clsx('col-span-1 grid ')} />
+      </div>
+      <div className={clsx('grid w-full grid-cols-12 pb-5')}>
+        <div className={clsx('h-100 col-span-1 grid')} />
+        <div
+          className={clsx(
+            'text-md h-100 col-span-10 grid w-full justify-items-center pr-3 text-black-600',
+          )}
+        >
+          <div
+            className={clsx('text-md h-100 grid w-full justify-items-center pb-3 text-black-600')}
+          >
             申請を選択してください
           </div>
           <div className={clsx('flex')}>
@@ -209,15 +265,20 @@ export default function PurchaseItemNumModal() {
                 報告へ進む
               </PrimaryButton>
               {isOpen && (
-                <PurchaseReportAddModal purchaseOrderId={purchaseOrderId} purchaseItemNum={purchaseItemNum} isOpen={isOpen} setIsOpen={setIsOpen} isOnlyReported={false} />
+                <PurchaseReportAddModal
+                  purchaseOrderId={purchaseOrderId}
+                  purchaseItemNum={purchaseItemNum}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                  isOnlyReported={false}
+                />
               )}
             </div>
           </div>
         </div>
-        <div className={clsx('grid col-span-1 h-100')} />
+        <div className={clsx('h-100 col-span-1 grid')} />
       </div>
-      <div className={clsx('grid justify-items-center px-1')}>
-      </div>
-    </Modal >
+      <div className={clsx('grid justify-items-center px-1')}></div>
+    </Modal>
   );
 }
