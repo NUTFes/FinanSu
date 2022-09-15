@@ -1,11 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  purge: ["./src/**/*.{js,ts,jsx,tsx}"],
-  content: ["./src/**/*.{js,ts,jsx,tsx}"],
-  // content: [
-  //   "./src/pages/**/*.{js,ts,jsx,tsx}",
-  //   "./src/components/**/*.{js,ts,jsx,tsx}",
-  // ],
+  tailwindConfig: './styles/tailwind.config.js',
+  purge: ['./src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     colors: {
       'primary-1': '#56DAFF',
@@ -48,27 +45,27 @@ module.exports = {
         '5/8': '62.5%',
         '6/8': '75%',
         '7/8': '87.5%',
-      }
+      },
     },
   },
   plugins: [
-    function({ addUtilities }) {
+    function ({ addUtilities }) {
       const newUtilities = {
-        ".text-shadow": {
-          textShadow: "0px 2px 3px darkgrey"
+        '.text-shadow': {
+          textShadow: '0px 2px 3px darkgrey',
         },
-        ".text-shadow-md": {
-          textShadow: "0px 3px 3px darkgrey"
+        '.text-shadow-md': {
+          textShadow: '0px 3px 3px darkgrey',
         },
-        ".text-shadow-logo": {
-          textShadow: "4px 2px 0px #333"
+        '.text-shadow-logo': {
+          textShadow: '4px 2px 0px #333',
         },
-        ".text-shadow-none": {
-          textShadow: "none"
-        }
+        '.text-shadow-none': {
+          textShadow: 'none',
+        },
       };
 
       addUtilities(newUtilities);
-    }
-  ]
-}
+    },
+  ],
+};
