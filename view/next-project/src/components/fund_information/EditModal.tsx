@@ -14,7 +14,7 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import Button from '../common/RegistButton';
@@ -75,26 +75,28 @@ export default function FundInformationEditModal(props: ModalProps) {
     is_last_check: false,
   });
 
+  // モーダルを開いているfund_informationを取得
+  const getFundInformation = useCallback(async () => {
+    const getFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + props.id;
+    setFormData(await get(getFundInformationURL));
+  }, [props.id]);
+
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/fund_informations/' + props.id;
-      const getFormData = async (url: string) => {
-        setFormData(await get(url));
-      };
-      getFormData(getFormDataUrl);
+      getFundInformation();
     }
-  }, [router]);
+  }, [router, getFundInformation]);
 
   const handler =
     (input: string) =>
-    (
-      e:
-        | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
-        | React.ChangeEvent<HTMLSelectElement>,
-    ) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
+      (
+        e:
+          | React.ChangeEvent<HTMLInputElement>
+          | React.ChangeEvent<HTMLTextAreaElement>
+          | React.ChangeEvent<HTMLSelectElement>,
+      ) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
 
   const submitFundInformation = async (data: any, id: number | string) => {
     const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;

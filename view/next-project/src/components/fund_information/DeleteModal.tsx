@@ -20,6 +20,7 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import { get, del } from '@api/api_methods';
 import { RedButton } from '@components/common';
+import { useCallback } from 'react';
 
 interface Teacher {
   id: number;
@@ -94,30 +95,31 @@ export default function DeleteModal(props: ModalProps) {
     role_id: 1,
   });
 
+  // モーダルを開いているfund_informationを取得
+  const getFundInformation = useCallback(async () => {
+    const getFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + props.id;
+    setFundInformation(await get(getFundInformationURL));
+  }, [props.id]);
+
+  // teacher_idに紐づくteacherを取得
+  const getTeacher = useCallback(async () => {
+    const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.teacher_id;
+    setTeacher(await get(getTeacherURL));
+  }, [props.teacher_id]);
+
+  // user_idに紐づくuserを取得
+  const getUser = useCallback(async () => {
+    const getUserURL = process.env.CSR_API_URI + '/users/' + props.user_id;
+    setUser(await get(getUserURL));
+  }, [props.user_id]);
+
   useEffect(() => {
     if (router.isReady) {
-      // モーダルを開いているfund_informationを取得
-      const getFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + props.id;
-      const getFundInformation = async (url: string) => {
-        setFundInformation(await get(url));
-      };
-      getFundInformation(getFundInformationURL);
-
-      // teacher_idに紐づくteacherを取得
-      const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.teacher_id;
-      const getTeacher = async (url: string) => {
-        setTeacher(await get(url));
-      };
-      getTeacher(getTeacherURL);
-
-      // user_idに紐づくuserを取得
-      const getUserURL = process.env.CSR_API_URI + '/users/' + props.user_id;
-      const getUser = async (url: string) => {
-        setUser(await get(url));
-      };
-      getUser(getUserURL);
+      getFundInformation();
+      getTeacher();
+      getUser();
     }
-  }, [router]);
+  }, [router, getFundInformation, getTeacher, getUser]);
 
   const deleteFundInformation = async (id: number | string) => {
     const deleteFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
