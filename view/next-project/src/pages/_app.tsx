@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       if (!state.isSignIn) {
         router.push('/');
         localStorage.clear();
-      } else if (state.isSignIn && router.pathname == '/') {
+      } else if (state.isSignIn === true && router.pathname == '/') {
         router.push('/purchaseorders');
       }
     }
