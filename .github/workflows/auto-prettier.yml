@@ -2,9 +2,8 @@ on:
   pull_request:
     branches:
       - develop
-
-env:
-  FILE_PATTERN: "view/next-project/src/**/*.{ts,tsx,js,jsx}"
+    paths:
+      - "view/next-project/**"
 
 jobs:
   prettier:
