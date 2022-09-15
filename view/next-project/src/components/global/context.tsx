@@ -31,16 +31,16 @@ type GlobalContextType = State & {
 
 type Action =
   | {
-      type: 'SET_USER';
-      user: User;
-    }
+    type: 'SET_USER';
+    user: User;
+  }
   | {
-      type: 'SET_IS_SIGN_IN';
-      isSignIn: boolean;
-    }
+    type: 'SET_IS_SIGN_IN';
+    isSignIn: boolean;
+  }
   | {
-      type: 'CLEAR_GLOBAL_FIELDS';
-    };
+    type: 'CLEAR_GLOBAL_FIELDS';
+  };
 
 const initialState: State = {
   user: {} as User,
@@ -87,28 +87,31 @@ export const GlobalStateProvider: FC = (props) => {
     () => dispatch({ type: 'CLEAR_GLOBAL_FIELDS' }),
     [dispatch],
   );
+
+  // current_userの取得とセット
+  const getCurrentUser = useCallback(async () => {
+    const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
+    setUser(await get_with_token(getCurrentUserURL));
+  }, [setUser]);
+
+  // sign in しているかの取得とセット
+  const getIsSignIn = useCallback(async () => {
+    const isSignInURL: string = process.env.CSR_API_URI + '/mail_auth/is_signin';
+    const isSignInRes = await get_with_token(isSignInURL);
+    const isSignIn: boolean = isSignInRes.is_sign_in;
+    setIsSignIn(isSignIn);
+    if (!isSignIn && router.pathname !== '/') {
+      localStorage.clear();
+      router.push('/');
+    }
+  }, [router, setIsSignIn]);
+
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-        setUser(currentUserRes);
-      };
-      const getIsSignIn = async () => {
-        const isSignInURL: string = process.env.CSR_API_URI + '/mail_auth/is_signin';
-        const isSignInRes = await get_with_token(isSignInURL);
-        const isSignIn: boolean = isSignInRes.is_sign_in;
-        setIsSignIn(isSignIn);
-        if (!isSignIn && router.pathname !== '/') {
-          localStorage.clear();
-          router.push('/');
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      getCurrentUser();
       getIsSignIn();
     }
-  }, [router]);
+  }, [router, getCurrentUser, getIsSignIn]);
 
   const user = useMemo(() => state.user, [state.user]);
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { RiArrowDropRightLine } from 'react-icons/ri';
@@ -97,54 +97,54 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   });
   const [purchaseReportId, setPurchaseReportId] = useState<number>(1);
 
+  // purchase_orderに紐づくpurchase_itemsを取得
+  const getPurchaseItems = useCallback(async () => {
+    const getPurchaseOrderViewURL = process.env.CSR_API_URI + '/get_purchaseorders_for_view/' + props.purchaseOrderId;
+
+    const purchaseOrderViewRes: PurchaseOrderView = await get(getPurchaseOrderViewURL);
+    let initFormDataList = [];
+    if (purchaseOrderViewRes.purchase_item !== null) {
+      for (let i = 0; i < purchaseOrderViewRes.purchase_item.length; i++) {
+        let initFormData: PurchaseItem = {
+          id: purchaseOrderViewRes.purchase_item[i].id,
+          item: purchaseOrderViewRes.purchase_item[i].item,
+          price: purchaseOrderViewRes.purchase_item[i].price,
+          quantity: purchaseOrderViewRes.purchase_item[i].quantity,
+          detail: purchaseOrderViewRes.purchase_item[i].detail,
+          url: purchaseOrderViewRes.purchase_item[i].url,
+          purchase_order_id: props.purchaseOrderId,
+          finance_check: purchaseOrderViewRes.purchase_item[i].finance_check,
+          created_at: purchaseOrderViewRes.purchase_item[i].created_at,
+          updated_at: purchaseOrderViewRes.purchase_item[i].updated_at,
+        };
+        initFormDataList.push(initFormData);
+      }
+      setFormDataList(initFormDataList);
+    }
+  }, [props.purchaseOrderId, setFormDataList]);
+
   useEffect(() => {
     if (router.isReady) {
-      const getPurchaseOrderViewUrl =
-        process.env.CSR_API_URI + '/get_purchaseorders_for_view/' + props.purchaseOrderId;
-
-      // purchase_orderに紐づくpurchase_itemsを取得
-      const getPurchaseItems = async (url: string) => {
-        const purchaseOrderViewRes: PurchaseOrderView = await get(url);
-        let initFormDataList = [];
-        if (purchaseOrderViewRes.purchase_item !== null) {
-          for (let i = 0; i < purchaseOrderViewRes.purchase_item.length; i++) {
-            let initFormData: PurchaseItem = {
-              id: purchaseOrderViewRes.purchase_item[i].id,
-              item: purchaseOrderViewRes.purchase_item[i].item,
-              price: purchaseOrderViewRes.purchase_item[i].price,
-              quantity: purchaseOrderViewRes.purchase_item[i].quantity,
-              detail: purchaseOrderViewRes.purchase_item[i].detail,
-              url: purchaseOrderViewRes.purchase_item[i].url,
-              purchase_order_id: props.purchaseOrderId,
-              finance_check: purchaseOrderViewRes.purchase_item[i].finance_check,
-              created_at: purchaseOrderViewRes.purchase_item[i].created_at,
-              updated_at: purchaseOrderViewRes.purchase_item[i].updated_at,
-            };
-            initFormDataList.push(initFormData);
-          }
-          setFormDataList(initFormDataList);
-        }
-      };
-      getPurchaseItems(getPurchaseOrderViewUrl);
+      getPurchaseItems();
     }
-  }, [router]);
+  }, [router, getPurchaseItems]);
 
   // 購入報告用のhandler
   const formDataHandler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
+      (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
   // 購入物品用のhandler
   const formDataListHandler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormDataList(
-        formDataList.map((formData: PurchaseItem) =>
-          formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
-        ),
-      );
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormDataList(
+          formDataList.map((formData: PurchaseItem) =>
+            formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
+          ),
+        );
+      };
 
   // finance_checkのtrue,falseを切り替え
   const isFinanceCheckHandler = (purchaseItemId: number, finance_check: boolean) => {

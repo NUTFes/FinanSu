@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
@@ -31,21 +31,25 @@ export default function PurchaseItemNumModal(props: ModalProps) {
 
   const tableColumns = ['物品名', '単価', '個数', '備考', 'URL'];
 
+  // 購入報告する物品と報告しない物品を仕分け
+  const judgeItems = useCallback(() => {
+    props.formDataList.map((formData: PurchaseItem) => {
+      if (formData.finance_check) {
+        setReportedPurchaseItems((reportedPurchaseItem) => [...reportedPurchaseItem, formData]);
+      } else {
+        setNotReportedPurchaseItems((notReportedPurchaseItem) => [
+          ...notReportedPurchaseItem,
+          formData,
+        ]);
+      }
+    });
+  }, [props.formDataList, setReportedPurchaseItems, setNotReportedPurchaseItems]);
+
   useEffect(() => {
     if (router.isReady) {
-      // 購入報告する物品と報告しない物品を仕分け
-      props.formDataList.map((formData: PurchaseItem) => {
-        if (formData.finance_check) {
-          setReportedPurchaseItems((reportedPurchaseItem) => [...reportedPurchaseItem, formData]);
-        } else {
-          setNotReportedPurchaseItems((notReportedPurchaseItem) => [
-            ...notReportedPurchaseItem,
-            formData,
-          ]);
-        }
-      });
+      judgeItems();
     }
-  }, [router]);
+  }, [router, judgeItems]);
 
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
     return (
