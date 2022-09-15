@@ -1,11 +1,9 @@
 on:
-  push
-  # pull_request:
-  #   branches:
-  #     - develop
-
-env:
-  FILE_PATTERN: "view/next-project/src/**/*.{ts,tsx,js,jsx}"
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - "view/next-project/**"
 
 jobs:
   prettier:
@@ -18,14 +16,10 @@ jobs:
           # Make sure the actual branch is checked out when running on pull requests
           ref: ${{ github.head_ref }}
 
-      # - name: prettier
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: 12.x
       - name: Prettier
         run: docker compose run --rm view npm install && docker compose run --rm view npm run format
       - name: Lint
         run: docker compose run --rm view npm run lint
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
-          commit_message: Apply Prettier Change
+          commit_message: fix prettier from workflow
