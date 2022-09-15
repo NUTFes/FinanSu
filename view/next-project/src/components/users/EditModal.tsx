@@ -70,14 +70,14 @@ export default function FundInformationEditModal(props: ModalProps) {
 
   const handler =
     (input: string) =>
-      (
-        e:
-          | React.ChangeEvent<HTMLInputElement>
-          | React.ChangeEvent<HTMLTextAreaElement>
-          | React.ChangeEvent<HTMLSelectElement>,
-      ) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLTextAreaElement>
+        | React.ChangeEvent<HTMLSelectElement>,
+    ) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   const submitUser = async (data: any, id: number | string) => {
     const submitUserURL = process.env.CSR_API_URI + '/users/' + id;

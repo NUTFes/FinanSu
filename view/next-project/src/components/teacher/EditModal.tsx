@@ -92,14 +92,14 @@ export default function FundInformationEditModal(props: ModalProps) {
 
   const handler =
     (input: string) =>
-      (
-        e:
-          | React.ChangeEvent<HTMLInputElement>
-          | React.ChangeEvent<HTMLTextAreaElement>
-          | React.ChangeEvent<HTMLSelectElement>,
-      ) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLTextAreaElement>
+        | React.ChangeEvent<HTMLSelectElement>,
+    ) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   const update = async (data: any, id: number | string, is_black: string) => {
     if (is_black == 'true') {

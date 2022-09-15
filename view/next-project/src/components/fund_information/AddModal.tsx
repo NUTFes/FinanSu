@@ -103,37 +103,76 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   // 学科別教員リストの用意
   // // 電気電子情報
-  const electricalTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 1), [props.teachersInformation]);
+  const electricalTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 1),
+    [props.teachersInformation],
+  );
   // // 生物
-  const biologicalTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 2), [props.teachersInformation]);
+  const biologicalTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 2),
+    [props.teachersInformation],
+  );
   // // 機械
-  const machineTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 3), [props.teachersInformation]);
+  const machineTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 3),
+    [props.teachersInformation],
+  );
   // // 物質
-  const materialTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 4), [props.teachersInformation]);
+  const materialTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 4),
+    [props.teachersInformation],
+  );
   // // 環境社会基盤
-  const environmentalTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 5), [props.teachersInformation]);
+  const environmentalTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 5),
+    [props.teachersInformation],
+  );
   // // 情報・経営
-  const informationManagementTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 6), [props.teachersInformation]);
+  const informationManagementTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 6),
+    [props.teachersInformation],
+  );
   // // 基盤共通
-  const commonEducationTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 7), [props.teachersInformation]);
+  const commonEducationTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 7),
+    [props.teachersInformation],
+  );
   // // 原子力
-  const nuclearTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 8), [props.teachersInformation]);
+  const nuclearTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 8),
+    [props.teachersInformation],
+  );
   // // 技学イノベ
-  const technologyInovationTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 9), [props.teachersInformation]);
+  const technologyInovationTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 9),
+    [props.teachersInformation],
+  );
   // // システム安全
-  const systemSafetyTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 10), [props.teachersInformation]);
+  const systemSafetyTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 10),
+    [props.teachersInformation],
+  );
   // // 技術支援
-  const technologySupportTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 11), [props.teachersInformation]);
+  const technologySupportTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 11),
+    [props.teachersInformation],
+  );
   // // 産学融合
-  const industryAcademiaFusionTeachers: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 12), [props.teachersInformation]);
+  const industryAcademiaFusionTeachers: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 12),
+    [props.teachersInformation],
+  );
   // // 学長・事務
-  const presidentClericals: Teacher[] = useMemo(() => props.teachersInformation.filter(teacher => teacher.department_id === 13), [props.teachersInformation]);
+  const presidentClericals: Teacher[] = useMemo(
+    () => props.teachersInformation.filter((teacher) => teacher.department_id === 13),
+    [props.teachersInformation],
+  );
 
   const handler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   const addFundInformation = async (data: any) => {
     const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
@@ -220,7 +259,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                     {formData.department_id == 9 &&
                       selectTeacherContent(technologyInovationTeachers)}
                     {formData.department_id == 10 && selectTeacherContent(systemSafetyTeachers)}
-                    {formData.department_id == 11 && selectTeacherContent(technologySupportTeachers)}
+                    {formData.department_id == 11 &&
+                      selectTeacherContent(technologySupportTeachers)}
                     {formData.department_id == 12 &&
                       selectTeacherContent(industryAcademiaFusionTeachers)}
                     {formData.department_id == 13 && selectTeacherContent(presidentClericals)}

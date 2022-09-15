@@ -46,13 +46,13 @@ export default function AddModal(props: ModalProps) {
 
   const handler =
     (stepNumber: number, input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        props.setFormDataList(
-          props.formDataList.map((formData: PurchaseItem) =>
-            formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
-          ),
-        );
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      props.setFormDataList(
+        props.formDataList.map((formData: PurchaseItem) =>
+          formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
+        ),
+      );
+    };
 
   const addPurchaseItem = async (data: PurchaseItem[]) => {
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';

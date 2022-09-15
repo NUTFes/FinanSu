@@ -31,16 +31,16 @@ type GlobalContextType = State & {
 
 type Action =
   | {
-    type: 'SET_USER';
-    user: User;
-  }
+      type: 'SET_USER';
+      user: User;
+    }
   | {
-    type: 'SET_IS_SIGN_IN';
-    isSignIn: boolean;
-  }
+      type: 'SET_IS_SIGN_IN';
+      isSignIn: boolean;
+    }
   | {
-    type: 'CLEAR_GLOBAL_FIELDS';
-  };
+      type: 'CLEAR_GLOBAL_FIELDS';
+    };
 
 const initialState: State = {
   user: {} as User,

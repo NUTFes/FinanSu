@@ -87,7 +87,8 @@ export default function EditModal(props: ModalProps) {
 
   // purchase_reportに紐づくpurchase_itemsを取得
   const getPurchaseItems = useCallback(async () => {
-    const getPurchaseOrderViewURL = process.env.CSR_API_URI + '/get_purchasereports_for_view/' + props.purchaseReportId;
+    const getPurchaseOrderViewURL =
+      process.env.CSR_API_URI + '/get_purchasereports_for_view/' + props.purchaseReportId;
 
     const purchaseOrderViewRes: PurchaseRecordView = await get(getPurchaseOrderViewURL);
     let initFormDataList = [];
@@ -121,20 +122,20 @@ export default function EditModal(props: ModalProps) {
   // 購入報告用のhandler
   const formDataHandler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   // 購入物品用のhandler
   const formDataListHandler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormDataList(
-          formDataList.map((formData: PurchaseItem) =>
-            formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
-          ),
-        );
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormDataList(
+        formDataList.map((formData: PurchaseItem) =>
+          formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
+        ),
+      );
+    };
 
   // finance_checkのtrue,falseを切り替え
   const isFinanceCheckHandler = (purchaseItemId: number, finance_check: boolean) => {
