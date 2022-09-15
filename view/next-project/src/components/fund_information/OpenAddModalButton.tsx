@@ -5,7 +5,6 @@ import { useState } from 'react';
 import theme from '@assets/theme';
 import AddModal from '@components/fund_information/AddModal';
 
-
 interface TeachersInformation {
   id: number;
   name: string;

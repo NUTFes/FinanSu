@@ -4,9 +4,6 @@ import { RiAddCircleLine } from 'react-icons/ri';
 
 import { PrimaryButton } from '@components/common';
 
-
-
-
 interface Props {
   className?: string;
   onClick?: () => void;

@@ -23,7 +23,6 @@ import { get, del } from '@api/api_methods';
 import theme from '@assets/theme';
 import { RedButton } from '@components/common';
 
-
 interface Teacher {
   id: number;
   name: string;

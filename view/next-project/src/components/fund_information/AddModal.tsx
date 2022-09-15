@@ -24,9 +24,6 @@ import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { useGlobalContext } from '@components/global/context';
 
-
-
-
 interface Department {
   id: number;
   name: string;

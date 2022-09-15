@@ -23,8 +23,6 @@ import LoadingButton from '@components/common/LoadingButton';
 import Password from '@components/common/Password';
 import PasswordConfirmation from '@components/common/PasswordConfirmation';
 
-
-
 interface PostData {
   email: string;
   password: string;

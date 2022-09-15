@@ -18,8 +18,6 @@ import Email from '@components/common/Email';
 import LoadingButton from '@components/common/LoadingButton';
 import Password from '@components/common/Password';
 
-
-
 interface PostData {
   email: string;
   password: string;

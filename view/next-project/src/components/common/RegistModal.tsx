@@ -24,7 +24,6 @@ import { post } from '@api/budget';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 
-
 interface ModalProps {
   setShowModal: any;
   openModal: any;

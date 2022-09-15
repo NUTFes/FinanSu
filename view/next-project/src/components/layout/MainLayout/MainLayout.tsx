@@ -6,7 +6,6 @@ import { get_with_token } from '@api/api_methods';
 import Header from '@components/common/Header';
 import SideNav from '@components/common/SideNav';
 
-
 import s from './MainLayout.module.css';
 
 interface User {

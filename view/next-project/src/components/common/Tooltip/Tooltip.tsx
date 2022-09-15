@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 interface Props {
   text?: string;
   children?: React.ReactNode;

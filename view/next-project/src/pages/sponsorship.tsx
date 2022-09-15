@@ -1,15 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Spacer,
-  Select,
-} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
 import { Center, Box } from '@chakra-ui/react';
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
