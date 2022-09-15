@@ -1,5 +1,5 @@
-import React from 'react';
 import { Input, FormControl, FormErrorMessage } from '@chakra-ui/react';
+import React from 'react';
 
 interface Props {
   errors: any;

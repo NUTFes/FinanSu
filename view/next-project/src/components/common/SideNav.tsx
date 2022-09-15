@@ -1,9 +1,8 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import { MdOutlineDashboard, MdOutlineSavings } from 'react-icons/md';
-import { BiBuildings } from 'react-icons/bi';
-import { HiCurrencyDollar, HiOutlineShoppingCart, HiOutlineDocumentText } from 'react-icons/hi';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { HiOutlineShoppingCart, HiOutlineDocumentText } from 'react-icons/hi';
+import { MdOutlineSavings } from 'react-icons/md';
 
 interface LinkItemProps {
   name: string;

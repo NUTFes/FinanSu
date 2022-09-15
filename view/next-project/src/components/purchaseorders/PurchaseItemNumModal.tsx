@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
+import React, { useState } from 'react';
+
 import { post } from '@api/purchaseOrder';
-import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { Modal, Input, Select, PrimaryButton, CloseButton } from '@components/common';
-import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
+import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
+import { useUI } from '@components/ui/context';
 import { PurchaseOrder, PurchaseItem } from '@pages/purchaseorders';
 
 interface FormData {
@@ -40,9 +41,9 @@ export default function PurchaseItemNumModal() {
   const [purchaseOrderId, setPurchaseOrderId] = useState(1);
 
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
-    let initFormDataList = [];
+    const initFormDataList = [];
     for (let i = 0; i < purchaseItemNumArray.length; i++) {
-      let initFormData: PurchaseItem = {
+      const initFormData: PurchaseItem = {
         id: i + 1,
         item: '',
         price: 0,
@@ -76,9 +77,9 @@ export default function PurchaseItemNumModal() {
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
     const postRes: PurchaseOrder = await post(addPurchaseOrderUrl, data);
     const purchaseOrderId = postRes.id;
-    let initialPurchaseItemList = [];
+    const initialPurchaseItemList = [];
     for (let i = 0; i < Number(purchaseItemNum.value); i++) {
-      let initialPurchaseItem: PurchaseItem = {
+      const initialPurchaseItem: PurchaseItem = {
         id: i + 1,
         item: '',
         price: 0,

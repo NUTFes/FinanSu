@@ -1,14 +1,15 @@
+import clsx from 'clsx';
 import Head from 'next/head';
 import React, { useState } from 'react';
-import { useGlobalContext } from '@components/global/context';
+
 import { get } from '@api/api_methods';
-import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
-import DetailModal from '@components/purchaseorders/DetailModal';
-import MainLayout from '@components/layout/MainLayout';
-import clsx from 'clsx';
-import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import { Card, Title, Checkbox } from '@components/common';
+import { useGlobalContext } from '@components/global/context';
+import MainLayout from '@components/layout/MainLayout';
+import DetailModal from '@components/purchaseorders/DetailModal';
+import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 
 export interface User {
   id: number;
@@ -75,7 +76,7 @@ export default function PurchaseOrder(props: Props) {
   };
 
   const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
+    const datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(5, datetime.length - 10).replace('-', '/');
     return datetime2;
   };

@@ -14,13 +14,15 @@ import {
   GridItem,
   Divider,
 } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
-import { get, del } from '@api/api_methods';
-import { RedButton } from '@components/common';
+import React, { useState, useEffect } from 'react';
 import { useCallback } from 'react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
+import { get, del } from '@api/api_methods';
+import theme from '@assets/theme';
+import { RedButton } from '@components/common';
+
 
 interface Teacher {
   id: number;

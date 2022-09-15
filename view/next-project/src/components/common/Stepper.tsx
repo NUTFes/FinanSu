@@ -1,5 +1,5 @@
-import React from 'react';
 import clsx from 'clsx';
+import React from 'react';
 
 interface Props {
   stepNum: number;
@@ -58,7 +58,7 @@ function Stepper(props: Props): JSX.Element {
             if (props.activeStep > step) {
               return (
                 <>
-                  <ActiveContent stepNum={step} />
+                  <ActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
                       'border-gray-300 flex-auto border-t-2 transition duration-500 ease-in-out',
@@ -67,19 +67,19 @@ function Stepper(props: Props): JSX.Element {
                 </>
               );
             } else {
-              return <ActiveContent stepNum={step} />;
+              return <ActiveContent stepNum={step} key={step} />;
             }
           } else if (step === stepNum) {
             if (props.activeStep >= step) {
-              return <ActiveContent stepNum={step} />;
+              return <ActiveContent stepNum={step} key={step} />;
             } else {
-              return <DeActiveContent stepNum={step} />;
+              return <DeActiveContent stepNum={step} key={step} />;
             }
           } else {
             if (props.activeStep >= step) {
               return (
                 <>
-                  <ActiveContent stepNum={step} />
+                  <ActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
                       'border-gray-300 flex-auto border-t-2 transition duration-500 ease-in-out',
@@ -90,7 +90,7 @@ function Stepper(props: Props): JSX.Element {
             } else {
               return (
                 <>
-                  <DeActiveContent stepNum={step} />
+                  <DeActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
                       'border-gray-300 flex-auto border-t-2 transition duration-500 ease-in-out',

@@ -17,11 +17,12 @@ import {
   RadioGroup,
   Stack,
 } from '@chakra-ui/react';
-import React, { useState, useEffect, useCallback } from 'react';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
+import React, { useState, useEffect, useCallback } from 'react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
 import { get, del } from '@api/api_methods';
+import theme from '@assets/theme';
 import { RedButton } from '@components/common';
 
 interface Department {

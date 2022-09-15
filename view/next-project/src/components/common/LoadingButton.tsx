@@ -1,6 +1,7 @@
-import { ChakraProvider, Button, propNames } from '@chakra-ui/react';
-import theme from '@assets/theme';
+import { ChakraProvider, Button } from '@chakra-ui/react';
 import * as React from 'react';
+
+import theme from '@assets/theme';
 
 interface Props {
   loadingText: string;

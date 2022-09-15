@@ -1,9 +1,10 @@
 import { Box } from '@chakra-ui/react';
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
 import { Center } from '@chakra-ui/react';
+
 import { get } from '@api/api_methods';
-import MainLayout from '@components/layout/MainLayout';
 import { AddButton, EditButton } from '@components/common';
+import MainLayout from '@components/layout/MainLayout';
 
 interface PurchaseItem {
   id: number;
@@ -32,13 +33,13 @@ export async function getServerSideProps({ params }: any) {
 export default function PurchaseItem(props: Props) {
   // 日付整形
   const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
+    const datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 5);
     return datetime2;
   };
 
   // 合計金額計算
-  let totalPriceArray: number[] = [];
+  const totalPriceArray: number[] = [];
   const calcItemTotalPrice = (quantity: number, price: number) => {
     // 合計金額の計算
     const totalPrice = quantity * price;

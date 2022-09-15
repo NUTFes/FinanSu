@@ -1,30 +1,25 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/common/EditButton';
-import RegistButton from '@components/common/RegistButton';
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  Button,
   Flex,
   Spacer,
   Select,
-  Icon,
-  Text,
-  createIcon,
 } from '@chakra-ui/react';
+import { Center, Box } from '@chakra-ui/react';
+import Head from 'next/head';
+import { RiAddCircleLine } from 'react-icons/ri';
 
 import theme from '@assets/theme';
-import { Center, Box } from '@chakra-ui/react';
-import { RiPencilFill, RiAddCircleLine } from 'react-icons/ri';
+import EditButton from '@components/common/EditButton';
 import Header from '@components/common/Header';
-import { getDomainLocale } from 'next/dist/shared/lib/router/router';
+import RegistButton from '@components/common/RegistButton';
+
+import type { NextPage } from 'next';
 
 interface activity {
   id: number;

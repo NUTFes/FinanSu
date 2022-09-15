@@ -1,10 +1,11 @@
-import React from 'react';
-import Router from 'next/router';
-import { del } from '@api/signOut';
-import { useGlobalContext } from '@components/global/context';
 import clsx from 'clsx';
+import Router from 'next/router';
+import React from 'react';
 import { RiAccountCircleFill } from 'react-icons/ri';
+
+import { del } from '@api/signOut';
 import { Dropdown } from '@components/common';
+import { useGlobalContext } from '@components/global/context';
 
 // sign out
 export const signOut = async () => {

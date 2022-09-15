@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
+
 import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
-import { PurchaseItem } from '@pages/purchasereports';
 import ReceiptModal from '@components/purchasereports/ReceiptModal';
+import { PurchaseItem } from '@pages/purchasereports';
 
 interface ModalProps {
   purchaseReportId: number;
   formDataList: PurchaseItem[];
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function PurchaseItemNumModal(props: ModalProps) {

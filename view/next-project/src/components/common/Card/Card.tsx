@@ -1,6 +1,6 @@
-import React from 'react';
 import clsx from 'clsx';
-import s from './Card.module.css';
+import React from 'react';
+
 
 interface Props {
   children?: React.ReactNode;

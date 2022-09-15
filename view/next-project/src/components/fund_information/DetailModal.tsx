@@ -12,11 +12,12 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import React, { FC, useEffect, useState, useCallback } from 'react';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
+import React, { FC, useEffect, useState, useCallback } from 'react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
 import { get } from '@api/api_methods';
+import theme from '@assets/theme';
 
 interface ModalProps {
   setShowModal: any;

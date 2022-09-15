@@ -1,6 +1,3 @@
-import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import {
   Box,
   Table,
@@ -18,13 +15,17 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
-import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
-import DisabledEditModalButton from '@components/fund_information/DisabledEditModalButton';
-import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
-import { put } from '@api/fundInformations';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+
 import { get, get_with_token } from '@api/api_methods';
+import { put } from '@api/fundInformations';
+import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
+import DisabledEditModalButton from '@components/fund_information/DisabledEditModalButton';
+import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 
 interface FundInformation {

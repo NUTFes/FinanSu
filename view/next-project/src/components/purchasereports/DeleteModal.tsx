@@ -12,12 +12,13 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
-import React, { FC } from 'react';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/RegistButton';
 import { useRouter } from 'next/router';
+import React, { FC } from 'react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
 import { del } from '@api/purchaseReport';
+import theme from '@assets/theme';
+import Button from '@components/common/RegistButton';
 
 interface ModalProps {
   setShowModal: any;

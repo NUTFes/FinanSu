@@ -1,9 +1,10 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
-import EditModal from '@components/teacher/EditModal';
 import { useState } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
+
+import theme from '@assets/theme';
+import EditModal from '@components/teacher/EditModal';
 
 interface Teacher {
   id: number;

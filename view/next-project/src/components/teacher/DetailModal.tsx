@@ -16,9 +16,10 @@ import {
   RadioGroup,
   Stack,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import theme from '@assets/theme';
+import React from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
+
+import theme from '@assets/theme';
 
 interface Teacher {
   id: number;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import EditModal from '@components/purchaseorders/EditModal';
+
 import { EditButton } from '@components/common';
+import EditModal from '@components/purchaseorders/EditModal';
 import { PurchaseItem } from '@pages/purchaseorders';
 
 interface Props {

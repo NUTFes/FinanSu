@@ -1,7 +1,8 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import { RiPencilFill } from 'react-icons/ri';
 import * as React from 'react';
 import { useState } from 'react';
+import { RiPencilFill } from 'react-icons/ri';
+
 import theme from '@assets/theme';
 import EditModal from '@components/budgets/EditModal';
 

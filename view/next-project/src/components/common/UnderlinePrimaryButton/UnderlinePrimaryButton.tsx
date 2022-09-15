@@ -1,6 +1,6 @@
-import React from 'react';
 import clsx from 'clsx';
-import s from './UnderlinePrimaryButton.module.css';
+import React from 'react';
+
 
 interface Props {
   className?: string;

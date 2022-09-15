@@ -1,13 +1,3 @@
-import React, { useState } from 'react';
-import Router from 'next/router';
-import { useForm } from 'react-hook-form';
-import { signUp } from '@api/signUp';
-import { get } from '@api/api_methods';
-import { post } from '@api/user';
-import LoadingButton from '@components/common/LoadingButton';
-import Email from '@components/common/Email';
-import Password from '@components/common/Password';
-import PasswordConfirmation from '@components/common/PasswordConfirmation';
 import {
   ChakraProvider,
   Center,
@@ -20,7 +10,20 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
+import Router from 'next/router';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { get } from '@api/api_methods';
+import { signUp } from '@api/signUp';
+import { post } from '@api/user';
 import theme from '@assets/theme';
+import Email from '@components/common/Email';
+import LoadingButton from '@components/common/LoadingButton';
+import Password from '@components/common/Password';
+import PasswordConfirmation from '@components/common/PasswordConfirmation';
+
+
 
 interface PostData {
   email: string;
@@ -41,11 +44,7 @@ interface Bureau {
   updated_at: string;
 }
 
-interface Props {
-  // bureaus: Bureau[];
-}
-
-export default function SignUpView(props: Props) {
+export default function SignUpView() {
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
 

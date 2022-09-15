@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
-import { get } from '@api/api_methods';
-import { post } from '@api/purchaseOrder';
+import React, { useState } from 'react';
+
 import * as purchaseItemAPI from '@api/purchaseItem';
+import { post } from '@api/purchaseOrder';
 import {
   Modal,
   OutlinePrimaryButton,
@@ -10,9 +10,9 @@ import {
   PrimaryButton,
   CloseButton,
 } from '@components/common';
-import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
+import { useUI } from '@components/ui/context';
 import { PurchaseItem } from '@pages/purchasereports';
 
 interface FormData {
@@ -50,7 +50,7 @@ export default function PurchaseReportItemNumModal() {
   // 購入報告は購入申請に紐づいているので、購入申請を追加
   const addPurchaseOrder = async () => {
     //年・月・日を取得する
-    var now = new Date();
+    const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
     const day = now.getDate();
@@ -80,7 +80,7 @@ export default function PurchaseReportItemNumModal() {
     // 購入物品数のpurchaseItemのリストを作成
     const updatePurchaseItemList = [];
     for (let i = 0; i < Number(purchaseItemNum.value); i++) {
-      let initialPurchaseItem: PurchaseItem = {
+      const initialPurchaseItem: PurchaseItem = {
         id: i + 1,
         item: '',
         price: 0,
@@ -101,7 +101,7 @@ export default function PurchaseReportItemNumModal() {
   // 購入報告の追加モーダルではPutをするので、ここではPostして購入物品を追加
   const addPurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
-      let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
+      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
       await purchaseItemAPI.post(updatePurchaseItemUrl, item);
     });
     // 購入報告の追加モーダルを開く

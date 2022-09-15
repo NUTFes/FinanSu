@@ -1,9 +1,12 @@
-import React from 'react';
-import Head from 'next/head';
-import Header from '@components/common/Header';
-import { get_with_token } from '@api/api_methods';
-import SideNav from '@components/common/SideNav';
 import clsx from 'clsx';
+import Head from 'next/head';
+import React from 'react';
+
+import { get_with_token } from '@api/api_methods';
+import Header from '@components/common/Header';
+import SideNav from '@components/common/SideNav';
+
+
 import s from './MainLayout.module.css';
 
 interface User {

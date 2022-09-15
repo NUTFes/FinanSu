@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { get } from '@api/api_methods';
-import { put as putPurchaseReport } from '@api/purchaseReport';
-import { put as putPurchaseItem } from '@api/purchaseItem';
-import { useGlobalContext } from '@components/global/context';
+import { useRouter } from 'next/router';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
+
+import { get } from '@api/api_methods';
+import { put as putPurchaseItem } from '@api/purchaseItem';
+import { put as putPurchaseReport } from '@api/purchaseReport';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -16,6 +16,7 @@ import {
   Stepper,
   Title,
 } from '@components/common';
+import { useGlobalContext } from '@components/global/context';
 import { PurchaseReport, PurchaseOrder, PurchaseItem, User } from '@pages/purchasereports';
 
 interface PurchaseRecordView {
@@ -29,7 +30,7 @@ interface PurchaseRecordView {
 interface ModalProps {
   purchaseReportId: number;
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function EditModal(props: ModalProps) {
@@ -52,7 +53,7 @@ export default function EditModal(props: ModalProps) {
   const [isDone, setIsDone] = useState<boolean>(false);
 
   // 購入物品数だけステップを用意
-  let steps = [];
+  const steps = [];
   for (let i = 0; i < 1; i++) {
     steps.push({ label: '' });
   }
@@ -91,10 +92,10 @@ export default function EditModal(props: ModalProps) {
       process.env.CSR_API_URI + '/get_purchasereports_for_view/' + props.purchaseReportId;
 
     const purchaseOrderViewRes: PurchaseRecordView = await get(getPurchaseOrderViewURL);
-    let initFormDataList = [];
+    const initFormDataList = [];
     for (let i = 0; i < purchaseOrderViewRes.purchaseitems.length; i++) {
       if (purchaseOrderViewRes.purchaseitems[i].finance_check) {
-        let initFormData: PurchaseItem = {
+        const initFormData: PurchaseItem = {
           id: purchaseOrderViewRes.purchaseitems[i].id,
           item: purchaseOrderViewRes.purchaseitems[i].item,
           price: purchaseOrderViewRes.purchaseitems[i].price,
@@ -168,13 +169,13 @@ export default function EditModal(props: ModalProps) {
   // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
-      let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
+      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
       await putPurchaseItem(updatePurchaseItemUrl, item);
     });
   };
 
   // 購入物品の情報
-  const content: Function = (data: PurchaseItem) => (
+  const content = (data: PurchaseItem) => (
     <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
       <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
         <div className={clsx('text-md flex items-center text-black-600')}>物品名</div>

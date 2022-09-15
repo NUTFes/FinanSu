@@ -1,9 +1,10 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
-import DeleteModal from '@components/teacher/DeleteModal';
 import { useState } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
+
+import theme from '@assets/theme';
+import DeleteModal from '@components/teacher/DeleteModal';
 
 interface Teacher {
   id: number;
