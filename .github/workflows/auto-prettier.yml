@@ -1,4 +1,5 @@
-on: push
+on:
+  push
   # pull_request:
   #   branches:
   #     - develop
@@ -8,14 +9,20 @@ env:
 
 jobs:
   prettier:
-    name: prettier
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v1
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          node-version: 12.x
-       - name: Prettier
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+
+      # - name: prettier
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 12.x
+      - name: Prettier
         run: docker compose run --rm view npm run format
       - name: Lint
         run: docker compose run --rm view npm run lint
