@@ -53,7 +53,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
         <thead>
           <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
             {tableColumns.map((tableColumn: string) => (
-              <th className={clsx('border-b-primary-1 px-6 pb-2')}>
+              <th key={tableColumn} className={clsx('border-b-primary-1 px-6 pb-2')}>
                 <div className={clsx('text-center text-sm text-black-600')}>{tableColumn}</div>
               </th>
             ))}

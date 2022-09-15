@@ -46,13 +46,13 @@ export default function AddModal(props: ModalProps) {
 
   const handler =
     (stepNumber: number, input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      props.setFormDataList(
-        props.formDataList.map((formData: PurchaseItem) =>
-          formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
-        ),
-      );
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        props.setFormDataList(
+          props.formDataList.map((formData: PurchaseItem) =>
+            formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
+          ),
+        );
+      };
 
   const addPurchaseItem = async (data: PurchaseItem[]) => {
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
@@ -126,7 +126,7 @@ export default function AddModal(props: ModalProps) {
         <thead>
           <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
             {tableColumns.map((tableColumn: string) => (
-              <th className={clsx('border-b-primary-1 px-6 pb-2')}>
+              <th key={tableColumn} className={clsx('border-b-primary-1 px-6 pb-2')}>
                 <div className={clsx('text-center text-sm text-black-600')}>{tableColumn}</div>
               </th>
             ))}
