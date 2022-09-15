@@ -17,7 +17,7 @@ import {
   RadioGroup,
   Stack,
 } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import theme from '@assets/theme';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -73,16 +73,17 @@ export default function DeleteModal(props: ModalProps) {
 
   const isBlack: string = props.teacher.is_black.toString();
 
+  // teacherを取得
+  const getTeacher = useCallback(async () => {
+    const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.id;
+    setTeacher(await get(getTeacherURL));
+  }, [props.id, setTeacher]);
+
   useEffect(() => {
     if (router.isReady) {
-      // teacherを取得
-      const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.id;
-      const getTeacher = async (url: string) => {
-        setTeacher(await get(url));
-      };
-      getTeacher(getTeacherURL);
+      getTeacher();
     }
-  }, [router]);
+  }, [router, getTeacher]);
 
   const deleteTeacher = async (id: number | string) => {
     const deleteURL = process.env.CSR_API_URI + '/teachers/' + id;

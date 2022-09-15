@@ -17,7 +17,7 @@ import {
   Radio,
   Stack,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import theme from '@assets/theme';
 import { get } from '@api/api_methods';
 import { put } from '@api/teachers';
@@ -78,26 +78,28 @@ export default function FundInformationEditModal(props: ModalProps) {
   const [formData, setFormData] = useState<FormData>(initFormData);
   const [isBlack, setIsBlack] = useState<string>(props.teacher.is_black.toString());
 
+  // teacherを取得
+  const getFormData = useCallback(async () => {
+    const getFormDataURL = process.env.CSR_API_URI + '/teachers/' + props.id;
+    setFormData(await get(getFormDataURL));
+  }, [props.id, setFormData]);
+
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/teachers/' + props.id;
-      const getFormData = async (url: string) => {
-        setFormData(await get(url));
-      };
-      getFormData(getFormDataUrl);
+      getFormData();
     }
-  }, [router]);
+  }, [router, getFormData]);
 
   const handler =
     (input: string) =>
-    (
-      e:
-        | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
-        | React.ChangeEvent<HTMLSelectElement>,
-    ) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
+      (
+        e:
+          | React.ChangeEvent<HTMLInputElement>
+          | React.ChangeEvent<HTMLTextAreaElement>
+          | React.ChangeEvent<HTMLSelectElement>,
+      ) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
 
   const update = async (data: any, id: number | string, is_black: string) => {
     if (is_black == 'true') {
