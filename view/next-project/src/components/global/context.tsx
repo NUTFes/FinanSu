@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, {
   FC,
   useCallback,
@@ -5,10 +6,9 @@ import React, {
   useReducer,
   useContext,
   createContext,
-  useState,
   useEffect,
 } from 'react';
-import { useRouter } from 'next/router';
+
 import { get_with_token } from '@api/api_methods';
 
 interface User {

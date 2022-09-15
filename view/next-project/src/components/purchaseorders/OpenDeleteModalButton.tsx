@@ -1,7 +1,8 @@
 import React from 'react';
-import DetailModal from '@components/purchaseorders/DetailModal';
 import { useState } from 'react';
+
 import { DeleteButton } from '@components/common';
+import DetailModal from '@components/purchaseorders/DetailModal';
 import { PurchaseOrderView } from '@pages/purchaseorders';
 
 interface Props {

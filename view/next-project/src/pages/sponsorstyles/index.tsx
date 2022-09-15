@@ -1,14 +1,15 @@
-import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/common/EditButton';
-import RegistButton from '@components/common/RegistButton';
 import { Table, Thead, Tbody, Th, Td, Tr, Flex, Spacer, Select } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import { Center, Box } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/common/Header';
-import { get } from '@api/sponsorship';
+import Head from 'next/head';
 import { useState } from 'react';
+import { RiAddCircleLine } from 'react-icons/ri';
+
+import { get } from '@api/sponsorship';
+import theme from '@assets/theme';
+import EditButton from '@components/common/EditButton';
+import Header from '@components/common/Header';
+import RegistButton from '@components/common/RegistButton';
 
 interface SponsorStyle {
   id: number;

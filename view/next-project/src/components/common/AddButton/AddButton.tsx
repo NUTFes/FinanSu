@@ -1,8 +1,8 @@
-import React from 'react';
 import clsx from 'clsx';
-import s from './AddButton.module.css';
-import { PrimaryButton } from '@components/common';
+import React from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
+
+import { PrimaryButton } from '@components/common';
 
 interface Props {
   className?: string;

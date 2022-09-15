@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import {
   Box,
   Table,
@@ -15,11 +14,12 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
+import { RiAddCircleLine } from 'react-icons/ri';
+
+import { get } from '@api/budget';
 import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/budgets/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/budgets/OpenEditModalButton';
-import { RiAddCircleLine } from 'react-icons/ri';
-import { get } from '@api/budget';
 import MainLayout from '@components/layout/MainLayout';
 
 interface Budget {

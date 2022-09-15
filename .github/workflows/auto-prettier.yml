@@ -19,7 +19,7 @@ jobs:
       - name: Prettier
         run: docker compose run --rm view npm install && docker compose run --rm view npm run format
       - name: Lint
-        run: docker compose run --rm view npm run lint
+        run: docker compose run --rm view npm run lint:fix
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
           commit_message: fix prettier from workflow

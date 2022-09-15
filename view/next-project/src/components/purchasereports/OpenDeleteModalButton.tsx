@@ -1,7 +1,8 @@
 import React from 'react';
-import DeleteModal from '@components/purchasereports/DeleteModal';
 import { useState } from 'react';
+
 import { DeleteButton } from '@components/common';
+import DeleteModal from '@components/purchasereports/DeleteModal';
 
 interface Props {
   children?: React.ReactNode;

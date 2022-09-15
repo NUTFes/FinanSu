@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { get } from '@api/api_methods';
-import Head from 'next/head';
-import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
-import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
-import DetailModal from '@components/purchasereports/DetailModal';
-import MainLayout from '@components/layout/MainLayout';
 import clsx from 'clsx';
+import Head from 'next/head';
+import React, { useState } from 'react';
+
+import { get } from '@api/api_methods';
 import { Card, Title, Checkbox } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
+import MainLayout from '@components/layout/MainLayout';
+import DetailModal from '@components/purchasereports/DetailModal';
+import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
 
 // 他コンポーネントで使うためにexport
 export interface PurchaseReport {
@@ -96,7 +97,7 @@ export default function PurchaseReport(props: Props) {
 
   // 購入報告
   const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(() => {
-    let initPurchaseReportList = [];
+    const initPurchaseReportList = [];
     for (let i = 0; i < props.purchaseReportView.length; i++) {
       initPurchaseReportList.push(props.purchaseReportView[i].purchasereport);
     }
@@ -104,7 +105,7 @@ export default function PurchaseReport(props: Props) {
   });
   // 購入申請
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
-    let initPurchaseOederList = [];
+    const initPurchaseOederList = [];
     for (let i = 0; i < props.purchaseReportView.length; i++) {
       initPurchaseOederList.push(props.purchaseReportView[i].purchaseorder);
     }
@@ -112,7 +113,7 @@ export default function PurchaseReport(props: Props) {
   });
   // 購入申請者
   const [orderUsers, setOrderUsers] = useState<User[]>(() => {
-    let initOederUserList = [];
+    const initOederUserList = [];
     for (let i = 0; i < props.purchaseReportView.length; i++) {
       initOederUserList.push(props.purchaseReportView[i].order_user);
     }
@@ -121,7 +122,7 @@ export default function PurchaseReport(props: Props) {
 
   // 日付のフォーマットを変更
   const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
+    const datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(5, datetime.length - 10).replace('-', '/');
     return datetime2;
   };

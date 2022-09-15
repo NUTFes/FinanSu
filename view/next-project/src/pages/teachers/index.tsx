@@ -1,6 +1,3 @@
-import Head from 'next/head';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import {
   Box,
   Text,
@@ -19,12 +16,15 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import { Center } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+
 import { get, get_with_token } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
-import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
-import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
 import DetailModal from '@components/teacher/DetailModal';
+import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
 
 interface Teacher {
   id: number;

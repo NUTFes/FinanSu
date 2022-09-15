@@ -1,12 +1,13 @@
-import React from 'react';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
+import { useRouter } from 'next/router';
+import React from 'react';
+
+import { Modal, PrimaryButton, CloseButton } from '@components/common';
 
 interface ModalProps {
   purchaseReportId: number;
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function ReceiptModal(props: ModalProps) {

@@ -1,10 +1,11 @@
+import { ChakraProvider, Center, Flex, Box, Heading, Link } from '@chakra-ui/react';
 import { useState } from 'react';
-import LoginLayout from '@components/layout/LoginLayout';
+
+import { get } from '@api/api_methods';
+import theme from '@assets/theme';
 import SignInView from '@components/auth/SignInView';
 import SignUpView from '@components/auth/SignUpView';
-import { ChakraProvider, Center, Flex, Box, Heading, Link, Spacer } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import { get } from '@api/api_methods';
+import LoginLayout from '@components/layout/LoginLayout';
 
 interface Department {
   id: number;
@@ -28,7 +29,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home(props: Props) {
-  let [isMember, setIsMember] = useState(true);
+  const [isMember, setIsMember] = useState(true);
   const cardContent = (isMember: boolean) => {
     if (isMember) {
       return (

@@ -1,7 +1,8 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
 import { RiPencilFill } from 'react-icons/ri';
+
+import theme from '@assets/theme';
 
 interface Props {
   width?: string;

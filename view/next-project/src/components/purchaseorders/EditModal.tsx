@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { put } from '@api/purchaseItem';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
+
+import { put } from '@api/purchaseItem';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -18,7 +19,7 @@ interface ModalProps {
   purchaseOrderId: number;
   purchaseItems: PurchaseItem[];
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function EditModal(props: ModalProps) {
@@ -40,7 +41,7 @@ export default function EditModal(props: ModalProps) {
   const [isDone, setIsDone] = useState<boolean>(false);
 
   // 購入物品数だけステップを用意
-  let steps = [];
+  const steps = [];
   for (let i = 0; i < 1; i++) {
     steps.push({ label: '' });
   }
@@ -78,13 +79,13 @@ export default function EditModal(props: ModalProps) {
   // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
-      let updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
+      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
       await put(updatePurchaseItemUrl, item);
     });
   };
 
   // 購入物品の情報
-  const content: Function = (data: PurchaseItem) => (
+  const content = (data: PurchaseItem) => (
     <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
       <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
         <div className={clsx('text-md flex items-center text-black-600')}>物品名</div>

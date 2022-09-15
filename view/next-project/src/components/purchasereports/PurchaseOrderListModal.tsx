@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
+
 import { get } from '@api/api_methods';
 import { Modal, Radio, PrimaryButton, OutlinePrimaryButton, CloseButton } from '@components/common';
 import { useUI } from '@components/ui/context';
+
 import PurchaseReportAddModal from './PurchaseReportAddModal';
 
 interface PurchaseOrder {
@@ -70,7 +72,7 @@ export default function PurchaseItemNumModal() {
 
   // 日付のフォーマットを変更
   const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
+    const datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 10);
     return datetime2;
   };
@@ -78,7 +80,7 @@ export default function PurchaseItemNumModal() {
   // 合計金額を計算
   const calcTotalFee = (purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
-    for (let i: number = 0; i < purchaseItems.length; i++) {
+    for (let i = 0; i < purchaseItems.length; i++) {
       totalFee += purchaseItems[i].price * purchaseItems[i].quantity;
     }
     return totalFee;

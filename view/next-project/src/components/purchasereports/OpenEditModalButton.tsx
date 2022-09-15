@@ -1,7 +1,8 @@
 import * as React from 'react';
-import EditModal from '@components/purchasereports/EditModal';
 import { useState } from 'react';
+
 import { EditButton } from '@components/common';
+import EditModal from '@components/purchasereports/EditModal';
 
 interface Props {
   children?: React.ReactNode;

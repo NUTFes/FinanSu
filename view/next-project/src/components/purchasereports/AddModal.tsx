@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
+import React, { useState } from 'react';
+
 import { Modal, PullDown, PrimaryButton, CloseButton } from '@components/common';
-import { useUI } from '@components/ui/context';
 import { useGlobalContext } from '@components/global/context';
+import { useUI } from '@components/ui/context';
 
 export default function PurchaseItemNumModal() {
   const state = useGlobalContext();

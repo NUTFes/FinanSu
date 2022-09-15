@@ -1,10 +1,3 @@
-import React, { FC, useState } from 'react';
-import Router from 'next/router';
-import { useForm } from 'react-hook-form';
-import { signIn } from '@api/signIn';
-import LoadingButton from '@components/common/LoadingButton';
-import Email from '@components/common/Email';
-import Password from '@components/common/Password';
 import {
   ChakraProvider,
   Center,
@@ -15,7 +8,15 @@ import {
   GridItem,
   Button,
 } from '@chakra-ui/react';
+import Router from 'next/router';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { signIn } from '@api/signIn';
 import theme from '@assets/theme';
+import Email from '@components/common/Email';
+import LoadingButton from '@components/common/LoadingButton';
+import Password from '@components/common/Password';
 
 interface PostData {
   email: string;

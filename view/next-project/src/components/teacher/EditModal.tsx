@@ -17,12 +17,13 @@ import {
   Radio,
   Stack,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState, useCallback } from 'react';
-import theme from '@assets/theme';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
 import { get } from '@api/api_methods';
 import { put } from '@api/teachers';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import { useRouter } from 'next/router';
+import theme from '@assets/theme';
 import { PrimaryButton } from '@components/common';
 
 interface Department {

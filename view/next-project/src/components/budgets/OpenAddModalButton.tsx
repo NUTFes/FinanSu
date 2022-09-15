@@ -1,8 +1,9 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
-import AddModal from '@components/budgets/AddModal';
 import { useState } from 'react';
+
+import theme from '@assets/theme';
+import AddModal from '@components/budgets/AddModal';
 
 interface Props {
   width?: string;

@@ -1,6 +1,3 @@
-import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import {
   Box,
   ChakraProvider,
@@ -17,11 +14,15 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+
+import { get, get_with_token } from '@api/api_methods';
 import theme from '@assets/theme';
 import Header from '@components/common/Header';
-import OpenEditModalButton from '@components/users/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
-import { get, get_with_token } from '@api/api_methods';
+import OpenEditModalButton from '@components/users/OpenEditModalButton';
 
 interface Role {
   id: number;

@@ -2,12 +2,10 @@ import {
   ChakraProvider,
   Select,
   Center,
-  Text,
   Input,
   Flex,
   Box,
   Spacer,
-  VStack,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -16,14 +14,15 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import { post } from '@api/fundInformations';
-import React, { FC, useState, useMemo } from 'react';
-import { useGlobalContext } from '@components/global/context';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import RegistButton from '@components/common/RegistButton';
 import { useRouter } from 'next/router';
+import React, { FC, useState, useMemo } from 'react';
 import { useEffect } from 'react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
+import { post } from '@api/fundInformations';
+import theme from '@assets/theme';
+import RegistButton from '@components/common/RegistButton';
+import { useGlobalContext } from '@components/global/context';
 
 interface Department {
   id: number;

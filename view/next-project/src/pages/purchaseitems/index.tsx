@@ -1,6 +1,4 @@
-import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/common/EditButton';
+import { Box } from '@chakra-ui/react';
 import {
   Table,
   Thead,
@@ -14,11 +12,11 @@ import {
   Spacer,
   Select,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import { Center } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/common/Header';
+
 import { get } from '@api/purchaseOrder';
+import EditButton from '@components/common/EditButton';
 import MainLayout from '@components/layout/MainLayout';
 
 interface PurchaseItem {
@@ -48,13 +46,13 @@ export async function getServerSideProps({ params }: any) {
 export default function PurchaseItem(props: Props) {
   // 日付整形
   const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
+    const datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 5);
     return datetime2;
   };
 
   // 合計金額計算
-  let totalPriceArray: number[] = [];
+  const totalPriceArray: number[] = [];
   const calcItemTotalPrice = (quantity: number, price: number) => {
     // 合計金額の計算
     const totalPrice = quantity * price;

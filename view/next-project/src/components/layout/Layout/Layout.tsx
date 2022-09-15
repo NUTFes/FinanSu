@@ -1,10 +1,12 @@
 import React from 'react';
-import { useUI } from '@components/ui/context';
-import s from './Layout.module.css';
+
 import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
+import { useUI } from '@components/ui/context';
+
+import s from './Layout.module.css';
 
 const ModalView: React.FC<{ modalView: string; closeModal(): any }> = ({
   modalView,

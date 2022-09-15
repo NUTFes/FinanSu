@@ -1,12 +1,14 @@
-import Head from 'next/head';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { ChakraProvider } from '@chakra-ui/react';
-import type { AppProps } from 'next/app';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+
 import 'tailwindcss/tailwind.css';
-import { ManagedUIContext } from '@components/ui/context';
 import { GlobalStateProvider, useGlobalContext } from '@components/global/context';
 import Layout from '@components/layout/Layout';
+import { ManagedUIContext } from '@components/ui/context';
+
+import type { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { RiAccountCircleFill, RiArrowDropDownLine } from 'react-icons/ri';
 import clsx from 'clsx';
+import React, { useRef, useState, useEffect } from 'react';
+import { RiArrowDropDownLine } from 'react-icons/ri';
 
 interface Props {
   title: string;

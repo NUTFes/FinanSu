@@ -1,15 +1,16 @@
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
-import { useRouter } from 'next/router';
+
 import { del } from '@api/api_methods';
 import { Modal, Checkbox, Tooltip, RedButton } from '@components/common';
-import clsx from 'clsx';
 import { useGlobalContext } from '@components/global/context';
 import { PurchaseOrderView } from '@pages/purchaseorders';
 
 interface ModalProps {
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
   id: number | string;
   purchaseOrderViewItem: PurchaseOrderView;
@@ -25,7 +26,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   const router = useRouter();
 
   const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
+    const datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(0, datetime.length - 10);
     return datetime2;
   };

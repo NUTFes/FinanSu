@@ -1,6 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
-import s from './Tooltip.module.css';
 
 interface Props {
   text?: string;

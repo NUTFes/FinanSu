@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
-import { post } from '@api/purchaseItem';
 import { RiArrowDropRightLine } from 'react-icons/ri';
+
+import { post } from '@api/purchaseItem';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -20,7 +21,7 @@ interface ModalProps {
   isOpen: boolean;
   numModalOnClose: () => void;
   onClose: () => void;
-  setFormDataList: Function;
+  setFormDataList: (formDataList: PurchaseItem[]) => void;
   formDataList: PurchaseItem[];
 }
 
@@ -69,7 +70,7 @@ export default function AddModal(props: ModalProps) {
   };
 
   // 購入物品の情報
-  const content: Function = (index: number, data: PurchaseItem) => (
+  const content = (index: number, data: PurchaseItem) => (
     <>
       <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-2 mr-2 grid')}>
@@ -216,7 +217,7 @@ export default function AddModal(props: ModalProps) {
   };
 
   // 購入物品数だけステップを用意
-  let steps = [];
+  const steps = [];
   for (let i = 0; i < props.purchaseItemNum.value; i++) {
     steps.push({ label: '' });
   }
