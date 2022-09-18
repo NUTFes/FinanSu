@@ -1,7 +1,12 @@
-# finansu
+# FinanSu
 
-## 初期コマンド
+## setting up
 ```
 docker compose build
 docker compose up
 ```
+or 
+```
+make build
+```
+
