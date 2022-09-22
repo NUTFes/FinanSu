@@ -15,11 +15,17 @@ jobs:
         with:
           # Make sure the actual branch is checked out when running on pull requests
           ref: ${{ github.head_ref }}
-
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+      - name: Use Node.js
+        run: npm install
       - name: Prettier
-        run: docker compose run --rm view npm install && docker compose run --rm view npm run format
+        run: npm run format
       - name: Lint
-        run: docker compose run --rm view npm run lint:fix
+        run: npm run lint:fix
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
-          commit_message: fix prettier from workflow
+          commit_message: formatted by workflow
