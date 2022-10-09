@@ -27,42 +27,7 @@ import OpenAddModalButton from '@components/fund_information/OpenAddModalButton'
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
-
-interface FundInformation {
-  id: number;
-  user_id: number;
-  teacher_id: number;
-  price: number;
-  remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import { FundInformation, Teacher, User, Department } from '@type/common';
 
 interface FundInformationView {
   fund_information: FundInformation;
@@ -115,54 +80,80 @@ export default function FundInformations(props: Props) {
     {
       id: 1,
       name: '電気電子情報',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 2,
       name: '生物機能',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 3,
       name: '機械創造',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 4,
       name: '物質材料',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 5,
       name: '環境社会基盤',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 6,
       name: '情報・経営システム',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 7,
       name: '基盤共通教育',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 8,
       name: '原子力システム安全',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 9,
       name: '技術科学イノベーション',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 10,
       name: 'システム安全',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 11,
       name: '技術支援',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 12,
       name: '産学融合',
+      created_at: '',
+      updated_at: '',
     },
     {
       id: 13,
       name: '学長・事務',
+      created_at: '',
+      updated_at: '',
     },
   ];
 
@@ -178,6 +169,8 @@ export default function FundInformations(props: Props) {
     name: '',
     bureau_id: 1,
     role_id: 1,
+    created_at: '',
+    updated_at: '',
   });
 
   // ログイン中のユーザの権限

@@ -6,7 +6,8 @@
       "@components/*": ["src/components/*"],
       "@api/*": ["src/utils/api/*"],
       "@utils/*": ["src/utils/*"],
-      "@pages/*": ["src/pages//*"]
+      "@pages/*": ["src/pages//*"],
+      "@type/*": ["src/type/*"]
     }
   }
 }
