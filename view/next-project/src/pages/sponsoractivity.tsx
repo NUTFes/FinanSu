@@ -28,6 +28,17 @@ import { getDomainLocale } from 'next/dist/shared/lib/router/router';
 import { get } from '@api/api_methods';
 import { useState } from 'react';
 
+interface Sponsor {
+  id: number;
+  name: string;
+  tel: string;
+  email: string;
+  repersentative: string;
+  address: string;
+  created_at: string;
+  updated_at: string;
+}
+
 interface SponsorActivity {
   id: number;
   sponsor_id: number;
@@ -37,9 +48,36 @@ interface SponsorActivity {
   created_at: string;
   updated_at: string;
 }
-interface Props {
-  sponsoractivities: SponsorActivity[];
+
+interface SponsorStyle {
+  id: number;
+  is_color: boolean;
+  price: number;
+  scale: string;
+  created_at: string;
+  updated_at: string;
 }
+
+interface User {
+  id: number;
+  name: string;
+  role_id: number;
+  bureau_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Props {
+  sponsoractivities: SponsorActivities[];
+}
+
+interface SponsorActivities {
+  sponsor: Sponsor;
+  sponsor_activity: SponsorActivity;
+  sponsor_style: SponsorStyle;
+  user: User;
+}
+
 export const getServerSideProps = async () => {
   const getSponsoractivitiesUrl = process.env.SSR_API_URI + '/get_activities_for_view';
   const sponsoractivitiesRes = await get(getSponsoractivitiesUrl);
@@ -51,7 +89,10 @@ export const getServerSideProps = async () => {
 };
 
 export default function SponsorList(props: Props) {
-  console.log(props);
+  console.log(props.sponsoractivities[0]);
+  const [sponsorActivities, setSponsorActivities] = useState<SponsorActivities[]>(
+    props.sponsoractivities,
+  );
   return (
     <ChakraProvider theme={theme}>
       <Head>
@@ -135,23 +176,27 @@ export default function SponsorList(props: Props) {
                 </Tr>
               </Thead>
               <Tbody>
-                {props.sponsoractivities.map((activityItem) => (
-                  <Tr key={activityItem.id}>
+                {sponsorActivities.map((activityItem) => (
+                  <Tr key={activityItem.sponsor_activity.id}>
                     <Td>
-                      <Center color='black.300'>{activityItem.id}</Center>
+                      <Center color='black.300'>{activityItem.sponsor_activity.id}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{activityItem.sponsor_id}</Center>
+                      <Center color='black.300'>{activityItem.sponsor.name}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{activityItem.sponsor_style_id}</Center>
+                      <Center color='black.300'>{activityItem.sponsor_style.scale}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{activityItem.user_id}</Center>
+                      <Center color='black.300'>{activityItem.user.name}</Center>
                     </Td>
                     <Td>
-                      {activityItem.is_done && <Center color='black.300'>回収完了</Center>}
-                      {!activityItem.is_done && <Center color='black.300'>未回収</Center>}
+                      {activityItem.sponsor_activity.is_done && (
+                        <Center color='black.300'>回収完了</Center>
+                      )}
+                      {!activityItem.sponsor_activity.is_done && (
+                        <Center color='black.300'>未回収</Center>
+                      )}
                     </Td>
                     <Td>
                       <Center>
