@@ -393,7 +393,7 @@ export default function FundInformations(props: Props) {
                   fundInformationView.map((fundViewItem: FundInformationView, index) => (
                     <Tr
                       key={fundViewItem.fund_information.id}
-                      onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
+                      // onChange={submit(fundViewItem.fund_information.id, fundInformation[index])}
                     >
                       <Td>
                         <Center color='black.300'>
