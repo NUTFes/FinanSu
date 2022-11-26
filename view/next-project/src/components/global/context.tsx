@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, {
+import {
   FC,
   useCallback,
   useMemo,
@@ -7,6 +7,7 @@ import React, {
   useContext,
   createContext,
   useEffect,
+  ReactNode,
 } from 'react';
 
 import { get_with_token } from '@api/api_methods';
@@ -16,6 +17,10 @@ interface User {
   name: string;
   bureau_id: number;
   role_id: number;
+}
+
+interface Props {
+  children?: ReactNode;
 }
 
 export type State = {
@@ -72,7 +77,7 @@ const GlobalStateReducer = (state: State, action: Action): State => {
   }
 };
 
-export const GlobalStateProvider: FC = (props) => {
+export const GlobalStateProvider: FC<Props> = (props) => {
   const [state, dispatch] = useReducer(GlobalStateReducer, initialState);
   const router = useRouter();
 

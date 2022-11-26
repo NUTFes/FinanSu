@@ -1,8 +1,12 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useMemo, createContext, useReducer, useContext, ReactNode } from 'react';
 
 export interface State {
   displayModal: boolean;
   modalView: string;
+}
+
+interface Props {
+  children?: ReactNode;
 }
 
 const initialState = {
@@ -28,7 +32,7 @@ type MODAL_VIEWS =
   | 'PURCHASE_ORDER_LIST_MODAL'
   | 'PURCHASE_REPORT_ITEM_NUM_MODAL';
 
-export const UIContext = React.createContext<State | any>(initialState);
+export const UIContext = createContext<State | any>(initialState);
 
 UIContext.displayName = 'UIContext';
 
@@ -55,8 +59,8 @@ function uiReducer(state: State, action: Action) {
   }
 }
 
-export const UIProvider: FC = (props) => {
-  const [state, dispatch] = React.useReducer(uiReducer, initialState);
+export const UIProvider: FC<Props> = (props) => {
+  const [state, dispatch] = useReducer(uiReducer, initialState);
 
   const openModal = useCallback(() => dispatch({ type: 'OPEN_MODAL' }), [dispatch]);
   const closeModal = useCallback(() => dispatch({ type: 'CLOSE_MODAL' }), [dispatch]);
@@ -80,11 +84,11 @@ export const UIProvider: FC = (props) => {
 };
 
 export const useUI = () => {
-  const context = React.useContext(UIContext);
+  const context = useContext(UIContext);
   if (context === undefined) {
     throw new Error(`useUI must be used within a UIProvider`);
   }
   return context;
 };
 
-export const ManagedUIContext: FC = ({ children }) => <UIProvider>{children}</UIProvider>;
+export const ManagedUIContext: FC<Props> = ({ children }) => <UIProvider>{children}</UIProvider>;
