@@ -123,7 +123,7 @@ export default function AddModal(props: ModalProps) {
   // 購入物品の確認用テーブル
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
     return (
-      <table className={clsx('border-collapse: collapse table-fixed')}>
+      <table className={clsx('table-fixed border-collapse')}>
         <thead>
           <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
             {tableColumns.map((tableColumn: string) => (

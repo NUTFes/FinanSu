@@ -165,7 +165,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <div
           className={clsx('w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1')}
         >
-          <table className={clsx('border-collapse: collapse w-full table-fixed')}>
+          <table className={clsx('w-full table-fixed border-collapse')}>
             <thead>
               <tr
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}

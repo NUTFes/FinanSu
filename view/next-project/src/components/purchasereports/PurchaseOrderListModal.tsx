@@ -106,7 +106,7 @@ export default function PurchaseItemNumModal() {
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
           <div className={clsx('w-100 mb-2 p-5')}>
-            <table className={clsx('border-collapse: collapse table-fixed')}>
+            <table className={clsx('table-fixed border-collapse')}>
               <thead>
                 <tr
                   className={clsx(
