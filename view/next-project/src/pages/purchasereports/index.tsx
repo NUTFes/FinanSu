@@ -179,7 +179,7 @@ export default function PurchaseReport(props: Props) {
           </div>
         </div>
         <div className={clsx('w-100 mb-2 p-5')}>
-          <table className={clsx('border-collapse: collapse mb-5 w-full table-fixed')}>
+          <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
             <thead>
               <tr
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
