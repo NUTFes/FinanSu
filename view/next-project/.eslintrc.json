@@ -70,7 +70,7 @@
   },
   "extends": [
     "plugin:react/recommended",
-    "standard",
+    // "standard",
     "prettier" // eslintとprettierの衝突回避
   ],
   "parser": "@typescript-eslint/parser",
