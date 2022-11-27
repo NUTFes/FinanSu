@@ -19,8 +19,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: npm
-          cache-dependency-path: view/next-project/package-lock.json
+          # cache: npm
+          # cache-dependency-path: view/next-project/package-lock.json
       - name: npm install
         working-directory: view/next-project
         run: npm install
