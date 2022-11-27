@@ -3,26 +3,26 @@
 export interface Budget {
   id: number;
   price: number;
-  year_id: number;
-  source_id: number;
-  created_at?: string;
-  updated_at?: string;
+  yearID: number;
+  sourceID: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // Source(予算の出所)
 export interface Source {
   id: number;
   name: string;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // Year(年度)
 export interface Year {
   id: number;
   year: number;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Purchase(購入関係)
@@ -34,32 +34,32 @@ export interface PurchaseItem {
   quantity: number;
   detail: string;
   url: string;
-  purchase_order_id: number;
-  finance_check: boolean;
-  created_at?: string;
-  updated_at?: string;
+  purchaseOrderID: number;
+  financeCheck: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 // // PurchaseOrder(購入申請)
 export interface PurchaseOrder {
   id: number;
   deadline: string;
-  user_id: number;
-  finance_check: boolean;
-  created_at?: string;
-  updated_at?: string;
+  userID: number;
+  financeCheck: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // PurchaseReport(購入報告)
 export interface PurchaseReport {
   id: number;
-  user_id: number;
+  userID: number;
   discount: number;
   addition: number;
-  finance_check: boolean;
+  financeCheck: boolean;
   remark: string;
-  purchase_order_id: number;
-  created_at?: string;
-  updated_at?: string;
+  purchaseOrderID: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Sponser(協賛関係)
@@ -67,21 +67,21 @@ export interface PurchaseReport {
 export interface SponserStyle {
   id: number;
   scale: string;
-  is_color: boolean;
+  isColor: boolean;
   price: number;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // Activity(協賛活動)
 export interface Activity {
   id: number;
-  sponser_style_id: number;
-  user_id: number;
-  is_color: boolean;
-  sponser_id: number;
-  created_at?: string;
-  updated_at?: string;
+  sponserStyleID: number;
+  userID: number;
+  isColor: boolean;
+  sponserID: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // Sponser(協賛企業)
@@ -92,22 +92,22 @@ export interface Sponser {
   email: string;
   address: string;
   representative: string;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // FundInformations(募金関係)
 // // FundInformation(協賛スタイル)
 export interface FundInformation {
   id: number;
-  user_id: number;
-  teacher_id: number;
+  userID: number;
+  teacherID: number;
   price: number;
   remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
-  created_at?: string;
-  updated_at?: string;
+  isFirstCheck: boolean;
+  isLastCheck: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // Teather(教員)
@@ -115,12 +115,12 @@ export interface Teacher {
   id: number;
   name: string;
   position: string;
-  department_id: number;
+  departmentID: number;
   room: string;
-  is_black: boolean;
+  isBlack: boolean;
   remark: string;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Others(その他)
@@ -128,24 +128,24 @@ export interface Teacher {
 export interface User {
   id: number;
   name: string;
-  bureau_id: number;
-  role_id: number;
-  created_at?: string;
-  updated_at?: string;
+  bureauID: number;
+  roleID: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // Department(学科)
 export interface Department {
   id: number;
   name: string;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // // Bureau(局)
 export interface Bureau {
   id: number;
   name: string;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
