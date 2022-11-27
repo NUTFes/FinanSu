@@ -1,7 +1,7 @@
 // Budget(予算関係)
 // // Budget(予算)
 export interface Budget {
-  id: number;
+  id?: number;
   price: number;
   yearID: number;
   sourceID: number;
@@ -11,7 +11,7 @@ export interface Budget {
 
 // // Source(予算の出所)
 export interface Source {
-  id: number;
+  id?: number;
   name: string;
   createdAt?: string;
   updatedAt?: string;
@@ -19,7 +19,7 @@ export interface Source {
 
 // // Year(年度)
 export interface Year {
-  id: number;
+  id?: number;
   year: number;
   createdAt?: string;
   updatedAt?: string;
@@ -28,7 +28,7 @@ export interface Year {
 // Purchase(購入関係)
 // // PurchaseItem(購入物品)
 export interface PurchaseItem {
-  id: number;
+  id?: number;
   item: string;
   price: number;
   quantity: number;
@@ -41,7 +41,7 @@ export interface PurchaseItem {
 }
 // // PurchaseOrder(購入申請)
 export interface PurchaseOrder {
-  id: number;
+  id?: number;
   deadline: string;
   userID: number;
   financeCheck: boolean;
@@ -51,7 +51,7 @@ export interface PurchaseOrder {
 
 // // PurchaseReport(購入報告)
 export interface PurchaseReport {
-  id: number;
+  id?: number;
   userID: number;
   discount: number;
   addition: number;
@@ -65,7 +65,7 @@ export interface PurchaseReport {
 // Sponser(協賛関係)
 // // SponserStyle(協賛スタイル)
 export interface SponserStyle {
-  id: number;
+  id?: number;
   scale: string;
   isColor: boolean;
   price: number;
@@ -75,7 +75,7 @@ export interface SponserStyle {
 
 // // Activity(協賛活動)
 export interface Activity {
-  id: number;
+  id?: number;
   sponserStyleID: number;
   userID: number;
   isColor: boolean;
@@ -86,7 +86,7 @@ export interface Activity {
 
 // // Sponser(協賛企業)
 export interface Sponser {
-  id: number;
+  id?: number;
   name: string;
   tel: number;
   email: string;
@@ -99,7 +99,7 @@ export interface Sponser {
 // FundInformations(募金関係)
 // // FundInformation(協賛スタイル)
 export interface FundInformation {
-  id: number;
+  id?: number;
   userID: number;
   teacherID: number;
   price: number;
@@ -112,7 +112,7 @@ export interface FundInformation {
 
 // // Teather(教員)
 export interface Teacher {
-  id: number;
+  id?: number;
   name: string;
   position: string;
   departmentID: number;
@@ -126,7 +126,7 @@ export interface Teacher {
 // Others(その他)
 // // User
 export interface User {
-  id: number;
+  id?: number;
   name: string;
   bureauID: number;
   roleID: number;
@@ -136,7 +136,7 @@ export interface User {
 
 // // Department(学科)
 export interface Department {
-  id: number;
+  id?: number;
   name: string;
   createdAt?: string;
   updatedAt?: string;
@@ -144,7 +144,7 @@ export interface Department {
 
 // // Bureau(局)
 export interface Bureau {
-  id: number;
+  id?: number;
   name: string;
   createdAt?: string;
   updatedAt?: string;
