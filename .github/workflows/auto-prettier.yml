@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: view/next-project/package-lock.json
       - name: npm install
         working-directory: view/next-project
-        run: npm install --force
+        run: npm install
       - name: Prettier
         working-directory: view/next-project
         run: npm run format
