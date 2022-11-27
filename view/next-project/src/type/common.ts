@@ -85,7 +85,7 @@ export interface Activity {
 }
 
 // // Sponser(協賛企業)
-export interface SponserStyle {
+export interface Sponser {
   id: number;
   name: string;
   tel: number;
