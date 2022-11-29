@@ -9,6 +9,8 @@ import {
   Flex,
   Grid,
   GridItem,
+  FormControl,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import Router from 'next/router';
 import React, { useState } from 'react';
@@ -18,10 +20,7 @@ import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
 import theme from '@assets/theme';
-import Email from '@components/common/Email';
 import LoadingButton from '@components/common/LoadingButton';
-import Password from '@components/common/Password';
-import PasswordConfirmation from '@components/common/PasswordConfirmation';
 import { Bureau, User, SignUp } from '@type/common';
 
 export default function SignUpView() {
@@ -126,7 +125,6 @@ export default function SignUpView() {
                   value={postUserData.name}
                   onChange={userDataHandler('name')}
                 />
-                bureauID
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
                 <Flex color='black.600' h='100%' justify='end' align='center'>
@@ -161,7 +159,23 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Email errors={errors} signUpRegister={register} />
+                  <FormControl isInvalid={errors.email ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='text'
+                      {...register('email', {
+                        required: 'メールアドレスは必須です。',
+                        pattern: {
+                          value:
+                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: 'メールアドレス形式で入力してください。',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -173,7 +187,24 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Password errors={errors} signUpRegister={register} />
+                  <FormControl isInvalid={errors.password ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='password'
+                      {...register('password', {
+                        required: 'パスワードは必須です。',
+                        minLength: {
+                          value: 6,
+                          message: 'パスワードは6文字以上で入力してください',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors.password && errors.password.message}
+                    </FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -185,11 +216,25 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <PasswordConfirmation
-                    errors={errors}
-                    register={register}
-                    password={getValues('password')}
-                  />
+                  <FormControl isInvalid={errors.passwordConfirmation ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='password'
+                      {...register('passwordConfirmation', {
+                        validate: {
+                          correct: (input: string) => input === getValues('password'),
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors.passwordConfirmation &&
+                        errors.passwordConfirmation.type === 'correct' && (
+                          <p>パスワードが一致しません</p>
+                        )}
+                    </FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
             </Grid>
