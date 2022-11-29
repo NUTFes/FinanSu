@@ -17,11 +17,7 @@ import theme from '@assets/theme';
 import Email from '@components/common/Email';
 import LoadingButton from '@components/common/LoadingButton';
 import Password from '@components/common/Password';
-
-interface PostData {
-  email: string;
-  password: string;
-}
+import { SignIn } from '@type/common';
 
 export default function SignInView() {
   // ログイン中フラグ
@@ -31,16 +27,16 @@ export default function SignInView() {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<PostData>({
+  } = useForm<SignIn>({
     mode: 'all',
   });
 
-  const SignIn = async (data: PostData) => {
+  const SignIn = async (data: SignIn) => {
     setIsSignInNow(true);
     const loginUrl: string = process.env.CSR_API_URI + '/mail_auth/signin';
 
-    const req: any = await signIn(loginUrl, data);
-    const res: any = await req.json();
+    const req = await signIn(loginUrl, data);
+    const res = await req.json();
     if (req.status === 200) {
       localStorage.setItem('access-token', res.access_token);
       localStorage.setItem('login', 'true');
@@ -72,7 +68,7 @@ export default function SignInView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Email errors={errors} register={register} />
+                  <Email errors={errors} signInRegister={register} />
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -84,7 +80,7 @@ export default function SignInView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Password errors={errors} register={register} />
+                  <Password errors={errors} signInRegister={register} />
                 </Flex>
               </GridItem>
             </Grid>
