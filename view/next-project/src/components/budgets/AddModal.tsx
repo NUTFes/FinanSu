@@ -16,17 +16,18 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/budget';
 import theme from '@assets/theme';
 import { PrimaryButton } from '@components/common';
+import { Budget } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   sources: Source[];
   years: Year[];
@@ -47,10 +48,10 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
     props.setShowModal(false);
   };
 
-  const [formData, setFormData] = useState({
-    price: '',
-    year_id: 1,
-    source_id: 1,
+  const [formData, setFormData] = useState<Budget>({
+    price: 0,
+    yearID: 1,
+    sourceID: 1,
   });
 
   const router = useRouter();
@@ -66,7 +67,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const registBudget = async (data: any) => {
+  const registBudget = async (data: Budget) => {
     const registBudgetUrl = process.env.CSR_API_URI + '/budgets';
     await post(registBudgetUrl, data);
   };
@@ -101,8 +102,8 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={9}>
                     <Select
-                      value={formData.year_id}
-                      onChange={handler('year_id')}
+                      value={formData.yearID}
+                      onChange={handler('yearID')}
                       borderRadius='full'
                       borderColor='primary.1'
                     >
@@ -122,8 +123,8 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                     <Select
                       borderRadius='full'
                       borderColor='primary.1'
-                      value={formData.source_id}
-                      onChange={handler('source_id')}
+                      value={formData.sourceID}
+                      onChange={handler('sourceID')}
                     >
                       {props.sources.map((source) => (
                         <option key={source.id} value={source.id}>
