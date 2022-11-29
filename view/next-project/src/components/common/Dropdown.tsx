@@ -9,7 +9,7 @@ interface Props {
 
 const Dropdown = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<any>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
