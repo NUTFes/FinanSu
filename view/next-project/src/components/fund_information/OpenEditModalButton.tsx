@@ -5,8 +5,7 @@ import { RiPencilFill } from 'react-icons/ri';
 
 import theme from '@assets/theme';
 import EditModal from '@components/fund_information/EditModal';
-import { Teacher, User } from '@type/common'
-
+import { Teacher, User } from '@type/common';
 
 interface Props {
   width?: string;

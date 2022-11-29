@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import theme from '@assets/theme';
 import AddModal from '@components/fund_information/AddModal';
-import { Teacher, Department, User } from '@type/common'
+import { Teacher, Department, User } from '@type/common';
 
 interface Props {
   width?: string;
