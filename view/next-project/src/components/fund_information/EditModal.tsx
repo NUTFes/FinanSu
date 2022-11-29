@@ -1,7 +1,18 @@
 import {
-  Box, Center, ChakraProvider, Flex, Grid,
-  GridItem, Input, Modal, ModalBody, ModalContent,
-  ModalFooter, ModalOverlay, Select, Spacer
+  Box,
+  Center,
+  ChakraProvider,
+  Flex,
+  Grid,
+  GridItem,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Select,
+  Spacer,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useState } from 'react';
