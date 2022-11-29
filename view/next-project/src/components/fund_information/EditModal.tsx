@@ -1,34 +1,22 @@
 import {
-  ChakraProvider,
-  Center,
-  Input,
-  Select,
-  Flex,
-  Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  Grid,
-  GridItem,
+  Box, Center, ChakraProvider, Flex, Grid,
+  GridItem, Input, Modal, ModalBody, ModalContent,
+  ModalFooter, ModalOverlay, Select, Spacer
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState, useCallback } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
 import theme from '@assets/theme';
-import { Teacher, FundInformation, User } from '@type/common';
-
-import Button from '../common/RegistButton';
+import Button from '@components/common/RegistButton';
+import { FundInformation, Teacher, User } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
-  children?: React.ReactNode;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
+  children?: ReactNode;
   id: number | string;
   teachers: Teacher[];
   currentUser: User;
@@ -42,7 +30,6 @@ export default function FundInformationEditModal(props: ModalProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<FundInformation>({
-    id: 0,
     userID: 0,
     teacherID: 0,
     price: 0,
@@ -74,7 +61,7 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitFundInformation = async (data: any, id: number | string) => {
+  const submitFundInformation = async (data: FundInformation, id: number | string) => {
     const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
     await put(submitFundInformationURL, data);
   };
@@ -108,7 +95,7 @@ export default function FundInformationEditModal(props: ModalProps) {
                   <GridItem rowSpan={1} colSpan={8}>
                     <Select
                       value={formData.teacherID}
-                      onChange={handler('teacher_id')}
+                      onChange={handler('teacherID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='224px'

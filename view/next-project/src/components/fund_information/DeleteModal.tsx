@@ -15,49 +15,22 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { useCallback } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { get, del } from '@api/api_methods';
 import theme from '@assets/theme';
 import { RedButton } from '@components/common';
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  department_id: number;
-  role_id: number;
-}
-
-interface FundInformation {
-  user_id: number;
-  teacher_id: number | string;
-  price: number;
-  remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
-}
+import { FundInformation, Teacher, User } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
-  teacher_id: number;
-  user_id: number;
+  teacherID: number;
+  userID: number;
 }
 
 export default function DeleteModal(props: ModalProps) {
@@ -69,31 +42,31 @@ export default function DeleteModal(props: ModalProps) {
 
   // モーダルに表示する用のfund_informationを定義
   const [fundInformation, setFundInformation] = useState<FundInformation>({
-    user_id: 0,
-    teacher_id: '',
+    userID: 0,
+    teacherID: 0,
     price: 0,
     remark: '',
-    is_first_check: false,
-    is_last_check: false,
+    isFirstCheck: false,
+    isLastCheck: false,
   });
 
   const [teacher, setTeacher] = useState<Teacher>({
-    id: Number(fundInformation.teacher_id),
+    id: Number(fundInformation.teacherID),
     name: '',
     position: '',
-    department_id: 1,
+    departmentID: 1,
     room: '',
-    is_black: false,
+    isBlack: false,
     remark: '',
-    created_at: '',
-    updated_at: '',
+    createdAt: '',
+    updatedAt: '',
   });
 
   const [user, setUser] = useState<User>({
     id: 0,
     name: '',
-    department_id: 1,
-    role_id: 1,
+    bureauID: 1,
+    roleID: 1,
   });
 
   // モーダルを開いているfund_informationを取得
@@ -104,15 +77,15 @@ export default function DeleteModal(props: ModalProps) {
 
   // teacher_idに紐づくteacherを取得
   const getTeacher = useCallback(async () => {
-    const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.teacher_id;
+    const getTeacherURL = process.env.CSR_API_URI + '/teachers/' + props.teacherID;
     setTeacher(await get(getTeacherURL));
-  }, [props.teacher_id]);
+  }, [props.teacherID]);
 
   // user_idに紐づくuserを取得
   const getUser = useCallback(async () => {
-    const getUserURL = process.env.CSR_API_URI + '/users/' + props.user_id;
+    const getUserURL = process.env.CSR_API_URI + '/users/' + props.userID;
     setUser(await get(getUserURL));
-  }, [props.user_id]);
+  }, [props.userID]);
 
   useEffect(() => {
     if (router.isReady) {

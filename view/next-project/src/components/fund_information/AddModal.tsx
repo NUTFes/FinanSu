@@ -1,43 +1,42 @@
 import {
-  ChakraProvider,
-  Select,
-  Center,
-  Input,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Select,
+  Spacer,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { FC, useState, useMemo } from 'react';
-import { useEffect } from 'react';
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/fundInformations';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { useGlobalContext } from '@components/global/context';
-import { Teacher, Department, User } from '@type/common';
+import { Department, Teacher, User } from '@type/common';
 
 interface FormData {
-  user_id: number | string;
-  teacher_id: number | string;
+  userID: number | string;
+  teacherID: number | string;
   price: number;
   remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
+  isFirstCheck: boolean;
+  isLastCheck: boolean;
   departmentID: number | string;
 }
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   teachersInformation: Teacher[];
   departments: Department[];
@@ -53,24 +52,24 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
-    user_id: state.user.id,
-    teacher_id: 1,
+    userID: state.user.id,
+    teacherID: 1,
     price: 0,
     remark: '',
-    is_first_check: false,
-    is_last_check: false,
+    isFirstCheck: false,
+    isLastCheck: false,
     departmentID: 1,
   });
 
   useEffect(() => {
     if (router.isReady) {
       const initFormData: FormData = {
-        user_id: state.user.id,
-        teacher_id: 1,
+        userID: state.user.id,
+        teacherID: 1,
         price: 0,
         remark: '',
-        is_first_check: false,
-        is_last_check: false,
+        isFirstCheck: false,
+        isLastCheck: false,
         departmentID: 1,
       };
       setFormData(initFormData);
@@ -160,8 +159,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     return (
       <>
         <Select
-          value={formData.teacher_id}
-          onChange={handler('teacher_id')}
+          value={formData.teacherID}
+          onChange={handler('teacherID')}
           borderRadius='full'
           borderColor='primary.1'
           w='100'
