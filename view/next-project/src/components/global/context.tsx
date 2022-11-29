@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import {
+  createContext,
   FC,
+  ReactNode,
   useCallback,
+  useContext,
+  useEffect,
   useMemo,
   useReducer,
-  useContext,
-  createContext,
-  useEffect,
-  ReactNode,
 } from 'react';
 
 import { get_with_token } from '@api/api_methods';
@@ -28,11 +28,11 @@ export type State = {
   isSignIn: boolean;
 };
 
-type GlobalContextType = State & {
-  setUser: (user: User) => void;
-  setIsSignIn: (isSignIn: boolean) => void;
-  clearGlobalFields: () => void;
-};
+// type GlobalContextType = State & {
+//   setUser: (user: User) => void;
+//   setIsSignIn: (isSignIn: boolean) => void;
+//   clearGlobalFields: () => void;
+// };
 
 type Action =
   | {
@@ -52,7 +52,7 @@ const initialState: State = {
   isSignIn: {} as boolean,
 };
 
-export const GlobalContext = createContext<State | any>(initialState);
+export const GlobalContext = createContext<State>(initialState);
 
 const GlobalStateReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -137,7 +137,7 @@ export const GlobalStateProvider: FC<Props> = (props) => {
 };
 
 export const useGlobalContext = () => {
-  const context = useContext<GlobalContextType>(GlobalContext);
+  const context = useContext<State>(GlobalContext);
   // if (context === undefined) {
   // throw new Error(`useGlobalContext must be used within a GlobalStateProvider`)
   // }
