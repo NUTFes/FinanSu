@@ -15,18 +15,18 @@ import {
   ModalBody,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import * as React from 'react';
-import { useState } from 'react';
-import { FC } from 'react';
+import { FC, useState, Dispatch, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/budget';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 
+import { Budget, Source, Year } from '@type/common';
+
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
 }
 
 const RegistModal: FC<ModalProps> = (props) => {
@@ -34,13 +34,13 @@ const RegistModal: FC<ModalProps> = (props) => {
     props.setShowModal(false);
   };
 
-  const [formData, setFormData] = useState({
-    price: '',
-    year_id: 1,
-    source_id: 1,
+  const [formData, setFormData] = useState<Budget>({
+    price: 0,
+    yearID: 1,
+    sourceID: 1,
   });
 
-  const sourceList = [
+  const sourceList: Source[] = [
     {
       id: 1,
       name: '教育振興会費',
@@ -59,7 +59,7 @@ const RegistModal: FC<ModalProps> = (props) => {
     },
   ];
 
-  const yearList = [
+  const yearList: Year[] = [
     {
       id: 1,
       year: 2020,
@@ -91,7 +91,7 @@ const RegistModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const registBudget = async (data: any) => {
+  const registBudget = async (data: Budget) => {
     const registBudgetUrl = process.env.CSR_API_URI + '/budgets';
     await post(registBudgetUrl, data);
   };
@@ -118,8 +118,8 @@ const RegistModal: FC<ModalProps> = (props) => {
                     年度
                   </Center>
                   <Select
-                    value={formData.year_id}
-                    onChange={handler('year_id')}
+                    value={formData.yearID}
+                    onChange={handler('yearID')}
                     borderRadius='full'
                     borderColor='primary.1'
                     w='224px'
@@ -136,8 +136,8 @@ const RegistModal: FC<ModalProps> = (props) => {
                     項目
                   </Center>
                   <Select
-                    value={formData.source_id}
-                    onChange={handler('source_id')}
+                    value={formData.sourceID}
+                    onChange={handler('sourceID')}
                     borderRadius='full'
                     borderColor='primary.1'
                     w='224px'

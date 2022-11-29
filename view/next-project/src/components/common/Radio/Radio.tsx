@@ -5,8 +5,8 @@ interface Props {
   className?: string;
   value?: string | number;
   checked?: boolean;
-  onClick?: any;
-  onChange?: any;
+  onClick?: () => void;
+  onChange?: () => void;
   children?: React.ReactNode;
 }
 

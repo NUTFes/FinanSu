@@ -7,7 +7,7 @@ interface Props {
   value?: string | number;
   checked?: boolean;
   disabled?: boolean;
-  onChange?: any;
+  onChange?: () => void;
   children?: React.ReactNode;
 }
 

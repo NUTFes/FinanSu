@@ -2,7 +2,7 @@ import React from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 interface Props {
-  onClick?: any;
+  onClick?: () => void;
 }
 
 export default function CloseButton(props: Props) {
@@ -11,7 +11,7 @@ export default function CloseButton(props: Props) {
       size={'23px'}
       color={'gray'}
       onClick={() => {
-        props.onClick();
+        props.onClick && props.onClick();
       }}
     />
   );

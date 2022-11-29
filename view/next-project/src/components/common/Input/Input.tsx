@@ -8,7 +8,7 @@ interface Props {
   placeholder?: string;
   id?: string;
   value?: string | number;
-  onChange?: any;
+  onChange?: () => void;
   children?: React.ReactNode;
 }
 

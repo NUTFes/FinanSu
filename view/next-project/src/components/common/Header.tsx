@@ -10,7 +10,7 @@ import { useGlobalContext } from '@components/global/context';
 // sign out
 export const signOut = async () => {
   const signOutUrl: string = process.env.CSR_API_URI + '/mail_auth/signout';
-  const req: any = await del(signOutUrl);
+  const req = await del(signOutUrl);
   if (req.status === 200) {
     localStorage.setItem('login', 'false');
     Router.push('/');
