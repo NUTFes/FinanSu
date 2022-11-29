@@ -22,32 +22,14 @@ import Email from '@components/common/Email';
 import LoadingButton from '@components/common/LoadingButton';
 import Password from '@components/common/Password';
 import PasswordConfirmation from '@components/common/PasswordConfirmation';
-
-interface PostData {
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-}
-
-interface User {
-  userName: string;
-  bureauId: number;
-  roleId: number;
-}
-
-interface Bureau {
-  id: number;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Bureau, User, SignUp } from '@type/common';
 
 export default function SignUpView() {
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
 
   // 局（Bureau）をフロントで定義
-  const bureaus = [
+  const bureaus: Bureau[] = [
     {
       id: 1,
       name: '総務局',
@@ -75,9 +57,9 @@ export default function SignUpView() {
   ];
 
   const [postUserData, setPostUserData] = useState<User>({
-    userName: '',
-    bureauId: 1,
-    roleId: 1,
+    name: '',
+    bureauID: 1,
+    roleID: 1,
   });
 
   const {
@@ -85,7 +67,7 @@ export default function SignUpView() {
     formState: { errors },
     getValues,
     handleSubmit,
-  } = useForm<PostData>({
+  } = useForm<SignUp>({
     mode: 'all',
   });
 
@@ -95,17 +77,17 @@ export default function SignUpView() {
       setPostUserData({ ...postUserData, [input]: e.target.value });
     };
 
-  const postUser = async (data: PostData) => {
+  const postUser = async (data: SignUp) => {
     setIsSignUpNow(true);
     const getUrl: string = process.env.CSR_API_URI + '/users';
     const postUserUrl: string = process.env.CSR_API_URI + '/users';
     const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
 
-    const getRes: any = await get(getUrl);
+    const getRes = await get(getUrl);
     const userID: number = getRes[getRes.length - 1].id + 1;
-    const userRes: any = await post(postUserUrl, postUserData);
-    const req: any = await signUp(signUpUrl, data, userID);
-    const res: any = await req.json();
+    await post(postUserUrl, postUserData);
+    const req = await signUp(signUpUrl, data, userID);
+    const res = await req.json();
     if (req.status === 200) {
       localStorage.setItem('access-token', res.access_token);
       localStorage.setItem('login', 'true');
@@ -141,9 +123,10 @@ export default function SignUpView() {
                   borderRadius='full'
                   borderColor='primary.1'
                   type='text'
-                  value={postUserData.userName}
-                  onChange={userDataHandler('userName')}
+                  value={postUserData.name}
+                  onChange={userDataHandler('name')}
                 />
+                bureauID
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
                 <Flex color='black.600' h='100%' justify='end' align='center'>
@@ -158,8 +141,8 @@ export default function SignUpView() {
                     minW='100'
                     borderRadius='full'
                     borderColor='primary.1'
-                    value={postUserData.bureauId}
-                    onChange={userDataHandler('bureauId')}
+                    value={postUserData.bureauID}
+                    onChange={userDataHandler('bureauID')}
                   >
                     {bureaus.map((bureau) => (
                       <option key={bureau.id} value={bureau.id}>
@@ -178,7 +161,7 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Email errors={errors} register={register} />
+                  <Email errors={errors} signUpRegister={register} />
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -190,7 +173,7 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Password errors={errors} register={register} />
+                  <Password errors={errors} signUpRegister={register} />
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
