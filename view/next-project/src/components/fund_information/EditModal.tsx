@@ -24,33 +24,8 @@ import theme from '@assets/theme';
 
 import Button from '../common/RegistButton';
 
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Teacher, FundInformation, User } from '@type/common'
 
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
-
-interface FundInformation {
-  user_id: number;
-  teacher_id: number | string;
-  price: number;
-  remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
-}
 
 interface ModalProps {
   setShowModal: any;
@@ -69,12 +44,13 @@ export default function FundInformationEditModal(props: ModalProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<FundInformation>({
-    user_id: 0,
-    teacher_id: '',
+    id: 0,
+    userID: 0,
+    teacherID: 0,
     price: 0,
     remark: '',
-    is_first_check: false,
-    is_last_check: false,
+    isFirstCheck: false,
+    isLastCheck: false,
   });
 
   // モーダルを開いているfund_informationを取得
@@ -133,7 +109,7 @@ export default function FundInformationEditModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Select
-                      value={formData.teacher_id}
+                      value={formData.teacherID}
                       onChange={handler('teacher_id')}
                       borderRadius='full'
                       borderColor='primary.1'

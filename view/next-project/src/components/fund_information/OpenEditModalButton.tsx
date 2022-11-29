@@ -5,25 +5,8 @@ import { RiPencilFill } from 'react-icons/ri';
 
 import theme from '@assets/theme';
 import EditModal from '@components/fund_information/EditModal';
+import { Teacher, User } from '@type/common'
 
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
 
 interface Props {
   width?: string;

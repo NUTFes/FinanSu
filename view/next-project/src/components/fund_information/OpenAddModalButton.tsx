@@ -4,36 +4,13 @@ import { useState } from 'react';
 
 import theme from '@assets/theme';
 import AddModal from '@components/fund_information/AddModal';
-
-interface TeachersInformation {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import { Teacher, Department, User } from '@type/common'
 
 interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
-  teachersInformation: TeachersInformation[];
+  teachersInformation: Teacher[];
   departments: Department[];
   currentUser: User;
   userID: number | string;
