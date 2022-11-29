@@ -23,7 +23,7 @@ import { post } from '@api/fundInformations';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { useGlobalContext } from '@components/global/context';
-import { Teacher, Department, User } from '@type/common'
+import { Teacher, Department, User } from '@type/common';
 
 interface FormData {
   user_id: number | string;
@@ -235,8 +235,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                     {formData.departmentID == 9 &&
                       selectTeacherContent(technologyInovationTeachers)}
                     {formData.departmentID == 10 && selectTeacherContent(systemSafetyTeachers)}
-                    {formData.departmentID == 11 &&
-                      selectTeacherContent(technologySupportTeachers)}
+                    {formData.departmentID == 11 && selectTeacherContent(technologySupportTeachers)}
                     {formData.departmentID == 12 &&
                       selectTeacherContent(industryAcademiaFusionTeachers)}
                     {formData.departmentID == 13 && selectTeacherContent(presidentClericals)}

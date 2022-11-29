@@ -21,11 +21,9 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
 import theme from '@assets/theme';
+import { Teacher, FundInformation, User } from '@type/common';
 
 import Button from '../common/RegistButton';
-
-import { Teacher, FundInformation, User } from '@type/common'
-
 
 interface ModalProps {
   setShowModal: any;
