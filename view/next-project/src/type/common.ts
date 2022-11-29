@@ -134,6 +134,19 @@ export interface User {
   updatedAt?: string;
 }
 
+// // SignUp
+export interface SignUp {
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+}
+
+// // SignIn
+export interface SignIn {
+  email: string;
+  password: string;
+}
+
 // // Department(学科)
 export interface Department {
   id?: number;
