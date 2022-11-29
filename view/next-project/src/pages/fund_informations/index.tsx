@@ -57,7 +57,7 @@ export const getServerSideProps = async () => {
   // 合計金額の計算
   let totalFee = 0;
   fundInformationRes.map((fundItemRes: FundInformation) => {
-    if (fundItemRes.is_last_check) {
+    if (fundItemRes.isLastCheck) {
       totalFee += fundItemRes.price;
     }
   });
@@ -80,80 +80,80 @@ export default function FundInformations(props: Props) {
     {
       id: 1,
       name: '電気電子情報',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 2,
       name: '生物機能',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 3,
       name: '機械創造',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 4,
       name: '物質材料',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 5,
       name: '環境社会基盤',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 6,
       name: '情報・経営システム',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 7,
       name: '基盤共通教育',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 8,
       name: '原子力システム安全',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 9,
       name: '技術科学イノベーション',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 10,
       name: 'システム安全',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 11,
       name: '技術支援',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 12,
       name: '産学融合',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 13,
       name: '学長・事務',
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     },
   ];
 
@@ -167,10 +167,10 @@ export default function FundInformations(props: Props) {
   const [currentUser, setCurrentUser] = useState<User>({
     id: 1,
     name: '',
-    bureau_id: 1,
-    role_id: 1,
-    created_at: '',
-    updated_at: '',
+    bureauID: 1,
+    roleID: 1,
+    createdAt: '',
+    updatedAt: '',
   });
 
   // ログイン中のユーザの権限
@@ -191,19 +191,19 @@ export default function FundInformations(props: Props) {
         setCurrentUser(currentUserRes);
 
         // current_userの権限をユーザに設定
-        if (currentUserRes.role_id == 1) {
+        if (currentUserRes.roleID == 1) {
           setIsUser(true);
         }
         // current_userの権限を開発者に設定
-        else if (currentUserRes.role_id == 2) {
+        else if (currentUserRes.roleID == 2) {
           setIsDeveloper(true);
         }
         // current_userの権限を財務局長に設定
-        else if (currentUserRes.role_id == 3) {
+        else if (currentUserRes.roleID == 3) {
           setIsFinanceDirector(true);
         }
         // current_userの権限を財務局員に設定
-        else if (currentUserRes.role_id == 4) {
+        else if (currentUserRes.roleID == 4) {
           setIsFinanceStaff(true);
         }
       };
@@ -218,7 +218,7 @@ export default function FundInformations(props: Props) {
   const [totalFee, setTotalFee] = useState(props.totalFee);
 
   const calcTotalFee = (initFundInformation: FundInformation) => {
-    if (initFundInformation.is_last_check) {
+    if (initFundInformation.isLastCheck) {
       setTotalFee(totalFee + initFundInformation.price);
     } else {
       setTotalFee(totalFee - initFundInformation.price);
@@ -232,17 +232,17 @@ export default function FundInformations(props: Props) {
     input: string,
     fundItem: FundInformation,
   ) => {
-    if (input == 'is_last_check') {
+    if (input == 'isLastCheck') {
       const initFundInformation: FundInformation = {
         id: id,
-        user_id: fundItem.user_id,
-        teacher_id: fundItem.teacher_id,
+        userID: fundItem.userID,
+        teacherID: fundItem.teacherID,
         price: fundItem.price,
         remark: fundItem.remark,
-        is_first_check: fundItem.is_first_check,
-        is_last_check: !isChecked,
-        created_at: fundItem.created_at,
-        updated_at: fundItem.updated_at,
+        isFirstCheck: fundItem.isFirstCheck,
+        isLastCheck: !isChecked,
+        createdAt: fundItem.createdAt,
+        updatedAt: fundItem.updatedAt,
       };
       calcTotalFee(initFundInformation);
     }
@@ -399,29 +399,29 @@ export default function FundInformations(props: Props) {
                         <Center color='black.300'>
                           {isFinanceDirector &&
                             changeableCheckboxContent(
-                              fundInformation[index].is_first_check,
+                              fundInformation[index].isFirstCheck,
                               fundViewItem.fund_information.id,
-                              'is_first_check',
+                              'isFirstCheck',
                               fundInformation[index],
                             )}
                           {isFinanceStaff &&
                             changeableCheckboxContent(
-                              fundInformation[index].is_first_check,
+                              fundInformation[index].isFirstCheck,
                               fundViewItem.fund_information.id,
-                              'is_first_check',
+                              'isFirstCheck',
                               fundInformation[index],
                             )}
                           {isDeveloper &&
                             unChangeableCheckboxContent(
-                              fundInformation[index].is_first_check,
+                              fundInformation[index].isFirstCheck,
                               fundViewItem.fund_information.id,
-                              'is_first_check',
+                              'isFirstCheck',
                             )}
                           {isUser &&
                             unChangeableCheckboxContent(
-                              fundInformation[index].is_first_check,
+                              fundInformation[index].isFirstCheck,
                               fundViewItem.fund_information.id,
-                              'is_first_check',
+                              'isFirstCheck',
                             )}
                         </Center>
                       </Td>
@@ -429,28 +429,28 @@ export default function FundInformations(props: Props) {
                         <Center color='black.300'>
                           {isFinanceDirector &&
                             changeableCheckboxContent(
-                              fundInformation[index].is_last_check,
+                              fundInformation[index].isLastCheck,
                               fundViewItem.fund_information.id,
-                              'is_last_check',
+                              'isLastCheck',
                               fundInformation[index],
                             )}
                           {isFinanceStaff &&
                             unChangeableCheckboxContent(
-                              fundInformation[index].is_last_check,
+                              fundInformation[index].isLastCheck,
                               fundViewItem.fund_information.id,
-                              'is_last_check',
+                              'isLastCheck',
                             )}
                           {isDeveloper &&
                             unChangeableCheckboxContent(
-                              fundInformation[index].is_last_check,
+                              fundInformation[index].isLastCheck,
                               fundViewItem.fund_information.id,
-                              'is_last_check',
+                              'isLastCheck',
                             )}
                           {isUser &&
                             unChangeableCheckboxContent(
-                              fundInformation[index].is_last_check,
+                              fundInformation[index].isLastCheck,
                               fundViewItem.fund_information.id,
-                              'is_last_check',
+                              'isLastCheck',
                             )}
                         </Center>
                       </Td>
@@ -470,7 +470,7 @@ export default function FundInformations(props: Props) {
                         <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
                       </Td>
                       {(() => {
-                        if (!isUser || fundViewItem.fund_information.user_id == currentUser.id) {
+                        if (!isUser || fundViewItem.fund_information.userID == currentUser.id) {
                           return (
                             <Td>
                               <Grid templateColumns='repeat(2, 1fr)' gap={3}>
@@ -487,8 +487,8 @@ export default function FundInformations(props: Props) {
                                   <Center>
                                     <OpenDeleteModalButton
                                       id={fundViewItem.fund_information.id}
-                                      teacher_id={fundViewItem.fund_information.teacher_id}
-                                      user_id={Number(fundViewItem.fund_information.user_id)}
+                                      teacher_id={fundViewItem.fund_information.teacherID}
+                                      user_id={Number(fundViewItem.fund_information.userID)}
                                     />
                                   </Center>
                                 </GridItem>

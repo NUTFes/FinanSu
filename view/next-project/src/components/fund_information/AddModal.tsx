@@ -23,30 +23,7 @@ import { post } from '@api/fundInformations';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { useGlobalContext } from '@components/global/context';
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number | string;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import { Teacher, Department, User } from '@type/common'
 
 interface FormData {
   user_id: number | string;
@@ -55,7 +32,7 @@ interface FormData {
   remark: string;
   is_first_check: boolean;
   is_last_check: boolean;
-  department_id: number | string;
+  departmentID: number | string;
 }
 
 interface ModalProps {
@@ -82,7 +59,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     remark: '',
     is_first_check: false,
     is_last_check: false,
-    department_id: 1,
+    departmentID: 1,
   });
 
   useEffect(() => {
@@ -94,7 +71,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         remark: '',
         is_first_check: false,
         is_last_check: false,
-        department_id: 1,
+        departmentID: 1,
       };
       setFormData(initFormData);
     }
@@ -103,67 +80,67 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   // 学科別教員リストの用意
   // // 電気電子情報
   const electricalTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 1),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 1),
     [props.teachersInformation],
   );
   // // 生物
   const biologicalTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 2),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 2),
     [props.teachersInformation],
   );
   // // 機械
   const machineTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 3),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 3),
     [props.teachersInformation],
   );
   // // 物質
   const materialTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 4),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 4),
     [props.teachersInformation],
   );
   // // 環境社会基盤
   const environmentalTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 5),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 5),
     [props.teachersInformation],
   );
   // // 情報・経営
   const informationManagementTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 6),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 6),
     [props.teachersInformation],
   );
   // // 基盤共通
   const commonEducationTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 7),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 7),
     [props.teachersInformation],
   );
   // // 原子力
   const nuclearTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 8),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 8),
     [props.teachersInformation],
   );
   // // 技学イノベ
   const technologyInovationTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 9),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 9),
     [props.teachersInformation],
   );
   // // システム安全
   const systemSafetyTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 10),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 10),
     [props.teachersInformation],
   );
   // // 技術支援
   const technologySupportTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 11),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 11),
     [props.teachersInformation],
   );
   // // 産学融合
   const industryAcademiaFusionTeachers: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 12),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 12),
     [props.teachersInformation],
   );
   // // 学長・事務
   const presidentClericals: Teacher[] = useMemo(
-    () => props.teachersInformation.filter((teacher) => teacher.department_id === 13),
+    () => props.teachersInformation.filter((teacher) => teacher.departmentID === 13),
     [props.teachersInformation],
   );
 
@@ -227,8 +204,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                   </GridItem>
                   <GridItem colSpan={9}>
                     <Select
-                      value={formData.department_id}
-                      onChange={handler('department_id')}
+                      value={formData.departmentID}
+                      onChange={handler('departmentID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='100'
@@ -246,23 +223,23 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                     </Flex>
                   </GridItem>
                   <GridItem colSpan={9}>
-                    {formData.department_id == 1 && selectTeacherContent(electricalTeachers)}
-                    {formData.department_id == 2 && selectTeacherContent(biologicalTeachers)}
-                    {formData.department_id == 3 && selectTeacherContent(machineTeachers)}
-                    {formData.department_id == 4 && selectTeacherContent(materialTeachers)}
-                    {formData.department_id == 5 && selectTeacherContent(environmentalTeachers)}
-                    {formData.department_id == 6 &&
+                    {formData.departmentID == 1 && selectTeacherContent(electricalTeachers)}
+                    {formData.departmentID == 2 && selectTeacherContent(biologicalTeachers)}
+                    {formData.departmentID == 3 && selectTeacherContent(machineTeachers)}
+                    {formData.departmentID == 4 && selectTeacherContent(materialTeachers)}
+                    {formData.departmentID == 5 && selectTeacherContent(environmentalTeachers)}
+                    {formData.departmentID == 6 &&
                       selectTeacherContent(informationManagementTeachers)}
-                    {formData.department_id == 7 && selectTeacherContent(commonEducationTeachers)}
-                    {formData.department_id == 8 && selectTeacherContent(nuclearTeachers)}
-                    {formData.department_id == 9 &&
+                    {formData.departmentID == 7 && selectTeacherContent(commonEducationTeachers)}
+                    {formData.departmentID == 8 && selectTeacherContent(nuclearTeachers)}
+                    {formData.departmentID == 9 &&
                       selectTeacherContent(technologyInovationTeachers)}
-                    {formData.department_id == 10 && selectTeacherContent(systemSafetyTeachers)}
-                    {formData.department_id == 11 &&
+                    {formData.departmentID == 10 && selectTeacherContent(systemSafetyTeachers)}
+                    {formData.departmentID == 11 &&
                       selectTeacherContent(technologySupportTeachers)}
-                    {formData.department_id == 12 &&
+                    {formData.departmentID == 12 &&
                       selectTeacherContent(industryAcademiaFusionTeachers)}
-                    {formData.department_id == 13 && selectTeacherContent(presidentClericals)}
+                    {formData.departmentID == 13 && selectTeacherContent(presidentClericals)}
                   </GridItem>
                   <GridItem colSpan={3}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>
