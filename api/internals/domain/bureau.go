@@ -5,8 +5,8 @@ import (
 )
 
 type Bureau struct {
-	ID 				ID 				`json:"id"`
+	ID 				ID 				`json:"ID"`
 	Name 			Name			`json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

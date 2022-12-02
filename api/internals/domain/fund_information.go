@@ -5,19 +5,19 @@ import (
 )
 
 type FundInformation struct {
-	ID           ID        `json:"id"`
-	UserID       ID        `json:"user_id"`
-	TeacherID    ID        `json:"teacher_id"`
+	ID           ID        `json:"ID"`
+	UserID       ID        `json:"userID"`
+	TeacherID    ID        `json:"teacherID"`
 	Price        Price     `json:"price"`
 	Remark       string    `json:"remark"`
-	IsFirstCheck bool      `json:"is_first_check"`
-	IsLastCheck  bool      `json:"is_last_check"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	IsFirstCheck bool      `json:"isFirstCheck"`
+	IsLastCheck  bool      `json:"isLastCheck"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
 type FundInforWithUserAndTeacher struct {
-	FundInformation FundInformation `json:"fund_information"`
-	User            User      `json:"user"`
-	Teacher         Teacher   `json:"teacher"`
+	FundInformation FundInformation `json:"fundInformation"`
+	User            User            `json:"user"`
+	Teacher         Teacher         `json:"teacher"`
 }

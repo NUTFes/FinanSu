@@ -5,8 +5,8 @@ import (
 )
 
 type Year struct {
-	ID        ID        `json:"id"`
+	ID        ID        `json:"ID"`
 	Year      int       `json:"year"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

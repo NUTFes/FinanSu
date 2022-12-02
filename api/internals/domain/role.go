@@ -1,10 +1,12 @@
 package domain
 
-import ("time")
+import (
+	"time"
+)
 
 type Role struct {
-	ID			ID			`json:"id"`
-	Name		string		`json:"name"`
-	CreatedAt	time.Time	`json:"created_at"`
-	UpdatedAt	time.Time	`json:"updated_at"`
-}	
+	ID        ID        `json:"ID"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}

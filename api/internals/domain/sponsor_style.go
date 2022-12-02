@@ -3,10 +3,10 @@ package domain
 import ("time")
 
 type SponsorStyle struct {
-	ID         ID        `json:"id"`
+	ID         ID        `json:"ID"`
 	Scale      Scale     `json:"scale"`
-	IsColor    bool   	 `json:"is_color"`
+	IsColor    bool   	 `json:"isColor"`
 	Price      Price     `json:"price"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	CreatedAt  time.Time `json:"createdAt"`
+	UpdatedAt  time.Time `json:"updatedAt"`
 }
