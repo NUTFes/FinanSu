@@ -1,24 +1,24 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
 import { get } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
 import { post } from '@api/purchaseReport';
 import {
-  PrimaryButton,
-  OutlinePrimaryButton,
-  UnderlinePrimaryButton,
   CloseButton,
   Input,
-  Textarea,
   Modal,
+  OutlinePrimaryButton,
+  PrimaryButton,
   Stepper,
+  Textarea,
+  UnderlinePrimaryButton,
 } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
 import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal';
-import { PurchaseReport, PurchaseOrder, PurchaseItem, User } from '@pages/purchasereports';
+import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@pages/purchasereports';
 
 interface PurchaseOrderView {
   purchase_order: PurchaseOrder;
@@ -177,7 +177,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
       const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
-      const res = await put(updatePurchaseItemUrl, item);
+      await put(updatePurchaseItemUrl, item);
     });
   };
 

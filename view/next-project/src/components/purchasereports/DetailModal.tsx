@@ -4,9 +4,9 @@ import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
 import { del } from '@api/api_methods';
-import { Modal, Checkbox, Tooltip, RedButton } from '@components/common';
+import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
-import { PurchaseReport, PurchaseItem, PurchaseReportView } from '@pages/purchasereports';
+import { PurchaseItem, PurchaseReport, PurchaseReportView } from '@pages/purchasereports';
 
 interface ModalProps {
   isOpen: boolean;
@@ -202,7 +202,7 @@ const DetailModal: FC<ModalProps> = (props) => {
               className={clsx('w-full border border-x-white-0 border-b-primary-1 border-t-white-0')}
             >
               {/* <div className={clsx('flex items-start')}> */}
-              {props.purchaseReportViewItem?.purchaseitems.map((purchaseItem, index) => (
+              {props.purchaseReportViewItem?.purchaseitems.map((purchaseItem) => (
                 <tr key={purchaseItem.id} className={clsx('w-full')}>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>

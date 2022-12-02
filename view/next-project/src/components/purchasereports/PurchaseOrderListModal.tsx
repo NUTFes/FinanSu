@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { get } from '@api/api_methods';
-import { Modal, Radio, PrimaryButton, OutlinePrimaryButton, CloseButton } from '@components/common';
+import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton, Radio } from '@components/common';
 import { useUI } from '@components/ui/context';
 
 import PurchaseReportAddModal from './PurchaseReportAddModal';
@@ -87,8 +87,9 @@ export default function PurchaseItemNumModal() {
   };
 
   // 報告する申請のID
-  const handler = (purchaseItemNum: number) => (e: any) => {
-    setPurchaseOrderId(Number(e.target.value));
+  const handler = (purchaseItemNum: number) => (e: React.MouseEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setPurchaseOrderId(Number(target.value));
     setPurchaseItemNum(Number(purchaseItemNum));
   };
 
