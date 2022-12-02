@@ -1,11 +1,11 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { ChangeEvent, MouseEventHandler } from 'react';
 
 interface Props {
   className?: string;
   value?: string | number;
   checked?: boolean;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLInputElement>;
   onChange?: () => void;
   children?: React.ReactNode;
 }
