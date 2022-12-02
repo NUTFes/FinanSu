@@ -149,7 +149,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const addFundInformation = async (data: any) => {
+  const addFundInformation = async (data: FormData) => {
     const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
     await post(addFundInformationUrl, data);
   };
