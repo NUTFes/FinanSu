@@ -5,16 +5,16 @@ import (
 )
 
 type Budget struct {
-	ID        ID        `json:"id"`
+	ID        ID        `json:"ID"`
 	Price     Price     `json:"price"`
-	YearID    YearID    `json:"year_id"`
-	SourceID  SourceID  `json:"source_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	YearID    YearID    `json:"yearID"`
+	SourceID  SourceID  `json:"sourceID"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type BudgetYearSource struct {
-	Budget    Budget	`json:"budget"`
-	Year      Year      `json:"year"`
-	Source	  Source	`json:"source"`
+	Budget Budget `json:"budget"`
+	Year   Year   `json:"year"`
+	Source Source `json:"source"`
 }
