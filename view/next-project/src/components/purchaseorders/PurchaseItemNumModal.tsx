@@ -2,11 +2,11 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 
 import { post } from '@api/purchaseOrder';
-import { Modal, Input, Select, PrimaryButton, CloseButton } from '@components/common';
+import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, PurchaseItem } from '@pages/purchaseorders';
+import { PurchaseItem, PurchaseOrder } from '@pages/purchaseorders';
 
 interface FormData {
   deadline: string;
@@ -38,7 +38,8 @@ export default function PurchaseItemNumModal() {
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
   });
-  const [purchaseOrderId, setPurchaseOrderId] = useState(1);
+  // const [purchaseOrderId, setPurchaseOrderId] = useState(1);
+  const purchaseOrderId = 1;
 
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
     const initFormDataList = [];
