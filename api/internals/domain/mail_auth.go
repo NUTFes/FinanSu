@@ -5,18 +5,18 @@ import (
 )
 
 type MailAuth struct {
-	ID        ID        `json:"id"`
+	ID        ID        `json:"ID"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
-	UserID    UserID    `json:"user_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	UserID    UserID    `json:"userID"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type Token struct {
-	AccessToken string `json:"access_token"`
+	AccessToken string `json:"accessToken"`
 }
 
 type IsSignIn struct {
-	IsSignIn bool `json:"is_sign_in"`
+	IsSignIn bool `json:"isSignIn"`
 }
