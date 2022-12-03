@@ -11,13 +11,7 @@ import {
 } from 'react';
 
 import { get_with_token } from '@api/api_methods';
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import { User } from '@type/common';
 
 interface Props {
   children?: ReactNode;
