@@ -5,7 +5,7 @@ import (
 )
 
 type Activity struct {
-	ID             ID             `json:"ID"`
+	ID             ID             `json:"id"`
 	SponsorStyleID SponsorStyleID `json:"sponsorStyleID"`
 	UserID         UserID         `json:"userID"`
 	IsDone         bool           `json:"isDone"`

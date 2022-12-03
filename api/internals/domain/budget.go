@@ -5,7 +5,7 @@ import (
 )
 
 type Budget struct {
-	ID        ID        `json:"ID"`
+	ID        ID        `json:"id"`
 	Price     Price     `json:"price"`
 	YearID    YearID    `json:"yearID"`
 	SourceID  SourceID  `json:"sourceID"`
