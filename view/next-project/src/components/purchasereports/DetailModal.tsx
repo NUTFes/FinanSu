@@ -6,7 +6,8 @@ import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-ico
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
-import { PurchaseItem, PurchaseReport, PurchaseReportView } from '@pages/purchasereports';
+import { PurchaseReportView } from '@pages/purchasereports';
+import { PurchaseItem, PurchaseReport } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -73,7 +74,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.id}
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}
             </div>
             <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
               <div className={clsx('text-md flex items-center text-black-600')}>合計金額</div>
@@ -85,8 +86,8 @@ const DetailModal: FC<ModalProps> = (props) => {
             >
               {props.purchaseReportViewItem &&
                 TotalFee(
-                  props.purchaseReportViewItem.purchasereport,
-                  props.purchaseReportViewItem.purchaseitems,
+                  props.purchaseReportViewItem.purchaseReport,
+                  props.purchaseReportViewItem.purchaseItems,
                 )}
             </div>
           </div>
@@ -101,22 +102,22 @@ const DetailModal: FC<ModalProps> = (props) => {
               )}
             >
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 1 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 1 &&
                 '総務局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 2 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 2 &&
                 '渉外局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 3 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 3 &&
                 '財務局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 4 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 4 &&
                 '企画局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 5 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 5 &&
                 '政策局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 6 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 6 &&
                 '情報局'}
             </div>
             <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
@@ -128,7 +129,11 @@ const DetailModal: FC<ModalProps> = (props) => {
               )}
             >
               {props.purchaseReportViewItem &&
-                formatDate(props.purchaseReportViewItem.purchasereport.created_at)}
+                formatDate(
+                  props.purchaseReportViewItem.purchaseReport.createdAt
+                    ? props.purchaseReportViewItem.purchaseReport.createdAt
+                    : '',
+                )}
             </div>
           </div>
           <div className={clsx('my-2 grid w-full grid-cols-12')}>
@@ -140,7 +145,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.discount}
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.discount}
             </div>
             <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
               <div className={clsx('text-md flex items-center text-black-600')}>加算</div>
@@ -150,7 +155,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.addition}
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.addition}
             </div>
           </div>
           <div className={clsx('my-2 grid w-full grid-cols-12')}></div>
@@ -202,7 +207,7 @@ const DetailModal: FC<ModalProps> = (props) => {
               className={clsx('w-full border border-x-white-0 border-b-primary-1 border-t-white-0')}
             >
               {/* <div className={clsx('flex items-start')}> */}
-              {props.purchaseReportViewItem?.purchaseitems.map((purchaseItem) => (
+              {props.purchaseReportViewItem?.purchaseItems.map((purchaseItem) => (
                 <tr key={purchaseItem.id} className={clsx('w-full')}>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>
@@ -250,7 +255,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                   {state.user.roleID === 3 ? (
                     <td className={clsx('border-b py-3')}>
                       <div className={clsx('text-center text-sm text-black-300')}>
-                        <Checkbox checked={purchaseItem.finance_check} disabled={true} />
+                        <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
                       </div>
                     </td>
                   ) : null}
