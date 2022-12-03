@@ -1,47 +1,30 @@
 import {
-  ChakraProvider,
-  Select,
-  Center,
-  Input,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
-  RadioGroup,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
   Radio,
+  RadioGroup,
+  Select,
+  Spacer,
   Stack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { FC } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/teachers';
 import theme from '@assets/theme';
 import { PrimaryButton } from '@components/common';
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Department, Teacher } from '@type/common';
 
 interface FormData {
   name: string;
@@ -53,8 +36,8 @@ interface FormData {
 }
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   teachersInformation: Teacher[];
   departments: Department[];
