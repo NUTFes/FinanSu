@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, createContext, useReducer, useContext, ReactNode } from 'react';
+import { createContext, FC, ReactNode, useCallback, useContext, useMemo, useReducer } from 'react';
 
 export interface State {
   displayModal: boolean;
@@ -32,7 +32,7 @@ type MODAL_VIEWS =
   | 'PURCHASE_ORDER_LIST_MODAL'
   | 'PURCHASE_REPORT_ITEM_NUM_MODAL';
 
-export const UIContext = createContext<State | any>(initialState);
+export const UIContext = createContext<State>(initialState);
 
 UIContext.displayName = 'UIContext';
 
@@ -79,7 +79,6 @@ export const UIProvider: FC<Props> = (props) => {
     }),
     [openModal, closeModal, setModalView, state],
   );
-
   return <UIContext.Provider value={value} {...props} />;
 };
 
