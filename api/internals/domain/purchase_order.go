@@ -5,7 +5,7 @@ import (
 )
 
 type PurchaseOrder struct {
-	ID           ID        `json:"ID"`
+	ID           ID        `json:"id"`
 	DeadLine     DeadLine  `json:"deadline"`
 	UserID       ID        `json:"userID"`
 	FinanceCheck bool      `json:"financeCheck"`

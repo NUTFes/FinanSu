@@ -5,7 +5,7 @@ import (
 )
 
 type Teacher struct {
-	ID           ID           `json:"ID"`
+	ID           ID           `json:"id"`
 	Name         string       `json:"name"`
 	Position     Position     `json:"position"`
 	DepartmentID DepartmentID `json:"departmentID"`

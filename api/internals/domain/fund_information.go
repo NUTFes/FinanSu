@@ -5,7 +5,7 @@ import (
 )
 
 type FundInformation struct {
-	ID           ID        `json:"ID"`
+	ID           ID        `json:"id"`
 	UserID       ID        `json:"userID"`
 	TeacherID    ID        `json:"teacherID"`
 	Price        Price     `json:"price"`
