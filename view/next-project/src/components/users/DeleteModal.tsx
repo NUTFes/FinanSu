@@ -1,42 +1,31 @@
 import {
-  ChakraProvider,
-  Center,
-  Text,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Divider,
+  Flex,
   Grid,
   GridItem,
-  Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Spacer,
+  Text,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { get, del } from '@api/api_methods';
+import { del, get } from '@api/api_methods';
 import theme from '@assets/theme';
 import { RedButton } from '@components/common';
-
-interface Bureau {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import { Bureau, User } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
   bureaus: Bureau[];
@@ -52,8 +41,8 @@ export default function DeleteModal(props: ModalProps) {
   const [user, setUser] = useState<User>({
     id: 0,
     name: '',
-    bureau_id: 1,
-    role_id: 1,
+    bureauID: 1,
+    roleID: 1,
   });
 
   // モーダルを開いているuserを取得
@@ -112,7 +101,7 @@ export default function DeleteModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Text fontSize='lg' pl={2}>
-                      {user.bureau_id}
+                      {user.bureauID}
                     </Text>
                     <Divider />
                   </GridItem>
@@ -123,7 +112,7 @@ export default function DeleteModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Text fontSize='lg' pl={2}>
-                      {user.role_id}
+                      {user.roleID}
                     </Text>
                     <Divider />
                   </GridItem>
