@@ -1,30 +1,9 @@
-export const get = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return await res.json();
-};
+import { PurchaseOrder } from '@type/common';
 
-export const get_with_token = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'access-token': localStorage.getItem('access-token') || 'none',
-      client: localStorage.getItem('client') || 'none',
-      uid: localStorage.getItem('uid') || 'none',
-    },
-  });
-  return await res.json();
-};
-
-export const post = async (url: string, data: any) => {
+export const post = async (url: string, data: PurchaseOrder) => {
   const deadline = data.deadline;
-  const userId = data.user_id;
-  const financeCheck = data.finance_check;
+  const userId = data.userID;
+  const financeCheck = data.financeCheck;
   const postUrl =
     url + '?deadline=' + deadline + '&user_id=' + userId + '&finance_check=' + financeCheck;
 
@@ -39,10 +18,10 @@ export const post = async (url: string, data: any) => {
   return res;
 };
 
-export const put = async (url: string, data: any) => {
+export const put = async (url: string, data: PurchaseOrder) => {
   const deadline = data.deadline;
-  const userId = data.user_id;
-  const financeCheck = data.finance_check;
+  const userId = data.userID;
+  const financeCheck = data.financeCheck;
   const putUrl =
     url + '?deadline=' + deadline + '&user_id=' + userId + '&finance_check=' + financeCheck;
   const res = await fetch(putUrl, {
@@ -54,9 +33,4 @@ export const put = async (url: string, data: any) => {
     body: JSON.stringify(data),
   }).then((response) => response.json());
   return res;
-};
-
-export const del = async (url: string) => {
-  const res = await fetch(url, { method: 'DELETE' });
-  return await res.json();
 };

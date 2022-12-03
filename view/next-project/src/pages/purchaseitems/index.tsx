@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { RiAddCircleLine } from 'react-icons/ri';
 
-import { get } from '@api/purchaseOrder';
+import { get } from '@api/api_methods';
 import EditButton from '@components/common/EditButton';
 import MainLayout from '@components/layout/MainLayout';
 import { PurchaseItem } from '@type/common';
