@@ -1,24 +1,26 @@
-export const post = async (url: string, data: any) => {
-  const user_id = data.user_id;
-  const teacher_id = data.teacher_id;
+import { FundInformation } from '@type/common';
+
+export const post = async (url: string, data: FundInformation) => {
+  const userID = data.userID;
+  const teacherID = data.teacherID;
   const price = data.price;
   const remark = data.remark;
-  const is_first_check = data.is_first_check;
-  const is_last_check = data.is_last_check;
+  const isFirstCheck = data.isFirstCheck;
+  const isLastCheck = data.isLastCheck;
   const postUrl =
     url +
     '?user_id=' +
-    user_id +
+    userID +
     '&teacher_id=' +
-    teacher_id +
+    teacherID +
     '&price=' +
     price +
     '&remark=' +
     remark +
     '&is_first_check=' +
-    is_first_check +
+    isFirstCheck +
     '&is_last_check=' +
-    is_last_check;
+    isLastCheck;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -30,27 +32,27 @@ export const post = async (url: string, data: any) => {
   return await res.json();
 };
 
-export const put = async (url: string, data: any) => {
-  const user_id = data.user_id;
-  const teacher_id = data.teacher_id;
+export const put = async (url: string, data: FundInformation) => {
+  const userID = data.userID;
+  const teacherID = data.teacherID;
   const price = data.price;
   const remark = data.remark;
-  const is_first_check = data.is_first_check;
-  const is_last_check = data.is_last_check;
+  const isFirstCheck = data.isFirstCheck;
+  const isLastCheck = data.isLastCheck;
   const putUrl =
     url +
-    '?user_id=' +
-    user_id +
+    '?userID=' +
+    userID +
     '&teacher_id=' +
-    teacher_id +
+    teacherID +
     '&price=' +
     price +
     '&remark=' +
     remark +
     '&is_first_check=' +
-    is_first_check +
+    isFirstCheck +
     '&is_last_check=' +
-    is_last_check;
+    isLastCheck;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',

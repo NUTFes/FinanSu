@@ -1,34 +1,13 @@
-export const get = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return await res.json();
-};
+import { PurchaseItem } from '@type/common';
 
-export const get_with_token = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'access-token': localStorage.getItem('access-token') || 'none',
-      client: localStorage.getItem('client') || 'none',
-      uid: localStorage.getItem('uid') || 'none',
-    },
-  });
-  return await res.json();
-};
-
-export const post = async (url: string, data: any) => {
+export const post = async (url: string, data: PurchaseItem) => {
   const item: string = data.item;
   const price: number = data.price;
   const quantity: number = data.quantity;
   const detail: string = data.detail;
   const itemUrl: string = data.url;
-  const purchaseOrderId: number = data.purchase_order_id;
-  const finance_check: boolean = data.finance_check;
+  const purchaseOrderId: number = data.purchaseOrderID;
+  const financeCheck: boolean = data.financeCheck;
   const postUrl =
     url +
     '?item=' +
@@ -44,7 +23,7 @@ export const post = async (url: string, data: any) => {
     '&purchase_order_id=' +
     purchaseOrderId +
     '&finance_check=' +
-    finance_check;
+    financeCheck;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -56,14 +35,14 @@ export const post = async (url: string, data: any) => {
   return res;
 };
 
-export const put = async (url: string, data: any) => {
+export const put = async (url: string, data: PurchaseItem) => {
   const item: string = data.item;
   const price: number = data.price;
   const quantity: number = data.quantity;
   const detail: string = data.detail;
   const itemUrl: string = data.url;
-  const purchaseOrderId: number = data.purchase_order_id;
-  const finance_check: boolean = data.finance_check;
+  const purchaseOrderId: number = data.purchaseOrderID;
+  const financeCheck: boolean = data.financeCheck;
   const putUrl =
     url +
     '?item=' +
@@ -79,7 +58,7 @@ export const put = async (url: string, data: any) => {
     '&purchase_order_id=' +
     purchaseOrderId +
     '&finance_check=' +
-    finance_check;
+    financeCheck;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
@@ -89,9 +68,4 @@ export const put = async (url: string, data: any) => {
     body: JSON.stringify(data),
   }).then((response) => response.json());
   return res;
-};
-
-export const del = async (url: string) => {
-  const res = await fetch(url, { method: 'DELETE' });
-  return await res.json();
 };

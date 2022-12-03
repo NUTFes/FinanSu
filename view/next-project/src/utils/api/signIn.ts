@@ -1,4 +1,6 @@
-export const signIn = async (url: string, data: any) => {
+import { SignIn } from '@type/common';
+
+export const signIn = async (url: string, data: SignIn) => {
   const email = data.email;
   const password = data.password;
   const postUrl = url + '?email=' + email + '&password=' + password;

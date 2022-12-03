@@ -1,9 +1,11 @@
-export const post = async (url: string, data: any) => {
+import { Teacher } from '@type/common';
+
+export const post = async (url: string, data: Teacher) => {
   const name = data.name;
   const position = data.position;
-  const department_id = data.department_id;
+  const departmentID = data.departmentID;
   const room = data.room;
-  const is_black = data.is_black;
+  const isBlack = data.isBlack;
   const remark = data.remark;
   const postUrl =
     url +
@@ -12,11 +14,11 @@ export const post = async (url: string, data: any) => {
     '&position=' +
     position +
     '&department_id=' +
-    department_id +
+    departmentID +
     '&room=' +
     room +
     '&is_black=' +
-    is_black +
+    isBlack +
     '&remark=' +
     remark;
   const res = await fetch(postUrl, {
@@ -30,12 +32,12 @@ export const post = async (url: string, data: any) => {
   return await res.json();
 };
 
-export const put = async (url: string, data: any) => {
+export const put = async (url: string, data: Teacher) => {
   const name = data.name;
   const position = data.position;
-  const department_id = data.department_id;
+  const departmentID = data.departmentID;
   const room = data.room;
-  const is_black = data.is_black;
+  const isBlack = data.isBlack;
   const remark = data.remark;
   const putUrl =
     url +
@@ -44,11 +46,11 @@ export const put = async (url: string, data: any) => {
     '&position=' +
     position +
     '&department_id=' +
-    department_id +
+    departmentID +
     '&room=' +
     room +
     '&is_black=' +
-    is_black +
+    isBlack +
     '&remark=' +
     remark;
   const res = await fetch(putUrl, {
