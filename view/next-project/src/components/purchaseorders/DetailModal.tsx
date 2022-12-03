@@ -144,7 +144,7 @@ const DetailModal: FC<ModalProps> = (props) => {
               <tr
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
               >
-                {state.user.role_id === 1 ? (
+                {state.user.roleID === 1 ? (
                   <th className={clsx('w-3/12 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>品名</div>
                   </th>
@@ -165,7 +165,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>URL</div>
                 </th>
-                {state.user.role_id === 3 ? (
+                {state.user.roleID === 3 ? (
                   <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>局長確認</div>
                   </th>
@@ -221,7 +221,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                       </div>
                     </div>
                   </td>
-                  {state.user.role_id === 3 ? (
+                  {state.user.roleID === 3 ? (
                     <td className={clsx('border-b py-3')}>
                       <div className={clsx('text-center text-sm text-black-300')}>
                         <Checkbox checked={purchaseItem.finance_check} disabled={true} />
