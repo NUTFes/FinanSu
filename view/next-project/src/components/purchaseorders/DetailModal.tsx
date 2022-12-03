@@ -63,7 +63,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchase_order.id}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchaseOrder.id}
             </div>
             <div className={clsx('col-span-3 grid')} />
           </div>
@@ -79,22 +79,22 @@ const DetailModal: FC<ModalProps> = (props) => {
               )}
             >
               {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureau_id === 1 &&
+                props.purchaseOrderViewItem.user.bureauID === 1 &&
                 '総務局'}
               {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureau_id === 2 &&
+                props.purchaseOrderViewItem.user.bureauID === 2 &&
                 '渉外局'}
               {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureau_id === 3 &&
+                props.purchaseOrderViewItem.user.bureauID === 3 &&
                 '財務局'}
               {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureau_id === 4 &&
+                props.purchaseOrderViewItem.user.bureauID === 4 &&
                 '企画局'}
               {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureau_id === 5 &&
+                props.purchaseOrderViewItem.user.bureauID === 5 &&
                 '政策局'}
               {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureau_id === 6 &&
+                props.purchaseOrderViewItem.user.bureauID === 6 &&
                 '情報局'}
             </div>
             <div className={clsx('col-span-3 grid')} />
@@ -110,7 +110,11 @@ const DetailModal: FC<ModalProps> = (props) => {
               )}
             >
               {props.purchaseOrderViewItem &&
-                formatDate(props.purchaseOrderViewItem.purchase_order.created_at)}
+                formatDate(
+                  props.purchaseOrderViewItem.purchaseOrder.createdAt
+                    ? props.purchaseOrderViewItem.purchaseOrder.createdAt
+                    : '',
+                )}
             </div>
             <div className={clsx('col-span-3 grid')} />
           </div>
@@ -124,7 +128,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchase_order.deadline}
+              {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchaseOrder.deadline}
             </div>
             <div className={clsx('col-span-3 grid')} />
           </div>
@@ -224,7 +228,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                   {state.user.roleID === 3 ? (
                     <td className={clsx('border-b py-3')}>
                       <div className={clsx('text-center text-sm text-black-300')}>
-                        <Checkbox checked={purchaseItem.finance_check} disabled={true} />
+                        <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
                       </div>
                     </td>
                   ) : null}
