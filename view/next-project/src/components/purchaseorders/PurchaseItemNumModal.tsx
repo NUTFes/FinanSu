@@ -6,12 +6,12 @@ import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/co
 import { useGlobalContext } from '@components/global/context';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseItem, PurchaseOrder } from '@pages/purchaseorders';
+import { PurchaseItem, PurchaseOrder } from '@type/common';
 
 interface FormData {
-  deadline: string;
-  user_id: number;
-  finance_check: boolean;
+  deadline?: string;
+  userID?: number;
+  financeCheck?: boolean;
 }
 
 export default function PurchaseItemNumModal() {
@@ -32,8 +32,8 @@ export default function PurchaseItemNumModal() {
 
   const [formData, setFormData] = useState({
     deadline: '',
-    user_id: state.user.id,
-    finance_check: false,
+    userID: state.user.id,
+    financeCheck: false,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
@@ -51,10 +51,10 @@ export default function PurchaseItemNumModal() {
         quantity: 0,
         detail: '',
         url: '',
-        purchase_order_id: purchaseOrderId,
-        finance_check: false,
-        created_at: '',
-        updated_at: '',
+        purchaseOrderID: purchaseOrderId,
+        financeCheck: false,
+        createdAt: '',
+        updatedAt: '',
       };
       initFormDataList.push(initFormData);
     }
@@ -87,10 +87,10 @@ export default function PurchaseItemNumModal() {
         quantity: 0,
         detail: '',
         url: '',
-        purchase_order_id: purchaseOrderId,
-        finance_check: false,
-        created_at: '',
-        updated_at: '',
+        purchaseOrderID: purchaseOrderId ? purchaseOrderId : 0,
+        financeCheck: false,
+        createdAt: '',
+        updatedAt: '',
       };
       initialPurchaseItemList.push(initialPurchaseItem);
     }
