@@ -1,34 +1,12 @@
-import { ChakraProvider, Center, Flex, Box, Heading, Link } from '@chakra-ui/react';
+import { Box, Center, ChakraProvider, Flex, Heading, Link } from '@chakra-ui/react';
 import { useState } from 'react';
 
-import { get } from '@api/api_methods';
 import theme from '@assets/theme';
 import SignInView from '@components/auth/SignInView';
 import SignUpView from '@components/auth/SignUpView';
 import LoginLayout from '@components/layout/LoginLayout';
 
-interface Department {
-  id: number;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Props {
-  departments: Department[];
-}
-
-export async function getServerSideProps() {
-  const getDepartmentsUrl: string = process.env.SSR_API_URI + '/departments';
-  const departmentsRes: Department = await get(getDepartmentsUrl);
-  return {
-    props: {
-      departments: departmentsRes,
-    },
-  };
-}
-
-export default function Home(props: Props) {
+export default function Home() {
   const [isMember, setIsMember] = useState(true);
   const cardContent = (isMember: boolean) => {
     if (isMember) {

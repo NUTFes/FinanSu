@@ -1,23 +1,23 @@
 import {
   Box,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Spacer,
-  Select,
   Center,
   Checkbox,
+  Flex,
   Grid,
   GridItem,
+  Select,
+  Spacer,
+  Table,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { get, get_with_token } from '@api/api_methods';
 import { put } from '@api/fundInformations';
@@ -27,7 +27,7 @@ import OpenAddModalButton from '@components/fund_information/OpenAddModalButton'
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
-import { FundInformation, Teacher, User, Department } from '@type/common';
+import { Department, FundInformation, Teacher, User } from '@type/common';
 
 interface FundInformationView {
   fund_information: FundInformation;
@@ -159,10 +159,7 @@ export default function FundInformations(props: Props) {
 
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
-  const [fundInformationView, setFundInformationView] = useState<FundInformationView[]>(
-    props.fundInformationView,
-  );
-
+  const fundInformationView: FundInformationView[] = props.fundInformationView;
   // ログイン中のユーザ
   const [currentUser, setCurrentUser] = useState<User>({
     id: 1,
@@ -295,7 +292,7 @@ export default function FundInformations(props: Props) {
   };
 
   // 変更不可能なcheckboxの描画
-  const unChangeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
+  const unChangeableCheckboxContent = (isChecked: boolean) => {
     {
       if (isChecked) {
         return (
@@ -339,7 +336,7 @@ export default function FundInformations(props: Props) {
                   teachersInformation={teachers}
                   departments={departments}
                   currentUser={currentUser}
-                  userID={userID}
+                  userID={userID ? userID : 0}
                 >
                   学内募金登録
                 </OpenAddModalButton>
@@ -400,29 +397,25 @@ export default function FundInformations(props: Props) {
                           {isFinanceDirector &&
                             changeableCheckboxContent(
                               fundInformation[index].isFirstCheck,
-                              fundViewItem.fund_information.id,
+                              fundViewItem.fund_information.id
+                                ? fundViewItem.fund_information.id
+                                : 0,
                               'isFirstCheck',
                               fundInformation[index],
                             )}
                           {isFinanceStaff &&
                             changeableCheckboxContent(
                               fundInformation[index].isFirstCheck,
-                              fundViewItem.fund_information.id,
+                              fundViewItem.fund_information.id
+                                ? fundViewItem.fund_information.id
+                                : 0,
                               'isFirstCheck',
                               fundInformation[index],
                             )}
                           {isDeveloper &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].isFirstCheck,
-                              fundViewItem.fund_information.id,
-                              'isFirstCheck',
-                            )}
+                            unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
                           {isUser &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].isFirstCheck,
-                              fundViewItem.fund_information.id,
-                              'isFirstCheck',
-                            )}
+                            unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
                         </Center>
                       </Td>
                       <Td>
@@ -430,28 +423,18 @@ export default function FundInformations(props: Props) {
                           {isFinanceDirector &&
                             changeableCheckboxContent(
                               fundInformation[index].isLastCheck,
-                              fundViewItem.fund_information.id,
+                              fundViewItem.fund_information.id
+                                ? fundViewItem.fund_information.id
+                                : 0,
                               'isLastCheck',
                               fundInformation[index],
                             )}
                           {isFinanceStaff &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].isLastCheck,
-                              fundViewItem.fund_information.id,
-                              'isLastCheck',
-                            )}
+                            unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
                           {isDeveloper &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].isLastCheck,
-                              fundViewItem.fund_information.id,
-                              'isLastCheck',
-                            )}
+                            unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
                           {isUser &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].isLastCheck,
-                              fundViewItem.fund_information.id,
-                              'isLastCheck',
-                            )}
+                            unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
                         </Center>
                       </Td>
                       <Td>
@@ -477,7 +460,11 @@ export default function FundInformations(props: Props) {
                                 <GridItem>
                                   <Center>
                                     <OpenEditModalButton
-                                      id={fundViewItem.fund_information.id}
+                                      id={
+                                        fundViewItem.fund_information.id
+                                          ? fundViewItem.fund_information.id
+                                          : 0
+                                      }
                                       teachers={teachers}
                                       currentUser={currentUser}
                                     />
@@ -486,7 +473,11 @@ export default function FundInformations(props: Props) {
                                 <GridItem>
                                   <Center>
                                     <OpenDeleteModalButton
-                                      id={fundViewItem.fund_information.id}
+                                      id={
+                                        fundViewItem.fund_information.id
+                                          ? fundViewItem.fund_information.id
+                                          : 0
+                                      }
                                       teacher_id={fundViewItem.fund_information.teacherID}
                                       user_id={Number(fundViewItem.fund_information.userID)}
                                     />
