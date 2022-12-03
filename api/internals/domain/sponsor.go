@@ -5,7 +5,7 @@ import (
 )
 
 type Sponsor struct {
-	ID             ID             `json:"ID"`
+	ID             ID             `json:"id"`
 	Name           Name           `json:"name"`
 	Tel            Tel            `json:"tel"`
 	Email          Email          `json:"email"`

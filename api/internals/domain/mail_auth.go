@@ -5,7 +5,7 @@ import (
 )
 
 type MailAuth struct {
-	ID        ID        `json:"ID"`
+	ID        ID        `json:"id"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
 	UserID    UserID    `json:"userID"`
