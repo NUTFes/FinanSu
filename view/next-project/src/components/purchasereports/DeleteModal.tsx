@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { del } from '@api/purchaseReport';
+import { del } from '@api/api_methods';
 import theme from '@assets/theme';
 import Button from '@components/common/RegistButton';
 
