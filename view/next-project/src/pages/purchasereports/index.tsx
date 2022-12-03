@@ -53,29 +53,28 @@ export default function PurchaseReport(props: Props) {
   };
 
   // 購入報告
-  const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(() => {
-    const initPurchaseReportList = [];
-    for (let i = 0; i < props.purchaseReportView.length; i++) {
-      initPurchaseReportList.push(props.purchaseReportView[i].purchaseReport);
-    }
-    return initPurchaseReportList;
-  });
-  // 購入申請
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
-    const initPurchaseOederList = [];
-    for (let i = 0; i < props.purchaseReportView.length; i++) {
-      initPurchaseOederList.push(props.purchaseReportView[i].purchaseOrder);
-    }
-    return initPurchaseOederList;
-  });
-  // 購入申請者
-  const [orderUsers, setOrderUsers] = useState<User[]>(() => {
-    const initOederUserList = [];
-    for (let i = 0; i < props.purchaseReportView.length; i++) {
-      initOederUserList.push(props.purchaseReportView[i].orderUser);
-    }
-    return initOederUserList;
-  });
+  const initPurchaseReportList = [];
+  for (let i = 0; i < props.purchaseReportView.length; i++) {
+    initPurchaseReportList.push(props.purchaseReportView[i].purchaseReport);
+  }
+  const purchaseReports: PurchaseReport[] = initPurchaseReportList;
+
+  // // 購入申請
+  // const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
+  //   const initPurchaseOederList = [];
+  //   for (let i = 0; i < props.purchaseReportView.length; i++) {
+  //     initPurchaseOederList.push(props.purchaseReportView[i].purchaseOrder);
+  //   }
+  //   return initPurchaseOederList;
+  // });
+  // // 購入申請者
+  // const [orderUsers, setOrderUsers] = useState<User[]>(() => {
+  //   const initOederUserList = [];
+  //   for (let i = 0; i < props.purchaseReportView.length; i++) {
+  //     initOederUserList.push(props.purchaseReportView[i].orderUser);
+  //   }
+  //   return initOederUserList;
+  // });
 
   // 日付のフォーマットを変更
   const formatDate = (date: string) => {

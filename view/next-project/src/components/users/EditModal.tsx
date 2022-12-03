@@ -21,7 +21,6 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { get } from '@api/api_methods';
 import { put } from '@api/user';
 import theme from '@assets/theme';
-
 import Button from '@components/common/RegistButton';
 import { Bureau } from '@type/common';
 

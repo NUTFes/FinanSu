@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { ChangeEvent, MouseEventHandler } from 'react';
+import React, { MouseEventHandler } from 'react';
 
 interface Props {
   className?: string;

@@ -18,7 +18,7 @@ import {
 } from '@components/common';
 import { useGlobalContext } from '@components/global/context';
 import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal';
-import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@pages/purchasereports';
+import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
 
 interface PurchaseOrderView {
   purchase_order: PurchaseOrder;
@@ -67,14 +67,14 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入報告
   const [formData, setFormData] = useState<PurchaseReport>({
     id: 0,
-    user_id: state.user.id,
+    userID: state.user.id ? state.user.id : 0,
     discount: 0,
     addition: 0,
-    finance_check: false,
+    financeCheck: false,
     remark: '',
-    purchase_order_id: props.purchaseOrderId,
-    created_at: '',
-    updated_at: '',
+    purchaseOrderID: props.purchaseOrderId,
+    createdAt: '',
+    updatedAt: '',
   });
   // 購入物品のリスト
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
@@ -87,10 +87,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         quantity: 0,
         detail: '',
         url: '',
-        purchase_order_id: props.purchaseOrderId,
-        finance_check: false,
-        created_at: '',
-        updated_at: '',
+        purchaseOrderID: props.purchaseOrderId,
+        financeCheck: false,
+        createdAt: '',
+        updatedAt: '',
       };
       initFormDataList.push(initFormData);
     }
@@ -114,10 +114,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           quantity: purchaseOrderViewRes.purchase_item[i].quantity,
           detail: purchaseOrderViewRes.purchase_item[i].detail,
           url: purchaseOrderViewRes.purchase_item[i].url,
-          purchase_order_id: props.purchaseOrderId,
-          finance_check: purchaseOrderViewRes.purchase_item[i].finance_check,
-          created_at: purchaseOrderViewRes.purchase_item[i].created_at,
-          updated_at: purchaseOrderViewRes.purchase_item[i].updated_at,
+          purchaseOrderID: props.purchaseOrderId,
+          financeCheck: purchaseOrderViewRes.purchase_item[i].financeCheck,
+          createdAt: purchaseOrderViewRes.purchase_item[i].createdAt,
+          updatedAt: purchaseOrderViewRes.purchase_item[i].updatedAt,
         };
         initFormDataList.push(initFormData);
       }
@@ -149,12 +149,10 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     };
 
   // finance_checkのtrue,falseを切り替え
-  const isFinanceCheckHandler = (purchaseItemId: number, finance_check: boolean) => {
+  const isFinanceCheckHandler = (purchaseItemId: number | undefined, financeCheck: boolean) => {
     setFormDataList(
       formDataList.map((formData: PurchaseItem) =>
-        formData.id === purchaseItemId
-          ? { ...formData, ['finance_check']: finance_check }
-          : formData,
+        formData.id === purchaseItemId ? { ...formData, ['financeCheck']: financeCheck } : formData,
       ),
     );
   };

@@ -1,4 +1,3 @@
-import theme from '@assets/theme';
 import {
   Box,
   Center,
@@ -17,10 +16,11 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { Teacher } from '@type/common';
 import React, { Dispatch, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
+import theme from '@assets/theme';
+import { Teacher } from '@type/common';
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   openModal: boolean;
