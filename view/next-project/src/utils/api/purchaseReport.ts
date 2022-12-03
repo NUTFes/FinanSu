@@ -1,37 +1,16 @@
-export const get = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return await res.json();
-};
+import { PurchaseReport } from '@type/common';
 
-export const get_with_token = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'access-token': localStorage.getItem('access-token') || 'none',
-      client: localStorage.getItem('client') || 'none',
-      uid: localStorage.getItem('uid') || 'none',
-    },
-  });
-  return await res.json();
-};
-
-export const post = async (url: string, data: any) => {
-  const user_id = data.user_id;
+export const post = async (url: string, data: PurchaseReport) => {
+  const userID = data.userID;
   const discount = data.discount;
   const addition = data.addition;
-  const financeCheck = data.finance_check;
+  const financeCheck = data.financeCheck;
   const remark = data.remark;
-  const purchaseOrderId = data.purchase_order_id;
+  const purchaseOrderId = data.purchaseOrderID;
   const postUrl =
     url +
     '?user_id=' +
-    user_id +
+    userID +
     '&discount=' +
     discount +
     '&addition=' +
@@ -53,17 +32,17 @@ export const post = async (url: string, data: any) => {
   return res;
 };
 
-export const put = async (url: string, data: any) => {
-  const user_id = data.user_id;
+export const put = async (url: string, data: PurchaseReport) => {
+  const userID = data.userID;
   const discount = data.discount;
   const addition = data.addition;
-  const financeCheck = data.finance_check;
+  const financeCheck = data.financeCheck;
   const remark = data.remark;
-  const purchaseOrderId = data.purchase_order_id;
+  const purchaseOrderId = data.purchaseOrderID;
   const putUrl =
     url +
     '?user_id=' +
-    user_id +
+    userID +
     '&discount=' +
     discount +
     '&addition=' +
@@ -83,9 +62,4 @@ export const put = async (url: string, data: any) => {
     body: JSON.stringify(data),
   }).then((response) => response.json());
   return res;
-};
-
-export const del = async (url: string) => {
-  const res = await fetch(url, { method: 'DELETE' });
-  return await res.json();
 };
