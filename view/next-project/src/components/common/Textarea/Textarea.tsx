@@ -7,7 +7,9 @@ interface Props {
   className?: string;
   placeholder?: string;
   value?: string | number;
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (
+    e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>,
+  ) => void;
   children?: React.ReactNode;
 }
 
