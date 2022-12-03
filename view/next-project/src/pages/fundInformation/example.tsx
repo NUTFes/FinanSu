@@ -1,6 +1,6 @@
-import { Table, Tr, Td, Button } from '@chakra-ui/react';
+import { Button, Table, Td, Tr } from '@chakra-ui/react';
 
-import { get, del } from '@api/api_methods';
+import { del, get } from '@api/api_methods';
 import { post, put } from '@api/fundInformations';
 type FundInformations = {
   id: number;
@@ -42,7 +42,7 @@ export async function postPurchaseOrders() {
   };
   const getRes = await get(postUrl);
   console.log(getRes.slice(-1)[0].id);
-  const postReq = await post(postUrl, postData);
+  await post(postUrl, postData);
 }
 
 export async function putPurchaseOrders() {
@@ -59,7 +59,7 @@ export async function putPurchaseOrders() {
     report_person: 'report',
     report_price: 3000,
   };
-  const putReq = await put(putUrl, putData);
+  await put(putUrl, putData);
 }
 
 export async function deletePurchaseOrders() {
@@ -68,7 +68,7 @@ export async function deletePurchaseOrders() {
   const getRes = await get(Url);
   const delUrl = Url + '/' + getRes.slice(-1)[0].id;
   console.log(getRes.slice(-1)[0].id);
-  const delReq = await del(delUrl);
+  await del(delUrl);
 }
 
 export default function Example(props: Props) {
