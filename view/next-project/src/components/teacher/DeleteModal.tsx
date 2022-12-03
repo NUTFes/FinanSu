@@ -1,50 +1,34 @@
 import {
-  ChakraProvider,
-  Center,
-  Text,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Divider,
+  Flex,
   Grid,
   GridItem,
-  Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
   Radio,
   RadioGroup,
+  Spacer,
   Stack,
+  Text,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { get, del } from '@api/api_methods';
+import { del, get } from '@api/api_methods';
 import theme from '@assets/theme';
 import { RedButton } from '@components/common';
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Department, Teacher } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
   teacher: Teacher;
@@ -63,16 +47,16 @@ export default function DeleteModal(props: ModalProps) {
     id: Number(props.id),
     name: '',
     position: '',
-    department_id: 1,
+    departmentID: 1,
     room: '',
-    is_black: false,
+    isBlack: false,
     remark: '',
-    created_at: '',
-    updated_at: '',
+    createdAt: '',
+    updatedAt: '',
   };
   const [teacher, setTeacher] = useState<Teacher>(initTeacher);
 
-  const isBlack: string = props.teacher.is_black.toString();
+  const isBlack: string = props.teacher.isBlack.toString();
 
   // teacherを取得
   const getTeacher = useCallback(async () => {
@@ -141,26 +125,26 @@ export default function DeleteModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Text fontSize='lg' pl={2}>
-                      {teacher.department_id == 1 && (
+                      {teacher.departmentID == 1 && (
                         <Text>機械工学分野/機械創造工学課程・機械創造工学専攻</Text>
                       )}
-                      {teacher.department_id == 2 && (
+                      {teacher.departmentID == 2 && (
                         <Text>電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻</Text>
                       )}
-                      {teacher.department_id == 3 && (
+                      {teacher.departmentID == 3 && (
                         <Text>
-                          情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻
+                          情報・経営シスB工学分野/情報・経営システム工学課程/情報・経営システム工学専攻
                         </Text>
                       )}
-                      {teacher.department_id == 4 && (
+                      {teacher.departmentID == 4 && (
                         <Text>
-                          物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻
+                          物質B工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻
                         </Text>
                       )}
-                      {teacher.department_id == 5 && (
+                      {teacher.departmentID == 5 && (
                         <Text>環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻</Text>
                       )}
-                      {teacher.department_id == 6 && (
+                      {teacher.departmentID == 6 && (
                         <Text>量子・原子力統合工学分野/原子力システム安全工学専攻</Text>
                       )}
                     </Text>
