@@ -20,7 +20,7 @@ services:
     container_name: "nutfes-finansu-api"
     volumes:
       - ./api:/app
-    command: go run cmd/main.go
+    command: "./start.sh"
     env_file:
       - ./finansu.env
     ports:
