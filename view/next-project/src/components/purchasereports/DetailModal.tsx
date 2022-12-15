@@ -1,13 +1,14 @@
-import { userAtom } from '@/store/atoms';
-import { del } from '@api/api_methods';
-import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { PurchaseReportView } from '@pages/purchasereports';
-import { PurchaseItem, PurchaseReport } from '@type/common';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
+
+import { userAtom } from '@/store/atoms';
+import { del } from '@api/api_methods';
+import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
+import { PurchaseReportView } from '@pages/purchasereports';
+import { PurchaseItem, PurchaseReport } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,7 +20,7 @@ interface ModalProps {
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
-  const [user, setUser] = useRecoilState(userAtom);
+  const [user] = useRecoilState(userAtom);
 
   const onClose = () => {
     props.setIsOpen(false);

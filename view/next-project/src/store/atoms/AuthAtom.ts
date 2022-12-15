@@ -1,6 +1,7 @@
-import { STORE_KEYS } from '@/store/storeKeys';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+
+import { STORE_KEYS } from '@/store/storeKeys';
 
 const { persistAtom } = recoilPersist();
 

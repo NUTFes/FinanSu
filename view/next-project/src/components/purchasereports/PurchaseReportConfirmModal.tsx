@@ -5,7 +5,7 @@ import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
 import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
 import ReceiptModal from '@components/purchasereports/ReceiptModal';
-import { PurchaseItem } from '@pages/purchasereports';
+import { PurchaseItem } from '@type/common';
 
 interface ModalProps {
   purchaseReportId: number;
@@ -35,7 +35,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
   // 購入報告する物品と報告しない物品を仕分け
   const judgeItems = useCallback(() => {
     props.formDataList.map((formData: PurchaseItem) => {
-      if (formData.finance_check) {
+      if (formData.financeCheck) {
         setReportedPurchaseItems((reportedPurchaseItem) => [...reportedPurchaseItem, formData]);
       } else {
         setNotReportedPurchaseItems((notReportedPurchaseItem) => [

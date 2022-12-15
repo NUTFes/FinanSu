@@ -1,3 +1,9 @@
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { RiArrowDropRightLine } from 'react-icons/ri';
+import { useRecoilState } from 'recoil';
+
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
@@ -14,11 +20,6 @@ import {
 } from '@components/common';
 import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal';
 import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
-import { RiArrowDropRightLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
 interface PurchaseOrderView {
   purchase_order: PurchaseOrder;
@@ -35,7 +36,7 @@ interface ModalProps {
 }
 
 export default function PurchaseReportAddModal(props: ModalProps) {
-  const [user, setUser] = useRecoilState(userAtom);
+  const [user] = useRecoilState(userAtom);
 
   const router = useRouter();
 

@@ -1,14 +1,16 @@
-import { authAtom } from '@/store/atoms';
-import { get_with_token } from '@api/api_methods';
-import Header from '@components/common/Header';
-import SideNav from '@components/common/SideNav';
-import { User } from '@type/common';
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
+
+import { authAtom } from '@/store/atoms';
+import { get_with_token } from '@api/api_methods';
 import 'tailwindcss/tailwind.css';
+import Header from '@components/common/Header';
+import SideNav from '@components/common/SideNav';
+import { User } from '@type/common';
+
 import s from './MainLayout.module.css';
 
 interface LayoutProps {
@@ -42,7 +44,7 @@ export default function MainLayout(props: LayoutProps) {
         router.push('/purchaseorders');
       }
     }
-  }, [router]);
+  }, [router, auth]);
 
   return (
     <>

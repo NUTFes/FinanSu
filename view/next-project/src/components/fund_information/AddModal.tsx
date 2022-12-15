@@ -1,6 +1,3 @@
-import { userAtom } from '@/store/atoms';
-import { post } from '@api/fundInformations';
-import theme from '@assets/theme';
 import {
   Box,
   Center,
@@ -17,12 +14,17 @@ import {
   Select,
   Spacer,
 } from '@chakra-ui/react';
-import RegistButton from '@components/common/RegistButton';
-import { Department, FundInformation, Teacher, User } from '@type/common';
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
+
+import { userAtom } from '@/store/atoms';
+import { post } from '@api/fundInformations';
+import theme from '@assets/theme';
+import RegistButton from '@components/common/RegistButton';
+import { Department, FundInformation, Teacher, User } from '@type/common';
+
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -35,7 +37,7 @@ interface ModalProps {
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
-  const [user, setUser] = useRecoilState(userAtom);
+  const [user] = useRecoilState(userAtom);
 
   const closeModal = () => {
     props.setShowModal(false);
