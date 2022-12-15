@@ -1,3 +1,6 @@
+import { userAtom } from '@/store/atoms';
+import { post } from '@api/fundInformations';
+import theme from '@assets/theme';
 import {
   Box,
   Center,
@@ -14,25 +17,12 @@ import {
   Select,
   Spacer,
 } from '@chakra-ui/react';
+import RegistButton from '@components/common/RegistButton';
+import { Department, FundInformation, Teacher, User } from '@type/common';
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-
-import { post } from '@api/fundInformations';
-import theme from '@assets/theme';
-import RegistButton from '@components/common/RegistButton';
-import { useGlobalContext } from '@components/global/context';
-import { Department, Teacher, User } from '@type/common';
-
-interface FormData {
-  userID: number | string;
-  teacherID: number | string;
-  price: number;
-  remark: string;
-  isFirstCheck: boolean;
-  isLastCheck: boolean;
-  departmentID: number | string;
-}
+import { useRecoilState } from 'recoil';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -45,36 +35,36 @@ interface ModalProps {
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
-  const state = useGlobalContext();
+  const [user, setUser] = useRecoilState(userAtom);
+
   const closeModal = () => {
     props.setShowModal(false);
   };
 
   const router = useRouter();
-  const [formData, setFormData] = useState<FormData>({
-    userID: state.user.id,
+  const [departmentID, setDepartmentID] = useState<number | string>(1);
+  const [formData, setFormData] = useState<FundInformation>({
+    userID: user.id,
     teacherID: 1,
     price: 0,
     remark: '',
     isFirstCheck: false,
     isLastCheck: false,
-    departmentID: 1,
   });
 
   useEffect(() => {
     if (router.isReady) {
-      const initFormData: FormData = {
-        userID: state.user.id,
+      const initFormData: FundInformation = {
+        userID: user.id,
         teacherID: 1,
         price: 0,
         remark: '',
         isFirstCheck: false,
         isLastCheck: false,
-        departmentID: 1,
       };
       setFormData(initFormData);
     }
-  }, [state.user, router.isReady]);
+  }, [user, router.isReady]);
 
   // 学科別教員リストの用意
   // // 電気電子情報
@@ -149,7 +139,11 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const addFundInformation = async (data: FormData) => {
+  const handleDepartmentID = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDepartmentID(Number(e.target.value));
+  };
+
+  const addFundInformation = async (data: FundInformation) => {
     const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
     await post(addFundInformationUrl, data);
   };
@@ -203,8 +197,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                   </GridItem>
                   <GridItem colSpan={9}>
                     <Select
-                      value={formData.departmentID}
-                      onChange={handler('departmentID')}
+                      value={departmentID}
+                      onChange={handleDepartmentID}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='100'
@@ -222,22 +216,19 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                     </Flex>
                   </GridItem>
                   <GridItem colSpan={9}>
-                    {formData.departmentID == 1 && selectTeacherContent(electricalTeachers)}
-                    {formData.departmentID == 2 && selectTeacherContent(biologicalTeachers)}
-                    {formData.departmentID == 3 && selectTeacherContent(machineTeachers)}
-                    {formData.departmentID == 4 && selectTeacherContent(materialTeachers)}
-                    {formData.departmentID == 5 && selectTeacherContent(environmentalTeachers)}
-                    {formData.departmentID == 6 &&
-                      selectTeacherContent(informationManagementTeachers)}
-                    {formData.departmentID == 7 && selectTeacherContent(commonEducationTeachers)}
-                    {formData.departmentID == 8 && selectTeacherContent(nuclearTeachers)}
-                    {formData.departmentID == 9 &&
-                      selectTeacherContent(technologyInovationTeachers)}
-                    {formData.departmentID == 10 && selectTeacherContent(systemSafetyTeachers)}
-                    {formData.departmentID == 11 && selectTeacherContent(technologySupportTeachers)}
-                    {formData.departmentID == 12 &&
-                      selectTeacherContent(industryAcademiaFusionTeachers)}
-                    {formData.departmentID == 13 && selectTeacherContent(presidentClericals)}
+                    {departmentID == 1 && selectTeacherContent(electricalTeachers)}
+                    {departmentID == 2 && selectTeacherContent(biologicalTeachers)}
+                    {departmentID == 3 && selectTeacherContent(machineTeachers)}
+                    {departmentID == 4 && selectTeacherContent(materialTeachers)}
+                    {departmentID == 5 && selectTeacherContent(environmentalTeachers)}
+                    {departmentID == 6 && selectTeacherContent(informationManagementTeachers)}
+                    {departmentID == 7 && selectTeacherContent(commonEducationTeachers)}
+                    {departmentID == 8 && selectTeacherContent(nuclearTeachers)}
+                    {departmentID == 9 && selectTeacherContent(technologyInovationTeachers)}
+                    {departmentID == 10 && selectTeacherContent(systemSafetyTeachers)}
+                    {departmentID == 11 && selectTeacherContent(technologySupportTeachers)}
+                    {departmentID == 12 && selectTeacherContent(industryAcademiaFusionTeachers)}
+                    {departmentID == 13 && selectTeacherContent(presidentClericals)}
                   </GridItem>
                   <GridItem colSpan={3}>
                     <Flex color='black.600' h='100%' justify='end' align='center'>

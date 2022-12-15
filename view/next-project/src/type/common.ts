@@ -126,7 +126,7 @@ export interface Teacher {
 // Others(その他)
 // // User
 export interface User {
-  id?: number;
+  id: number;
   name: string;
   bureauID: number;
   roleID: number;

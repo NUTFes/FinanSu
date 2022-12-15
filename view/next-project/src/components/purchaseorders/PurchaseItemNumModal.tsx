@@ -1,21 +1,17 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
+import { userAtom } from '@/store/atoms';
 import { post } from '@api/purchaseOrder';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { useUI } from '@components/ui/context';
 import { PurchaseItem, PurchaseOrder } from '@type/common';
-
-interface FormData {
-  deadline?: string;
-  userID?: number;
-  financeCheck?: boolean;
-}
+import { useRecoilState } from 'recoil';
 
 export default function PurchaseItemNumModal() {
-  const state = useGlobalContext();
+  const [user] = useRecoilState(userAtom);
+
   // 購入物品数用の配列
   const purchaseItemNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -32,7 +28,7 @@ export default function PurchaseItemNumModal() {
 
   const [formData, setFormData] = useState({
     deadline: '',
-    userID: state.user.id,
+    userID: user.id,
     financeCheck: false,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
@@ -74,7 +70,7 @@ export default function PurchaseItemNumModal() {
   };
 
   // 購入申請の登録と登録した購入申請のIDを使って購入物品を更新
-  const submit = async (data: FormData) => {
+  const submit = async (data: PurchaseOrder) => {
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
     const postRes: PurchaseOrder = await post(addPurchaseOrderUrl, data);
     const purchaseOrderId = postRes.id;
