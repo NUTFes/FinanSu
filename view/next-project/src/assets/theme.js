@@ -38,6 +38,9 @@ const theme = extendTheme({
     primary: {
       1: '#56DAFF',
       2: '#1DBCC5',
+      3: '#E2E8F0',
+      4: '#023859',
+      5: '#04668C',
     },
     accent: {
       1: '#E4434E',
