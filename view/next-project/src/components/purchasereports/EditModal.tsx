@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { put as putPurchaseItem } from '@api/purchaseItem';
 import { put as putPurchaseReport } from '@api/purchaseReport';
@@ -19,6 +18,7 @@ import {
   Title,
 } from '@components/common';
 import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
+import { userAtom } from 'src/store/atoms';
 
 interface PurchaseRecordView {
   purchasereport: PurchaseReport;

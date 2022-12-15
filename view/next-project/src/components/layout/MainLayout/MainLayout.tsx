@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { authAtom } from '@/store/atoms';
 import { get_with_token } from '@api/api_methods';
 import 'tailwindcss/tailwind.css';
 import Header from '@components/common/Header';
 import SideNav from '@components/common/SideNav';
 import { User } from '@type/common';
+import { authAtom } from 'src/store/atoms';
 
 import s from './MainLayout.module.css';
 

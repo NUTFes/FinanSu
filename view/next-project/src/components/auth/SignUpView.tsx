@@ -17,13 +17,13 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
-import { authAtom, userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
 import theme from '@assets/theme';
 import LoadingButton from '@components/common/LoadingButton';
 import { Bureau, SignUp, User } from '@type/common';
+import { authAtom, userAtom } from 'src/store/atoms';
 
 export default function SignUpView() {
   const [, setAuth] = useRecoilState(authAtom);

@@ -19,11 +19,11 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } fro
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
 import { post } from '@api/fundInformations';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { Department, FundInformation, Teacher, User } from '@type/common';
+import { userAtom } from 'src/store/atoms';
 
 
 interface ModalProps {

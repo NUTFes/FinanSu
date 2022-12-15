@@ -16,12 +16,12 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
-import { authAtom, userAtom } from '@/store/atoms';
 import { get_with_token } from '@api/api_methods';
 import { signIn } from '@api/signIn';
 import theme from '@assets/theme';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignIn } from '@type/common';
+import { authAtom, userAtom } from 'src/store/atoms';
 
 export default function SignInView() {
   // ログイン中フラグ

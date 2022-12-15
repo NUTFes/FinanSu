@@ -3,10 +3,10 @@ import Router from 'next/router';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
-import { authAtom, userAtom } from '@/store/atoms';
-import { User } from '@/type/common';
 import { del } from '@api/signOut';
 import { ChakraUIDropdown } from '@components/common';
+import { User } from '@type/common';
+import { authAtom, userAtom } from 'src/store/atoms';
 
 const Header = () => {
   const [auth, setAuth] = useRecoilState(authAtom);
