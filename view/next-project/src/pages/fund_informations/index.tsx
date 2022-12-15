@@ -478,8 +478,8 @@ export default function FundInformations(props: Props) {
                                           ? fundViewItem.fund_information.id
                                           : 0
                                       }
-                                      teacher_id={fundViewItem.fund_information.teacherID}
-                                      user_id={Number(fundViewItem.fund_information.userID)}
+                                      teacherID={fundViewItem.fund_information.teacherID}
+                                      userID={Number(fundViewItem.fund_information.userID)}
                                     />
                                   </Center>
                                 </GridItem>
