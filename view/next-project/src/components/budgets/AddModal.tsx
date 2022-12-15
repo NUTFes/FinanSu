@@ -23,7 +23,7 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { post } from '@api/budget';
 import theme from '@assets/theme';
 import { PrimaryButton } from '@components/common';
-import { Budget } from '@type/common';
+import { Budget, Source, Year } from '@type/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -31,16 +31,6 @@ interface ModalProps {
   children?: React.ReactNode;
   sources: Source[];
   years: Year[];
-}
-
-interface Source {
-  id: number;
-  name: string;
-}
-
-interface Year {
-  id: number;
-  year: number;
 }
 
 const BudgetAddModal: FC<ModalProps> = (props) => {

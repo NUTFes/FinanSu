@@ -26,15 +26,6 @@ import theme from '@assets/theme';
 import { PrimaryButton } from '@components/common';
 import { Department, Teacher } from '@type/common';
 
-interface FormData {
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-}
-
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   openModal: boolean;
@@ -50,16 +41,16 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
 
-  const initFormData: FormData = {
+  const initFormData: Teacher = {
     name: '',
     position: '',
-    department_id: 1,
+    departmentID: 1,
     room: '',
-    is_black: false,
+    isBlack: false,
     remark: '',
   };
 
-  const [formData, setFormData] = useState<FormData>(initFormData);
+  const [formData, setFormData] = useState<Teacher>(initFormData);
   const [isBlack, setIsBlack] = useState<string>('false');
 
   const handler =
@@ -68,11 +59,11 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const addTeacher = async (data: FormData, is_black: string) => {
-    if (is_black == 'true') {
-      data.is_black = true;
+  const addTeacher = async (data: Teacher, isBlack: string) => {
+    if (isBlack == 'true') {
+      data.isBlack = true;
     } else {
-      data.is_black = false;
+      data.isBlack = false;
     }
     const addTeacherURL = process.env.CSR_API_URI + '/teachers';
     await post(addTeacherURL, data);
@@ -138,8 +129,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                   </GridItem>
                   <GridItem colSpan={9}>
                     <Select
-                      value={formData.department_id}
-                      onChange={handler('department_id')}
+                      value={formData.departmentID}
+                      onChange={handler('departmentID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='100'

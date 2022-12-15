@@ -61,6 +61,7 @@ export default function SignUpView() {
   ];
 
   const [postUserData, setPostUserData] = useState<User>({
+    id: 0,
     name: '',
     bureauID: 1,
     roleID: 1,

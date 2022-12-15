@@ -33,7 +33,7 @@ export async function getServerSideProps() {
   };
 }
 
-export default function PurchaseItem(props: Props) {
+export default function PurchaseItems(props: Props) {
   // 合計金額計算
   const totalPriceArray: number[] = [];
   const calcItemTotalPrice = (quantity: number, price: number) => {
