@@ -1,8 +1,4 @@
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
-import { RiArrowDropRightLine } from 'react-icons/ri';
-
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
 import { post } from '@api/purchaseReport';
@@ -16,9 +12,13 @@ import {
   Textarea,
   UnderlinePrimaryButton,
 } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
 import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal';
 import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { RiArrowDropRightLine } from 'react-icons/ri';
+import { useRecoilState } from 'recoil';
 
 interface PurchaseOrderView {
   purchase_order: PurchaseOrder;
@@ -35,7 +35,8 @@ interface ModalProps {
 }
 
 export default function PurchaseReportAddModal(props: ModalProps) {
-  const state = useGlobalContext();
+  const [user, setUser] = useRecoilState(userAtom);
+
   const router = useRouter();
 
   const [activeStep, setActiveStep] = useState<number>(1);
@@ -67,7 +68,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入報告
   const [formData, setFormData] = useState<PurchaseReport>({
     id: 0,
-    userID: state.user.id ? state.user.id : 0,
+    userID: user.id,
     discount: 0,
     addition: 0,
     financeCheck: false,

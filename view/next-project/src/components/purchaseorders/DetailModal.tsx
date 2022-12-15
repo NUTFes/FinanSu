@@ -1,12 +1,12 @@
+import { userAtom } from '@/store/atoms';
+import { del } from '@api/api_methods';
+import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
+import { PurchaseOrderView } from '@pages/purchaseorders';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
-
-import { del } from '@api/api_methods';
-import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
-import { PurchaseOrderView } from '@pages/purchaseorders';
+import { useRecoilState } from 'recoil';
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,7 +18,8 @@ interface ModalProps {
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
-  const state = useGlobalContext();
+  const [user] = useRecoilState(userAtom);
+
   const onClose = () => {
     props.setIsOpen(false);
   };
@@ -148,7 +149,7 @@ const DetailModal: FC<ModalProps> = (props) => {
               <tr
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
               >
-                {state.user.roleID === 1 ? (
+                {user.roleID === 1 ? (
                   <th className={clsx('w-3/12 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>品名</div>
                   </th>
@@ -169,7 +170,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>URL</div>
                 </th>
-                {state.user.roleID === 3 ? (
+                {user.roleID === 3 ? (
                   <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>局長確認</div>
                   </th>
@@ -225,7 +226,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                       </div>
                     </div>
                   </td>
-                  {state.user.roleID === 3 ? (
+                  {user.roleID === 3 ? (
                     <td className={clsx('border-b py-3')}>
                       <div className={clsx('text-center text-sm text-black-300')}>
                         <Checkbox checked={purchaseItem.financeCheck} disabled={true} />

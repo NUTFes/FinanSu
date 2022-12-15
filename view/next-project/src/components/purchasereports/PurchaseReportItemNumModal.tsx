@@ -1,29 +1,24 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
+import { userAtom } from '@/store/atoms';
 import * as purchaseItemAPI from '@api/purchaseItem';
 import { post } from '@api/purchaseOrder';
 import {
+  CloseButton,
   Modal,
   OutlinePrimaryButton,
-  PullDown,
   PrimaryButton,
-  CloseButton,
+  PullDown,
 } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseItem } from '@pages/purchasereports';
-
-interface FormData {
-  deadline: string;
-  user_id: number;
-  finance_check: boolean;
-}
+import { PurchaseItem, PurchaseOrder } from '@type/common';
+import { useRecoilState } from 'recoil';
 
 export default function PurchaseReportItemNumModal() {
-  // グローバルステートを呼び出し
-  const state = useGlobalContext();
+  const [user, setUser] = useRecoilState(userAtom);
+
   const { setModalView, openModal, closeModal } = useUI();
 
   // 購入物品数用の配列
@@ -67,10 +62,10 @@ export default function PurchaseReportItemNumModal() {
       dayStr = String(day);
     }
 
-    const data: FormData = {
+    const data: PurchaseOrder = {
       deadline: String(year) + monthStr + dayStr,
-      user_id: state.user.id,
-      finance_check: false,
+      userID: user.id,
+      financeCheck: false,
     };
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
     const postRes = await post(addPurchaseOrderUrl, data);
@@ -87,10 +82,10 @@ export default function PurchaseReportItemNumModal() {
         quantity: 0,
         detail: '',
         url: '',
-        purchase_order_id: purchaseOrderID,
-        finance_check: false,
-        created_at: '',
-        updated_at: '',
+        purchaseOrderID: purchaseOrderID,
+        financeCheck: false,
+        createdAt: '',
+        updatedAt: '',
       };
       updatePurchaseItemList.push(initialPurchaseItem);
     }
