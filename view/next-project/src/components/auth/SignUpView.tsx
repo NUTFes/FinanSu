@@ -1,29 +1,33 @@
-import {
-  ChakraProvider,
-  Center,
-  Box,
-  Heading,
-  Input,
-  Select,
-  Button,
-  Flex,
-  Grid,
-  GridItem,
-  FormControl,
-  FormErrorMessage,
-} from '@chakra-ui/react';
-import Router from 'next/router';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-
+import { authAtom, userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
 import theme from '@assets/theme';
+import {
+  Box,
+  Button,
+  Center,
+  ChakraProvider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Grid,
+  GridItem,
+  Heading,
+  Input,
+  Select,
+} from '@chakra-ui/react';
 import LoadingButton from '@components/common/LoadingButton';
-import { Bureau, User, SignUp } from '@type/common';
+import { Bureau, SignUp, User } from '@type/common';
+import Router from 'next/router';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
 
 export default function SignUpView() {
+  const [, setAuth] = useRecoilState(authAtom);
+  const [, setUser] = useRecoilState(userAtom);
+
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
 
@@ -78,18 +82,31 @@ export default function SignUpView() {
 
   const postUser = async (data: SignUp) => {
     setIsSignUpNow(true);
-    const getUrl: string = process.env.CSR_API_URI + '/users';
-    const postUserUrl: string = process.env.CSR_API_URI + '/users';
+    const userUrl: string = process.env.CSR_API_URI + '/users';
     const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
-
-    const getRes = await get(getUrl);
+    // userのpost時のResに登録したデータが返ってこないので以下で用意
+    const getRes = await get(userUrl);
     const userID: number = getRes[getRes.length - 1].id + 1;
-    await post(postUserUrl, postUserData);
+    // signIn には登録したuserのIDが必要なので先にUserをpost
+    await post(userUrl, postUserData);
+    // signUp
     const req = await signUp(signUpUrl, data, userID);
     const res = await req.json();
+    // state用のuserのデータ
+    const userData: User = {
+      id: userID,
+      name: postUserData.name,
+      bureauID: Number(postUserData.bureauID),
+      roleID: postUserData.roleID,
+    };
     if (req.status === 200) {
-      localStorage.setItem('access-token', res.access_token);
-      localStorage.setItem('login', 'true');
+      // state用のauthのデータ
+      const authData = {
+        isSignIn: true,
+        accessToken: res.accessToken,
+      };
+      setAuth(authData);
+      setUser(userData);
       Router.push('/purchaseorders');
     } else {
       console.log('Error' + res.status);

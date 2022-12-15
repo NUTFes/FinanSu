@@ -1,28 +1,32 @@
-import {
-  ChakraProvider,
-  Center,
-  Box,
-  Heading,
-  Flex,
-  Grid,
-  GridItem,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  Input,
-} from '@chakra-ui/react';
-import Router from 'next/router';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-
+import { authAtom, userAtom } from '@/store/atoms';
+import { get_with_token } from '@api/api_methods';
 import { signIn } from '@api/signIn';
 import theme from '@assets/theme';
+import {
+  Box,
+  Button,
+  Center,
+  ChakraProvider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Grid,
+  GridItem,
+  Heading,
+  Input,
+} from '@chakra-ui/react';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignIn } from '@type/common';
+import Router from 'next/router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
 
 export default function SignInView() {
   // ログイン中フラグ
   const [isSignInNow, setIsSignInNow] = useState<boolean>(false);
+  const [, setAuth] = useRecoilState(authAtom);
+  const [, setUser] = useRecoilState(userAtom);
 
   const {
     register,
@@ -34,13 +38,20 @@ export default function SignInView() {
 
   const SignIn = async (data: SignIn) => {
     setIsSignInNow(true);
-    const loginUrl: string = process.env.CSR_API_URI + '/mail_auth/signin';
+    const signinUrl: string = process.env.CSR_API_URI + '/mail_auth/signin';
+    const currentUserUrl: string = process.env.CSR_API_URI + '/current_user';
 
-    const req = await signIn(loginUrl, data);
+    const req = await signIn(signinUrl, data);
     const res = await req.json();
+    const userRes = await get_with_token(currentUserUrl, res.accessToken);
     if (req.status === 200) {
-      localStorage.setItem('access-token', res.access_token);
-      localStorage.setItem('login', 'true');
+      // state用のauthのデータ
+      const authData = {
+        isSignIn: true,
+        accessToken: res.accessToken,
+      };
+      setAuth(authData);
+      setUser(userRes);
       Router.push('/purchaseorders');
     } else {
       console.log('Error' + res.status);

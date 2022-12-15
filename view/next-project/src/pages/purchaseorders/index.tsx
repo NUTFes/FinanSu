@@ -1,16 +1,16 @@
-import clsx from 'clsx';
-import Head from 'next/head';
-import { useState } from 'react';
-
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Checkbox, Title } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 import { PurchaseItem, PurchaseOrder, User } from '@type/common';
+import clsx from 'clsx';
+import Head from 'next/head';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 export interface PurchaseOrderView {
   purchaseOrder: PurchaseOrder;
@@ -36,8 +36,8 @@ export async function getServerSideProps() {
   };
 }
 
-export default function PurchaseOrder(props: Props) {
-  const state = useGlobalContext();
+export default function PurchaseOrders(props: Props) {
+  const [user] = useRecoilState(userAtom);
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -57,7 +57,7 @@ export default function PurchaseOrder(props: Props) {
   // // 申請を出した時点では購入物品のチェックはfalseなので、finance_check関係なく計算
   const TotalFee = (purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
-    purchaseItems.map((purchaseItem: PurchaseItem) => {
+    purchaseItems?.map((purchaseItem: PurchaseItem) => {
       totalFee += purchaseItem.price * purchaseItem.quantity;
     });
     return totalFee;
@@ -142,7 +142,7 @@ export default function PurchaseOrder(props: Props) {
                     )}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {state.user.roleID === 3
+                      {user.roleID === 3
                         ? changeableCheckboxContent(
                             purchaseOrderViewItem.purchaseOrder.financeCheck,
                           )
@@ -288,9 +288,9 @@ export default function PurchaseOrder(props: Props) {
                           purchaseItems={purchaseOrderViewItem.purchase_item}
                           isDisabled={
                             !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (state.user.bureauID === 2 ||
-                              state.user.bureauID === 3 ||
-                              state.user.id === purchaseOrderViewItem.purchaseOrder.userID)
+                            (user.bureauID === 2 ||
+                              user.bureauID === 3 ||
+                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
                           }
                         />
                       </div>
@@ -304,9 +304,9 @@ export default function PurchaseOrder(props: Props) {
                           purchaseOrderViewItem={purchaseOrderViewItem}
                           isDisabled={
                             !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (state.user.bureauID === 2 ||
-                              state.user.bureauID === 3 ||
-                              state.user.id === purchaseOrderViewItem.purchaseOrder.userID)
+                            (user.bureauID === 2 ||
+                              user.bureauID === 3 ||
+                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
                           }
                         />
                       </div>
