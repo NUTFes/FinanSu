@@ -1,16 +1,16 @@
-import clsx from 'clsx';
-import Head from 'next/head';
-import { useState } from 'react';
-
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Checkbox, Title } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
 import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
+import clsx from 'clsx';
+import Head from 'next/head';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 export interface PurchaseReportView {
   purchaseReport: PurchaseReport;
@@ -40,8 +40,9 @@ export async function getServerSideProps() {
   };
 }
 
-export default function PurchaseReport(props: Props) {
-  const state = useGlobalContext();
+export default function PurchaseReports(props: Props) {
+  const [user] = useRecoilState(userAtom);
+
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
   const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
 
@@ -180,7 +181,7 @@ export default function PurchaseReport(props: Props) {
                     }}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {state.user.roleID === 3
+                      {user.roleID === 3
                         ? changeableCheckboxContent(
                             purchaseReportViewItem.purchaseReport.financeCheck,
                           )
@@ -328,9 +329,9 @@ export default function PurchaseReport(props: Props) {
                           }
                           isDisabled={
                             !purchaseReportViewItem.purchaseReport.financeCheck &&
-                            (state.user.bureauID === 2 ||
-                              state.user.bureauID === 3 ||
-                              state.user.id === purchaseReportViewItem.reportUser.id)
+                            (user.bureauID === 2 ||
+                              user.bureauID === 3 ||
+                              user.id === purchaseReportViewItem.reportUser.id)
                           }
                         />
                       </div>
@@ -343,9 +344,9 @@ export default function PurchaseReport(props: Props) {
                           }
                           isDisabled={
                             !purchaseReportViewItem.purchaseReport.financeCheck &&
-                            (state.user.bureauID === 2 ||
-                              state.user.bureauID === 3 ||
-                              state.user.id === purchaseReportViewItem.reportUser.id)
+                            (user.bureauID === 2 ||
+                              user.bureauID === 3 ||
+                              user.id === purchaseReportViewItem.reportUser.id)
                           }
                         />
                       </div>
