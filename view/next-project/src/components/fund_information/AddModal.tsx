@@ -25,7 +25,6 @@ import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { Department, FundInformation, Teacher, User } from '@type/common';
 
-
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   openModal: boolean;

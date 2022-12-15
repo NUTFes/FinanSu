@@ -11,7 +11,6 @@ import RegistButton from '@components/common/RegistButton';
 
 import type { NextPage } from 'next';
 
-
 interface activity {
   id: number;
   sponsor_id: number;

@@ -11,7 +11,6 @@ import RegistButton from '@components/common/RegistButton';
 
 import type { NextPage } from 'next';
 
-
 const sponsorship: NextPage = () => {
   const sponsorshipList = [
     {
