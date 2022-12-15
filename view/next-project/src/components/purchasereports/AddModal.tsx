@@ -1,9 +1,10 @@
-import { userAtom } from '@/store/atoms';
-import { CloseButton, Modal, PrimaryButton, PullDown } from '@components/common';
-import { useUI } from '@components/ui/context';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
+
+import { userAtom } from '@/store/atoms';
+import { CloseButton, Modal, PrimaryButton, PullDown } from '@components/common';
+import { useUI } from '@components/ui/context';
 
 export default function PurchaseItemNumModal() {
   const [user] = useRecoilState(userAtom);

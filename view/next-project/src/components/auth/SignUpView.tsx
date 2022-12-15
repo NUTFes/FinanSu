@@ -1,8 +1,3 @@
-import { authAtom, userAtom } from '@/store/atoms';
-import { get } from '@api/api_methods';
-import { signUp } from '@api/signUp';
-import { post } from '@api/user';
-import theme from '@assets/theme';
 import {
   Box,
   Button,
@@ -17,12 +12,18 @@ import {
   Input,
   Select,
 } from '@chakra-ui/react';
-import LoadingButton from '@components/common/LoadingButton';
-import { Bureau, SignUp, User } from '@type/common';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
+
+import { authAtom, userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
+import { signUp } from '@api/signUp';
+import { post } from '@api/user';
+import theme from '@assets/theme';
+import LoadingButton from '@components/common/LoadingButton';
+import { Bureau, SignUp, User } from '@type/common';
 
 export default function SignUpView() {
   const [, setAuth] = useRecoilState(authAtom);

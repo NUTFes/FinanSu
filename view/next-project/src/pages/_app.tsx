@@ -1,9 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import Layout from '@components/layout/Layout';
-import { ManagedUIContext } from '@components/ui/context';
-import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { RecoilRoot } from 'recoil';
+
+import Layout from '@components/layout/Layout';
+import { ManagedUIContext } from '@components/ui/context';
+
+import type { AppProps } from 'next/app';
 import 'tailwindcss/tailwind.css';
 
 function MyApp({ Component, pageProps }: AppProps) {

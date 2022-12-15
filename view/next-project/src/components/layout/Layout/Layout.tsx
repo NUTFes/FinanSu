@@ -8,6 +8,7 @@ import { useUI } from '@components/ui/context';
 
 import s from './Layout.module.css';
 
+
 const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
   return (
     <>

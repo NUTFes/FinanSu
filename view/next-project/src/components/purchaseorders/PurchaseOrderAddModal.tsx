@@ -14,7 +14,7 @@ import {
   Stepper,
   Tooltip,
 } from '@components/common';
-import { PurchaseItem } from '@pages/purchaseorders';
+import { PurchaseItem } from '@type/common';
 
 interface ModalProps {
   purchaseItemNum: PurchaseItemNum;

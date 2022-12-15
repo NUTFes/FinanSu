@@ -1,7 +1,8 @@
-import { STORE_KEYS } from '@/store/storeKeys';
-import { User } from '@/type/common';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+
+import { STORE_KEYS } from '@/store/storeKeys';
+import { User } from '@/type/common';
 
 const { persistAtom } = recoilPersist();
 

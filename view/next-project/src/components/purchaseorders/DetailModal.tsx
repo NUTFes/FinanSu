@@ -1,12 +1,13 @@
-import { userAtom } from '@/store/atoms';
-import { del } from '@api/api_methods';
-import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { PurchaseOrderView } from '@pages/purchaseorders';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
+
+import { userAtom } from '@/store/atoms';
+import { del } from '@api/api_methods';
+import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
+import { PurchaseOrderView } from '@pages/purchaseorders';
 
 interface ModalProps {
   isOpen: boolean;
