@@ -7,42 +7,12 @@ import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton, Radio } from '
 import { useUI } from '@components/ui/context';
 
 import PurchaseReportAddModal from './PurchaseReportAddModal';
-
-
-interface PurchaseOrder {
-  id: number;
-  deadline: string;
-  user_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number;
-  quantity: number;
-  detail: string;
-  url: string;
-  purchase_order_id: number;
-  finance_check: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
-}
+import { PurchaseOrder, User, PurchaseItem } from 'src/type/common';
 
 interface PurchaseOrderView {
-  purchase_order: PurchaseOrder;
+  purchaseOrder: PurchaseOrder;
   user: User;
-  purchase_item: PurchaseItem[];
+  purchaseItem: PurchaseItem[];
 }
 
 export default function PurchaseItemNumModal() {
@@ -72,9 +42,14 @@ export default function PurchaseItemNumModal() {
   }, [router]);
 
   // 日付のフォーマットを変更
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 10);
+  const formatDate = (date: string | undefined) => {
+    let datetime2 = '';
+    if (date != undefined && date.length > 10) {
+      const datetime = date.replace('T', ' ');
+      datetime2 = datetime.substring(0, datetime.length - 10);
+    } else {
+      datetime2 = '';
+    }
     return datetime2;
   };
 
@@ -139,7 +114,7 @@ export default function PurchaseItemNumModal() {
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}
               >
                 {purchaseOrderView.map((purchaseOrderItem, index) => (
-                  <tr key={purchaseOrderItem.purchase_order.id}>
+                  <tr key={purchaseOrderItem.purchaseOrder?.id}>
                     <td
                       className={clsx(
                         'px-4',
@@ -149,10 +124,10 @@ export default function PurchaseItemNumModal() {
                     >
                       {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchase_item && (
+                        {purchaseOrderItem.purchaseItem && (
                           <Radio
-                            value={purchaseOrderItem.purchase_order.id}
-                            onClick={handler(purchaseOrderItem.purchase_item.length)}
+                            value={purchaseOrderItem.purchaseOrder?.id}
+                            onClick={handler(purchaseOrderItem.purchaseItem.length)}
                           />
                         )}
                       </div>
@@ -165,12 +140,12 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.user.bureau_id === 1 && '総務局'}
-                        {purchaseOrderItem.user.bureau_id === 2 && '渉外局'}
-                        {purchaseOrderItem.user.bureau_id === 3 && '財務局'}
-                        {purchaseOrderItem.user.bureau_id === 4 && '企画局'}
-                        {purchaseOrderItem.user.bureau_id === 5 && '政策局'}
-                        {purchaseOrderItem.user.bureau_id === 6 && '情報局'}
+                        {purchaseOrderItem.user.bureauID === 1 && '総務局'}
+                        {purchaseOrderItem.user.bureauID === 2 && '渉外局'}
+                        {purchaseOrderItem.user.bureauID === 3 && '財務局'}
+                        {purchaseOrderItem.user.bureauID === 4 && '企画局'}
+                        {purchaseOrderItem.user.bureauID === 5 && '政策局'}
+                        {purchaseOrderItem.user.bureauID === 6 && '情報局'}
                       </div>
                     </td>
                     <td
@@ -181,8 +156,8 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchase_item &&
-                          calcTotalFee(purchaseOrderItem.purchase_item)}
+                        {purchaseOrderItem.purchaseItem &&
+                          calcTotalFee(purchaseOrderItem.purchaseItem)}
                       </div>
                     </td>
                     <td
@@ -193,15 +168,15 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchase_item.length === 1 ? (
+                        {purchaseOrderItem.purchaseItem?.length === 1 ? (
                           <>
-                            {purchaseOrderItem.purchase_item &&
-                              purchaseOrderItem.purchase_item[0].item}
+                            {purchaseOrderItem.purchaseItem &&
+                              purchaseOrderItem.purchaseItem[0].item}
                           </>
                         ) : (
                           <>
-                            {purchaseOrderItem.purchase_item &&
-                              purchaseOrderItem.purchase_item[0].item}
+                            {purchaseOrderItem.purchaseItem &&
+                              purchaseOrderItem.purchaseItem[0].item}
                             , ...
                           </>
                         )}
@@ -215,7 +190,7 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchase_item && purchaseOrderItem.purchase_item.length}
+                        {purchaseOrderItem.purchaseItem && purchaseOrderItem.purchaseItem.length}
                       </div>
                     </td>
                     <td
@@ -226,7 +201,7 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {formatDate(purchaseOrderItem.purchase_order.created_at)}
+                        {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
                       </div>
                     </td>
                   </tr>

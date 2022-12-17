@@ -6,8 +6,8 @@ import { useRecoilState } from 'recoil';
 
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { PurchaseOrderView } from '@pages/purchaseorders';
 import { userAtom } from 'src/store/atoms';
+import { PurchaseItem, PurchaseOrderView } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -50,7 +50,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           'mb-8 grid w-full justify-items-center text-2xl font-thin leading-8 tracking-widest text-black-600',
         )}
       >
-        申請の詳細
+        申請の{props.isDelete ? '削除' : '詳細'}
       </div>
       <div className={clsx('mb-8 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-1 grid')} />
@@ -182,7 +182,7 @@ const DetailModal: FC<ModalProps> = (props) => {
               className={clsx('w-full border border-x-white-0 border-b-primary-1 border-t-white-0')}
             >
               {/* <div className={clsx('flex items-start')}> */}
-              {props.purchaseOrderViewItem?.purchase_item.map((purchaseItem) => (
+              {props.purchaseOrderViewItem?.purchaseItem?.map((purchaseItem: PurchaseItem) => (
                 <tr key={purchaseItem.id} className={clsx('w-full')}>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>

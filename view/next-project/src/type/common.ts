@@ -162,3 +162,10 @@ export interface Bureau {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// for view Types
+export interface PurchaseOrderView {
+  purchaseOrder: PurchaseOrder;
+  user: User;
+  purchaseItem: PurchaseItem[];
+}

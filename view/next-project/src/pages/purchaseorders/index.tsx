@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { get } from '@api/api_methods';
 import { Card, Checkbox, Title } from '@components/common';
@@ -10,14 +10,8 @@ import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, User } from '@type/common';
+import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView } from '@type/common';
 import { userAtom } from 'src/store/atoms';
-
-export interface PurchaseOrderView {
-  purchaseOrder: PurchaseOrder;
-  user: User;
-  purchase_item: PurchaseItem[];
-}
 
 interface Props {
   user: User;
@@ -39,6 +33,8 @@ export async function getServerSideProps() {
 
 export default function PurchaseOrders(props: Props) {
   const [user] = useRecoilState(userAtom);
+  const user2 = useRecoilValue(userAtom);
+  const [currentUser, setCurrentUser] = useState<User>(user);
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -238,11 +234,11 @@ export default function PurchaseOrders(props: Props) {
                         'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
                       )}
                     >
-                      {purchaseOrderViewItem.purchase_item &&
-                        purchaseOrderViewItem.purchase_item.map(
+                      {purchaseOrderViewItem.purchaseItem &&
+                        purchaseOrderViewItem.purchaseItem.map(
                           (purchaseItem: PurchaseItem, index: number) => (
                             <>
-                              {purchaseOrderViewItem.purchase_item.length - 1 === index ? (
+                              {purchaseOrderViewItem.purchaseItem.length - 1 === index ? (
                                 <>{purchaseItem.item}</>
                               ) : (
                                 <>{purchaseItem.item},</>
@@ -268,7 +264,7 @@ export default function PurchaseOrders(props: Props) {
                     }}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {TotalFee(purchaseOrderViewItem.purchase_item)}
+                      {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>
                   </td>
                   <td
@@ -280,17 +276,17 @@ export default function PurchaseOrders(props: Props) {
                   >
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        <OpenEditModalButton
+                        <OpenEditModalButton  
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
                               ? purchaseOrderViewItem.purchaseOrder.id
                               : 0
                           }
-                          purchaseItems={purchaseOrderViewItem.purchase_item}
+                          purchaseItems={purchaseOrderViewItem.purchaseItem}
                           isDisabled={
                             !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (user.bureauID === 2 ||
-                              user.bureauID === 3 ||
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
                               user.id === purchaseOrderViewItem.purchaseOrder.userID)
                           }
                         />
@@ -305,8 +301,8 @@ export default function PurchaseOrders(props: Props) {
                           purchaseOrderViewItem={purchaseOrderViewItem}
                           isDisabled={
                             !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (user.bureauID === 2 ||
-                              user.bureauID === 3 ||
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
                               user.id === purchaseOrderViewItem.purchaseOrder.userID)
                           }
                         />
