@@ -169,3 +169,11 @@ export interface PurchaseOrderView {
   user: User;
   purchaseItem: PurchaseItem[];
 }
+
+export interface PurchaseReportView {
+  purchaseReport: PurchaseReport;
+  purchaseOrder: PurchaseOrder;
+  orderUser: User;
+  reportUser: User;
+  purchaseItems: PurchaseItem[];
+}

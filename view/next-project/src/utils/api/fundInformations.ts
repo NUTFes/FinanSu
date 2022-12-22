@@ -41,7 +41,7 @@ export const put = async (url: string, data: FundInformation) => {
   const isLastCheck = data.isLastCheck;
   const putUrl =
     url +
-    '?userID=' +
+    '?user_id=' +
     userID +
     '&teacher_id=' +
     teacherID +

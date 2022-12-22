@@ -17,16 +17,14 @@ import {
   Textarea,
   Title,
 } from '@components/common';
-import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
+import {
+  PurchaseItem,
+  PurchaseOrder,
+  PurchaseReport,
+  User,
+  PurchaseReportView,
+} from '@type/common';
 import { userAtom } from 'src/store/atoms';
-
-interface PurchaseRecordView {
-  purchasereport: PurchaseReport;
-  purchaseorder: PurchaseOrder;
-  order_user: User;
-  report_user: User;
-  purchaseitems: PurchaseItem[];
-}
 
 interface ModalProps {
   purchaseReportId: number;
@@ -93,28 +91,28 @@ export default function EditModal(props: ModalProps) {
     const getPurchaseOrderViewURL =
       process.env.CSR_API_URI + '/get_purchasereports_for_view/' + props.purchaseReportId;
 
-    const purchaseOrderViewRes: PurchaseRecordView = await get(getPurchaseOrderViewURL);
+    const purchaseOrderViewRes: PurchaseReportView = await get(getPurchaseOrderViewURL);
     const initFormDataList = [];
-    for (let i = 0; i < purchaseOrderViewRes.purchaseitems.length; i++) {
-      if (purchaseOrderViewRes.purchaseitems[i].financeCheck) {
+    for (let i = 0; i < purchaseOrderViewRes.purchaseItems.length; i++) {
+      if (purchaseOrderViewRes.purchaseItems[i].financeCheck) {
         const initFormData: PurchaseItem = {
-          id: purchaseOrderViewRes.purchaseitems[i].id,
-          item: purchaseOrderViewRes.purchaseitems[i].item,
-          price: purchaseOrderViewRes.purchaseitems[i].price,
-          quantity: purchaseOrderViewRes.purchaseitems[i].quantity,
-          detail: purchaseOrderViewRes.purchaseitems[i].detail,
-          url: purchaseOrderViewRes.purchaseitems[i].url,
-          purchaseOrderID: purchaseOrderViewRes.purchaseorder.id
-            ? purchaseOrderViewRes.purchaseorder.id
+          id: purchaseOrderViewRes.purchaseItems[i].id,
+          item: purchaseOrderViewRes.purchaseItems[i].item,
+          price: purchaseOrderViewRes.purchaseItems[i].price,
+          quantity: purchaseOrderViewRes.purchaseItems[i].quantity,
+          detail: purchaseOrderViewRes.purchaseItems[i].detail,
+          url: purchaseOrderViewRes.purchaseItems[i].url,
+          purchaseOrderID: purchaseOrderViewRes.purchaseOrder.id
+            ? purchaseOrderViewRes.purchaseOrder.id
             : 0,
-          financeCheck: purchaseOrderViewRes.purchaseitems[i].financeCheck,
-          createdAt: purchaseOrderViewRes.purchaseitems[i].createdAt,
-          updatedAt: purchaseOrderViewRes.purchaseitems[i].updatedAt,
+          financeCheck: purchaseOrderViewRes.purchaseItems[i].financeCheck,
+          createdAt: purchaseOrderViewRes.purchaseItems[i].createdAt,
+          updatedAt: purchaseOrderViewRes.purchaseItems[i].updatedAt,
         };
         initFormDataList.push(initFormData);
       }
     }
-    setFormData(purchaseOrderViewRes.purchasereport);
+    setFormData(purchaseOrderViewRes.purchaseReport);
     setFormDataList(initFormDataList);
   }, [props.purchaseReportId, setFormData, setFormDataList]);
 
@@ -171,7 +169,7 @@ export default function EditModal(props: ModalProps) {
   // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
-      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
+      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseItems/' + item.id;
       await putPurchaseItem(updatePurchaseItemUrl, item);
     });
   };

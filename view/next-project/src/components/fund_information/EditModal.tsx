@@ -75,6 +75,7 @@ export default function FundInformationEditModal(props: ModalProps) {
   const submitFundInformation = async (data: FundInformation, id: number | string) => {
     const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
     await put(submitFundInformationURL, data);
+    router.reload();
   };
 
   return (
@@ -161,7 +162,6 @@ export default function FundInformationEditModal(props: ModalProps) {
                 width='220px'
                 onClick={() => {
                   submitFundInformation(formData, props.id);
-                  router.reload();
                 }}
               >
                 編集する

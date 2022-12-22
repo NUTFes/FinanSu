@@ -22,9 +22,9 @@ import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common'
 import { userAtom } from 'src/store/atoms';
 
 interface PurchaseOrderView {
-  purchase_order: PurchaseOrder;
+  purchaseOrder: PurchaseOrder;
   user: User;
-  purchase_item: PurchaseItem[];
+  purchaseItem: PurchaseItem[];
 }
 
 interface ModalProps {
@@ -107,19 +107,19 @@ export default function PurchaseReportAddModal(props: ModalProps) {
 
     const purchaseOrderViewRes: PurchaseOrderView = await get(getPurchaseOrderViewURL);
     const initFormDataList = [];
-    if (purchaseOrderViewRes.purchase_item !== null) {
-      for (let i = 0; i < purchaseOrderViewRes.purchase_item.length; i++) {
+    if (purchaseOrderViewRes.purchaseItem !== null) {
+      for (let i = 0; i < purchaseOrderViewRes.purchaseItem.length; i++) {
         const initFormData: PurchaseItem = {
-          id: purchaseOrderViewRes.purchase_item[i].id,
-          item: purchaseOrderViewRes.purchase_item[i].item,
-          price: purchaseOrderViewRes.purchase_item[i].price,
-          quantity: purchaseOrderViewRes.purchase_item[i].quantity,
-          detail: purchaseOrderViewRes.purchase_item[i].detail,
-          url: purchaseOrderViewRes.purchase_item[i].url,
+          id: purchaseOrderViewRes.purchaseItem[i].id,
+          item: purchaseOrderViewRes.purchaseItem[i].item,
+          price: purchaseOrderViewRes.purchaseItem[i].price,
+          quantity: purchaseOrderViewRes.purchaseItem[i].quantity,
+          detail: purchaseOrderViewRes.purchaseItem[i].detail,
+          url: purchaseOrderViewRes.purchaseItem[i].url,
           purchaseOrderID: props.purchaseOrderId,
-          financeCheck: purchaseOrderViewRes.purchase_item[i].financeCheck,
-          createdAt: purchaseOrderViewRes.purchase_item[i].createdAt,
-          updatedAt: purchaseOrderViewRes.purchase_item[i].updatedAt,
+          financeCheck: purchaseOrderViewRes.purchaseItem[i].financeCheck,
+          createdAt: purchaseOrderViewRes.purchaseItem[i].createdAt,
+          updatedAt: purchaseOrderViewRes.purchaseItem[i].updatedAt,
         };
         initFormDataList.push(initFormData);
       }

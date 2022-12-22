@@ -44,6 +44,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
         ]);
       }
     });
+    console.log('reportedPurchaseItems', reportedPurchaseItems);
   }, [props.formDataList, setReportedPurchaseItems, setNotReportedPurchaseItems]);
 
   useEffect(() => {
