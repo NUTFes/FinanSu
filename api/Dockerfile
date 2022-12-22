@@ -16,4 +16,6 @@ ENV CGO_ENABLED=0
 ENV GOOS=linux
 ENV GOARCH=amd64
 
-RUN go get -u github.com/cosmtrek/air
+# Airをインストール
+RUN go get -u github.com/cosmtrek/air && go build -o /go/bin/air github.com/cosmtrek/air
+CMD ["air", "-c", ".air.toml"]
