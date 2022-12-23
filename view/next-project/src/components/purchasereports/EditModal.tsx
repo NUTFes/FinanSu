@@ -18,11 +18,7 @@ import {
   Textarea,
   Title,
 } from '@components/common';
-import {
-  PurchaseItem,
-  PurchaseReport,
-  PurchaseReportView,
-} from '@type/common';
+import { PurchaseItem, PurchaseReport, PurchaseReportView } from '@type/common';
 
 interface ModalProps {
   purchaseReportId: number;
