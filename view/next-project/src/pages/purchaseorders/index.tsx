@@ -33,9 +33,9 @@ export async function getServerSideProps() {
 
 export default function PurchaseOrders(props: Props) {
   const [user] = useRecoilState(userAtom);
-  const [, setPurchaseOrderID] = useState<number>(1);
+  const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
-  const [, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = (purchaseOrderID: number, purchaseOrderViewItem: PurchaseOrderView) => {
     setPurchaseOrderID(purchaseOrderID);
     setPurchaseOrderViewItem(purchaseOrderViewItem);
@@ -274,7 +274,7 @@ export default function PurchaseOrders(props: Props) {
                   >
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        <OpenEditModalButton  
+                        <OpenEditModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
                               ? purchaseOrderViewItem.purchaseOrder.id
