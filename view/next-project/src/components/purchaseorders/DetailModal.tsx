@@ -4,9 +4,9 @@ import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { userAtom } from 'src/store/atoms';
 import { PurchaseItem, PurchaseOrderView } from '@type/common';
 
 interface ModalProps {

@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Checkbox, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -11,7 +12,6 @@ import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView } from '@type/common';
-import { userAtom } from 'src/store/atoms';
 
 interface Props {
   user: User;
@@ -33,11 +33,9 @@ export async function getServerSideProps() {
 
 export default function PurchaseOrders(props: Props) {
   const [user] = useRecoilState(userAtom);
-  const user2 = useRecoilValue(userAtom);
-  const [currentUser, setCurrentUser] = useState<User>(user);
-  const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
+  const [, setPurchaseOrderID] = useState<number>(1);
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [, setIsOpen] = useState<boolean>(false);
   const onOpen = (purchaseOrderID: number, purchaseOrderViewItem: PurchaseOrderView) => {
     setPurchaseOrderID(purchaseOrderID);
     setPurchaseOrderViewItem(purchaseOrderViewItem);

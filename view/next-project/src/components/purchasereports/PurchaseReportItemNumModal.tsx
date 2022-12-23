@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import * as purchaseItemAPI from '@api/purchaseItem';
 import { post } from '@api/purchaseOrder';
 import {
@@ -14,7 +15,6 @@ import {
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
 import { useUI } from '@components/ui/context';
 import { PurchaseItem, PurchaseOrder } from '@type/common';
-import { userAtom } from 'src/store/atoms';
 
 export default function PurchaseReportItemNumModal() {
   const [user] = useRecoilState(userAtom);

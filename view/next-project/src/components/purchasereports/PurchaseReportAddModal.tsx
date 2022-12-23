@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
 import { post } from '@api/purchaseReport';
@@ -19,7 +20,6 @@ import {
 } from '@components/common';
 import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal';
 import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
-import { userAtom } from 'src/store/atoms';
 
 interface PurchaseOrderView {
   purchaseOrder: PurchaseOrder;
