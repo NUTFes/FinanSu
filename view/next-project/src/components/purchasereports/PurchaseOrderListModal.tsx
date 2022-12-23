@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import { get } from '@api/api_methods';
 import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton, Radio } from '@components/common';
 import { useUI } from '@components/ui/context';
+import { PurchaseOrder, User, PurchaseItem } from 'src/type/common';
 
 import PurchaseReportAddModal from './PurchaseReportAddModal';
-import { PurchaseOrder, User, PurchaseItem } from 'src/type/common';
 
 interface PurchaseOrderView {
   purchaseOrder: PurchaseOrder;

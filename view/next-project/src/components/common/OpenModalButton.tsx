@@ -6,7 +6,6 @@ import theme from '@assets/theme';
 
 import RegistModal from './RegistModal';
 
-
 interface Props {
   width?: string;
   height?: string;

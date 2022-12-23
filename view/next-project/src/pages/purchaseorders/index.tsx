@@ -274,7 +274,7 @@ export default function PurchaseOrders(props: Props) {
                   >
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        <OpenEditModalButton  
+                        <OpenEditModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
                               ? purchaseOrderViewItem.purchaseOrder.id
