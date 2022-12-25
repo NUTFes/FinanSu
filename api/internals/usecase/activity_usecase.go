@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
@@ -17,7 +18,7 @@ type ActivityUseCase interface {
 	CreateActivity(context.Context, string, string, string, string) error
 	UpdateActivity(context.Context, string, string, string, string, string) error
 	DestroyActivity(context.Context, string) error
-	GetActivitiesWithSponsorAndStyle(context.Context) ([]domain.ActivityForAdminView, error) 
+	GetActivitiesWithSponsorAndStyle(context.Context) ([]domain.ActivityForAdminView, error)
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
@@ -77,12 +78,23 @@ func (a *activityUseCase) GetActivityByID(c context.Context, id string) (domain.
 	return activity, nil
 }
 
-func (a *activityUseCase) CreateActivity(c context.Context, sponsorStyleID string, userID string, isDone string, sponsorID string) error {
+func (a *activityUseCase) CreateActivity(
+	c context.Context,
+	sponsorStyleID string,
+	userID string,
+	isDone string,
+	sponsorID string) error {
 	err := a.rep.Create(c, sponsorStyleID, userID, isDone, sponsorID)
 	return err
 }
 
-func (a *activityUseCase) UpdateActivity(c context.Context, id string, sponsorStyleID string, userID string, isDone string, sponsorID string) error {
+func (a *activityUseCase) UpdateActivity(
+	c context.Context,
+	id string,
+	sponsorStyleID string,
+	userID string,
+	isDone string,
+	sponsorID string) error {
 	err := a.rep.Update(c, id, sponsorStyleID, userID, isDone, sponsorID)
 	return err
 }
