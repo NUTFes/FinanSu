@@ -38,7 +38,6 @@ services:
       - "1323:1323"
     stdin_open: true
     tty: true
-      # depends_on:
-      #   db:
-      #     condition: service_started
+      depends_on:
+        db:
 
