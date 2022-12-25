@@ -38,6 +38,6 @@ services:
       - "1323:1323"
     stdin_open: true
     tty: true
-      depends_on:
-        db:
+    depends_on:
+      - db
 
