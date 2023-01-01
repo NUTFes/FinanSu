@@ -40,6 +40,9 @@ func (a abstractRepository) ReadByID(ctx context.Context, query string) (*sql.Ro
 
 func (a abstractRepository) UpdateDB(ctx context.Context, query string) error {
 	_, err := a.client.DB().ExecContext(ctx, query)
+	if err != nil {
+		return err
+	}
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
 }
