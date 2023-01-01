@@ -3,11 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
-	"github.com/pkg/errors"
 )
 
 type activityRepository struct {
@@ -37,9 +35,7 @@ func (ar *activityRepository) All(c context.Context) (*sql.Rows, error) {
 // 1件取得
 func (ar *activityRepository) Find(c context.Context, id string) (*sql.Row, error) {
 	query := "SELECT * FROM activities WHERE id =" + id
-	row := ar.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row, nil
+	return ar.crud.ReadByID(c, query)
 }
 
 // 作成
@@ -56,9 +52,7 @@ func (ar *activityRepository) Create(
 	VALUES
 		(` + sponsorStyleID + "," + userID + "," + isDone + "," + sponsorID + ")"
 
-	_, err := ar.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	return ar.crud.UpdateDB(c, query)
 }
 
 // 編集
@@ -79,19 +73,13 @@ func (ar *activityRepository) Update(
 		", sponsor_id = " + sponsorID +
 		" where id = " + id
 
-	_, err := ar.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	return ar.crud.UpdateDB(c, query)
 }
 
 // 削除
 func (ar *activityRepository) Destroy(c context.Context, id string) error {
-
 	query := "DELETE FROM activities WHERE id = " + id
-
-	_, err := ar.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	return ar.crud.UpdateDB(c, query)
 }
 
 func (ar *activityRepository) AllWithSponsor(c context.Context) (*sql.Rows, error) {
@@ -111,10 +99,5 @@ func (ar *activityRepository) AllWithSponsor(c context.Context) (*sql.Rows, erro
 	ON
 		activities.user_id = users.id`
 
-	rows, err := ar.client.DB().QueryContext(c, query)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+	return ar.crud.Read(c, query)
 }
