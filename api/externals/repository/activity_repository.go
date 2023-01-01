@@ -6,11 +6,13 @@ import (
 	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/pkg/errors"
 )
 
 type activityRepository struct {
 	client db.Client
+	crud   abstract.Crud
 }
 
 type ActivityRepository interface {
@@ -22,19 +24,14 @@ type ActivityRepository interface {
 	AllWithSponsor(context.Context) (*sql.Rows, error)
 }
 
-func NewActivityRepository(client db.Client) ActivityRepository {
-	return &activityRepository{client}
+func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
+	return &activityRepository{c, ac}
 }
 
 // 全件取得
 func (ar *activityRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "SELECT * FROM activities"
-	rows, err := ar.client.DB().QueryContext(c, query)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+	return ar.crud.Read(c, query)
 }
 
 // 1件取得

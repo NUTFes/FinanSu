@@ -1,13 +1,15 @@
 package di
 
 import (
+	"log"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/NUTFes/FinanSu/api/router"
-	"log"
 )
 
 func InitializeServer() db.Client {
@@ -16,6 +18,8 @@ func InitializeServer() db.Client {
 	if err != nil {
 		log.Fatal("db error")
 	}
+
+	crud := abstract.NewCrud(client)
 
 	// ↓
 
@@ -33,7 +37,7 @@ func InitializeServer() db.Client {
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client)
 	sponsorStyleRepository := repository.NewSponsorStyleRepository(client)
 	teacherRepository := repository.NewTeacherRepository(client)
-	activityRepository := repository.NewActivityRepository(client)
+	activityRepository := repository.NewActivityRepository(client, crud)
 	sponsorRepository := repository.NewSponsorRepository(client)
 	bureauRepository := repository.NewBureauRepository(client)
 	// ↓
