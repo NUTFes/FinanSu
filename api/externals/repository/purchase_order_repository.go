@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
-	"github.com/pkg/errors"
-	"fmt"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type purchaseOrderRepository struct {
 	client db.Client
+	crud   abstract.Crud
 }
 
 type PurchaseOrderRepository interface {
@@ -18,106 +19,80 @@ type PurchaseOrderRepository interface {
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Delete(context.Context, string) error
-	AllOrderWithUser(context.Context) (*sql.Rows,error)
-	FindWithOrderItem(context.Context,string) (*sql.Row,error)
-	GetPurchaseItemByOrderId(context.Context, string) (*sql.Rows,error)
-	FindNewRecord(context.Context) (*sql.Row,error)
+	AllOrderWithUser(context.Context) (*sql.Rows, error)
+	FindWithOrderItem(context.Context, string) (*sql.Row, error)
+	GetPurchaseItemByOrderId(context.Context, string) (*sql.Rows, error)
+	FindNewRecord(context.Context) (*sql.Row, error)
 }
 
-func NewPurchaseOrderRepository(client db.Client) PurchaseOrderRepository {
-	return &purchaseOrderRepository{client}
+func NewPurchaseOrderRepository(c db.Client, ac abstract.Crud) PurchaseOrderRepository {
+	return &purchaseOrderRepository{c, ac}
 }
 
-//全件取得
+// 全件取得
 func (por *purchaseOrderRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "select * from purchase_orders"
-	rows, err := por.client.DB().QueryContext(c, query)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+	return por.crud.Read(c, query)
 }
 
-//1件取得
-func (por * purchaseOrderRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from purchase_orders where id = "+ id
-	row := por.client.DB().QueryRowContext(c ,query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row, nil
-} 
+// 1件取得
+func (por *purchaseOrderRepository) Find(c context.Context, id string) (*sql.Row, error) {
+	query := "select * from purchase_orders where id = " + id
+	return por.crud.ReadByID(c, query)
+}
 
-//作成
-func (por * purchaseOrderRepository) Create(
+// 作成
+func (por *purchaseOrderRepository) Create(
 	c context.Context,
 	deadLine string,
 	userId string,
 	financeCheck string,
 ) error {
-		var query = "insert into purchase_orders (deadline, user_id, finance_check) values ('" + deadLine + "'," + userId + "," + financeCheck +")"
-		_, err := por.client.DB().ExecContext(c, query)
-		fmt.Printf("\x1b[36m%s\n", query)
-		return err
+	var query = "insert into purchase_orders (deadline, user_id, finance_check) values ('" + deadLine + "'," + userId + "," + financeCheck + ")"
+	return por.crud.UpdateDB(c, query)
 }
 
-//編集
-func (por * purchaseOrderRepository) Update(
+// 編集
+func (por *purchaseOrderRepository) Update(
 	c context.Context,
 	id string,
 	deadLine string,
 	userId string,
 	financeCheck string,
 ) error {
-	var query = "update purchase_orders set deadline ='" + deadLine + "', user_id = " + userId + ",finance_check = " + financeCheck	+ " where id = " + id 
-	_, err := por.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err 
+	var query = "update purchase_orders set deadline ='" + deadLine + "', user_id = " + userId + ",finance_check = " + financeCheck + " where id = " + id
+	return por.crud.UpdateDB(c, query)
 }
-//削除
-func (por * purchaseOrderRepository) Delete(
+
+// 削除
+func (por *purchaseOrderRepository) Delete(
 	c context.Context,
 	id string,
-)error {
+) error {
 	query := "Delete from purchase_orders where id =" + id
-	_, err := por.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	return por.crud.UpdateDB(c, query)
 }
 
-//orderに紐づくuserの取得(All)
-func (p *purchaseOrderRepository) AllOrderWithUser(c context.Context) (*sql.Rows, error){
+// orderに紐づくuserの取得(All)
+func (p *purchaseOrderRepository) AllOrderWithUser(c context.Context) (*sql.Rows, error) {
 	query := "select * from purchase_orders inner join users on purchase_orders.user_id = users.id;"
-	rows , err := p.client.DB().QueryContext(c,query)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+	return p.crud.Read(c, query)
 }
 
-//orderに紐づくuserの取得(byID)
+// orderに紐づくuserの取得(byID)
 func (p *purchaseOrderRepository) FindWithOrderItem(c context.Context, id string) (*sql.Row, error) {
-	query := " select * from purchase_orders inner join users on purchase_orders.user_id = users.id where purchase_orders.id =" +id
-	row := p.client.DB().QueryRowContext(c,query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row,nil	
+	query := " select * from purchase_orders inner join users on purchase_orders.user_id = users.id where purchase_orders.id =" + id
+	return p.crud.ReadByID(c, query)
 }
 
-//指定したorder_idのitemを取得する
-func (p *purchaseOrderRepository) GetPurchaseItemByOrderId(c context.Context, purchaseOrderID string) (*sql.Rows,error) {
-	query := "select * from purchase_items where purchase_items.purchase_order_id ="+ purchaseOrderID
-	rows, err := p.client.DB().QueryContext(c, query)
-	if err!= nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL") 
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+// 指定したorder_idのitemを取得する
+func (p *purchaseOrderRepository) GetPurchaseItemByOrderId(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
+	query := "select * from purchase_items where purchase_items.purchase_order_id =" + purchaseOrderID
+	return p.crud.Read(c, query)
 }
 
-//最新のレコードを取得
-func (por *purchaseOrderRepository) FindNewRecord(c context.Context) (*sql.Row,error) {
+// 最新のレコードを取得
+func (por *purchaseOrderRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
 	query := "select * from purchase_orders order by id desc limit 1"
-	row:= por.client.DB().QueryRowContext(c,query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row ,nil
+	return por.crud.ReadByID(c, query)
 }

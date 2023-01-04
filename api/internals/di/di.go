@@ -1,13 +1,15 @@
 package di
 
 import (
+	"log"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/NUTFes/FinanSu/api/router"
-	"log"
 )
 
 func InitializeServer() db.Client {
@@ -17,25 +19,27 @@ func InitializeServer() db.Client {
 		log.Fatal("db error")
 	}
 
+	crud := abstract.NewCrud(client)
+
 	// ↓
 
 	// Repository
-	userRepository := repository.NewUserRepository(client)
+	userRepository := repository.NewUserRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client)
 	sessionRepository := repository.NewSessionRepository(client)
-	departmentRepository := repository.NewDepartmentRepository(client)
-	sourceRepository := repository.NewSourceRepository(client)
-	yearRepository := repository.NewYearRepository(client)
-	budgetRepository := repository.NewBudgetRepository(client)
-	fundInformationRepository := repository.NewFundInformationRepository(client)
-	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
-	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
-	purchaseItemRepository := repository.NewPurchaseItemRepository(client)
-	sponsorStyleRepository := repository.NewSponsorStyleRepository(client)
-	teacherRepository := repository.NewTeacherRepository(client)
-	activityRepository := repository.NewActivityRepository(client)
-	sponsorRepository := repository.NewSponsorRepository(client)
-	bureauRepository := repository.NewBureauRepository(client)
+	departmentRepository := repository.NewDepartmentRepository(client, crud)
+	sourceRepository := repository.NewSourceRepository(client, crud)
+	yearRepository := repository.NewYearRepository(client, crud)
+	budgetRepository := repository.NewBudgetRepository(client, crud)
+	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
+	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
+	purchaseReportRepository := repository.NewPurchaseReportRepository(client, crud)
+	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
+	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
+	teacherRepository := repository.NewTeacherRepository(client, crud)
+	activityRepository := repository.NewActivityRepository(client, crud)
+	sponsorRepository := repository.NewSponsorRepository(client, crud)
+	bureauRepository := repository.NewBureauRepository(client, crud)
 	// ↓
 
 	// UseCase
