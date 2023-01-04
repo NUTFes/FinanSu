@@ -1,6 +1,8 @@
 package domain
 
-import ("time")
+import (
+	"time"
+)
 
 type PurchaseItem struct {
 	ID              ID              `json:"id"`
@@ -9,22 +11,22 @@ type PurchaseItem struct {
 	Quantity        Quantity        `json:"quantity"`
 	Detail          Detail          `json:"detail"`
 	Url             Url             `json:"url"`
-	PurchaseOrderID PurchaseOrderID `json:"purchase_order_id"`
-	FinanceCheck    bool            `json:"finance_check"`
-	CreatedAt       time.Time       `json:"created_at"`
-	UpdatedAt       time.Time       `json:"updated_at"`
+	PurchaseOrderID PurchaseOrderID `json:"purchaseOrderID"`
+	FinanceCheck    bool            `json:"financeCheck"`
+	CreatedAt       time.Time       `json:"createdAt"`
+	UpdatedAt       time.Time       `json:"updatedAt"`
 }
 
 type PurchaseItemWithOrder struct {
-	ID              ID              `json:"id"`
-	Item            string          `json:"item"`
-	Price           int             `json:"price"`
-	Quantity        int             `json:"quantity"`
-	Detail          string          `json:"detail"`
-	Url             string          `json:"url"`
-	DeadLine        string          `json:"deadline"`
-	Name            string          `json:"name"`
-	FinanceCheck    bool            `json:"finance_check"`
-	CreatedAt       time.Time       `json:"created_at"`
-	UpdatedAt       time.Time       `json:"updated_at"`
+	ID           ID        `json:"ID"`
+	Item         string    `json:"item"`
+	Price        int       `json:"price"`
+	Quantity     int       `json:"quantity"`
+	Detail       string    `json:"detail"`
+	Url          string    `json:"url"`
+	DeadLine     string    `json:"deadline"`
+	Name         string    `json:"name"`
+	FinanceCheck bool      `json:"financeCheck"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }

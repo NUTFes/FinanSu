@@ -8,10 +8,10 @@ type Teacher struct {
 	ID           ID           `json:"id"`
 	Name         string       `json:"name"`
 	Position     Position     `json:"position"`
-	DepartmentID DepartmentID `json:"department_id"`
+	DepartmentID DepartmentID `json:"departmentID"`
 	Room         Room         `json:"room"`
-	IsBlack      bool         `json:"is_black"`
+	IsBlack      bool         `json:"isBlack"`
 	Remark       string       `json:"remark"`
-	CreatedAt    time.Time    `json:"created_at"`
-	UpdatedAt    time.Time    `json:"updated_at"`
+	CreatedAt    time.Time    `json:"createdAt"`
+	UpdatedAt    time.Time    `json:"updatedAt"`
 }
