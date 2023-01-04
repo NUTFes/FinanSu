@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
-	"github.com/pkg/errors"
-	"fmt"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type yearRepository struct {
-	client db.Client
+	client   db.Client
+	abstract abstract.Crud
 }
 
 type YearRepository interface {
@@ -20,49 +21,36 @@ type YearRepository interface {
 	Destroy(context.Context, string) error
 }
 
-func NewYearRepository(client db.Client) YearRepository {
-	return &yearRepository{client}
+func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
+	return &yearRepository{c, ac}
 }
 
 // 全件取得
 func (yr *yearRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "select * from years"
-	rows, err := yr.client.DB().QueryContext(c,query )
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+	return yr.abstract.Read(c, query)
 }
 
 // 1件取得
 func (yr *yearRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from years where id = "+id
-	row := yr.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row, nil
+	query := "select * from years where id = " + id
+	return yr.abstract.ReadByID(c, query)
 }
 
 // 作成
 func (yr *yearRepository) Create(c context.Context, year string) error {
-	query := "insert into years (year) values ('"+year+"')"
-	_, err := yr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	query := "insert into years (year) values ('" + year + "')"
+	return yr.abstract.UpdateDB(c, query)
 }
 
 // 編集
 func (yr *yearRepository) Update(c context.Context, id string, year string) error {
-	query := "update years set year = '"+year+"' where id = "+id
-	_, err := yr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	query := "update years set year = '" + year + "' where id = " + id
+	return yr.abstract.UpdateDB(c, query)
 }
 
 // 削除
 func (yr *yearRepository) Destroy(c context.Context, id string) error {
-	query :="delete from years where id = "+id
-	_, err := yr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	query := "delete from years where id = " + id
+	return yr.abstract.UpdateDB(c, query)
 }
