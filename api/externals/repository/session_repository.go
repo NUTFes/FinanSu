@@ -51,5 +51,4 @@ func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessTo
 	row := r.client.DB().QueryRowContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return row
-	a
 }
