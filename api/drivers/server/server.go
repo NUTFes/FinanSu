@@ -1,6 +1,7 @@
 package server
 
 import (
+	_ "github.com/NUTFes/FinanSu/api/docs"
 	"github.com/NUTFes/FinanSu/api/router"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -48,7 +49,18 @@ func RunServer(router router.Router) {
 
 	// swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/checkswagger/", checkswagger)
 
 	// サーバー起動
 	e.Start(":1323")
+}
+
+func checkswagger(c echo.Context) error {
+	return c.JSON(http.StatusOK, &Response{
+		Int64:  1,
+		String: "string",
+		World: &Item{
+			Text: "checkswagger",
+		},
+	})
 }
