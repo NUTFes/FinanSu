@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
-	"github.com/pkg/errors"
-	"fmt"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type sponsorRepository struct {
-	client db.Client
+	client   db.Client
+	abstract abstract.Crud
 }
 
 type SponsorRepository interface {
@@ -20,30 +21,23 @@ type SponsorRepository interface {
 	Delete(context.Context, string) error
 }
 
-func NewSponsorRepository(client db.Client) SponsorRepository {
-	return &sponsorRepository{client}
+func NewSponsorRepository(c db.Client, ac abstract.Crud) SponsorRepository {
+	return &sponsorRepository{c, ac}
 }
 
-//全件取得
+// 全件取得
 func (sr *sponsorRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "select * from sponsors"
-	rows, err := sr.client.DB().QueryContext(c, query)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+	return sr.abstract.Read(c, query)
 }
 
-//1件取得
-func (sr *sponsorRepository) Find(c context.Context, id string) (*sql.Row, error){
+// 1件取得
+func (sr *sponsorRepository) Find(c context.Context, id string) (*sql.Row, error) {
 	query := "select * from sponsors where id = " + id
-	row := sr.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row, nil
+	return sr.abstract.ReadByID(c, query)
 }
 
-//作成
+// 作成
 func (sr *sponsorRepository) Create(
 	c context.Context,
 	name string,
@@ -51,14 +45,12 @@ func (sr *sponsorRepository) Create(
 	email string,
 	address string,
 	representative string,
-)error{
-	var query ="insert into sponsors (name, tel, email, address, representative) values ('" + name + "','" + tel + "','" + email + "','" + address + "','" +representative + "')"
-	_, err := sr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+) error {
+	var query = "insert into sponsors (name, tel, email, address, representative) values ('" + name + "','" + tel + "','" + email + "','" + address + "','" + representative + "')"
+	return sr.abstract.UpdateDB(c, query)
 }
 
-//編集
+// 編集
 func (sr *sponsorRepository) Update(
 	c context.Context,
 	id string,
@@ -67,20 +59,17 @@ func (sr *sponsorRepository) Update(
 	email string,
 	address string,
 	representative string,
-)error {
-	var query = "update sponsors set name = '" + name + "', tel='" + tel + "', email = '" + email + "', address = '" + address + "', representative = '" + representative + "' where id = " +id
-	_, err := sr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err 
+) error {
+	var query = "update sponsors set name = '" + name + "', tel='" + tel + "', email = '" + email + "', address = '" + address + "', representative = '" + representative + "' where id = " + id
+	return sr.abstract.UpdateDB(c, query)
 }
 
-//削除
+// 削除
 func (sr *sponsorRepository) Delete(
 	c context.Context,
 	id string,
-)error {
+) error {
 	query := "Delete from sponsors where id =" + id
-	_, err := sr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	return sr.abstract.UpdateDB(c, query)
+
 }
