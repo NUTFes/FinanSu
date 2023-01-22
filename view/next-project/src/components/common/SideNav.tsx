@@ -1,17 +1,17 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { HiOutlineShoppingCart, HiOutlineDocumentText } from 'react-icons/hi';
 import { MdOutlineSavings } from 'react-icons/md';
 
 interface LinkItemProps {
   name: string;
-  icon: any;
+  icon: ReactNode;
   href: string;
 }
 
 interface NavItemProps {
-  icon: any;
+  icon: ReactNode;
   children?: React.ReactNode;
   href: string;
   currentPath: string;

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 
 interface Props {
@@ -9,20 +9,24 @@ interface Props {
 
 const Dropdown = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<any>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
+    // document.addEventListener('mousedown', handleOutsideClick);
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
 
-  const handleOutsideClick = (e: any) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setIsOpen(false);
-    }
-  };
+  // 定義を変更
+  const handleOutsideClick: EventListener =
+    () =>
+    (e: React.MouseEvent<Element, MouseEvent>): void => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
 
   return (
     <>

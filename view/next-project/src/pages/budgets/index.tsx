@@ -21,26 +21,7 @@ import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/budgets/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/budgets/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
-
-interface Budget {
-  id: number;
-  price: number;
-  year_id: number;
-  source_id: number;
-  source: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Source {
-  id: number;
-  name: string;
-}
-
-interface Year {
-  id: number;
-  year: number;
-}
+import { Budget, Source, Year } from '@type/common';
 
 interface Props {
   budgets: Budget[];
@@ -75,20 +56,20 @@ export default function BudgetList(props: Props) {
   // 合計金額用の変数
   let totalFee = 0;
 
-  // year_idからyearを取得するための処理（後々APIから取得する）
+  // yearIDからyearを取得するための処理（後々APIから取得する）
   // 合計金額を計算するための処理
   for (let i = 0; i < props.budgets.length; i++) {
     for (let j = 0; j < years.length; j++) {
-      if (props.budgets[i].year_id == years[j].id) {
-        props.budgets[i].year_id = years[j].year;
+      if (props.budgets[i].yearID == years[j].id) {
+        props.budgets[i].yearID = years[j].year;
       }
     }
 
-    for (let j = 0; j < sources.length; j++) {
-      if (props.budgets[i].source_id == sources[j].id) {
-        props.budgets[i].source = sources[j].name;
-      }
-    }
+    // for (let j = 0; j < sources.length; j++) {
+    //   if (props.budgets[i].sourceID == sources[j].id) {
+    //     props.budgets[i].source = sources[j].name;
+    //   }
+    // }
     // 合計金額を計算
     totalFee += props.budgets[i].price;
   }
@@ -163,11 +144,9 @@ export default function BudgetList(props: Props) {
                     <Td>
                       <Center color='black.300'>{budgetItem.id}</Center>
                     </Td>
+                    <Td>{/* <Center color='black.300'>{budgetItem.source}</Center> */}</Td>
                     <Td>
-                      <Center color='black.300'>{budgetItem.source}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{budgetItem.year_id}</Center>
+                      <Center color='black.300'>{budgetItem.yearID}</Center>
                     </Td>
                     <Td isNumeric color='black.300'>
                       {budgetItem.price}
@@ -177,7 +156,7 @@ export default function BudgetList(props: Props) {
                         <GridItem>
                           <Center>
                             <OpenEditModalButton
-                              id={budgetItem.id}
+                              id={budgetItem.id ? budgetItem.id : 0}
                               sources={sources}
                               years={years}
                             />
@@ -185,16 +164,16 @@ export default function BudgetList(props: Props) {
                         </GridItem>
                         <GridItem>
                           <Center>
-                            <OpenDeleteModalButton id={budgetItem.id} />
+                            <OpenDeleteModalButton id={budgetItem.id ? budgetItem.id : 0} />
                           </Center>
                         </GridItem>
                       </Grid>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budgetItem.created_at}</Center>
+                      <Center color='black.300'>{budgetItem.createdAt}</Center>
                     </Td>
                     <Td>
-                      <Center color='black.300'>{budgetItem.updated_at}</Center>
+                      <Center color='black.300'>{budgetItem.updatedAt}</Center>
                     </Td>
                   </Tr>
                 ))}

@@ -20,11 +20,15 @@ jobs:
         with:
           node-version: 16
           cache: npm
-      - name: Use Node.js
+          cache-dependency-path: view/next-project/package-lock.json
+      - name: npm install
+        working-directory: view/next-project
         run: npm install
       - name: Prettier
+        working-directory: view/next-project
         run: npm run format
       - name: Lint
+        working-directory: view/next-project
         run: npm run lint:fix
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:

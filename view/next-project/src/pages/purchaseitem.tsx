@@ -1,6 +1,17 @@
-import { Box } from '@chakra-ui/react';
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
-import { Center } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Flex,
+  Select,
+  Spacer,
+  Table,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 
 import { get } from '@api/api_methods';
 import { AddButton, EditButton } from '@components/common';
@@ -20,7 +31,7 @@ interface PurchaseItem {
 interface Props {
   purchaseItem: PurchaseItem[];
 }
-export async function getServerSideProps({ params }: any) {
+export async function getServerSideProps() {
   const getPurchaseItemUrl = process.env.SSR_API_URI + '/purchaseitems';
   const purchaseItemRes = await get(getPurchaseItemUrl);
   return {
@@ -31,13 +42,6 @@ export async function getServerSideProps({ params }: any) {
 }
 
 export default function PurchaseItem(props: Props) {
-  // 日付整形
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 5);
-    return datetime2;
-  };
-
   // 合計金額計算
   const totalPriceArray: number[] = [];
   const calcItemTotalPrice = (quantity: number, price: number) => {

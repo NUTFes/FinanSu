@@ -1,21 +1,17 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import { post } from '@api/purchaseOrder';
-import { Modal, Input, Select, PrimaryButton, CloseButton } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
+import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, PurchaseItem } from '@pages/purchaseorders';
-
-interface FormData {
-  deadline: string;
-  user_id: number;
-  finance_check: boolean;
-}
+import { PurchaseItem, PurchaseOrder } from '@type/common';
 
 export default function PurchaseItemNumModal() {
-  const state = useGlobalContext();
+  const [user] = useRecoilState(userAtom);
+
   // 購入物品数用の配列
   const purchaseItemNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -32,13 +28,14 @@ export default function PurchaseItemNumModal() {
 
   const [formData, setFormData] = useState({
     deadline: '',
-    user_id: state.user.id,
-    finance_check: false,
+    userID: user.id,
+    financeCheck: false,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
   });
-  const [purchaseOrderId, setPurchaseOrderId] = useState(1);
+  // const [purchaseOrderId, setPurchaseOrderId] = useState(1);
+  const purchaseOrderId = 1;
 
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
     const initFormDataList = [];
@@ -50,10 +47,10 @@ export default function PurchaseItemNumModal() {
         quantity: 0,
         detail: '',
         url: '',
-        purchase_order_id: purchaseOrderId,
-        finance_check: false,
-        created_at: '',
-        updated_at: '',
+        purchaseOrderID: purchaseOrderId,
+        financeCheck: false,
+        createdAt: '',
+        updatedAt: '',
       };
       initFormDataList.push(initFormData);
     }
@@ -73,7 +70,7 @@ export default function PurchaseItemNumModal() {
   };
 
   // 購入申請の登録と登録した購入申請のIDを使って購入物品を更新
-  const submit = async (data: FormData) => {
+  const submit = async (data: PurchaseOrder) => {
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
     const postRes: PurchaseOrder = await post(addPurchaseOrderUrl, data);
     const purchaseOrderId = postRes.id;
@@ -86,10 +83,10 @@ export default function PurchaseItemNumModal() {
         quantity: 0,
         detail: '',
         url: '',
-        purchase_order_id: purchaseOrderId,
-        finance_check: false,
-        created_at: '',
-        updated_at: '',
+        purchaseOrderID: purchaseOrderId ? purchaseOrderId : 0,
+        financeCheck: false,
+        createdAt: '',
+        updatedAt: '',
       };
       initialPurchaseItemList.push(initialPurchaseItem);
     }

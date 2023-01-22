@@ -1,12 +1,14 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
-import { Modal, PullDown, PrimaryButton, CloseButton } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
+import { userAtom } from '@/store/atoms';
+import { CloseButton, Modal, PrimaryButton, PullDown } from '@components/common';
 import { useUI } from '@components/ui/context';
 
 export default function PurchaseItemNumModal() {
-  const state = useGlobalContext();
+  const [user] = useRecoilState(userAtom);
+
   const { setModalView, openModal, closeModal } = useUI();
 
   // 局（Bureau）をフロントで定義
@@ -37,7 +39,7 @@ export default function PurchaseItemNumModal() {
     },
   ];
 
-  const [bureauID, setBureauID] = useState<number>(state.user.bureau_id);
+  const [bureauID, setBureauID] = useState<number>(user.bureauID);
 
   // 申請する局用のhandler
   const bureauHandler = () => (e: React.ChangeEvent<HTMLSelectElement>) => {

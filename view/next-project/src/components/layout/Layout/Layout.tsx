@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
@@ -8,10 +8,7 @@ import { useUI } from '@components/ui/context';
 
 import s from './Layout.module.css';
 
-const ModalView: React.FC<{ modalView: string; closeModal(): any }> = ({
-  modalView,
-  closeModal,
-}) => {
+const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
   return (
     <>
       {modalView === 'PURCHASE_ITEM_NUM_MODAL' && <PurchaseItemNumModal />}
@@ -23,11 +20,11 @@ const ModalView: React.FC<{ modalView: string; closeModal(): any }> = ({
 };
 
 const ModalUI: React.FC = () => {
-  const { displayModal, closeModal, modalView } = useUI();
-  return displayModal ? <ModalView modalView={modalView} closeModal={closeModal} /> : null;
+  const { displayModal, modalView } = useUI();
+  return displayModal ? <ModalView modalView={modalView} /> : null;
 };
 
-const Layout: React.FC<{ children: any }> = ({ children }) => {
+const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div className={s.root}>
       <main>{children}</main>

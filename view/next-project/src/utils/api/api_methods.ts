@@ -8,12 +8,12 @@ export const get = async (url: string) => {
   return await res.json();
 };
 
-export const get_with_token = async (url: string) => {
+export const get_with_token = async (url: string, accessToken?: string) => {
   const res = await fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'access-token': localStorage.getItem('access-token') || 'none',
+      'access-token': accessToken ? accessToken : localStorage.getItem('access-token') || 'none',
       client: localStorage.getItem('client') || 'none',
       uid: localStorage.getItem('uid') || 'none',
     },

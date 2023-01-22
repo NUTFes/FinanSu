@@ -1,60 +1,34 @@
 import {
-  ChakraProvider,
-  Select,
-  Center,
-  Input,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
-  RadioGroup,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
   Radio,
+  RadioGroup,
+  Select,
+  Spacer,
   Stack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { FC } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/teachers';
 import theme from '@assets/theme';
 import { PrimaryButton } from '@components/common';
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface FormData {
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-}
+import { Department, Teacher } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   teachersInformation: Teacher[];
   departments: Department[];
@@ -67,16 +41,16 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
 
-  const initFormData: FormData = {
+  const initFormData: Teacher = {
     name: '',
     position: '',
-    department_id: 1,
+    departmentID: 1,
     room: '',
-    is_black: false,
+    isBlack: false,
     remark: '',
   };
 
-  const [formData, setFormData] = useState<FormData>(initFormData);
+  const [formData, setFormData] = useState<Teacher>(initFormData);
   const [isBlack, setIsBlack] = useState<string>('false');
 
   const handler =
@@ -85,11 +59,11 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const addTeacher = async (data: FormData, is_black: string) => {
-    if (is_black == 'true') {
-      data.is_black = true;
+  const addTeacher = async (data: Teacher, isBlack: string) => {
+    if (isBlack == 'true') {
+      data.isBlack = true;
     } else {
-      data.is_black = false;
+      data.isBlack = false;
     }
     const addTeacherURL = process.env.CSR_API_URI + '/teachers';
     await post(addTeacherURL, data);
@@ -155,8 +129,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
                   </GridItem>
                   <GridItem colSpan={9}>
                     <Select
-                      value={formData.department_id}
-                      onChange={handler('department_id')}
+                      value={formData.departmentID}
+                      onChange={handler('departmentID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='100'

@@ -13,7 +13,7 @@ import {
   Stepper,
   Title,
 } from '@components/common';
-import { PurchaseItem } from '@pages/purchaseorders';
+import { PurchaseItem } from '@type/common';
 
 interface ModalProps {
   purchaseOrderId: number;
@@ -60,7 +60,7 @@ export default function EditModal(props: ModalProps) {
     };
 
   // finance_checkのtrue,falseを切り替え
-  const isFinanceCheckHandler = (purchaseItemId: number, finance_check: boolean) => {
+  const isFinanceCheckHandler = (purchaseItemId: number | undefined, finance_check: boolean) => {
     setFormDataList(
       formDataList.map((formData: PurchaseItem) =>
         formData.id === purchaseItemId

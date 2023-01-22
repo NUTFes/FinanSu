@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { DeleteButton } from '@components/common';
 import DetailModal from '@components/purchaseorders/DetailModal';
-import { PurchaseOrderView } from '@pages/purchaseorders';
+import { PurchaseOrderView } from '@type/common';
 
 interface Props {
   children?: React.ReactNode;

@@ -1,8 +1,18 @@
-import { ChakraProvider } from '@chakra-ui/react';
-import { Table, Thead, Tbody, Th, Td, Tr, Flex, Spacer, Select } from '@chakra-ui/react';
-import { Center, Box } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  ChakraProvider,
+  Flex,
+  Select,
+  Spacer,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import Head from 'next/head';
-import { useState } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
 
 import { get } from '@api/sponsorship';
@@ -32,7 +42,7 @@ export const getServerSideProps = async () => {
   };
 };
 export default function SponsorList(props: Props) {
-  const [sponsorList, setSponsorList] = useState<SponsorStyle[]>(props.sponsorstyles);
+  const sponsorList: SponsorStyle[] = props.sponsorstyles;
   return (
     <ChakraProvider theme={theme}>
       <Head>

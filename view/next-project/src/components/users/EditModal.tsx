@@ -1,37 +1,32 @@
 import {
-  ChakraProvider,
-  Center,
-  Input,
-  Select,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Select,
+  Spacer,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { get } from '@api/api_methods';
 import { put } from '@api/user';
 import theme from '@assets/theme';
-
-import Button from '../common/RegistButton';
-
-interface Bureau {
-  id: number;
-  name: string;
-}
+import Button from '@components/common/RegistButton';
+import { Bureau } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
   bureaus: Bureau[];
@@ -40,8 +35,8 @@ interface ModalProps {
 interface FormData {
   id: number;
   name: string;
-  bureau_id: number;
-  role_id: number;
+  bureauID: number;
+  roleID: number;
 }
 
 export default function FundInformationEditModal(props: ModalProps) {
@@ -54,8 +49,8 @@ export default function FundInformationEditModal(props: ModalProps) {
   const [formData, setFormData] = useState<FormData>({
     id: 1,
     name: '',
-    bureau_id: 1,
-    role_id: 1,
+    bureauID: 1,
+    roleID: 1,
   });
 
   // モーダルを開いているuserを取得
@@ -81,9 +76,9 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitUser = async (data: any, id: number | string) => {
+  const submitUser = async (data: FormData, id: number | string) => {
     const submitUserURL = process.env.CSR_API_URI + '/users/' + id;
-    const res = await put(submitUserURL, data);
+    await put(submitUserURL, data);
   };
 
   return (
@@ -130,8 +125,8 @@ export default function FundInformationEditModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Select
-                      value={formData.bureau_id}
-                      onChange={handler('bureau_id')}
+                      value={formData.bureauID}
+                      onChange={handler('bureauID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='224px'
@@ -154,8 +149,8 @@ export default function FundInformationEditModal(props: ModalProps) {
                         w='100'
                         borderRadius='full'
                         borderColor='primary.1'
-                        value={formData.role_id}
-                        onChange={handler('role_id')}
+                        value={formData.roleID}
+                        onChange={handler('roleID')}
                       />
                     </Flex>
                   </GridItem>

@@ -1,19 +1,17 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 
+import { authAtom } from '@/store/atoms';
 import { get_with_token } from '@api/api_methods';
+import 'tailwindcss/tailwind.css';
 import Header from '@components/common/Header';
 import SideNav from '@components/common/SideNav';
+import { User } from '@type/common';
 
 import s from './MainLayout.module.css';
-
-interface User {
-  id: number;
-  name: string;
-  department_id: number;
-  role_id: number;
-}
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -31,6 +29,23 @@ export async function getServerSideProps() {
 }
 
 export default function MainLayout(props: LayoutProps) {
+  const router = useRouter();
+  const [auth] = useRecoilState(authAtom);
+
+  useEffect(() => {
+    if (router.isReady) {
+      console.log(auth);
+      if (!auth.isSignIn) {
+        console.log('if');
+        router.push('/');
+        localStorage.clear();
+      } else if (auth.isSignIn === true && router.pathname == '/') {
+        console.log('else if');
+        router.push('/purchaseorders');
+      }
+    }
+  }, [router, auth]);
+
   return (
     <>
       <Head>

@@ -14,15 +14,15 @@ import {
   ModalBody,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { FC } from 'react';
+import { FC, Dispatch, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { del } from '@api/budget';
 import theme from '@assets/theme';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
 }

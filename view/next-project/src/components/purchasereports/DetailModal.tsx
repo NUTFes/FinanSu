@@ -2,11 +2,12 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
+import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
-import { Modal, Checkbox, Tooltip, RedButton } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
-import { PurchaseReport, PurchaseItem, PurchaseReportView } from '@pages/purchasereports';
+import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
+import { PurchaseItem, PurchaseReport, PurchaseReportView } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,7 +19,8 @@ interface ModalProps {
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
-  const state = useGlobalContext();
+  const [user] = useRecoilState(userAtom);
+
   const onClose = () => {
     props.setIsOpen(false);
   };
@@ -73,7 +75,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.id}
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}
             </div>
             <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
               <div className={clsx('text-md flex items-center text-black-600')}>合計金額</div>
@@ -85,8 +87,8 @@ const DetailModal: FC<ModalProps> = (props) => {
             >
               {props.purchaseReportViewItem &&
                 TotalFee(
-                  props.purchaseReportViewItem.purchasereport,
-                  props.purchaseReportViewItem.purchaseitems,
+                  props.purchaseReportViewItem.purchaseReport,
+                  props.purchaseReportViewItem.purchaseItems,
                 )}
             </div>
           </div>
@@ -101,22 +103,22 @@ const DetailModal: FC<ModalProps> = (props) => {
               )}
             >
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 1 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 1 &&
                 '総務局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 2 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 2 &&
                 '渉外局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 3 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 3 &&
                 '財務局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 4 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 4 &&
                 '企画局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 5 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 5 &&
                 '政策局'}
               {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.report_user.bureau_id === 6 &&
+                props.purchaseReportViewItem.reportUser.bureauID === 6 &&
                 '情報局'}
             </div>
             <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
@@ -128,7 +130,11 @@ const DetailModal: FC<ModalProps> = (props) => {
               )}
             >
               {props.purchaseReportViewItem &&
-                formatDate(props.purchaseReportViewItem.purchasereport.created_at)}
+                formatDate(
+                  props.purchaseReportViewItem.purchaseReport.createdAt
+                    ? props.purchaseReportViewItem.purchaseReport.createdAt
+                    : '',
+                )}
             </div>
           </div>
           <div className={clsx('my-2 grid w-full grid-cols-12')}>
@@ -140,7 +146,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.discount}
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.discount}
             </div>
             <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
               <div className={clsx('text-md flex items-center text-black-600')}>加算</div>
@@ -150,7 +156,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchasereport.addition}
+              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.addition}
             </div>
           </div>
           <div className={clsx('my-2 grid w-full grid-cols-12')}></div>
@@ -165,12 +171,12 @@ const DetailModal: FC<ModalProps> = (props) => {
         <div
           className={clsx('w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1')}
         >
-          <table className={clsx('border-collapse: collapse w-full table-fixed')}>
+          <table className={clsx('w-full table-fixed border-collapse')}>
             <thead>
               <tr
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
               >
-                {state.user.role_id === 1 ? (
+                {user.roleID === 1 ? (
                   <th className={clsx('w-3/12 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>品名</div>
                   </th>
@@ -191,7 +197,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>URL</div>
                 </th>
-                {state.user.role_id === 3 ? (
+                {user.roleID === 3 ? (
                   <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>局長確認</div>
                   </th>
@@ -202,7 +208,7 @@ const DetailModal: FC<ModalProps> = (props) => {
               className={clsx('w-full border border-x-white-0 border-b-primary-1 border-t-white-0')}
             >
               {/* <div className={clsx('flex items-start')}> */}
-              {props.purchaseReportViewItem?.purchaseitems.map((purchaseItem, index) => (
+              {props.purchaseReportViewItem?.purchaseItems.map((purchaseItem) => (
                 <tr key={purchaseItem.id} className={clsx('w-full')}>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>
@@ -247,10 +253,10 @@ const DetailModal: FC<ModalProps> = (props) => {
                       </div>
                     </div>
                   </td>
-                  {state.user.role_id === 3 ? (
+                  {user.roleID === 3 ? (
                     <td className={clsx('border-b py-3')}>
                       <div className={clsx('text-center text-sm text-black-300')}>
-                        <Checkbox checked={purchaseItem.finance_check} disabled={true} />
+                        <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
                       </div>
                     </td>
                   ) : null}

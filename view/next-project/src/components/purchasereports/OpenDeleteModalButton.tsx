@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { DeleteButton } from '@components/common';
 import DeleteModal from '@components/purchasereports/DeleteModal';
@@ -14,9 +13,6 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const onOpen = () => {
     setIsOpen(true);
-  };
-  const onClose = () => {
-    setIsOpen(false);
   };
   return (
     <>

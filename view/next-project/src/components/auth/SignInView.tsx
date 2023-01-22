@@ -1,49 +1,58 @@
 import {
-  ChakraProvider,
-  Center,
   Box,
-  Heading,
+  Button,
+  Center,
+  ChakraProvider,
   Flex,
+  FormControl,
+  FormErrorMessage,
   Grid,
   GridItem,
-  Button,
+  Heading,
+  Input,
 } from '@chakra-ui/react';
 import Router from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
 
+import { authAtom, userAtom } from '@/store/atoms';
+import { get_with_token } from '@api/api_methods';
 import { signIn } from '@api/signIn';
 import theme from '@assets/theme';
-import Email from '@components/common/Email';
 import LoadingButton from '@components/common/LoadingButton';
-import Password from '@components/common/Password';
-
-interface PostData {
-  email: string;
-  password: string;
-}
+import { SignIn } from '@type/common';
 
 export default function SignInView() {
   // ログイン中フラグ
   const [isSignInNow, setIsSignInNow] = useState<boolean>(false);
+  const [, setAuth] = useRecoilState(authAtom);
+  const [, setUser] = useRecoilState(userAtom);
 
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<PostData>({
+  } = useForm<SignIn>({
     mode: 'all',
   });
 
-  const SignIn = async (data: PostData) => {
+  const SignIn = async (data: SignIn) => {
     setIsSignInNow(true);
-    const loginUrl: string = process.env.CSR_API_URI + '/mail_auth/signin';
+    const signinUrl: string = process.env.CSR_API_URI + '/mail_auth/signin';
+    const currentUserUrl: string = process.env.CSR_API_URI + '/current_user';
 
-    const req: any = await signIn(loginUrl, data);
-    const res: any = await req.json();
+    const req = await signIn(signinUrl, data);
+    const res = await req.json();
+    const userRes = await get_with_token(currentUserUrl, res.accessToken);
     if (req.status === 200) {
-      localStorage.setItem('access-token', res.access_token);
-      localStorage.setItem('login', 'true');
+      // state用のauthのデータ
+      const authData = {
+        isSignIn: true,
+        accessToken: res.accessToken,
+      };
+      setAuth(authData);
+      setUser(userRes);
       Router.push('/purchaseorders');
     } else {
       console.log('Error' + res.status);
@@ -72,7 +81,23 @@ export default function SignInView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Email errors={errors} register={register} />
+                  <FormControl isInvalid={errors.email ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='text'
+                      {...register('email', {
+                        required: 'メールアドレスは必須です。',
+                        pattern: {
+                          value:
+                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: 'メールアドレス形式で入力してください。',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -84,7 +109,24 @@ export default function SignInView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Password errors={errors} register={register} />
+                  <FormControl isInvalid={errors.password ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='password'
+                      {...register('password', {
+                        required: 'パスワードは必須です。',
+                        minLength: {
+                          value: 6,
+                          message: 'パスワードは6文字以上で入力してください',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors.password && errors.password.message}
+                    </FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
             </Grid>

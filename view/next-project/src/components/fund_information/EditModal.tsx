@@ -1,61 +1,33 @@
 import {
-  ChakraProvider,
-  Center,
-  Input,
-  Select,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Select,
+  Spacer,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState, useCallback } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
 import theme from '@assets/theme';
-
-import Button from '../common/RegistButton';
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
-
-interface FundInformation {
-  user_id: number;
-  teacher_id: number | string;
-  price: number;
-  remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
-}
+import Button from '@components/common/RegistButton';
+import { FundInformation, Teacher, User } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
-  children?: React.ReactNode;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
+  children?: ReactNode;
   id: number | string;
   teachers: Teacher[];
   currentUser: User;
@@ -69,12 +41,12 @@ export default function FundInformationEditModal(props: ModalProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<FundInformation>({
-    user_id: 0,
-    teacher_id: '',
+    userID: 0,
+    teacherID: 0,
     price: 0,
     remark: '',
-    is_first_check: false,
-    is_last_check: false,
+    isFirstCheck: false,
+    isLastCheck: false,
   });
 
   // モーダルを開いているfund_informationを取得
@@ -100,9 +72,10 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitFundInformation = async (data: any, id: number | string) => {
+  const submitFundInformation = async (data: FundInformation, id: number | string) => {
     const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
     await put(submitFundInformationURL, data);
+    router.reload();
   };
 
   return (
@@ -133,8 +106,8 @@ export default function FundInformationEditModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Select
-                      value={formData.teacher_id}
-                      onChange={handler('teacher_id')}
+                      value={formData.teacherID}
+                      onChange={handler('teacherID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='224px'
@@ -189,7 +162,6 @@ export default function FundInformationEditModal(props: ModalProps) {
                 width='220px'
                 onClick={() => {
                   submitFundInformation(formData, props.id);
-                  router.reload();
                 }}
               >
                 編集する

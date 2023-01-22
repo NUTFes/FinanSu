@@ -28,6 +28,7 @@ type MODAL_VIEWS =
   | 'PURCHASE_ORDER_LIST_MODAL'
   | 'PURCHASE_REPORT_ITEM_NUM_MODAL';
 
+// eslint-disable-next-line
 export const UIContext = React.createContext<State | any>(initialState);
 
 UIContext.displayName = 'UIContext';
@@ -55,7 +56,11 @@ function uiReducer(state: State, action: Action) {
   }
 }
 
-export const UIProvider: FC = (props) => {
+interface UIProviderProps {
+  children: React.ReactNode;
+}
+
+export const UIProvider: FC<UIProviderProps> = (props) => {
   const [state, dispatch] = React.useReducer(uiReducer, initialState);
 
   const openModal = useCallback(() => dispatch({ type: 'OPEN_MODAL' }), [dispatch]);
@@ -87,4 +92,6 @@ export const useUI = () => {
   return context;
 };
 
-export const ManagedUIContext: FC = ({ children }) => <UIProvider>{children}</UIProvider>;
+export const ManagedUIContext: FC<{ children: React.ReactNode }> = ({ children }) => (
+  <UIProvider>{children}</UIProvider>
+);

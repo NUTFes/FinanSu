@@ -1,53 +1,39 @@
 import {
-  ChakraProvider,
-  Center,
   Box,
+  Button,
+  Center,
+  ChakraProvider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Grid,
+  GridItem,
   Heading,
   Input,
   Select,
-  Button,
-  Flex,
-  Grid,
-  GridItem,
 } from '@chakra-ui/react';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
 
+import { authAtom, userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
 import theme from '@assets/theme';
-import Email from '@components/common/Email';
 import LoadingButton from '@components/common/LoadingButton';
-import Password from '@components/common/Password';
-import PasswordConfirmation from '@components/common/PasswordConfirmation';
-
-interface PostData {
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-}
-
-interface User {
-  userName: string;
-  bureauId: number;
-  roleId: number;
-}
-
-interface Bureau {
-  id: number;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Bureau, SignUp, User } from '@type/common';
 
 export default function SignUpView() {
+  const [, setAuth] = useRecoilState(authAtom);
+  const [, setUser] = useRecoilState(userAtom);
+
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
 
   // 局（Bureau）をフロントで定義
-  const bureaus = [
+  const bureaus: Bureau[] = [
     {
       id: 1,
       name: '総務局',
@@ -75,9 +61,10 @@ export default function SignUpView() {
   ];
 
   const [postUserData, setPostUserData] = useState<User>({
-    userName: '',
-    bureauId: 1,
-    roleId: 1,
+    id: 0,
+    name: '',
+    bureauID: 1,
+    roleID: 1,
   });
 
   const {
@@ -85,7 +72,7 @@ export default function SignUpView() {
     formState: { errors },
     getValues,
     handleSubmit,
-  } = useForm<PostData>({
+  } = useForm<SignUp>({
     mode: 'all',
   });
 
@@ -95,20 +82,33 @@ export default function SignUpView() {
       setPostUserData({ ...postUserData, [input]: e.target.value });
     };
 
-  const postUser = async (data: PostData) => {
+  const postUser = async (data: SignUp) => {
     setIsSignUpNow(true);
-    const getUrl: string = process.env.CSR_API_URI + '/users';
-    const postUserUrl: string = process.env.CSR_API_URI + '/users';
+    const userUrl: string = process.env.CSR_API_URI + '/users';
     const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
-
-    const getRes: any = await get(getUrl);
+    // userのpost時のResに登録したデータが返ってこないので以下で用意
+    const getRes = await get(userUrl);
     const userID: number = getRes[getRes.length - 1].id + 1;
-    const userRes: any = await post(postUserUrl, postUserData);
-    const req: any = await signUp(signUpUrl, data, userID);
-    const res: any = await req.json();
+    // signIn には登録したuserのIDが必要なので先にUserをpost
+    await post(userUrl, postUserData);
+    // signUp
+    const req = await signUp(signUpUrl, data, userID);
+    const res = await req.json();
+    // state用のuserのデータ
+    const userData: User = {
+      id: userID,
+      name: postUserData.name,
+      bureauID: Number(postUserData.bureauID),
+      roleID: postUserData.roleID,
+    };
     if (req.status === 200) {
-      localStorage.setItem('access-token', res.access_token);
-      localStorage.setItem('login', 'true');
+      // state用のauthのデータ
+      const authData = {
+        isSignIn: true,
+        accessToken: res.accessToken,
+      };
+      setAuth(authData);
+      setUser(userData);
       Router.push('/purchaseorders');
     } else {
       console.log('Error' + res.status);
@@ -141,8 +141,8 @@ export default function SignUpView() {
                   borderRadius='full'
                   borderColor='primary.1'
                   type='text'
-                  value={postUserData.userName}
-                  onChange={userDataHandler('userName')}
+                  value={postUserData.name}
+                  onChange={userDataHandler('name')}
                 />
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -158,8 +158,8 @@ export default function SignUpView() {
                     minW='100'
                     borderRadius='full'
                     borderColor='primary.1'
-                    value={postUserData.bureauId}
-                    onChange={userDataHandler('bureauId')}
+                    value={postUserData.bureauID}
+                    onChange={userDataHandler('bureauID')}
                   >
                     {bureaus.map((bureau) => (
                       <option key={bureau.id} value={bureau.id}>
@@ -178,7 +178,23 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Email errors={errors} register={register} />
+                  <FormControl isInvalid={errors.email ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='text'
+                      {...register('email', {
+                        required: 'メールアドレスは必須です。',
+                        pattern: {
+                          value:
+                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: 'メールアドレス形式で入力してください。',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -190,7 +206,24 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <Password errors={errors} register={register} />
+                  <FormControl isInvalid={errors.password ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='password'
+                      {...register('password', {
+                        required: 'パスワードは必須です。',
+                        minLength: {
+                          value: 6,
+                          message: 'パスワードは6文字以上で入力してください',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors.password && errors.password.message}
+                    </FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
               <GridItem rowSpan={1} colSpan={4}>
@@ -202,11 +235,25 @@ export default function SignUpView() {
               </GridItem>
               <GridItem rowSpan={1} colSpan={8}>
                 <Flex>
-                  <PasswordConfirmation
-                    errors={errors}
-                    register={register}
-                    password={getValues('password')}
-                  />
+                  <FormControl isInvalid={errors.passwordConfirmation ? true : false} isRequired>
+                    <Input
+                      minW='100'
+                      borderRadius='full'
+                      borderColor='primary.1'
+                      type='password'
+                      {...register('passwordConfirmation', {
+                        validate: {
+                          correct: (input: string) => input === getValues('password'),
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors.passwordConfirmation &&
+                        errors.passwordConfirmation.type === 'correct' && (
+                          <p>パスワードが一致しません</p>
+                        )}
+                    </FormErrorMessage>
+                  </FormControl>
                 </Flex>
               </GridItem>
             </Grid>

@@ -11,8 +11,8 @@ interface Props {
   height?: string;
   children?: React.ReactNode;
   id: number;
-  teacher_id: number;
-  user_id: number;
+  teacherID: number;
+  userID: number;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -37,8 +37,8 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
       </Button>
       <DeleteModal
         id={props.id}
-        teacher_id={props.teacher_id}
-        user_id={props.user_id}
+        teacherID={props.teacherID}
+        userID={props.userID}
         openModal={showModal}
         setShowModal={setShowModal}
       />

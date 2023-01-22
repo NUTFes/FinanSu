@@ -1,66 +1,24 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
-import { Card, Title, Checkbox } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
+import { Card, Checkbox, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
-
-// 他コンポーネントで使うためにexport
-export interface PurchaseReport {
-  id: number;
-  user_id: number;
-  discount: number;
-  addition: number;
-  finance_check: boolean;
-  remark: string;
-  purchase_order_id: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface PurchaseOrder {
-  id: number;
-  deadline: string;
-  user_id: number;
-  finance_check: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number;
-  quantity: number;
-  detail: string;
-  url: string;
-  purchase_order_id: number;
-  finance_check: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
-}
+import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
 
 export interface PurchaseReportView {
-  purchasereport: PurchaseReport;
-  report_user: User;
-  purchaseorder: PurchaseOrder;
-  order_user: User;
-  purchaseitems: PurchaseItem[];
+  purchaseReport: PurchaseReport;
+  reportUser: User;
+  purchaseOrder: PurchaseOrder;
+  orderUser: User;
+  purchaseItems: PurchaseItem[];
 }
 
 interface Props {
@@ -83,8 +41,9 @@ export async function getServerSideProps() {
   };
 }
 
-export default function PurchaseReport(props: Props) {
-  const state = useGlobalContext();
+export default function PurchaseReports(props: Props) {
+  const [user] = useRecoilState(userAtom);
+
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
   const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
 
@@ -96,29 +55,28 @@ export default function PurchaseReport(props: Props) {
   };
 
   // 購入報告
-  const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(() => {
-    const initPurchaseReportList = [];
-    for (let i = 0; i < props.purchaseReportView.length; i++) {
-      initPurchaseReportList.push(props.purchaseReportView[i].purchasereport);
-    }
-    return initPurchaseReportList;
-  });
-  // 購入申請
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
-    const initPurchaseOederList = [];
-    for (let i = 0; i < props.purchaseReportView.length; i++) {
-      initPurchaseOederList.push(props.purchaseReportView[i].purchaseorder);
-    }
-    return initPurchaseOederList;
-  });
-  // 購入申請者
-  const [orderUsers, setOrderUsers] = useState<User[]>(() => {
-    const initOederUserList = [];
-    for (let i = 0; i < props.purchaseReportView.length; i++) {
-      initOederUserList.push(props.purchaseReportView[i].order_user);
-    }
-    return initOederUserList;
-  });
+  const initPurchaseReportList = [];
+  for (let i = 0; i < props.purchaseReportView.length; i++) {
+    initPurchaseReportList.push(props.purchaseReportView[i].purchaseReport);
+  }
+  const purchaseReports: PurchaseReport[] = initPurchaseReportList;
+
+  // // 購入申請
+  // const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
+  //   const initPurchaseOederList = [];
+  //   for (let i = 0; i < props.purchaseReportView.length; i++) {
+  //     initPurchaseOederList.push(props.purchaseReportView[i].purchaseOrder);
+  //   }
+  //   return initPurchaseOederList;
+  // });
+  // // 購入申請者
+  // const [orderUsers, setOrderUsers] = useState<User[]>(() => {
+  //   const initOederUserList = [];
+  //   for (let i = 0; i < props.purchaseReportView.length; i++) {
+  //     initOederUserList.push(props.purchaseReportView[i].orderUser);
+  //   }
+  //   return initOederUserList;
+  // });
 
   // 日付のフォーマットを変更
   const formatDate = (date: string) => {
@@ -179,7 +137,7 @@ export default function PurchaseReport(props: Props) {
           </div>
         </div>
         <div className={clsx('w-100 mb-2 p-5')}>
-          <table className={clsx('border-collapse: collapse mb-5 w-full table-fixed')}>
+          <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
             <thead>
               <tr
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
@@ -207,7 +165,7 @@ export default function PurchaseReport(props: Props) {
             </thead>
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
               {props.purchaseReportView.map((purchaseReportViewItem, index) => (
-                <tr key={purchaseReportViewItem.purchasereport.id}>
+                <tr key={purchaseReportViewItem.purchaseReport.id}>
                   <td
                     className={clsx(
                       'px-1',
@@ -215,16 +173,21 @@ export default function PurchaseReport(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                      onOpen(
+                        purchaseReportViewItem.purchaseReport.id
+                          ? purchaseReportViewItem.purchaseReport.id
+                          : 0,
+                        purchaseReportViewItem,
+                      );
                     }}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {state.user.role_id === 3
+                      {user.roleID === 3
                         ? changeableCheckboxContent(
-                            purchaseReportViewItem.purchasereport.finance_check,
+                            purchaseReportViewItem.purchaseReport.financeCheck,
                           )
                         : unChangeableCheckboxContent(
-                            purchaseReportViewItem.purchasereport.finance_check,
+                            purchaseReportViewItem.purchaseReport.financeCheck,
                           )}
                     </div>
                   </td>
@@ -235,16 +198,21 @@ export default function PurchaseReport(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                      onOpen(
+                        purchaseReportViewItem.purchaseReport.id
+                          ? purchaseReportViewItem.purchaseReport.id
+                          : 0,
+                        purchaseReportViewItem,
+                      );
                     }}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {purchaseReportViewItem.order_user.bureau_id === 1 && '総務局'}
-                      {purchaseReportViewItem.order_user.bureau_id === 2 && '渉外局'}
-                      {purchaseReportViewItem.order_user.bureau_id === 3 && '財務局'}
-                      {purchaseReportViewItem.order_user.bureau_id === 4 && '企画局'}
-                      {purchaseReportViewItem.order_user.bureau_id === 5 && '政策局'}
-                      {purchaseReportViewItem.order_user.bureau_id === 6 && '情報局'}
+                      {purchaseReportViewItem.orderUser.bureauID === 1 && '総務局'}
+                      {purchaseReportViewItem.orderUser.bureauID === 2 && '渉外局'}
+                      {purchaseReportViewItem.orderUser.bureauID === 3 && '財務局'}
+                      {purchaseReportViewItem.orderUser.bureauID === 4 && '企画局'}
+                      {purchaseReportViewItem.orderUser.bureauID === 5 && '政策局'}
+                      {purchaseReportViewItem.orderUser.bureauID === 6 && '情報局'}
                     </div>
                   </td>
                   <td
@@ -254,11 +222,20 @@ export default function PurchaseReport(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                      onOpen(
+                        purchaseReportViewItem.purchaseReport.id
+                          ? purchaseReportViewItem.purchaseReport.id
+                          : 0,
+                        purchaseReportViewItem,
+                      );
                     }}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {formatDate(purchaseReportViewItem.purchasereport.created_at)}
+                      {formatDate(
+                        purchaseReportViewItem.purchaseReport.createdAt
+                          ? purchaseReportViewItem.purchaseReport.createdAt
+                          : '',
+                      )}
                     </div>
                   </td>
                   <td
@@ -268,11 +245,16 @@ export default function PurchaseReport(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                      onOpen(
+                        purchaseReportViewItem.purchaseReport.id
+                          ? purchaseReportViewItem.purchaseReport.id
+                          : 0,
+                        purchaseReportViewItem,
+                      );
                     }}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {purchaseReportViewItem.purchaseorder.deadline}
+                      {purchaseReportViewItem.purchaseOrder.deadline}
                     </div>
                   </td>
                   <td
@@ -282,7 +264,12 @@ export default function PurchaseReport(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                      onOpen(
+                        purchaseReportViewItem.purchaseReport.id
+                          ? purchaseReportViewItem.purchaseReport.id
+                          : 0,
+                        purchaseReportViewItem,
+                      );
                     }}
                   >
                     <div
@@ -290,11 +277,11 @@ export default function PurchaseReport(props: Props) {
                         'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
                       )}
                     >
-                      {purchaseReportViewItem.purchaseitems &&
-                        purchaseReportViewItem.purchaseitems.map(
+                      {purchaseReportViewItem.purchaseItems &&
+                        purchaseReportViewItem.purchaseItems.map(
                           (purchaseItem: PurchaseItem, index: number) => (
                             <>
-                              {purchaseReportViewItem.purchaseitems.length - 1 === index ? (
+                              {purchaseReportViewItem.purchaseItems.length - 1 === index ? (
                                 <>{purchaseItem.item}</>
                               ) : (
                                 <>{purchaseItem.item},</>
@@ -311,13 +298,18 @@ export default function PurchaseReport(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(purchaseReportViewItem.purchasereport.id, purchaseReportViewItem);
+                      onOpen(
+                        purchaseReportViewItem.purchaseReport.id
+                          ? purchaseReportViewItem.purchaseReport.id
+                          : 0,
+                        purchaseReportViewItem,
+                      );
                     }}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {TotalFee(
-                        purchaseReportViewItem.purchasereport,
-                        purchaseReportViewItem.purchaseitems,
+                        purchaseReportViewItem.purchaseReport,
+                        purchaseReportViewItem.purchaseItems,
                       )}
                     </div>
                   </td>
@@ -331,23 +323,31 @@ export default function PurchaseReport(props: Props) {
                     <div className={clsx('flex')}>
                       <div className={clsx('mx-1')}>
                         <OpenEditModalButton
-                          id={purchaseReportViewItem.purchasereport.id}
+                          id={
+                            purchaseReportViewItem.purchaseReport.id
+                              ? purchaseReportViewItem.purchaseReport.id
+                              : 0
+                          }
                           isDisabled={
-                            !purchaseReportViewItem.purchasereport.finance_check &&
-                            (state.user.bureau_id === 2 ||
-                              state.user.bureau_id === 3 ||
-                              state.user.id === purchaseReportViewItem.report_user.id)
+                            !purchaseReportViewItem.purchaseReport.financeCheck &&
+                            (user.bureauID === 2 ||
+                              user.bureauID === 3 ||
+                              user.id === purchaseReportViewItem.reportUser.id)
                           }
                         />
                       </div>
                       <div className={clsx('mx-1')}>
                         <OpenDeleteModalButton
-                          id={purchaseReportViewItem.purchasereport.id}
+                          id={
+                            purchaseReportViewItem.purchaseReport.id
+                              ? purchaseReportViewItem.purchaseReport.id
+                              : 0
+                          }
                           isDisabled={
-                            !purchaseReportViewItem.purchasereport.finance_check &&
-                            (state.user.bureau_id === 2 ||
-                              state.user.bureau_id === 3 ||
-                              state.user.id === purchaseReportViewItem.report_user.id)
+                            !purchaseReportViewItem.purchaseReport.financeCheck &&
+                            (user.bureauID === 2 ||
+                              user.bureauID === 3 ||
+                              user.id === purchaseReportViewItem.reportUser.id)
                           }
                         />
                       </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { EditButton } from '@components/common';
 import EditModal from '@components/purchaseorders/EditModal';
-import { PurchaseItem } from '@pages/purchaseorders';
+import { PurchaseItem } from '@type/common';
 
 interface Props {
   children?: React.ReactNode;

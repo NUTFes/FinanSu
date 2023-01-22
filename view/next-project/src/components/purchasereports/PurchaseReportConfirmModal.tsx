@@ -5,7 +5,7 @@ import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
 import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
 import ReceiptModal from '@components/purchasereports/ReceiptModal';
-import { PurchaseItem } from '@pages/purchasereports';
+import { PurchaseItem } from '@type/common';
 
 interface ModalProps {
   purchaseReportId: number;
@@ -35,7 +35,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
   // 購入報告する物品と報告しない物品を仕分け
   const judgeItems = useCallback(() => {
     props.formDataList.map((formData: PurchaseItem) => {
-      if (formData.finance_check) {
+      if (formData.financeCheck) {
         setReportedPurchaseItems((reportedPurchaseItem) => [...reportedPurchaseItem, formData]);
       } else {
         setNotReportedPurchaseItems((notReportedPurchaseItem) => [
@@ -44,7 +44,13 @@ export default function PurchaseItemNumModal(props: ModalProps) {
         ]);
       }
     });
-  }, [props.formDataList, setReportedPurchaseItems, setNotReportedPurchaseItems]);
+    console.log('reportedPurchaseItems', reportedPurchaseItems);
+  }, [
+    props.formDataList,
+    setReportedPurchaseItems,
+    setNotReportedPurchaseItems,
+    reportedPurchaseItems,
+  ]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -54,7 +60,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
 
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
     return (
-      <table className={clsx('border-collapse: collapse table-fixed')}>
+      <table className={clsx('table-fixed border-collapse')}>
         <thead>
           <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
             {tableColumns.map((tableColumn: string) => (

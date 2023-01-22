@@ -1,31 +1,24 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
+import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { put as putPurchaseItem } from '@api/purchaseItem';
 import { put as putPurchaseReport } from '@api/purchaseReport';
 import {
-  PrimaryButton,
-  OutlinePrimaryButton,
   CloseButton,
   Input,
-  Textarea,
   Modal,
+  OutlinePrimaryButton,
+  PrimaryButton,
   Stepper,
+  Textarea,
   Title,
 } from '@components/common';
-import { useGlobalContext } from '@components/global/context';
-import { PurchaseReport, PurchaseOrder, PurchaseItem, User } from '@pages/purchasereports';
-
-interface PurchaseRecordView {
-  purchasereport: PurchaseReport;
-  purchaseorder: PurchaseOrder;
-  order_user: User;
-  report_user: User;
-  purchaseitems: PurchaseItem[];
-}
+import { PurchaseItem, PurchaseReport, PurchaseReportView } from '@type/common';
 
 interface ModalProps {
   purchaseReportId: number;
@@ -34,7 +27,8 @@ interface ModalProps {
 }
 
 export default function EditModal(props: ModalProps) {
-  const state = useGlobalContext();
+  const [user] = useRecoilState(userAtom);
+
   const router = useRouter();
 
   const [activeStep, setActiveStep] = useState<number>(1);
@@ -61,14 +55,14 @@ export default function EditModal(props: ModalProps) {
   // 購入報告
   const [formData, setFormData] = useState<PurchaseReport>({
     id: 0,
-    user_id: state.user.id,
+    userID: user.id,
     discount: 0,
     addition: 0,
-    finance_check: false,
+    financeCheck: false,
     remark: '',
-    purchase_order_id: 1,
-    created_at: '',
-    updated_at: '',
+    purchaseOrderID: 1,
+    createdAt: '',
+    updatedAt: '',
   });
   // 購入物品のリスト
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>([
@@ -79,10 +73,10 @@ export default function EditModal(props: ModalProps) {
       quantity: 0,
       detail: '',
       url: '',
-      purchase_order_id: 1,
-      finance_check: false,
-      created_at: '',
-      updated_at: '',
+      purchaseOrderID: 1,
+      financeCheck: false,
+      createdAt: '',
+      updatedAt: '',
     },
   ]);
 
@@ -91,26 +85,28 @@ export default function EditModal(props: ModalProps) {
     const getPurchaseOrderViewURL =
       process.env.CSR_API_URI + '/get_purchasereports_for_view/' + props.purchaseReportId;
 
-    const purchaseOrderViewRes: PurchaseRecordView = await get(getPurchaseOrderViewURL);
+    const purchaseOrderViewRes: PurchaseReportView = await get(getPurchaseOrderViewURL);
     const initFormDataList = [];
-    for (let i = 0; i < purchaseOrderViewRes.purchaseitems.length; i++) {
-      if (purchaseOrderViewRes.purchaseitems[i].finance_check) {
+    for (let i = 0; i < purchaseOrderViewRes.purchaseItems.length; i++) {
+      if (purchaseOrderViewRes.purchaseItems[i].financeCheck) {
         const initFormData: PurchaseItem = {
-          id: purchaseOrderViewRes.purchaseitems[i].id,
-          item: purchaseOrderViewRes.purchaseitems[i].item,
-          price: purchaseOrderViewRes.purchaseitems[i].price,
-          quantity: purchaseOrderViewRes.purchaseitems[i].quantity,
-          detail: purchaseOrderViewRes.purchaseitems[i].detail,
-          url: purchaseOrderViewRes.purchaseitems[i].url,
-          purchase_order_id: purchaseOrderViewRes.purchaseorder.id,
-          finance_check: purchaseOrderViewRes.purchaseitems[i].finance_check,
-          created_at: purchaseOrderViewRes.purchaseitems[i].created_at,
-          updated_at: purchaseOrderViewRes.purchaseitems[i].updated_at,
+          id: purchaseOrderViewRes.purchaseItems[i].id,
+          item: purchaseOrderViewRes.purchaseItems[i].item,
+          price: purchaseOrderViewRes.purchaseItems[i].price,
+          quantity: purchaseOrderViewRes.purchaseItems[i].quantity,
+          detail: purchaseOrderViewRes.purchaseItems[i].detail,
+          url: purchaseOrderViewRes.purchaseItems[i].url,
+          purchaseOrderID: purchaseOrderViewRes.purchaseOrder.id
+            ? purchaseOrderViewRes.purchaseOrder.id
+            : 0,
+          financeCheck: purchaseOrderViewRes.purchaseItems[i].financeCheck,
+          createdAt: purchaseOrderViewRes.purchaseItems[i].createdAt,
+          updatedAt: purchaseOrderViewRes.purchaseItems[i].updatedAt,
         };
         initFormDataList.push(initFormData);
       }
     }
-    setFormData(purchaseOrderViewRes.purchasereport);
+    setFormData(purchaseOrderViewRes.purchaseReport);
     setFormDataList(initFormDataList);
   }, [props.purchaseReportId, setFormData, setFormDataList]);
 
@@ -139,12 +135,10 @@ export default function EditModal(props: ModalProps) {
     };
 
   // finance_checkのtrue,falseを切り替え
-  const isFinanceCheckHandler = (purchaseItemId: number, finance_check: boolean) => {
+  const isFinanceCheckHandler = (purchaseItemId: number | undefined, financeCheck: boolean) => {
     setFormDataList(
       formDataList.map((formData: PurchaseItem) =>
-        formData.id === purchaseItemId
-          ? { ...formData, ['finance_check']: finance_check }
-          : formData,
+        formData.id === purchaseItemId ? { ...formData, ['financeCheck']: financeCheck } : formData,
       ),
     );
   };
@@ -169,7 +163,7 @@ export default function EditModal(props: ModalProps) {
   // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
-      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
+      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseItems/' + item.id;
       await putPurchaseItem(updatePurchaseItemUrl, item);
     });
   };

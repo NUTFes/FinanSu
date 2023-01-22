@@ -1,10 +1,10 @@
 import { extendTheme } from '@chakra-ui/react';
 import '@fontsource/noto-sans-jp';
-import { StepsStyleConfig as Steps } from 'chakra-ui-steps';
+// import { StepsStyleConfig as Steps } from 'chakra-ui-steps';
 const theme = extendTheme({
-  components: {
-    Steps,
-  },
+  // components: {
+  //   Steps,
+  // },
   styles: {
     global: {
       body: {
@@ -38,6 +38,9 @@ const theme = extendTheme({
     primary: {
       1: '#56DAFF',
       2: '#1DBCC5',
+      3: '#E2E8F0',
+      4: '#023859',
+      5: '#04668C',
     },
     accent: {
       1: '#E4434E',

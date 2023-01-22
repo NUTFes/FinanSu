@@ -1,22 +1,22 @@
 import {
   Box,
-  ChakraProvider,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Spacer,
-  Select,
   Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
+  Select,
+  Spacer,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { get, get_with_token } from '@api/api_methods';
 import theme from '@assets/theme';
@@ -88,14 +88,6 @@ export default function Users(props: Props) {
     },
   ];
 
-  // ログイン中のユーザ
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: 1,
-    name: '',
-    bureau_id: 1,
-    role_id: 1,
-  });
-
   // ログイン中のユーザの権限
   const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
 
@@ -108,7 +100,6 @@ export default function Users(props: Props) {
       const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
       const getCurrentUser = async (url: string) => {
         const currentUserRes = await get_with_token(url);
-        setCurrentUser(currentUserRes);
 
         // current_userの権限を開発者に設定
         if (currentUserRes.role_id == 2) {

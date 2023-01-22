@@ -3,7 +3,7 @@ import React from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
 interface Props {
-  onClick?: any;
+  onClick?: () => void;
   isDisabled?: boolean;
 }
 

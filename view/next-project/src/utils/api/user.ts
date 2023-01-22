@@ -1,8 +1,10 @@
-export const post = async (url: string, data: any) => {
-  const name = data.userName;
-  const bureau_id = data.bureauId;
-  const role_id = data.roleId;
-  const postUrl = url + '?name=' + name + '&bureau_id=' + bureau_id + '&role_id=' + role_id;
+import { User } from '@type/common';
+
+export const post = async (url: string, data: User) => {
+  const name = data.name;
+  const bureauID = data.bureauID;
+  const roleID = data.roleID;
+  const postUrl = url + '?name=' + name + '&bureau_id=' + bureauID + '&role_id=' + roleID;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -15,11 +17,11 @@ export const post = async (url: string, data: any) => {
   // return await res.json();
 };
 
-export const put = async (url: string, data: any) => {
+export const put = async (url: string, data: User) => {
   const name = data.name;
-  const bureau_id = data.bureau_id;
-  const role_id = data.role_id;
-  const putUrl = url + '?name=' + name + '&bureau_id=' + bureau_id + '&role_id=' + role_id;
+  const bureauID = data.bureauID;
+  const roleID = data.roleID;
+  const putUrl = url + '?name=' + name + '&bureau_id=' + bureauID + '&role_id=' + roleID;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',

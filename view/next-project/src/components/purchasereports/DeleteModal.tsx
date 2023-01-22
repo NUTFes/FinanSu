@@ -1,28 +1,28 @@
 import {
-  ChakraProvider,
-  Center,
-  Text,
-  Flex,
   Box,
-  Spacer,
-  VStack,
+  Center,
+  ChakraProvider,
+  Flex,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalContent,
   ModalFooter,
-  ModalBody,
+  ModalOverlay,
+  Spacer,
+  Text,
+  VStack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { FC } from 'react';
+import React, { Dispatch, FC, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { del } from '@api/purchaseReport';
+import { del } from '@api/api_methods';
 import theme from '@assets/theme';
 import Button from '@components/common/RegistButton';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
 }

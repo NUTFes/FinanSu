@@ -1,44 +1,35 @@
 import {
-  ChakraProvider,
-  Center,
-  Select,
-  Input,
-  Flex,
   Box,
-  Spacer,
+  Center,
+  ChakraProvider,
+  Flex,
+  Grid,
+  GridItem,
+  Input,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalContent,
   ModalFooter,
-  ModalBody,
-  GridItem,
-  Grid,
+  ModalOverlay,
+  Select,
+  Spacer,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { FC, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { get, put } from '@api/budget';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
+import { Budget, Source, Year } from '@type/common';
 
 interface BudgetProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
   sources: Source[];
   years: Year[];
-}
-
-interface Source {
-  id: number;
-  name: string;
-}
-
-interface Year {
-  id: number;
-  year: number;
 }
 
 const BudgetEditModal: FC<BudgetProps> = (props) => {
@@ -48,10 +39,10 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
 
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    year_id: '',
-    source_id: '',
-    price: '',
+  const [formData, setFormData] = useState<Budget>({
+    yearID: 0,
+    sourceID: 0,
+    price: 0,
   });
 
   useEffect(() => {
@@ -75,7 +66,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitBudget = async (data: any, id: number | string) => {
+  const submitBudget = async (data: Budget, id: number | string) => {
     const submitBudgetUrl = process.env.CSR_API_URI + '/budgets/' + id;
     await put(submitBudgetUrl, data);
   };
@@ -110,8 +101,8 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={9}>
                     <Select
-                      value={formData.year_id}
-                      onChange={handler('year_id')}
+                      value={formData.yearID}
+                      onChange={handler('yearID')}
                       borderRadius='full'
                       borderColor='primary.1'
                     >
@@ -131,8 +122,8 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
                     <Select
                       borderRadius='full'
                       borderColor='primary.1'
-                      value={formData.source_id}
-                      onChange={handler('source_id')}
+                      value={formData.sourceID}
+                      onChange={handler('sourceID')}
                     >
                       {props.sources.map((source) => (
                         <option key={source.id} value={source.id}>

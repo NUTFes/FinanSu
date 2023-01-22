@@ -20,8 +20,6 @@
     }
   },
   "rules": {
-    // "sort-imports": 0,
-    // "import/order": [2, { "alphabetize": { "order": "asc" } }]
     "unused-imports/no-unused-imports": "error",
     "import/order": [
       "error",
