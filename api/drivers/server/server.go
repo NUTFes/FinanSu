@@ -10,18 +10,6 @@ import (
 	"os"
 )
 
-type (
-	Response struct {
-		Int64  int64  `json:"int64"`
-		String string `json:"string"`
-		World  *Item  `json:"world"`
-	}
-
-	Item struct {
-		Text string `json:"text"`
-	}
-)
-
 func RunServer(router router.Router) {
 	// echoのインスタンス
 	e := echo.New()
@@ -49,18 +37,7 @@ func RunServer(router router.Router) {
 
 	// swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
-	e.GET("/checkswagger/", checkswagger)
 
 	// サーバー起動
 	e.Start(":1323")
-}
-
-func checkswagger(c echo.Context) error {
-	return c.JSON(http.StatusOK, &Response{
-		Int64:  1,
-		String: "string",
-		World: &Item{
-			Text: "checkswagger",
-		},
-	})
 }
