@@ -5,7 +5,7 @@ services:
     container_name: "nutfes-finansu-view"
     volumes:
       - ./view:/app
-    command: "npm run dev"
+    command: "npm run start"
     ports:
       - "3000:3000"
     stdin_open: true
