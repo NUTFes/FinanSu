@@ -15,7 +15,123 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/budgets": {
+            "get": {
+                tags: ["budget"],
+                "description": "budgetの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "budgetの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["budget"],
+                "description": "budgetの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたbudgetが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "year_id",
+                        "in": "query",
+                        "description": "year_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "source_id",
+                        "in": "query",
+                        "description": "source_id",
+                        "type": "integer"
+                    }
+                ],
+            },
+        },
+        "/budgets/{id}": {
+            "get": {
+                tags: ["budget"],
+                "description": "IDで指定されたbudgetの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "budgetの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["budget"],
+                "description": "budgetの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたbudgetが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "year_id",
+                        "in": "query",
+                        "description": "year_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "source_id",
+                        "in": "query",
+                        "description": "source_id",
+                        "type": "integer"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["budget"],
+                "description": "IDを指定してbudgetの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "budgetの削除完了",
+                    }
+                },
+            },
+        },
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
