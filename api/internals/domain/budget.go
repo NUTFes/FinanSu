@@ -13,7 +13,7 @@ type Budget struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-type BudgetYearSource struct {
+type BudgetDetail struct {
 	Budget Budget `json:"budget"`
 	Year   Year   `json:"year"`
 	Source Source `json:"source"`
