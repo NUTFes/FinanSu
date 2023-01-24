@@ -11,11 +11,16 @@ RUN apt-get install -y locales \
 
 RUN export LANG=C.UTF-8
 RUN export LANGUAGE=en_US:
-  
+
 ENV CGO_ENABLED=0
 ENV GOOS=linux
 ENV GOARCH=amd64
 
+# swaggerをinstall
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
 # Airをインストール
 RUN go get -u github.com/cosmtrek/air && go build -o /go/bin/air github.com/cosmtrek/air
 CMD ["air", "-c", ".air.toml"]
+
+

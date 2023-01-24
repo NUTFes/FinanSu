@@ -4,6 +4,7 @@ build:
 run:
 	docker compose up
 run-api:
+	docker compose up -d db
 	docker compose up api
 down:
 	docker compose down

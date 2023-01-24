@@ -1,9 +1,11 @@
 package server
 
 import (
+	_ "github.com/NUTFes/FinanSu/api/docs"
 	"github.com/NUTFes/FinanSu/api/router"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 	"net/http"
 	"os"
 )
@@ -32,6 +34,9 @@ func RunServer(router router.Router) {
 
 	// ルーティング
 	router.ProvideRouter(e)
+
+	// swagger
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// サーバー起動
 	e.Start(":1323")
