@@ -48,11 +48,11 @@ func (b *budgetController) CreateBudget(c echo.Context) error {
 	price := c.QueryParam("price")
 	yearID := c.QueryParam("year_id")
 	sourceID := c.QueryParam("source_id")
-	err := b.u.CreateBudget(c.Request().Context(), price, yearID, sourceID)
+	latastBudget, err := b.u.CreateBudget(c.Request().Context(), price, yearID, sourceID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created Budget")
+	return c.JSON(http.StatusOK, latastBudget)
 }
 
 // Update
@@ -61,11 +61,11 @@ func (b *budgetController) UpdateBudget(c echo.Context) error {
 	price := c.QueryParam("price")
 	yearID := c.QueryParam("year_id")
 	sourceID := c.QueryParam("source_id")
-	err := b.u.UpdateBudget(c.Request().Context(), id, price, yearID, sourceID)
+	updatedBudget, err := b.u.UpdateBudget(c.Request().Context(), id, price, yearID, sourceID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated Budget")
+	return c.JSON(http.StatusOK, updatedBudget)
 }
 
 // Destroy

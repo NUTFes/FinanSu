@@ -14,8 +14,8 @@ type budgetUseCase struct {
 type BudgetUseCase interface {
 	GetBudgets(context.Context) ([]domain.Budget, error)
 	GetBudgetByID(context.Context, string) (domain.Budget, error)
-	CreateBudget(context.Context, string, string, string) error
-	UpdateBudget(context.Context, string, string, string, string) error
+	CreateBudget(context.Context, string, string, string) (domain.Budget, error)
+	UpdateBudget(context.Context, string, string, string, string) (domain.Budget, error)
 	DestroyBudget(context.Context, string) error
 	//budgetsに紐づくyearとsourceの取得
 	GetBudgetWithYearAndSource(context.Context, string) (domain.BudgetYearSource, error)
@@ -79,15 +79,41 @@ func (b *budgetUseCase) GetBudgetByID(c context.Context, id string) (domain.Budg
 }
 
 //budgetの作成(Create)
-func (b *budgetUseCase) CreateBudget(c context.Context, price string, yearID string, sourceID string) error {
+func (b *budgetUseCase) CreateBudget(c context.Context, price string, yearID string, sourceID string) (domain.Budget, error) {
 	err := b.rep.Create(c, price, yearID, sourceID)
-	return err
+	latastBudget:= domain.Budget{}
+	row, err := b.rep.FindLatestRecord(c)
+	err = row.Scan(
+		&latastBudget.ID,
+		&latastBudget.Price,
+		&latastBudget.YearID,
+		&latastBudget.SourceID,
+		&latastBudget.CreatedAt,
+		&latastBudget.UpdatedAt,
+	)
+	if err != nil {
+		return latastBudget, err
+	}
+	return latastBudget, nil
 }
 
 //budgetの更新(Update)
-func (b *budgetUseCase) UpdateBudget(c context.Context, id string, price string, yearID string, sourceID string) error {
+func (b *budgetUseCase) UpdateBudget(c context.Context, id string, price string, yearID string, sourceID string) (domain.Budget, error) {
 	err := b.rep.Update(c, id, price, yearID, sourceID)
-	return err
+	updatedBudget:= domain.Budget{}
+	row, err := b.rep.Find(c, id)
+	err = row.Scan(
+		&updatedBudget.ID,
+		&updatedBudget.Price,
+		&updatedBudget.YearID,
+		&updatedBudget.SourceID,
+		&updatedBudget.CreatedAt,
+		&updatedBudget.UpdatedAt,
+	)
+	if err != nil {
+		return updatedBudget, err
+	}
+	return updatedBudget, nil
 }
 
 //budgetの削除(Delete)
