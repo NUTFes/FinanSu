@@ -14,7 +14,7 @@ RUN export LANGUAGE=en_US:
 
 ENV CGO_ENABLED=0
 ENV GOOS=linux
-ENV GOARCH=amd64
+#ENV GOARCH=amd64
 
 # swaggerをinstall
 RUN go install github.com/swaggo/swag/cmd/swag@latest
