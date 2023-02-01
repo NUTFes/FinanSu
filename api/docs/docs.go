@@ -153,7 +153,7 @@ const docTemplate = `{
         },
         "/activities": {
             "get": {
-                tags: ["activities"],
+                tags: ["activity"],
                 "description": "activitiesの一覧を取得",
                 "responses": {
                     "200": {
@@ -162,7 +162,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                tags: ["activities"],
+                tags: ["activity"],
                 "description": "activitiesの作成",
                 responses: {
                     "200": {
@@ -200,7 +200,7 @@ const docTemplate = `{
         },
         "/activities/{id}": {
             "get": {
-                tags: ["activities"],
+                tags: ["activity"],
                 "description": "IDで指定されたactivitiesの取得",
                 "parameters": [
                     {
@@ -218,7 +218,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                tags: ["activities"],
+                tags: ["activity"],
                 "description": "activitiesの更新",
                 responses: {
                     "200": {
@@ -261,7 +261,7 @@ const docTemplate = `{
                 ],
             },
             "delete": {
-                tags: ["activities"],
+                tags: ["activity"],
                 "description": "IDを指定してactivitiesの削除",
                 "parameters": [
                     {
@@ -281,7 +281,7 @@ const docTemplate = `{
         },
         "/get_activities_for_view": {
             "get": {
-                tags: ["activities"],
+                tags: ["activity"],
                 "description": "activitiesとsponcer,sponsorStyle,userの一覧を取得",
                 "responses": {
                     "200": {
