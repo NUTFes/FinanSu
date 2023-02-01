@@ -15,10 +15,10 @@ type activityUseCase struct {
 type ActivityUseCase interface {
 	GetActivities(context.Context) ([]domain.Activity, error)
 	GetActivityByID(context.Context, string) (domain.Activity, error)
-	CreateActivity(context.Context, string, string, string, string) error
-	UpdateActivity(context.Context, string, string, string, string, string) error
+	CreateActivity(context.Context, string, string, string, string) (domain.Activity, error)
+	UpdateActivity(context.Context, string, string, string, string, string) (domain.Activity, error)
 	DestroyActivity(context.Context, string) error
-	GetActivitiesWithSponsorAndStyle(context.Context) ([]domain.ActivityForAdminView, error)
+	GetActivitiesWithSponsorAndStyle(context.Context) ([]domain.ActivityDetail, error)
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
@@ -83,9 +83,25 @@ func (a *activityUseCase) CreateActivity(
 	sponsorStyleID string,
 	userID string,
 	isDone string,
-	sponsorID string) error {
+	sponsorID string) (domain.Activity, error) {
+	latastActivity := domain.Activity{}
+
 	err := a.rep.Create(c, sponsorStyleID, userID, isDone, sponsorID)
-	return err
+	row, err := a.rep.FindLatestRecord(c)
+	err = row.Scan(
+		&latastActivity.ID,
+		&latastActivity.SponsorStyleID,
+		&latastActivity.UserID,
+		&latastActivity.IsDone,
+		&latastActivity.SponsorID,
+		&latastActivity.CreatedAt,
+		&latastActivity.UpdatedAt,
+	)
+
+	if err != nil {
+		return latastActivity, err
+	}
+	return latastActivity, nil
 }
 
 func (a *activityUseCase) UpdateActivity(
@@ -94,9 +110,23 @@ func (a *activityUseCase) UpdateActivity(
 	sponsorStyleID string,
 	userID string,
 	isDone string,
-	sponsorID string) error {
+	sponsorID string) (domain.Activity, error) {
+	updatedActivity := domain.Activity{}
 	err := a.rep.Update(c, id, sponsorStyleID, userID, isDone, sponsorID)
-	return err
+	row, err := a.rep.Find(c, id)
+	err = row.Scan(
+		&updatedActivity.ID,
+		&updatedActivity.SponsorStyleID,
+		&updatedActivity.UserID,
+		&updatedActivity.IsDone,
+		&updatedActivity.SponsorID,
+		&updatedActivity.CreatedAt,
+		&updatedActivity.UpdatedAt,
+	)
+	if err != nil {
+		return updatedActivity, err
+	}
+	return updatedActivity, nil
 }
 
 func (a *activityUseCase) DestroyActivity(c context.Context, id string) error {
@@ -104,10 +134,10 @@ func (a *activityUseCase) DestroyActivity(c context.Context, id string) error {
 	return err
 }
 
-func (a *activityUseCase) GetActivitiesWithSponsorAndStyle(c context.Context) ([]domain.ActivityForAdminView, error) {
+func (a *activityUseCase) GetActivitiesWithSponsorAndStyle(c context.Context) ([]domain.ActivityDetail, error) {
 
-	activity := domain.ActivityForAdminView{}
-	var activities []domain.ActivityForAdminView
+	activity := domain.ActivityDetail{}
+	var activities []domain.ActivityDetail
 
 	// クエリー実行
 	rows, err := a.rep.AllWithSponsor(c)

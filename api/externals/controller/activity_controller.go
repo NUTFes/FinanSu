@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type activityController struct {
@@ -48,11 +49,11 @@ func (a *activityController) CreateActivity(c echo.Context) error {
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
 	sponsorID := c.QueryParam("sponsor_id")
-	err := a.u.CreateActivity(c.Request().Context(), sponsorStyleID, userID, isDone, sponsorID)
+	latastActivity, err := a.u.CreateActivity(c.Request().Context(), sponsorStyleID, userID, isDone, sponsorID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created Activity")
+	return c.JSON(http.StatusOK, latastActivity)
 }
 
 // Update
@@ -62,11 +63,11 @@ func (a *activityController) UpdateActivity(c echo.Context) error {
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
 	sponsorID := c.QueryParam("sponsor_id")
-	err := a.u.UpdateActivity(c.Request().Context(), id, sponsorStyleID, userID, isDone, sponsorID)
+	updatedActivity, err := a.u.UpdateActivity(c.Request().Context(), id, sponsorStyleID, userID, isDone, sponsorID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated Activity")
+	return c.JSON(http.StatusOK, updatedActivity)
 }
 
 // Destroy
@@ -87,4 +88,3 @@ func (a *activityController) IndexActivityWithSponsorAndStyle(c echo.Context) er
 	}
 	return c.JSON(http.StatusOK, activities)
 }
-

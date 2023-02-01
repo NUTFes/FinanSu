@@ -151,6 +151,145 @@ const docTemplate = `{
                 }
             },
         },
+        "/activities": {
+            "get": {
+                tags: ["activities"],
+                "description": "activitiesの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activitiesの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["activities"],
+                "description": "activitiesの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたactivitiestが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "sponsor_style_id",
+                        "in": "query",
+                        "description": "sponsor_style_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "is_done",
+                        "in": "query",
+                        "description": "is_done",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "sponsor_id",
+                        "in": "query",
+                        "description": "sponsor_id",
+                        "type": "integer"
+                    }
+                ],
+            },
+        },
+        "/activities/{id}": {
+            "get": {
+                tags: ["activities"],
+                "description": "IDで指定されたactivitiesの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activitiesの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["activities"],
+                "description": "activitiesの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたactivitiesが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sponsor_style_id",
+                        "in": "query",
+                        "description": "sponsor_style_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "is_done",
+                        "in": "query",
+                        "description": "is_done",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "sponsor_id",
+                        "in": "query",
+                        "description": "sponsor_id",
+                        "type": "integer"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["activities"],
+                "description": "IDを指定してactivitiesの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "activitiesの削除完了",
+                    }
+                },
+            },
+        },
+        "/get_activities_for_view": {
+            "get": {
+                tags: ["activities"],
+                "description": "activitiesとsponcer,sponsorStyle,userの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activitiesとsponcer,sponsorStyle,userの一覧の取得",
+                    }
+                }
+            },
+        },
     }
 }`
 
