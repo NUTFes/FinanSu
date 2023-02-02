@@ -279,7 +279,7 @@ const docTemplate = `{
                 },
             },
         },
-        "/get_activities_for_view": {
+        "/activities/details": {
             "get": {
                 tags: ["activity"],
                 "description": "activitiesとsponcer,sponsorStyle,userの一覧を取得",

@@ -13,19 +13,19 @@ type activityUseCase struct {
 }
 
 type ActivityUseCase interface {
-	GetActivities(context.Context) ([]domain.Activity, error)
+	GetActivity(context.Context) ([]domain.Activity, error)
 	GetActivityByID(context.Context, string) (domain.Activity, error)
 	CreateActivity(context.Context, string, string, string, string) (domain.Activity, error)
 	UpdateActivity(context.Context, string, string, string, string, string) (domain.Activity, error)
 	DestroyActivity(context.Context, string) error
-	GetActivitiesWithSponsorAndStyle(context.Context) ([]domain.ActivityDetail, error)
+	GetActivityDetail(context.Context) ([]domain.ActivityDetail, error)
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
 	return &activityUseCase{rep}
 }
 
-func (a *activityUseCase) GetActivities(c context.Context) ([]domain.Activity, error) {
+func (a *activityUseCase) GetActivity(c context.Context) ([]domain.Activity, error) {
 
 	activity := domain.Activity{}
 	var activities []domain.Activity
@@ -134,13 +134,13 @@ func (a *activityUseCase) DestroyActivity(c context.Context, id string) error {
 	return err
 }
 
-func (a *activityUseCase) GetActivitiesWithSponsorAndStyle(c context.Context) ([]domain.ActivityDetail, error) {
+func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.ActivityDetail, error) {
 
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
 
 	// クエリー実行
-	rows, err := a.rep.AllWithSponsor(c)
+	rows, err := a.rep.FindDetail(c)
 	if err != nil {
 		return nil, err
 	}
