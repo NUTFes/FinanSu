@@ -171,7 +171,7 @@ func (b *budgetUseCase) GetBudgetDetails(c context.Context) ([]domain.BudgetDeta
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
-		budgetsDetails = append(budgetsDetails, budgetDetail)
+		budgetDetails = append(budgetDetails, budgetDetail)
 	}
 	return budgetsDetails, nil
 }
