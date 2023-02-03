@@ -28,31 +28,31 @@ func NewBureauRepository(c db.Client, ac abstract.Crud) BureauRepository {
 
 // 全件取得
 func (b *bureauRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from bureaus"
+	query := "SELECT * FROM bureaus"
 	return b.crud.Read(c, query)
 }
 
 // 1件取得
 func (b *bureauRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from bureaus where id =" + id
+	query := "SELECT * FROM bureaus WHERE id =" + id
 	return b.crud.ReadByID(c, query)
 }
 
 // 作成
 func (b *bureauRepository) Create(c context.Context, name string) error {
-	query := "Insert into bureaus (name) values ('" + name + "')"
+	query := "INSERT INTO bureaus (name) VALUES ('" + name + "')"
 	return b.crud.UpdateDB(c, query)
 }
 
 // 編集
 func (b *bureauRepository) Update(c context.Context, id string, name string) error {
-	query := "update bureaus set name = '" + name + "' where id = " + id
+	query := "UPDATE bureaus SET name = '" + name + "' WHERE id = " + id
 	return b.crud.UpdateDB(c, query)
 }
 
 // 削除
 func (b *bureauRepository) Destroy(c context.Context, id string) error {
-	query := "delete from bureaus where id =" + id
+	query := "DELETE FROM bureaus WHERE id =" + id
 	return b.crud.UpdateDB(c, query)
 }
 
