@@ -143,7 +143,7 @@ func (b *budgetUseCase) GetBudgetDetailByID(c context.Context, id string) (domai
 
 func (b *budgetUseCase) GetBudgetDetails(c context.Context) ([]domain.BudgetDetail, error) {
 	budgetDetail := domain.BudgetDetail{}
-	var budgets []domain.BudgetDetail
+	var budgetDetails []domain.BudgetDetail
 
 	rows, err := b.rep.FindDetail(c)
 	if err != nil {
