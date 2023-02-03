@@ -57,6 +57,17 @@ const docTemplate = `{
                 ],
             },
         },
+        "/budgets/details": {
+            "get": {
+                tags: ["budget"],
+                "description": "budgetに紐づくyearとsourceの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "budgetに紐づくyearとsourceの一覧を取得",
+                    }
+                }
+            },
+        },
         "/budgets/{id}": {
             "get": {
                 tags: ["budget"],
@@ -131,18 +142,7 @@ const docTemplate = `{
                 },
             },
         },
-        "/budgets/details": {
-            "get": {
-                tags: ["budget"],
-                "description": "budgetに紐づくyearとsourceの一覧を取得",
-                "responses": {
-                    "200": {
-                        "description": "budgetに紐づくyearとsourceの一覧を取得",
-                    }
-                }
-            },
-        },
-        "/budgets/details/{id}": {
+        "/budgets/{id}/details": {
             "get": {
                 tags: ["budget"],
                 "description": "IDで指定されたbudgetに紐づくyearとsourceを取得",
@@ -207,6 +207,17 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 ],
+            },
+        },
+        "/activities/details": {
+            "get": {
+                tags: ["activity"],
+                "description": "activitiesとsponcer,sponsorStyle,userの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activitiesとsponcer,sponsorStyle,userの一覧の取得",
+                    }
+                }
             },
         },
         "/activities/{id}": {
@@ -290,15 +301,95 @@ const docTemplate = `{
                 },
             },
         },
-        "/activities/details": {
+        "/bureaus": {
             "get": {
-                tags: ["activity"],
-                "description": "activitiesとsponcer,sponsorStyle,userの一覧を取得",
+                tags: ["bureau"],
+                "description": "bureauの一覧を取得",
                 "responses": {
                     "200": {
-                        "description": "activitiesとsponcer,sponsorStyle,userの一覧の取得",
+                        "description": "bureauの一覧の取得",
                     }
                 }
+            },
+            "post": {
+                tags: ["bureau"],
+                "description": "bureauの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたbureauが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                ],
+            },
+        },
+        "/bureaus/{id}": {
+            "get": {
+                tags: ["bureau"],
+                "description": "IDで指定されたbureauの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "bureauの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["bureau"],
+                "description": "bureauの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたbureauが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["bureau"],
+                "description": "IDを指定してbureauの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "bureauの削除完了",
+                    }
+                },
             },
         },
     }

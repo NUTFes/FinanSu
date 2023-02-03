@@ -19,6 +19,7 @@ type BureauRepository interface {
 	Create(context.Context, string) error
 	Update(context.Context, string, string) error
 	Destroy(context.Context, string) error
+	FindLatestRecord(context.Context) (*sql.Row, error)
 }
 
 func NewBureauRepository(c db.Client, ac abstract.Crud) BureauRepository {
@@ -53,4 +54,18 @@ func (b *bureauRepository) Update(c context.Context, id string, name string) err
 func (b *bureauRepository) Destroy(c context.Context, id string) error {
 	query := "delete from bureaus where id =" + id
 	return b.crud.UpdateDB(c, query)
+}
+
+// 最新のbureauを取得する
+func (b *bureauRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `
+		SELECT
+			*
+		FROM
+			bureaus
+		ORDER BY
+			id
+		DESC LIMIT 1
+	`
+	return b.crud.ReadByID(c, query)
 }
