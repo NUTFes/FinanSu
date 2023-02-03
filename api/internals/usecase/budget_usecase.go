@@ -173,5 +173,5 @@ func (b *budgetUseCase) GetBudgetDetails(c context.Context) ([]domain.BudgetDeta
 		}
 		budgetsDetails = append(budgetsDetails, budgetDetail)
 	}
-	return budgets, nil
+	return budgetsDetails, nil
 }
