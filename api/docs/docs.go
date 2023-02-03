@@ -131,7 +131,18 @@ const docTemplate = `{
                 },
             },
         },
-        "/budgets/{id}/details": {
+        "/budgets/details": {
+            "get": {
+                tags: ["budget"],
+                "description": "budgetに紐づくyearとsourceの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "budgetに紐づくyearとsourceの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/budgets/details/{id}": {
             "get": {
                 tags: ["budget"],
                 "description": "IDで指定されたbudgetに紐づくyearとsourceを取得",
