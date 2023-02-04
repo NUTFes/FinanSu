@@ -89,7 +89,7 @@ func (b *bureauUseCase) UpdateBureau(c context.Context, id string, name string) 
 		&updatedBureau.ID,
 		&updatedBureau.Name,
 		&updatedBureau.CreatedAt,
-		&updatedBureau.UpdatedAt,		
+		&updatedBureau.UpdatedAt,
 	)
 	if err != nil {
 		return updatedBureau, err
