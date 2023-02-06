@@ -1,17 +1,13 @@
-import { ChakraProvider } from '@chakra-ui/react';
-import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
-import { Center, Box } from '@chakra-ui/react';
+import clsx from 'clsx';
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
-import theme from '@assets/theme';
+import MainLayout from '@/components/layout/MainLayout';
 import EditButton from '@components/common/EditButton';
-import Header from '@components/common/Header';
 import RegistButton from '@components/common/RegistButton';
 
 import type { NextPage } from 'next';
-import clsx from 'clsx';
-import MainLayout from '@/components/layout/MainLayout';
+
 
 interface activity {
   id: number;
@@ -53,10 +49,10 @@ const activity: NextPage = () => {
       </Head>
 
       <div className={clsx('text-center')}>
-        <div className={clsx('m-10 px-10 boxShadow-base rounded-lg')}>
-          <div className={clsx('mt-10 mx-5')}>
+        <div className={clsx('boxShadow-base m-10 rounded-lg px-10')}>
+          <div className={clsx('mx-5 mt-10')}>
             <div className={clsx('flex')}>
-              <div className={clsx('text-center mr-5 text-2x1 font-thin text-black')}>
+              <div className={clsx('text-2x1 text-black mr-5 text-center font-thin')}>
                 協賛金回収状況
               </div>
               <select className={'w-100'}>
@@ -78,47 +74,35 @@ const activity: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className={clsx('p-5 mb-2')}>
+          <div className={clsx('mb-2 p-5')}>
             <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
               <thead>
                 <tr>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm text-black')}>
-                      ID
-                    </div>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black text-center text-sm')}>ID</div>
                   </th>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm text-black')}>
-                      協賛ID
-                    </div>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black text-center text-sm')}>協賛ID</div>
                   </th>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm mr-1 text-black')}>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black mr-1 text-center text-sm')}>
                       協賛スタイルID
                     </div>
                   </th>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm text-black')}>
-                      ユーザーID
-                    </div>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black text-center text-sm')}>ユーザーID</div>
                   </th>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm text-black')}>
-                      回収状況
-                    </div>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black text-center text-sm')}>回収状況</div>
                   </th>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm text-black')}></div>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black text-center text-sm')}></div>
                   </th>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm text-black')}>
-                      作成日時
-                    </div>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black text-center text-sm')}>作成日時</div>
                   </th>
-                  <th className={clsx('border-b-4 border-blue-400')}>
-                    <div className={clsx('text-center text-sm text-black')}>
-                      更新日時
-                    </div>
+                  <th className={clsx('border-blue-400 border-b-4')}>
+                    <div className={clsx('text-black text-center text-sm')}>更新日時</div>
                   </th>
                 </tr>
               </thead>
@@ -126,20 +110,26 @@ const activity: NextPage = () => {
                 {activity.map((activityItem) => (
                   <tr key={activityItem.id}>
                     <td>
-                      <div className={clsx('text-center text-black')}>{activityItem.id}</div>
+                      <div className={clsx('text-black text-center')}>{activityItem.id}</div>
                     </td>
                     <td>
-                      <div className={clsx('text-center text-black')}>{activityItem.sponsorID}</div>
+                      <div className={clsx('text-black text-center')}>{activityItem.sponsorID}</div>
                     </td>
                     <td>
-                      <div className={clsx('text-center text-black')}>{activityItem.sponsorStyleID}</div>
+                      <div className={clsx('text-black text-center')}>
+                        {activityItem.sponsorStyleID}
+                      </div>
                     </td>
                     <td>
-                      <div className={clsx('text-center text-black')}>{activityItem.userID}</div>
+                      <div className={clsx('text-black text-center')}>{activityItem.userID}</div>
                     </td>
                     <td>
-                      {activityItem.isDone && <div className={clsx('text-center text-black')}>回収完了</div>}
-                      {!activityItem.isDone && <div className={clsx('text-center text-black')}>未回収</div>}
+                      {activityItem.isDone && (
+                        <div className={clsx('text-black text-center')}>回収完了</div>
+                      )}
+                      {!activityItem.isDone && (
+                        <div className={clsx('text-black text-center')}>未回収</div>
+                      )}
                     </td>
                     <td>
                       <div className={clsx('text-center')}>
@@ -147,10 +137,10 @@ const activity: NextPage = () => {
                       </div>
                     </td>
                     <td>
-                      <div className={clsx('text-center text-black')}>{activityItem.createdAt}</div>
+                      <div className={clsx('text-black text-center')}>{activityItem.createdAt}</div>
                     </td>
                     <td>
-                      <div className={clsx('text-center text-black')}>{activityItem.updatedAt}</div>
+                      <div className={clsx('text-black text-center')}>{activityItem.updatedAt}</div>
                     </td>
                   </tr>
                 ))}
