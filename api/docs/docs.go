@@ -452,6 +452,17 @@ const docTemplate = `{
                 ],
             },
         },
+        "/fund_informations/details": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "fund_informationに紐づくteacherとuserの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "fund_informationに紐づくteacherとuserの一覧を取得",
+                    }
+                }
+            },
+        },
         "/fund_informations/{id}": {
             "get": {
                 tags: ["fund_information"],
@@ -546,18 +557,7 @@ const docTemplate = `{
                 },
             },
         },
-        "/get_fund_informations_for_view": {
-            "get": {
-                tags: ["fund_information"],
-                "description": "fund_informationに紐づくteacherとuserの一覧を取得",
-                "responses": {
-                    "200": {
-                        "description": "fund_informationに紐づくteacherとuserの一覧を取得",
-                    }
-                }
-            },
-        },
-        "/get_fund_informations_for_view/{id}": {
+        "/fund_informations/{id}/details": {
             "get": {
                 tags: ["fund_information"],
                 "description": "IDで指定されたfund_informatinに紐づくteacherとuserを取得",

@@ -127,8 +127,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/fund_informations", r.fundInformationController.CreateFundInformation)
 	e.PUT("/fund_informations/:id", r.fundInformationController.UpdateFundInformation)
 	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
-	e.GET("/get_fund_informations_for_view", r.fundInformationController.IndexFundInformationDetails)
-	e.GET("/get_fund_informations_for_view/:id", r.fundInformationController.ShowFundInformationDetailByID)
+	e.GET("/fund_informations/details", r.fundInformationController.IndexFundInformationDetails)
+	e.GET("/fund_informations/:id/details", r.fundInformationController.ShowFundInformationDetailByID)
 
 	// parcahseordersのRoute
 	e.GET("/purchaseorders", r.purchaseOrderController.IndexPurchaseOrder)
