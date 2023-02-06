@@ -620,6 +620,17 @@ const docTemplate = `{
                 ],
             },
         },
+        "/purchaseorders/details": {
+            "get": {
+                tags: ["purchaseorder"],
+                "description": "purchaseorderに紐づくuserとitemの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "bpurchaseorderに紐づくuserとitemの一覧を取得",
+                    }
+                }
+            },
+        },
         "/purchaseorders/{id}": {
             "get": {
                 tags: ["purchaseorder"],
@@ -695,18 +706,7 @@ const docTemplate = `{
                 },
             },
         },
-        "/get_purchaseorders_for_view": {
-            "get": {
-                tags: ["purchaseorder"],
-                "description": "purchaseorderに紐づくuserとitemの一覧を取得",
-                "responses": {
-                    "200": {
-                        "description": "bpurchaseorderに紐づくuserとitemの一覧を取得",
-                    }
-                }
-            },
-        },
-        "/get_purchaseorders_for_view/{id}": {
+        "/purchaseorders/{id}/details": {
             "get": {
                 tags: ["purchaseorder"],
                 "description": "IDで指定されたpurchaseorderに紐づくuserとitemを取得",
@@ -721,7 +721,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "purchaseorderに紐づくuserとitemを取得",
+                        "description": "IDで指定されたpurchaseorderに紐づくuserとitemを取得",
                     }
                 }
             },
