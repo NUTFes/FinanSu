@@ -31,13 +31,13 @@ func NewPurchaseOrderRepository(c db.Client, ac abstract.Crud) PurchaseOrderRepo
 
 // 全件取得
 func (por *purchaseOrderRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from purchase_orders"
+	query := "SELECT * FROM purchase_orders"
 	return por.crud.Read(c, query)
 }
 
 // 1件取得
 func (por *purchaseOrderRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from purchase_orders where id = " + id
+	query := "SELECT * FROM purchase_orders WHERE id = " + id
 	return por.crud.ReadByID(c, query)
 }
 
@@ -48,7 +48,10 @@ func (por *purchaseOrderRepository) Create(
 	userId string,
 	financeCheck string,
 ) error {
-	var query = "insert into purchase_orders (deadline, user_id, finance_check) values ('" + deadLine + "'," + userId + "," + financeCheck + ")"
+	query := `
+		INSERT INTO
+			purchase_orders (deadline, user_id, finance_check)
+		VALUES ('` + deadLine + "'," + userId + "," + financeCheck + ")"
 	return por.crud.UpdateDB(c, query)
 }
 
@@ -60,7 +63,14 @@ func (por *purchaseOrderRepository) Update(
 	userId string,
 	financeCheck string,
 ) error {
-	var query = "update purchase_orders set deadline ='" + deadLine + "', user_id = " + userId + ",finance_check = " + financeCheck + " where id = " + id
+	query := `
+		UPDATE
+			purchase_orders
+		SET
+			deadline ='` + deadLine +
+		"', user_id = " + userId +
+		",finance_check = " + financeCheck +
+		" WHERE id = " + id
 	return por.crud.UpdateDB(c, query)
 }
 
@@ -69,30 +79,64 @@ func (por *purchaseOrderRepository) Delete(
 	c context.Context,
 	id string,
 ) error {
-	query := "Delete from purchase_orders where id =" + id
+	query := `
+		DELETE FROM
+			purchase_orders
+		WHERE id =` + id
 	return por.crud.UpdateDB(c, query)
 }
 
 // orderに紐づくuserの取得(All)
 func (p *purchaseOrderRepository) AllOrderWithUser(c context.Context) (*sql.Rows, error) {
-	query := "select * from purchase_orders inner join users on purchase_orders.user_id = users.id;"
+	query := `
+		SELECT
+			*
+		FROM
+			purchase_orders
+		INNER JOIN
+			users
+		ON
+			purchase_orders.user_id = users.id;`
 	return p.crud.Read(c, query)
 }
 
 // orderに紐づくuserの取得(byID)
 func (p *purchaseOrderRepository) FindWithOrderItem(c context.Context, id string) (*sql.Row, error) {
-	query := " select * from purchase_orders inner join users on purchase_orders.user_id = users.id where purchase_orders.id =" + id
+	query := `
+		SELECT
+			*
+		FROM
+			purchase_orders
+		INNER JOIN
+			users
+		ON
+			purchase_orders.user_id = users.id
+		WHERE
+			purchase_orders.id =` + id
 	return p.crud.ReadByID(c, query)
 }
 
 // 指定したorder_idのitemを取得する
 func (p *purchaseOrderRepository) GetPurchaseItemByOrderId(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
-	query := "select * from purchase_items where purchase_items.purchase_order_id =" + purchaseOrderID
+	query := `
+		SELECT
+			*
+		FROM
+			purchase_items
+		WHERE
+			purchase_items.purchase_order_id =` + purchaseOrderID
 	return p.crud.Read(c, query)
 }
 
 // 最新のレコードを取得
 func (por *purchaseOrderRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
-	query := "select * from purchase_orders order by id desc limit 1"
+	query := `
+		SELECT
+			*
+		FROM
+			purchase_orders
+		ORDER BY
+			id
+		DESC LIMIT 1`
 	return por.crud.ReadByID(c, query)
 }
