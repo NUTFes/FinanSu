@@ -52,7 +52,7 @@ func (fir *fundInformationRepository) Create(
 ) error {
 	query := `
 		INSERT INTO
-	 		fund_informations(
+			fund_informations(
 				user_id,
 				teacher_id,
 				price, remark,
