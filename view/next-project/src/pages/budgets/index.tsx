@@ -1,27 +1,15 @@
-import {
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Spacer,
-  Select,
-  Center,
-  Grid,
-  GridItem,
-} from '@chakra-ui/react';
+import clsx from 'clsx';
+import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
 import { get } from '@api/budget';
 import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/budgets/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/budgets/OpenEditModalButton';
+import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import { Budget, Source, Year } from '@type/common';
+
 
 interface Props {
   budgets: Budget[];
@@ -52,7 +40,6 @@ export async function getServerSideProps() {
 export default function BudgetList(props: Props) {
   const sources = props.sources;
   const years = props.years;
-
   // 合計金額用の変数
   let totalFee = 0;
 
@@ -76,126 +63,116 @@ export default function BudgetList(props: Props) {
 
   return (
     <MainLayout>
-      <Flex justify='center' align='center'>
-        <Box m='10' px='10' boxShadow='base' rounded='lg'>
-          <Box mt='10' mx='5'>
-            <Flex>
-              <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                予算一覧
-              </Center>
-              <Select variant='flushed' w='100'>
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-              </Select>
-            </Flex>
-            <Flex>
-              <Spacer />
-              <Box>
-                <OpenAddModalButton sources={sources} years={years}>
-                  <RiAddCircleLine
-                    size={20}
-                    style={{
-                      marginRight: 5,
-                    }}
-                  />
-                  予算登録
-                </OpenAddModalButton>
-              </Box>
-            </Flex>
-          </Box>
-          <Box p='5' mb='2'>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      ID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7' isNumeric>
-                    <Center fontSize='sm' color='black.600'>
-                      項目
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      年度
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7' isNumeric>
-                    <Center fontSize='sm' color='black.600'>
-                      金額
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center></Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>作成日時</Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'>更新日時</Center>
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {props.budgets.map((budgetItem) => (
-                  <Tr key={budgetItem.id}>
-                    <Td>
-                      <Center color='black.300'>{budgetItem.id}</Center>
-                    </Td>
-                    <Td>{/* <Center color='black.300'>{budgetItem.source}</Center> */}</Td>
-                    <Td>
-                      <Center color='black.300'>{budgetItem.yearID}</Center>
-                    </Td>
-                    <Td isNumeric color='black.300'>
+      <Head>
+        <title>予算一覧</title>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      </Head>
+      <Card>
+        <div className={clsx('mx-5 mt-10')}>
+          <div className={clsx('flex')}>
+            <Title title={'予算一覧'} />
+            <select className={clsx('w-100 ')}>
+              <option value='2021'>2021</option>
+              <option value='2022'>2022</option>
+            </select>
+          </div>
+          <div className={clsx('flex justify-end')}>
+            <OpenAddModalButton sources={sources} years={years}>
+              <RiAddCircleLine
+                size={20}
+                style={{
+                  marginRight: 5,
+                }}
+              />
+              予算登録
+            </OpenAddModalButton>
+          </div>
+          <div className={clsx('w-100 mb-2 p-5')}>
+            <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
+              <thead>
+                <tr
+                  className={clsx(
+                    'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
+                  )}
+                >
+                  <th className={clsx('w-1/12 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>ID</div>
+                  </th>
+                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>項目</div>
+                  </th>
+                  <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>年度</div>
+                  </th>
+                  <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>金額</div>
+                  </th>
+                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}></div>
+                  </th>
+                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>作成日時</div>
+                  </th>
+                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>更新日時</div>
+                  </th>
+                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>最終更新者</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {props.budgets.map((budgetItem, index) => (
+                  <tr key={budgetItem.id}>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                      {budgetItem.id}
+                    </td>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                      {budgetItem.sourceID}
+                    </td>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                      {budgetItem.yearID}
+                    </td>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
                       {budgetItem.price}
-                    </Td>
-                    <Td>
-                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                        <GridItem>
-                          <Center>
-                            <OpenEditModalButton
-                              id={budgetItem.id ? budgetItem.id : 0}
-                              sources={sources}
-                              years={years}
-                            />
-                          </Center>
-                        </GridItem>
-                        <GridItem>
-                          <Center>
-                            <OpenDeleteModalButton id={budgetItem.id ? budgetItem.id : 0} />
-                          </Center>
-                        </GridItem>
-                      </Grid>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{budgetItem.createdAt}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{budgetItem.updatedAt}</Center>
-                    </Td>
-                  </Tr>
+                    </td>
+                    <td className={clsx('content-center py-3 pt-4 pb-3 text-black-600')}>
+                      <div className={clsx('flex text-center')}>
+                        <div className={clsx('flex-auto')}>
+                          <OpenEditModalButton
+                            id={budgetItem.id ? budgetItem.id : 0}
+                            sources={sources}
+                            years={years}
+                          />
+                        </div>
+                        <div className={clsx('flex-auto')}>
+                          <OpenDeleteModalButton id={budgetItem.id ? budgetItem.id : 0} />
+                        </div>
+                      </div>
+                    </td>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                      {budgetItem.createdAt}
+                    </td>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                      {budgetItem.updatedAt}
+                    </td>
+                  </tr>
                 ))}
-              </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th />
-                  <Th />
-                  <Th>
-                    <Center fontSize='sm' fontWeight='500' color='black.600'>
-                      合計金額
-                    </Center>
-                  </Th>
-                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
-                    {totalFee}
-                  </Th>
-                </Tr>
-              </Tfoot>
-            </Table>
-          </Box>
-        </Box>
-      </Flex>
+              </tbody>
+              <tfoot
+                className={clsx('border border-x-white-0 border-t-primary-1 border-b-white-0')}
+              >
+                <tr>
+                  <th />
+                  <th />
+                  <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>合計金額</th>
+                  <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>{totalFee}</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </Card>
     </MainLayout>
   );
 }
