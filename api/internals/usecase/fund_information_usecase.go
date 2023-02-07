@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
@@ -13,18 +14,18 @@ type fundInformationUseCase struct {
 type FundInformationUseCase interface {
 	GetFundInformations(context.Context) ([]domain.FundInformation, error)
 	GetFundInformationByID(context.Context, string) (domain.FundInformation, error)
-	CreateFundInformation(context.Context, string, string, string, string, string, string) error
-	UpdateFundInformation(context.Context, string, string, string, string, string, string, string) error
+	CreateFundInformation(context.Context, string, string, string, string, string, string) (domain.FundInformation, error)
+	UpdateFundInformation(context.Context, string, string, string, string, string, string, string) (domain.FundInformation, error)
 	DestroyFundInformation(context.Context, string) error
-	GetFundInforWithUserAndTeach(context.Context) ([]domain.FundInforWithUserAndTeacher, error)
-	GetFundInforWithUserAndTeachByID(context.Context, string) (domain.FundInforWithUserAndTeacher,error)
+	GetFundInformationDetails(context.Context) ([]domain.FundInformationDetail, error)
+	GetFundInformationDetailByID(context.Context, string) (domain.FundInformationDetail, error)
 }
 
 func NewFundInformationUseCase(rep rep.FundInformationRepository) FundInformationUseCase {
 	return &fundInformationUseCase{rep}
 }
 
-//FundInformationsの取得(Get)
+// FundInformationsの取得(Get)
 func (f *fundInformationUseCase) GetFundInformations(c context.Context) ([]domain.FundInformation, error) {
 	fundInformation := domain.FundInformation{}
 	var fundInformations []domain.FundInformation
@@ -53,7 +54,7 @@ func (f *fundInformationUseCase) GetFundInformations(c context.Context) ([]domai
 	return fundInformations, nil
 }
 
-//FundInfomationの取得(Get)
+// FundInfomationの取得(Get)
 func (f *fundInformationUseCase) GetFundInformationByID(c context.Context, id string) (domain.FundInformation, error) {
 	fundInformation := domain.FundInformation{}
 
@@ -75,7 +76,7 @@ func (f *fundInformationUseCase) GetFundInformationByID(c context.Context, id st
 	return fundInformation, nil
 }
 
-//FundInfomationの作成(Create)
+// FundInfomationの作成(Create)
 func (f *fundInformationUseCase) CreateFundInformation(
 	c context.Context,
 	userID string,
@@ -84,12 +85,28 @@ func (f *fundInformationUseCase) CreateFundInformation(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
-) error {
+) (domain.FundInformation, error) {
+	latastFundInformation := domain.FundInformation{}
 	err := f.rep.Create(c, userID, teacherID, price, remark, isFirstCheck, isLastCheck)
-	return err
+	row, err := f.rep.FindLatestRecord(c)
+	err = row.Scan(
+		&latastFundInformation.ID,
+		&latastFundInformation.UserID,
+		&latastFundInformation.TeacherID,
+		&latastFundInformation.Price,
+		&latastFundInformation.Remark,
+		&latastFundInformation.IsFirstCheck,
+		&latastFundInformation.IsLastCheck,
+		&latastFundInformation.CreatedAt,
+		&latastFundInformation.UpdatedAt,
+	)
+	if err != nil {
+		return latastFundInformation, err
+	}
+	return latastFundInformation, err
 }
 
-//FundInformationの修正(Update)
+// FundInformationの修正(Update)
 func (f *fundInformationUseCase) UpdateFundInformation(
 	c context.Context,
 	id string,
@@ -99,95 +116,111 @@ func (f *fundInformationUseCase) UpdateFundInformation(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
-) error {
+) (domain.FundInformation, error) {
+	updatedFundInformation := domain.FundInformation{}
 	err := f.rep.Update(c, id, userID, teacherID, price, remark, isFirstCheck, isLastCheck)
-	return err
+	row, err := f.rep.Find(c, id)
+	err = row.Scan(
+		&updatedFundInformation.ID,
+		&updatedFundInformation.UserID,
+		&updatedFundInformation.TeacherID,
+		&updatedFundInformation.Price,
+		&updatedFundInformation.Remark,
+		&updatedFundInformation.IsFirstCheck,
+		&updatedFundInformation.IsLastCheck,
+		&updatedFundInformation.CreatedAt,
+		&updatedFundInformation.UpdatedAt,
+	)
+	if err != nil {
+		return updatedFundInformation, err
+	}
+	return updatedFundInformation, err
 }
 
-//funcInformationの削除(delete)
+// funcInformationの削除(delete)
 func (f *fundInformationUseCase) DestroyFundInformation(c context.Context, id string) error {
 	err := f.rep.Delete(c, id)
 	return err
 }
 
-//fund_informations-api(GETS)
-func (f *fundInformationUseCase) GetFundInforWithUserAndTeach(c context.Context) ([]domain.FundInforWithUserAndTeacher, error) {
-	fundinforuserandteacher := domain.FundInforWithUserAndTeacher{}
-	var fundinforuserandteachers []domain.FundInforWithUserAndTeacher
+// fund_informations-api(GETS)
+func (f *fundInformationUseCase) GetFundInformationDetails(c context.Context) ([]domain.FundInformationDetail, error) {
+	fundInformationDetail := domain.FundInformationDetail{}
+	var fundInformationDetails []domain.FundInformationDetail
 
-	rows ,err := f.rep.AllWithUAndT(c)
+	rows, err := f.rep.FindDetails(c)
 	if err != nil {
 		return nil, err
 	}
-	for rows.Next(){
+	for rows.Next() {
 		err := rows.Scan(
-			&fundinforuserandteacher.FundInformation.ID,
-			&fundinforuserandteacher.FundInformation.UserID,
-			&fundinforuserandteacher.FundInformation.TeacherID,
-			&fundinforuserandteacher.FundInformation.Price,
-			&fundinforuserandteacher.FundInformation.Remark,
-			&fundinforuserandteacher.FundInformation.IsFirstCheck,
-			&fundinforuserandteacher.FundInformation.IsLastCheck,
-			&fundinforuserandteacher.FundInformation.CreatedAt,
-			&fundinforuserandteacher.FundInformation.UpdatedAt,
-			&fundinforuserandteacher.User.ID,
-			&fundinforuserandteacher.User.Name,
-			&fundinforuserandteacher.User.BureauID,
-			&fundinforuserandteacher.User.RoleID,
-			&fundinforuserandteacher.User.CreatedAt,
-			&fundinforuserandteacher.User.UpdatedAt,
-			&fundinforuserandteacher.Teacher.ID,
-			&fundinforuserandteacher.Teacher.Name,
-			&fundinforuserandteacher.Teacher.Position,
-			&fundinforuserandteacher.Teacher.DepartmentID,
-			&fundinforuserandteacher.Teacher.Room,
-			&fundinforuserandteacher.Teacher.IsBlack,
-			&fundinforuserandteacher.Teacher.Remark,
-			&fundinforuserandteacher.Teacher.CreatedAt,
-			&fundinforuserandteacher.Teacher.UpdatedAt,
-		) 
+			&fundInformationDetail.FundInformation.ID,
+			&fundInformationDetail.FundInformation.UserID,
+			&fundInformationDetail.FundInformation.TeacherID,
+			&fundInformationDetail.FundInformation.Price,
+			&fundInformationDetail.FundInformation.Remark,
+			&fundInformationDetail.FundInformation.IsFirstCheck,
+			&fundInformationDetail.FundInformation.IsLastCheck,
+			&fundInformationDetail.FundInformation.CreatedAt,
+			&fundInformationDetail.FundInformation.UpdatedAt,
+			&fundInformationDetail.User.ID,
+			&fundInformationDetail.User.Name,
+			&fundInformationDetail.User.BureauID,
+			&fundInformationDetail.User.RoleID,
+			&fundInformationDetail.User.CreatedAt,
+			&fundInformationDetail.User.UpdatedAt,
+			&fundInformationDetail.Teacher.ID,
+			&fundInformationDetail.Teacher.Name,
+			&fundInformationDetail.Teacher.Position,
+			&fundInformationDetail.Teacher.DepartmentID,
+			&fundInformationDetail.Teacher.Room,
+			&fundInformationDetail.Teacher.IsBlack,
+			&fundInformationDetail.Teacher.Remark,
+			&fundInformationDetail.Teacher.CreatedAt,
+			&fundInformationDetail.Teacher.UpdatedAt,
+		)
 		if err != nil {
-			return nil,err
+			return nil, err
 		}
-		fundinforuserandteachers = append(fundinforuserandteachers, fundinforuserandteacher)
+		fundInformationDetails = append(fundInformationDetails, fundInformationDetail)
 	}
-	return fundinforuserandteachers, nil
+	return fundInformationDetails, nil
 }
 
-//fund_information-api(GET)
-func (f *fundInformationUseCase) GetFundInforWithUserAndTeachByID(c context.Context, id string) (domain.FundInforWithUserAndTeacher,error) {
-	var fundinforuserandteacher domain.FundInforWithUserAndTeacher 
+// fund_information-api(GET)
+func (f *fundInformationUseCase) GetFundInformationDetailByID(c context.Context, id string) (domain.FundInformationDetail, error) {
+	var fundInformationDetail domain.FundInformationDetail
 
-	row ,err:= f.rep.FindWithUAndT(c,id)
-	
-	err  = row.Scan(
-		&fundinforuserandteacher.FundInformation.ID,
-		&fundinforuserandteacher.FundInformation.UserID,
-		&fundinforuserandteacher.FundInformation.TeacherID,
-		&fundinforuserandteacher.FundInformation.Price,
-		&fundinforuserandteacher.FundInformation.Remark,
-		&fundinforuserandteacher.FundInformation.IsFirstCheck,
-		&fundinforuserandteacher.FundInformation.IsLastCheck,
-		&fundinforuserandteacher.FundInformation.CreatedAt,
-		&fundinforuserandteacher.FundInformation.UpdatedAt,
-		&fundinforuserandteacher.User.ID,
-		&fundinforuserandteacher.User.Name,
-		&fundinforuserandteacher.User.BureauID,
-		&fundinforuserandteacher.User.RoleID,
-		&fundinforuserandteacher.User.CreatedAt,
-		&fundinforuserandteacher.User.UpdatedAt,
-		&fundinforuserandteacher.Teacher.ID,
-		&fundinforuserandteacher.Teacher.Name,
-		&fundinforuserandteacher.Teacher.Position,
-		&fundinforuserandteacher.Teacher.DepartmentID,
-		&fundinforuserandteacher.Teacher.Room,
-		&fundinforuserandteacher.Teacher.IsBlack,
-		&fundinforuserandteacher.Teacher.Remark,
-		&fundinforuserandteacher.Teacher.CreatedAt,
-		&fundinforuserandteacher.Teacher.UpdatedAt,
+	row, err := f.rep.FindDetailByID(c, id)
+
+	err = row.Scan(
+		&fundInformationDetail.FundInformation.ID,
+		&fundInformationDetail.FundInformation.UserID,
+		&fundInformationDetail.FundInformation.TeacherID,
+		&fundInformationDetail.FundInformation.Price,
+		&fundInformationDetail.FundInformation.Remark,
+		&fundInformationDetail.FundInformation.IsFirstCheck,
+		&fundInformationDetail.FundInformation.IsLastCheck,
+		&fundInformationDetail.FundInformation.CreatedAt,
+		&fundInformationDetail.FundInformation.UpdatedAt,
+		&fundInformationDetail.User.ID,
+		&fundInformationDetail.User.Name,
+		&fundInformationDetail.User.BureauID,
+		&fundInformationDetail.User.RoleID,
+		&fundInformationDetail.User.CreatedAt,
+		&fundInformationDetail.User.UpdatedAt,
+		&fundInformationDetail.Teacher.ID,
+		&fundInformationDetail.Teacher.Name,
+		&fundInformationDetail.Teacher.Position,
+		&fundInformationDetail.Teacher.DepartmentID,
+		&fundInformationDetail.Teacher.Room,
+		&fundInformationDetail.Teacher.IsBlack,
+		&fundInformationDetail.Teacher.Remark,
+		&fundInformationDetail.Teacher.CreatedAt,
+		&fundInformationDetail.Teacher.UpdatedAt,
 	)
 	if err != nil {
-		return fundinforuserandteacher, err
+		return fundInformationDetail, err
 	}
-	return fundinforuserandteacher,nil
+	return fundInformationDetail, nil
 }

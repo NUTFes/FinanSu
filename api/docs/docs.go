@@ -392,6 +392,193 @@ const docTemplate = `{
                 },
             },
         },
+        "/fund_informations": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "fund_informationの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "fund_informationの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["fund_information"],
+                "description": "fund_informationの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたfund_informationが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "teacher_id",
+                        "in": "query",
+                        "description": "teacher_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_first_check",
+                        "in": "query",
+                        "description": "is_first_check",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "is_last_check",
+                        "in": "query",
+                        "description": "is_last_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+        },
+        "/fund_informations/details": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "fund_informationに紐づくteacherとuserの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "fund_informationに紐づくteacherとuserの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/fund_informations/{id}": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "IDで指定されたfund_informationの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "fund_informationの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["fund_information"],
+                "description": "fund_informationの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたfund_informationが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "teacher_id",
+                        "in": "query",
+                        "description": "teacher_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_first_check",
+                        "in": "query",
+                        "description": "is_first_check",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "is_last_check",
+                        "in": "query",
+                        "description": "is_last_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["fund_information"],
+                "description": "IDを指定してfund_informationの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "fund_informationの削除完了",
+                    }
+                },
+            },
+        },
+        "/fund_informations/{id}/details": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "IDで指定されたfund_informatinに紐づくteacherとuserを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "fund_informatinに紐づくteacherとuserを取得",
+                    }
+                }
+            },
+        },
     }
 }`
 
