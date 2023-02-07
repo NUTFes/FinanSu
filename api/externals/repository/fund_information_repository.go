@@ -30,22 +30,13 @@ func NewFundInformationRepository(c db.Client, ac abstract.Crud) FundInformation
 
 // 全件取得
 func (fir *fundInformationRepository) All(c context.Context) (*sql.Rows, error) {
-	query := `
-		SELECT
-			*
-		FROM
-			fund_informations`
+	query := `SELECT * FROM fund_informations`
 	return fir.crud.Read(c, query)
 }
 
 // 1件取得
 func (fir *fundInformationRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := `
-		SELECT
-	 		*
-		FROM
-			fund_informations
-		WHERE id =` + id
+	query := `SELECT * FROM fund_informations WHERE id =` + id
 	return fir.crud.ReadByID(c, query)
 }
 
@@ -61,9 +52,19 @@ func (fir *fundInformationRepository) Create(
 ) error {
 	query := `
 		INSERT INTO
-	 		fund_informations
-			(user_id, teacher_id, price, remark, is_first_check, is_last_check)
-		VALUES (` + userID + "," + teacherID + "," + price + ",'" + remark + "'," + isFirstCheck + "," + isLastCheck + ")"
+	 		fund_informations(
+				user_id,
+				teacher_id,
+				price, remark,
+				is_first_check,
+				is_last_check
+			) VALUES (
+				` + userID +
+				"," + teacherID +
+				"," + price +
+				",'" + remark +
+				"'," + isFirstCheck +
+				"," + isLastCheck + ")"
 	return fir.crud.UpdateDB(c, query)
 }
 
@@ -101,7 +102,7 @@ func (fir *fundInformationRepository) Delete(c context.Context, id string) error
 // fund_informationに紐づくuserとteacherを全件取得する
 func (fir *fundInformationRepository) FindDetails(c context.Context) (*sql.Rows, error) {
 	query := `
-		SELECT 
+		SELECT
 			*
 		FROM
 			fund_informations

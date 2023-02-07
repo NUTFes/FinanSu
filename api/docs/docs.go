@@ -422,19 +422,20 @@ const docTemplate = `{
                         "name": "teacher_id",
                         "in": "query",
                         "description": "teacher_id",
+                        "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "price",
                         "in": "query",
                         "description": "price",
+                        "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "remark",
                         "in": "query",
                         "description": "remark",
-                        "required": true,
                         "type": "string"
                     },
                     {
@@ -509,19 +510,20 @@ const docTemplate = `{
                         "name": "teacher_id",
                         "in": "query",
                         "description": "teacher_id",
+                        "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "price",
                         "in": "query",
                         "description": "price",
+                        "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "remark",
                         "in": "query",
                         "description": "remark",
-                        "required": true,
                         "type": "string"
                     },
                     {
