@@ -42,7 +42,7 @@ func (y *yearRepository) Create(c context.Context, year string) error {
 }
 
 func (y *yearRepository) Update(c context.Context, id string, year string) error {
-	query := `UPDATE years SET year =` + year + "WHERE id = " + id
+	query := `UPDATE years SET year =` + year + " WHERE id = " + id
 	return y.abstract.UpdateDB(c, query)
 }
 
