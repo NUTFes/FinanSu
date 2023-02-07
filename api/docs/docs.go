@@ -581,7 +581,7 @@ const docTemplate = `{
         },
         "/purchaseorders": {
             "get": {
-                tags: ["purchaseorder"],
+                tags: ["purchase_order"],
                 "description": "purchaseorderの一覧を取得",
                 "responses": {
                     "200": {
@@ -590,7 +590,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                tags: ["purchaseorder"],
+                tags: ["purchase_order"],
                 "description": "purchaseorderの作成",
                 responses: {
                     "200": {
@@ -621,7 +621,7 @@ const docTemplate = `{
         },
         "/purchaseorders/details": {
             "get": {
-                tags: ["purchaseorder"],
+                tags: ["purchase_order"],
                 "description": "purchaseorderに紐づくuserとitemの一覧を取得",
                 "responses": {
                     "200": {
@@ -632,7 +632,7 @@ const docTemplate = `{
         },
         "/purchaseorders/{id}": {
             "get": {
-                tags: ["purchaseorder"],
+                tags: ["purchase_order"],
                 "description": "IDで指定されたpurchaseorderの取得",
                 "parameters": [
                     {
@@ -650,7 +650,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                tags: ["purchaseorder"],
+                tags: ["purchase_order"],
                 "description": "purchaseorderの更新",
                 responses: {
                     "200": {
@@ -686,7 +686,7 @@ const docTemplate = `{
                 ],
             },
             "delete": {
-                tags: ["purchaseorder"],
+                tags: ["purchase_order"],
                 "description": "IDを指定してpurchaseorderの削除",
                 "parameters": [
                     {
@@ -706,7 +706,7 @@ const docTemplate = `{
         },
         "/purchaseorders/{id}/details": {
             "get": {
-                tags: ["purchaseorder"],
+                tags: ["purchase_order"],
                 "description": "IDで指定されたpurchaseorderに紐づくuserとitemを取得",
                 "parameters": [
                     {
