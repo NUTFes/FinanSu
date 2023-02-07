@@ -19,9 +19,9 @@ type PurchaseOrderRepository interface {
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Delete(context.Context, string) error
-	AllOrderWithUser(context.Context) (*sql.Rows, error)
-	FindWithOrderItem(context.Context, string) (*sql.Row, error)
-	GetPurchaseItemByOrderId(context.Context, string) (*sql.Rows, error)
+	AllUserInfo(context.Context) (*sql.Rows, error)
+	FindUserInfo(context.Context, string) (*sql.Row, error)
+	FindPurchaseItem(context.Context, string) (*sql.Rows, error)
 	FindNewRecord(context.Context) (*sql.Row, error)
 }
 
@@ -84,7 +84,7 @@ func (por *purchaseOrderRepository) Delete(
 }
 
 // orderに紐づくuserの取得(All)
-func (p *purchaseOrderRepository) AllOrderWithUser(c context.Context) (*sql.Rows, error) {
+func (p *purchaseOrderRepository) AllUserInfo(c context.Context) (*sql.Rows, error) {
 	query := `
 		SELECT
 			*
@@ -98,7 +98,7 @@ func (p *purchaseOrderRepository) AllOrderWithUser(c context.Context) (*sql.Rows
 }
 
 // orderに紐づくuserの取得(byID)
-func (p *purchaseOrderRepository) FindWithOrderItem(c context.Context, id string) (*sql.Row, error) {
+func (p *purchaseOrderRepository) FindUserInfo(c context.Context, id string) (*sql.Row, error) {
 	query := `
 		SELECT
 			*
@@ -114,7 +114,7 @@ func (p *purchaseOrderRepository) FindWithOrderItem(c context.Context, id string
 }
 
 // 指定したorder_idのitemを取得する
-func (p *purchaseOrderRepository) GetPurchaseItemByOrderId(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
+func (p *purchaseOrderRepository) FindPurchaseItem(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
 	query := `
 		SELECT
 			*

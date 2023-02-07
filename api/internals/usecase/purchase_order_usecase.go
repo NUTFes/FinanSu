@@ -133,7 +133,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetails(c context.Context) ([]dom
 	var orderDetails []domain.OrderDetail
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
-	rows, err := p.rep.AllOrderWithUser(c)
+	rows, err := p.rep.AllUserInfo(c)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetails(c context.Context) ([]dom
 		if err != nil {
 			return nil, err
 		}
-		rows, err := p.rep.GetPurchaseItemByOrderId(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
+		rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,
@@ -186,7 +186,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 	orderDetail := domain.OrderDetail{}
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
-	row, err := p.rep.FindWithOrderItem(c, id)
+	row, err := p.rep.FindUserInfo(c, id)
 	err = row.Scan(
 		&orderDetail.PurchaseOrder.ID,
 		&orderDetail.PurchaseOrder.DeadLine,
@@ -204,7 +204,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 	if err != nil {
 		return orderDetail, nil
 	}
-	rows, err := p.rep.GetPurchaseItemByOrderId(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
+	rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
 	for rows.Next() {
 		err := rows.Scan(
 			&purchaseItem.ID,

@@ -16,8 +16,8 @@ type PurchaseOrderController interface {
 	CreatePurchaseOrder(echo.Context) error
 	UpdatePurchaseOrder(echo.Context) error
 	DestroyPurchaseOrder(echo.Context) error
-	IndexOrderWithUserItem(echo.Context) error
-	ShowOrderWithUserItem(echo.Context) error
+	IndexOrderDetail(echo.Context) error
+	ShowOrderDetail(echo.Context) error
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
@@ -80,7 +80,7 @@ func (p *purchaseOrderController) DestroyPurchaseOrder(c echo.Context) error{
 }
 
 //IndexOrderWithUserItem
-func (p *purchaseOrderController) IndexOrderWithUserItem(c echo.Context) error{
+func (p *purchaseOrderController) IndexOrderDetail(c echo.Context) error{
 	orderWithUserItems, err := p.u.GetPurchaseOrderDetails(c.Request().Context())
 	if err != nil {
 		return err
@@ -88,7 +88,7 @@ func (p *purchaseOrderController) IndexOrderWithUserItem(c echo.Context) error{
 	return c.JSON(http.StatusOK,orderWithUserItems)
 }
 
-func (p *purchaseOrderController) ShowOrderWithUserItem(c echo.Context) error{
+func (p *purchaseOrderController) ShowOrderDetail(c echo.Context) error{
 	id := c.Param("id")
 	orderWithUserAndItem , err := p.u.GetPurchaseOrderDetailByID(c.Request().Context(),id)
 	if err != nil {
