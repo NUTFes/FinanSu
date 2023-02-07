@@ -579,6 +579,98 @@ const docTemplate = `{
                 }
             },
         },
+        "/years": {
+            "get": {
+                tags: ["year"],
+                "description": "yearの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "yearの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["year"],
+                "description": "yearの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたyearが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+            },
+        },
+        "/years/{id}": {
+            "get": {
+                tags: ["year"],
+                "description": "IDで指定されたyearの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "yearの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["year"],
+                "description": "yearの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたyearが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["year"],
+                "description": "IDを指定してyearの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "yearの削除完了",
+                    }
+                },
+            },
+        },
     }
 }`
 
