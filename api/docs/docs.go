@@ -602,7 +602,6 @@ const docTemplate = `{
                         "name": "deadline",
                         "in": "query",
                         "description": "deadline",
-                        "required": true,
                         "type": "string"
                     },
                     {
@@ -670,7 +669,6 @@ const docTemplate = `{
                         "name": "deadline",
                         "in": "query",
                         "description": "deadline",
-                        "required": true,
                         "type": "string"
                     },
                     {

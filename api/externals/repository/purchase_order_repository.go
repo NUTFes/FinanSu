@@ -79,10 +79,7 @@ func (por *purchaseOrderRepository) Delete(
 	c context.Context,
 	id string,
 ) error {
-	query := `
-		DELETE FROM
-			purchase_orders
-		WHERE id =` + id
+	query := `DELETE FROM purchase_orders WHERE id =` + id
 	return por.crud.UpdateDB(c, query)
 }
 
