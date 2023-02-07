@@ -582,19 +582,19 @@ const docTemplate = `{
         "/purchaseorders": {
             "get": {
                 tags: ["purchase_order"],
-                "description": "purchaseorderの一覧を取得",
+                "description": "purchase_orderの一覧を取得",
                 "responses": {
                     "200": {
-                        "description": "purchaseorderの一覧の取得",
+                        "description": "purchase_orderの一覧の取得",
                     }
                 }
             },
             "post": {
                 tags: ["purchase_order"],
-                "description": "purchaseorderの作成",
+                "description": "purchase_orderの作成",
                 responses: {
                     "200": {
-                        "description": "create されたpurchaseorderが返ってくる",
+                        "description": "createされたpurchase_orderが返ってくる",
                     }
                 },
                 "parameters": [
@@ -625,7 +625,7 @@ const docTemplate = `{
                 "description": "purchaseorderに紐づくuserとitemの一覧を取得",
                 "responses": {
                     "200": {
-                        "description": "bpurchaseorderに紐づくuserとitemの一覧を取得",
+                        "description": "purchase_orderに紐づくuserとpurchase_itemの一覧を取得",
                     }
                 }
             },
@@ -633,7 +633,7 @@ const docTemplate = `{
         "/purchaseorders/{id}": {
             "get": {
                 tags: ["purchase_order"],
-                "description": "IDで指定されたpurchaseorderの取得",
+                "description": "IDで指定されたpurchase_orderの取得",
                 "parameters": [
                     {
                         "name": "id",
@@ -645,16 +645,16 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "purchaseorderの取得",
+                        "description": "purchase_orderの取得",
                     }
                 }
             },
             "put": {
                 tags: ["purchase_order"],
-                "description": "purchaseorderの更新",
+                "description": "purchase_orderの更新",
                 responses: {
                     "200": {
-                        "description": "更新されたpurchaseorderが返ってくる",
+                        "description": "更新されたpurchase_orderが返ってくる",
                     }
                 },
                 "parameters": [
@@ -687,7 +687,7 @@ const docTemplate = `{
             },
             "delete": {
                 tags: ["purchase_order"],
-                "description": "IDを指定してpurchaseorderの削除",
+                "description": "IDを指定してpurchase_orderの削除",
                 "parameters": [
                     {
                         "name": "id",
@@ -699,7 +699,7 @@ const docTemplate = `{
                 ],
                 responses: {
                     "200": {
-                        "description": "purchaseorderの削除完了",
+                        "description": "purchase_orderの削除完了",
                     }
                 },
             },
@@ -707,7 +707,7 @@ const docTemplate = `{
         "/purchaseorders/{id}/details": {
             "get": {
                 tags: ["purchase_order"],
-                "description": "IDで指定されたpurchaseorderに紐づくuserとitemを取得",
+                "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
                 "parameters": [
                     {
                         "name": "id",
@@ -719,7 +719,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "IDで指定されたpurchaseorderに紐づくuserとitemを取得",
+                        "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
                     }
                 }
             },
