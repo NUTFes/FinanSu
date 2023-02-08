@@ -19,6 +19,7 @@ type SourceRepository interface {
 	Create(context.Context, string) error
 	Update(context.Context, string, string) error
 	Destroy(context.Context, string) error
+	FindLatestRecord(context.Context) (*sql.Row, error)
 }
 
 func NewSourceRepository(c db.Client, ac abstract.Crud) SourceRepository {
@@ -27,30 +28,44 @@ func NewSourceRepository(c db.Client, ac abstract.Crud) SourceRepository {
 
 // 全件取得
 func (sr *sourceRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from sources"
+	query := "SELECT * FROM sources"
 	return sr.abstract.Read(c, query)
 }
 
 // 1件取得
 func (sr *sourceRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from sources where id = " + id
+	query := "SELECT * FROM sources WHERE id = " + id
 	return sr.abstract.ReadByID(c, query)
 }
 
 // 作成
 func (sr *sourceRepository) Create(c context.Context, name string) error {
-	query := "insert into sources (name) values ('" + name + "')"
+	query := "INSERT INTO sources (name) VALUES ('" + name + "')"
 	return sr.abstract.UpdateDB(c, query)
 }
 
 // 編集
 func (sr *sourceRepository) Update(c context.Context, id string, name string) error {
-	query := "update sources set name = '" + name + "' where id = " + id
+	query := "UPDATE sources SET name = '" + name + "' WHERE id = " + id
 	return sr.abstract.UpdateDB(c, query)
 }
 
 // 削除
 func (sr *sourceRepository) Destroy(c context.Context, id string) error {
-	query := "delete from sources where id = " + id
+	query := "DELETE FROM sources WHERE id = " + id
 	return sr.abstract.UpdateDB(c, query)
+}
+
+// 最新のsourceを取得する
+func (sr *sourceRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `
+		SELECT
+			*
+		FROM
+			sources
+		ORDER BY
+			id
+		DESC LIMIT 1
+	`
+	return sr.abstract.ReadByID(c, query)
 }
