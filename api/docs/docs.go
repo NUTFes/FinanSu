@@ -579,6 +579,151 @@ const docTemplate = `{
                 }
             },
         },
+        "/purchaseorders": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "purchase_orderの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_orderの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["purchase_order"],
+                "description": "purchase_orderの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたpurchase_orderが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "deadline",
+                        "in": "query",
+                        "description": "deadline",
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+        },
+        "/purchaseorders/details": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "purchaseorderに紐づくuserとitemの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_orderに紐づくuserとpurchase_itemの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/purchaseorders/{id}": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "IDで指定されたpurchase_orderの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "purchase_orderの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["purchase_order"],
+                "description": "purchase_orderの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたpurchase_orderが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "deadline",
+                        "in": "query",
+                        "description": "deadline",
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["purchase_order"],
+                "description": "IDを指定してpurchase_orderの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "purchase_orderの削除完了",
+                    }
+                },
+            },
+        },
+        "/purchaseorders/{id}/details": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
+                    }
+                }
+            },
+        },
         "/years": {
             "get": {
                 tags: ["year"],

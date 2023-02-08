@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"strconv"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
-	"strconv"
 )
 
 type purchaseOrderUseCase struct {
@@ -14,47 +15,44 @@ type purchaseOrderUseCase struct {
 type PurchaseOrderUseCase interface {
 	GetPurchaseOrders(context.Context) ([]domain.PurchaseOrder, error)
 	GetPurchaseOrderByID(context.Context, string) (domain.PurchaseOrder, error)
-	CreatePurchaseOrder(context.Context, string, string, string) error
-	UpdatePurchaseOrder(context.Context, string, string, string, string) error
+	CreatePurchaseOrder(context.Context, string, string, string) (domain.PurchaseOrder, error)
+	UpdatePurchaseOrder(context.Context, string, string, string, string) (domain.PurchaseOrder, error)
 	DestroyPurchaseOrder(context.Context, string) error
-	GetOrderWithUserItem(context.Context) ([]domain.OrderWithItemAndUser,error)
-	GetOrderWithUserItemByID(context.Context, string) (domain.OrderWithItemAndUser,error)
-	GetPurchaseOrderNewRecord(context.Context, string, string,string) (domain.PurchaseOrder,error)
-	GetPurchaseOrderEdit(context.Context,string,string,string,string) (domain.PurchaseOrder,error)
+	GetPurchaseOrderDetails(context.Context) ([]domain.OrderDetail, error)
+	GetPurchaseOrderDetailByID(context.Context, string) (domain.OrderDetail, error)
 }
-
 
 func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
 	return &purchaseOrderUseCase{rep}
 }
 
-//PurchaseOrdersの取得(Gets)
-func (p *purchaseOrderUseCase) GetPurchaseOrders(c context.Context) ([]domain.PurchaseOrder, error)	{
+// PurchaseOrdersの取得(Gets)
+func (p *purchaseOrderUseCase) GetPurchaseOrders(c context.Context) ([]domain.PurchaseOrder, error) {
 	purchaseOrder := domain.PurchaseOrder{}
-		var purchaseOrders []domain.PurchaseOrder
-		rows , err := p.rep.All(c)
+	var purchaseOrders []domain.PurchaseOrder
+	rows, err := p.rep.All(c)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		err := rows.Scan(
+			&purchaseOrder.ID,
+			&purchaseOrder.DeadLine,
+			&purchaseOrder.UserID,
+			&purchaseOrder.FinanceCheck,
+			&purchaseOrder.CreatedAt,
+			&purchaseOrder.UpdatedAt,
+		)
 		if err != nil {
 			return nil, err
 		}
-		for rows.Next() {
-			err := rows.Scan(
-				&purchaseOrder.ID,
-				&purchaseOrder.DeadLine,
-				&purchaseOrder.UserID,
-				&purchaseOrder.FinanceCheck,
-				&purchaseOrder.CreatedAt,
-				&purchaseOrder.UpdatedAt,
-			)
-			if err != nil {
-				return nil, err
-			}
-			purchaseOrders = append(purchaseOrders, purchaseOrder)
-		}
-		return purchaseOrders, nil
+		purchaseOrders = append(purchaseOrders, purchaseOrder)
+	}
+	return purchaseOrders, nil
 }
 
-//PurchaseOrderの取得(Get)
-func (p *purchaseOrderUseCase) GetPurchaseOrderByID(c context.Context, id string) (domain.PurchaseOrder, error){
+// PurchaseOrderの取得(Get)
+func (p *purchaseOrderUseCase) GetPurchaseOrderByID(c context.Context, id string) (domain.PurchaseOrder, error) {
 	purchaseOrder := domain.PurchaseOrder{}
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
@@ -71,68 +69,94 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderByID(c context.Context, id string
 	return purchaseOrder, nil
 }
 
-//PurcahseOrderの作成(create)
+// PurcahseOrderの作成(create)
 func (p *purchaseOrderUseCase) CreatePurchaseOrder(
-	c context.Context, 
-	DeadLine string,
+	c context.Context,
+	deadLine string,
 	userID string,
-	FinanceCheck string,
-) error {
-	err := p.rep.Create(c, DeadLine, userID, FinanceCheck)
-	return err
+	finansuCheck string,
+) (domain.PurchaseOrder, error) {
+	latastPurchaseOrder := domain.PurchaseOrder{}
+	p.rep.Create(c, deadLine, userID, finansuCheck)
+	row, err := p.rep.FindNewRecord(c)
+	err = row.Scan(
+		&latastPurchaseOrder.ID,
+		&latastPurchaseOrder.DeadLine,
+		&latastPurchaseOrder.UserID,
+		&latastPurchaseOrder.FinanceCheck,
+		&latastPurchaseOrder.CreatedAt,
+		&latastPurchaseOrder.UpdatedAt,
+	)
+	if err != nil {
+		return latastPurchaseOrder, err
+	}
+	return latastPurchaseOrder, nil
 }
 
-//PurchaseOrderの修正(Update)
+// PurchaseOrderの修正(Update)
 func (p *purchaseOrderUseCase) UpdatePurchaseOrder(
 	c context.Context,
 	id string,
-	DeadLine string,
+	deadLine string,
 	userID string,
-	FinanceCheck string,
-) error {
-	err := p.rep.Update(c, id, DeadLine, userID, FinanceCheck)
-	return err
+	finansuCheck string,
+) (domain.PurchaseOrder, error) {
+	updatedPurchaseOrder := domain.PurchaseOrder{}
+	p.rep.Update(c, id, deadLine, userID, finansuCheck)
+	row, err := p.rep.Find(c, id)
+	err = row.Scan(
+		&updatedPurchaseOrder.ID,
+		&updatedPurchaseOrder.DeadLine,
+		&updatedPurchaseOrder.UserID,
+		&updatedPurchaseOrder.FinanceCheck,
+		&updatedPurchaseOrder.CreatedAt,
+		&updatedPurchaseOrder.UpdatedAt,
+	)
+	if err != nil {
+		return updatedPurchaseOrder, err
+	}
+	return updatedPurchaseOrder, nil
 }
 
-//PurchaseOrderの削除(delete)
+// PurchaseOrderの削除(delete)
 func (p *purchaseOrderUseCase) DestroyPurchaseOrder(
 	c context.Context,
 	id string,
-)error {
+) error {
 	err := p.rep.Delete(c, id)
 	return err
 }
 
-//Purchase_orderに紐づくUserとItemの取得(All)
-func (p *purchaseOrderUseCase) GetOrderWithUserItem(c context.Context) ([]domain.OrderWithItemAndUser,error){
-	orderWithUserAndItem := domain.OrderWithItemAndUser{}
-	var orderWithUserAndItems []domain.OrderWithItemAndUser
+// Purchase_orderに紐づくUserとItemの取得(All)
+func (p *purchaseOrderUseCase) GetPurchaseOrderDetails(c context.Context) ([]domain.OrderDetail, error) {
+	orderDetail := domain.OrderDetail{}
+	var orderDetails []domain.OrderDetail
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
-	rows, err := p.rep.AllOrderWithUser(c)
+	rows, err := p.rep.AllUserInfo(c)
 	if err != nil {
 		return nil, err
 	}
-	for rows.Next(){
+	for rows.Next() {
 		err := rows.Scan(
-			&orderWithUserAndItem.PurchaseOrder.ID,
-			&orderWithUserAndItem.PurchaseOrder.DeadLine,
-			&orderWithUserAndItem.PurchaseOrder.UserID,
-			&orderWithUserAndItem.PurchaseOrder.FinanceCheck,
-			&orderWithUserAndItem.PurchaseOrder.CreatedAt,
-			&orderWithUserAndItem.PurchaseOrder.UpdatedAt,
-			&orderWithUserAndItem.User.ID,
-			&orderWithUserAndItem.User.Name,
-			&orderWithUserAndItem.User.BureauID,
-			&orderWithUserAndItem.User.RoleID,
-			&orderWithUserAndItem.User.CreatedAt,
-			&orderWithUserAndItem.User.UpdatedAt,
+			&orderDetail.PurchaseOrder.ID,
+			&orderDetail.PurchaseOrder.DeadLine,
+			&orderDetail.PurchaseOrder.UserID,
+			&orderDetail.PurchaseOrder.FinanceCheck,
+			&orderDetail.PurchaseOrder.CreatedAt,
+			&orderDetail.PurchaseOrder.UpdatedAt,
+			&orderDetail.User.ID,
+			&orderDetail.User.Name,
+			&orderDetail.User.BureauID,
+			&orderDetail.User.RoleID,
+			&orderDetail.User.CreatedAt,
+			&orderDetail.User.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-		rows, err := p.rep.GetPurchaseItemByOrderId(c, strconv.Itoa(int(orderWithUserAndItem.PurchaseOrder.ID)))
-		for rows.Next(){
+		rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
+		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,
 				&purchaseItem.Item,
@@ -148,39 +172,39 @@ func (p *purchaseOrderUseCase) GetOrderWithUserItem(c context.Context) ([]domain
 			if err != nil {
 				return nil, err
 			}
-			purchaseItems = append(purchaseItems,purchaseItem)
+			purchaseItems = append(purchaseItems, purchaseItem)
 		}
-		orderWithUserAndItem.PurchaseItem = purchaseItems
-		orderWithUserAndItems = append(orderWithUserAndItems,orderWithUserAndItem)
+		orderDetail.PurchaseItem = purchaseItems
+		orderDetails = append(orderDetails, orderDetail)
 		purchaseItems = nil
 	}
-	return orderWithUserAndItems,nil
+	return orderDetails, nil
 }
 
-//Purchase_orderに紐づくUserとItemの取得(ByID)
-func (p *purchaseOrderUseCase) GetOrderWithUserItemByID(c context.Context, id string) (domain.OrderWithItemAndUser,error) {
-	orderWithUserAndItem := domain.OrderWithItemAndUser{}
+// Purchase_orderに紐づくUserとItemの取得(ByID)
+func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id string) (domain.OrderDetail, error) {
+	orderDetail := domain.OrderDetail{}
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
-	row ,err := p.rep.FindWithOrderItem(c, id)
+	row, err := p.rep.FindUserInfo(c, id)
 	err = row.Scan(
-		  &orderWithUserAndItem.PurchaseOrder.ID,
-			&orderWithUserAndItem.PurchaseOrder.DeadLine,
-			&orderWithUserAndItem.PurchaseOrder.UserID,
-			&orderWithUserAndItem.PurchaseOrder.FinanceCheck,
-			&orderWithUserAndItem.PurchaseOrder.CreatedAt,
-			&orderWithUserAndItem.PurchaseOrder.UpdatedAt,
-			&orderWithUserAndItem.User.ID,
-			&orderWithUserAndItem.User.Name,
-			&orderWithUserAndItem.User.BureauID,
-			&orderWithUserAndItem.User.RoleID,
-			&orderWithUserAndItem.User.CreatedAt,
-			&orderWithUserAndItem.User.UpdatedAt,
+		&orderDetail.PurchaseOrder.ID,
+		&orderDetail.PurchaseOrder.DeadLine,
+		&orderDetail.PurchaseOrder.UserID,
+		&orderDetail.PurchaseOrder.FinanceCheck,
+		&orderDetail.PurchaseOrder.CreatedAt,
+		&orderDetail.PurchaseOrder.UpdatedAt,
+		&orderDetail.User.ID,
+		&orderDetail.User.Name,
+		&orderDetail.User.BureauID,
+		&orderDetail.User.RoleID,
+		&orderDetail.User.CreatedAt,
+		&orderDetail.User.UpdatedAt,
 	)
 	if err != nil {
-		return orderWithUserAndItem ,nil
+		return orderDetail, nil
 	}
-	rows, err := p.rep.GetPurchaseItemByOrderId(c, strconv.Itoa(int(orderWithUserAndItem.PurchaseOrder.ID)))
+	rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
 	for rows.Next() {
 		err := rows.Scan(
 			&purchaseItem.ID,
@@ -195,59 +219,10 @@ func (p *purchaseOrderUseCase) GetOrderWithUserItemByID(c context.Context, id st
 			&purchaseItem.UpdatedAt,
 		)
 		if err != nil {
-			return orderWithUserAndItem ,nil
+			return orderDetail, nil
 		}
-		purchaseItems = append(purchaseItems,purchaseItem)
+		purchaseItems = append(purchaseItems, purchaseItem)
 	}
-	orderWithUserAndItem.PurchaseItem = purchaseItems
-	return orderWithUserAndItem, nil
-}
-
-//postした時に作成されたレコードの取得
-func (p *purchaseOrderUseCase) GetPurchaseOrderNewRecord(
-	c context.Context,
-	deadLine string,
-	userID string,
-	finansuCheck string,
-	)(domain.PurchaseOrder,error) {
-	purchaseOrder := domain.PurchaseOrder{}
-	p.rep.Create(c,deadLine,userID,finansuCheck)
-	row, err := p.rep.FindNewRecord(c)
-	err = row.Scan(
-		&purchaseOrder.ID,
-		&purchaseOrder.DeadLine,
-		&purchaseOrder.UserID,
-		&purchaseOrder.FinanceCheck,
-		&purchaseOrder.CreatedAt,
-		&purchaseOrder.UpdatedAt,
-	)
-	if err != nil {
-		return purchaseOrder, err
-	}	
-	return purchaseOrder,nil
-}
-
-//putした時に更新されたレコードの取得
-func (p *purchaseOrderUseCase) GetPurchaseOrderEdit(
-	c context.Context,
-	id string,
-	deadLine string,
-	userID string,
-	finansuCheck string,
-)(domain.PurchaseOrder,error){
-	purchaseOrder :=domain.PurchaseOrder{}
-	p.rep.Update(c,id,deadLine,userID,finansuCheck)
-	row, err := p.rep.Find(c, id)
-	err = row.Scan(
-		&purchaseOrder.ID,
-		&purchaseOrder.DeadLine,
-		&purchaseOrder.UserID,
-		&purchaseOrder.FinanceCheck,
-		&purchaseOrder.CreatedAt,
-		&purchaseOrder.UpdatedAt,
-	)
-	if err != nil {
-		return purchaseOrder, err
-	}
-	return purchaseOrder, nil
+	orderDetail.PurchaseItem = purchaseItems
+	return orderDetail, nil
 }
