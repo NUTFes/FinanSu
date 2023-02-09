@@ -816,6 +816,163 @@ const docTemplate = `{
                 },
             },
         },
+        "/teachers": {
+            "get": {
+                tags: ["teacher"],
+                "description": "teacherの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "teacherの一覧を取得",
+                        "schema": {
+                            "type": "array",
+                        }
+                    }
+                }
+            },
+            "post": {
+                tags: ["teacher"],
+                "description": "teacherの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたteacherが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "名前",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "position",
+                        "in": "query",
+                        "description": "役職",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "department_id",
+                        "in": "query",
+                        "description": "学科ID",
+                        "type": "integer",
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "description": "部屋番号",
+                        "type": "string",
+                    },
+                    {
+                        "name": "is_black",
+                        "in": "query",
+                        "description": "ブラックリストの真偽",
+                        "type": "boolean",
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "備考",
+                        "type": "string",
+                    },
+                ],
+            },
+        },
+        "/teachers/{id}": {
+            "get": {
+                tags: ["teacher"],
+                "description": "IDで指定されたteacherの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "teacherの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["teacher"],
+                "description": "teacherの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたteacherが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Teacherのid",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "教員の名前",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "position",
+                        "in": "query",
+                        "description": "教員の役職",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "department_id",
+                        "in": "query",
+                        "description": "学科ID",
+                        "type": "integer",
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "description": "部屋番号",
+                        "type": "string",
+                    },
+                    {
+                        "name": "is_black",
+                        "in": "query",
+                        "description": "ブラックリストに入っているか",
+                        "type": "boolean",
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "備考欄",
+                        "type": "string",
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["teacher"],
+                "description": "IDを指定してteacherの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "teacherの削除完了",
+                    }
+                },
+            },
+        },
         "/years": {
             "get": {
                 tags: ["year"],
