@@ -19,38 +19,72 @@ type TeacherRepository interface {
 	Create(context.Context, string, string, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string, string, string) error
 	Destroy(context.Context, string) error
+	FindLatestRecord(c context.Context) (*sql.Row, error)
 }
 
 func NewTeacherRepository(c db.Client, ac abstract.Crud) TeacherRepository {
 	return &teacherRepository{c, ac}
 }
 
-// 全件取得
-func (tr *teacherRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from teachers"
-	return tr.abstract.Read(c, query)
+func (t *teacherRepository) All(c context.Context) (*sql.Rows, error) {
+	query := "SELECT * FROM teachers"
+	return t.abstract.Read(c, query)
 }
 
-// 1件取得
-func (tr *teacherRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from teachers where id = " + id
-	return tr.abstract.ReadByID(c, query)
+func (t *teacherRepository) Find(c context.Context, id string) (*sql.Row, error) {
+	query := "SELECT * FROM teachers WHERE id = " + id
+	return t.abstract.ReadByID(c, query)
 }
 
-// 作成
-func (tr *teacherRepository) Create(c context.Context, name string, position string, departmentID string, room string, isBlack string, remark string) error {
-	query := "insert into teachers (name, position, department_id, room, is_black, remark) values ('" + name + "','" + position + "'," + departmentID + ",'" + room + "', " + isBlack + ", '" + remark + "')"
-	return tr.abstract.UpdateDB(c, query)
+func (t *teacherRepository) Create(
+	c context.Context,
+	name string,
+	position string,
+	departmentID string,
+	room string,
+	isBlack string,
+	remark string) error {
+	query := `
+	INSERT teachers
+		(name, position, department_id, room, is_black, remark)
+	VALUES
+		(` + name +
+		"," + position +
+		"," + departmentID +
+		"," + room +
+		"', " + isBlack +
+		"," + remark +
+		")"
+	return t.abstract.UpdateDB(c, query)
 }
 
-// 編集
-func (tr *teacherRepository) Update(c context.Context, id string, name string, position string, departmentID string, room string, isBlack string, remark string) error {
-	query := "update teachers set name = '" + name + "', position = '" + position + "', department_id = " + departmentID + ", room = '" + room + "', is_black = " + isBlack + ", remark = '" + remark + "' where id = " + id
-	return tr.abstract.UpdateDB(c, query)
+func (t *teacherRepository) Update(
+	c context.Context,
+	id string,
+	name string,
+	position string,
+	departmentID string,
+	room string,
+	isBlack string,
+	remark string) error {
+	query := `
+	UPDATE teachers
+	SET name =` + name +
+		", position = " + position +
+		", department_id = " + departmentID +
+		", room = '" + room +
+		", is_black = " + isBlack +
+		", remark = '" + remark +
+	" WHERE id = " + id
+	return t.abstract.UpdateDB(c, query)
 }
 
-// 削除
-func (tr *teacherRepository) Destroy(c context.Context, id string) error {
-	query := "delete from teachers where id = " + id
-	return tr.abstract.UpdateDB(c, query)
+func (t *teacherRepository) Destroy(c context.Context, id string) error {
+	query := "DELETE FROM teachers WHERE id = " + id
+	return t.abstract.UpdateDB(c, query)
+}
+
+func (t *teacherRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := "SELECT * FROM teachers ORDER BY id DESC LIMIT 1"
+	return t.abstract.ReadByID(c, query)
 }
