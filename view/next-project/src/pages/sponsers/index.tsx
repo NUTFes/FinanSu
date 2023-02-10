@@ -2,10 +2,10 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
-import MainLayout from '@components/layout/MainLayout';
 import EditButton from '@components/common/EditButton';
 import Header from '@components/common/Header';
 import RegistButton from '@components/common/RegistButton';
+import MainLayout from '@components/layout/MainLayout';
 
 import type { NextPage } from 'next';
 
