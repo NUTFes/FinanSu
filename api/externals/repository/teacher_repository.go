@@ -3,14 +3,15 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type teacherRepository struct {
-	client   db.Client
-	abstract abstract.Crud
+	client db.Client
+	crud   abstract.Crud
 }
 
 type TeacherRepository interface {
@@ -28,12 +29,12 @@ func NewTeacherRepository(c db.Client, ac abstract.Crud) TeacherRepository {
 
 func (t *teacherRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "SELECT * FROM teachers"
-	return t.abstract.Read(c, query)
+	return t.crud.Read(c, query)
 }
 
 func (t *teacherRepository) Find(c context.Context, id string) (*sql.Row, error) {
 	query := "SELECT * FROM teachers WHERE id = " + id
-	return t.abstract.ReadByID(c, query)
+	return t.crud.ReadByID(c, query)
 }
 
 func (t *teacherRepository) Create(
@@ -45,17 +46,16 @@ func (t *teacherRepository) Create(
 	isBlack string,
 	remark string) error {
 	query := `
-	INSERT teachers
-		(name, position, department_id, room, is_black, remark)
-	VALUES
-		(` + name +
-		"," + position +
-		"," + departmentID +
-		"," + room +
-		"', " + isBlack +
-		"," + remark +
-		")"
-	return t.abstract.UpdateDB(c, query)
+	INSERT INTO teachers
+		(name, position, department_id, room, is_black, remark) VALUES
+	('` + name +
+		"','" + position +
+		"'," + departmentID +
+		",'" + room +
+		"'," + isBlack +
+		",'" + remark +
+		"')"
+	return t.crud.UpdateDB(c, query)
 }
 
 func (t *teacherRepository) Update(
@@ -69,22 +69,23 @@ func (t *teacherRepository) Update(
 	remark string) error {
 	query := `
 	UPDATE teachers
-	SET name =` + name +
-		", position = " + position +
-		", department_id = " + departmentID +
+	SET name ='` + name +
+		"', position = '" + position +
+		"', department_id = " + departmentID +
 		", room = '" + room +
-		", is_black = " + isBlack +
+		"', is_black = " + isBlack +
 		", remark = '" + remark +
-	" WHERE id = " + id
-	return t.abstract.UpdateDB(c, query)
+		"' WHERE id = " + id
+	fmt.Println(query)
+	return t.crud.UpdateDB(c, query)
 }
 
 func (t *teacherRepository) Destroy(c context.Context, id string) error {
 	query := "DELETE FROM teachers WHERE id = " + id
-	return t.abstract.UpdateDB(c, query)
+	return t.crud.UpdateDB(c, query)
 }
 
 func (t *teacherRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
 	query := "SELECT * FROM teachers ORDER BY id DESC LIMIT 1"
-	return t.abstract.ReadByID(c, query)
+	return t.crud.ReadByID(c, query)
 }

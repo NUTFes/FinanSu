@@ -89,10 +89,9 @@ func (t *teacherUseCase) CreateTeacher(
 	room string,
 	isBlack string,
 	remark string) (domain.Teacher, error) {
-
-	err := t.rep.Create(c, name, position, departmentID, room, isBlack, remark)
 	latestTeacher := domain.Teacher{}
 
+	err := t.rep.Create(c, name, position, departmentID, room, isBlack, remark)
 	row, err := t.rep.FindLatestRecord(c)
 	err = row.Scan(
 		&latestTeacher.ID,
