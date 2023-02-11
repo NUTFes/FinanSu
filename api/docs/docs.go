@@ -724,7 +724,6 @@ const docTemplate = `{
                 }
             },
         },
-<<<<<<< HEAD
         "/sources": {
             "get": {
                 tags: ["source"],
@@ -817,8 +816,6 @@ const docTemplate = `{
                 },
             },
         },
-=======
->>>>>>> 2e4fe6a (createとupdateの修正)
         "/teachers": {
             "get": {
                 tags: ["teacher"],
