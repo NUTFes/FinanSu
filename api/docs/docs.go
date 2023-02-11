@@ -724,6 +724,98 @@ const docTemplate = `{
                 }
             },
         },
+        "/sources": {
+            "get": {
+                tags: ["source"],
+                "description": "sourceの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "sourceの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["source"],
+                "description": "sourceの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたsourceが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/sources/{id}": {
+            "get": {
+                tags: ["source"],
+                "description": "IDで指定されたsourceの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "sourceの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["source"],
+                "description": "sourceの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたsourceが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["source"],
+                "description": "IDを指定してsourceの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "sourceの削除完了",
+                    }
+                },
+            },
+        },
         "/years": {
             "get": {
                 tags: ["year"],
