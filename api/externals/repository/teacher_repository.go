@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -76,7 +75,6 @@ func (t *teacherRepository) Update(
 		"', is_black = " + isBlack +
 		", remark = '" + remark +
 		"' WHERE id = " + id
-	fmt.Println(query)
 	return t.crud.UpdateDB(c, query)
 }
 
