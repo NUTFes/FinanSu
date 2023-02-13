@@ -816,6 +816,154 @@ const docTemplate = `{
                 },
             },
         },
+        "/sponsors": {
+            "get": {
+                tags: ["sponsor"],
+                "description": "sponsorの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "sponsorsの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["sponsor"],
+                "description": "sponsorの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたsponsorが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "tel",
+                        "in": "query",
+                        "description": "tel",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "address",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "representative",
+                        "in": "query",
+                        "description": "representative",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/sponsors/{id}": {
+            "get": {
+                tags: ["sponsor"],
+                "description": "IDで指定されたsponsorの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "sponsorの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["sponsor"],
+                "description": "sponsorの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたsponsorが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "tel",
+                        "in": "query",
+                        "description": "tel",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "address",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "representative",
+                        "in": "query",
+                        "description": "representative",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["sponsor"],
+                "description": "IDを指定してsponsorの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "sponsorの削除完了",
+                    }
+                },
+            },
+        },
         "/teachers": {
             "get": {
                 tags: ["teacher"],
