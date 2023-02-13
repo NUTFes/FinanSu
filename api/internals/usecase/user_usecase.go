@@ -17,8 +17,8 @@ type userUseCase struct {
 type UserUseCase interface {
 	GetUsers(context.Context) ([]domain.User, error)
 	GetUserByID(context.Context, string) (domain.User, error)
-	CreateUser(context.Context, string, string, string) error
-	UpdateUser(context.Context, string, string, string, string) error
+	CreateUser(context.Context, string, string, string) (domain.User,error)
+	UpdateUser(context.Context, string, string, string, string) (domain.User, error)
 	DestroyUser(context.Context, string) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
 	GetUserPostRecord(context.Context,string, string, string) (domain.User,error)
@@ -34,7 +34,6 @@ func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
 	user := domain.User{}
 	var users []domain.User
 
-	// クエリー実行
 	rows, err := u.userRep.All(c)
 	if err != nil {
 		return nil, err
@@ -80,14 +79,40 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 	return user, nil
 }
 
-func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) error {
+func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {
+	latastUser := domain.User{}
 	err := u.userRep.Create(c, name, bureauID, roleID)
-	return err
+	row , err :=u.userRep.FindNewRecord(c)
+	err = row.Scan(
+		&latastUser.ID,
+		&latastUser.Name,
+		&latastUser.BureauID,
+		&latastUser.RoleID,
+		&latastUser.CreatedAt,
+		&latastUser.UpdatedAt,
+	)
+	if err != nil {
+		return latastUser, err
+	}
+	return latastUser, err
 }
 
-func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bureauID string, roleID string) error {
-	err := u.userRep.Update(c, id, name, bureauID, roleID)
-	return err
+func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bureauID string, roleID string) (domain.User, error) {
+	updatedUser := domain.User{}
+	u.userRep.Update(c, id, name, bureauID, roleID)
+	row, err :=u.userRep.Find(c, id)
+	err = row.Scan(
+		&updatedUser.ID,
+		&updatedUser.Name,
+		&updatedUser.BureauID,
+		&updatedUser.RoleID,
+		&updatedUser.CreatedAt,
+		&updatedUser.UpdatedAt,
+	) 
+	if err != nil {
+		return updatedUser, err
+	}
+	return updatedUser, nil
 }
 
 func (u *userUseCase) DestroyUser(c context.Context, id string) error {

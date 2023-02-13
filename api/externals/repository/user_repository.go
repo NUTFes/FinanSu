@@ -10,7 +10,7 @@ import (
 
 type userRepository struct {
 	client   db.Client
-	abstract abstract.Crud
+	crud abstract.Crud
 }
 
 type UserRepository interface {
@@ -28,35 +28,45 @@ func NewUserRepository(c db.Client, ac abstract.Crud) UserRepository {
 
 // 全件取得
 func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from users"
-	return ur.abstract.Read(c, query)
+	query := "SELECT * FROM users"
+	return ur.crud.Read(c, query)
 }
 
 // 1件取得
 func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from users where id = " + id
-	return ur.abstract.ReadByID(c, query)
+	query := "SELECT * FROM users WHERE id = " + id
+	return ur.crud.ReadByID(c, query)
 }
 
 // 作成
 func (ur *userRepository) Create(c context.Context, name string, bureauID string, roleID string) error {
-	query := "insert into users (name, bureau_id, role_id) values ('" + name + "', " + bureauID + ", " + roleID + ")"
-	return ur.abstract.UpdateDB(c, query)
+	query := `
+		INSERT INTO
+	 		users (name, bureau_id, role_id)
+		VALUES ('` + name + "', " + bureauID + ", " + roleID + ")"
+	return ur.crud.UpdateDB(c, query)
 }
 
 // 編集
 func (ur *userRepository) Update(c context.Context, id string, name string, bureauID string, roleID string) error {
-	query := "update users set name = '" + name + "', bureau_id = " + bureauID + ", role_id = " + roleID + " where id = " + id
-	return ur.abstract.UpdateDB(c, query)
+	query := `
+		UPDATE 
+			users 
+		SET
+			name = '` + name +
+		"', bureau_id = " + bureauID +
+		", role_id = " + roleID +
+		" WHERE id = " + id
+	return ur.crud.UpdateDB(c, query)
 }
 
 // 削除
 func (ur *userRepository) Destroy(c context.Context, id string) error {
-	query := "delete from users where id = " + id
-	return ur.abstract.UpdateDB(c, query)
+	query := "DELETE FROM users WHERE id = " + id
+	return ur.crud.UpdateDB(c, query)
 }
 
 func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
-	query := "select * from users order by id desc limit 1"
-	return ur.abstract.ReadByID(c, query)
+	query := "SELECT * FROM users ORDER BY id DESC LIMIT 1"
+	return ur.crud.ReadByID(c, query)
 }

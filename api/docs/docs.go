@@ -1121,6 +1121,129 @@ const docTemplate = `{
                 },
             },
         },
+        "/users": {
+            "get": {
+                tags: ["user"],
+                "description": "userの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "userの一覧を取得",
+                        "schema": {
+                            "type": "array",
+                        }
+                    }
+                }
+            },
+            "post": {
+                tags: ["user"],
+                "description": "userの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたuserが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "bureau_id",
+                        "in": "query",
+                        "description": "bureau_d",
+                        "type": "integer",
+                        "required": true
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "description": "role_id",
+                        "type": "integer",
+                        "required": true,
+                    },
+                ],
+            },
+        },
+        "/users/{id}": {
+            "get": {
+                tags: ["user"],
+                "description": "IDで指定されたuserの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "userの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["user"],
+                "description": "userの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたuserが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "userのid",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "bureau_id",
+                        "in": "query",
+                        "description": "bureau_d",
+                        "type": "integer",
+                        "required": true
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "description": "role_id",
+                        "type": "integer",
+                        "required": true,
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["user"],
+                "description": "IDを指定してuserの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "userの削除完了",
+                    }
+                },
+            },
+        },
         "/years": {
             "get": {
                 tags: ["year"],
