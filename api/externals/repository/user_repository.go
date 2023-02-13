@@ -42,7 +42,7 @@ func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
 func (ur *userRepository) Create(c context.Context, name string, bureauID string, roleID string) error {
 	query := `
 		INSERT INTO
-	 		users (name, bureau_id, role_id)
+			users (name, bureau_id, role_id)
 		VALUES ('` + name + "', " + bureauID + ", " + roleID + ")"
 	return ur.crud.UpdateDB(c, query)
 }
@@ -50,8 +50,8 @@ func (ur *userRepository) Create(c context.Context, name string, bureauID string
 // 編集
 func (ur *userRepository) Update(c context.Context, id string, name string, bureauID string, roleID string) error {
 	query := `
-		UPDATE 
-			users 
+		UPDATE
+			users
 		SET
 			name = '` + name +
 		"', bureau_id = " + bureauID +

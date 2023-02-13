@@ -3,10 +3,11 @@ package usecase
 import (
 	"context"
 	"database/sql"
+	"strconv"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 type userUseCase struct {
@@ -17,12 +18,12 @@ type userUseCase struct {
 type UserUseCase interface {
 	GetUsers(context.Context) ([]domain.User, error)
 	GetUserByID(context.Context, string) (domain.User, error)
-	CreateUser(context.Context, string, string, string) (domain.User,error)
+	CreateUser(context.Context, string, string, string) (domain.User, error)
 	UpdateUser(context.Context, string, string, string, string) (domain.User, error)
 	DestroyUser(context.Context, string) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
-	GetUserPostRecord(context.Context,string, string, string) (domain.User,error)
-	GetUserPutRecord(context.Context,string, string, string, string) (domain.User, error)
+	GetUserPostRecord(context.Context, string, string, string) (domain.User, error)
+	GetUserPutRecord(context.Context, string, string, string, string) (domain.User, error)
 }
 
 func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository) UserUseCase {
@@ -82,7 +83,7 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {
 	latastUser := domain.User{}
 	err := u.userRep.Create(c, name, bureauID, roleID)
-	row , err :=u.userRep.FindNewRecord(c)
+	row, err := u.userRep.FindNewRecord(c)
 	err = row.Scan(
 		&latastUser.ID,
 		&latastUser.Name,
@@ -100,7 +101,7 @@ func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string
 func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bureauID string, roleID string) (domain.User, error) {
 	updatedUser := domain.User{}
 	u.userRep.Update(c, id, name, bureauID, roleID)
-	row, err :=u.userRep.Find(c, id)
+	row, err := u.userRep.Find(c, id)
 	err = row.Scan(
 		&updatedUser.ID,
 		&updatedUser.Name,
@@ -108,7 +109,7 @@ func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bure
 		&updatedUser.RoleID,
 		&updatedUser.CreatedAt,
 		&updatedUser.UpdatedAt,
-	) 
+	)
 	if err != nil {
 		return updatedUser, err
 	}
@@ -155,11 +156,11 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 	return user, nil
 }
 
-//postした時のできるuserレコードの取得
+// postした時のできるuserレコードの取得
 func (u *userUseCase) GetUserPostRecord(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {
 	user := domain.User{}
-	u.userRep.Create(c,name,bureauID,roleID)
-	row , err :=u.userRep.FindNewRecord(c)
+	u.userRep.Create(c, name, bureauID, roleID)
+	row, err := u.userRep.FindNewRecord(c)
 	err = row.Scan(
 		&user.ID,
 		&user.Name,
@@ -174,11 +175,11 @@ func (u *userUseCase) GetUserPostRecord(c context.Context, name string, bureauID
 	return user, nil
 }
 
-//PUTした時に更新されるuserレコードの取得
+// PUTした時に更新されるuserレコードの取得
 func (u *userUseCase) GetUserPutRecord(c context.Context, id string, name string, bureauID string, roleID string) (domain.User, error) {
 	user := domain.User{}
 	u.userRep.Update(c, id, name, bureauID, roleID)
-	row, err :=u.userRep.Find(c, id)
+	row, err := u.userRep.Find(c, id)
 	err = row.Scan(
 		&user.ID,
 		&user.Name,
@@ -186,7 +187,7 @@ func (u *userUseCase) GetUserPutRecord(c context.Context, id string, name string
 		&user.RoleID,
 		&user.CreatedAt,
 		&user.UpdatedAt,
-	) 
+	)
 	if err != nil {
 		return user, err
 	}
