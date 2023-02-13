@@ -19,7 +19,8 @@ type ActivityRepository interface {
 	Create(context.Context, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string) error
 	Destroy(context.Context, string) error
-	AllWithSponsor(context.Context) (*sql.Rows, error)
+	FindDetail(context.Context) (*sql.Rows, error)
+	FindLatestRecord(c context.Context) (*sql.Row, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -82,7 +83,7 @@ func (ar *activityRepository) Destroy(c context.Context, id string) error {
 	return ar.crud.UpdateDB(c, query)
 }
 
-func (ar *activityRepository) AllWithSponsor(c context.Context) (*sql.Rows, error) {
+func (ar *activityRepository) FindDetail(c context.Context) (*sql.Rows, error) {
 	query := `
 	SELECT * FROM
 		activities
@@ -100,4 +101,17 @@ func (ar *activityRepository) AllWithSponsor(c context.Context) (*sql.Rows, erro
 		activities.user_id = users.id`
 
 	return ar.crud.Read(c, query)
+}
+
+func (ar *activityRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `
+		SELECT
+			*
+		FROM
+			activities
+		ORDER BY
+			id
+		DESC LIMIT 1
+	`
+	return ar.crud.ReadByID(c, query)
 }

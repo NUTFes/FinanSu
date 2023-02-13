@@ -14,8 +14,8 @@ type yearUseCase struct {
 type YearUseCase interface {
 	GetYears(context.Context) ([]domain.Year, error)
 	GetYearByID(context.Context, string) (domain.Year, error)
-	CreateYear(context.Context, string) error
-	UpdateYear(context.Context, string, string) error
+	CreateYear(context.Context, string) (domain.Year, error)
+	UpdateYear(context.Context, string, string) (domain.Year, error)
 	DestroyYear(context.Context, string) error
 }
 
@@ -70,14 +70,36 @@ func (y *yearUseCase) GetYearByID(c context.Context, id string) (domain.Year, er
 	return year, nil
 }
 
-func (y *yearUseCase) CreateYear(c context.Context, year string) error {
+func (y *yearUseCase) CreateYear(c context.Context, year string) (domain.Year, error) {
+	latestYear := domain.Year{}
 	err := y.rep.Create(c, year)
-	return err
+	row, err := y.rep.FindLatestRecord(c)
+	err = row.Scan(
+		&latestYear.ID,
+		&latestYear.Year,
+		&latestYear.CreatedAt,
+		&latestYear.UpdatedAt,
+	)
+	if err != nil {
+		return latestYear, err
+	}
+	return latestYear, nil
 }
 
-func (y *yearUseCase) UpdateYear(c context.Context, id string, year string) error {
+func (y *yearUseCase) UpdateYear(c context.Context, id string, year string) (domain.Year, error) {
+	updatedYear := domain.Year{}
 	err := y.rep.Update(c, id, year)
-	return err
+	row, err := y.rep.Find(c, id)
+	err = row.Scan(
+		&updatedYear.ID,
+		&updatedYear.Year,
+		&updatedYear.CreatedAt,
+		&updatedYear.UpdatedAt,
+	)
+	if err != nil {
+		return updatedYear, err
+	}
+	return updatedYear, nil
 }
 
 func (y *yearUseCase) DestroyYear(c context.Context, id string) error {

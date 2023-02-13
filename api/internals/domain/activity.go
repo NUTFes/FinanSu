@@ -5,16 +5,16 @@ import (
 )
 
 type Activity struct {
-	ID             ID             `json:"id"`
-	SponsorStyleID SponsorStyleID `json:"sponsorStyleID"`
-	UserID         UserID         `json:"userID"`
-	IsDone         bool           `json:"isDone"`
-	SponsorID      SponsorID      `json:"sponsorID"`
-	CreatedAt      time.Time      `json:"createdAt"`
-	UpdatedAt      time.Time      `json:"updatedAt"`
+	ID             int       `json:"id"`
+	SponsorStyleID uint      `json:"sponsorStyleID"`
+	UserID         uint      `json:"userID"`
+	IsDone         bool      `json:"isDone"`
+	SponsorID      uint      `json:"sponsorID"`
+	CreatedAt      time.Time `json:"createdAt"`
+	UpdatedAt      time.Time `json:"updatedAt"`
 }
 
-type ActivityForAdminView struct {
+type ActivityDetail struct {
 	Activity     Activity     `json:"sponsorActivity"`
 	Sponsor      Sponsor      `json:"sponsor"`
 	SponsorStyle SponsorStyle `json:"sponsorStyle"`
