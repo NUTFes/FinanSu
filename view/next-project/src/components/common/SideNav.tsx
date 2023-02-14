@@ -82,8 +82,8 @@ const otherLinkItems: LinkItemProps[] = [
 
 export default function SimpleSidebar() {
   const router = useRouter();
-  const [financeItemsShow, setFinanceItemsShow] = useReducer((state) => !state, false);
-  const [relationItemsShow, setRelationItemsShow] = useReducer((state) => !state, false);
+  const [isFinanceItemsShow, setisFinanceItemsShow] = useReducer((state) => !state, false);
+  const [isRelationItemsShow, setisRelationItemsShow] = useReducer((state) => !state, false);
 
   return (
     <div className={clsx('h-full w-full bg-primary-4')}>
@@ -95,8 +95,8 @@ export default function SimpleSidebar() {
             href={link.href}
             currentPath={router.pathname}
             isParent={link.isParent}
-            isShow={financeItemsShow}
-            onClick={link.isParent ? setFinanceItemsShow : undefined}
+            isShow={isFinanceItemsShow}
+            onClick={link.isParent ? setisFinanceItemsShow : undefined}
           >
             {link.name}
           </NavItem>
@@ -110,8 +110,8 @@ export default function SimpleSidebar() {
             href={link.href}
             currentPath={router.pathname}
             isParent={link.isParent}
-            isShow={relationItemsShow}
-            onClick={link.isParent ? setRelationItemsShow : undefined}
+            isShow={isRelationItemsShow}
+            onClick={link.isParent ? setisRelationItemsShow : undefined}
           >
             {link.name}
           </NavItem>
