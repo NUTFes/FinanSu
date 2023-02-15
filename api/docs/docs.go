@@ -392,6 +392,96 @@ const docTemplate = `{
                 },
             },
         },
+        "/departments": {
+            "get": {
+                tags: ["department"],
+                "description": "departmentの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "departmentの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["department"],
+                "description": "departmentの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたdepartmentが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/departments/{id}": {
+            "get": {
+                tags: ["department"],
+                "description": "IDで指定されたdepartmentの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "departmentの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["department"],
+                "description": "departmentの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたdepartmentが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["department"],
+                "description": "IDを指定してdepartmentの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "departmentの削除完了",
+                    }
+                },
+            },
+        },
         "/fund_informations": {
             "get": {
                 tags: ["fund_information"],
