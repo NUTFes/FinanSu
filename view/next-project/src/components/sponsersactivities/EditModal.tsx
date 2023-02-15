@@ -269,7 +269,7 @@ export default function EditModal(props: ModalProps) {
                       <PrimaryButton
                         className={'mx-2'}
                         onClick={() => {
-                          submit(formDataList, formData, props.purchaseReportId);
+                          submit(formDataList, formData, Number(props.purchaseReportId));
                         }}
                       >
                         編集完了

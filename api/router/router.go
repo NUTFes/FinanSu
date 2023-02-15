@@ -21,7 +21,7 @@ type router struct {
 	teacherController         controller.TeacherController
 	activityController        controller.ActivityController
 	sponsorController         controller.SponsorController
-	bureauController					controller.BureauController
+	bureauController          controller.BureauController
 }
 
 type Router interface {
@@ -83,9 +83,6 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/users", r.userController.CreateUser)
 	e.PUT("/users/:id", r.userController.UpdateUser)
 	e.DELETE("/users/:id", r.userController.DestroyUser)
-	e.POST("/get_post_users_record",r.userController.ShowPostUser)
-	e.PUT("/get_put_users_record/:id",r.userController.ShowPutUser)
-
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
@@ -118,7 +115,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/budgets/:id", r.budgetController.UpdateBudget)
 	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
 	//budgetに紐づくyearとsourceの取得
-	e.GET("get_budgets_for_view/:id", r.budgetController.ShowBudgetWithYearAndSource)
+	e.GET("/budgets/:id/details", r.budgetController.ShowBudgetDetailById)
+	//budgetに紐づくyearとsourceの全件取得
+	e.GET("/budgets/details", r.budgetController.ShowBudgetDetails)
 
 	// fund informations
 	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)
@@ -126,8 +125,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/fund_informations", r.fundInformationController.CreateFundInformation)
 	e.PUT("/fund_informations/:id", r.fundInformationController.UpdateFundInformation)
 	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
-	e.GET("/get_fund_informations_for_view", r.fundInformationController.IndexFundInforUserAndTeach)
-	e.GET("/get_fund_informations_for_view/:id", r.fundInformationController.ShowFundInforUserAndTeach)
+	e.GET("/fund_informations/details", r.fundInformationController.IndexFundInformationDetails)
+	e.GET("/fund_informations/:id/details", r.fundInformationController.ShowFundInformationDetailByID)
 
 	// parcahseordersのRoute
 	e.GET("/purchaseorders", r.purchaseOrderController.IndexPurchaseOrder)
@@ -135,10 +134,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
 	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
-	e.GET("/get_purchaseorders_for_view", r.purchaseOrderController.IndexOrderWithUserItem)
-	e.GET("/get_purchaseorders_for_view/:id", r.purchaseOrderController.ShowOrderWithUserItem)
-	e.POST("/get_post_purchaseorder_record", r.purchaseOrderController.ShowNewPurchaseOrder)
-	e.PUT("/get_put_purchaseorder_record/:id", r.purchaseOrderController.ShowEditPurchaseOrder)
+	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)
+	e.GET("/purchaseorders/:id/details", r.purchaseOrderController.ShowOrderDetail)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
@@ -152,7 +149,6 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/get_put_purchasereports_record/:id", r.purchaseReportController.ShowPurchaseReportPutRecord)
 
 	// purchasereport_for_viewのRoute
-	
 
 	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)
@@ -161,7 +157,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
 	e.GET("/get_purchaseitems_for_view", r.purchaseItemController.IndexPurchaseItemWithPurchaseOrder)
-	e.GET("/get_purchaseitems_for_view/:id",r.purchaseItemController.ShowPurchaseItemWithPurchaseOrder)
+	e.GET("/get_purchaseitems_for_view/:id", r.purchaseItemController.ShowPurchaseItemWithPurchaseOrder)
 
 	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
@@ -183,7 +179,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/activities", r.activityController.CreateActivity)
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
-	e.GET("/get_activities_for_view", r.activityController.IndexActivityWithSponsorAndStyle)
+	e.GET("/activities/details", r.activityController.IndexActivityDetail)
 
 	// sponsorのRoute
 	e.GET("/sponsors", r.sponsorController.IndexSponsor)
@@ -194,7 +190,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	//bureauのRoute
 	e.GET("/bureaus", r.bureauController.IndexBureau)
-	e.GET("/bureaus/:id",r.bureauController.ShowBureau)
+	e.GET("/bureaus/:id", r.bureauController.ShowBureau)
 	e.POST("/bureaus", r.bureauController.CreateBureau)
 	e.PUT("/bureaus/:id", r.bureauController.UpdateBureau)
 	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)

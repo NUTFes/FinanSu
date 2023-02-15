@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type activityController struct {
@@ -16,7 +17,7 @@ type ActivityController interface {
 	CreateActivity(echo.Context) error
 	UpdateActivity(echo.Context) error
 	DestroyActivity(echo.Context) error
-	IndexActivityWithSponsorAndStyle(echo.Context) error
+	IndexActivityDetail(echo.Context) error
 }
 
 func NewActivityController(u usecase.ActivityUseCase) ActivityController {
@@ -25,7 +26,7 @@ func NewActivityController(u usecase.ActivityUseCase) ActivityController {
 
 // Index
 func (a *activityController) IndexActivity(c echo.Context) error {
-	activities, err := a.u.GetActivities(c.Request().Context())
+	activities, err := a.u.GetActivity(c.Request().Context())
 	if err != nil {
 		return err
 	}
@@ -48,11 +49,11 @@ func (a *activityController) CreateActivity(c echo.Context) error {
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
 	sponsorID := c.QueryParam("sponsor_id")
-	err := a.u.CreateActivity(c.Request().Context(), sponsorStyleID, userID, isDone, sponsorID)
+	latastActivity, err := a.u.CreateActivity(c.Request().Context(), sponsorStyleID, userID, isDone, sponsorID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created Activity")
+	return c.JSON(http.StatusOK, latastActivity)
 }
 
 // Update
@@ -62,11 +63,11 @@ func (a *activityController) UpdateActivity(c echo.Context) error {
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
 	sponsorID := c.QueryParam("sponsor_id")
-	err := a.u.UpdateActivity(c.Request().Context(), id, sponsorStyleID, userID, isDone, sponsorID)
+	updatedActivity, err := a.u.UpdateActivity(c.Request().Context(), id, sponsorStyleID, userID, isDone, sponsorID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated Activity")
+	return c.JSON(http.StatusOK, updatedActivity)
 }
 
 // Destroy
@@ -80,11 +81,10 @@ func (a *activityController) DestroyActivity(c echo.Context) error {
 }
 
 // For admin view
-func (a *activityController) IndexActivityWithSponsorAndStyle(c echo.Context) error {
-	activities, err := a.u.GetActivitiesWithSponsorAndStyle(c.Request().Context())
+func (a *activityController) IndexActivityDetail(c echo.Context) error {
+	activities, err := a.u.GetActivityDetail(c.Request().Context())
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, activities)
 }
-

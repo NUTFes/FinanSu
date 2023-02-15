@@ -49,11 +49,11 @@ func (t *teacherController) CreateTeacher(c echo.Context) error {
 	room := c.QueryParam("room")
 	isBlack := c.QueryParam("is_black")
 	remark := c.QueryParam("remark")
-	err := t.u.CreateTeacher(c.Request().Context(), name, position, departmentID, room, isBlack, remark)
+	latestTeacher, err := t.u.CreateTeacher(c.Request().Context(), name, position, departmentID, room, isBlack, remark)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created Teacher")
+	return c.JSON(http.StatusCreated, latestTeacher)
 }
 
 // Update
@@ -65,11 +65,11 @@ func (t *teacherController) UpdateTeacher(c echo.Context) error {
 	room := c.QueryParam("room")
 	isBlack := c.QueryParam("is_black")
 	remark := c.QueryParam("remark")
-	err := t.u.UpdateTeacher(c.Request().Context(), id, name, position, departmentID, room, isBlack, remark)
+	updateTeacher, err := t.u.UpdateTeacher(c.Request().Context(), id, name, position, departmentID, room, isBlack, remark)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated Budget")
+	return c.JSON(http.StatusOK, updateTeacher)
 }
 
 // Destroy

@@ -48,7 +48,7 @@ export const getServerSideProps = async () => {
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getDepartmentURL = process.env.SSR_API_URI + '/departments';
   const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
-  const getFundInformationViewURL = process.env.SSR_API_URI + '/get_fund_informations_for_view';
+  const getFundInformationViewURL = process.env.SSR_API_URI + '/fund_informations/details';
   const teachersInformationRes = await get(getTeachersInformationURL);
   const fundInformationRes = await get(getFundInformationURL);
   const departmentRes = await get(getDepartmentURL);

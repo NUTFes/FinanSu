@@ -103,7 +103,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // purchase_orderに紐づくpurchase_itemsを取得
   const getPurchaseItems = useCallback(async () => {
     const getPurchaseOrderViewURL =
-      process.env.CSR_API_URI + '/get_purchaseorders_for_view/' + props.purchaseOrderId;
+      process.env.CSR_API_URI + '/purchaseorders/' + props.purchaseOrderId + 'details';
 
     const purchaseOrderViewRes: PurchaseOrderView = await get(getPurchaseOrderViewURL);
     const initFormDataList = [];

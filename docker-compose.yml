@@ -5,7 +5,7 @@ services:
     container_name: "nutfes-finansu-db"
     volumes:
       - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
-#      - ./mysql/data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_DATABASE: finansu_db
       MYSQL_USER: finansu
@@ -39,5 +39,6 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - db
+      db:
+        condition: service_started
 
