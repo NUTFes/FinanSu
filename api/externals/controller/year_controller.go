@@ -44,22 +44,22 @@ func (y *yearController) ShowYear(c echo.Context) error {
 // Create
 func (y *yearController) CreateYear(c echo.Context) error {
 	year := c.QueryParam("year")
-	err := y.u.CreateYear(c.Request().Context(), year)
+	latestYear, err := y.u.CreateYear(c.Request().Context(), year)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created Year")
+	return c.JSON(http.StatusCreated, latestYear)
 }
 
 // Update
 func (y *yearController) UpdateYear(c echo.Context) error {
 	id := c.Param("id")
 	year := c.QueryParam("year")
-	err := y.u.UpdateYear(c.Request().Context(), id, year)
+	updatedYear, err := y.u.UpdateYear(c.Request().Context(), id, year)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated Year")
+	return c.JSON(http.StatusOK, updatedYear)
 }
 
 // Destroy

@@ -19,38 +19,39 @@ type YearRepository interface {
 	Create(context.Context, string) error
 	Update(context.Context, string, string) error
 	Destroy(context.Context, string) error
+	FindLatestRecord(context.Context) (*sql.Row, error)
 }
 
 func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
 	return &yearRepository{c, ac}
 }
 
-// 全件取得
-func (yr *yearRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from years"
-	return yr.abstract.Read(c, query)
+func (y *yearRepository) All(c context.Context) (*sql.Rows, error) {
+	query := "SELECT * FROM years"
+	return y.abstract.Read(c, query)
 }
 
-// 1件取得
-func (yr *yearRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from years where id = " + id
-	return yr.abstract.ReadByID(c, query)
+func (y *yearRepository) Find(c context.Context, id string) (*sql.Row, error) {
+	query := "SELECT * FROM years WHERE id = " + id
+	return y.abstract.ReadByID(c, query)
 }
 
-// 作成
-func (yr *yearRepository) Create(c context.Context, year string) error {
-	query := "insert into years (year) values ('" + year + "')"
-	return yr.abstract.UpdateDB(c, query)
+func (y *yearRepository) Create(c context.Context, year string) error {
+	query := `INSERT INTO years (year) VALUES (` + year + ")"
+	return y.abstract.UpdateDB(c, query)
 }
 
-// 編集
-func (yr *yearRepository) Update(c context.Context, id string, year string) error {
-	query := "update years set year = '" + year + "' where id = " + id
-	return yr.abstract.UpdateDB(c, query)
+func (y *yearRepository) Update(c context.Context, id string, year string) error {
+	query := `UPDATE years SET year =` + year + " WHERE id = " + id
+	return y.abstract.UpdateDB(c, query)
 }
 
-// 削除
-func (yr *yearRepository) Destroy(c context.Context, id string) error {
-	query := "delete from years where id = " + id
-	return yr.abstract.UpdateDB(c, query)
+func (y *yearRepository) Destroy(c context.Context, id string) error {
+	query := "DELETE FROM years WHERE id = " + id
+	return y.abstract.UpdateDB(c, query)
+}
+
+func (y *yearRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `SELECT * FROM years ORDER BY id DESC LIMIT 1`
+	return y.abstract.ReadByID(c, query)
 }

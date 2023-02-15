@@ -5,15 +5,15 @@ import (
 )
 
 type PurchaseOrder struct {
-	ID           ID        `json:"id"`
-	DeadLine     DeadLine  `json:"deadline"`
-	UserID       ID        `json:"userID"`
+	ID           int       `json:"id"`
+	DeadLine     string    `json:"deadline"`
+	UserID       int       `json:"userID"`
 	FinanceCheck bool      `json:"financeCheck"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
-type OrderWithItemAndUser struct {
+type OrderDetail struct {
 	PurchaseOrder PurchaseOrder  `json:"purchaseOrder"`
 	User          User           `json:"user"`
 	PurchaseItem  []PurchaseItem `json:"purchaseItem"`
