@@ -5,20 +5,20 @@ import (
 )
 
 type PurchaseItem struct {
-	ID              ID              `json:"id"`
-	Item            Item            `json:"item"`
-	Price           Price           `json:"price"`
-	Quantity        Quantity        `json:"quantity"`
-	Detail          Detail          `json:"detail"`
-	Url             Url             `json:"url"`
-	PurchaseOrderID PurchaseOrderID `json:"purchaseOrderID"`
-	FinanceCheck    bool            `json:"financeCheck"`
-	CreatedAt       time.Time       `json:"createdAt"`
-	UpdatedAt       time.Time       `json:"updatedAt"`
+	ID              int       `json:"id"`
+	Item            string    `json:"item"`
+	Price           int       `json:"price"`
+	Quantity        int       `json:"quantity"`
+	Detail          string    `json:"detail"`
+	Url             string    `json:"url"`
+	PurchaseOrderID int       `json:"purchaseOrderID"`
+	FinanceCheck    bool      `json:"financeCheck"`
+	CreatedAt       time.Time `json:"createdAt"`
+	UpdatedAt       time.Time `json:"updatedAt"`
 }
 
-type PurchaseItemWithOrder struct {
-	ID           ID        `json:"ID"`
+type PurchaseItemDetails struct {
+	ID           int       `json:"ID"`
 	Item         string    `json:"item"`
 	Price        int       `json:"price"`
 	Quantity     int       `json:"quantity"`
