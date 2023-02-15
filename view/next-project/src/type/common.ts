@@ -84,6 +84,34 @@ export interface Activity {
   updatedAt?: string;
 }
 
+export interface SponserActivitiesItem {
+  id?: number;
+  sponsorID: number;
+  sponsorStyleID: number;
+  sponserName: string;
+  userID: number;
+  isDone: boolean;
+  price: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SponserActivity {
+  id: number;
+  sponsorID: number;
+  sponsorStyleID: number;
+  userID: number;
+  isDone: boolean;
+  createdAt: string;
+  updated_At: string;
+}
+
+export interface SponserActivitiesView {
+  viewUser: User;
+  viewItem: SponserActivitiesItem;
+  sponserActivitiesItems: SponserActivitiesItem[];
+}
+
 // // Sponser(協賛企業)
 export interface Sponser {
   id?: number;
