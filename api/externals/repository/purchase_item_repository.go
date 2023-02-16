@@ -101,20 +101,26 @@ func (pir *purchaseItemRepository) AllDetails(c context.Context) (*sql.Rows, err
 			purchase_items.id,
 			purchase_items.item,
 			purchase_items.price,
-			purchase_items.quantity ,
+			purchase_items.quantity,
 			purchase_items.detail,
 			purchase_items.url,
-			purchase_orders.deadline,
-			users.name,
+			purchase_items.purchase_order_id,
 			purchase_items.finance_check,
 			purchase_items.created_at,
-			purchase_items.updated_at
+			purchase_items.updated_at,
+			purchase_orders.id,
+			purchase_orders.deadline,
+			purchase_orders.user_id,
+			purchase_orders.finance_check,
+			users.id, users.name,
+			users.bureau_id,
+			users.role_id
 		FROM
 			purchase_items
 		INNER JOIN
 			purchase_orders
 		ON
-			purchase_items.purchase_order_id  = purchase_orders.id
+			purchase_items.purchase_order_id= purchase_orders.id
 		INNER JOIN
 			users
 		ON
@@ -131,11 +137,17 @@ func (pir *purchaseItemRepository) FindDetails(c context.Context, id string) (*s
 			purchase_items.quantity,
 			purchase_items.detail,
 			purchase_items.url,
-			purchase_orders.deadline,
-			users.name,
+			purchase_items.purchase_order_id,
 			purchase_items.finance_check,
 			purchase_items.created_at,
-			purchase_items.updated_at
+			purchase_items.updated_at,
+			purchase_orders.id,
+			purchase_orders.deadline,
+			purchase_orders.user_id,
+			purchase_orders.finance_check,
+			users.id, users.name,
+			users.bureau_id,
+			users.role_id
 		FROM
 			purchase_items
 		INNER JOIN

@@ -167,17 +167,24 @@ func (p *purchaseItemUseCase) GetPurchaseItemDetails(c context.Context) ([]domai
 
 	for rows.Next() {
 		err := rows.Scan(
-			&purchaseItemDetail.ID,
-			&purchaseItemDetail.Item,
-			&purchaseItemDetail.Price,
-			&purchaseItemDetail.Quantity,
-			&purchaseItemDetail.Detail,
-			&purchaseItemDetail.Url,
-			&purchaseItemDetail.DeadLine,
-			&purchaseItemDetail.UserName,
-			&purchaseItemDetail.FinanceCheck,
-			&purchaseItemDetail.CreatedAt,
-			&purchaseItemDetail.UpdatedAt,
+			&purchaseItemDetail.PurchaseItem.ID,
+			&purchaseItemDetail.PurchaseItem.Item,
+			&purchaseItemDetail.PurchaseItem.Price,
+			&purchaseItemDetail.PurchaseItem.Quantity,
+			&purchaseItemDetail.PurchaseItem.Detail,
+			&purchaseItemDetail.PurchaseItem.Url,
+			&purchaseItemDetail.PurchaseItem.PurchaseOrderID,
+			&purchaseItemDetail.PurchaseItem.FinanceCheck,
+			&purchaseItemDetail.PurchaseItem.CreatedAt,
+			&purchaseItemDetail.PurchaseItem.UpdatedAt,
+			&purchaseItemDetail.PurchaseOrder.ID,
+			&purchaseItemDetail.PurchaseOrder.DeadLine,
+			&purchaseItemDetail.PurchaseOrder.UserID,
+			&purchaseItemDetail.PurchaseOrder.FinanceCheck,
+			&purchaseItemDetail.User.ID,
+			&purchaseItemDetail.User.Name,
+			&purchaseItemDetail.User.BureauID,
+			&purchaseItemDetail.User.RoleID,
 		)
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot connect SQL")
@@ -193,17 +200,24 @@ func (p *purchaseItemUseCase) GetPurchaseItemDetailsByID(c context.Context, id s
 
 	row, err := p.rep.FindDetails(c, id)
 	err = row.Scan(
-		&purchaseItemDetail.ID,
-		&purchaseItemDetail.Item,
-		&purchaseItemDetail.Price,
-		&purchaseItemDetail.Quantity,
-		&purchaseItemDetail.Detail,
-		&purchaseItemDetail.Url,
-		&purchaseItemDetail.DeadLine,
-		&purchaseItemDetail.UserName,
-		&purchaseItemDetail.FinanceCheck,
-		&purchaseItemDetail.CreatedAt,
-		&purchaseItemDetail.UpdatedAt,
+		&purchaseItemDetail.PurchaseItem.ID,
+		&purchaseItemDetail.PurchaseItem.Item,
+		&purchaseItemDetail.PurchaseItem.Price,
+		&purchaseItemDetail.PurchaseItem.Quantity,
+		&purchaseItemDetail.PurchaseItem.Detail,
+		&purchaseItemDetail.PurchaseItem.Url,
+		&purchaseItemDetail.PurchaseItem.PurchaseOrderID,
+		&purchaseItemDetail.PurchaseItem.FinanceCheck,
+		&purchaseItemDetail.PurchaseItem.CreatedAt,
+		&purchaseItemDetail.PurchaseItem.UpdatedAt,
+		&purchaseItemDetail.PurchaseOrder.ID,
+		&purchaseItemDetail.PurchaseOrder.DeadLine,
+		&purchaseItemDetail.PurchaseOrder.UserID,
+		&purchaseItemDetail.PurchaseOrder.FinanceCheck,
+		&purchaseItemDetail.User.ID,
+		&purchaseItemDetail.User.Name,
+		&purchaseItemDetail.User.BureauID,
+		&purchaseItemDetail.User.RoleID,
 	)
 	if err != nil {
 		return purchaseItemDetail, err
