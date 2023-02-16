@@ -155,8 +155,8 @@ func (p *purchaseItemUseCase) DestroyPurchaseItem(
 // purchaseOrderに紐づくPurchaseItemの取得(Gets)
 func (p *purchaseItemUseCase) GetPurchaseItemDetails(c context.Context) ([]domain.PurchaseItemDetails, error) {
 
-	purchaseItemwithpurchaseorder := domain.PurchaseItemDetails{}
-	var purchaseItemwithpurchaseorders []domain.PurchaseItemDetails
+	purchaseItemDetail := domain.PurchaseItemDetails{}
+	var purchaseItemDetails []domain.PurchaseItemDetails
 
 	//クエリ実行
 	rows, err := p.rep.AllDetails(c)
@@ -167,47 +167,47 @@ func (p *purchaseItemUseCase) GetPurchaseItemDetails(c context.Context) ([]domai
 
 	for rows.Next() {
 		err := rows.Scan(
-			&purchaseItemwithpurchaseorder.ID,
-			&purchaseItemwithpurchaseorder.Item,
-			&purchaseItemwithpurchaseorder.Price,
-			&purchaseItemwithpurchaseorder.Quantity,
-			&purchaseItemwithpurchaseorder.Detail,
-			&purchaseItemwithpurchaseorder.Url,
-			&purchaseItemwithpurchaseorder.DeadLine,
-			&purchaseItemwithpurchaseorder.Name,
-			&purchaseItemwithpurchaseorder.FinanceCheck,
-			&purchaseItemwithpurchaseorder.CreatedAt,
-			&purchaseItemwithpurchaseorder.UpdatedAt,
+			&purchaseItemDetail.ID,
+			&purchaseItemDetail.Item,
+			&purchaseItemDetail.Price,
+			&purchaseItemDetail.Quantity,
+			&purchaseItemDetail.Detail,
+			&purchaseItemDetail.Url,
+			&purchaseItemDetail.DeadLine,
+			&purchaseItemDetail.UserName,
+			&purchaseItemDetail.FinanceCheck,
+			&purchaseItemDetail.CreatedAt,
+			&purchaseItemDetail.UpdatedAt,
 		)
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
-		purchaseItemwithpurchaseorders = append(purchaseItemwithpurchaseorders, purchaseItemwithpurchaseorder)
+		purchaseItemDetails = append(purchaseItemDetails, purchaseItemDetail)
 	}
-	return purchaseItemwithpurchaseorders, nil
+	return purchaseItemDetails, nil
 }
 
 // purchaseOrderに紐づくPurchaseItemの取得(Get)
 func (p *purchaseItemUseCase) GetPurchaseItemDetailsByID(c context.Context, id string) (domain.PurchaseItemDetails, error) {
-	purchaseItemwithpurchaseorder := domain.PurchaseItemDetails{}
+	purchaseItemDetail := domain.PurchaseItemDetails{}
 
 	row, err := p.rep.FindDetails(c, id)
 	err = row.Scan(
-		&purchaseItemwithpurchaseorder.ID,
-		&purchaseItemwithpurchaseorder.Item,
-		&purchaseItemwithpurchaseorder.Price,
-		&purchaseItemwithpurchaseorder.Quantity,
-		&purchaseItemwithpurchaseorder.Detail,
-		&purchaseItemwithpurchaseorder.Url,
-		&purchaseItemwithpurchaseorder.DeadLine,
-		&purchaseItemwithpurchaseorder.Name,
-		&purchaseItemwithpurchaseorder.FinanceCheck,
-		&purchaseItemwithpurchaseorder.CreatedAt,
-		&purchaseItemwithpurchaseorder.UpdatedAt,
+		&purchaseItemDetail.ID,
+		&purchaseItemDetail.Item,
+		&purchaseItemDetail.Price,
+		&purchaseItemDetail.Quantity,
+		&purchaseItemDetail.Detail,
+		&purchaseItemDetail.Url,
+		&purchaseItemDetail.DeadLine,
+		&purchaseItemDetail.UserName,
+		&purchaseItemDetail.FinanceCheck,
+		&purchaseItemDetail.CreatedAt,
+		&purchaseItemDetail.UpdatedAt,
 	)
 	if err != nil {
-		return purchaseItemwithpurchaseorder, err
+		return purchaseItemDetail, err
 	}
-	return purchaseItemwithpurchaseorder, nil
+	return purchaseItemDetail, nil
 
 }

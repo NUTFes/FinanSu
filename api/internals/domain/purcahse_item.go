@@ -25,7 +25,7 @@ type PurchaseItemDetails struct {
 	Detail       string    `json:"detail"`
 	Url          string    `json:"url"`
 	DeadLine     string    `json:"deadline"`
-	Name         string    `json:"name"`
+	UserName     string    `json:"name"`
 	FinanceCheck bool      `json:"financeCheck"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`
