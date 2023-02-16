@@ -7,14 +7,14 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { SponserActivitiesView } from '@type/common';
+import { SponsorActivitiesView } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
   id: React.ReactNode;
-  sponserActivitiesViewItem: SponserActivitiesView;
+  sponsorActivitiesViewItem: SponsorActivitiesView;
   isDelete: boolean;
 }
 
@@ -33,9 +33,9 @@ const DetailModal: FC<ModalProps> = (props) => {
     return datetime2;
   };
 
-  const deletePurchaseOrders = async (id: number | string) => {
-    const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
-    await del(deletePurchaseOrderUrl);
+  const deleteSponsorActivities = async (id: number | string) => {
+    const deleteSponsorActivitiesUrl = process.env.CSR_API_URI + '/activites/' + id;
+    await del(deleteSponsorActivitiesUrl);
     router.reload();
   };
 
@@ -65,7 +65,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.sponserActivitiesViewItem && props.sponserActivitiesViewItem.viewItem.id}
+              {props.sponsorActivitiesViewItem && props.sponsorActivitiesViewItem.sponsorActivities.id}
             </div>
           </div>
           <div className={clsx('col-span-1 grid ')} />
@@ -78,23 +78,23 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.sponserActivitiesViewItem &&
-                props.sponserActivitiesViewItem.viewUser.bureauID === 1 &&
+              {props.sponsorActivitiesViewItem &&
+                props.sponsorActivitiesViewItem.viewUser.bureauID === 1 &&
                 '総務局'}
-              {props.sponserActivitiesViewItem &&
-                props.sponserActivitiesViewItem.viewUser.bureauID === 2 &&
+              {props.sponsorActivitiesViewItem &&
+                props.sponsorActivitiesViewItem.viewUser.bureauID === 2 &&
                 '渉外局'}
-              {props.sponserActivitiesViewItem &&
-                props.sponserActivitiesViewItem.viewUser.bureauID === 3 &&
+              {props.sponsorActivitiesViewItem &&
+                props.sponsorActivitiesViewItem.viewUser.bureauID === 3 &&
                 '財務局'}
-              {props.sponserActivitiesViewItem &&
-                props.sponserActivitiesViewItem.viewUser.bureauID === 4 &&
+              {props.sponsorActivitiesViewItem &&
+                props.sponsorActivitiesViewItem.viewUser.bureauID === 4 &&
                 '企画局'}
-              {props.sponserActivitiesViewItem &&
-                props.sponserActivitiesViewItem.viewUser.bureauID === 5 &&
+              {props.sponsorActivitiesViewItem &&
+                props.sponsorActivitiesViewItem.viewUser.bureauID === 5 &&
                 '政策局'}
-              {props.sponserActivitiesViewItem &&
-                props.sponserActivitiesViewItem.viewUser.bureauID === 6 &&
+              {props.sponsorActivitiesViewItem &&
+                props.sponsorActivitiesViewItem.viewUser.bureauID === 6 &&
                 '情報局'}
             </div>
             <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
@@ -105,10 +105,10 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.sponserActivitiesViewItem &&
+              {props.sponsorActivitiesViewItem &&
                 formatDate(
-                  props.sponserActivitiesViewItem.viewItem.createdAt
-                    ? props.sponserActivitiesViewItem.viewItem.createdAt
+                  props.sponsorActivitiesViewItem.sponsorActivities.createdAt
+                    ? props.sponsorActivitiesViewItem.sponsorActivities.createdAt
                     : '',
                 )}
             </div>
@@ -150,16 +150,16 @@ const DetailModal: FC<ModalProps> = (props) => {
               className={clsx('w-full border border-x-white-0 border-b-primary-1 border-t-white-0')}
             >
               {/* <div className={clsx('flex items-start')}> */}
-              {props.sponserActivitiesViewItem.sponserActivitiesItems.map((sponserActivitiesItem) => (
-                <tr key={sponserActivitiesItem.id} className={clsx('w-full')}>
+              {props.sponsorActivitiesViewItem?.viewItem.map((sponsorActivitiesItem) => (
+                <tr key={sponsorActivitiesItem.id} className={clsx('w-full')}>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>
-                      {sponserActivitiesItem.sponserName}
+                      {sponsorActivitiesItem.sponsorID}
                     </div>
                   </td>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>
-                      {sponserActivitiesItem.price}
+                      {sponsorActivitiesItem.sponsorStyleID}
                     </div>
                   </td>
                   
@@ -173,7 +173,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         {props.isDelete && (
           <RedButton
             onClick={() => {
-              deletePurchaseOrders(String(props.id));
+              deleteSponsorActivities(String(props.id));
             }}
           >
             申請を削除する

@@ -1,7 +1,6 @@
+import AddButton  from '../common/AddButton';
+import { useUI } from '../ui/context';
 import React from 'react';
-
-import { AddButton } from '@components/common';
-import { useUI } from '@components/ui/context';
 
 interface Props {
   width?: string;
@@ -16,7 +15,7 @@ export default function OpenModalButton(props: Props) {
   return (
     <AddButton
       onClick={() => {
-        setModalView('PURCHASE_REPORT_ADD_MODAL');
+        setModalView('SPONSOR_ACTIVITIES_ADD_MODAL');
         openModal();
       }}
     >

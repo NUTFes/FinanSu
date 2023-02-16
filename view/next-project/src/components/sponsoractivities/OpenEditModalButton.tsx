@@ -1,8 +1,8 @@
+import { EditButton } from '../common';
+import EditModal from './EditModal';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { EditButton } from '@components/common';
-import EditModal from '@components/purchasereports/EditModal';
 
 interface Props {
   children?: React.ReactNode;

@@ -54,7 +54,7 @@ export default function PurchaseItemNumModal() {
         </div>
       </div>
       <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
-        購入報告の登録
+        協賛活動報告の登録
       </div>
       <div className={clsx('mb-10 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-1 grid')} />
@@ -104,7 +104,7 @@ export default function PurchaseItemNumModal() {
             <div className={clsx('mx-2')}>
               <PrimaryButton
                 onClick={() => {
-                  setModalView('PURCHASE_ORDER_LIST_MODAL');
+                  setModalView('SPONSOR_ACTIVITIES_LIST_MODAL');
                   openModal();
                 }}
               >
@@ -114,7 +114,7 @@ export default function PurchaseItemNumModal() {
             <div className={clsx('mx-2')}>
               <PrimaryButton
                 onClick={() => {
-                  setModalView('PURCHASE_REPORT_ITEM_NUM_MODAL');
+                  setModalView('SPONSOR_ACTIVITIES_ITEM_NUM_MODAL');
                   openModal();
                 }}
               >
