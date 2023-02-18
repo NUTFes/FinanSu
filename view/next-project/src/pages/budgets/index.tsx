@@ -123,14 +123,14 @@ export default function BudgetList(props: Props) {
               {props.budgets.map((budgetItem, index) => (
                 <tr key={budgetItem.id}> 
                   {props.sources.map((sourceItem) =>(
-                    <td
+                    <td key={sourceItem.id}
                   className={clsx('text-center pt-4 pb-3 py-3 text-black-600')}
                   >
                     {sourceItem.name}
                   </td>
                   ))} 
                   {props.years.map((yearItem) => (
-                    <td
+                    <td key={yearItem.id}
                   className={clsx('text-center pt-4 pb-3 py-3 text-black-600')}
                   >
                     {yearItem.year}
