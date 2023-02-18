@@ -44,22 +44,22 @@ func (s *sourceController) ShowSource(c echo.Context) error {
 // Create
 func (s *sourceController) CreateSource(c echo.Context) error {
 	name := c.QueryParam("name")
-	err := s.u.CreateSource(c.Request().Context(), name)
+	latastSource,err := s.u.CreateSource(c.Request().Context(), name)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created Source")
+	return c.JSON(http.StatusCreated, latastSource)
 }
 
 // Update
 func (s *sourceController) UpdateSource(c echo.Context) error {
 	id := c.Param("id")
 	name := c.QueryParam("name")
-	err := s.u.UpdateSource(c.Request().Context(), id, name)
+	updatedSource,err := s.u.UpdateSource(c.Request().Context(), id, name)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated Source")
+	return c.JSON(http.StatusOK, updatedSource)
 }
 
 // Destroy

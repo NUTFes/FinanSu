@@ -44,22 +44,22 @@ func (d *departmentController) ShowDepartment(c echo.Context) error {
 // Create
 func (d *departmentController) CreateDepartment(c echo.Context) error {
 	name := c.QueryParam("name")
-	err := d.u.CreateDepartment(c.Request().Context(), name)
+	latastDepartment, err := d.u.CreateDepartment(c.Request().Context(), name)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created Department")
+	return c.JSON(http.StatusCreated, latastDepartment)
 }
 
 // Update
 func (d *departmentController) UpdateDepartment(c echo.Context) error {
 	id := c.Param("id")
 	name := c.QueryParam("name")
-	err := d.u.UpdateDepartment(c.Request().Context(), id, name)
+	updatedDepartment, err := d.u.UpdateDepartment(c.Request().Context(), id, name)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated Department")
+	return c.JSON(http.StatusOK, updatedDepartment)
 }
 
 // Destroy

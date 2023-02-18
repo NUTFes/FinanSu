@@ -16,6 +16,145 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/activities": {
+            "get": {
+                tags: ["activity"],
+                "description": "activitiesの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activitiesの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["activity"],
+                "description": "activitiesの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたactivitiestが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "sponsor_style_id",
+                        "in": "query",
+                        "description": "sponsor_style_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "is_done",
+                        "in": "query",
+                        "description": "is_done",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "sponsor_id",
+                        "in": "query",
+                        "description": "sponsor_id",
+                        "type": "integer"
+                    }
+                ],
+            },
+        },
+        "/activities/details": {
+            "get": {
+                tags: ["activity"],
+                "description": "activitiesとsponcer,sponsorStyle,userの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activitiesとsponcer,sponsorStyle,userの一覧の取得",
+                    }
+                }
+            },
+        },
+        "/activities/{id}": {
+            "get": {
+                tags: ["activity"],
+                "description": "IDで指定されたactivitiesの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activitiesの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["activity"],
+                "description": "activitiesの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたactivitiesが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sponsor_style_id",
+                        "in": "query",
+                        "description": "sponsor_style_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "is_done",
+                        "in": "query",
+                        "description": "is_done",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "sponsor_id",
+                        "in": "query",
+                        "description": "sponsor_id",
+                        "type": "integer"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["activity"],
+                "description": "IDを指定してactivitiesの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "activitiesの削除完了",
+                    }
+                },
+            },
+        },
         "/budgets": {
             "get": {
                 tags: ["budget"],
@@ -55,6 +194,17 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 ],
+            },
+        },
+        "/budgets/details": {
+            "get": {
+                tags: ["budget"],
+                "description": "budgetに紐づくyearとsourceの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "budgetに紐づくyearとsourceの一覧を取得",
+                    }
+                }
             },
         },
         "/budgets/{id}": {
@@ -149,6 +299,1324 @@ const docTemplate = `{
                         "description": "budgetに紐づくyearとsourceを取得",
                     }
                 }
+            },
+        },
+        "/bureaus": {
+            "get": {
+                tags: ["bureau"],
+                "description": "bureauの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "bureauの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["bureau"],
+                "description": "bureauの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたbureauが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                ],
+            },
+        },
+        "/bureaus/{id}": {
+            "get": {
+                tags: ["bureau"],
+                "description": "IDで指定されたbureauの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "bureauの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["bureau"],
+                "description": "bureauの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたbureauが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["bureau"],
+                "description": "IDを指定してbureauの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "bureauの削除完了",
+                    }
+                },
+            },
+        },
+        "/departments": {
+            "get": {
+                tags: ["department"],
+                "description": "departmentの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "departmentの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["department"],
+                "description": "departmentの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたdepartmentが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/departments/{id}": {
+            "get": {
+                tags: ["department"],
+                "description": "IDで指定されたdepartmentの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "departmentの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["department"],
+                "description": "departmentの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたdepartmentが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["department"],
+                "description": "IDを指定してdepartmentの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "departmentの削除完了",
+                    }
+                },
+            },
+        },
+        "/fund_informations": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "fund_informationの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "fund_informationの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["fund_information"],
+                "description": "fund_informationの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたfund_informationが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "teacher_id",
+                        "in": "query",
+                        "description": "teacher_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_first_check",
+                        "in": "query",
+                        "description": "is_first_check",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "is_last_check",
+                        "in": "query",
+                        "description": "is_last_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+        },
+        "/fund_informations/details": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "fund_informationに紐づくteacherとuserの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "fund_informationに紐づくteacherとuserの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/fund_informations/{id}": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "IDで指定されたfund_informationの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "fund_informationの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["fund_information"],
+                "description": "fund_informationの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたfund_informationが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "teacher_id",
+                        "in": "query",
+                        "description": "teacher_id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_first_check",
+                        "in": "query",
+                        "description": "is_first_check",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "is_last_check",
+                        "in": "query",
+                        "description": "is_last_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["fund_information"],
+                "description": "IDを指定してfund_informationの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "fund_informationの削除完了",
+                    }
+                },
+            },
+        },
+        "/fund_informations/{id}/details": {
+            "get": {
+                tags: ["fund_information"],
+                "description": "IDで指定されたfund_informatinに紐づくteacherとuserを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "fund_informatinに紐づくteacherとuserを取得",
+                    }
+                }
+            },
+        },
+        "/purchaseitems": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_itemの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたpurchase_itemが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "query",
+                        "description": "item",
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "description": "quantity",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "detail",
+                        "in": "query",
+                        "description": "detail",
+                        "type": "string"
+                    },
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "url",
+                        "type": "string"
+                    },
+                    {
+                        "name": "purchase_order_id",
+                        "in": "query",
+                        "description": "purchase_order_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+        },
+        "/purchaseitems/details": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemに紐づくuserとpurchase_orderの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_itemに紐づくuserとpurchase_orderの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/purchaseitems/{id}": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "IDで指定されたpurchase_itemの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "purchase_itemの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたpurchase_itemが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "item",
+                        "in": "query",
+                        "description": "item",
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "description": "quantity",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "detail",
+                        "in": "query",
+                        "description": "detail",
+                        "type": "string"
+                    },
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "url",
+                        "type": "string"
+                    },
+                    {
+                        "name": "purchase_order_id",
+                        "in": "query",
+                        "description": "purchase_order_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["purchase_item"],
+                "description": "IDを指定してpurchase_itemの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "purchase_itemの削除完了",
+                    }
+                },
+            },
+        },
+        "/purchaseitems/{id}/details": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "IDで指定されたpurchase_itemに紐づくuserとpurchase_orderを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたpurchase_itemに紐づくuserとpurchase_orderを取得",
+                    }
+                }
+            },
+        },
+        "/purchaseorders": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "purchase_orderの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_orderの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["purchase_order"],
+                "description": "purchase_orderの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたpurchase_orderが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "deadline",
+                        "in": "query",
+                        "description": "deadline",
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+        },
+        "/purchaseorders/details": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "purchaseorderに紐づくuserとitemの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_orderに紐づくuserとpurchase_itemの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/purchaseorders/{id}": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "IDで指定されたpurchase_orderの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "purchase_orderの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["purchase_order"],
+                "description": "purchase_orderの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたpurchase_orderが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "deadline",
+                        "in": "query",
+                        "description": "deadline",
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["purchase_order"],
+                "description": "IDを指定してpurchase_orderの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "purchase_orderの削除完了",
+                    }
+                },
+            },
+        },
+        "/purchaseorders/{id}/details": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
+                    }
+                }
+            },
+        },
+        "/sources": {
+            "get": {
+                tags: ["source"],
+                "description": "sourceの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "sourceの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["source"],
+                "description": "sourceの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたsourceが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/sources/{id}": {
+            "get": {
+                tags: ["source"],
+                "description": "IDで指定されたsourceの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "sourceの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["source"],
+                "description": "sourceの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたsourceが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["source"],
+                "description": "IDを指定してsourceの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "sourceの削除完了",
+                    }
+                },
+            },
+        },
+        "/sponsors": {
+            "get": {
+                tags: ["sponsor"],
+                "description": "sponsorの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "sponsorsの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["sponsor"],
+                "description": "sponsorの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたsponsorが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "tel",
+                        "in": "query",
+                        "description": "tel",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "address",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "representative",
+                        "in": "query",
+                        "description": "representative",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/sponsors/{id}": {
+            "get": {
+                tags: ["sponsor"],
+                "description": "IDで指定されたsponsorの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "sponsorの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["sponsor"],
+                "description": "sponsorの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたsponsorが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "tel",
+                        "in": "query",
+                        "description": "tel",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "address",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "representative",
+                        "in": "query",
+                        "description": "representative",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["sponsor"],
+                "description": "IDを指定してsponsorの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "sponsorの削除完了",
+                    }
+                },
+            },
+        },
+        "/teachers": {
+            "get": {
+                tags: ["teacher"],
+                "description": "teacherの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "teacherの一覧を取得",
+                        "schema": {
+                            "type": "array",
+                        }
+                    }
+                }
+            },
+            "post": {
+                tags: ["teacher"],
+                "description": "teacherの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたteacherが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "名前",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "position",
+                        "in": "query",
+                        "description": "役職",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "department_id",
+                        "in": "query",
+                        "description": "学科ID",
+                        "type": "integer",
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "description": "部屋番号",
+                        "type": "string",
+                    },
+                    {
+                        "name": "is_black",
+                        "in": "query",
+                        "description": "ブラックリストの真偽",
+                        "type": "boolean",
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "備考",
+                        "type": "string",
+                    },
+                ],
+            },
+        },
+        "/teachers/{id}": {
+            "get": {
+                tags: ["teacher"],
+                "description": "IDで指定されたteacherの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "teacherの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["teacher"],
+                "description": "teacherの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたteacherが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Teacherのid",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "教員の名前",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "position",
+                        "in": "query",
+                        "description": "教員の役職",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "department_id",
+                        "in": "query",
+                        "description": "学科ID",
+                        "type": "integer",
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "description": "部屋番号",
+                        "type": "string",
+                    },
+                    {
+                        "name": "is_black",
+                        "in": "query",
+                        "description": "ブラックリストに入っているか",
+                        "type": "boolean",
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "備考欄",
+                        "type": "string",
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["teacher"],
+                "description": "IDを指定してteacherの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "teacherの削除完了",
+                    }
+                },
+            },
+        },
+        "/users": {
+            "get": {
+                tags: ["user"],
+                "description": "userの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "userの一覧を取得",
+                        "schema": {
+                            "type": "array",
+                        }
+                    }
+                }
+            },
+            "post": {
+                tags: ["user"],
+                "description": "userの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたuserが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "bureau_id",
+                        "in": "query",
+                        "description": "bureau_d",
+                        "type": "integer",
+                        "required": true
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "description": "role_id",
+                        "type": "integer",
+                        "required": true,
+                    },
+                ],
+            },
+        },
+        "/users/{id}": {
+            "get": {
+                tags: ["user"],
+                "description": "IDで指定されたuserの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "userの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["user"],
+                "description": "userの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたuserが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "userのid",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "bureau_id",
+                        "in": "query",
+                        "description": "bureau_d",
+                        "type": "integer",
+                        "required": true
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "description": "role_id",
+                        "type": "integer",
+                        "required": true,
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["user"],
+                "description": "IDを指定してuserの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "userの削除完了",
+                    }
+                },
+            },
+        },
+        "/years": {
+            "get": {
+                tags: ["year"],
+                "description": "yearの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "yearの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["year"],
+                "description": "yearの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたyearが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+            },
+        },
+        "/years/{id}": {
+            "get": {
+                tags: ["year"],
+                "description": "IDで指定されたyearの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "yearの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["year"],
+                "description": "yearの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたyearが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["year"],
+                "description": "IDを指定してyearの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "yearの削除完了",
+                    }
+                },
             },
         },
     }

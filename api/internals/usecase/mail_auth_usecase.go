@@ -3,11 +3,12 @@ package usecase
 import (
 	"context"
 	"crypto/rand"
+	"strconv"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
-	"strconv"
 )
 
 type mailAuthUseCase struct {
@@ -58,6 +59,7 @@ func (u *mailAuthUseCase) SignIn(c context.Context, email string, password strin
 		&mailAuth.CreatedAt,
 		&mailAuth.UpdatedAt,
 	)
+	u.sessionRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID)))
 	// パスワードがあっているか確認
 	err = bcrypt.CompareHashAndPassword([]byte(mailAuth.Password), []byte(password))
 	if err != nil {
