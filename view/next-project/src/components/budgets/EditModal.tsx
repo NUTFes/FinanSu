@@ -22,6 +22,7 @@ import { get, put } from '@api/budget';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { Budget, Source, Year } from '@type/common';
+import { SOURCES } from '@/constants/sources';
 
 interface BudgetProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -125,7 +126,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
                       value={formData.sourceID}
                       onChange={handler('sourceID')}
                     >
-                      {props.sources.map((source) => (
+                      {SOURCES.map((source) => (
                         <option key={source.id} value={source.id}>
                           {source.name}
                         </option>
