@@ -16,6 +16,7 @@ type SessionRepository interface {
 	Create(context.Context, string, string, string) error
 	Destroy(context.Context, string) error
 	FindSessionByAccessToken(context.Context, string) *sql.Row
+	DestroyByUserID(context.Context, string) error
 }
 
 func NewSessionRepository(client db.Client) SessionRepository {
@@ -51,4 +52,15 @@ func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessTo
 	row := r.client.DB().QueryRowContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return row
+}
+
+// user_idからsessionを削除する
+func (r *sessionRepository) DestroyByUserID(c context.Context, userID string) error {
+	query := "delete from session where user_id = " + userID
+	_, err := r.client.DB().ExecContext(c, query)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("\x1b[36m%s\n", query)
+	return nil
 }

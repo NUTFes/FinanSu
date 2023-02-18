@@ -9,8 +9,8 @@ import (
 )
 
 type sponsorRepository struct {
-	client   db.Client
-	abstract abstract.Crud
+	client db.Client
+	crud   abstract.Crud
 }
 
 type SponsorRepository interface {
@@ -19,6 +19,7 @@ type SponsorRepository interface {
 	Create(context.Context, string, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
+	FindLatestRecord(context.Context) (*sql.Row, error)
 }
 
 func NewSponsorRepository(c db.Client, ac abstract.Crud) SponsorRepository {
@@ -27,14 +28,14 @@ func NewSponsorRepository(c db.Client, ac abstract.Crud) SponsorRepository {
 
 // 全件取得
 func (sr *sponsorRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from sponsors"
-	return sr.abstract.Read(c, query)
+	query := "SELECT * FROM sponsors"
+	return sr.crud.Read(c, query)
 }
 
 // 1件取得
 func (sr *sponsorRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from sponsors where id = " + id
-	return sr.abstract.ReadByID(c, query)
+	query := "SELECT * FROM sponsors WHERE id = " + id
+	return sr.crud.ReadByID(c, query)
 }
 
 // 作成
@@ -46,8 +47,11 @@ func (sr *sponsorRepository) Create(
 	address string,
 	representative string,
 ) error {
-	var query = "insert into sponsors (name, tel, email, address, representative) values ('" + name + "','" + tel + "','" + email + "','" + address + "','" + representative + "')"
-	return sr.abstract.UpdateDB(c, query)
+	query := `
+		INSERT  INTO
+			sponsors (name, tel, email, address, representative)
+		VALUES ('` + name + "','" + tel + "','" + email + "','" + address + "','" + representative + "')"
+	return sr.crud.UpdateDB(c, query)
 }
 
 // 編集
@@ -60,8 +64,17 @@ func (sr *sponsorRepository) Update(
 	address string,
 	representative string,
 ) error {
-	var query = "update sponsors set name = '" + name + "', tel='" + tel + "', email = '" + email + "', address = '" + address + "', representative = '" + representative + "' where id = " + id
-	return sr.abstract.UpdateDB(c, query)
+	query := `
+		UPDATE
+			sponsors
+		SET
+			name = '` + name +
+		"', tel='" + tel +
+		"', email = '" + email +
+		"', address = '" + address +
+		"', representative = '" + representative +
+		"' WHERE id = " + id
+	return sr.crud.UpdateDB(c, query)
 }
 
 // 削除
@@ -69,7 +82,13 @@ func (sr *sponsorRepository) Delete(
 	c context.Context,
 	id string,
 ) error {
-	query := "Delete from sponsors where id =" + id
-	return sr.abstract.UpdateDB(c, query)
+	query := "DELETE FROM sponsors WHERE id =" + id
+	return sr.crud.UpdateDB(c, query)
 
+}
+
+// 最新のsponcerを取得する
+func (sr *sponsorRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `SELECT * FROM sponsors ORDER BY id DESC LIMIT 1`
+	return sr.crud.ReadByID(c, query)
 }
