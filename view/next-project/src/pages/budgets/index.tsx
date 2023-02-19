@@ -100,22 +100,22 @@ export default function BudgetList(props: Props) {
                     'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
                   )}
                 >
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>項目</div>
                   </th>
-                  <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>年度</div>
                   </th>
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>金額</div>
                   </th>
-                  <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>作成日時</div>
                   </th>
-                  <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>更新日時</div>
                   </th>
-                  <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}></div>
                   </th>
                 </tr>
@@ -148,7 +148,7 @@ export default function BudgetList(props: Props) {
                     <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
                       {formatDate(budgetItem.updatedAt ? budgetItem.updatedAt : '')}
                     </td>
-                    <td className={clsx('content-center py-3 pt-4 pb-3 text-black-600')}>
+                    <td className={clsx('content-center p-3 text-black-600')}>
                       <div className={clsx('flex text-center')}>
                         <div className={clsx('flex-auto')}>
                           <OpenEditModalButton
