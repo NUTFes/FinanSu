@@ -1,10 +1,9 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { RiAddCircleLine } from 'react-icons/ri';
+import OpenAddModalButton from '@components/sponsers/OpenAddModalButton';
 
 import { Card, Title } from '@components/common';
 import EditButton from '@components/common/EditButton';
-import RegistButton from '@components/common/RegistButton';
 import MainLayout from '@components/layout/MainLayout';
 
 import type { NextPage } from 'next';
@@ -36,10 +35,7 @@ const sponsorship: NextPage = () => {
             </select>
           </div>
           <div className={clsx('flex justify-end')}>
-            <RegistButton>
-              <RiAddCircleLine size={20} style={{ marginRight: 5 }} />
-              企業登録
-            </RegistButton>
+            <OpenAddModalButton>企業登録</OpenAddModalButton>
           </div>
         </div>
         <div className={clsx('mb-2 p-5')}>
