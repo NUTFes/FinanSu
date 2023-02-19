@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import { post } from '@api/purchaseItem';
+import { post } from '@api/sponser';
 import { PrimaryButton, CloseButton, Input, Modal } from '@components/common';
 import { Sponser } from '@type/common';
 import { useUI } from '@components/ui/context';
@@ -25,15 +25,13 @@ export default function AddModal() {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  // const addPurchaseItem = async (data: Sponser[]) => {
-  //   const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
-  //   data.map(async (item) => {
-  //     await post(addPurchaseItemUrl, item);
-  //   });
-  // };
+  const addPurchaseItem = async (data: Sponser) => {
+    const addPurchaseItemUrl = process.env.CSR_API_URI + '/sponsers';
+    await post(addPurchaseItemUrl, data);
+  };
 
   const submit = async (formData: Sponser) => {
-    // addPurchaseItem(formData);
+    addPurchaseItem(formData);
     router.reload();
   };
 
