@@ -22,7 +22,7 @@ const sponsorship: NextPage = () => {
   ];
   return (
     <MainLayout>
-    <Head>
+      <Head>
         <title>企業一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
@@ -30,18 +30,18 @@ const sponsorship: NextPage = () => {
         <div className={clsx('mx-5 mt-10')}>
           <div className={clsx('flex')}>
             <Title title={'企業一覧'} />
-              <select className={clsx('w-100')}>
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-              </select>
-            </div>
-            <div className={clsx('flex justify-end')}>
-              <RegistButton>
-                <RiAddCircleLine size={20} style={{ marginRight: 5 }} />
-                企業登録
-              </RegistButton>
-            </div>
+            <select className={clsx('w-100')}>
+              <option value='2021'>2021</option>
+              <option value='2022'>2022</option>
+            </select>
           </div>
+          <div className={clsx('flex justify-end')}>
+            <RegistButton>
+              <RiAddCircleLine size={20} style={{ marginRight: 5 }} />
+              企業登録
+            </RegistButton>
+          </div>
+        </div>
         <div className={clsx('mb-2 p-5')}>
           <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
             <thead>
