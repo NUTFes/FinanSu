@@ -20,7 +20,7 @@ interface Props {
 }
 export async function getServerSideProps() {
   const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
-  const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/get_purchaseorders_for_view';
+  const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
   const purchaseOrderRes = await get(getPurchaseOrderUrl);
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   return {

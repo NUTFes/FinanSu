@@ -10,7 +10,6 @@ import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import { Budget, Source, Year } from '@type/common';
 
-
 interface Props {
   budgets: Budget[];
   sources: Source[];
@@ -61,6 +60,12 @@ export default function BudgetList(props: Props) {
     totalFee += props.budgets[i].price;
   }
 
+  const formatDate = (date: string) => {
+    const datetime = date.replace('T', ' ');
+    const datetime2 = datetime.substring(10, datetime.length - 20);
+    return datetime2;
+  };
+
   return (
     <MainLayout>
       <Head>
@@ -95,46 +100,53 @@ export default function BudgetList(props: Props) {
                     'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
                   )}
                 >
-                  <th className={clsx('w-1/12 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>ID</div>
-                  </th>
                   <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>項目</div>
                   </th>
                   <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>年度</div>
                   </th>
-                  <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>金額</div>
                   </th>
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}></div>
-                  </th>
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>作成日時</div>
                   </th>
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>更新日時</div>
                   </th>
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>最終更新者</div>
+                  <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                    <div className={clsx('text-center text-sm text-black-600')}></div>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {props.budgets.map((budgetItem, index) => (
                   <tr key={budgetItem.id}>
-                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                      {budgetItem.id}
-                    </td>
-                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                      {budgetItem.sourceID}
-                    </td>
-                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                      {budgetItem.yearID}
-                    </td>
+                    {props.sources.map((sourceItem) => (
+                      <td
+                        key={sourceItem.id}
+                        className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}
+                      >
+                        {sourceItem.name}
+                      </td>
+                    ))}
+                    {props.years.map((yearItem) => (
+                      <td
+                        key={yearItem.id}
+                        className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}
+                      >
+                        {yearItem.year}
+                      </td>
+                    ))}
                     <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
                       {budgetItem.price}
+                    </td>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                      {formatDate(budgetItem.createdAt ? budgetItem.createdAt : '')}
+                    </td>
+                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                      {formatDate(budgetItem.updatedAt ? budgetItem.updatedAt : '')}
                     </td>
                     <td className={clsx('content-center py-3 pt-4 pb-3 text-black-600')}>
                       <div className={clsx('flex text-center')}>
@@ -150,12 +162,6 @@ export default function BudgetList(props: Props) {
                         </div>
                       </div>
                     </td>
-                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                      {budgetItem.createdAt}
-                    </td>
-                    <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                      {budgetItem.updatedAt}
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -164,9 +170,9 @@ export default function BudgetList(props: Props) {
               >
                 <tr>
                   <th />
-                  <th />
                   <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>合計金額</th>
                   <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>{totalFee}</th>
+                  <th />
                 </tr>
               </tfoot>
             </table>

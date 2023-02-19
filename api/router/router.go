@@ -83,8 +83,6 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/users", r.userController.CreateUser)
 	e.PUT("/users/:id", r.userController.UpdateUser)
 	e.DELETE("/users/:id", r.userController.DestroyUser)
-	e.POST("/get_post_users_record", r.userController.ShowPostUser)
-	e.PUT("/get_put_users_record/:id", r.userController.ShowPutUser)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
@@ -136,10 +134,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
 	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
-	e.GET("/get_purchaseorders_for_view", r.purchaseOrderController.IndexOrderWithUserItem)
-	e.GET("/get_purchaseorders_for_view/:id", r.purchaseOrderController.ShowOrderWithUserItem)
-	e.POST("/get_post_purchaseorder_record", r.purchaseOrderController.ShowNewPurchaseOrder)
-	e.PUT("/get_put_purchaseorder_record/:id", r.purchaseOrderController.ShowEditPurchaseOrder)
+	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)
+	e.GET("/purchaseorders/:id/details", r.purchaseOrderController.ShowOrderDetail)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
@@ -160,8 +156,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
-	e.GET("/get_purchaseitems_for_view", r.purchaseItemController.IndexPurchaseItemWithPurchaseOrder)
-	e.GET("/get_purchaseitems_for_view/:id", r.purchaseItemController.ShowPurchaseItemWithPurchaseOrder)
+	e.GET("/purchaseitems/details", r.purchaseItemController.IndexPurchaseItemDetails)
+	e.GET("/purchaseitems/:id/details", r.purchaseItemController.ShowPurchaseItemDetails)
 
 	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
