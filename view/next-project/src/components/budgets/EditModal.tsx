@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
+import { SOURCES } from '@/constants/sources';
 import { get, put } from '@api/budget';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
@@ -125,7 +126,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
                       value={formData.sourceID}
                       onChange={handler('sourceID')}
                     >
-                      {props.sources.map((source) => (
+                      {SOURCES.map((source) => (
                         <option key={source.id} value={source.id}>
                           {source.name}
                         </option>
