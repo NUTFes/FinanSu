@@ -10,7 +10,7 @@ import MainLayout from '@components/layout/MainLayout';
 import type { NextPage } from 'next';
 
 const sponsorship: NextPage = () => {
-  const sponsorshipList = [
+  const sponsershipList = [
     {
       id: 1,
       name: '海龍',
@@ -69,30 +69,66 @@ const sponsorship: NextPage = () => {
               </tr>
             </thead>
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
-              {sponsorshipList.map((sponsorshipItem) => (
+              {sponsershipList.map((sponsorshipItem, index) => (
                 <tr key={sponsorshipItem.id}>
-                  <td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
                     <div className={clsx('text-center text-black-300')}>{sponsorshipItem.name}</div>
                   </td>
-                  <td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
                     <div className={clsx('text-center text-black-300')}>{sponsorshipItem.tel}</div>
                   </td>
-                  <td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
                     <div className={clsx('text-center text-black-300')}>
                       {sponsorshipItem.email}
                     </div>
                   </td>
-                  <td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
                     <div className={clsx('text-center text-black-300')}>
                       {sponsorshipItem.address}
                     </div>
                   </td>{' '}
-                  <td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
                     <div className={clsx('text-center text-black-300')}>
                       {sponsorshipItem.representative}
                     </div>
                   </td>
-                  <td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
                     <div className={clsx('text-center')}>
                       <EditButton />
                     </div>
