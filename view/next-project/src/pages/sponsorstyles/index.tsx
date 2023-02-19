@@ -15,7 +15,7 @@ import {
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
-import { get } from '@api/sponsorship';
+import { get } from '@/utils/api/api_methods';
 import theme from '@assets/theme';
 import EditButton from '@components/common/EditButton';
 import Header from '@components/common/Header';
