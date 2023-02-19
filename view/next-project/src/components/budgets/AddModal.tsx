@@ -20,6 +20,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
+import { SOURCES } from '@/constants/sources';
 import { post } from '@api/budget';
 import theme from '@assets/theme';
 import { PrimaryButton } from '@components/common';
@@ -116,7 +117,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
                       value={formData.sourceID}
                       onChange={handler('sourceID')}
                     >
-                      {props.sources.map((source) => (
+                      {SOURCES.map((source) => (
                         <option key={source.id} value={source.id}>
                           {source.name}
                         </option>
