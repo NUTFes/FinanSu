@@ -16,8 +16,6 @@ const sponsorship: NextPage = () => {
       email: 'kairyu@gmail.com',
       address: '新潟県長岡市上富岡町2丁目280-1',
       representative: '長岡太郎',
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
     },
   ];
   return (
@@ -26,7 +24,7 @@ const sponsorship: NextPage = () => {
         <title>企業一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-      <Card>
+      <Card w='w-1/1'>
         <div className={clsx('mx-5 mt-10')}>
           <div className={clsx('flex')}>
             <Title title={'企業一覧'} />
@@ -45,33 +43,21 @@ const sponsorship: NextPage = () => {
         <div className={clsx('mb-2 p-5')}>
           <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
             <thead>
-              <tr
-                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
-              >
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>ID</div>
-                </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+              <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
+                <th className={clsx('w-1/8 border-b-primary-1 pb-2')}>
                   <div className={clsx('mr-1 text-center text-sm text-black-600')}>企業名</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                <th className={clsx('w-1/8 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>電話番号</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-right text-sm text-black-600')}>メール</div>
+                <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>メール</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center')}>住所</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                <th className={clsx('w-1/8 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-black-600')}>代表者</div>
-                </th>
-
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-black-600')}>作成日時</div>
-                </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-black-600')}>更新日時</div>
                 </th>
                 <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-black-600')}></div>
@@ -82,16 +68,13 @@ const sponsorship: NextPage = () => {
               {sponsorshipList.map((sponsorshipItem) => (
                 <tr key={sponsorshipItem.id}>
                   <td>
-                    <div className={clsx('text-center text-black-300')}>{sponsorshipItem.id}</div>
-                  </td>
-                  <td>
                     <div className={clsx('text-center text-black-300')}>{sponsorshipItem.name}</div>
                   </td>
                   <td>
                     <div className={clsx('text-center text-black-300')}>{sponsorshipItem.tel}</div>
                   </td>
                   <td>
-                    <div className={clsx('text-right text-black-300')}>{sponsorshipItem.email}</div>
+                    <div className={clsx('text-center text-black-300')}>{sponsorshipItem.email}</div>
                   </td>
                   <td>
                     <div className={clsx('text-center text-black-300')}>
@@ -101,16 +84,6 @@ const sponsorship: NextPage = () => {
                   <td>
                     <div className={clsx('text-center text-black-300')}>
                       {sponsorshipItem.representative}
-                    </div>
-                  </td>
-                  <td>
-                    <div className={clsx('text-center text-black-300')}>
-                      {sponsorshipItem.updated_at}
-                    </div>
-                  </td>
-                  <td>
-                    <div className={clsx('text-center text-black-300')}>
-                      {sponsorshipItem.created_at}
                     </div>
                   </td>
                   <td>
