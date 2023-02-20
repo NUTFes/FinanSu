@@ -1270,7 +1270,7 @@ const docTemplate = `{
                     {
                         "name": "price",
                         "in": "query",
-                        "description": "email",
+                        "description": "広告値段",
                         "type": "integer"
                     },
                 ],
@@ -1327,7 +1327,7 @@ const docTemplate = `{
                     {
                         "name": "price",
                         "in": "query",
-                        "description": "email",
+                        "description": "広告値段",
                         "type": "integer"
                     },
                 ],
