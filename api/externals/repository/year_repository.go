@@ -10,7 +10,7 @@ import (
 
 type yearRepository struct {
 	client   db.Client
-	abstract abstract.Crud
+	crud abstract.Crud
 }
 
 type YearRepository interface {
@@ -28,30 +28,30 @@ func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
 
 func (y *yearRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "SELECT * FROM years"
-	return y.abstract.Read(c, query)
+	return y.crud.Read(c, query)
 }
 
 func (y *yearRepository) Find(c context.Context, id string) (*sql.Row, error) {
 	query := "SELECT * FROM years WHERE id = " + id
-	return y.abstract.ReadByID(c, query)
+	return y.crud.ReadByID(c, query)
 }
 
 func (y *yearRepository) Create(c context.Context, year string) error {
 	query := `INSERT INTO years (year) VALUES (` + year + ")"
-	return y.abstract.UpdateDB(c, query)
+	return y.crud.UpdateDB(c, query)
 }
 
 func (y *yearRepository) Update(c context.Context, id string, year string) error {
 	query := `UPDATE years SET year =` + year + " WHERE id = " + id
-	return y.abstract.UpdateDB(c, query)
+	return y.crud.UpdateDB(c, query)
 }
 
 func (y *yearRepository) Destroy(c context.Context, id string) error {
 	query := "DELETE FROM years WHERE id = " + id
-	return y.abstract.UpdateDB(c, query)
+	return y.crud.UpdateDB(c, query)
 }
 
 func (y *yearRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
 	query := `SELECT * FROM years ORDER BY id DESC LIMIT 1`
-	return y.abstract.ReadByID(c, query)
+	return y.crud.ReadByID(c, query)
 }
