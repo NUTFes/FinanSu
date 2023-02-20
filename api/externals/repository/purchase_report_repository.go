@@ -21,7 +21,7 @@ type PurchaseReportRepository interface {
 	Delete(context.Context, string) error
 	AllDetails(context.Context) (*sql.Rows, error)
 	FindDetail(context.Context, string) (*sql.Row, error)
-	GetItemInfo(context.Context, string) (*sql.Rows, error)
+	AllItemInfo(context.Context, string) (*sql.Rows, error)
 	FindNewRecord(context.Context) (*sql.Row, error)
 }
 
@@ -146,7 +146,7 @@ func (ppr *purchaseReportRepository) FindDetail(c context.Context, id string) (*
 }
 
 // purchase_order_idに紐づいたpuchase_itemの取得
-func (ppr *purchaseReportRepository) GetItemInfo(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
+func (ppr *purchaseReportRepository) AllItemInfo(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
 	query := "SELECT * FROM purchase_items WHERE purchase_order_id = " + purchaseOrderID
 	return ppr.crud.Read(c, query)
 }

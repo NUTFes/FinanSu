@@ -187,7 +187,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]d
 		if err != nil {
 			return nil, err
 		}
-		rows, err := p.rep.GetItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
+		rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,
@@ -251,7 +251,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 	if err != nil {
 		return purchaseReportDetail, err
 	}
-	rows, err := p.rep.GetItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
+	rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
 	for rows.Next() {
 		err := rows.Scan(
 			&purchaseItem.ID,

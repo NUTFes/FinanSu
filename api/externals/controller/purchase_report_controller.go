@@ -85,7 +85,6 @@ func (p *purchaseReportController) DestroyPurchaseReport(c echo.Context) error{
 	return c.String(http.StatusOK, "Destory PurchaseReport")
 }
 
-//IndexPurchaseReportWithOrderItem
 func (p *purchaseReportController) IndexPurchaseReportDetails(c echo.Context) error{
 	purchaseReportDetails, err :=p.u.GetPurchaseReportDetails(c.Request().Context())
 	if err != nil {
@@ -94,7 +93,6 @@ func (p *purchaseReportController) IndexPurchaseReportDetails(c echo.Context) er
 	return c.JSON(http.StatusOK, purchaseReportDetails)
 }
 
-//ShowPurchaseReportWithOrderItem
 func (p *purchaseReportController) ShowPurchaseReportDetail(c echo.Context) error {
 	id := c.Param("id")
 	purchaseReportDetail, err := p.u.GetPurchaseReportDetailByID(c.Request().Context(), id)
