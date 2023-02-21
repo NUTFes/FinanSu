@@ -1428,6 +1428,122 @@ const docTemplate = `{
                 },
             },
         },
+        "/sponsorstyles": {
+            "get": {
+                tags: ["sponsorstyle"],
+                "description": "sponsorstyleの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "sponsorstyleの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["sponsorstyle"],
+                "description": "sponsorstyleの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたsponsorstyleが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "scale",
+                        "in": "query",
+                        "description": "scale",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_color",
+                        "in": "query",
+                        "description": "is_color",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "広告値段",
+                        "type": "integer"
+                    },
+                ],
+            },
+        },
+        "/sponsorstyles/{id}": {
+            "get": {
+                tags: ["sponsorstyle"],
+                "description": "IDで指定されたsponsorstyleの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "sponsorstyleの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["sponsorstyle"],
+                "description": "sponsorstyleの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたsponsorstyleが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "scale",
+                        "in": "query",
+                        "description": "scale",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_color",
+                        "in": "query",
+                        "description": "is_color",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "広告値段",
+                        "type": "integer"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["sponsorstyle"],
+                "description": "IDを指定してsponsorstyleの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "sponsorstyleの削除完了",
+                    }
+                },
+            },
+        },
         "/teachers": {
             "get": {
                 tags: ["teacher"],
