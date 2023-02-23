@@ -1,7 +1,6 @@
 import {
   Box,
   Center,
-  ChakraProvider,
   Flex,
   Select,
   Spacer,
@@ -15,12 +14,10 @@ import {
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
-import { get } from '@api/sponsorship';
-import theme from '@assets/theme';
-import EditButton from '@components/common/EditButton';
-import Header from '@components/common/Header';
-import RegistButton from '@components/common/RegistButton';
 import MainLayout from '@/components/layout/MainLayout';
+import { get } from '@api/sponsorship';
+import EditButton from '@components/common/EditButton';
+import RegistButton from '@components/common/RegistButton';
 
 interface SponsorStyle {
   id: number;
