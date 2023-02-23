@@ -103,7 +103,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // purchase_orderに紐づくpurchase_itemsを取得
   const getPurchaseItems = useCallback(async () => {
     const getPurchaseOrderViewURL =
-      process.env.CSR_API_URI + '/purchaseorders/' + props.purchaseOrderId + 'details';
+      process.env.CSR_API_URI + '/purchaseorders/' + props.purchaseOrderId + '/details';
 
     const purchaseOrderViewRes: PurchaseOrderView = await get(getPurchaseOrderViewURL);
     const initFormDataList = [];
@@ -168,7 +168,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
 
   // 購入報告の追加
   const addPurchaseReport = async () => {
-    const purchaseReportUrl = process.env.CSR_API_URI + '/get_post_purchasereports_record';
+    const purchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
     const postRes = await post(purchaseReportUrl, formData);
     setPurchaseReportId(postRes.id);
   };
