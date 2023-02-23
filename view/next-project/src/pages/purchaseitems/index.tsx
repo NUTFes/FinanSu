@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import {
   Box,
   Button,
@@ -58,6 +59,10 @@ export default function PurchaseItems(props: Props) {
   return (
     <>
       <MainLayout>
+      <Head>
+        <title>協賛物品一覧</title>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      </Head>
         <Flex justify='center' align='center'>
           <Center>
             <Box m='10' px='10' boxShadow='base' rounded='lg'>
