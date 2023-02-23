@@ -71,7 +71,7 @@ export default function PurchaseItemNumModal() {
 
   // 購入申請の登録と登録した購入申請のIDを使って購入物品を更新
   const submit = async (data: PurchaseOrder) => {
-    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
+    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     const postRes: PurchaseOrder = await post(addPurchaseOrderUrl, data);
     const purchaseOrderId = postRes.id;
     const initialPurchaseItemList = [];
