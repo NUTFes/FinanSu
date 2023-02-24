@@ -50,8 +50,9 @@ func (p *purchaseReportController) CreatePurchaseReport(c echo.Context)error{
 	addition :=c.QueryParam("addition")
 	financeCheck :=c.QueryParam("finance_check") 
 	purchaseOrderID := c.QueryParam("purchase_order_id")
+	expenseID := c.QueryParam("expense_id")
 	remark :=c.QueryParam("remark")
-	latastPurchaseReport, err := p.u.CreatePurchaseReport(c.Request().Context(),userID, discount,addition,financeCheck,purchaseOrderID,remark)
+	latastPurchaseReport, err := p.u.CreatePurchaseReport(c.Request().Context(),userID, discount,addition,financeCheck,purchaseOrderID,expenseID,remark)
 	if err != nil {
 		return err
 	}
@@ -66,9 +67,10 @@ func (p *purchaseReportController) UpdatePurchaseReport(c echo.Context) error{
 	addition :=c.QueryParam("addition")
 	financeCheck :=c.QueryParam("finance_check") 
 	purchaseOrderID := c.QueryParam("purchase_order_id")
+	expenseID := c.QueryParam("expense_id")
 	remark :=c.QueryParam("remark")
 	
-	updatedPurchaseReport, err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, discount, addition, financeCheck ,purchaseOrderID ,remark)
+	updatedPurchaseReport, err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, discount, addition, financeCheck ,purchaseOrderID ,expenseID ,remark)
 	if err != nil {
 		return err
 	}
