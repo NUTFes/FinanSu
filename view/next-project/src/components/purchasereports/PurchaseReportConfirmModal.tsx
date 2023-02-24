@@ -44,13 +44,12 @@ export default function PurchaseItemNumModal(props: ModalProps) {
         ]);
       }
     });
-    console.log('reportedPurchaseItems', reportedPurchaseItems);
-  }, [
-    props.formDataList,
-    setReportedPurchaseItems,
-    setNotReportedPurchaseItems,
-    reportedPurchaseItems,
-  ]);
+  }, [props.formDataList, setReportedPurchaseItems, setNotReportedPurchaseItems]);
+
+  useEffect(() => {
+    console.log(reportedPurchaseItems);
+    console.log(notReportedPurchaseItems);
+  }, [reportedPurchaseItems, notReportedPurchaseItems]);
 
   useEffect(() => {
     if (router.isReady) {

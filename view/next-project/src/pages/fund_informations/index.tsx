@@ -316,7 +316,6 @@ export default function FundInformations(props: Props) {
         <title>募金一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-
       <Flex justify='center' align='center'>
         <Box m='10' px='10' boxShadow='base' rounded='lg'>
           <Box mt='10' mx='5'>

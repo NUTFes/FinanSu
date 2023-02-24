@@ -30,7 +30,7 @@ interface Props {
 
 export async function getServerSideProps() {
   const getPurchaseReportUrl = process.env.SSR_API_URI + '/purchasereports';
-  const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/get_purchasereports_for_view';
+  const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/purchasereports/details';
   const purchaseReportRes = await get(getPurchaseReportUrl);
   const purchaseReportViewRes = await get(getPurchaseReportViewUrl);
   return {

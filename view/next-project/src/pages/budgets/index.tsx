@@ -21,7 +21,7 @@ export async function getServerSideProps() {
   const getBudgetUrl = process.env.SSR_API_URI + '/budgets';
   const getSourceUrl = process.env.SSR_API_URI + '/sources';
   const getYearUrl = process.env.SSR_API_URI + '/years';
-  const getUrl = process.env.SSR_API_URI + '/budgetyearsources/1';
+  const getUrl = process.env.SSR_API_URI + 'budgets/1/details';
 
   const budgetRes = await get(getBudgetUrl);
   const sourceRes = await get(getSourceUrl);
