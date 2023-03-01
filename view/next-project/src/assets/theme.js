@@ -46,6 +46,12 @@ const theme = extendTheme({
       1: '#E4434E',
       2: '#FF5B6C',
     },
+    affairs: '#3CA249',
+    relation: '#4F6FAC',
+    information: '#F3B3BF',
+    finance: '#EB6100',
+    planning: '#603085',
+    production: '#BBB704',
   },
 });
 export default theme;
