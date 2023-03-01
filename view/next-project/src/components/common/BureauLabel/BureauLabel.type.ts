@@ -1,4 +1,3 @@
-
-export type BureauLabelProps = {
-  bureauID: Number;
+export interface BureauLabelProps {
+  bureauID: string;
 }
