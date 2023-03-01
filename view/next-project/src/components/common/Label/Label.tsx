@@ -1,11 +1,11 @@
-import clsx from 'clsx';
 import React, { useMemo } from 'react';
-
 import { LabelProps } from './Label.type';
+import { Box } from '@chakra-ui/react';
+import theme from '@/assets/theme';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const Label: React.FC<LabelProps> = (props) => {
   const {
-    className,
     children,
     color = 'primary-1',
     padding = 'default',
@@ -13,47 +13,67 @@ const Label: React.FC<LabelProps> = (props) => {
     isOutline = false,
     ...rest
   } = props;
-  const classes = useMemo(() => {
-    const colorClass = (() => {
-      if (isOutline) {
-        return `bg-transparent border border-${color} text-${color}`;
-      } else {
-        return `bg-${color} text-base-2`;
-      }
-    })();
-    const paddingClass = (() => {
-      switch (padding) {
-        case 'default':
-          return 'py-1 px-2';
-        case 'small':
-          return 'py-0.5 px-1';
-        case 'large':
-          return 'py-2 px-4';
-        case 'none':
-          return '';
-      }
-    })();
-    const cornerClass = (() => {
-      switch (corner) {
-        case 'round':
-          return 'rounded-full';
-        case 'square':
-          return 'rounded';
-      }
-    })();
-    console.log(color);
-    return clsx(
-      'flex items-center justify-center font-medium text-xs w-fit',
-      colorClass,
-      paddingClass,
-      cornerClass,
-      className,
-    );
-  }, [className, color, padding, corner, isOutline]);
+
+  const bgColor = useMemo(() => {
+    if (isOutline) {
+      return 'transparent';
+    }
+    return color;
+  }, [color, isOutline]);
+
+  const borderColor = useMemo(() => {
+    if (isOutline) {
+      return color;
+    }
+    return 'transparent';
+  }, [color, isOutline]);
+
+  const textColor = useMemo(() => {
+    if (isOutline) {
+      return color;
+    }
+    return 'white';
+  }, [color, isOutline]);
+
+  const paddingValue = useMemo(() => {
+    if (padding === 'default') {
+      return '1';
+    }
+    if (padding === 'small') {
+      return '0';
+    }
+    if (padding === 'large') {
+      return '2';
+    }
+    return padding;
+  }, [padding]);
+
+  const borderRadius = useMemo(() => {
+    if (corner === 'round') {
+      return 'full';
+    }
+    if (corner === 'square') {
+      return 'none';
+    }
+    return corner;
+  }, [corner]);
+
   return (
-    <div className={clsx(classes)} {...rest}>
-      {children}
-    </div>
+    <ChakraProvider theme={theme}>
+      <Box
+        as='span'
+        {...rest}
+        fontSize='small'
+        bgColor={bgColor}
+        border='1px'
+        borderColor={borderColor}
+        color={textColor}
+        padding={paddingValue}
+        borderRadius={borderRadius}
+      >
+        {children}
+      </Box>
+    </ChakraProvider>
   );
 };
 
