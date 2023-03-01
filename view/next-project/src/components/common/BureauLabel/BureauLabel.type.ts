@@ -1,3 +1,3 @@
 export interface BureauLabelProps {
-  bureauID: string;
+  bureauID: number;
 }
