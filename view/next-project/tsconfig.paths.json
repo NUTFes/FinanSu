@@ -10,7 +10,7 @@
       "@utils/*": ["src/utils/*"],
       "@pages/*": ["src/pages//*"],
       "@type/*": ["src/type/*"],
-      "@constants/*": ["src/constants/*"],
+      "@constants/*": ["src/constants/*"]
     }
   }
 }

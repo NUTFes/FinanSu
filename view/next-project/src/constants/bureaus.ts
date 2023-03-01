@@ -58,4 +58,4 @@ export const BUREAUS_WITH_EN = [
     name: '情報局',
     name_en: 'information',
   },
-]
+];

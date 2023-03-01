@@ -1,6 +1,7 @@
-import { LabelProps } from './Label.type';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
+
+import { LabelProps } from './Label.type';
 
 const Label: React.FC<LabelProps> = (props) => {
   const {
@@ -40,7 +41,7 @@ const Label: React.FC<LabelProps> = (props) => {
           return 'rounded';
       }
     })();
-    console.log(color)
+    console.log(color);
     return clsx(
       'flex items-center justify-center font-medium text-xs w-fit',
       colorClass,

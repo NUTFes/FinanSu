@@ -1,5 +1,6 @@
-import { Color } from '@type/color.type';
 import { ReactNode } from 'react';
+
+import { Color } from '@type/color.type';
 
 export type LabelProps = {
   children: ReactNode;

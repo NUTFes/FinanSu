@@ -25,12 +25,12 @@ module.exports = {
       'white-100': '#f2f2f2',
       'red-500': '#ef4444',
       'red-600': '#dc2626',
-      'affairs': '#3CA249',
-      'relation': '#4F6FAC',
-      'information': '#F3B3BF',
-      'finance': '#EB6100',
-      'planning': '#603085',
-      'production': '#EFEA35'
+      affairs: '#3CA249',
+      relation: '#4F6FAC',
+      information: '#F3B3BF',
+      finance: '#EB6100',
+      planning: '#603085',
+      production: '#EFEA35',
     },
     extend: {
       width: {

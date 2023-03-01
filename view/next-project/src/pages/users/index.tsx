@@ -18,12 +18,12 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
+import { BUREAUS } from '@/constants/bureaus';
 import { get, get_with_token } from '@api/api_methods';
 import theme from '@assets/theme';
 import Header from '@components/common/Header';
 import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/users/OpenEditModalButton';
-import { BUREAUS } from '@/constants/bureaus';
 
 interface Role {
   id: number;
