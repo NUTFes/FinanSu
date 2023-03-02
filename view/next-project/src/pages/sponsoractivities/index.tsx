@@ -35,7 +35,6 @@ export interface SopnserActivitiesView {
 interface Props {
   sponsorActiviries: SponsorActivities[]
   sponsorActivitiesView: SopnserActivitiesView[];
-  user: User;
 }
 
 export async function getServerSideProps() {
