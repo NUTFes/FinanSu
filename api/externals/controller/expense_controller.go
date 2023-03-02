@@ -16,6 +16,7 @@ type ExpenseController interface {
 	CreateExpense(echo.Context) error
 	UpdateExpense(echo.Context) error
 	DestroyExpense(echo.Context) error
+	UpdateExpenseTP(echo.Context) error
 }
 
 func NewExpenseController(u usecase.ExpenseUseCase) ExpenseController {
@@ -67,4 +68,12 @@ func (e *expenseController) DestroyExpense(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy Expense")
+}
+
+func (e *expenseController) UpdateExpenseTP(c echo.Context) error {
+	err := e.u.UpdateExpenseTP(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.String(http.StatusOK, "Updated Expense's totalPrice")
 }

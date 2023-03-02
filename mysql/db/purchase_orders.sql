@@ -13,3 +13,5 @@ CREATE TABLE purchase_orders (
 INSERT into purchase_orders (deadline, user_id, finance_check) values ('2022-2-22', 1, true);
 INSERT into purchase_orders (deadline, user_id, finance_check) values ('2022-3-28', 1, true);
 INSERT into purchase_orders (deadline, user_id, finance_check) values ('2022-4-6', 1, true);
+-- INSERT into purchase_orders (deadline, user_id, finance_check) values ('2022-3-28', 1, false);
+-- INSERT into purchase_orders (deadline, user_id, finance_check) values ('2022-4-6', 1, true);

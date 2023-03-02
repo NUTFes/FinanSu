@@ -195,6 +195,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	//expenseのRoute
 	e.GET("/expense", r.expenseController.IndexExpense)
+	e.GET("/expense/updateTP", r.expenseController.UpdateExpenseTP)
 	e.GET("/expense/:id", r.expenseController.ShowExpense)
 	e.POST("/expense", r.expenseController.CreateExpense)
 	e.PUT("/expense/:id", r.expenseController.UpdateExpense)

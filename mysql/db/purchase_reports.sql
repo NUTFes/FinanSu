@@ -16,5 +16,6 @@ CREATE TABLE purchase_reports (
 
 INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark) values (1, 100, 200, true, 1, 1, 'test-remark');
 INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark) values (2, 200, 400, false, 2, 1, 'test-remark2');
-INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark) values (3, 400, 800, true, 1, 1, 'test-remark3');
-INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark) values (4, 400, 800, true, 1, 2, 'test-remark3');
+-- INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark) values (1, 400, 800, true, 3, 1, 'test-remark3');
+-- INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark) values (1, 400, 800, true, 4, 2, 'test-remark3');
+-- INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark) values (1, 400, 800, true, 5, 2, 'test-remark3');

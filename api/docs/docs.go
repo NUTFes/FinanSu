@@ -516,6 +516,17 @@ const docTemplate = `{
                 ],
             },
         },
+        "/expense/updateTP": {
+            "get": {
+                tags: ["expense"],
+                "description": "totalPriceの更新",
+                "responses": {
+                    "200": {
+                        "description": "totalPriceの更新",
+                    }
+                }
+            },
+        },
         "/expense/{id}": {
             "get": {
                 tags: ["expense"],

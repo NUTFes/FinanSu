@@ -18,6 +18,7 @@ type ExpenseUseCase interface {
 	CreateExpense(context.Context, string, string) (domain.Expense, error)
 	UpdateExpense(context.Context, string, string, string) (domain.Expense, error)
 	DestroyExpense(context.Context, string) error
+	UpdateExpenseTP(context.Context) error
 }
 
 func NewExpenseUseCase(rep rep.ExpenseRepository) ExpenseUseCase {
@@ -25,7 +26,6 @@ func NewExpenseUseCase(rep rep.ExpenseRepository) ExpenseUseCase {
 }
 
 func (e *expenseUseCase) GetExpenses(c context.Context) ([]domain.Expense, error) {
-
 	expense := domain.Expense{}
 	var expenses []domain.Expense
 
@@ -93,7 +93,7 @@ func (e *expenseUseCase) CreateExpense(c context.Context, name string, yearID st
 func (e *expenseUseCase) UpdateExpense(c context.Context, id string, name string, yearID string) (domain.Expense, error) {
 	updatedExpense := domain.Expense{}
 	err := e.rep.Update(c, id, name, yearID)
-	row, err := e.rep.Find(c,id)
+	row, err := e.rep.Find(c, id)
 	err = row.Scan(
 		&updatedExpense.ID,
 		&updatedExpense.Name,
@@ -110,5 +110,10 @@ func (e *expenseUseCase) UpdateExpense(c context.Context, id string, name string
 
 func (e *expenseUseCase) DestroyExpense(c context.Context, id string) error {
 	err := e.rep.Destroy(c, id)
+	return err
+}
+
+func (e *expenseUseCase) UpdateExpenseTP(c context.Context) error {
+	err := e.rep.UpdateTotalprice(c)
 	return err
 }
