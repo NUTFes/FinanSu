@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type expenseController struct {
@@ -17,6 +18,8 @@ type ExpenseController interface {
 	UpdateExpense(echo.Context) error
 	DestroyExpense(echo.Context) error
 	UpdateExpenseTP(echo.Context) error
+	IndexExpenseDetails(echo.Context) error
+	ShowExpenseDetail(echo.Context) error
 }
 
 func NewExpenseController(u usecase.ExpenseUseCase) ExpenseController {
@@ -76,4 +79,21 @@ func (e *expenseController) UpdateExpenseTP(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Updated Expense's totalPrice")
+}
+
+func (e *expenseController) IndexExpenseDetails(c echo.Context) error {
+	expenseDetails, err := e.u.GetExpenseDetails(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, expenseDetails)
+}
+
+func (e *expenseController) ShowExpenseDetail(c echo.Context) error {
+	id := c.Param("id")
+	expenseDetail, err := e.u.GetExpenseDetailByID(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, expenseDetail)
 }

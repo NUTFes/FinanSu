@@ -516,6 +516,17 @@ const docTemplate = `{
                 ],
             },
         },
+        "/expense/details": {
+            "get": {
+                tags: ["expense"],
+                "description": "expenseに紐づくpurchase_itemの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "expenseに紐づくpurchase_itemの一覧を取得",
+                    }
+                }
+            },
+        },
         "/expense/updateTP": {
             "get": {
                 tags: ["expense"],
@@ -593,6 +604,26 @@ const docTemplate = `{
                         "description": "expenseの削除完了",
                     }
                 },
+            },
+        },
+        "/expense/{id}/details": {
+            "get": {
+                tags: ["expense"],
+                "description": "IDで指定されたexpenseに紐づくpurchase_itemsを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたexpenseに紐づくpurchase_itemsを取得",
+                    }
+                }
             },
         },
         "/fund_informations": {

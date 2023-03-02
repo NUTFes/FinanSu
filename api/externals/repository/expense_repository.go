@@ -21,6 +21,7 @@ type ExpenseRepository interface {
 	UpdateTotalprice(context.Context) error
 	Destroy(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
+	AllItemInfo(context.Context, string) (*sql.Rows, error)
 }
 
 func NewExpenseRepository(c db.Client, ac abstract.Crud) ExpenseRepository {
@@ -66,7 +67,7 @@ func (er *expenseRepository) FindLatestRecord(c context.Context) (*sql.Row, erro
 	return er.crud.ReadByID(c, query)
 }
 
-//totalPriceの更新
+// totalPriceの更新
 func (er *expenseRepository) UpdateTotalprice(c context.Context) error {
 	//tmp,tmp2のテーブルデータを削除
 	query := `DELETE FROM tmp`
@@ -142,4 +143,24 @@ func (er *expenseRepository) UpdateTotalprice(c context.Context) error {
 		SET
 			expense.totalPrice = tmp2.totalPrice;`
 	return er.crud.UpdateDB(c, query)
+}
+
+// expense_idに紐づいたpuchase_itemの金額が多い順に3件取得
+func (er *expenseRepository) AllItemInfo(c context.Context, expenseID string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			pi.id,
+			pi.item
+		FROM
+			purchase_items pi
+		INNER JOIN
+			purchase_reports pr
+		ON
+			pi.purchase_order_id = pr.purchase_order_id
+		WHERE
+			pr.expense_id =` + expenseID + `
+		ORDER BY
+			pi.price*pi.quantity
+		DESC LIMIT 3`
+	return er.crud.Read(c, query)
 }
