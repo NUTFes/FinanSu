@@ -68,8 +68,12 @@ const Label: React.FC<LabelProps> = (props) => {
         border='1px'
         borderColor={borderColor}
         color={textColor}
-        padding={paddingValue}
+        py={paddingValue}
+        px={Number(paddingValue) * 2}
         borderRadius={borderRadius}
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
       >
         {children}
       </Box>
