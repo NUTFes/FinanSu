@@ -159,6 +159,10 @@ func (er *expenseRepository) AllItemInfo(c context.Context, expenseID string) (*
 			pi.purchase_order_id = pr.purchase_order_id
 		WHERE
 			pr.expense_id =` + expenseID + `
+		AND
+			pi.finance_check IS true
+		AND
+			pr.finance_check IS true
 		ORDER BY
 			pi.price*pi.quantity
 		DESC LIMIT 3`
