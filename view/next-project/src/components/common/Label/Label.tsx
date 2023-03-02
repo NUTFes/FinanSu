@@ -1,8 +1,9 @@
+import { Box, ChakraProvider } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { LabelProps } from './Label.type';
-import { Box } from '@chakra-ui/react';
+
 import theme from '@/assets/theme';
-import { ChakraProvider } from '@chakra-ui/react';
+
+import { LabelProps } from './Label.type';
 
 const Label: React.FC<LabelProps> = (props) => {
   const {
