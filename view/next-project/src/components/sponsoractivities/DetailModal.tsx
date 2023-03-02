@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
-import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
+import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
-import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
+import { Modal, RedButton } from '@components/common';
 import { SponsorActivitiesView } from '@type/common';
 
 interface ModalProps {
@@ -65,7 +65,8 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.sponsorActivitiesViewItem && props.sponsorActivitiesViewItem.sponsorActivities.id}
+              {props.sponsorActivitiesViewItem &&
+                props.sponsorActivitiesViewItem.sponsorActivities.id}
             </div>
           </div>
           <div className={clsx('col-span-1 grid ')} />
@@ -162,7 +163,6 @@ const DetailModal: FC<ModalProps> = (props) => {
                       {sponsorActivitiesItem.sponsorStyleID}
                     </div>
                   </td>
-                  
                 </tr>
               ))}
             </tbody>
