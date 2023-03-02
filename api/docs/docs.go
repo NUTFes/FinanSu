@@ -36,28 +36,28 @@ const docTemplate = `{
                 },
                 "parameters": [
                     {
-                        "name": "sponsor_style_id",
+                        "name": "sponsorStyleID",
                         "in": "query",
-                        "description": "sponsor_style_id",
+                        "description": "sponsorStyleID",
                         "required": true,
                         "type": "integer"
                     },
                     {
-                        "name": "user_id",
+                        "name": "userID",
                         "in": "query",
-                        "description": "user_id",
+                        "description": "userID",
                         "type": "integer"
                     },
                     {
-                        "name": "is_done",
+                        "name": "isDone",
                         "in": "query",
-                        "description": "is_done",
+                        "description": "isDone",
                         "type": "boolean"
                     },
                     {
-                        "name": "sponsor_id",
+                        "name": "sponsorID",
                         "in": "query",
-                        "description": "sponsor_id",
+                        "description": "sponsorID",
                         "type": "integer"
                     }
                 ],
@@ -110,28 +110,28 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
-                        "name": "sponsor_style_id",
+                        "name": "sponsorStyleID",
                         "in": "query",
-                        "description": "sponsor_style_id",
+                        "description": "sponsorStyleID",
                         "required": true,
                         "type": "integer"
                     },
                     {
-                        "name": "user_id",
+                        "name": "userID",
                         "in": "query",
-                        "description": "user_id",
+                        "description": "userID",
                         "type": "integer"
                     },
                     {
-                        "name": "is_done",
+                        "name": "isDone",
                         "in": "query",
-                        "description": "is_done",
+                        "description": "isDone",
                         "type": "boolean"
                     },
                     {
-                        "name": "sponsor_id",
+                        "name": "sponsorID",
                         "in": "query",
-                        "description": "sponsor_id",
+                        "description": "sponsorID",
                         "type": "integer"
                     },
                 ],

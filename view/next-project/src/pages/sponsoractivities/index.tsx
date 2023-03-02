@@ -8,7 +8,7 @@ import DetailModal from '@/components/sponsoractivities/DetailModal';
 import OpenAddModalButton from '@/components/sponsoractivities/OpenAddModalButton';
 import OpenDeleteModalButton from '@/components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsoractivities/OpenEditModalButton'
-import { SponsorActivities, SponsorActivitiesItem, User } from '@type/common'
+import { SponsorActivities, SponsorActivitiesView } from '@type/common'
 
 import type { NextPage } from 'next';
 import { useState } from 'react';
@@ -16,25 +16,19 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 
-interface activity {
-  id: number;
-  sponsorID: number;
-  sponsorStyleID: number;
-  userID: number;
-  isDone: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface SopnserActivitiesView {
-  viewUser: User;
-  sponsorActivities: SponsorActivities;
-  viewItem: SponsorActivitiesItem[];
-}
+// interface activity {
+//   id: number;
+//   sponsorID: number;
+//   sponsorStyleID: number;
+//   userID: number;
+//   isDone: boolean;
+//   createdAt: string;
+//   updatedAt: string;
+// }
 
 interface Props {
-  sponsorActiviries: SponsorActivities[]
-  sponsorActivitiesView: SopnserActivitiesView[];
+  sponsorActivities: SponsorActivities[]
+  sponsorActivitiesView: SponsorActivitiesView[];
 }
 
 export async function getServerSideProps() {
@@ -42,6 +36,7 @@ export async function getServerSideProps() {
   const getSponsorAcvitiesViewUrl = process.env.SSR_API_URI + '/activities/details';
   const sponsorActivitiesRes = await get(getSponsorAcvitiesUrl);
   const sponsorActivitiesViewRes = await get(getSponsorAcvitiesViewUrl);
+  console.log(sponsorActivitiesRes)
   return {
     props: {
       sponsorActivities: sponsorActivitiesRes,
@@ -53,9 +48,9 @@ export async function getServerSideProps() {
 export default function SponsorActivity(props: Props) {
   const [user] = useRecoilState(userAtom);
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
-  const [sponsorActivitiesViewItem, setSponsorActivitiesViewItem] = useState<SopnserActivitiesView>();
+  const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivities>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SopnserActivitiesView) => {
+  const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SponsorActivities) => {
     setSponsorActivitiesID(sponsorActivitiesID);
     setSponsorActivitiesViewItem(sponsorActivitiesItem);
     setIsOpen(true);
@@ -119,8 +114,8 @@ export default function SponsorActivity(props: Props) {
                 </tr>
               </thead>
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
-                {props.sponsorActivitiesView.length? props.sponsorActivitiesView.map((sponsorActivitiesViewItem, index) => (
-                  <tr key={sponsorActivitiesViewItem.sponsorActivities.id}>
+                {props.sponsorActivities.length >= 1 ? (props.sponsorActivities.map((sponsorActivitiesItem, index) => (
+                  <tr key={sponsorActivitiesItem.id}>
                     <td
                       className={clsx(
                         'px-1',
@@ -129,14 +124,14 @@ export default function SponsorActivity(props: Props) {
                       )}
                       onClick={() => {
                         onOpen(
-                          sponsorActivitiesViewItem.sponsorActivities.id
-                            ? sponsorActivitiesViewItem.sponsorActivities.id
+                          sponsorActivitiesItem.id
+                            ? sponsorActivitiesItem.id
                             : 0,
-                          sponsorActivitiesViewItem,
+                          sponsorActivitiesItem,
                         );
                       }}
                     >
-                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesViewItem.sponsorActivities.id}</div>
+                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesItem.id}</div>
                     </td>
                     <td
                       className={clsx(
@@ -144,7 +139,7 @@ export default function SponsorActivity(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === props.sponsorActivitiesView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}>
-                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesViewItem.sponsorActivities.sponsorID}</div>
+                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesItem.sponsorID}</div>
                     </td>
                     <td
                       className={clsx(
@@ -153,7 +148,7 @@ export default function SponsorActivity(props: Props) {
                       index === props.sponsorActivitiesView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {sponsorActivitiesViewItem.sponsorActivities.sponsorStyleID}
+                        {sponsorActivitiesItem.sponsorStyleID}
                       </div>
                     </td>
                     <td
@@ -162,7 +157,7 @@ export default function SponsorActivity(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === props.sponsorActivitiesView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}>
-                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesViewItem.sponsorActivities.userID}</div>
+                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesItem.userID}</div>
                     </td>
                     <td
                       className={clsx(
@@ -170,10 +165,10 @@ export default function SponsorActivity(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === props.sponsorActivitiesView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}>
-                      {sponsorActivitiesViewItem.sponsorActivities.isDone && (
+                      {sponsorActivitiesItem.isDone && (
                         <div className={clsx('text-center text-sm text-black-600')}>回収完了</div>
                       )}
-                      {!sponsorActivitiesViewItem.sponsorActivities.isDone && (
+                      {!sponsorActivitiesItem.isDone && (
                         <div className={clsx('text-center text-sm text-black-600')}>未回収</div>
                       )}
                     </td>
@@ -183,7 +178,7 @@ export default function SponsorActivity(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === props.sponsorActivitiesView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}>
-                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesViewItem.sponsorActivities.createdAt}</div>
+                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesItem.createdAt}</div>
                     </td>
                     <td
                       className={clsx(
@@ -191,7 +186,7 @@ export default function SponsorActivity(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === props.sponsorActivitiesView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}>
-                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesViewItem.sponsorActivities.updatedAt}</div>
+                      <div className={clsx('text-center text-sm text-black-600')}>{sponsorActivitiesItem.updatedAt}</div>
                     </td>
                     <td
                       className={clsx(
@@ -203,49 +198,49 @@ export default function SponsorActivity(props: Props) {
                         <div className={clsx('mx-1')}>
                           <OpenEditModalButton
                             id={
-                              sponsorActivitiesViewItem.sponsorActivities.id
-                                ? sponsorActivitiesViewItem.sponsorActivities.id
+                              sponsorActivitiesItem.id
+                                ? sponsorActivitiesItem.id
                                 : 0
                             }
                             isDisabled={
                               (user.bureauID === 2 ||
                                 user.bureauID === 3 ||
                                 user.bureauID === 6 ||
-                                user.id === sponsorActivitiesViewItem.sponsorActivities.id)
+                                user.id === sponsorActivitiesItem.id)
                             }
                           />
                         </div>
                         <div className={clsx('mx-1')}>
                           <OpenDeleteModalButton
                             id={
-                              sponsorActivitiesViewItem.sponsorActivities.id
-                                ? sponsorActivitiesViewItem.sponsorActivities.id
+                              sponsorActivitiesItem.id
+                                ? sponsorActivitiesItem.id
                                 : 0
                             } isDisabled={
                               (user.bureauID === 2 ||
                                 user.bureauID === 3 ||
                                 user.bureauID === 6 ||
-                                user.id === sponsorActivitiesViewItem.sponsorActivities.id)
+                                user.id === sponsorActivitiesItem.id)
                             }
                           />
                         </div>
                       </div>
                     </td>
                   </tr>
-                )): ""}
+                ))): ""}
               </tbody>
             </table>
           </div>
       </Card>
-      {isOpen && sponsorActivitiesViewItem && (
+      {/* {isOpen && sponsorActivitiesItem && (
         <DetailModal
           id={sponsorActivitiesID}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          sponsorActivitiesViewItem={sponsorActivitiesViewItem}
+          sponsorActivitiesViewItem={sponsorActivitiesItem}
           isDelete={false}
         />
-      )}
+      )} */}
     </MainLayout>
   );
 }

@@ -12,3 +12,4 @@ CREATE TABLE activities (
 );
 
 INSERT into activities (sponsor_style_id, user_id, is_done, sponsor_id) values (1, 1, false, 1);
+INSERT into activities (sponsor_style_id, user_id, is_done, sponsor_id) values (2, 2, false, 2);
