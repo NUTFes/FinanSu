@@ -12,7 +12,11 @@ const BureauLabel: React.FC<BureauLabelProps> = (props) => {
     return bureau;
   }, [bureauID]);
 
-  return <Label isOutline color={bureau?.name_en}>{bureau?.name}</Label>;
+  return (
+    <Label isOutline color={bureau?.name_en}>
+      {bureau?.name}
+    </Label>
+  );
 };
 
 export default BureauLabel;
