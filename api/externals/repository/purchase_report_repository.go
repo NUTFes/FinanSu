@@ -16,8 +16,8 @@ type purchaseReportRepository struct {
 type PurchaseReportRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string, string, string, string) error
+	Create(context.Context, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
 	AllDetails(context.Context) (*sql.Rows, error)
 	FindDetail(context.Context, string) (*sql.Row, error)
@@ -49,13 +49,12 @@ func (ppr *purchaseReportRepository) Create(
 	addition string,
 	finance_check string,
 	purchaseOrderId string,
-	expenseId string,
 	remark string,
 ) error {
 	query := `
 		INSERT INTO
-			purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, expense_id, remark)
-		VALUES (` + userId + "," + discount + "," + addition + "," + finance_check + "," + purchaseOrderId + ",'" +expenseId + ",'" + remark + "')"
+			purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark)
+		VALUES (` + userId + "," + discount + "," + addition + "," + finance_check + "," + purchaseOrderId + ",'" + remark + "')"
 	return ppr.crud.UpdateDB(c, query)
 }
 
@@ -68,7 +67,6 @@ func (ppr *purchaseReportRepository) Update(
 	addition string,
 	finance_check string,
 	purchaseOrderId string,
-	expenseId string,
 	remark string,
 ) error {
 	query := `
@@ -77,10 +75,9 @@ func (ppr *purchaseReportRepository) Update(
 		SET
 			user_id =` + userId +
 		", discount =" + discount +
-		",addition =" + addition +
+		", addition =" + addition +
 		", finance_check =" + finance_check +
 		", purchase_order_id =" + purchaseOrderId +
-		", expense_id =" + expenseId +
 		", remark ='" + remark +
 		"' WHERE id = " + id
 	return ppr.crud.UpdateDB(c, query)

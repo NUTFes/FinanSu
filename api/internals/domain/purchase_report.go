@@ -11,7 +11,6 @@ type PurchaseReport struct {
 	Addition        int       `json:"addition"`
 	FinanceCheck    bool      `json:"financeCheck"`
 	PurchaseOrderID int       `json:"purchaseOrderID"`
-	ExpenseID       int       `json:"expenseID"`
 	Remark          string    `json:"remark"`
 	CreatedAt       time.Time `json:"createdAt"`
 	UpdatedAt       time.Time `json:"updatedAt"`

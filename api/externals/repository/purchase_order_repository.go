@@ -16,8 +16,8 @@ type purchaseOrderRepository struct {
 type PurchaseOrderRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string) error
-	Update(context.Context, string, string, string, string) error
+	Create(context.Context, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string) error
 	Delete(context.Context, string) error
 	AllUserInfo(context.Context) (*sql.Rows, error)
 	FindUserInfo(context.Context, string) (*sql.Row, error)
@@ -46,12 +46,13 @@ func (por *purchaseOrderRepository) Create(
 	c context.Context,
 	deadLine string,
 	userId string,
+	expenseId string,
 	financeCheck string,
 ) error {
 	query := `
 		INSERT INTO
-			purchase_orders (deadline, user_id, finance_check)
-		VALUES ('` + deadLine + "'," + userId + "," + financeCheck + ")"
+			purchase_orders (deadline, user_id, expense_id, finance_check)
+		VALUES ('` + deadLine + "'," + userId + "," + expenseId + "," +financeCheck + ")"
 	return por.crud.UpdateDB(c, query)
 }
 
@@ -61,6 +62,7 @@ func (por *purchaseOrderRepository) Update(
 	id string,
 	deadLine string,
 	userId string,
+	expenseId string,
 	financeCheck string,
 ) error {
 	query := `
@@ -69,7 +71,8 @@ func (por *purchaseOrderRepository) Update(
 		SET
 			deadline ='` + deadLine +
 		"', user_id = " + userId +
-		",finance_check = " + financeCheck +
+		"', expense_id = " + expenseId +
+		", finance_check = " + financeCheck +
 		" WHERE id = " + id
 	return por.crud.UpdateDB(c, query)
 }

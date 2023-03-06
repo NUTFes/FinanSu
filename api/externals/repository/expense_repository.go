@@ -88,7 +88,7 @@ func (er *expenseRepository) UpdateTotalprice(c context.Context) error {
 		GROUP BY
 			pi.purchase_order_id`
 	er.crud.UpdateDB(c, query)
-	//tmpのデータにpurhchase_reportsのデータを入れる
+	//tmpにpurhchase_reportsのデータを入れる
 	query = `
 		UPDATE
 			tmp
@@ -100,23 +100,23 @@ func (er *expenseRepository) UpdateTotalprice(c context.Context) error {
 			tmp.purchase_reports_id = pr.id,
 			tmp.addition = pr.addition,
 			tmp.discount = pr.discount,
-			tmp.expense_id = pr.expense_id,
 			tmp.finance_check = pr.finance_check`
 	er.crud.UpdateDB(c, query)
-	//purchaser_ordersでfinance_checkがfalseのデータを削除する
+	//tmpにpurchaser_ordersのexpense_idを入れる
 	query = `
-		DELETE
-			tmp
-		FROM
+		UPDATE
 			tmp
 		INNER JOIN
-			purchase_orders
-		AS
-			po
+			purchase_orders po
 		ON
 			tmp.id = po.id
+		SET
+			tmp.expense_id = po.expense_id
 		WHERE
-			po.finance_check IS false`
+			po.finance_check IS true`
+	er.crud.UpdateDB(c, query)
+	//expense_idがNULLのレコードを削除する
+	query = `DELETE FROM tmp WHERE expense_id IS NULL`
 	er.crud.UpdateDB(c, query)
 	//tmpのデータをexpense_idごとにまとめて総和を求める、データをtmp2に入れる
 	query = `
@@ -154,15 +154,15 @@ func (er *expenseRepository) AllItemInfo(c context.Context, expenseID string) (*
 		FROM
 			purchase_items pi
 		INNER JOIN
-			purchase_reports pr
+			purchase_orders po
 		ON
-			pi.purchase_order_id = pr.purchase_order_id
+			pi.purchase_order_id = po.id
 		WHERE
-			pr.expense_id =` + expenseID + `
+			po.expense_id =` + expenseID + `
 		AND
 			pi.finance_check IS true
 		AND
-			pr.finance_check IS true
+			po.finance_check IS true
 		ORDER BY
 			pi.price*pi.quantity
 		DESC LIMIT 3`

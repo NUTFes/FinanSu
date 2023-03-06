@@ -21,7 +21,8 @@ CREATE TABLE tmp (
   id int(10) NOT NULL,
   totalPrice int(10),
   purchase_reports_id int(10),
-  addition int(10), discount int(10),
+  addition int(10),
+  discount int(10),
   expense_id int(10),
   finance_check boolean,
   PRIMARY KEY (`id`)

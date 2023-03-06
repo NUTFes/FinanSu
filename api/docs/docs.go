@@ -1038,6 +1038,12 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
+                        "name": "expense_id",
+                        "in": "query",
+                        "description": "expense_id",
+                        "type": "integer"
+                    },
+                    {
                         "name": "finance_check",
                         "in": "query",
                         "description": "finance_check",
@@ -1102,6 +1108,12 @@ const docTemplate = `{
                         "name": "user_id",
                         "in": "query",
                         "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "expense_id",
+                        "in": "query",
+                        "description": "expense_id",
                         "type": "integer"
                     },
                     {
@@ -1201,12 +1213,6 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
-                        "name": "expense_id",
-                        "in": "query",
-                        "description": "支出id",
-                        "type": "integer"
-                    },
-                    {
                         "name": "remark",
                         "in": "query",
                         "description": "remark",
@@ -1289,12 +1295,6 @@ const docTemplate = `{
                         "name": "purchase_order_id",
                         "in": "query",
                         "description": "購入申請id",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "expense_id",
-                        "in": "query",
-                        "description": "支出id",
                         "type": "integer"
                     },
                     {
