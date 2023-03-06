@@ -1,8 +1,8 @@
+import clsx from 'clsx';
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
 import { Card, Title } from '@/components/common';
-import clsx from 'clsx';
 
 import MainLayout from '@/components/layout/MainLayout';
 import { get } from '@api/sponsorship';
@@ -38,7 +38,7 @@ export default function SponsorList(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className='mt-10 mx-5'>
+        <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title>協賛スタイル一覧</Title>
             <select className='w-fit'>
@@ -60,38 +60,30 @@ export default function SponsorList(props: Props) {
             </div>
           </div>
         </div>
-        <div className='p-5 mb-2'>
+        <div className='mb-2 p-5'>
           <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'>
-                    ID
-                  </p>
+                  <p className='text-center text-sm text-black-600'>ID</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <p className='text-center text-sm text-black-600'>
-                    広告サイズ
-                  </p>
+                  <p className='text-center text-sm text-black-600'>広告サイズ</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <p className='text-center mr-1 text-sm text-black-600'>
-                    カラー，モノクロ
-                  </p>
+                  <p className='mr-1 text-center text-sm text-black-600'>カラー，モノクロ</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <p className='text-center text-sm text-black-600'>
-                    金額
-                  </p>
+                  <p className='text-center text-sm text-black-600'>金額</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <p className='text-center text-sm text-black-600'></p>
+                  <p className='text-center text-sm text-black-600'></p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <p className='text-center text-sm text-black-600'>作成日時</p>
+                  <p className='text-center text-sm text-black-600'>作成日時</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <p className='text-center text-sm text-black-600'>更新日時</p>
+                  <p className='text-center text-sm text-black-600'>更新日時</p>
                 </th>
               </tr>
             </thead>
@@ -105,7 +97,7 @@ export default function SponsorList(props: Props) {
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                  <p className='text-center text-sm text-black-600'>{sponsorStyleItem.id}</p>
+                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.id}</p>
                   </td>
                   <td
                     className={clsx(
@@ -123,8 +115,12 @@ export default function SponsorList(props: Props) {
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    {sponsorStyleItem.is_color && <p className='text-center text-sm text-black-600'>カラー</p>}
-                    {!sponsorStyleItem.is_color && <p className='text-center text-sm text-black-600'>モノクロ</p>}
+                    {sponsorStyleItem.is_color && (
+                      <p className='text-center text-sm text-black-600'>カラー</p>
+                    )}
+                    {!sponsorStyleItem.is_color && (
+                      <p className='text-center text-sm text-black-600'>モノクロ</p>
+                    )}
                   </td>
                   <td
                     className={clsx(
@@ -153,7 +149,9 @@ export default function SponsorList(props: Props) {
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.created_at}</p>
+                    <p className='text-center text-sm text-black-600'>
+                      {sponsorStyleItem.created_at}
+                    </p>
                   </td>
                   <td
                     className={clsx(
@@ -162,7 +160,9 @@ export default function SponsorList(props: Props) {
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.updated_at}</p>
+                    <p className='text-center text-sm text-black-600'>
+                      {sponsorStyleItem.updated_at}
+                    </p>
                   </td>
                 </tr>
               ))}
