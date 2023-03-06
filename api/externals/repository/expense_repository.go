@@ -157,12 +157,18 @@ func (er *expenseRepository) AllItemInfo(c context.Context, expenseID string) (*
 			purchase_orders po
 		ON
 			pi.purchase_order_id = po.id
+		INNER JOIN
+			purchase_reports pr
+		ON
+			pi.purchase_order_id = pr.purchase_order_id
 		WHERE
 			po.expense_id =` + expenseID + `
 		AND
 			pi.finance_check IS true
 		AND
 			po.finance_check IS true
+		AND
+			pr.finance_check IS true
 		ORDER BY
 			pi.price*pi.quantity
 		DESC LIMIT 3`
