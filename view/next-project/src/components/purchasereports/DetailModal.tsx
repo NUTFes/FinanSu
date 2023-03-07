@@ -51,190 +51,128 @@ const DetailModal: FC<ModalProps> = (props) => {
 
   return (
     <Modal>
-      <div className={clsx('w-full')}>
-        <div className={clsx('mr-5 grid w-full justify-items-end')}>
-          <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
+      <div className='ml-auto w-fit'>
+        <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
+      </div>
+      <div className='w-fit mx-auto mb-10'>
+        <p className='text-2xl font-thin text-black-600'>報告の詳細</p>
+      </div>
+      <div className='mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-y-3 gap-x-10'>
+        <p className='text-black-600'>ID</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          <p>{props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}</p>
         </div>
-      </div>
-      <div
-        className={clsx(
-          'mb-8 grid w-full justify-items-center text-2xl font-thin leading-8 tracking-widest text-black-600',
-        )}
-      >
-        報告の詳細
-      </div>
-      <div className={clsx('mb-8 grid grid-cols-12 gap-4')}>
-        <div className={clsx('col-span-1 grid')} />
-        <div className={clsx('col-span-10 grid')}>
-          <div className={clsx('my-2 grid w-full grid-cols-12')}>
-            <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>ID</div>
-            </div>
-            <div
-              className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
-              )}
-            >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}
-            </div>
-            <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>合計金額</div>
-            </div>
-            <div
-              className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
-              )}
-            >
-              {props.purchaseReportViewItem &&
-                TotalFee(
-                  props.purchaseReportViewItem.purchaseReport,
-                  props.purchaseReportViewItem.purchaseItems,
-                )}
-            </div>
-          </div>
-          <div className={clsx('col-span-1 grid ')} />
-          <div className={clsx('my-2 grid w-full grid-cols-12')}>
-            <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>報告した局</div>
-            </div>
-            <div
-              className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
-              )}
-            >
-              {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.reportUser.bureauID === 1 &&
-                '総務局'}
-              {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.reportUser.bureauID === 2 &&
-                '渉外局'}
-              {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.reportUser.bureauID === 3 &&
-                '財務局'}
-              {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.reportUser.bureauID === 4 &&
-                '企画局'}
-              {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.reportUser.bureauID === 5 &&
-                '政策局'}
-              {props.purchaseReportViewItem &&
-                props.purchaseReportViewItem.reportUser.bureauID === 6 &&
-                '情報局'}
-            </div>
-            <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>報告日</div>
-            </div>
-            <div
-              className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
-              )}
-            >
-              {props.purchaseReportViewItem &&
-                formatDate(
-                  props.purchaseReportViewItem.purchaseReport.createdAt
-                    ? props.purchaseReportViewItem.purchaseReport.createdAt
-                    : '',
-                )}
-            </div>
-          </div>
-          <div className={clsx('my-2 grid w-full grid-cols-12')}>
-            <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>割引</div>
-            </div>
-            <div
-              className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
-              )}
-            >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.discount}
-            </div>
-            <div className={clsx('col-span-3 mr-2 grid justify-items-end')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>加算</div>
-            </div>
-            <div
-              className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
-              )}
-            >
-              {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.addition}
-            </div>
-          </div>
-          <div className={clsx('my-2 grid w-full grid-cols-12')}></div>
-          <div className={clsx('col-span-1 grid ')} />
+        <p className='text-black-600'>合計金額</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          {props.purchaseReportViewItem &&
+            TotalFee(
+              props.purchaseReportViewItem.purchaseReport,
+              props.purchaseReportViewItem.purchaseItems,
+            )}
+        </div>
+        <p className='text-black-600'>報告した局</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          {props.purchaseReportViewItem &&
+            props.purchaseReportViewItem.reportUser.bureauID === 1 &&
+            '総務局'}
+          {props.purchaseReportViewItem &&
+            props.purchaseReportViewItem.reportUser.bureauID === 2 &&
+            '渉外局'}
+          {props.purchaseReportViewItem &&
+            props.purchaseReportViewItem.reportUser.bureauID === 3 &&
+            '財務局'}
+          {props.purchaseReportViewItem &&
+            props.purchaseReportViewItem.reportUser.bureauID === 4 &&
+            '企画局'}
+          {props.purchaseReportViewItem &&
+            props.purchaseReportViewItem.reportUser.bureauID === 5 &&
+            '政策局'}
+          {props.purchaseReportViewItem &&
+            props.purchaseReportViewItem.reportUser.bureauID === 6 &&
+            '情報局'}
+        </div>
+        <p className='text-black-600'>報告日</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          {props.purchaseReportViewItem &&
+            formatDate(
+              props.purchaseReportViewItem.purchaseReport.createdAt
+                ? props.purchaseReportViewItem.purchaseReport.createdAt
+                : '',
+            )}
+        </div>
+        <p className='text-black-600'>割引</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.discount}
+        </div>
+        <p className='text-black-600'>加算</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.addition}
+        </div>
+        <p className='text-black-600'>立替先</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.remark}
         </div>
       </div>
 
-      <div className={clsx('mt-2 mb-5 grid w-full justify-items-center text-base text-black-600')}>
-        購入物品
+      <div className='w-fit mx-auto mb-10'>
+        <p className='text-2xl font-thin text-black-600'>購入物品</p>
       </div>
-      <div className={clsx('grid h-[20rem] w-full justify-items-center')}>
-        <div
-          className={clsx('w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1')}
-        >
-          <table className={clsx('w-full table-fixed border-collapse')}>
+      <div className='grid h-[20rem] w-full justify-items-center'>
+        <div className='w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1'>
+          <table className='w-full table-fixed border-collapse'>
             <thead>
-              <tr
-                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
-              >
+              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 {user.roleID === 1 ? (
-                  <th className={clsx('w-3/12 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>品名</div>
+                  <th className='w-3/12 pb-2'>
+                    <div className='text-center text-sm text-black-600'>品名</div>
                   </th>
                 ) : (
-                  <th className={clsx('w-4/12 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>品名</div>
+                  <th className='w-4/12 pb-2'>
+                    <div className='text-center text-sm text-black-600'>品名</div>
                   </th>
                 )}
-                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>単価</div>
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>単価</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>個数</div>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>個数</div>
                 </th>
-                <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>詳細</div>
+                <th className='w-3/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>詳細</div>
                 </th>
-                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>URL</div>
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>URL</div>
                 </th>
                 {user.roleID === 3 ? (
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>局長確認</div>
+                  <th className='w-2/12 border-b-primary-1 pb-2'>
+                    <div className='text-center text-sm text-black-600'>局長確認</div>
                   </th>
                 ) : null}
               </tr>
             </thead>
-            <tbody
-              className={clsx('w-full border border-x-white-0 border-b-primary-1 border-t-white-0')}
-            >
-              {/* <div className={clsx('flex items-start')}> */}
+            <tbody className='w-full border border-x-white-0 border-b-primary-1 border-t-white-0'>
+              {/* <div className='flex items-start'> */}
               {props.purchaseReportViewItem?.purchaseItems.map((purchaseItem) => (
-                <tr key={purchaseItem.id} className={clsx('w-full')}>
-                  <td className={clsx('border-b py-3')}>
-                    <div className={clsx('text-center text-sm text-black-300')}>
-                      {purchaseItem.item}
-                    </div>
+                <tr key={purchaseItem.id} className='w-full'>
+                  <td className='border-b py-3'>
+                    <div className='text-center text-sm text-black-300'>{purchaseItem.item}</div>
                   </td>
-                  <td className={clsx('border-b py-3')}>
-                    <div className={clsx('text-center text-sm text-black-300')}>
-                      {purchaseItem.price}
-                    </div>
+                  <td className='border-b py-3'>
+                    <div className='text-center text-sm text-black-300'>{purchaseItem.price}</div>
                   </td>
-                  <td className={clsx('border-b py-3')}>
-                    <div className={clsx('text-center text-sm text-black-300')}>
+                  <td className='border-b py-3'>
+                    <div className='text-center text-sm text-black-300'>
                       {purchaseItem.quantity}
                     </div>
                   </td>
-                  <td className={clsx('border-b py-3')}>
-                    <div className={clsx('text-center text-sm text-black-300')}>
-                      {purchaseItem.detail}
-                    </div>
+                  <td className='border-b py-3'>
+                    <div className='text-center text-sm text-black-300'>{purchaseItem.detail}</div>
                   </td>
-                  <td className={clsx('border-b py-3')}>
-                    <div className={clsx('text-center text-sm text-black-300')}>
-                      <div className={clsx('flex justify-center')}>
+                  <td className='border-b py-3'>
+                    <div className='text-center text-sm text-black-300'>
+                      <div className='flex justify-center'>
                         <a
-                          className={clsx('mx-1')}
+                          className='mx-1'
                           href={purchaseItem.url}
                           target='_blank'
                           rel='noopener noreferrer'
@@ -243,7 +181,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                         </a>
                         <Tooltip text={'copy URL'}>
                           <RiFileCopyLine
-                            className={clsx('mx-1')}
+                            className='mx-1'
                             size={'16px'}
                             onClick={() => {
                               navigator.clipboard.writeText(purchaseItem.url);
@@ -254,8 +192,8 @@ const DetailModal: FC<ModalProps> = (props) => {
                     </div>
                   </td>
                   {user.roleID === 3 ? (
-                    <td className={clsx('border-b py-3')}>
-                      <div className={clsx('text-center text-sm text-black-300')}>
+                    <td className='border-b py-3'>
+                      <div className='text-center text-sm text-black-300'>
                         <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
                       </div>
                     </td>
@@ -266,7 +204,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           </table>
         </div>
       </div>
-      <div className={clsx('mt-3 grid w-full justify-items-center')}>
+      <div className='mt-3 grid w-full justify-items-center'>
         {props.isDelete && (
           <RedButton
             onClick={() => {
