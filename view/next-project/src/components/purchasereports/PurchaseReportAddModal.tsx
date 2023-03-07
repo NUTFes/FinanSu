@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
@@ -184,19 +183,29 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
     <>
-      <div className='my-6 grid grid-cols-5 gap-4 w-9/10 mx-auto'>
+      <div className='my-6 mx-auto grid w-9/10 grid-cols-5 gap-4'>
         <p className='text-black-600'>物品名</p>
         <div className='col-span-4 w-full'>
-          <Input className='w-full' id={String(data.id)} value={data.item} onChange={formDataListHandler('item')} />
+          <Input
+            className='w-full'
+            id={String(data.id)}
+            value={data.item}
+            onChange={formDataListHandler('item')}
+          />
         </div>
         <p className='text-black-600'>単価</p>
         <div className='col-span-4 w-full'>
-          <Input className='w-full' id={String(data.id)} value={data.price} onChange={formDataListHandler('price')} />
+          <Input
+            className='w-full'
+            id={String(data.id)}
+            value={data.price}
+            onChange={formDataListHandler('price')}
+          />
         </div>
         <p className='text-black-600'>個数</p>
         <div className='col-span-4 w-full'>
           <Input
-            className='w-full' 
+            className='w-full'
             id={String(data.id)}
             value={data.quantity}
             onChange={formDataListHandler('quantity')}
@@ -205,7 +214,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         <p className='text-black-600'>詳細</p>
         <div className='col-span-4 w-full'>
           <Input
-            className='w-full' 
+            className='w-full'
             id={String(data.id)}
             value={data.detail}
             onChange={formDataListHandler('detail')}
@@ -213,7 +222,12 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         </div>
         <p className='text-black-600'>URL</p>
         <div className='col-span-4 w-full'>
-          <Input className='w-full' id={String(data.id)} value={data.url} onChange={formDataListHandler('url')} />
+          <Input
+            className='w-full'
+            id={String(data.id)}
+            value={data.url}
+            onChange={formDataListHandler('url')}
+          />
         </div>
       </div>
     </>
@@ -223,107 +237,107 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     <>
       {props.isOpen ? (
         <Modal className='w-1/2'>
-          <div className='w-fit ml-auto'>
+          <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
                 props.setIsOpen(false);
               }}
             />
           </div>
-          <div className='mb-10 w-fit mx-auto text-xl text-black-600'>
-            購入物品の登録
-          </div>
-            <Stepper stepNum={props.purchaseItemNum} activeStep={activeStep} isDone={isDone}>
-              {!isDone && <>{content(formDataList[activeStep - 1])}</>}
-            </Stepper>
-            {isDone ? (
-              <>
-                <div className='mt-3 mb-10 w-9/10 mx-auto grid grid-cols-5 items-center justify-items-center gap-4'>
-                  <p className='text-black-600'>
-                    割引
-                  </p>
-                  <div className='col-span-4 w-full'>
-                    <Input className='w-full' value={formData.discount} onChange={formDataHandler('discount')} />
-                  </div>
-                  <p className='text-black-600'>
-                    加算
-                  </p>
-                  <div className='col-span-4 w-full'>
-                    <Input className='w-full' value={formData.addition} onChange={formDataHandler('addition')} />
-                  </div>
-                  <p className='text-black-600'>
-                    備考
-                  </p>
-                  <div className='col-span-4 w-full'>
-                    <Textarea className='w-full' value={formData.remark} onChange={formDataHandler('remark')} />
-                  </div>
+          <div className='mx-auto mb-10 w-fit text-xl text-black-600'>購入物品の登録</div>
+          <Stepper stepNum={props.purchaseItemNum} activeStep={activeStep} isDone={isDone}>
+            {!isDone && <>{content(formDataList[activeStep - 1])}</>}
+          </Stepper>
+          {isDone ? (
+            <>
+              <div className='mx-auto mt-3 mb-10 grid w-9/10 grid-cols-5 items-center justify-items-center gap-4'>
+                <p className='text-black-600'>割引</p>
+                <div className='col-span-4 w-full'>
+                  <Input
+                    className='w-full'
+                    value={formData.discount}
+                    onChange={formDataHandler('discount')}
+                  />
                 </div>
-                <div className='grid justify-items-center'>
-                  <div className='flex flex-row gap-4'>
-                    <OutlinePrimaryButton onClick={reset}>
-                      戻る
-                    </OutlinePrimaryButton>
-                    <PrimaryButton
-                      onClick={() => {
-                        submit(formDataList);
-                      }}
-                    >
-                      登録して確認
-                    </PrimaryButton>
-                    {isOpen && (
-                      <PurchaseReportConfirmModal
-                        purchaseReportId={purchaseReportId}
-                        formDataList={formDataList}
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
-                      />
-                    )}
-                  </div>
+                <p className='text-black-600'>加算</p>
+                <div className='col-span-4 w-full'>
+                  <Input
+                    className='w-full'
+                    value={formData.addition}
+                    onChange={formDataHandler('addition')}
+                  />
                 </div>
-              </>
-            ) : (
-              <>
-                <div className='flex flex-col items-center gap-5'>
-                  <div className='flex flex-row gap-4'>
-                    {/* stepが1より大きい時のみ戻るボタンを表示 */}
-                    {activeStep > 1 && (
-                      <OutlinePrimaryButton onClick={prevStep}>
-                        戻る
-                      </OutlinePrimaryButton>
-                    )}
-                    <PrimaryButton
+                <p className='text-black-600'>備考</p>
+                <div className='col-span-4 w-full'>
+                  <Textarea
+                    className='w-full'
+                    value={formData.remark}
+                    onChange={formDataHandler('remark')}
+                  />
+                </div>
+              </div>
+              <div className='grid justify-items-center'>
+                <div className='flex flex-row gap-4'>
+                  <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
+                  <PrimaryButton
+                    onClick={() => {
+                      submit(formDataList);
+                    }}
+                  >
+                    登録して確認
+                  </PrimaryButton>
+                  {isOpen && (
+                    <PurchaseReportConfirmModal
+                      purchaseReportId={purchaseReportId}
+                      formDataList={formDataList}
+                      isOpen={isOpen}
+                      setIsOpen={setIsOpen}
+                    />
+                  )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className='flex flex-col items-center gap-5'>
+                <div className='flex flex-row gap-4'>
+                  {/* stepが1より大きい時のみ戻るボタンを表示 */}
+                  {activeStep > 1 && (
+                    <OutlinePrimaryButton onClick={prevStep}>戻る</OutlinePrimaryButton>
+                  )}
+                  <PrimaryButton
+                    onClick={() => {
+                      {
+                        activeStep === steps.length ? setIsDone(true) : nextStep();
+                      }
+                      isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
+                    }}
+                  >
+                    <div className='flex'>
+                      {activeStep === steps.length ? '登録して確認' : '登録して次へ'}
+                      <RiArrowDropRightLine size={23} />
+                    </div>
+                  </PrimaryButton>
+                </div>
+                {!props.isOnlyReported && (
+                  <div className='col-span-12 grid w-full justify-items-center'>
+                    <UnderlinePrimaryButton
+                      className={'pr-1'}
                       onClick={() => {
                         {
                           activeStep === steps.length ? setIsDone(true) : nextStep();
                         }
-                        isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
+                        isFinanceCheckHandler(formDataList[activeStep - 1].id, false);
                       }}
                     >
-                      <div className='flex'>
-                        {activeStep === steps.length ? '登録して確認' : '登録して次へ'}
-                        <RiArrowDropRightLine size={23} />
-                      </div>
-                    </PrimaryButton>
+                      {activeStep === steps.length ? '登録せずに確認' : '登録せずに次へ'}
+                      <RiArrowDropRightLine size={23} />
+                    </UnderlinePrimaryButton>
                   </div>
-                  {!props.isOnlyReported && (
-                    <div className='col-span-12 grid w-full justify-items-center'>
-                      <UnderlinePrimaryButton
-                        className={'pr-1'}
-                        onClick={() => {
-                          {
-                            activeStep === steps.length ? setIsDone(true) : nextStep();
-                          }
-                          isFinanceCheckHandler(formDataList[activeStep - 1].id, false);
-                        }}
-                      >
-                        {activeStep === steps.length ? '登録せずに確認' : '登録せずに次へ'}
-                        <RiArrowDropRightLine size={23} />
-                      </UnderlinePrimaryButton>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
+                )}
+              </div>
+            </>
+          )}
         </Modal>
       ) : null}
     </>

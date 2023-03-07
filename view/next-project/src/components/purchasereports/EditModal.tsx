@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
@@ -170,19 +169,29 @@ export default function EditModal(props: ModalProps) {
 
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
-    <div className='my-6 grid grid-cols-4 justify-items-center items-center gap-4 w-9/10 mx-auto'>
+    <div className='my-6 mx-auto grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
       <p className='text-lg text-black-600'>物品名</p>
       <div className='col-span-3 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.item} onChange={formDataListHandler('item')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.item}
+          onChange={formDataListHandler('item')}
+        />
       </div>
       <p className='text-lg text-black-600'>単価</p>
       <div className='col-span-3 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.price} onChange={formDataListHandler('price')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.price}
+          onChange={formDataListHandler('price')}
+        />
       </div>
       <p className='text-lg text-black-600'>個数</p>
       <div className='col-span-3 w-full'>
         <Input
-          className='w-full' 
+          className='w-full'
           id={String(data.id)}
           value={data.quantity}
           onChange={formDataListHandler('quantity')}
@@ -190,11 +199,21 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-lg text-black-600'>詳細</p>
       <div className='col-span-3 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.detail} onChange={formDataListHandler('detail')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.detail}
+          onChange={formDataListHandler('detail')}
+        />
       </div>
       <p className='text-lg text-black-600'>URL</p>
       <div className='col-span-3 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.url} onChange={formDataListHandler('url')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.url}
+          onChange={formDataListHandler('url')}
+        />
       </div>
     </div>
   );
@@ -204,7 +223,7 @@ export default function EditModal(props: ModalProps) {
       {props.isOpen ? (
         <Modal className='w-1/2'>
           <div className='w-full'>
-            <div className='w-fit ml-auto'>
+            <div className='ml-auto w-fit'>
               <CloseButton
                 onClick={() => {
                   props.setIsOpen(false);
@@ -212,7 +231,7 @@ export default function EditModal(props: ModalProps) {
               />
             </div>
           </div>
-          <div className='mb-10 w-fit mx-auto text-xl text-black-600'>
+          <div className='mx-auto mb-10 w-fit text-xl text-black-600'>
             <p>購入物品の修正</p>
           </div>
           <div>
@@ -230,24 +249,34 @@ export default function EditModal(props: ModalProps) {
               {isDone ? (
                 // 編集完了した時に完了と戻るボタンを表示
                 <>
-                  <div className='w-9/10 mb-6 grid mx-auto grid-cols-4 gap-4 my-5 justify-items-center items-center'>
+                  <div className='mx-auto my-5 mb-6 grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
                     <p className='text-lg text-black-600'>割引</p>
                     <div className='col-span-3 w-full'>
-                      <Input className='w-full' value={formData.discount} onChange={formDataHandler('discount')} />
+                      <Input
+                        className='w-full'
+                        value={formData.discount}
+                        onChange={formDataHandler('discount')}
+                      />
                     </div>
                     <p className='text-lg text-black-600'>加算</p>
                     <div className='col-span-3 w-full'>
-                      <Input className='w-full' value={formData.addition} onChange={formDataHandler('addition')} />
+                      <Input
+                        className='w-full'
+                        value={formData.addition}
+                        onChange={formDataHandler('addition')}
+                      />
                     </div>
                     <p className='text-lg text-black-600'>備考</p>
                     <div className='col-span-3 w-full'>
-                      <Textarea className='w-full' value={formData.remark} onChange={formDataHandler('remark')} />
+                      <Textarea
+                        className='w-full'
+                        value={formData.remark}
+                        onChange={formDataHandler('remark')}
+                      />
                     </div>
                   </div>
-                  <div className='flex flex-row gap-4 justify-center'>
-                    <OutlinePrimaryButton onClick={reset}>
-                      戻る
-                    </OutlinePrimaryButton>
+                  <div className='flex flex-row justify-center gap-4'>
+                    <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
                     <PrimaryButton
                       onClick={() => {
                         submit(formDataList, formData, props.purchaseReportId);
@@ -260,7 +289,7 @@ export default function EditModal(props: ModalProps) {
               ) : (
                 <>
                   <div className='mt-6 grid grid-cols-12 gap-4'>
-                    <div className='col-span-1 grid'/>
+                    <div className='col-span-1 grid' />
                     <div className='col-span-10 grid justify-items-center'>
                       {formDataList.length > 0 ? (
                         <div className='flex'>
@@ -300,12 +329,12 @@ export default function EditModal(props: ModalProps) {
                         </div>
                       )}
                     </div>
-                    <div className='col-span-1 grid'/>
+                    <div className='col-span-1 grid' />
                   </div>
                 </>
               )}
             </div>
-            <div className='col-span-1 grid'/>
+            <div className='col-span-1 grid' />
           </div>
         </Modal>
       ) : null}

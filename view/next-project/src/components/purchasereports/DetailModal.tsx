@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
@@ -54,7 +53,7 @@ const DetailModal: FC<ModalProps> = (props) => {
       <div className='ml-auto w-fit'>
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
       </div>
-      <div className='w-fit mx-auto mb-10'>
+      <div className='mx-auto mb-10 w-fit'>
         <p className='text-2xl font-thin text-black-600'>報告の詳細</p>
       </div>
       <div className='mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-y-3 gap-x-10'>
@@ -114,7 +113,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         </div>
       </div>
 
-      <div className='w-fit mx-auto mb-10'>
+      <div className='mx-auto mb-10 w-fit'>
         <p className='text-2xl font-thin text-black-600'>購入物品</p>
       </div>
       <div className='grid h-[20rem] w-full justify-items-center'>
