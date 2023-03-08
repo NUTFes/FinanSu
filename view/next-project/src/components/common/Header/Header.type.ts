@@ -1,3 +1,3 @@
 export interface HeaderProps {
-    onSideNavOpen?: () => void;
+  onSideNavOpen?: () => void;
 }

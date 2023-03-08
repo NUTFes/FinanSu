@@ -59,7 +59,13 @@ export default function MainLayout(props: LayoutProps) {
           <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
         </div>
         <div className={clsx(s.parent)}>
-          <div className={clsx({'opacity-0 invisible': !isSideNavOpen}, {'opacity-100 visible': isSideNavOpen}, 'transition-all')}>
+          <div
+            className={clsx(
+              { 'invisible opacity-0': !isSideNavOpen },
+              { 'visible opacity-100': isSideNavOpen },
+              'transition-all',
+            )}
+          >
             <SideNav />
           </div>
           <div className={clsx('h-full w-7/8', s.content)}>{props.children}</div>
