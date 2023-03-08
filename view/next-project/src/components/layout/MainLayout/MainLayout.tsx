@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
 import { get_with_token } from '@api/api_methods';
 import 'tailwindcss/tailwind.css';
-import Header from '@components/common/Header';
+import { Header } from '@components/common/Header';
 import SideNav from '@components/common/SideNav';
 import { User } from '@type/common';
 
@@ -31,6 +31,7 @@ export async function getServerSideProps() {
 export default function MainLayout(props: LayoutProps) {
   const router = useRouter();
   const [auth] = useRecoilState(authAtom);
+  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
   useEffect(() => {
     if (router.isReady) {
@@ -55,10 +56,10 @@ export default function MainLayout(props: LayoutProps) {
       </Head>
       <div className={clsx('h-screen w-full')}>
         <div className={clsx('h-16 w-full')}>
-          <Header />
+          <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
         </div>
         <div className={clsx(s.parent)}>
-          <div className={clsx('w-1/8 bg-primary-4', s.sidenav)}>
+          <div className={clsx({'opacity-0 invisible': !isSideNavOpen}, {'opacity-100 visible': isSideNavOpen}, 'transition-all')}>
             <SideNav />
           </div>
           <div className={clsx('h-full w-7/8', s.content)}>{props.children}</div>
