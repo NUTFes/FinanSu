@@ -74,7 +74,7 @@ export default function BudgetList(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Tabs variant='soft-rounded' className={clsx('primary-1')}>
-        <TabList className={clsx('mx-10 mt-10')}>
+        <TabList className={clsx('mx-20 mt-10')}>
           <Tab>収入</Tab>
           <Tab>支出</Tab>
         </TabList>
