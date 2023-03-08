@@ -34,7 +34,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <div className='fixed flex gap-5 h-16 w-full flex-row items-center border-b-2 border-primary-1 bg-primary-4 px-3 md:px-10'>
+      <div className='fixed flex gap-5 z-50 h-16 w-full flex-row items-center border-b-2 border-primary-1 bg-primary-4 px-3 md:px-10'>
           <button
             onClick={() => {
               if (onSideNavOpen) onSideNavOpen();
