@@ -18,8 +18,10 @@ const Dropdown = (props: Props) => {
         _hover={{ color: '#023859', bgColor: '#fff' }}
         _active={{ color: '#023859', bgColor: '#fff' }}
       >
-        {/* hydrogen error が起こらないようにする */}
-        <span suppressHydrationWarning>{props.title}</span>
+        <div className='flex flex-row gap-3'>
+          {props.children}
+          <span suppressHydrationWarning className='hidden md:block'>{props.title}</span>
+        </div>
       </MenuButton>
       <MenuList>
         <MenuItem
