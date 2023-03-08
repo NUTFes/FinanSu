@@ -128,7 +128,7 @@ export default function SponsorList(props: Props) {
                   </td>
                   <td
                     className={clsx(
-                      'px-1 text-black-300',
+                      'px-1 text-black-300 text-center',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
