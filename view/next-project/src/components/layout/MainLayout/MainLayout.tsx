@@ -31,7 +31,7 @@ export async function getServerSideProps() {
 export default function MainLayout(props: LayoutProps) {
   const router = useRouter();
   const [auth] = useRecoilState(authAtom);
-  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+  const [isSideNavOpen, setIsSideNavOpen] = useState(true);
 
   useEffect(() => {
     if (router.isReady) {
@@ -61,8 +61,8 @@ export default function MainLayout(props: LayoutProps) {
         <div className={clsx(s.parent)}>
           <div
             className={clsx(
-              { 'invisible opacity-0': !isSideNavOpen },
-              { 'visible opacity-100': isSideNavOpen },
+              { 'invisible opacity-0 md:visible md:opacity-100': isSideNavOpen },
+              { 'visible opacity-100 md:invisible md:opacity-0': !isSideNavOpen },
               'transition-all',
             )}
           >
