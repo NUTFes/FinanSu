@@ -20,7 +20,9 @@ const Dropdown = (props: Props) => {
       >
         <div className='flex flex-row gap-3'>
           {props.children}
-          <span suppressHydrationWarning className='hidden md:block'>{props.title}</span>
+          <span suppressHydrationWarning className='hidden md:block'>
+            {props.title}
+          </span>
         </div>
       </MenuButton>
       <MenuList>
