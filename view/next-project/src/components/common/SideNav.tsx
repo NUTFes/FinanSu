@@ -1,5 +1,5 @@
-import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
 import React, { ReactNode, useReducer } from 'react';
 import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { HiOutlineShoppingCart, HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
@@ -26,28 +26,28 @@ interface NavItemProps {
 const FinanceLinkItems: LinkItemProps[] = [
   {
     name: '財務局',
-    icon: <IoIosArrowDropup className={clsx('mx-2 text-xl')} />,
+    icon: <IoIosArrowDropup className='mx-2 text-xl' />,
     href: '',
     isParent: true,
   },
   {
     name: '予算',
-    icon: <HiCurrencyDollar className={clsx('mx-2 text-xl')} />,
+    icon: <HiCurrencyDollar className='mx-2 text-xl' />,
     href: '/budgets',
   },
   {
     name: '学内募金',
-    icon: <MdOutlineSavings className={clsx('mx-2 text-xl')} />,
+    icon: <MdOutlineSavings className='mx-2 text-xl' />,
     href: '/fund_informations',
   },
   {
     name: '購入申請',
-    icon: <HiOutlineShoppingCart className={clsx('mx-2 text-xl')} />,
+    icon: <HiOutlineShoppingCart className='mx-2 text-xl' />,
     href: '/purchaseorders',
   },
   {
     name: '購入報告',
-    icon: <HiOutlineDocumentText className={clsx('mx-2 text-xl')} />,
+    icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
     href: '/purchasereports',
   },
 ];
@@ -55,23 +55,23 @@ const FinanceLinkItems: LinkItemProps[] = [
 const RelationLinkItems: LinkItemProps[] = [
   {
     name: '渉外局',
-    icon: <IoIosArrowDropup className={clsx('mx-2 text-xl')} />,
+    icon: <IoIosArrowDropup className='mx-2 text-xl' />,
     href: '',
     isParent: true,
   },
   {
     name: '協賛活動',
-    icon: <MdOutlineWorkOutline className={clsx('mx-2 text-xl')} />,
+    icon: <MdOutlineWorkOutline className='mx-2 text-xl' />,
     href: '/sponsoractivities',
   },
   {
     name: '協賛スタイル',
-    icon: <BsVectorPen className={clsx('mx-2 text-xl')} />,
+    icon: <BsVectorPen className='mx-2 text-xl' />,
     href: '/sponsorstyles',
   },
   {
     name: '協賛企業一覧',
-    icon: <BsBuilding className={clsx('mx-2 text-xl')} />,
+    icon: <BsBuilding className='mx-2 text-xl' />,
     href: '/sponsors',
   },
 ];
@@ -86,8 +86,8 @@ export default function SimpleSidebar() {
   const [isRelationItemsShow, setisRelationItemsShow] = useReducer((state) => !state, false);
 
   return (
-    <div className={clsx('h-full w-full bg-primary-4')}>
-      <div className={clsx('border-b-2 border-primary-1')}>
+    <div className='fixed h-full w-52 bg-primary-4 md:left-0 right-0'>
+      <div className='border-b-2 border-primary-1'>
         {FinanceLinkItems.map((link) => (
           <NavItem
             key={link.name}
@@ -102,7 +102,7 @@ export default function SimpleSidebar() {
           </NavItem>
         ))}
       </div>
-      <div className={clsx('border-b-2 border-primary-1')}>
+      <div className='border-b-2 border-primary-1'>
         {RelationLinkItems.map((link) => (
           <NavItem
             key={link.name}
