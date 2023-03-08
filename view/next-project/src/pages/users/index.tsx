@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react';
 
 import { get, get_with_token } from '@api/api_methods';
 import theme from '@assets/theme';
-import Header from '@components/common/Header';
+import { Header } from '@components/common/Header';
 import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/users/OpenEditModalButton';
 
