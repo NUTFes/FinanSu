@@ -68,7 +68,9 @@ export default function MainLayout(props: LayoutProps) {
           >
             <SideNav />
           </div>
-          <div className={clsx('h-full', {'w-7/8': isSideNavOpen}, s.content)}>{props.children}</div>
+          <div className={clsx('h-full', { 'w-7/8': isSideNavOpen }, s.content)}>
+            {props.children}
+          </div>
         </div>
       </div>
     </>

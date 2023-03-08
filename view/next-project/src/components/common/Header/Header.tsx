@@ -35,15 +35,15 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <div className='fixed flex gap-5 z-50 h-16 w-full flex-row items-center border-b-2 border-primary-1 bg-primary-4 px-3 md:px-10'>
-          <button
-            onClick={() => {
-              if (onSideNavOpen) onSideNavOpen();
-            }}
-            className='text-white-0 hidden md:block'
-          >
-            <AiOutlineMenu size={'20px'} />
-          </button>
+      <div className='fixed z-50 flex h-16 w-full flex-row items-center gap-5 border-b-2 border-primary-1 bg-primary-4 px-3 md:px-10'>
+        <button
+          onClick={() => {
+            if (onSideNavOpen) onSideNavOpen();
+          }}
+          className='hidden text-white-0 md:block'
+        >
+          <AiOutlineMenu size={'20px'} />
+        </button>
         <div className='w-24 md:w-40'>
           <Image src='/logo.svg' alt='logo' width={150} height={40} className='h-fit w-fit' />
         </div>
