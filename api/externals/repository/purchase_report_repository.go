@@ -75,7 +75,7 @@ func (ppr *purchaseReportRepository) Update(
 		SET
 			user_id =` + userId +
 		", discount =" + discount +
-		",addition =" + addition +
+		", addition =" + addition +
 		", finance_check =" + finance_check +
 		", purchase_order_id =" + purchaseOrderId +
 		", remark ='" + remark +

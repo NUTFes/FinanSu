@@ -13,7 +13,9 @@ CREATE TABLE purchase_reports (
   PRIMARY KEY (id)
 );
 
-INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (1, 100, 200, true, 1, 'test-remark');
-INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (2, 200, 400, false, 2, 'test-remark2');
-INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (3, 400, 800, true, 1, 'test-remark3');
-
+INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (1, 100, 200, true, 2, 'test-remark');
+INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (1, 0, 0, false, 1, 'test-remark2');
+INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (1, 400, 800, true, 3, 'test-remark3');
+INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (1, 400, 800, true, 4, 'test-remark3');
+INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (1, 400, 800, true, 5, 'test-remark3');
+INSERT into purchase_reports (user_id, discount, addition, finance_check, purchase_order_id, remark) values (1, 400, 800, true, 6, 'test-remark3');

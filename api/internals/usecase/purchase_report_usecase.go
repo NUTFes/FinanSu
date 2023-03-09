@@ -84,7 +84,7 @@ func (p *purchaseReportUseCase) CreatePurchaseReport(
 	PurchaseOrderID string,
 	Remark string,
 ) (domain.PurchaseReport, error) {
-	p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID,Remark)
+	p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID, Remark)
 	latastPurchaseReport := domain.PurchaseReport{}
 	row, err := p.rep.FindNewRecord(c)
 	err = row.Scan(
@@ -174,6 +174,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]d
 			&purchaseReportDetail.PurchaseOrder.ID,
 			&purchaseReportDetail.PurchaseOrder.DeadLine,
 			&purchaseReportDetail.PurchaseOrder.UserID,
+			&purchaseReportDetail.PurchaseOrder.ExpenseID,
 			&purchaseReportDetail.PurchaseOrder.FinanceCheck,
 			&purchaseReportDetail.PurchaseOrder.CreatedAt,
 			&purchaseReportDetail.PurchaseOrder.UpdatedAt,
@@ -238,6 +239,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 		&purchaseReportDetail.PurchaseOrder.ID,
 		&purchaseReportDetail.PurchaseOrder.DeadLine,
 		&purchaseReportDetail.PurchaseOrder.UserID,
+		&purchaseReportDetail.PurchaseOrder.ExpenseID,
 		&purchaseReportDetail.PurchaseOrder.FinanceCheck,
 		&purchaseReportDetail.PurchaseOrder.CreatedAt,
 		&purchaseReportDetail.PurchaseOrder.UpdatedAt,
