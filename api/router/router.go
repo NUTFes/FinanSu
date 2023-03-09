@@ -22,7 +22,6 @@ type router struct {
 	activityController        controller.ActivityController
 	sponsorController         controller.SponsorController
 	bureauController          controller.BureauController
-	expenseController         controller.ExpenseController
 }
 
 type Router interface {
@@ -46,7 +45,7 @@ func NewRouter(
 	activityController controller.ActivityController,
 	sponsorController controller.SponsorController,
 	bureauController controller.BureauController,
-	expenseController controller.ExpenseController,
+
 ) Router {
 	return router{
 		healthController,
@@ -65,7 +64,6 @@ func NewRouter(
 		activityController,
 		sponsorController,
 		bureauController,
-		expenseController,
 	}
 }
 
@@ -192,14 +190,4 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/bureaus", r.bureauController.CreateBureau)
 	e.PUT("/bureaus/:id", r.bureauController.UpdateBureau)
 	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
-
-	//expenseのRoute
-	e.GET("/expense", r.expenseController.IndexExpense)
-	e.GET("/expense/updateTP", r.expenseController.UpdateExpenseTP)
-	e.GET("/expense/details", r.expenseController.IndexExpenseDetails)
-	e.GET("/expense/:id", r.expenseController.ShowExpense)
-	e.GET("/expense/:id/details", r.expenseController.ShowExpenseDetail)
-	e.POST("/expense", r.expenseController.CreateExpense)
-	e.PUT("/expense/:id", r.expenseController.UpdateExpense)
-	e.DELETE("/expense/:id", r.expenseController.DestroyExpense)
 }

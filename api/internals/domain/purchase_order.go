@@ -8,7 +8,6 @@ type PurchaseOrder struct {
 	ID           int       `json:"id"`
 	DeadLine     string    `json:"deadline"`
 	UserID       int       `json:"userID"`
-	ExpenseID    int       `json:"expenseID"`
 	FinanceCheck bool      `json:"financeCheck"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`
