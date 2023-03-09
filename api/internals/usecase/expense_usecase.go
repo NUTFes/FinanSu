@@ -32,7 +32,6 @@ func (e *expenseUseCase) GetExpenses(c context.Context) ([]domain.Expense, error
 	expense := domain.Expense{}
 	var expenses []domain.Expense
 
-	// クエリー実行
 	rows, err := e.rep.All(c)
 	if err != nil {
 		return nil, err
