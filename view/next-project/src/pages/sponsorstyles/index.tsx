@@ -16,8 +16,8 @@ interface Props {
 export const getServerSideProps = async () => {
   const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const sponsorstylesRes = await get(getSponsorstylesUrl);
-  
-  console.log(sponsorstylesRes)
+
+  console.log(sponsorstylesRes);
 
   return {
     props: {
