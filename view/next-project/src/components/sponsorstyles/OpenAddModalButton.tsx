@@ -20,6 +20,6 @@ export const OpenAddModalButton = (props: Props) => {
       {props.children}
     </AddButton>
   );
-}
+};
 
 export default OpenAddModalButton;
