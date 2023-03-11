@@ -13,16 +13,17 @@ import {
   Stepper,
   Select,
 } from '@components/common';
+import { SCALE } from '@constants/scale';
 import { SponsorStyle } from '@type/common';
 
 import { useUI } from '../ui/context';
+
 
 interface ModalProps {
   purchaseItemNum: number;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const SCALE = ['8分の1', '4分の1', '2分の1', '1ページ', '2ページ']
 const TABLE_COLUMNS = ['広告サイズ', 'カラーorモノクロ', '金額'];
 
 export default function SponsorStyleAddModal(props: ModalProps) {
@@ -42,7 +43,6 @@ export default function SponsorStyleAddModal(props: ModalProps) {
 
   // 協賛スタイルを登録するかどうかのフラグ
   const [isDone, setIsDone] = useState<boolean>(false);
-
 
   // 協賛スタイル数だけステップを用意
   const steps = [];
@@ -73,13 +73,6 @@ export default function SponsorStyleAddModal(props: ModalProps) {
     return initFormDataList;
   });
 
-  // 協賛スタイル用のhandler
-  const formDataHandler =
-    (input: string) =>
-    (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
-
   const formDataListHandler =
     (input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -102,14 +95,14 @@ export default function SponsorStyleAddModal(props: ModalProps) {
   const addSponsorStyles = async (data: SponsorStyle[]) => {
     data.map(async (data: SponsorStyle) => {
       const purchaseReportUrl = process.env.CSR_API_URI + '/sponsorstyles';
-      const postRes = await post(purchaseReportUrl, data);
+      await post(purchaseReportUrl, data);
     });
   };
 
   // 購入物品の情報
   const content = (data: SponsorStyle) => (
     <>
-      <div className='mx-auto grid grid-cols-5 justify-items-center items-center gap-5'>
+      <div className='mx-auto grid grid-cols-5 items-center justify-items-center gap-5'>
         <p className='text-black-600'>広告サイズ</p>
         <div className='col-span-4 w-full'>
           <Select
@@ -118,11 +111,11 @@ export default function SponsorStyleAddModal(props: ModalProps) {
               setFormData({ ...formData, ['isColor']: e.target.value === 'カラー' ? true : false });
             }}
           >
-            {
-              SCALE.map((scale: string, index) => (
-                <option value={scale} key={index}>{scale}</option>
-              ))
-            }
+            {SCALE.map((scale: string, index: number) => (
+              <option value={scale} key={index}>
+                {scale}
+              </option>
+            ))}
           </Select>
         </div>
         <div className='flex flex-col items-center'>
@@ -141,7 +134,7 @@ export default function SponsorStyleAddModal(props: ModalProps) {
           </Select>
         </div>
         <p className='text-black-600'>金額</p>
-        <Input 
+        <Input
           className='col-span-4 w-full'
           id={String(data.id)}
           value={data.price}
@@ -153,7 +146,7 @@ export default function SponsorStyleAddModal(props: ModalProps) {
 
   const SponsorStyleTable = (sponsorStyles: SponsorStyle[]) => {
     return (
-      <table className='table-fixed border-collapse mb-10 w-full'>
+      <table className='mb-10 w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
             {TABLE_COLUMNS.map((tableColumn: string) => (
@@ -206,7 +199,7 @@ export default function SponsorStyleAddModal(props: ModalProps) {
     <>
       <Modal className='w-1/2'>
         <div className='w-full'>
-          <div className='w-fit ml-auto'>
+          <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
                 props.setIsOpen(false);
@@ -214,15 +207,15 @@ export default function SponsorStyleAddModal(props: ModalProps) {
             />
           </div>
         </div>
-        <div className='w-fit mx-auto text-xl mb-5 text-black-600'>協賛スタイルの登録</div>
+        <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛スタイルの登録</div>
         <div className='flex flex-col gap-5'>
           <Stepper stepNum={props.purchaseItemNum} activeStep={activeStep} isDone={isDone}>
             {!isDone && <>{content(formDataList[activeStep - 1])}</>}
           </Stepper>
           {isDone ? (
             <>
-              <div className='w-fit mx-auto'>{SponsorStyleTable(formDataList)}</div>
-              <div className='flex flex-row gap-5 justify-center'>
+              <div className='mx-auto w-fit'>{SponsorStyleTable(formDataList)}</div>
+              <div className='flex flex-row justify-center gap-5'>
                 <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
                 <PrimaryButton
                   onClick={() => {
@@ -235,13 +228,19 @@ export default function SponsorStyleAddModal(props: ModalProps) {
             </>
           ) : (
             <>
-              <div className='w-fit mx-auto flex flex-row gap-5'>
+              <div className='mx-auto flex w-fit flex-row gap-5'>
                 {/* stepが1より大きい時のみ戻るボタンを表示 */}
                 {activeStep > 1 && (
                   <OutlinePrimaryButton onClick={prevStep}>戻る</OutlinePrimaryButton>
                 )}
                 {activeStep === 1 && (
-                  <OutlinePrimaryButton onClick={()=>{props.setIsOpen(false)}}>戻る</OutlinePrimaryButton>
+                  <OutlinePrimaryButton
+                    onClick={() => {
+                      props.setIsOpen(false);
+                    }}
+                  >
+                    戻る
+                  </OutlinePrimaryButton>
                 )}
                 <PrimaryButton
                   onClick={() => {
