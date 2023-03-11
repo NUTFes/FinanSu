@@ -1,23 +1,21 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { RiAddCircleLine } from 'react-icons/ri';
 
 import { Card, Title } from '@/components/common';
 
 import MainLayout from '@/components/layout/MainLayout';
 import { get } from '@api/sponsorship';
 import EditButton from '@components/common/EditButton';
-import RegistButton from '@components/common/RegistButton';
+import OpenAddModalButton from '@components/sponsorstyles/OpenAddModalButton';
 import { SponsorStyle } from '@type/common';
 
 interface Props {
   sponsorstyles: SponsorStyle[];
 }
+
 export const getServerSideProps = async () => {
   const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const sponsorstylesRes = await get(getSponsorstylesUrl);
-
-  console.log(sponsorstylesRes);
 
   return {
     props: {
@@ -44,15 +42,9 @@ export default function SponsorList(props: Props) {
           </div>
           <div className='flex justify-end'>
             <div>
-              <RegistButton>
-                <RiAddCircleLine
-                  size={20}
-                  style={{
-                    marginRight: 5,
-                  }}
-                />
+              <OpenAddModalButton>
                 協賛スタイル登録
-              </RegistButton>
+              </OpenAddModalButton>
             </div>
           </div>
         </div>
