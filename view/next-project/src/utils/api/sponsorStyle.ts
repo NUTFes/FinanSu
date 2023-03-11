@@ -26,8 +26,20 @@ export const post = async (url: string, data: SponsorStyle) => {
 };
 
 export const put = async (url: string, data: SponsorStyle) => {
+  const scale = data.scale;
+  const isColor = data.isColor;
+  const price = data.price;
 
-  const res = await fetch(url, {
+  const putUrl =
+    url +
+    '?scale=' +
+    scale +
+    '&is_color=' +
+    isColor +
+    '&price=' +
+    price;
+
+  const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
     headers: {
