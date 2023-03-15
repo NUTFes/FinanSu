@@ -17,8 +17,6 @@ export const getServerSideProps = async () => {
   const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const sponsorstylesRes = await get(getSponsorstylesUrl);
 
-  console.log(sponsorstylesRes);
-
   return {
     props: {
       sponsorstyles: sponsorstylesRes,
