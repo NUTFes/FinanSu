@@ -27,10 +27,10 @@ module.exports = {
       'red-600': '#dc2626',
       affairs: '#3CA249',
       relation: '#4F6FAC',
-      information: '#F3B3BF',
+      information: '#E35874',
       finance: '#EB6100',
       planning: '#603085',
-      production: '#EFEA35',
+      production: '#B2AC0F',
     },
     extend: {
       width: {

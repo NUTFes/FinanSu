@@ -48,10 +48,10 @@ const theme = extendTheme({
     },
     affairs: '#3CA249',
     relation: '#4F6FAC',
-    information: '#F3B3BF',
+    information: '#E35874',
     finance: '#EB6100',
     planning: '#603085',
-    production: '#BBB704',
+    production: '#B2AC0F',
   },
 });
 export default theme;
