@@ -3,24 +3,18 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import MainLayout from '@/components/layout/MainLayout';
-import DetailModal from '@/components/sponsoractivities/DetailModal';
-import OpenAddModalButton from '@/components/sponsoractivities/OpenAddModalButton';
-import OpenDeleteModalButton from '@/components/sponsoractivities/OpenDeleteModalButton';
-<<<<<<< HEAD
-import OpenEditModalButton from '@/components/sponsoractivities/OpenEditModalButton'
-import { SponsorActivities, SponsorActivitiesView } from '@type/common'
+import MainLayout from '@components/layout/MainLayout';
+import DetailModal from '@components/sponsoractivities/DetailModal';
+import OpenAddModalButton from '@components/sponsoractivities/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
+import { SponsorActivities, SponsorActivitiesView } from '@type/common';
 
 import type { NextPage } from 'next';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
-=======
-import OpenEditModalButton from '@/components/sponsoractivities/OpenEditModalButton';
->>>>>>> a05c13749ad519d58a7f2ed5be7a1860c64bea54
+
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
-import { SponsorActivities, SponsorActivitiesItem, User } from '@type/common';
 
 // interface activity {
 //   id: number;
@@ -33,14 +27,8 @@ import { SponsorActivities, SponsorActivitiesItem, User } from '@type/common';
 // }
 
 interface Props {
-<<<<<<< HEAD
   sponsorActivities: SponsorActivities[]
   sponsorActivitiesView: SponsorActivitiesView[];
-=======
-  sponsorActiviries: SponsorActivities[];
-  sponsorActivitiesView: SopnserActivitiesView[];
-  user: User;
->>>>>>> a05c13749ad519d58a7f2ed5be7a1860c64bea54
 }
 
 export async function getServerSideProps() {
@@ -48,7 +36,6 @@ export async function getServerSideProps() {
   const getSponsorAcvitiesViewUrl = process.env.SSR_API_URI + '/activities/details';
   const sponsorActivitiesRes = await get(getSponsorAcvitiesUrl);
   const sponsorActivitiesViewRes = await get(getSponsorAcvitiesViewUrl);
-  console.log(sponsorActivitiesRes)
   return {
     props: {
       sponsorActivities: sponsorActivitiesRes,
@@ -60,12 +47,7 @@ export async function getServerSideProps() {
 export default function SponsorActivity(props: Props) {
   const [user] = useRecoilState(userAtom);
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
-<<<<<<< HEAD
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivities>();
-=======
-  const [sponsorActivitiesViewItem, setSponsorActivitiesViewItem] =
-    useState<SopnserActivitiesView>();
->>>>>>> a05c13749ad519d58a7f2ed5be7a1860c64bea54
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SponsorActivities) => {
     setSponsorActivitiesID(sponsorActivitiesID);
@@ -131,7 +113,6 @@ export default function SponsorActivity(props: Props) {
               </tr>
             </thead>
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
-<<<<<<< HEAD
                 {props.sponsorActivities.length >= 1 ? (props.sponsorActivities.map((sponsorActivitiesItem, index) => (
                   <tr key={sponsorActivitiesItem.id}>
                     <td
@@ -249,161 +230,6 @@ export default function SponsorActivity(props: Props) {
               </tbody>
             </table>
           </div>
-=======
-              {props.sponsorActivitiesView.length
-                ? props.sponsorActivitiesView.map((sponsorActivitiesViewItem, index) => (
-                    <tr key={sponsorActivitiesViewItem.sponsorActivities.id}>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                        onClick={() => {
-                          onOpen(
-                            sponsorActivitiesViewItem.sponsorActivities.id
-                              ? sponsorActivitiesViewItem.sponsorActivities.id
-                              : 0,
-                            sponsorActivitiesViewItem,
-                          );
-                        }}
-                      >
-                        <div className={clsx('text-center text-sm text-black-600')}>
-                          {sponsorActivitiesViewItem.sponsorActivities.id}
-                        </div>
-                      </td>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                      >
-                        <div className={clsx('text-center text-sm text-black-600')}>
-                          {sponsorActivitiesViewItem.sponsorActivities.sponsorID}
-                        </div>
-                      </td>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                      >
-                        <div className={clsx('text-center text-sm text-black-600')}>
-                          {sponsorActivitiesViewItem.sponsorActivities.sponsorStyleID}
-                        </div>
-                      </td>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                      >
-                        <div className={clsx('text-center text-sm text-black-600')}>
-                          {sponsorActivitiesViewItem.sponsorActivities.userID}
-                        </div>
-                      </td>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                      >
-                        {sponsorActivitiesViewItem.sponsorActivities.isDone && (
-                          <div className={clsx('text-center text-sm text-black-600')}>回収完了</div>
-                        )}
-                        {!sponsorActivitiesViewItem.sponsorActivities.isDone && (
-                          <div className={clsx('text-center text-sm text-black-600')}>未回収</div>
-                        )}
-                      </td>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                      >
-                        <div className={clsx('text-center text-sm text-black-600')}>
-                          {sponsorActivitiesViewItem.sponsorActivities.createdAt}
-                        </div>
-                      </td>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                      >
-                        <div className={clsx('text-center text-sm text-black-600')}>
-                          {sponsorActivitiesViewItem.sponsorActivities.updatedAt}
-                        </div>
-                      </td>
-                      <td
-                        className={clsx(
-                          'px-1',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.sponsorActivitiesView.length - 1
-                            ? 'pb-4 pt-3'
-                            : 'border-b py-3',
-                        )}
-                      >
-                        <div className={clsx('flex')}>
-                          <div className={clsx('mx-1')}>
-                            <OpenEditModalButton
-                              id={
-                                sponsorActivitiesViewItem.sponsorActivities.id
-                                  ? sponsorActivitiesViewItem.sponsorActivities.id
-                                  : 0
-                              }
-                              isDisabled={
-                                user.bureauID === 2 ||
-                                user.bureauID === 3 ||
-                                user.bureauID === 6 ||
-                                user.id === sponsorActivitiesViewItem.sponsorActivities.id
-                              }
-                            />
-                          </div>
-                          <div className={clsx('mx-1')}>
-                            <OpenDeleteModalButton
-                              id={
-                                sponsorActivitiesViewItem.sponsorActivities.id
-                                  ? sponsorActivitiesViewItem.sponsorActivities.id
-                                  : 0
-                              }
-                              isDisabled={
-                                user.bureauID === 2 ||
-                                user.bureauID === 3 ||
-                                user.bureauID === 6 ||
-                                user.id === sponsorActivitiesViewItem.sponsorActivities.id
-                              }
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                : ''}
-            </tbody>
-          </table>
-        </div>
->>>>>>> a05c13749ad519d58a7f2ed5be7a1860c64bea54
       </Card>
       {/* {isOpen && sponsorActivitiesItem && (
         <DetailModal
