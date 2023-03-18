@@ -56,7 +56,10 @@ export default function PurchaseReports(props: Props) {
 
   const isReportEdits = useMemo(() => {
     return props.purchaseReportView.map((purchaseReportView) => {
-      return !purchaseReportView.purchaseReport.financeCheck && (user.bureauID === 2 || user.bureauID === 3 || purchaseReportView.reportUser.id === user.id);
+      return (
+        !purchaseReportView.purchaseReport.financeCheck &&
+        (user.bureauID === 2 || user.bureauID === 3 || purchaseReportView.reportUser.id === user.id)
+      );
     });
   }, [props.purchaseReportView, user]);
 

@@ -20,7 +20,7 @@ const DeleteButton = (props: Props) => {
   return (
     <button
       disabled={!isDisabled}
-      className={`${buttonClass} h-6 w-6 min-w-0 rounded-full p-0 bg-gradient-to-br from-red-500 to-red-600`}
+      className={`${buttonClass} h-6 w-6 min-w-0 rounded-full bg-gradient-to-br from-red-500 to-red-600 p-0`}
       onClick={onClick}
     >
       <div className='flex items-center justify-center'>
@@ -28,6 +28,6 @@ const DeleteButton = (props: Props) => {
       </div>
     </button>
   );
-}
+};
 
 export default DeleteButton;

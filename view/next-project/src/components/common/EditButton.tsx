@@ -28,6 +28,6 @@ const EditButton: React.FC<Props> = (props) => {
       </div>
     </button>
   );
-}
+};
 
 export default EditButton;

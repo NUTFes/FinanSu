@@ -109,7 +109,8 @@ const DetailModal: FC<ModalProps> = (props) => {
         </div>
         <p className='text-black-600'>備考</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
-          {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.remark || '無し'}
+          {(props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.remark) ||
+            '無し'}
         </div>
       </div>
 
