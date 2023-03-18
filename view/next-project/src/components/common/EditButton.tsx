@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { RiPencilFill } from 'react-icons/ri';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const EditButton: React.FC<Props> = (props) => {
-  const { onClick, isDisabled = true } = props;
+  const { onClick, isDisabled } = props;
 
   return (
     <button
@@ -26,4 +26,4 @@ const EditButton: React.FC<Props> = (props) => {
   );
 }
 
-export default EditButton;
+export default React.memo(EditButton);
