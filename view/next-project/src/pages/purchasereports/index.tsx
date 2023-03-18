@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
@@ -53,6 +53,12 @@ export default function PurchaseReports(props: Props) {
     setPurchaseReportViewItem(purchaseReportViewItem);
     setIsOpen(true);
   };
+
+  const isReportEdits = useMemo(() => {
+    return props.purchaseReportView.map((purchaseReportView) => {
+      return !purchaseReportView.purchaseReport.financeCheck && (user.bureauID === 2 || user.bureauID === 3 || purchaseReportView.reportUser.id === user.id);
+    });
+  }, [props.purchaseReportView, user]);
 
   // 購入報告
   const initPurchaseReportList = [];
@@ -281,13 +287,13 @@ export default function PurchaseReports(props: Props) {
                       {purchaseReportViewItem.purchaseItems &&
                         purchaseReportViewItem.purchaseItems.map(
                           (purchaseItem: PurchaseItem, index: number) => (
-                            <>
+                            <div key={index}>
                               {purchaseReportViewItem.purchaseItems.length - 1 === index ? (
                                 <>{purchaseItem.item}</>
                               ) : (
                                 <>{purchaseItem.item},</>
                               )}
-                            </>
+                            </div>
                           ),
                         )}
                     </div>
@@ -348,12 +354,7 @@ export default function PurchaseReports(props: Props) {
                               ? purchaseReportViewItem.purchaseReport.id
                               : 0
                           }
-                          isDisabled={
-                            !purchaseReportViewItem.purchaseReport.financeCheck &&
-                            (user.bureauID === 2 ||
-                              user.bureauID === 3 ||
-                              user.id === purchaseReportViewItem.reportUser.id)
-                          }
+                          isDisabled={isReportEdits[index]}
                         />
                       </div>
                       <div className='mx-1'>
@@ -363,12 +364,7 @@ export default function PurchaseReports(props: Props) {
                               ? purchaseReportViewItem.purchaseReport.id
                               : 0
                           }
-                          isDisabled={
-                            !purchaseReportViewItem.purchaseReport.financeCheck &&
-                            (user.bureauID === 2 ||
-                              user.bureauID === 3 ||
-                              user.id === purchaseReportViewItem.reportUser.id)
-                          }
+                          isDisabled={isReportEdits[index]}
                         />
                       </div>
                     </div>
