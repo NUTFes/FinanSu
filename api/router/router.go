@@ -194,12 +194,12 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
 
 	//expenseのRoute
-	e.GET("/expense", r.expenseController.IndexExpense)
-	e.GET("/expense/updateTP", r.expenseController.UpdateExpenseTP)
-	e.GET("/expense/details", r.expenseController.IndexExpenseDetails)
-	e.GET("/expense/:id", r.expenseController.ShowExpense)
-	e.GET("/expense/:id/details", r.expenseController.ShowExpenseDetail)
-	e.POST("/expense", r.expenseController.CreateExpense)
-	e.PUT("/expense/:id", r.expenseController.UpdateExpense)
-	e.DELETE("/expense/:id", r.expenseController.DestroyExpense)
+	e.GET("/expenses", r.expenseController.IndexExpense)
+	e.GET("/expenses/updateTP", r.expenseController.UpdateExpenseTP)
+	e.GET("/expenses/details", r.expenseController.IndexExpenseDetails)
+	e.GET("/expenses/:id", r.expenseController.ShowExpense)
+	e.GET("/expenses/:id/details", r.expenseController.ShowExpenseDetail)
+	e.POST("/expenses", r.expenseController.CreateExpense)
+	e.PUT("/expenses/:id", r.expenseController.UpdateExpense)
+	e.DELETE("/expenses/:id", r.expenseController.DestroyExpense)
 }
