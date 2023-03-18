@@ -162,7 +162,7 @@ export default function EditModal(props: ModalProps) {
   // 購入物品を更新
   const updatePurchaseItem = async (data: PurchaseItem[]) => {
     data.map(async (item) => {
-      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseItems/' + item.id;
+      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
       await putPurchaseItem(updatePurchaseItemUrl, item);
     });
   };
