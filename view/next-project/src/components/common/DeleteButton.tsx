@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
@@ -7,7 +6,7 @@ interface Props {
   isDisabled?: boolean;
 }
 
-export default function DeleteButton(props: Props) {
+const DeleteButton = (props: Props) => {
   const { onClick, isDisabled } = props;
 
   const buttonClass = useMemo(() => {
@@ -30,3 +29,5 @@ export default function DeleteButton(props: Props) {
     </button>
   );
 }
+
+export default DeleteButton;
