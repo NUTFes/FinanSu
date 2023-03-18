@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
 
 interface Props {
@@ -9,13 +9,17 @@ interface Props {
 const EditButton: React.FC<Props> = (props) => {
   const { onClick, isDisabled } = props;
 
+  const buttonClass = useMemo(() => {
+    if (!isDisabled) {
+      return 'cursor-default bg-primary-1 opacity-25';
+    } else {
+      return 'cursor-pointer bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1';
+    }
+  }, [isDisabled]);
+
   return (
     <button
-      className={`${
-      !isDisabled
-          ? 'cursor-default bg-primary-1 opacity-25'
-          : 'cursor-pointer bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1'
-      }  h-6 w-6 min-w-0 rounded-full  p-0`}
+      className={`${buttonClass}  h-6 w-6 min-w-0 rounded-full  p-0`}
       disabled={!isDisabled}
       onClick={onClick}
     >
@@ -26,4 +30,4 @@ const EditButton: React.FC<Props> = (props) => {
   );
 }
 
-export default React.memo(EditButton);
+export default EditButton;
