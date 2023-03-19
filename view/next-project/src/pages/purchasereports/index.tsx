@@ -54,15 +54,6 @@ export default function PurchaseReports(props: Props) {
     setIsOpen(true);
   };
 
-  const isReportEdits = useMemo(() => {
-    return props.purchaseReportView.map((purchaseReportView) => {
-      return (
-        !purchaseReportView.purchaseReport.financeCheck &&
-        (user.bureauID === 2 || user.bureauID === 3 || purchaseReportView.reportUser.id === user.id)
-      );
-    });
-  }, [props.purchaseReportView, user]);
-
   // 購入報告
   const initPurchaseReportList = [];
   for (let i = 0; i < props.purchaseReportView.length; i++) {
@@ -352,7 +343,12 @@ export default function PurchaseReports(props: Props) {
                               ? purchaseReportViewItem.purchaseReport.id
                               : 0
                           }
-                          isDisabled={isReportEdits[index]}
+                          isDisabled={
+                            !purchaseReportViewItem.purchaseOrder.financeCheck &&
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
+                              user.id === purchaseReportViewItem.purchaseOrder.userID)
+                          }
                         />
                       </div>
                       <div className='mx-1'>
@@ -362,7 +358,12 @@ export default function PurchaseReports(props: Props) {
                               ? purchaseReportViewItem.purchaseReport.id
                               : 0
                           }
-                          isDisabled={isReportEdits[index]}
+                          isDisabled={
+                            !purchaseReportViewItem.purchaseOrder.financeCheck &&
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
+                              user.id === purchaseReportViewItem.purchaseOrder.userID)
+                          }
                         />
                       </div>
                     </div>
