@@ -5,11 +5,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 
 import theme from '@assets/theme';
 import DeleteModal from '@components/users/DeleteModal';
-
-interface Bureau {
-  id: number;
-  name: string;
-}
+import { Bureau } from '@type/common';
 
 interface Props {
   width?: string;
