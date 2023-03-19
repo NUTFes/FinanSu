@@ -17,13 +17,14 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
+import { BUREAUS } from '@/constants/bureaus';
 import { authAtom, userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
 import theme from '@assets/theme';
 import LoadingButton from '@components/common/LoadingButton';
-import { Bureau, SignUp, User } from '@type/common';
+import { SignUp, User } from '@type/common';
 
 export default function SignUpView() {
   const [, setAuth] = useRecoilState(authAtom);
@@ -31,34 +32,6 @@ export default function SignUpView() {
 
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
-
-  // 局（Bureau）をフロントで定義
-  const bureaus: Bureau[] = [
-    {
-      id: 1,
-      name: '総務局',
-    },
-    {
-      id: 2,
-      name: '渉外局',
-    },
-    {
-      id: 3,
-      name: '財務局',
-    },
-    {
-      id: 4,
-      name: '企画局',
-    },
-    {
-      id: 5,
-      name: '制作局',
-    },
-    {
-      id: 6,
-      name: '情報局',
-    },
-  ];
 
   const [postUserData, setPostUserData] = useState<User>({
     id: 0,
@@ -159,7 +132,7 @@ export default function SignUpView() {
                     value={postUserData.bureauID}
                     onChange={userDataHandler('bureauID')}
                   >
-                    {bureaus.map((bureau) => (
+                    {BUREAUS.map((bureau) => (
                       <option key={bureau.id} value={bureau.id}>
                         {bureau.name}
                       </option>

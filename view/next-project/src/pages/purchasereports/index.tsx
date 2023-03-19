@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
-import { Card, Checkbox, Title } from '@components/common';
+import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
@@ -216,13 +216,8 @@ export default function PurchaseReports(props: Props) {
                       );
                     }}
                   >
-                    <div className='text-center text-sm text-black-600'>
-                      {purchaseReportViewItem.orderUser.bureauID === 1 && '総務局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 2 && '渉外局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 3 && '財務局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 4 && '企画局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 5 && '政策局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 6 && '情報局'}
+                    <div className={clsx('flex justify-center')}>
+                      <BureauLabel bureauID={purchaseReportViewItem.orderUser.bureauID} />
                     </div>
                   </td>
                   <td
