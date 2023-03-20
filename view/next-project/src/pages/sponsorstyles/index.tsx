@@ -8,21 +8,17 @@ import MainLayout from '@/components/layout/MainLayout';
 import { get } from '@api/sponsorship';
 import EditButton from '@components/common/EditButton';
 import RegistButton from '@components/common/RegistButton';
+import { SponsorStyle } from '@type/common';
 
-interface SponsorStyle {
-  id: number;
-  scale: string;
-  is_color: boolean;
-  price: number;
-  created_at: string;
-  updated_at: string;
-}
 interface Props {
   sponsorstyles: SponsorStyle[];
 }
 export const getServerSideProps = async () => {
   const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const sponsorstylesRes = await get(getSponsorstylesUrl);
+
+  console.log(sponsorstylesRes);
+
   return {
     props: {
       sponsorstyles: sponsorstylesRes,
@@ -79,12 +75,6 @@ export default function SponsorList(props: Props) {
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                   <p className='text-center text-sm text-black-600'></p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'>作成日時</p>
-                </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'>更新日時</p>
-                </th>
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
@@ -115,10 +105,10 @@ export default function SponsorList(props: Props) {
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    {sponsorStyleItem.is_color && (
+                    {sponsorStyleItem.isColor && (
                       <p className='text-center text-sm text-black-600'>カラー</p>
                     )}
-                    {!sponsorStyleItem.is_color && (
+                    {!sponsorStyleItem.isColor && (
                       <p className='text-center text-sm text-black-600'>モノクロ</p>
                     )}
                   </td>
@@ -141,28 +131,6 @@ export default function SponsorList(props: Props) {
                     <div className='text-center'>
                       <EditButton />
                     </div>
-                  </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <p className='text-center text-sm text-black-600'>
-                      {sponsorStyleItem.created_at}
-                    </p>
-                  </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <p className='text-center text-sm text-black-600'>
-                      {sponsorStyleItem.updated_at}
-                    </p>
                   </td>
                 </tr>
               ))}
