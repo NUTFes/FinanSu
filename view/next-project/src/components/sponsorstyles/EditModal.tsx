@@ -23,12 +23,7 @@ export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
   // 協賛スタイルのリスト
-  const [formData, setFormData] = useState<SponsorStyle>({
-    id: props.sponsorStyle.id,
-    scale: props.sponsorStyle.scale,
-    isColor: props.sponsorStyle.isColor,
-    price: props.sponsorStyle.price,
-  });
+  const [formData, setFormData] = useState<SponsorStyle>(props.sponsorStyle);
 
   const handler =
     (input: string) =>
