@@ -19,7 +19,13 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <EditButton onClick={onOpen} isDisabled={true} />
-      {isOpen && <EditModal sponsorStyleId={props.id} setIsOpen={setIsOpen} sponsorStyle={props.sponsorStyle} />}
+      {isOpen && (
+        <EditModal
+          sponsorStyleId={props.id}
+          setIsOpen={setIsOpen}
+          sponsorStyle={props.sponsorStyle}
+        />
+      )}
     </>
   );
 };

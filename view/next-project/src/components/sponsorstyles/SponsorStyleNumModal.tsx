@@ -30,16 +30,16 @@ export default function SponsorStyleNumModal() {
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <div className='mt-3 mb-8 mx-auto w-fit'>
+      <div className='mx-auto mt-3 mb-8 w-fit'>
         <p className='text-xl text-black-600'> 協賛スタイルの登録</p>
       </div>
-      <div className='flex flex-col gap-8 items-center'>
-        <div className='flex flex-col gap-2 items-center'>
+      <div className='flex flex-col items-center gap-8'>
+        <div className='flex flex-col items-center gap-2'>
           <p className='text-md flex items-center text-black-600'>複数同時に登録できます</p>
           <p className='text-md flex items-center text-black-600'>いくつ登録しますか？</p>
         </div>
-        <div className='w-3/4 flex flex-row gap-3 items-center'>
-          <p className='w-1/2 text-md text-black-600'>登録数</p>
+        <div className='flex w-3/4 flex-row items-center gap-3'>
+          <p className='text-md w-1/2 text-black-600'>登録数</p>
           <PullDown
             value={purchaseItemNum}
             onChange={(e) => setPurchaseItemNum(Number(e.target.value))}
@@ -64,10 +64,7 @@ export default function SponsorStyleNumModal() {
               報告へ進む
             </PrimaryButton>
             {isOpen && (
-              <SponsorStyleAddModal
-                purchaseItemNum={purchaseItemNum}
-                setIsOpen={setIsOpen}
-              />
+              <SponsorStyleAddModal purchaseItemNum={purchaseItemNum} setIsOpen={setIsOpen} />
             )}
           </div>
         </div>

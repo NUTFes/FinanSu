@@ -18,7 +18,6 @@ import { SponsorStyle } from '@type/common';
 
 import { useUI } from '../ui/context';
 
-
 interface ModalProps {
   purchaseItemNum: number;
   setIsOpen: (isOpen: boolean) => void;

@@ -5,14 +5,7 @@ export const post = async (url: string, data: SponsorStyle) => {
   const isColor = data.isColor;
   const price = data.price;
 
-  const postUrl =
-    url +
-    '?scale=' +
-    scale +
-    '&is_color=' +
-    isColor +
-    '&price=' +
-    price;
+  const postUrl = url + '?scale=' + scale + '&is_color=' + isColor + '&price=' + price;
 
   const res = await fetch(postUrl, {
     method: 'POST',
@@ -30,14 +23,7 @@ export const put = async (url: string, data: SponsorStyle) => {
   const isColor = data.isColor;
   const price = data.price;
 
-  const putUrl =
-    url +
-    '?scale=' +
-    scale +
-    '&is_color=' +
-    isColor +
-    '&price=' +
-    price;
+  const putUrl = url + '?scale=' + scale + '&is_color=' + isColor + '&price=' + price;
 
   const res = await fetch(putUrl, {
     method: 'PUT',
