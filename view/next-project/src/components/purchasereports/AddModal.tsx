@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
+import { BUREAUS } from '@/constants/bureaus';
 import { userAtom } from '@/store/atoms';
 import { CloseButton, Modal, PrimaryButton, PullDown } from '@components/common';
 import { useUI } from '@components/ui/context';
@@ -10,34 +11,6 @@ export default function PurchaseItemNumModal() {
   const [user] = useRecoilState(userAtom);
 
   const { setModalView, openModal, closeModal } = useUI();
-
-  // 局（Bureau）をフロントで定義
-  const bureaus = [
-    {
-      id: 1,
-      name: '総務局',
-    },
-    {
-      id: 2,
-      name: '渉外局',
-    },
-    {
-      id: 3,
-      name: '財務局',
-    },
-    {
-      id: 4,
-      name: '企画局',
-    },
-    {
-      id: 5,
-      name: '制作局',
-    },
-    {
-      id: 6,
-      name: '情報局',
-    },
-  ];
 
   const [bureauID, setBureauID] = useState<number>(user.bureauID);
 
@@ -81,7 +54,7 @@ export default function PurchaseItemNumModal() {
               )}
             >
               <PullDown value={bureauID} onChange={bureauHandler()}>
-                {bureaus.map((data) => (
+                {BUREAUS.map((data) => (
                   <option key={data.id} value={data.id}>
                     {data.name}
                   </option>
