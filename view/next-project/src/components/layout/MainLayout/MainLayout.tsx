@@ -34,13 +34,10 @@ export default function MainLayout(props: LayoutProps) {
 
   useEffect(() => {
     if (router.isReady) {
-      console.log(auth);
       if (!auth.isSignIn) {
-        console.log('if');
         router.push('/');
         localStorage.clear();
       } else if (auth.isSignIn === true && router.pathname == '/') {
-        console.log('else if');
         router.push('/purchaseorders');
       }
     }

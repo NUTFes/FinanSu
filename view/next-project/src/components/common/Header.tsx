@@ -19,14 +19,10 @@ const Header = () => {
       isSignIn: false,
       accessToken: '',
     };
-    console.log('sign out');
     if (req.status === 200) {
       setAuth(authData);
       setUser({} as User);
       Router.push('/');
-    } else {
-      console.log('Error' + req.status);
-      console.log(req);
     }
   };
 
