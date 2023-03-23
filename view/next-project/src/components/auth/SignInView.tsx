@@ -55,8 +55,6 @@ export default function SignInView() {
       setUser(userRes);
       Router.push('/purchaseorders');
     } else {
-      console.log('Error' + res.status);
-      console.log(res);
       alert(
         'ログインに失敗しました。メールアドレスもしくはパスワードが間違っている可能性があります',
       );
