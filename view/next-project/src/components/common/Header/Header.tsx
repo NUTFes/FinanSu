@@ -27,9 +27,6 @@ const Header = (props: HeaderProps) => {
       setAuth(authData);
       setUser({} as User);
       Router.push('/');
-    } else {
-      console.log('Error' + req.status);
-      console.log(req);
     }
   };
 
