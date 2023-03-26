@@ -15,7 +15,12 @@ function PrimaryButton(props: Props): JSX.Element {
     (props.className ? ` ${props.className}` : '') +
     (props.disabled ? ' cursor-not-allowed opacity-20' : '');
   return (
-    <button className={clsx(className)} onClick={props.onClick} type={props.type} disabled={props.disabled}>
+    <button
+      className={clsx(className)}
+      onClick={props.onClick}
+      type={props.type}
+      disabled={props.disabled}
+    >
       <div className={clsx('flex items-center')}>{props.children}</div>
     </button>
   );

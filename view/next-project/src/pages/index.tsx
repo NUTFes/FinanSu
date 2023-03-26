@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import Image from 'next/image';
+import { useState } from 'react';
+
 import { PrimaryButton } from '@/components/common';
 
 import SignInView from '@components/auth/SignInView';
@@ -12,15 +13,15 @@ export default function Home() {
     if (isMember) {
       return (
         <>
-          <div className='flex items-center justify-center gap-2 mt-8'>
+          <div className='mt-8 flex items-center justify-center gap-2'>
             <Image
               src='/logo-black.svg'
               alt='logo'
               width={150}
               height={40}
-              className='h-fit md:w-48 w-40'
+              className='h-fit w-40 md:w-48'
             />
-            <p className='md:text-3xl text-2xl text-black-600'>ログイン</p>
+            <p className='text-2xl text-black-600 md:text-3xl'>ログイン</p>
           </div>
           <SignInView />
           <hr className='border-black-300' />
@@ -33,7 +34,7 @@ export default function Home() {
     } else {
       return (
         <>
-          <div className='flex items-center justify-center gap-2 mt-8'>
+          <div className='mt-8 flex items-center justify-center gap-2'>
             <Image
               src='/logo-black.svg'
               alt='logo'
@@ -55,7 +56,9 @@ export default function Home() {
   };
   return (
     <LoginLayout>
-      <div className='m-8 w-fit rounded-lg px-10 shadow-md min-w-[500px]'>{cardContent(isMember)}</div>
+      <div className='m-8 w-fit min-w-[500px] rounded-lg px-10 shadow-md'>
+        {cardContent(isMember)}
+      </div>
     </LoginLayout>
   );
 }

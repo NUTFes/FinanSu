@@ -10,6 +10,7 @@ import { signUp } from '@api/signUp';
 import { post } from '@api/user';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignUp, User } from '@type/common';
+
 import { PrimaryButton } from '../common';
 
 export default function SignUpView() {
@@ -79,21 +80,17 @@ export default function SignUpView() {
 
   return (
     <form onSubmit={handleSubmit(postUser)}>
-      <div className='my-16 flex flex-col items-center w-full'>
-        <div className='flex flex-col gap-3 mb-10'>
+      <div className='my-16 flex w-full flex-col items-center'>
+        <div className='mb-10 flex flex-col gap-3'>
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
-            <p className='text-black-300 whitespace-nowrap'>
-              名前
-            </p>
+            <p className='whitespace-nowrap text-black-300'>名前</p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='text'
               value={postUserData.name}
               onChange={userDataHandler('name')}
             />
-            <p className='text-black-300 whitespace-nowrap'>
-              学科
-            </p>
+            <p className='whitespace-nowrap text-black-300'>学科</p>
             <select
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               value={postUserData.bureauID}
@@ -105,9 +102,7 @@ export default function SignUpView() {
                 </option>
               ))}
             </select>
-            <p className='text-black-300 whitespace-nowrap'>
-              メールアドレス
-            </p>
+            <p className='whitespace-nowrap text-black-300'>メールアドレス</p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='text'
@@ -120,9 +115,7 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p className='text-black-300 whitespace-nowrap'>
-              パスワード
-            </p>
+            <p className='whitespace-nowrap text-black-300'>パスワード</p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='password'
@@ -134,28 +127,26 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p className='text-black-300 whitespace-nowrap'>
-              パスワード確認
-            </p>
-              <input
-                className='col-span-2 w-full border-b border-b-primary-1 p-1'
-                type='password'
-                {...register('passwordConfirmation', {
-                  validate: {
-                    correct: (input: string) => input === getValues('password'),
-                  },
-                })}
-              />
+            <p className='whitespace-nowrap text-black-300'>パスワード確認</p>
+            <input
+              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              type='password'
+              {...register('passwordConfirmation', {
+                validate: {
+                  correct: (input: string) => input === getValues('password'),
+                },
+              })}
+            />
           </div>
         </div>
         <div className='mb-5'>
           <p className='text-red-500'>{errors.email && errors.email.message}</p>
           <p className='text-red-500'>{errors.password && errors.password.message}</p>
           <p className='text-red-500'>
-              {errors.passwordConfirmation && errors.passwordConfirmation.type === 'correct' && (
-                <p>パスワードが一致しません</p>
-              )}
-            </p>
+            {errors.passwordConfirmation && errors.passwordConfirmation.type === 'correct' && (
+              <p>パスワードが一致しません</p>
+            )}
+          </p>
         </div>
         {isSignUpNow ? (
           <LoadingButton loadingText='登録中' />
