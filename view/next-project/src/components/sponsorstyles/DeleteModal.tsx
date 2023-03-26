@@ -10,7 +10,7 @@ interface ModalProps {
   id: number | string;
 }
 
-const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
+const SponsorStyleDeleteModal: FC<ModalProps> = (props) => {
   const router = useRouter();
 
   const closeModal = () => {
@@ -27,7 +27,7 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
     <Modal className='w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
-          <CloseButton onClick={closeModal} />
+          <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
       <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛スタイルの削除</div>
@@ -49,4 +49,4 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
   );
 };
 
-export default PurchaseReportDeleteModal;
+export default SponsorStyleDeleteModal;
