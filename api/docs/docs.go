@@ -392,6 +392,96 @@ const docTemplate = `{
                 },
             },
         },
+        "/departments": {
+            "get": {
+                tags: ["department"],
+                "description": "departmentの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "departmentの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["department"],
+                "description": "departmentの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたdepartmentが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/departments/{id}": {
+            "get": {
+                tags: ["department"],
+                "description": "IDで指定されたdepartmentの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "departmentの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["department"],
+                "description": "departmentの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたdepartmentが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["department"],
+                "description": "IDを指定してdepartmentの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "departmentの削除完了",
+                    }
+                },
+            },
+        },
         "/fund_informations": {
             "get": {
                 tags: ["fund_information"],
@@ -579,6 +669,199 @@ const docTemplate = `{
                 }
             },
         },
+        "/purchaseitems": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_itemの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたpurchase_itemが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "query",
+                        "description": "item",
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "description": "quantity",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "detail",
+                        "in": "query",
+                        "description": "detail",
+                        "type": "string"
+                    },
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "url",
+                        "type": "string"
+                    },
+                    {
+                        "name": "purchase_order_id",
+                        "in": "query",
+                        "description": "purchase_order_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    }
+                ],
+            },
+        },
+        "/purchaseitems/details": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemに紐づくuserとpurchase_orderの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_itemに紐づくuserとpurchase_orderの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/purchaseitems/{id}": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "IDで指定されたpurchase_itemの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "purchase_itemの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["purchase_item"],
+                "description": "purchase_itemの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたpurchase_itemが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "item",
+                        "in": "query",
+                        "description": "item",
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "price",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "description": "quantity",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "detail",
+                        "in": "query",
+                        "description": "detail",
+                        "type": "string"
+                    },
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "url",
+                        "type": "string"
+                    },
+                    {
+                        "name": "purchase_order_id",
+                        "in": "query",
+                        "description": "purchase_order_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["purchase_item"],
+                "description": "IDを指定してpurchase_itemの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "purchase_itemの削除完了",
+                    }
+                },
+            },
+        },
+        "/purchaseitems/{id}/details": {
+            "get": {
+                tags: ["purchase_item"],
+                "description": "IDで指定されたpurchase_itemに紐づくuserとpurchase_orderを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたpurchase_itemに紐づくuserとpurchase_orderを取得",
+                    }
+                }
+            },
+        },
         "/purchaseorders": {
             "get": {
                 tags: ["purchase_order"],
@@ -720,6 +1003,187 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
+                    }
+                }
+            },
+        },
+        "/purchasereports": {
+            "get": {
+                tags: ["purchase_report"],
+                "description": "purchase_reportの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_reportの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["purchase_report"],
+                "description": "purchase_reportの作成",
+                responses: {
+                    "200": {
+                        "description": "createされたpurchase_reportが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "discount",
+                        "in": "query",
+                        "description": "discount",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "addition",
+                        "in": "query",
+                        "description": "addition",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "purchase_order_id",
+                        "in": "query",
+                        "description": "purchase_order_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/purchasereports/details": {
+            "get": {
+                tags: ["purchase_report"],
+                "description": "purchasereportsに紐づくデータの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "purchase_reportに紐づくデータの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/purchasereports/{id}": {
+            "get": {
+                tags: ["purchase_report"],
+                "description": "IDで指定されたpurchase_reportの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "purchase_reportの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["purchase_report"],
+                "description": "purchase_reportの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたpurchase_reportが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "discount",
+                        "in": "query",
+                        "description": "discount",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "addition",
+                        "in": "query",
+                        "description": "addition",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "finance_check",
+                        "in": "query",
+                        "description": "finance_check",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "purchase_order_id",
+                        "in": "query",
+                        "description": "purchase_order_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["purchase_report"],
+                "description": "IDを指定してpurchase_reportの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "purchase_reportの削除完了",
+                    }
+                },
+            },
+        },
+        "/purchasereports/{id}/details": {
+            "get": {
+                tags: ["purchase_report"],
+                "description": "IDで指定されたpurchase_reportに紐づくデータを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたpurchase_reportに紐づくデータを取得",
                     }
                 }
             },
@@ -960,6 +1424,122 @@ const docTemplate = `{
                 responses: {
                     "200": {
                         "description": "sponsorの削除完了",
+                    }
+                },
+            },
+        },
+        "/sponsorstyles": {
+            "get": {
+                tags: ["sponsorstyle"],
+                "description": "sponsorstyleの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "sponsorstyleの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["sponsorstyle"],
+                "description": "sponsorstyleの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたsponsorstyleが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "scale",
+                        "in": "query",
+                        "description": "scale",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_color",
+                        "in": "query",
+                        "description": "is_color",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "広告値段",
+                        "type": "integer"
+                    },
+                ],
+            },
+        },
+        "/sponsorstyles/{id}": {
+            "get": {
+                tags: ["sponsorstyle"],
+                "description": "IDで指定されたsponsorstyleの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "sponsorstyleの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["sponsorstyle"],
+                "description": "sponsorstyleの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたsponsorstyleが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "scale",
+                        "in": "query",
+                        "description": "scale",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "is_color",
+                        "in": "query",
+                        "description": "is_color",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "広告値段",
+                        "type": "integer"
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["sponsorstyle"],
+                "description": "IDを指定してsponsorstyleの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "sponsorstyleの削除完了",
                     }
                 },
             },

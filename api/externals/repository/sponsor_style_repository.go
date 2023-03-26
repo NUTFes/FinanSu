@@ -9,8 +9,8 @@ import (
 )
 
 type sponsorStyleRepository struct {
-	client   db.Client
-	abstract abstract.Crud
+	client db.Client
+	crud   abstract.Crud
 }
 
 type SponsorStyleRepository interface {
@@ -19,6 +19,7 @@ type SponsorStyleRepository interface {
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Delete(context.Context, string) error
+	FindLatestRecord(context.Context) (*sql.Row, error)
 }
 
 func NewSponsorStyleRepository(c db.Client, ac abstract.Crud) SponsorStyleRepository {
@@ -27,14 +28,14 @@ func NewSponsorStyleRepository(c db.Client, ac abstract.Crud) SponsorStyleReposi
 
 // 全件取得
 func (ssr *sponsorStyleRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from sponsor_styles"
-	return ssr.abstract.Read(c, query)
+	query := "SELECT * FROM sponsor_styles"
+	return ssr.crud.Read(c, query)
 }
 
 // １件取得
 func (ssr *sponsorStyleRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select *from sponsor_styles where id = " + id
-	return ssr.abstract.ReadByID(c, query)
+	query := "SELECT * FROM sponsor_styles WHERE id = " + id
+	return ssr.crud.ReadByID(c, query)
 }
 
 // 作成
@@ -44,8 +45,11 @@ func (ssr *sponsorStyleRepository) Create(
 	isColor string,
 	price string,
 ) error {
-	var query = "insert into sponsor_styles (scale, is_color, price) values ('" + scale + "'," + isColor + "," + price + ")"
-	return ssr.abstract.UpdateDB(c, query)
+	query := `
+		INSERT INTO
+			sponsor_styles (scale, is_color, price)
+		VALUES ('` + scale + "'," + isColor + "," + price + ")"
+	return ssr.crud.UpdateDB(c, query)
 }
 
 // 編集
@@ -56,8 +60,15 @@ func (ssr *sponsorStyleRepository) Update(
 	isColor string,
 	price string,
 ) error {
-	var query = "update sponsor_styles set scale = '" + scale + "' , is_color = " + isColor + ", price = " + price + " where id = " + id
-	return ssr.abstract.UpdateDB(c, query)
+	query := `
+		UPDATE
+			sponsor_styles
+		SET
+			scale = '` + scale +
+		"' , is_color = " + isColor +
+		", price = " + price +
+		" where id = " + id
+	return ssr.crud.UpdateDB(c, query)
 }
 
 // 削除
@@ -65,6 +76,11 @@ func (ssr *sponsorStyleRepository) Delete(
 	c context.Context,
 	id string,
 ) error {
-	query := "Delete from sponsor_styles where id =" + id
-	return ssr.abstract.UpdateDB(c, query)
+	query := "DELETE FROM sponsor_styles WHERE id =" + id
+	return ssr.crud.UpdateDB(c, query)
+}
+
+func (ssr *sponsorStyleRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `SELECT * FROM sponsor_styles ORDER BY id DESC LIMIT 1`
+	return ssr.crud.ReadByID(c, query)
 }

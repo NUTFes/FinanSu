@@ -16,10 +16,8 @@ type PurchaseReportController interface {
 	CreatePurchaseReport(echo.Context) error
 	UpdatePurchaseReport(echo.Context) error
 	DestroyPurchaseReport(echo.Context) error
-	IndexPurchaseReportWithOrderItem(echo.Context) error
-	ShowPurchaseReportWithOrderItem(echo.Context) error
-	ShowPurchaseReportPostRecord(echo.Context) error
-	ShowPurchaseReportPutRecord(echo.Context) error
+	IndexPurchaseReportDetails(echo.Context) error
+	ShowPurchaseReportDetail(echo.Context) error
 }
 
 func NewPurchaseReportController(u usecase.PurchaseReportUseCase) PurchaseReportController {
@@ -53,11 +51,11 @@ func (p *purchaseReportController) CreatePurchaseReport(c echo.Context)error{
 	financeCheck :=c.QueryParam("finance_check") 
 	purchaseOrderID := c.QueryParam("purchase_order_id")
 	remark :=c.QueryParam("remark")
-	err := p.u.CreatePurchaseReport(c.Request().Context(),userID, discount,addition,financeCheck,purchaseOrderID,remark)
+	latastPurchaseReport, err := p.u.CreatePurchaseReport(c.Request().Context(),userID, discount,addition,financeCheck,purchaseOrderID,remark)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Create PurchaseReport")
+	return c.JSON(http.StatusOK, latastPurchaseReport)
 }
 
 //Update
@@ -70,11 +68,11 @@ func (p *purchaseReportController) UpdatePurchaseReport(c echo.Context) error{
 	purchaseOrderID := c.QueryParam("purchase_order_id")
 	remark :=c.QueryParam("remark")
 	
-	err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, discount, addition, financeCheck ,purchaseOrderID ,remark)
+	updatedPurchaseReport, err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, discount, addition, financeCheck ,purchaseOrderID ,remark)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Update PurchaseReport")
+	return c.JSON(http.StatusOK, updatedPurchaseReport)
 }
 
 //Destory
@@ -87,52 +85,19 @@ func (p *purchaseReportController) DestroyPurchaseReport(c echo.Context) error{
 	return c.String(http.StatusOK, "Destory PurchaseReport")
 }
 
-//IndexPurchaseReportWithOrderItem
-func (p *purchaseReportController) IndexPurchaseReportWithOrderItem(c echo.Context) error{
-	purchaseReportwithorderitems, err :=p.u.GetPurchaseReportsWithOrderItem(c.Request().Context())
+func (p *purchaseReportController) IndexPurchaseReportDetails(c echo.Context) error{
+	purchaseReportDetails, err :=p.u.GetPurchaseReportDetails(c.Request().Context())
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, purchaseReportwithorderitems)
+	return c.JSON(http.StatusOK, purchaseReportDetails)
 }
 
-//ShowPurchaseReportWithOrderItem
-func (p *purchaseReportController) ShowPurchaseReportWithOrderItem(c echo.Context) error {
+func (p *purchaseReportController) ShowPurchaseReportDetail(c echo.Context) error {
 	id := c.Param("id")
-	purchaseReportwithorderitem, err := p.u.GetPurchaseReportWithOrderItemByID(c.Request().Context(), id)
+	purchaseReportDetail, err := p.u.GetPurchaseReportDetailByID(c.Request().Context(), id)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, purchaseReportwithorderitem)
-}
-
-//ShowPurchaseReportPostRecord
-func (p *purchaseReportController) ShowPurchaseReportPostRecord(c echo.Context) error {
-	userID :=c.QueryParam("user_id")
-	discount :=c.QueryParam("discount")
-	addition :=c.QueryParam("addition")
-	financeCheck :=c.QueryParam("finance_check") 
-	purchaseOrderID := c.QueryParam("purchase_order_id")
-	remark :=c.QueryParam("remark")
-	purchaseReport, err := p.u.GetPurchaseReportPostRecord(c.Request().Context(),userID, discount, addition, financeCheck, purchaseOrderID, remark)
-	if err != nil {
-		return nil
-	}
-	return c.JSON(http.StatusOK, purchaseReport)
-}
-
-//ShowPurchaseReportPutRecord
-func (p *purchaseReportController) ShowPurchaseReportPutRecord(c echo.Context) error {
-	id := c.Param("id")
-	userID :=c.QueryParam("user_id")
-	discount :=c.QueryParam("discount")
-	addition :=c.QueryParam("addition")
-	financeCheck :=c.QueryParam("finance_check") 
-	purchaseOrderID := c.QueryParam("purchase_order_id")
-	remark :=c.QueryParam("remark")
-	purchaseReport, err:= p.u.GetPurchaseReportPutRecord(c.Request().Context(), id, userID, discount, addition, financeCheck, purchaseOrderID, remark)
-	if err != nil {
-		return nil
-	}
-	return c.JSON(http.StatusOK, purchaseReport)
+	return c.JSON(http.StatusOK, purchaseReportDetail)
 }

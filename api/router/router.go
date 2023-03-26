@@ -143,12 +143,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchasereports", r.purchaseReportController.CreatePurchaseReport)
 	e.PUT("/purchasereports/:id", r.purchaseReportController.UpdatePurchaseReport)
 	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
-	e.GET("/get_purchasereports_for_view", r.purchaseReportController.IndexPurchaseReportWithOrderItem)
-	e.GET("/get_purchasereports_for_view/:id", r.purchaseReportController.ShowPurchaseReportWithOrderItem)
-	e.POST("/get_post_purchasereports_record", r.purchaseReportController.ShowPurchaseReportPostRecord)
-	e.PUT("/get_put_purchasereports_record/:id", r.purchaseReportController.ShowPurchaseReportPutRecord)
-
-	// purchasereport_for_viewのRoute
+	e.GET("/purchasereports/details", r.purchaseReportController.IndexPurchaseReportDetails)
+	e.GET("/purchasereports/:id/details", r.purchaseReportController.ShowPurchaseReportDetail)
 
 	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)
@@ -156,8 +152,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
-	e.GET("/get_purchaseitems_for_view", r.purchaseItemController.IndexPurchaseItemWithPurchaseOrder)
-	e.GET("/get_purchaseitems_for_view/:id", r.purchaseItemController.ShowPurchaseItemWithPurchaseOrder)
+	e.GET("/purchaseitems/details", r.purchaseItemController.IndexPurchaseItemDetails)
+	e.GET("/purchaseitems/:id/details", r.purchaseItemController.ShowPurchaseItemDetails)
 
 	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
