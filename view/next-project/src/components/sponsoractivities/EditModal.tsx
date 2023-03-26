@@ -1,3 +1,7 @@
+import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
+
+import { put } from '@/utils/api/sponsorActivities';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -6,10 +10,6 @@ import {
   Select,
 } from '@components/common';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
-import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
-
-import { put } from '@/utils/api/sponsorActivities';
 
 interface ModalProps {
   sponsorActivityId: number | string;
@@ -90,7 +90,9 @@ export default function EditModal(props: ModalProps) {
               value={sponsorStyle.id}
               selected={sponsorStyle.id === data.sponsorStyleID}
             >
-              {`${sponsorStyle.scale} / ${sponsorStyle.isColor?'カラー':'モノクロ'} / ${sponsorStyle.price} 円`}
+              {`${sponsorStyle.scale} / ${sponsorStyle.isColor ? 'カラー' : 'モノクロ'} / ${
+                sponsorStyle.price
+              } 円`}
             </option>
           ))}
         </Select>
@@ -105,9 +107,15 @@ export default function EditModal(props: ModalProps) {
           ))}
         </Select>
       </div>
-        <div className='text-black-600'>回収状況</div>
-        <div className='col-span-4 w-full'>
-        <Select className='w-full' value={data.isDone?'回収完了':'未回収'} onChange={(e) => {setFormData({...formData, isDone: e.target.value === '1' ? true : false})}}>
+      <div className='text-black-600'>回収状況</div>
+      <div className='col-span-4 w-full'>
+        <Select
+          className='w-full'
+          value={data.isDone ? '回収完了' : '未回収'}
+          onChange={(e) => {
+            setFormData({ ...formData, isDone: e.target.value === '1' ? true : false });
+          }}
+        >
           <option value='0' selected={data.isDone === false}>
             未回収
           </option>

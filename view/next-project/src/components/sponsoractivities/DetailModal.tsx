@@ -1,12 +1,9 @@
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
-import { del } from '@api/api_methods';
-import { Modal, RedButton } from '@components/common';
+import { Modal } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
 interface ModalProps {
@@ -38,7 +35,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
-      <p className='mb-8 w-fit mx-auto text-2xl font-thin leading-8 tracking-widest text-black-600'>
+      <p className='mx-auto mb-8 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
         協賛活動の詳細
       </p>
       <div className='my-10 flex flex-wrap justify-center gap-8'>
@@ -110,7 +107,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='mb-5 mt-10 mx-auto w-fit text-xl text-black-600'>協賛スタイル</p>
+      <p className='mx-auto mb-5 mt-10 w-fit text-xl text-black-600'>協賛スタイル</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>

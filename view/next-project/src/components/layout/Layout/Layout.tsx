@@ -1,12 +1,12 @@
+import React, { ReactNode } from 'react';
 
-import PurchaseItemNumModal from '../../purchaseorders/PurchaseItemNumModal';
+import SponsorActivitiesAddModal from '@/components/sponsoractivities/SponsorActivitiesAddModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
-import SponsorActivitiesAddModal from '@/components/sponsoractivities/SponsorActivitiesAddModal';
 import { useUI } from '@components/ui/context';
-import React, { ReactNode } from 'react';
 
+import PurchaseItemNumModal from '../../purchaseorders/PurchaseItemNumModal';
 import s from './Layout.module.css';
 
 const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
