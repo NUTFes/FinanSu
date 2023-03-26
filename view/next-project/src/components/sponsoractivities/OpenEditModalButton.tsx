@@ -3,10 +3,12 @@ import { useState } from 'react';
 
 import { EditButton } from '../common';
 import EditModal from './EditModal';
+import { SponsorActivity } from '@/type/common';
 
 interface Props {
   children?: React.ReactNode;
-  id: React.ReactNode;
+  id: number | string;
+  sponsorActivity: SponsorActivity;
   isDisabled: boolean;
 }
 
@@ -19,7 +21,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
     <>
       <EditButton onClick={onOpen} isDisabled={props.isDisabled} />
       {isOpen ? (
-        <EditModal purchaseReportId={props.id} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <EditModal sponsorActivityId={props.id} sponsorActivity={props.sponsorActivity} setIsOpen={setIsOpen} />
       ) : null}
     </>
   );
