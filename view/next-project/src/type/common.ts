@@ -65,9 +65,6 @@ export interface PurchaseReport {
 // Sponsor(協賛関係)
 // // SponsorStyle(協賛スタイル)
 export interface SponsorStyle {
-// Sponsor(協賛関係)
-// // SponsorStyle(協賛スタイル)
-export interface SponsorStyle {
   id?: number;
   scale: string;
   isColor: boolean;
@@ -79,7 +76,6 @@ export interface SponsorStyle {
 // // Activity(協賛活動)
 export interface Activity {
   id?: number;
-  sponsorStyleID: number;
   sponsorStyleID: number;
   userID: number;
   isColor: boolean;
