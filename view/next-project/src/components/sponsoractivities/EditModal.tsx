@@ -50,6 +50,10 @@ export default function EditModal(props: ModalProps) {
   // 協賛企業のリスト
   const [formData, setFormData] = useState<SponsorActivity>(props.sponsorActivity);
 
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+
   const handler =
     (input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +77,7 @@ export default function EditModal(props: ModalProps) {
     <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
       <p className='text-black-600'>企業名</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' value={data.sponsorID} onChange={handler('sponsorId')}>
+        <Select className='w-full' onChange={handler('sponsorID')}>
           {sponsor.map((sponsor) => (
             <option key={sponsor.id} value={sponsor.id} selected={sponsor.id === data.sponsorID}>
               {sponsor.name}
@@ -83,7 +87,7 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' value={data.sponsorStyleID} onChange={handler('sponsorStyleId')}>
+        <Select className='w-full' onChange={handler('sponsorStyleID')}>
           {sponsorStyle.map((sponsorStyle) => (
             <option
               key={sponsorStyle.id}
@@ -99,7 +103,7 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' value={data.userID} onChange={handler('userId')}>
+        <Select className='w-full' onChange={handler('userID')}>
           {user.map((user) => (
             <option key={user.id} value={user.id} selected={user.id === data.userID}>
               {user.name}
@@ -111,15 +115,14 @@ export default function EditModal(props: ModalProps) {
       <div className='col-span-4 w-full'>
         <Select
           className='w-full'
-          value={data.isDone ? '回収完了' : '未回収'}
           onChange={(e) => {
-            setFormData({ ...formData, isDone: e.target.value === '1' ? true : false });
+            setFormData({ ...formData, isDone: e.target.value === '回収完了' ? true : false });
           }}
         >
-          <option value='0' selected={data.isDone === false}>
+          <option value='未回収' selected={data.isDone === false}>
             未回収
           </option>
-          <option value='1' selected={data.isDone === true}>
+          <option value='回収完了' selected={data.isDone === true}>
             回収完了
           </option>
         </Select>
