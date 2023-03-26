@@ -1,11 +1,11 @@
 import clsx from 'clsx';
-import { Title, Card } from '@components/common';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { get, get_with_token } from '@api/api_methods';
 import { put } from '@api/fundInformations';
+import { Title, Card } from '@components/common';
 import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
 import DisabledEditModalButton from '@components/fund_information/DisabledEditModalButton';
 import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
@@ -332,39 +332,25 @@ export default function FundInformations(props: Props) {
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3 '>
                 <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>
-                    財務局員確認
-                  </div>
+                  <div className='text-center text-sm text-black-600'>財務局員確認</div>
                 </th>
                 <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>
-                    財務局長確認
-                  </div>
+                  <div className='text-center text-sm text-black-600'>財務局長確認</div>
                 </th>
                 <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>
-                    教員名
-                  </div>
+                  <div className='text-center text-sm text-black-600'>教員名</div>
                 </th>
                 <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>
-                    居室
-                  </div>
+                  <div className='text-center text-sm text-black-600'>居室</div>
                 </th>
                 <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>
-                    担当者
-                  </div>
+                  <div className='text-center text-sm text-black-600'>担当者</div>
                 </th>
                 <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>
-                    金額
-                  </div>
+                  <div className='text-center text-sm text-black-600'>金額</div>
                 </th>
                 <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>
-                    備考
-                  </div>
+                  <div className='text-center text-sm text-black-600'>備考</div>
                 </th>
                 <th className='w-2/12 pb-2'></th>
               </tr>
@@ -380,10 +366,12 @@ export default function FundInformations(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
                       )}
-                    >                      
-                    <div className='text-center text-sm text-black-600'>
+                    >
+                      <div className='text-center text-sm text-black-600'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
                             fundInformation[index].isFirstCheck,
@@ -398,7 +386,8 @@ export default function FundInformations(props: Props) {
                             'isFirstCheck',
                             fundInformation[index],
                           )}
-                        {isDeveloper && unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
+                        {isDeveloper &&
+                          unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
                         {isUser && unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
                       </div>
                     </td>
@@ -406,9 +395,11 @@ export default function FundInformations(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
                       )}
-                    >   
+                    >
                       <div className='text-center text-sm text-black-600'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
@@ -421,98 +412,117 @@ export default function FundInformations(props: Props) {
                           unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
                         {isDeveloper &&
                           unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
-                        {isUser &&
-                          unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
+                        {isUser && unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
                       </div>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
                       )}
-                    >  
-                      <div className='text-center text-sm text-black-600'>{fundViewItem.teacher.name}</div>
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.teacher.name}
+                      </div>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
                       )}
-                    >  
-                      <div className='text-center text-sm text-black-600'>{fundViewItem.teacher.room}</div>
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.teacher.room}
+                      </div>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
                       )}
-                    >  
-                      <div className='text-center text-sm text-black-600'>{fundViewItem.user.name}</div>
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.user.name}
+                      </div>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
                       )}
-                    >  
-                      <div className='text-center text-sm text-black-600'>{fundViewItem.fundInformation.price}</div>
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.fundInformation.price}
+                      </div>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
                       )}
-                    >  
-                      <div className='text-center text-sm text-black-600'>{fundViewItem.fundInformation.remark}</div>
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.fundInformation.remark}
+                      </div>
                     </td>
-                      {(!isUser || fundViewItem.fundInformation.userID == currentUser.id) ? (
+                    {!isUser || fundViewItem.fundInformation.userID == currentUser.id ? (
                       <td
                         className={clsx(
                           'px-1',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === props.fundInformationView.length - 1
+                            ? 'pb-4 pt-3'
+                            : 'border-b py-3',
                         )}
                       >
                         <div className='flex gap-3'>
                           <OpenEditModalButton
                             id={
-                              fundViewItem.fundInformation.id
-                                ? fundViewItem.fundInformation.id
-                                : 0
+                              fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0
                             }
                             teachers={teachers}
                             currentUser={currentUser}
                           />
                           <OpenDeleteModalButton
                             id={
-                              fundViewItem.fundInformation.id
-                                ? fundViewItem.fundInformation.id
-                                : 0
+                              fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0
                             }
                             teacherID={fundViewItem.fundInformation.teacherID}
                             userID={Number(fundViewItem.fundInformation.userID)}
                           />
                         </div>
                       </td>
-                      ) : (
+                    ) : (
                       <td
                         className={clsx(
                           'px-1',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === props.fundInformationView.length - 1
+                            ? 'pb-4 pt-3'
+                            : 'border-b py-3',
                         )}
-                      > 
+                      >
                         <div className='flex gap-3'>
                           <DisabledEditModalButton />
                           <DisabledDeleteModalButton />
                         </div>
                       </td>
-                      )}
+                    )}
                   </tr>
                 ))}
             </tbody>
@@ -522,12 +532,8 @@ export default function FundInformations(props: Props) {
                 <th />
                 <th />
                 <th />
-                <th className='text-center text-sm text-black-600'>
-                  合計金額
-                </th>
-                <th className='text-center text-sm text-black-600'>
-                  {totalFee}
-                </th>
+                <th className='text-center text-sm text-black-600'>合計金額</th>
+                <th className='text-center text-sm text-black-600'>{totalFee}</th>
               </tr>
             </tfoot>
           </table>
