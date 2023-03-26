@@ -3,6 +3,9 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
+import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenAddModalButton from '@components/sponsoractivities/OpenAddModalButton';
@@ -10,9 +13,6 @@ import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModal
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
 import { SponsorActivity, SponsorActivityView } from '@type/common';
 
-import { userAtom } from '@/store/atoms';
-import { get } from '@api/api_methods';
-import { Card, Title } from '@components/common';
 
 interface Props {
   sponsorActivities: SponsorActivity[];
