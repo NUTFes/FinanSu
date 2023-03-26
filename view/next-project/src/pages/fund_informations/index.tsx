@@ -308,15 +308,15 @@ export default function FundInformations(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className={clsx('mx-5 mt-10')}>
-          <div className={clsx('flex')}>
+        <div className='mx-5 mt-10'>
+          <div className='flex'>
             <Title title={'購入申請一覧'} />
-            <select className={clsx('w-100 ')}>
+            <select className='w-100 '>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
             </select>
           </div>
-          <div className={clsx('flex justify-end')}>
+          <div className='flex justify-end'>
             <OpenAddModalButton
               teachersInformation={teachers}
               departments={departments}
@@ -327,51 +327,49 @@ export default function FundInformations(props: Props) {
             </OpenAddModalButton>
           </div>
         </div>
-        <div className={clsx('w-100 mb-2 p-5')}>
-          <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
+        <div className='w-100 mb-2 p-5'>
+          <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
-              <tr
-                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
-              >
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3 '>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>
                     財務局員確認
                   </div>
                 </th>
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>
                     財務局長確認
                   </div>
                 </th>
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>
                     教員名
                   </div>
                 </th>
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>
                     居室
                   </div>
                 </th>
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>
                     担当者
                   </div>
                 </th>
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>
                     金額
                   </div>
                 </th>
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>
                     備考
                   </div>
                 </th>
-                <th className={clsx('w-2/12 pb-2')}></th>
+                <th className='w-2/12 pb-2'></th>
               </tr>
             </thead>
-            <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
+            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationView &&
                 fundInformationView.map((fundViewItem: FundInformationView, index) => (
                   <tr
@@ -385,7 +383,7 @@ export default function FundInformations(props: Props) {
                         index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >                      
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                    <div className='text-center text-sm text-black-600'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
                             fundInformation[index].isFirstCheck,
@@ -411,7 +409,7 @@ export default function FundInformations(props: Props) {
                         index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >   
-                      <div className={clsx('text-center text-sm text-black-600')}>
+                      <div className='text-center text-sm text-black-600'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
                             fundInformation[index].isLastCheck,
@@ -434,7 +432,7 @@ export default function FundInformations(props: Props) {
                         index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >  
-                      <div className={clsx('text-center text-sm text-black-600')}>{fundViewItem.teacher.name}</div>
+                      <div className='text-center text-sm text-black-600'>{fundViewItem.teacher.name}</div>
                     </td>
                     <td
                       className={clsx(
@@ -443,7 +441,7 @@ export default function FundInformations(props: Props) {
                         index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >  
-                      <div className={clsx('text-center text-sm text-black-600')}>{fundViewItem.teacher.room}</div>
+                      <div className='text-center text-sm text-black-600'>{fundViewItem.teacher.room}</div>
                     </td>
                     <td
                       className={clsx(
@@ -452,7 +450,7 @@ export default function FundInformations(props: Props) {
                         index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >  
-                      <div className={clsx('text-center text-sm text-black-600')}>{fundViewItem.user.name}</div>
+                      <div className='text-center text-sm text-black-600'>{fundViewItem.user.name}</div>
                     </td>
                     <td
                       className={clsx(
@@ -461,7 +459,7 @@ export default function FundInformations(props: Props) {
                         index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >  
-                      <div className={clsx('text-center text-sm text-black-600')}>{fundViewItem.fundInformation.price}</div>
+                      <div className='text-center text-sm text-black-600'>{fundViewItem.fundInformation.price}</div>
                     </td>
                     <td
                       className={clsx(
@@ -470,7 +468,7 @@ export default function FundInformations(props: Props) {
                         index === props.fundInformationView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >  
-                      <div className={clsx('text-center text-sm text-black-600')}>{fundViewItem.fundInformation.remark}</div>
+                      <div className='text-center text-sm text-black-600'>{fundViewItem.fundInformation.remark}</div>
                     </td>
                       {(!isUser || fundViewItem.fundInformation.userID == currentUser.id) ? (
                       <td
@@ -524,10 +522,10 @@ export default function FundInformations(props: Props) {
                 <th />
                 <th />
                 <th />
-                <th className={clsx('text-center text-sm text-black-600')}>
+                <th className='text-center text-sm text-black-600'>
                   合計金額
                 </th>
-                <th className={clsx('text-center text-sm text-black-600')}>
+                <th className='text-center text-sm text-black-600'>
                   {totalFee}
                 </th>
               </tr>
