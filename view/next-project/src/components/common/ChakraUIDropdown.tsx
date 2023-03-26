@@ -1,6 +1,8 @@
 import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import React from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '@/store/atoms';
 
 interface Props {
   title: string;
@@ -9,6 +11,8 @@ interface Props {
 }
 
 const Dropdown = (props: Props) => {
+  const user = useRecoilValue(userAtom);
+
   return (
     <Menu>
       <MenuButton
@@ -18,10 +22,17 @@ const Dropdown = (props: Props) => {
         _hover={{ color: '#023859', bgColor: '#fff' }}
         _active={{ color: '#023859', bgColor: '#fff' }}
       >
-        {/* hydrogen error が起こらないようにする */}
-        <span suppressHydrationWarning>{props.title}</span>
+        <div className='flex flex-row gap-3'>
+          {props.children}
+          <span suppressHydrationWarning className='hidden md:block'>
+            {props.title}
+          </span>
+        </div>
       </MenuButton>
       <MenuList>
+        <p className='text-primary-4 w-fit mx-auto pb-2 md:hidden'>
+          {user.name}
+        </p>
         <MenuItem
           style={{ color: '#023859' }}
           onClick={() => {
