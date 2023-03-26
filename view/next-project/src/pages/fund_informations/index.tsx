@@ -163,9 +163,6 @@ export default function FundInformations(props: Props) {
 
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(currentUser);
-  }, [currentUser]);
 
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
