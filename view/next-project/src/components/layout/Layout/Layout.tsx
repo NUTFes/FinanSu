@@ -3,7 +3,7 @@ import PurchaseItemNumModal from '../../purchaseorders/PurchaseItemNumModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
-import SponsorActivitiesAddModal from '@components/sponsoractivities/AddModal';
+import SponsorActivitiesAddModal from '@/components/sponsoractivities/SponsorActivitiesAddModal';
 import { useUI } from '@components/ui/context';
 import React, { ReactNode } from 'react';
 
