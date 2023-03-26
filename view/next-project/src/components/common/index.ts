@@ -22,3 +22,5 @@ export { default as Tooltip } from './Tooltip';
 export { default as UnderlinePrimaryButton } from './UnderlinePrimaryButton';
 export { default as Label } from './Label';
 export { default as BureauLabel } from './BureauLabel';
+export { default as Header } from './Header';
+export { default as SideNav } from './SideNav';
