@@ -13,7 +13,6 @@ import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModal
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
 import { SponsorActivity, SponsorActivityView } from '@type/common';
 
-
 interface Props {
   sponsorActivities: SponsorActivity[];
   sponsorActivitiesView: SponsorActivityView[];
