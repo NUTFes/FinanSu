@@ -42,7 +42,7 @@ export const put = async (url: string, data: SponsorActivity) => {
     '&is_done=' +
     isDone;
 
-  console.log('putUrl: ', putUrl)
+  console.log('putUrl: ', putUrl);
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
