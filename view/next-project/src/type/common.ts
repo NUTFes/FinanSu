@@ -84,17 +84,7 @@ export interface Activity {
   updatedAt?: string;
 }
 
-export interface SponsorActivitiesItem {
-  id?: number;
-  sponsorID: number;
-  sponsorStyleID: number;
-  userID: number;
-  isDone: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface SponsorActivities {
+export interface SponsorActivity {
   id?: number;
   sponsorID: number;
   sponsorStyleID: number;
@@ -104,10 +94,11 @@ export interface SponsorActivities {
   updatedAt: string;
 }
 
-export interface SponsorActivitiesView {
-  viewUser: User;
-  sponsorActivities: SponsorActivities;
-  viewItem: SponsorActivitiesItem[];
+export interface SponsorActivityView {
+  user: User;
+  sponsor: Sponsor;
+  sponsorStyle: SponsorStyle;
+  sponsorActivity: SponsorActivity;
 }
 
 // // Sponsor(協賛企業)
