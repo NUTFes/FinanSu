@@ -287,13 +287,13 @@ export default function FundInformations(props: Props) {
   return (
     <MainLayout>
       <Head>
-        <title>募金一覧</title>
+        <title>学内募金一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
           <div className='flex'>
-            <Title title={'購入申請一覧'} />
+            <Title title={'学内募金一覧'} />
             <select className='w-100 '>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
