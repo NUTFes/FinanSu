@@ -31,7 +31,10 @@ const Dropdown = (props: Props) => {
         </div>
       </MenuButton>
       <MenuList>
-        <span suppressHydrationWarning className='md:hidden block text-black-300 w-fit mx-auto pb-2'>
+        <span
+          suppressHydrationWarning
+          className='mx-auto block w-fit pb-2 text-black-300 md:hidden'
+        >
           {props.title}
         </span>
         <MenuItem
