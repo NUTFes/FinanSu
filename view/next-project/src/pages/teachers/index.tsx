@@ -18,16 +18,16 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { get, get_with_token } from '@api/api_methods';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/teacher/DetailModal';
 import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
 import { Department, Teacher } from '@type/common';
-import { useRecoilValue } from 'recoil';
-import { userAtom } from '@/store/atoms';
 
 interface Props {
   teachers: Teacher[];

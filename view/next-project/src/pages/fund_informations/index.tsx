@@ -2,8 +2,10 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { get, get_with_token } from '@api/api_methods';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
 import { Title, Card } from '@components/common';
 import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
@@ -13,8 +15,6 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { Department, FundInformation, Teacher, User } from '@type/common';
-import { useRecoilValue } from 'recoil';
-import { userAtom } from '@/store/atoms';
 
 interface FundInformationView {
   fundInformation: FundInformation;

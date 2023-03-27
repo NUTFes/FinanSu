@@ -17,15 +17,15 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { BUREAUS } from '@/constants/bureaus';
-import { get, get_with_token } from '@api/api_methods';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import theme from '@assets/theme';
 import Header from '@components/common/Header';
 import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/users/OpenEditModalButton';
-import { useRecoilValue } from 'recoil';
-import { userAtom } from '@/store/atoms';
 
 interface Role {
   id: number;
@@ -75,7 +75,7 @@ export default function Users(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-        // current_userの権限を開発者に設定
+      // current_userの権限を開発者に設定
       if (user.roleID == 2) {
         setIsDeveloper(true);
       }

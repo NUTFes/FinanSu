@@ -5,10 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
-import { get_with_token } from '@api/api_methods';
 import 'tailwindcss/tailwind.css';
 import { Header, SideNav } from '@components/common';
-import { User } from '@type/common';
 
 import s from './MainLayout.module.css';
 
