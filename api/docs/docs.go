@@ -66,7 +66,7 @@ const docTemplate = `{
         "/activities/details": {
             "get": {
                 tags: ["activity"],
-                "description": "activitiesとsponosr,sponsorStyle,userの一覧を取得",
+                "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
                 "responses": {
                     "200": {
                         "description": "activitiesとsponsor,sponsorStyle,userの一覧の取得",
