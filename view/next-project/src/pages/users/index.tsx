@@ -24,6 +24,8 @@ import theme from '@assets/theme';
 import Header from '@components/common/Header';
 import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/users/OpenEditModalButton';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '@/store/atoms';
 
 interface Role {
   id: number;
@@ -63,6 +65,8 @@ export const getServerSideProps = async () => {
 export default function Users(props: Props) {
   const users = props.users;
 
+  const user = useRecoilValue(userAtom);
+
   // ログイン中のユーザの権限
   const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
 
@@ -71,17 +75,10 @@ export default function Users(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-
         // current_userの権限を開発者に設定
-        if (currentUserRes.role_id == 2) {
-          setIsDeveloper(true);
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      if (user.roleID == 2) {
+        setIsDeveloper(true);
+      }
     }
   }, [router]);
 
