@@ -31,7 +31,9 @@ const Dropdown = (props: Props) => {
         </div>
       </MenuButton>
       <MenuList>
-        <p className='mx-auto w-fit pb-2 text-primary-4 md:hidden'>{user.name}</p>
+        <span suppressHydrationWarning className='md:hidden block text-black-300 w-fit mx-auto pb-2'>
+          {props.title}
+        </span>
         <MenuItem
           style={{ color: '#023859' }}
           onClick={() => {
