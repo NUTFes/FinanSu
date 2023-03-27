@@ -1,8 +1,7 @@
-import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction } from 'react';
-
 import { del } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
+import { useRouter } from 'next/router';
+import React, { Dispatch, FC, SetStateAction } from 'react';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -18,8 +17,8 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
     router.reload();
   };
 
-  const deleteSponsorActivity = async (id: number | string) => {
-    const deleteSponsorActivityUrl = process.env.CSR_API_URI + '/activities/' + id;
+  const deleteSponsorActivity = async () => {
+    const deleteSponsorActivityUrl = process.env.CSR_API_URI + '/activities/' + props.id;
     await del(deleteSponsorActivityUrl);
   };
 
@@ -37,7 +36,7 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton
             onClick={() => {
-              deleteSponsorActivity(props.id);
+              deleteSponsorActivity();
               closeModal();
             }}
           >
