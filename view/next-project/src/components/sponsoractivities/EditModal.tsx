@@ -50,10 +50,6 @@ export default function EditModal(props: ModalProps) {
   // 協賛企業のリスト
   const [formData, setFormData] = useState<SponsorActivity>(props.sponsorActivity);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const handler =
     (input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
