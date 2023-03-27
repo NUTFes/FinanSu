@@ -13,6 +13,8 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { Department, FundInformation, Teacher, User } from '@type/common';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '@/store/atoms';
 
 interface FundInformationView {
   fundInformation: FundInformation;
@@ -142,18 +144,12 @@ export default function FundInformations(props: Props) {
     },
   ];
 
+  // ログイン中のユーザ
+  const currentUser = useRecoilValue(userAtom);
+
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
   const fundInformationView: FundInformationView[] = props.fundInformationView;
-  // ログイン中のユーザ
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: 1,
-    name: '',
-    bureauID: 1,
-    roleID: 1,
-    createdAt: '',
-    updatedAt: '',
-  });
 
   // ログイン中のユーザの権限
   const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
@@ -166,30 +162,21 @@ export default function FundInformations(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-        setCurrentUser(currentUserRes);
-
-        // current_userの権限をユーザに設定
-        if (currentUserRes.roleID == 1) {
-          setIsUser(true);
-        }
-        // current_userの権限を開発者に設定
-        else if (currentUserRes.roleID == 2) {
-          setIsDeveloper(true);
-        }
-        // current_userの権限を財務局長に設定
-        else if (currentUserRes.roleID == 3) {
-          setIsFinanceDirector(true);
-        }
-        // current_userの権限を財務局員に設定
-        else if (currentUserRes.roleID == 4) {
-          setIsFinanceStaff(true);
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      if (currentUser.roleID == 1) {
+        setIsUser(true);
+      }
+      // current_userの権限を開発者に設定
+      else if (currentUser.roleID == 2) {
+        setIsDeveloper(true);
+      }
+      // current_userの権限を財務局長に設定
+      else if (currentUser.roleID == 3) {
+        setIsFinanceDirector(true);
+      }
+      // current_userの権限を財務局員に設定
+      else if (currentUser.roleID == 4) {
+        setIsFinanceStaff(true);
+      }
     }
   }, [router]);
 
