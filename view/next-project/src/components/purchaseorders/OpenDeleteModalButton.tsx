@@ -20,7 +20,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {isOpen ? (
+      {isOpen && (
         <DetailModal
           id={props.id}
           isOpen={isOpen}
@@ -28,7 +28,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
           purchaseOrderViewItem={props.purchaseOrderViewItem}
           isDelete={true}
         />
-      ) : null}
+      )}
     </>
   );
 };

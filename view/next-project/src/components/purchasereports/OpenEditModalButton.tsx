@@ -18,9 +18,9 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <EditButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {isOpen ? (
+      {isOpen && (
         <EditModal purchaseReportId={props.id} isOpen={isOpen} setIsOpen={setIsOpen} />
-      ) : null}
+      )}
     </>
   );
 };

@@ -24,7 +24,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <EditButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {isOpen ? (
+      {isOpen && (
         <EditModal
           sponsorActivityId={props.id}
           sponsorActivity={props.sponsorActivity}
@@ -33,7 +33,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
           users={props.users}
           setIsOpen={setIsOpen}
         />
-      ) : null}
+      )}
     </>
   );
 };
