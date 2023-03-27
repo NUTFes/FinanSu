@@ -65,13 +65,13 @@ export default function SponsorActivities(props: Props) {
   return (
     <MainLayout>
       <Head>
-        <title>協賛活動</title>
+        <title>協賛活動一覧</title>
         <meta name='viewpoinst' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
           <div className='flex'>
-            <Title title={'協賛活動'} />
+            <Title title={'協賛活動一覧'} />
             <select className={'w-100'}>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
