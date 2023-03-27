@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { put } from '@/utils/api/sponsorActivities';
 import {
