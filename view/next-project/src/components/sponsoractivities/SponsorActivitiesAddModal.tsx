@@ -26,21 +26,21 @@ export default function SponsorActivitiesAddModal() {
   // 協賛活動を登録するかどうかのフラグ
   const [isDone, setIsDone] = useState<boolean>(false);
 
-  const [sponsor, setSponsor] = useState<Sponsor[]>([]);
-  const [sponsorStyle, setSponsorStyle] = useState<SponsorStyle[]>([]);
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+  const [sponsorStyles, setSponsorStyles] = useState<SponsorStyle[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
     const getSponsor = async () => {
       const sponsorUrl = process.env.CSR_API_URI + '/sponsors';
       const res = await fetch(sponsorUrl);
       const data = await res.json();
-      setSponsor(data);
+      setSponsors(data);
     };
     const getSponsorStyle = async () => {
       const sponsorStyleUrl = process.env.CSR_API_URI + '/sponsorstyles';
       const res = await fetch(sponsorStyleUrl);
       const data = await res.json();
-      setSponsorStyle(data);
+      setSponsorStyles(data);
     };
     const getUsers = async () => {
       const usersUrl = process.env.CSR_API_URI + '/users';
@@ -88,7 +88,7 @@ export default function SponsorActivitiesAddModal() {
       <p className='text-black-600'>協賛企業</p>
       <div className='col-span-4 w-full'>
         <Select value={data.sponsorID} onChange={formDataHandler('sponsorID')}>
-          {sponsor.map((sponsor: Sponsor) => (
+          {sponsors.map((sponsor: Sponsor) => (
             <option key={sponsor.id} value={sponsor.id}>
               {sponsor.name}
             </option>
@@ -98,7 +98,7 @@ export default function SponsorActivitiesAddModal() {
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
         <Select value={data.sponsorStyleID} onChange={formDataHandler('sponsorStyleID')}>
-          {sponsorStyle.map((sponsorStyle: SponsorStyle) => (
+          {sponsorStyles.map((sponsorStyle: SponsorStyle) => (
             <option key={sponsorStyle.id} value={sponsorStyle.id}>
               {`${sponsorStyle.scale} / ${sponsorStyle.isColor ? 'カラー' : 'モノクロ'} / ${
                 sponsorStyle.price
@@ -135,10 +135,10 @@ export default function SponsorActivitiesAddModal() {
   );
 
   const SponsorActivityTable = (sponsorActivities: SponsorActivity) => {
-    const sponsorView = sponsor.find(
+    const sponsorView = sponsors.find(
       (sponsor) => sponsor.id === Number(sponsorActivities.sponsorID),
     );
-    const sponsorStyleView = sponsorStyle.find(
+    const sponsorStyleView = sponsorStyles.find(
       (sponsorStyle) => sponsorStyle.id === Number(sponsorActivities.sponsorStyleID),
     );
     const userView = users.find((user) => user.id === Number(sponsorActivities.userID));
