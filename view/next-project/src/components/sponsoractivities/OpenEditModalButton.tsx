@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { SponsorActivity } from '@/type/common';
+import { SponsorActivity, SponsorStyle, Sponsor, User } from '@/type/common';
 
 import { EditButton } from '../common';
 import EditModal from './EditModal';
@@ -10,6 +10,9 @@ interface Props {
   children?: React.ReactNode;
   id: number | string;
   sponsorActivity: SponsorActivity;
+  sponsorStyles: SponsorStyle[];
+  sponsors: Sponsor[];
+  users: User[];
   isDisabled: boolean;
 }
 
@@ -25,6 +28,9 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
         <EditModal
           sponsorActivityId={props.id}
           sponsorActivity={props.sponsorActivity}
+          sponsorStyles={props.sponsorStyles}
+          sponsors={props.sponsors}
+          users={props.users}
           setIsOpen={setIsOpen}
         />
       ) : null}

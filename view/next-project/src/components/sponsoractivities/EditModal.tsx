@@ -14,38 +14,14 @@ import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 interface ModalProps {
   sponsorActivityId: number | string;
   sponsorActivity: SponsorActivity;
+  sponsorStyles: SponsorStyle[];
+  sponsors: Sponsor[];
+  users: User[];
   setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function EditModal(props: ModalProps) {
   const router = useRouter();
-
-  const [sponsor, setSponsor] = useState<Sponsor[]>([]);
-  const [sponsorStyle, setSponsorStyle] = useState<SponsorStyle[]>([]);
-  const [user, setUser] = useState<User[]>([]);
-  useEffect(() => {
-    const getSponsorUrl = process.env.CSR_API_URI + '/sponsors';
-    const getSponsorStyleUrl = process.env.CSR_API_URI + '/sponsorstyles';
-    const getUserUrl = process.env.CSR_API_URI + '/users';
-    const getSponsor = async () => {
-      const res = await fetch(getSponsorUrl);
-      const data = await res.json();
-      setSponsor(data);
-    };
-    const getSponsorStyle = async () => {
-      const res = await fetch(getSponsorStyleUrl);
-      const data = await res.json();
-      setSponsorStyle(data);
-    };
-    const getUser = async () => {
-      const res = await fetch(getUserUrl);
-      const data = await res.json();
-      setUser(data);
-    };
-    getSponsor();
-    getSponsorStyle();
-    getUser();
-  }, []);
 
   // 協賛企業のリスト
   const [formData, setFormData] = useState<SponsorActivity>(props.sponsorActivity);
@@ -74,7 +50,7 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>企業名</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('sponsorID')}>
-          {sponsor.map((sponsor) => (
+          {props.sponsors.map((sponsor) => (
             <option key={sponsor.id} value={sponsor.id} selected={sponsor.id === data.sponsorID}>
               {sponsor.name}
             </option>
@@ -84,7 +60,7 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('sponsorStyleID')}>
-          {sponsorStyle.map((sponsorStyle) => (
+          {props.sponsorStyles.map((sponsorStyle) => (
             <option
               key={sponsorStyle.id}
               value={sponsorStyle.id}
@@ -100,7 +76,7 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('userID')}>
-          {user.map((user) => (
+          {props.users.map((user) => (
             <option key={user.id} value={user.id} selected={user.id === data.userID}>
               {user.name}
             </option>

@@ -11,22 +11,36 @@ import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenAddModalButton from '@components/sponsoractivities/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
-import { SponsorActivity, SponsorActivityView } from '@type/common';
+import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User } from '@type/common';
 
 interface Props {
   sponsorActivities: SponsorActivity[];
   sponsorActivitiesView: SponsorActivityView[];
+  sponsorStyles: SponsorStyle[];
+  sponsors: Sponsor[];
+  users: User[];
 }
 
 export async function getServerSideProps() {
-  const getSponsorAcvitiesUrl = process.env.SSR_API_URI + '/activities';
-  const getSponsorAcvitiesViewUrl = process.env.SSR_API_URI + '/activities/details';
-  const sponsorActivitiesRes = await get(getSponsorAcvitiesUrl);
-  const sponsorActivitiesViewRes = await get(getSponsorAcvitiesViewUrl);
+  const getSponsorActivitiesUrl = process.env.SSR_API_URI + '/activities';
+  const getSponsorActivitiesViewUrl = process.env.SSR_API_URI + '/activities/details';
+  const getSponsorStylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
+  const getSponsorsUrl = process.env.SSR_API_URI + '/sponsors';
+  const getUsersUrl = process.env.SSR_API_URI + '/users';
+
+  const sponsorActivitiesRes = await get(getSponsorActivitiesUrl);
+  const sponsorActivitiesViewRes = await get(getSponsorActivitiesViewUrl);
+  const sponsorStylesRes = await get(getSponsorStylesUrl);
+  const sponsorsRes = await get(getSponsorsUrl);
+  const usersRes = await get(getUsersUrl);
+
   return {
     props: {
       sponsorActivities: sponsorActivitiesRes,
       sponsorActivitiesView: sponsorActivitiesViewRes,
+      sponsorStyles: sponsorStylesRes,
+      sponsors: sponsorsRes,
+      users: usersRes,
     },
   };
 }
@@ -212,6 +226,9 @@ export default function SponsorActivities(props: Props) {
                         <OpenEditModalButton
                           id={sponsorActivitiesItem.sponsorActivity.id || '0'}
                           sponsorActivity={sponsorActivitiesItem.sponsorActivity}
+                          sponsors={props.sponsors}
+                          sponsorStyles={props.sponsorStyles}
+                          users={props.users}
                           isDisabled={
                             user.bureauID === 2 ||
                             user.bureauID === 3 ||
