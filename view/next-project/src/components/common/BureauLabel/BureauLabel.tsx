@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 
 import { BUREAUS_WITH_EN } from '@constants/bureaus';
 
-import Label from '../Label';
 import { BureauLabelProps } from './BureauLabel.type';
+import Label from '../Label';
 
 const BureauLabel: React.FC<BureauLabelProps> = (props) => {
   const { bureauID } = props;
