@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { AddButton } from '@components/common';
 import { useUI } from '@components/ui/context';
+import React from 'react';
 
 interface Props {
   width?: string;
