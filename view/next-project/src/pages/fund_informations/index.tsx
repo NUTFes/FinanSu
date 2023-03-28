@@ -2,8 +2,10 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { get, get_with_token } from '@api/api_methods';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
 import { Title, Card } from '@components/common';
 import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
@@ -142,18 +144,12 @@ export default function FundInformations(props: Props) {
     },
   ];
 
+  // ログイン中のユーザ
+  const currentUser = useRecoilValue(userAtom);
+
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
   const fundInformationView: FundInformationView[] = props.fundInformationView;
-  // ログイン中のユーザ
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: 1,
-    name: '',
-    bureauID: 1,
-    roleID: 1,
-    createdAt: '',
-    updatedAt: '',
-  });
 
   // ログイン中のユーザの権限
   const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
@@ -166,30 +162,21 @@ export default function FundInformations(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-        setCurrentUser(currentUserRes);
-
-        // current_userの権限をユーザに設定
-        if (currentUserRes.roleID == 1) {
-          setIsUser(true);
-        }
-        // current_userの権限を開発者に設定
-        else if (currentUserRes.roleID == 2) {
-          setIsDeveloper(true);
-        }
-        // current_userの権限を財務局長に設定
-        else if (currentUserRes.roleID == 3) {
-          setIsFinanceDirector(true);
-        }
-        // current_userの権限を財務局員に設定
-        else if (currentUserRes.roleID == 4) {
-          setIsFinanceStaff(true);
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      if (currentUser.roleID == 1) {
+        setIsUser(true);
+      }
+      // current_userの権限を開発者に設定
+      else if (currentUser.roleID == 2) {
+        setIsDeveloper(true);
+      }
+      // current_userの権限を財務局長に設定
+      else if (currentUser.roleID == 3) {
+        setIsFinanceDirector(true);
+      }
+      // current_userの権限を財務局員に設定
+      else if (currentUser.roleID == 4) {
+        setIsFinanceStaff(true);
+      }
     }
   }, [router]);
 
@@ -300,13 +287,13 @@ export default function FundInformations(props: Props) {
   return (
     <MainLayout>
       <Head>
-        <title>募金一覧</title>
+        <title>学内募金一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
           <div className='flex'>
-            <Title title={'購入申請一覧'} />
+            <Title title={'学内募金一覧'} />
             <select className='w-100 '>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>

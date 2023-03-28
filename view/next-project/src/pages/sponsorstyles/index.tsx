@@ -1,18 +1,18 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { RiAddCircleLine } from 'react-icons/ri';
 
-import { Card, Title } from '@/components/common';
-
-import MainLayout from '@/components/layout/MainLayout';
+import OpenDeleteModalButton from '@/components/sponsorstyles/OpenDeleteModalButton';
+import OpenEditModalButton from '@/components/sponsorstyles/OpenEditModalButton';
 import { get } from '@api/sponsorship';
-import EditButton from '@components/common/EditButton';
-import RegistButton from '@components/common/RegistButton';
+import { Card, Title } from '@components/common';
+import MainLayout from '@components/layout/MainLayout';
+import OpenAddModalButton from '@components/sponsorstyles/OpenAddModalButton';
 import { SponsorStyle } from '@type/common';
 
 interface Props {
   sponsorstyles: SponsorStyle[];
 }
+
 export const getServerSideProps = async () => {
   const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const sponsorstylesRes = await get(getSponsorstylesUrl);
@@ -25,6 +25,7 @@ export const getServerSideProps = async () => {
 };
 export default function SponsorList(props: Props) {
   const sponsorList: SponsorStyle[] = props.sponsorstyles;
+
   return (
     <MainLayout>
       <Head>
@@ -42,15 +43,7 @@ export default function SponsorList(props: Props) {
           </div>
           <div className='flex justify-end'>
             <div>
-              <RegistButton>
-                <RiAddCircleLine
-                  size={20}
-                  style={{
-                    marginRight: 5,
-                  }}
-                />
-                協賛スタイル登録
-              </RegistButton>
+              <OpenAddModalButton>協賛スタイル登録</OpenAddModalButton>
             </div>
           </div>
         </div>
@@ -126,8 +119,12 @@ export default function SponsorList(props: Props) {
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <div className='text-center'>
-                      <EditButton />
+                    <div className='flex flex-row gap-3'>
+                      <OpenEditModalButton
+                        id={sponsorStyleItem.id || 0}
+                        sponsorStyle={sponsorStyleItem}
+                      />
+                      <OpenDeleteModalButton id={sponsorStyleItem.id || 0} />
                     </div>
                   </td>
                 </tr>

@@ -18,8 +18,10 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { get, get_with_token } from '@api/api_methods';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/teacher/DetailModal';
 import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
@@ -110,20 +112,14 @@ export default function TeachersList(props: Props) {
 
   const router = useRouter();
 
+  const currentUser = useRecoilValue(userAtom);
+
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-
-        // current_userの権限がユーザなら前のページに戻る
-        if (currentUserRes.role_id == 1) {
-          router.back();
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      if (currentUser.roleID === 1) {
+        router.back();
+      }
     }
   }, [router]);
 

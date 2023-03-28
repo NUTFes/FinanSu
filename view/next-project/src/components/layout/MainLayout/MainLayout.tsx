@@ -5,26 +5,13 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
-import { get_with_token } from '@api/api_methods';
 import 'tailwindcss/tailwind.css';
 import { Header, SideNav } from '@components/common';
-import { User } from '@type/common';
 
 import s from './MainLayout.module.css';
 
 interface LayoutProps {
   children?: React.ReactNode;
-  currentUser?: User;
-}
-
-export async function getServerSideProps() {
-  const getCurrentUserUrl = process.env.SSR_API_URI + '/current_user';
-  const currentUserRes = await get_with_token(getCurrentUserUrl);
-  return {
-    props: {
-      currentUser: currentUserRes,
-    },
-  };
 }
 
 export default function MainLayout(props: LayoutProps) {

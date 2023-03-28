@@ -17,9 +17,11 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { BUREAUS } from '@/constants/bureaus';
-import { get, get_with_token } from '@api/api_methods';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import theme from '@assets/theme';
 import Header from '@components/common/Header';
 import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
@@ -63,6 +65,8 @@ export const getServerSideProps = async () => {
 export default function Users(props: Props) {
   const users = props.users;
 
+  const user = useRecoilValue(userAtom);
+
   // ログイン中のユーザの権限
   const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
 
@@ -71,17 +75,10 @@ export default function Users(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-
-        // current_userの権限を開発者に設定
-        if (currentUserRes.role_id == 2) {
-          setIsDeveloper(true);
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      // current_userの権限を開発者に設定
+      if (user.roleID == 2) {
+        setIsDeveloper(true);
+      }
     }
   }, [router]);
 
