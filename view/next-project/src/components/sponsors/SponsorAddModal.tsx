@@ -3,7 +3,6 @@ import { post } from '@api/sponsor';
 import { PrimaryButton, CloseButton, Input, Modal } from '@components/common';
 import { useUI } from '@components/ui/context';
 import { Sponsor } from '@type/common';
-import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -13,7 +12,7 @@ export default function SponsorAddModal() {
 
   const [formData, setFormData] = useState<Sponsor>({
     name: '',
-    tel: 0,
+    tel: '',
     email: '',
     address: '',
     representative: '',
@@ -26,8 +25,8 @@ export default function SponsorAddModal() {
     };
 
   const addSponsor = async (data: Sponsor) => {
-    const addPurchaseItemUrl = process.env.CSR_API_URI + '/sponsors';
-    await post(addPurchaseItemUrl, data);
+    const addSponsorUrl = process.env.CSR_API_URI + '/sponsors';
+    await post(addSponsorUrl, data);
   };
 
   const submit = async (formData: Sponsor) => {
@@ -38,69 +37,38 @@ export default function SponsorAddModal() {
 
   return (
     <>
-      <Modal className='!w-1/2'>
-        <div className={clsx('w-full')}>
-          <div className={clsx('mr-5 grid w-full justify-items-end')}>
+      <Modal className='w-1/2'>
+        <div className='w-full'>
+          <div className='mr-5 w-fit ml-auto'>
             <CloseButton onClick={closeModal} />
           </div>
         </div>
-        <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
+        <h1 className='mb-10 w-fit mx-auto text-xl text-black-600'>
           企業登録
-        </div>
-        <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
-          <div className={clsx('col-span-2 mr-2 grid')}>
-            <div
-              className={clsx('text-md flex grid items-center justify-items-end text-black-600')}
-            >
-              企業名
-            </div>
+        </h1>
+        <div className='my-6 grid grid-cols-5 gap-4 items-center justify-items-center'>
+          <p className='col-span-1 text-black-600'>企業名</p>
+          <div className='col-span-4 w-full'>
+            <Input className='w-full' value={formData.name} onChange={handler('name')} />
           </div>
-          <div className={clsx('col-span-10 grid w-full')}>
-            <Input value={formData.name} onChange={handler('name')} />
+          <p className='col-span-1 text-black-600'>電話番号</p>
+          <div className='col-span-4 w-full'>
+            <Input className='w-full' value={formData.tel} onChange={handler('tel')} />
           </div>
-          <div className={clsx('col-span-2 mr-2 grid')}>
-            <div
-              className={clsx('text-md flex grid items-center justify-items-end text-black-600')}
-            >
-              電話番号
-            </div>
+          <p className='col-span-1 text-black-600'>メール</p>
+          <div className='col-span-4 w-full'>
+            <Input className='w-full' value={formData.email} onChange={handler('email')} />
           </div>
-          <div className={clsx('col-span-10 grid w-full')}>
-            <Input value={formData.tel} onChange={handler('tel')} />
+          <p className='col-span-1 text-black-600'>住所</p>
+          <div className='col-span-4 w-full'>
+            <Input className='w-full' value={formData.address} onChange={handler('address')} />
           </div>
-          <div className={clsx('col-span-2 mr-2 grid')}>
-            <div
-              className={clsx('text-md flex grid items-center justify-items-end text-black-600')}
-            >
-              メール
-            </div>
-          </div>
-          <div className={clsx('col-span-10 grid w-full')}>
-            <Input value={formData.email} onChange={handler('email')} />
-          </div>
-          <div className={clsx('col-span-2 mr-2 grid')}>
-            <div
-              className={clsx('text-md flex grid items-center justify-items-end text-black-600')}
-            >
-              住所
-            </div>
-          </div>
-          <div className={clsx('col-span-10 grid w-full')}>
-            <Input value={formData.address} onChange={handler('address')} />
-          </div>
-          <div className={clsx('col-span-2 mr-2 grid')}>
-            <div
-              className={clsx('text-md flex grid items-center justify-items-end text-black-600')}
-            >
-              代表者
-            </div>
-          </div>
-          <div className={clsx('col-span-10 grid w-full')}>
-            <Input value={formData.representative} onChange={handler('representative')} />
+          <p className='col-span-1 text-black-600'>代表者</p>
+          <div className='col-span-4 w-full'>
+            <Input className='w-full' value={formData.representative} onChange={handler('representative')} />
           </div>
         </div>
-
-        <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
+        <div className='mb-5 w-fit mx-auto'>
           <PrimaryButton
             className={'mx-2'}
             onClick={() => {
