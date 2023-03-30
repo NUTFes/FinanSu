@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 
+import SponsorAddModal from '@/components/sponsors/SponsorAddModal';
 import SponsorStyleNumModal from '@/components/sponsorstyles/SponsorStyleNumModal';
 import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
-import SponsorAddModal from '@/components/sponsors/SponsorAddModal';
 import { useUI } from '@components/ui/context';
 
 import s from './Layout.module.css';

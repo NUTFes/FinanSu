@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { EditButton } from '@components/common';
-import SponsorEditModal from './SponsorEditModal';
 import { Sponsor } from '@type/common';
+
+import SponsorEditModal from './SponsorEditModal';
 
 interface Props {
   children?: React.ReactNode;
@@ -19,9 +20,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <EditButton onClick={onOpen} isDisabled={props.isDisabled || true} />
-      {isOpen && (
-        <SponsorEditModal sponsor={props.sponsor} setIsOpen={setIsOpen} />
-      )}
+      {isOpen && <SponsorEditModal sponsor={props.sponsor} setIsOpen={setIsOpen} />}
     </>
   );
 };

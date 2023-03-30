@@ -1,10 +1,11 @@
 /* eslint-disable import/no-unresolved */
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+
 import { put } from '@api/sponsor';
 import { PrimaryButton, CloseButton, Input, Modal } from '@components/common';
 import { useUI } from '@components/ui/context';
 import { Sponsor } from '@type/common';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
 
 interface Props {
   sponsor: Sponsor;
