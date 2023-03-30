@@ -1,17 +1,17 @@
 /* eslint-disable import/no-unresolved */
-import { post } from '@api/sponser';
+import { post } from '@api/sponsor';
 import { PrimaryButton, CloseButton, Input, Modal } from '@components/common';
 import { useUI } from '@components/ui/context';
-import { Sponser } from '@type/common';
+import { Sponsor } from '@type/common';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-export default function AddModal() {
+export default function SponsorAddModal() {
   const router = useRouter();
   const { closeModal } = useUI();
 
-  const [formData, setFormData] = useState<Sponser>({
+  const [formData, setFormData] = useState<Sponsor>({
     name: '',
     tel: 0,
     email: '',
@@ -25,13 +25,13 @@ export default function AddModal() {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const addSponserItem = async (data: Sponser) => {
-    const addPurchaseItemUrl = process.env.CSR_API_URI + '/sponsers';
+  const addSponsor = async (data: Sponsor) => {
+    const addPurchaseItemUrl = process.env.CSR_API_URI + '/sponsors';
     await post(addPurchaseItemUrl, data);
   };
 
-  const submit = async (formData: Sponser) => {
-    addSponserItem(formData);
+  const submit = async (formData: Sponsor) => {
+    addSponsor(formData);
     closeModal();
     router.reload();
   };

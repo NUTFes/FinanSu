@@ -5,7 +5,7 @@ import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModa
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
-import SponserAddModal from '@components/sponsers/AddModal';
+import SponsorAddModal from '@/components/sponsors/SponsorAddModal';
 import { useUI } from '@components/ui/context';
 
 import s from './Layout.module.css';
@@ -13,7 +13,7 @@ import s from './Layout.module.css';
 const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
   return (
     <>
-      {modalView === 'SPONSER_ADD_MODAL' && <SponserAddModal />}
+      {modalView === 'SPONSOR_ADD_MODAL' && <SponsorAddModal />}
       {modalView === 'PURCHASE_ITEM_NUM_MODAL' && <PurchaseItemNumModal />}
       {modalView === 'PURCHASE_REPORT_ADD_MODAL' && <PurchaseReportAddModal />}
       {modalView === 'PURCHASE_ORDER_LIST_MODAL' && <PurchaseOrderListModal />}

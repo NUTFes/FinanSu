@@ -1,6 +1,6 @@
-import { Sponser } from '@type/common';
+import { Sponsor } from '@type/common';
 
-export const post = async (url: string, data: Sponser) => {
+export const post = async (url: string, data: Sponsor) => {
   const name = data.name;
   const tel = data.tel;
   const email = data.email;
@@ -30,7 +30,7 @@ export const post = async (url: string, data: Sponser) => {
   return res;
 };
 
-export const put = async (url: string, data: Sponser) => {
+export const put = async (url: string, data: Sponsor) => {
   const name = data.name;
   const tel = data.tel;
   const email = data.email;

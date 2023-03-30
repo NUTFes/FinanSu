@@ -16,7 +16,7 @@ export default function OpenModalButton(props: Props) {
     <>
       <AddButton
         onClick={() => {
-          setModalView('SPONSER_ADD_MODAL');
+          setModalView('SPONSOR_ADD_MODAL');
           openModal();
         }}
       >

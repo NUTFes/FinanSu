@@ -10,7 +10,7 @@ import MainLayout from '@components/layout/MainLayout';
 import type { NextPage } from 'next';
 
 const sponsorship: NextPage = () => {
-  const sponsershipList = [
+  const sponsorshipList = [
     {
       id: 1,
       name: '海龍',
@@ -69,13 +69,13 @@ const sponsorship: NextPage = () => {
               </tr>
             </thead>
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
-              {sponsershipList.map((sponsorshipItem, index) => (
+              {sponsorshipList.map((sponsorshipItem, index) => (
                 <tr key={sponsorshipItem.id}>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>{sponsorshipItem.name}</div>
@@ -84,7 +84,7 @@ const sponsorship: NextPage = () => {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>{sponsorshipItem.tel}</div>
@@ -93,7 +93,7 @@ const sponsorship: NextPage = () => {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>
@@ -104,7 +104,7 @@ const sponsorship: NextPage = () => {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>
@@ -115,7 +115,7 @@ const sponsorship: NextPage = () => {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>
@@ -126,7 +126,7 @@ const sponsorship: NextPage = () => {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsershipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center')}>
