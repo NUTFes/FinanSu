@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import OpenDeleteModalButton from '@/components/sponsorstyles/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsorstyles/OpenEditModalButton';
-import { get } from '@api/sponsorship';
+import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsorstyles/OpenAddModalButton';
