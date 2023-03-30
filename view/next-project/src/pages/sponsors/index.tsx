@@ -29,7 +29,7 @@ const sponsorship: NextPage = () => {
       <Card w='w-1/1'>
         <div className={clsx('mx-5 mt-10')}>
           <div className={clsx('flex')}>
-            <Title title={'企業一覧'} />
+            <Title title={'協賛企業一覧'} />
             <select className={clsx('w-100')}>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
