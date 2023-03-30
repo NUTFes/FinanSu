@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { get } from '@/utils/api/api_methods';
 import { Card, Title } from '@components/common';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
+import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { Sponsor } from '@type/common';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
@@ -135,8 +136,9 @@ const sponsorship: NextPage<Props> = (props: Props) => {
                       index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <div className='text-center'>
+                    <div className='flex gap-3'>
                       <OpenEditModalButton sponsor={sponsor} />
+                      <OpenDeleteModalButton id={sponsor.id || 0} />
                     </div>
                   </td>
                 </tr>
