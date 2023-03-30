@@ -5,11 +5,7 @@ import { RiPencilFill } from 'react-icons/ri';
 
 import theme from '@assets/theme';
 import EditModal from '@components/users/EditModal';
-
-interface Bureau {
-  id: number;
-  name: string;
-}
+import { Bureau } from '@type/common';
 
 interface Props {
   width?: string;

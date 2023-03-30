@@ -44,13 +44,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
         ]);
       }
     });
-    console.log('reportedPurchaseItems', reportedPurchaseItems);
-  }, [
-    props.formDataList,
-    setReportedPurchaseItems,
-    setNotReportedPurchaseItems,
-    reportedPurchaseItems,
-  ]);
+  }, [props.formDataList, setReportedPurchaseItems, setNotReportedPurchaseItems]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -60,17 +54,17 @@ export default function PurchaseItemNumModal(props: ModalProps) {
 
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
     return (
-      <table className={clsx('table-fixed border-collapse')}>
+      <table className='table-fixed border-collapse'>
         <thead>
-          <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
+          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
             {tableColumns.map((tableColumn: string) => (
-              <th key={tableColumn} className={clsx('border-b-primary-1 px-6 pb-2')}>
-                <div className={clsx('text-center text-sm text-black-600')}>{tableColumn}</div>
+              <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
+                <div className='text-center text-sm text-black-600'>{tableColumn}</div>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
+        <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
           {purchaseItems.map((purchaseItem, index) => (
             <tr key={purchaseItem.id}>
               <td
@@ -80,9 +74,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
-                <div className={clsx('text-center text-sm text-black-300')}>
-                  {purchaseItem.item}
-                </div>
+                <div className='text-center text-sm text-black-300'>{purchaseItem.item}</div>
               </td>
               <td
                 className={clsx(
@@ -91,9 +83,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
-                <div className={clsx('text-center text-sm text-black-300')}>
-                  {purchaseItem.price}
-                </div>
+                <div className='text-center text-sm text-black-300'>{purchaseItem.price}</div>
               </td>
               <td
                 className={clsx(
@@ -102,9 +92,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
-                <div className={clsx('text-center text-sm text-black-300')}>
-                  {purchaseItem.quantity}
-                </div>
+                <div className='text-center text-sm text-black-300'>{purchaseItem.quantity}</div>
               </td>
               <td
                 className={clsx(
@@ -113,9 +101,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
-                <div className={clsx('text-center text-sm text-black-300')}>
-                  {purchaseItem.detail}
-                </div>
+                <div className='text-center text-sm text-black-300'>{purchaseItem.detail}</div>
               </td>
               <td
                 className={clsx(
@@ -124,10 +110,10 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
-                <div className={clsx('text-center text-sm text-black-300')}>
-                  <div className={clsx('flex')}>
+                <div className='text-center text-sm text-black-300'>
+                  <div className='flex'>
                     <a
-                      className={clsx('mx-1')}
+                      className='mx-1'
                       href={purchaseItem.url}
                       target='_blank'
                       rel='noopener noreferrer'
@@ -136,7 +122,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                     </a>
                     <Tooltip text={'copy URL'}>
                       <RiFileCopyLine
-                        className={clsx('mx-1')}
+                        className='mx-1'
                         size={'16px'}
                         onClick={() => {
                           navigator.clipboard.writeText(purchaseItem.url);
@@ -155,80 +141,45 @@ export default function PurchaseItemNumModal(props: ModalProps) {
 
   return (
     <Modal>
-      <div className={clsx('w-full')}>
-        <div className={clsx('mr-5 grid w-full justify-items-end')}>
+      <div className='w-full'>
+        <div className='mr-5 grid w-full justify-items-end'>
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
-        購入申請
-      </div>
-      <div className={clsx('mb-4 grid grid-cols-12 gap-4')}>
-        <div className={clsx('col-span-1 grid')} />
-        <div className={clsx('col-span-10 grid')}>
-          <div
-            className={clsx(
-              'text-md h-100 grid w-full justify-items-center font-bold text-black-300',
-            )}
-          >
-            購入物品
-          </div>
-          <div className={clsx('w-100 mb-2 p-5')}>{PurchaseItemTable(reportedPurchaseItems)}</div>
-          <div
-            className={clsx(
-              'text-md h-100 grid w-full justify-items-center font-bold text-black-300',
-            )}
-          >
-            登録しなかった物品
-          </div>
-          {notReportedPurchaseItems.length === 0 ? (
-            <div className={clsx('text-md h-100 grid w-full justify-items-center text-black-300')}>
-              登録しなかった物品はありません
+      <div className='mb-10 grid w-full justify-items-center text-xl text-black-600'>購入申請</div>
+      <div className='flex flex-col items-center gap-5'>
+        <div className='mx-auto w-fit font-bold text-black-300'>購入物品</div>
+        <div className='max-h-60 w-full overflow-scroll'>
+          {PurchaseItemTable(reportedPurchaseItems)}
+        </div>
+        <div className='mx-auto w-fit font-bold text-black-300'>登録しなかった物品</div>
+        {notReportedPurchaseItems.length === 0 ? (
+          <div className='mx-auto w-fit text-black-300'>登録しなかった物品はありません</div>
+        ) : (
+          <>
+            <div className='mx-auto w-fit font-bold text-black-300'>
+              購入しなかったものとして処理します
             </div>
-          ) : (
-            <>
-              <div
-                className={clsx('text-md h-100 grid w-full justify-items-center text-black-300')}
-              >
-                購入しなかったものとして処理します
-              </div>
-              <div className={clsx('w-100 mb-2 p-5')}>
-                {PurchaseItemTable(notReportedPurchaseItems)}
-              </div>
-            </>
+            <div className='w-full'>{PurchaseItemTable(notReportedPurchaseItems)}</div>
+          </>
+        )}
+        <div className='flex justify-center'>
+          <PrimaryButton
+            onClick={() => {
+              onOpen();
+            }}
+          >
+            確認を終了
+          </PrimaryButton>
+          {isOpen && (
+            <ReceiptModal
+              purchaseReportId={props.purchaseReportId}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+            />
           )}
         </div>
-        <div className={clsx('col-span-1 grid ')} />
       </div>
-      <div className={clsx('grid w-full grid-cols-12 pb-5')}>
-        <div className={clsx('h-100 col-span-1 grid')} />
-        <div
-          className={clsx(
-            'text-md h-100 col-span-10 grid w-full justify-items-center pr-3 text-black-600',
-          )}
-        >
-          <div className={clsx('flex')}>
-            <div className={clsx('mx-2')}>
-              <PrimaryButton
-                onClick={() => {
-                  onOpen();
-                }}
-              >
-                確認を終了
-              </PrimaryButton>
-              {isOpen && (
-                <ReceiptModal
-                  purchaseReportId={props.purchaseReportId}
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-        <div className={clsx('h-100 col-span-1 grid')} />
-      </div>
-      <div className={clsx('grid justify-items-center px-1')}></div>
     </Modal>
   );
 }

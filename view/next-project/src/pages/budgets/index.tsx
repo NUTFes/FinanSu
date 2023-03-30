@@ -21,7 +21,7 @@ export async function getServerSideProps() {
   const getBudgetUrl = process.env.SSR_API_URI + '/budgets';
   const getSourceUrl = process.env.SSR_API_URI + '/sources';
   const getYearUrl = process.env.SSR_API_URI + '/years';
-  const getUrl = process.env.SSR_API_URI + '/budgetyearsources/1';
+  const getUrl = process.env.SSR_API_URI + '/budgets/1/details';
 
   const budgetRes = await get(getBudgetUrl);
   const sourceRes = await get(getSourceUrl);
@@ -74,7 +74,7 @@ export default function BudgetList(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Tabs variant='soft-rounded' className={clsx('primary-1')}>
-        <TabList className={clsx('mx-10 mt-10')}>
+        <TabList className={clsx('mx-20 mt-10')}>
           <Tab>収入</Tab>
           <Tab>支出</Tab>
         </TabList>

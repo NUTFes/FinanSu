@@ -27,7 +27,8 @@ type MODAL_VIEWS =
   | 'PURCHASE_ITEM_NUM_MODAL'
   | 'PURCHASE_REPORT_ADD_MODAL'
   | 'PURCHASE_ORDER_LIST_MODAL'
-  | 'PURCHASE_REPORT_ITEM_NUM_MODAL';
+  | 'PURCHASE_REPORT_ITEM_NUM_MODAL'
+  | 'SPONSOR_STYLE_NUM_MODAL';
 
 // eslint-disable-next-line
 export const UIContext = React.createContext<State | any>(initialState);

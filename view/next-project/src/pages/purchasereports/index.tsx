@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
-import { Card, Checkbox, Title } from '@components/common';
+import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
@@ -30,7 +30,7 @@ interface Props {
 
 export async function getServerSideProps() {
   const getPurchaseReportUrl = process.env.SSR_API_URI + '/purchasereports';
-  const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/get_purchasereports_for_view';
+  const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/purchasereports/details';
   const purchaseReportRes = await get(getPurchaseReportUrl);
   const purchaseReportViewRes = await get(getPurchaseReportViewUrl);
   return {
@@ -124,46 +124,47 @@ export default function PurchaseReports(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className={clsx('mx-5 mt-10')}>
-          <div className={clsx('flex')}>
+        <div className='mx-5 mt-10'>
+          <div className='flex'>
             <Title title={'購入報告一覧'} />
-            <select className={clsx('w-100 ')}>
+            <select className='w-100 '>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
             </select>
           </div>
-          <div className={clsx('flex justify-end')}>
+          <div className='flex justify-end'>
             <OpenAddModalButton>報告登録</OpenAddModalButton>
           </div>
         </div>
-        <div className={clsx('w-100 mb-2 p-5')}>
-          <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
+        <div className='w-100 mb-2 p-5'>
+          <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
-              <tr
-                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
-              >
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
+              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>財務局長チェック</div>
                 </th>
-                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>報告した局</div>
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>報告した局</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>報告日</div>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>報告日</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>期限日</div>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>期限日</div>
                 </th>
-                <th className={clsx('w-4/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>購入物品</div>
+                <th className='w-3/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>購入物品</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>合計金額</div>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>合計金額</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}></th>
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>備考</div>
+                </th>
+                <th className='w-1/12 border-b-primary-1 pb-2'></th>
               </tr>
             </thead>
-            <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
+            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {props.purchaseReportView.map((purchaseReportViewItem, index) => (
                 <tr key={purchaseReportViewItem.purchaseReport.id}>
                   <td
@@ -181,7 +182,7 @@ export default function PurchaseReports(props: Props) {
                       );
                     }}
                   >
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                    <div className='text-center text-sm text-black-600'>
                       {user.roleID === 3
                         ? changeableCheckboxContent(
                             purchaseReportViewItem.purchaseReport.financeCheck,
@@ -206,13 +207,8 @@ export default function PurchaseReports(props: Props) {
                       );
                     }}
                   >
-                    <div className={clsx('text-center text-sm text-black-600')}>
-                      {purchaseReportViewItem.orderUser.bureauID === 1 && '総務局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 2 && '渉外局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 3 && '財務局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 4 && '企画局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 5 && '政策局'}
-                      {purchaseReportViewItem.orderUser.bureauID === 6 && '情報局'}
+                    <div className={clsx('flex justify-center')}>
+                      <BureauLabel bureauID={purchaseReportViewItem.orderUser.bureauID} />
                     </div>
                   </td>
                   <td
@@ -230,7 +226,7 @@ export default function PurchaseReports(props: Props) {
                       );
                     }}
                   >
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                    <div className='text-center text-sm text-black-600'>
                       {formatDate(
                         purchaseReportViewItem.purchaseReport.createdAt
                           ? purchaseReportViewItem.purchaseReport.createdAt
@@ -253,7 +249,7 @@ export default function PurchaseReports(props: Props) {
                       );
                     }}
                   >
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                    <div className='text-center text-sm text-black-600'>
                       {purchaseReportViewItem.purchaseOrder.deadline}
                     </div>
                   </td>
@@ -280,13 +276,13 @@ export default function PurchaseReports(props: Props) {
                       {purchaseReportViewItem.purchaseItems &&
                         purchaseReportViewItem.purchaseItems.map(
                           (purchaseItem: PurchaseItem, index: number) => (
-                            <>
+                            <div key={index}>
                               {purchaseReportViewItem.purchaseItems.length - 1 === index ? (
                                 <>{purchaseItem.item}</>
                               ) : (
                                 <>{purchaseItem.item},</>
                               )}
-                            </>
+                            </div>
                           ),
                         )}
                     </div>
@@ -306,7 +302,7 @@ export default function PurchaseReports(props: Props) {
                       );
                     }}
                   >
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                    <div className='text-center text-sm text-black-600'>
                       {TotalFee(
                         purchaseReportViewItem.purchaseReport,
                         purchaseReportViewItem.purchaseItems,
@@ -319,9 +315,28 @@ export default function PurchaseReports(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
+                    onClick={() => {
+                      onOpen(
+                        purchaseReportViewItem.purchaseReport.id
+                          ? purchaseReportViewItem.purchaseReport.id
+                          : 0,
+                        purchaseReportViewItem,
+                      );
+                    }}
                   >
-                    <div className={clsx('flex')}>
-                      <div className={clsx('mx-1')}>
+                    <div className='text-center text-sm text-black-600'>
+                      {purchaseReportViewItem.purchaseReport.remark || '無し'}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
+                    <div className='flex'>
+                      <div className='mx-1'>
                         <OpenEditModalButton
                           id={
                             purchaseReportViewItem.purchaseReport.id
@@ -329,14 +344,14 @@ export default function PurchaseReports(props: Props) {
                               : 0
                           }
                           isDisabled={
-                            !purchaseReportViewItem.purchaseReport.financeCheck &&
-                            (user.bureauID === 2 ||
-                              user.bureauID === 3 ||
-                              user.id === purchaseReportViewItem.reportUser.id)
+                            !purchaseReportViewItem.purchaseOrder.financeCheck &&
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
+                              user.id === purchaseReportViewItem.purchaseOrder.userID)
                           }
                         />
                       </div>
-                      <div className={clsx('mx-1')}>
+                      <div className='mx-1'>
                         <OpenDeleteModalButton
                           id={
                             purchaseReportViewItem.purchaseReport.id
@@ -344,10 +359,10 @@ export default function PurchaseReports(props: Props) {
                               : 0
                           }
                           isDisabled={
-                            !purchaseReportViewItem.purchaseReport.financeCheck &&
-                            (user.bureauID === 2 ||
-                              user.bureauID === 3 ||
-                              user.id === purchaseReportViewItem.reportUser.id)
+                            !purchaseReportViewItem.purchaseOrder.financeCheck &&
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
+                              user.id === purchaseReportViewItem.purchaseOrder.userID)
                           }
                         />
                       </div>

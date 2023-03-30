@@ -44,7 +44,6 @@ export const put = async (url: string, data: Budget) => {
   const yearID = data.yearID;
   const sourceID = data.sourceID;
   const putUrl = url + '?price=' + price + '&year_id=' + yearID + '&source_id=' + sourceID;
-  console.log(putUrl, data.price, data.yearID, data.sourceID);
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',

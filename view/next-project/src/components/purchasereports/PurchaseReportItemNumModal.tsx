@@ -67,7 +67,7 @@ export default function PurchaseReportItemNumModal() {
       userID: user.id,
       financeCheck: false,
     };
-    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/get_post_purchaseorder_record';
+    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     const postRes = await post(addPurchaseOrderUrl, data);
     const purchaseOrderID = postRes.id;
     setPurchaseOrderId(purchaseOrderID);
