@@ -50,7 +50,7 @@ export const put = async (url: string, data: Sponsor) => {
     representative;
 
   const res = await fetch(postUrl, {
-    method: 'POST',
+    method: 'PUT',
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
