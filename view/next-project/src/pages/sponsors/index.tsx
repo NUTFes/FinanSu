@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import { get } from '@/utils/api/api_methods';
 import { Card, Title } from '@components/common';
-import EditButton from '@components/common/EditButton';
+import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { Sponsor } from '@type/common';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
@@ -136,7 +136,7 @@ const sponsorship: NextPage<Props> = (props: Props) => {
                     )}
                   >
                     <div className='text-center'>
-                      <EditButton />
+                      <OpenEditModalButton sponsor={sponsor} />
                     </div>
                   </td>
                 </tr>
