@@ -9,7 +9,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export default function OpenModalButton(props: Props) {
+export default function OpenAddModalButton(props: Props) {
   const { setModalView, openModal } = useUI();
 
   return (
