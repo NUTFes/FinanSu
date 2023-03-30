@@ -2,24 +2,32 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
+import { get } from '@/utils/api/api_methods';
 import { Card, Title } from '@components/common';
 import EditButton from '@components/common/EditButton';
 import RegistButton from '@components/common/RegistButton';
 import MainLayout from '@components/layout/MainLayout';
+import { Sponsor } from '@type/common';
 
 import type { NextPage } from 'next';
 
-const sponsorship: NextPage = () => {
-  const sponsorshipList = [
-    {
-      id: 1,
-      name: '海龍',
-      tel: '000-0000-0000',
-      email: 'kairyu@gmail.com',
-      address: '新潟県長岡市上富岡町2丁目280-1',
-      representative: '長岡太郎',
+interface Props {
+  sponsor: Sponsor[];
+}
+
+export const getServerSideProps = async () => {
+  const getSponsorUrl = process.env.SSR_API_URI + '/sponsors';
+  const sponsorRes = await get(getSponsorUrl);
+
+  return {
+    props: {
+      sponsor: sponsorRes,
     },
-  ];
+  };
+};
+
+const sponsorship: NextPage<Props> = (props: Props) => {
+  const sponsorList: Sponsor[] = props.sponsor;
   return (
     <MainLayout>
       <Head>
@@ -69,64 +77,64 @@ const sponsorship: NextPage = () => {
               </tr>
             </thead>
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
-              {sponsorshipList.map((sponsorshipItem, index) => (
-                <tr key={sponsorshipItem.id}>
+              {sponsorList.map((sponsor, index) => (
+                <tr key={sponsor.id}>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <div className={clsx('text-center text-black-300')}>{sponsorshipItem.name}</div>
+                    <div className={clsx('text-center text-black-300')}>{sponsor.name}</div>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <div className={clsx('text-center text-black-300')}>{sponsorshipItem.tel}</div>
+                    <div className={clsx('text-center text-black-300')}>{sponsor.tel}</div>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>
-                      {sponsorshipItem.email}
+                      {sponsor.email}
                     </div>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>
-                      {sponsorshipItem.address}
+                      {sponsor.address}
                     </div>
                   </td>{' '}
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-black-300')}>
-                      {sponsorshipItem.representative}
+                      {sponsor.representative}
                     </div>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorshipList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center')}>
