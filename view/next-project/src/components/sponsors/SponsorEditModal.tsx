@@ -38,14 +38,12 @@ export default function SponsorEditModal(props: Props) {
   return (
     <Modal className='w-1/2'>
       <div className='w-full'>
-        <div className='mr-5 w-fit ml-auto'>
+        <div className='mr-5 ml-auto w-fit'>
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <h1 className='mb-10 w-fit mx-auto text-xl text-black-600'>
-        企業登録
-      </h1>
-      <div className='my-6 grid grid-cols-5 gap-4 items-center justify-items-center'>
+      <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>企業登録</h1>
+      <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
         <p className='col-span-1 text-black-600'>企業名</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.name} onChange={handler('name')} />
@@ -64,10 +62,14 @@ export default function SponsorEditModal(props: Props) {
         </div>
         <p className='col-span-1 text-black-600'>代表者</p>
         <div className='col-span-4 w-full'>
-          <Input className='w-full' value={formData.representative} onChange={handler('representative')} />
+          <Input
+            className='w-full'
+            value={formData.representative}
+            onChange={handler('representative')}
+          />
         </div>
       </div>
-      <div className='mb-5 w-fit mx-auto'>
+      <div className='mx-auto mb-5 w-fit'>
         <PrimaryButton
           className={'mx-2'}
           onClick={() => {
