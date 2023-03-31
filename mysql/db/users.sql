@@ -10,5 +10,7 @@ CREATE TABLE users (
   PRIMARY KEY (id)
 );
 
-INSERT into users (name, bureau_id, role_id) values ('技大太郎', 1, 1);
-INSERT into users (name, bureau_id, role_id) values ('test-user', 1, 2);
+INSERT into users (name, bureau_id, role_id) values ('技大太郎1', 1, 1);
+INSERT into users (name, bureau_id, role_id) values ('技大太郎2', 1, 2);
+INSERT into users (name, bureau_id, role_id) values ('技大太郎3', 1, 3);
+INSERT into users (name, bureau_id, role_id) values ('技大太郎4', 1, 4);
