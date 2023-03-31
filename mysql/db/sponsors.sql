@@ -13,3 +13,6 @@ CREATE TABLE sponsors (
 );
 
 INSERT into sponsors (name, tel, email, address, representative) values ('テスト企業', '00000000000', 'test@nutfes.com', '新潟県長岡市上富岡町', '技大太郎');
+INSERT into sponsors (name, tel, email, address, representative) values ('テスト企業2', '08000000000', 'test2@nutfes.com', '新潟県長岡市上富岡町', 'いまいまい');
+INSERT into sponsors (name, tel, email, address, representative) values ('テスト企業3', '09000000000', 'test3@nutfes.com', '新潟県長岡市上富岡町', 'いまいまい2');
+

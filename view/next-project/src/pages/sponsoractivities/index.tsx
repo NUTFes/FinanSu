@@ -1,161 +1,270 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Flex, Spacer, Select } from '@chakra-ui/react';
-import { Center, Box } from '@chakra-ui/react';
+import clsx from 'clsx';
 import Head from 'next/head';
-import { RiAddCircleLine } from 'react-icons/ri';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
-import MainLayout from '@/components/layout/MainLayout';
-import EditButton from '@components/common/EditButton';
-import RegistButton from '@components/common/RegistButton';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
+import { Card, Title } from '@components/common';
+import MainLayout from '@components/layout/MainLayout';
+import DetailModal from '@components/sponsoractivities/DetailModal';
+import OpenAddModalButton from '@components/sponsoractivities/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
+import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User } from '@type/common';
 
-import type { NextPage } from 'next';
-
-interface activity {
-  id: number;
-  sponsor_id: number;
-  sponsor_style_id: number;
-  user_id: number;
-  is_done: boolean;
-  created_at: string;
-  updated_at: string;
+interface Props {
+  sponsorActivities: SponsorActivity[];
+  sponsorActivitiesView: SponsorActivityView[];
+  sponsorStyles: SponsorStyle[];
+  sponsors: Sponsor[];
+  users: User[];
 }
 
-const activity: NextPage = () => {
-  const activity = [
-    {
-      id: 1,
-      sponsor_id: 1,
-      sponsor_style_id: 1,
-      user_id: 1,
-      is_done: true,
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
+export async function getServerSideProps() {
+  const getSponsorActivitiesUrl = process.env.SSR_API_URI + '/activities';
+  const getSponsorActivitiesViewUrl = process.env.SSR_API_URI + '/activities/details';
+  const getSponsorStylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
+  const getSponsorsUrl = process.env.SSR_API_URI + '/sponsors';
+  const getUsersUrl = process.env.SSR_API_URI + '/users';
+
+  const sponsorActivitiesRes = await get(getSponsorActivitiesUrl);
+  const sponsorActivitiesViewRes = await get(getSponsorActivitiesViewUrl);
+  const sponsorStylesRes = await get(getSponsorStylesUrl);
+  const sponsorsRes = await get(getSponsorsUrl);
+  const usersRes = await get(getUsersUrl);
+
+  return {
+    props: {
+      sponsorActivities: sponsorActivitiesRes,
+      sponsorActivitiesView: sponsorActivitiesViewRes,
+      sponsorStyles: sponsorStylesRes,
+      sponsors: sponsorsRes,
+      users: usersRes,
     },
-    {
-      id: 2,
-      sponsor_id: 2,
-      sponsor_style_id: 2,
-      user_id: 2,
-      is_done: false,
-      created_at: '2022/3/1',
-      updated_at: '2022/3/2',
-    },
-  ];
+  };
+}
+
+export default function SponsorActivities(props: Props) {
+  const [user] = useRecoilState(userAtom);
+  const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
+  const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SponsorActivityView) => {
+    setSponsorActivitiesID(sponsorActivitiesID);
+    setSponsorActivitiesViewItem(sponsorActivitiesItem);
+    setIsOpen(true);
+  };
+
+  const formatDate = (date: string) => {
+    const datetime = date.replace('T', ' ').replace('Z', '');
+    const datetime2 = datetime.substring(5, datetime.length - 3).replace('-', '/');
+    return datetime2;
+  };
+
   return (
     <MainLayout>
       <Head>
         <title>協賛活動一覧</title>
-        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+        <meta name='viewpoinst' content='initial-scale=1.0, width=device-width' />
       </Head>
-      <Center>
-        <Box m='10' px='10' boxShadow='base' rounded='lg'>
-          <Box mt='10' mx='5'>
-            <Flex>
-              <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                協賛金回収状況
-              </Center>
-              <Select variant='flushed' w='100'>
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-              </Select>
-            </Flex>
-            <Flex>
-              <Spacer />
-              <Box>
-                <RegistButton>
-                  <RiAddCircleLine
-                    size={20}
-                    style={{
-                      marginRight: 5,
+      <Card>
+        <div className='mx-5 mt-10'>
+          <div className='flex'>
+            <Title title={'協賛活動一覧'} />
+            <select className={'w-100'}>
+              <option value='2021'>2021</option>
+              <option value='2022'>2022</option>
+            </select>
+          </div>
+          <div className='flex justify-end'>
+            <OpenAddModalButton>協賛活動登録</OpenAddModalButton>
+          </div>
+        </div>
+        <div className='w-100 mb-2 p-5'>
+          <table className='mb-5 w-full table-fixed border-collapse'>
+            <thead>
+              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>企業名</div>
+                </th>
+                <th className='w-1/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>協賛スタイル</div>
+                </th>
+                <th className='w-1/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>担当者名</div>
+                </th>
+                <th className='w-2/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>回収状況</div>
+                </th>
+                <th className='w-2/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>作成日時</div>
+                </th>
+                <th className='w-2/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>更新日時</div>
+                </th>
+                <th className='w-1/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'></div>
+                </th>
+              </tr>
+            </thead>
+            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+              {props.sponsorActivitiesView.map((sponsorActivitiesItem, index) => (
+                <tr key={sponsorActivitiesItem.sponsorActivity.id}>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === props.sponsorActivitiesView.length - 1
+                        ? 'pb-4 pt-3'
+                        : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
                     }}
-                  />
-                  協賛スタイル登録
-                </RegistButton>
-              </Box>
-            </Flex>
-          </Box>
-          <Box p='5' mb='2'>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      ID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      協賛ID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
-                      協賛スタイルID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      ユーザーID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      回収状況
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center color='black.600'></Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      作成日時
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      更新日時
-                    </Center>
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {activity.map((activityItem) => (
-                  <Tr key={activityItem.id}>
-                    <Td>
-                      <Center color='black.300'>{activityItem.id}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{activityItem.sponsor_id}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{activityItem.sponsor_style_id}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{activityItem.user_id}</Center>
-                    </Td>
-                    <Td>
-                      {activityItem.is_done && <Center color='black.300'>回収完了</Center>}
-                      {!activityItem.is_done && <Center color='black.300'>未回収</Center>}
-                    </Td>
-                    <Td>
-                      <Center>
-                        <EditButton />
-                      </Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{activityItem.created_at}</Center>
-                    </Td>
-                    <Td>
-                      <Center color='black.300'>{activityItem.updated_at}</Center>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
-        </Box>
-      </Center>
+                  >
+                    <div className='text-center text-sm text-black-600'>
+                      {sponsorActivitiesItem.sponsor.name}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === props.sponsorActivitiesView.length - 1
+                        ? 'pb-4 pt-3'
+                        : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
+                    }}
+                  >
+                    <div className='text-center text-sm text-black-600'>
+                      <p>{sponsorActivitiesItem.sponsorStyle.scale}</p>
+                      <p>{sponsorActivitiesItem.sponsorStyle.isColor ? 'カラー' : 'モノクロ'}</p>
+                      <p>{sponsorActivitiesItem.sponsorStyle.price} 円</p>
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === props.sponsorActivitiesView.length - 1
+                        ? 'pb-4 pt-3'
+                        : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
+                    }}
+                  >
+                    <div className='text-center text-sm text-black-600'>
+                      {sponsorActivitiesItem.user.name}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === props.sponsorActivitiesView.length - 1
+                        ? 'pb-4 pt-3'
+                        : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
+                    }}
+                  >
+                    {sponsorActivitiesItem.sponsorActivity.isDone && (
+                      <div className='text-center text-sm text-black-600'>回収完了</div>
+                    )}
+                    {!sponsorActivitiesItem.sponsorActivity.isDone && (
+                      <div className='text-center text-sm text-black-600'>未回収</div>
+                    )}
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === props.sponsorActivitiesView.length - 1
+                        ? 'pb-4 pt-3'
+                        : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
+                    }}
+                  >
+                    <div className='text-center text-sm text-black-600'>
+                      {formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === props.sponsorActivitiesView.length - 1
+                        ? 'pb-4 pt-3'
+                        : 'border-b py-3',
+                    )}
+                    onClick={() => {
+                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
+                    }}
+                  >
+                    <div className='text-center text-sm text-black-600'>
+                      {formatDate(sponsorActivitiesItem.sponsorActivity.updatedAt)}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === props.sponsorActivitiesView.length - 1
+                        ? 'pb-4 pt-3'
+                        : 'border-b py-3',
+                    )}
+                  >
+                    <div className='flex'>
+                      <div className='mx-1'>
+                        <OpenEditModalButton
+                          id={sponsorActivitiesItem.sponsorActivity.id || '0'}
+                          sponsorActivity={sponsorActivitiesItem.sponsorActivity}
+                          sponsors={props.sponsors}
+                          sponsorStyles={props.sponsorStyles}
+                          users={props.users}
+                          isDisabled={
+                            user.bureauID === 2 ||
+                            user.bureauID === 3 ||
+                            user.bureauID === 6 ||
+                            user.id === sponsorActivitiesItem.sponsorActivity.id
+                          }
+                        />
+                      </div>
+                      <div className='mx-1'>
+                        <OpenDeleteModalButton
+                          id={sponsorActivitiesItem.sponsorActivity.id || 0}
+                          isDisabled={
+                            user.bureauID === 2 ||
+                            user.bureauID === 3 ||
+                            user.bureauID === 6 ||
+                            user.id === sponsorActivitiesItem.sponsorActivity.id
+                          }
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      {isOpen && sponsorActivitiesItem && (
+        <DetailModal
+          id={sponsorActivitiesID}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          sponsorActivitiesViewItem={sponsorActivitiesItem}
+          isDelete={false}
+        />
+      )}
     </MainLayout>
   );
-};
-
-export default activity;
+}

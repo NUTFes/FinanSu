@@ -235,7 +235,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
 
   return (
     <>
-      {props.isOpen ? (
+      {props.isOpen && (
         <Modal className='w-1/2'>
           <div className='ml-auto w-fit'>
             <CloseButton
@@ -339,7 +339,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
             </>
           )}
         </Modal>
-      ) : null}
+      )}
     </>
   );
 }

@@ -27,6 +27,8 @@ type MODAL_VIEWS =
   | 'PURCHASE_REPORT_ADD_MODAL'
   | 'PURCHASE_ORDER_LIST_MODAL'
   | 'PURCHASE_REPORT_ITEM_NUM_MODAL'
+  | 'SPONSOR_ACTIVITIES_NUM_MODAL'
+  | 'SPONSOR_ACTIVITIES_ADD_MODAL'
   | 'SPONSOR_STYLE_NUM_MODAL';
 
 // eslint-disable-next-line
@@ -81,7 +83,6 @@ export const UIProvider: FC<UIProviderProps> = (props) => {
     }),
     [openModal, closeModal, setModalView, state],
   );
-
   return <UIContext.Provider value={value} {...props} />;
 };
 

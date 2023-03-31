@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
 import { DeleteButton } from '@components/common';
-import DeleteModal from '@components/purchasereports/DeleteModal';
+
+import DeleteModal from '../sponsoractivities/DeleteModal';
 
 interface Props {
   children?: React.ReactNode;
-  id: number;
+  id: number | string;
   isDisabled: boolean;
 }
 
@@ -17,7 +18,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {isOpen && <DeleteModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} />}
+      {isOpen && <DeleteModal id={props.id} setShowModal={setIsOpen} />}
     </>
   );
 };
