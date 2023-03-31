@@ -122,7 +122,7 @@ export default function EditModal(props: ModalProps) {
 
   return (
     <>
-      {props.isOpen ? (
+      {props.isOpen && (
         <Modal className='!w-1/2'>
           <div className={clsx('w-full')}>
             <div className={clsx('mr-5 grid w-full justify-items-end')}>
@@ -221,7 +221,7 @@ export default function EditModal(props: ModalProps) {
             <div className={clsx('col-span-1 grid')} />
           </div>
         </Modal>
-      ) : null}
+      )}
     </>
   );
 }

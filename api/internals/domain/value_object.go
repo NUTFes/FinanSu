@@ -22,7 +22,7 @@ type PurchaseOrderID int
 //purchaseItem
 type Quantity int
 
-//sponsorStyle
+//sponsorstyle
 type Scale string
 
 //sponsor
