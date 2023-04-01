@@ -4,7 +4,7 @@ protocol: http2
 
 ingress:
  - hostname: finansu.nutfes.net
-   service: http://192.168.1.102:3000
+   service: http://localhost:3000
  - hostname: finansu-api.nutfes.net
-   service: http://192.168.1.102:1323
+   service: http://localhost:1323
  - service: http_status:404
