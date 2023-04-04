@@ -1,14 +1,15 @@
-import React, { ReactNode } from 'react';
-
-import SponsorActivitiesAddModal from '@/components/sponsoractivities/SponsorActivitiesAddModal';
-import SponsorStyleNumModal from '@/components/sponsorstyles/SponsorStyleNumModal';
 import PurchaseItemNumModal from '@components/purchaseorders/PurchaseItemNumModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
 import { useUI } from '@components/ui/context';
+import React, { ReactNode } from 'react';
 
 import s from './Layout.module.css';
+
+import SponsorActivitiesAddModal from '@/components/sponsoractivities/SponsorActivitiesAddModal';
+import SponsorAddModal from '@/components/sponsors/SponsorAddModal';
+import SponsorStyleNumModal from '@/components/sponsorstyles/SponsorStyleNumModal';
 
 const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
   return (
