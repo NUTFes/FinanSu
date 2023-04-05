@@ -14,7 +14,6 @@ export default function OpenAddModalButton(props: Props) {
   const { setModalView, openModal } = useUI();
 
   return (
-    <>
       <AddButton
         onClick={() => {
           setModalView('SPONSOR_ADD_MODAL');
@@ -23,6 +22,5 @@ export default function OpenAddModalButton(props: Props) {
       >
         {props.children}
       </AddButton>
-    </>
   );
 }
