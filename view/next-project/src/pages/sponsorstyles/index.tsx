@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import OpenDeleteModalButton from '@/components/sponsorstyles/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsorstyles/OpenEditModalButton';
-import { get } from '@api/sponsorship';
+import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsorstyles/OpenAddModalButton';
@@ -23,8 +23,8 @@ export const getServerSideProps = async () => {
     },
   };
 };
-export default function SponsorList(props: Props) {
-  const sponsorList: SponsorStyle[] = props.sponsorstyles;
+export default function SponsorStyleList(props: Props) {
+  const sponsorStyleList: SponsorStyle[] = props.sponsorstyles;
 
   return (
     <MainLayout>
@@ -69,13 +69,13 @@ export default function SponsorList(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {sponsorList.map((sponsorStyleItem, index) => (
+              {sponsorStyleList.map((sponsorStyleItem, index) => (
                 <tr key={sponsorStyleItem.id}>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>{sponsorStyleItem.id}</p>
@@ -84,7 +84,7 @@ export default function SponsorList(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>{sponsorStyleItem.scale}</p>
@@ -93,7 +93,7 @@ export default function SponsorList(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     {sponsorStyleItem.isColor && (
@@ -107,7 +107,7 @@ export default function SponsorList(props: Props) {
                     className={clsx(
                       'px-1 text-center text-black-300',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     {sponsorStyleItem.price}
@@ -116,7 +116,7 @@ export default function SponsorList(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
                     <div className='flex flex-row gap-3'>

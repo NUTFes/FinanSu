@@ -58,7 +58,7 @@ export const RelationLinkItems: LinkItemProps[] = [
     href: '/sponsorstyles',
   },
   {
-    name: '協賛企業一覧',
+    name: '協賛企業',
     icon: <BsBuilding className='mx-2 text-xl' />,
     href: '/sponsors',
   },

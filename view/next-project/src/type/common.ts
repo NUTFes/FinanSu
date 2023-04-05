@@ -105,7 +105,7 @@ export interface SponsorActivityView {
 export interface Sponsor {
   id?: number;
   name: string;
-  tel: number;
+  tel: string;
   email: string;
   address: string;
   representative: string;
