@@ -14,13 +14,13 @@ export default function OpenAddModalButton(props: Props) {
   const { setModalView, openModal } = useUI();
 
   return (
-      <AddButton
-        onClick={() => {
-          setModalView('SPONSOR_ADD_MODAL');
-          openModal();
-        }}
-      >
-        {props.children}
-      </AddButton>
+    <AddButton
+      onClick={() => {
+        setModalView('SPONSOR_ADD_MODAL');
+        openModal();
+      }}
+    >
+      {props.children}
+    </AddButton>
   );
 }
