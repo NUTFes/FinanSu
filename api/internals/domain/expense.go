@@ -14,11 +14,12 @@ type Expense struct {
 }
 
 type ExpenseDetails struct {
-	Expense       Expense            `json:"expense"`
-	PurchaseItems []PurchaseItemInfo `json:"purchaseItem"`
+	Expense         Expense          `json:"expense"`
+	PurchaseDetails []PurchaseDetail `json:"purchaseDetails"`
 }
 
-type PurchaseItemInfo struct {
-	ID   int    `json:"id"`
-	Item string `json:"item"`
+type PurchaseDetail struct {
+	PurchaseOrder  PurchaseOrder  `json:"purchaseOrder"`
+	PurchaseReport PurchaseReport `json:"purchaseReport"`
+	PurchaseItems  []PurchaseItem `json:"purchaseItems"`
 }

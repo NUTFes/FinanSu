@@ -66,10 +66,10 @@ const docTemplate = `{
         "/activities/details": {
             "get": {
                 tags: ["activity"],
-                "description": "activitiesとsponcer,sponsorStyle,userの一覧を取得",
+                "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
                 "responses": {
                     "200": {
-                        "description": "activitiesとsponcer,sponsorStyle,userの一覧の取得",
+                        "description": "activitiesとsponsor,sponsorStyle,userの一覧の取得",
                     }
                 }
             },
@@ -482,7 +482,7 @@ const docTemplate = `{
                 },
             },
         },
-        "/expense": {
+        "/expenses": {
             "get": {
                 tags: ["expense"],
                 "description": "expenseの一覧の取得",
@@ -516,7 +516,7 @@ const docTemplate = `{
                 ],
             },
         },
-        "/expense/details": {
+        "/expenses/details": {
             "get": {
                 tags: ["expense"],
                 "description": "expenseに紐づくpurchase_itemの一覧を取得",
@@ -527,18 +527,7 @@ const docTemplate = `{
                 }
             },
         },
-        "/expense/updateTP": {
-            "get": {
-                tags: ["expense"],
-                "description": "totalPriceの更新",
-                "responses": {
-                    "200": {
-                        "description": "totalPriceの更新",
-                    }
-                }
-            },
-        },
-        "/expense/{id}": {
+        "/expenses/{id}": {
             "get": {
                 tags: ["expense"],
                 "description": "IDで指定されたexpenseの取得",
@@ -606,7 +595,7 @@ const docTemplate = `{
                 },
             },
         },
-        "/expense/{id}/details": {
+        "/expenses/{id}/details": {
             "get": {
                 tags: ["expense"],
                 "description": "IDで指定されたexpenseに紐づくpurchase_itemsを取得",

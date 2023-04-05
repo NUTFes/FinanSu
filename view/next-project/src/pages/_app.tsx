@@ -13,8 +13,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     <RecoilRoot>
       <ChakraProvider>
         <Head>
-          <title>FinanSu</title>
-          <meta name='FinanSu' content='ja' />
           <link rel='icon' href='/favicon.ico' />
         </Head>
         <ManagedUIContext>

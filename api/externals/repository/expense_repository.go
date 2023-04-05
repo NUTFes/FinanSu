@@ -22,6 +22,7 @@ type ExpenseRepository interface {
 	Destroy(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	AllItemInfo(context.Context, string) (*sql.Rows, error)
+	AllOrderAndReportInfo(context.Context, string) (*sql.Rows, error)
 }
 
 func NewExpenseRepository(c db.Client, ac abstract.Crud) ExpenseRepository {
@@ -145,26 +146,36 @@ func (er *expenseRepository) UpdateTotalprice(c context.Context) error {
 	return er.crud.UpdateDB(c, query)
 }
 
-// expense_idに紐づいたpuchase_itemの金額が多い順に3件取得
-func (er *expenseRepository) AllItemInfo(c context.Context, expenseID string) (*sql.Rows, error) {
+// purchase_order_idに紐づいたpuchase_itemsを取得
+func (er *expenseRepository) AllItemInfo(c context.Context, purchaseOrderID string) (*sql.Rows, error) {
 	query := `
 		SELECT
-			pi.id,
-			pi.item
+			*
 		FROM
 			purchase_items pi
+		WHERE
+			pi.purchase_order_id = ` + purchaseOrderID + `
+		AND
+			pi.finance_check IS true;`
+	return er.crud.Read(c, query)
+}
+
+// expense_idに紐づくpurchase_ordersを取得
+func (er *expenseRepository) AllOrderAndReportInfo(c context.Context, expenseID string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			*
+		FROM
+			purchase_reports pr
 		INNER JOIN
 			purchase_orders po
 		ON
-			pi.purchase_order_id = po.id
-		WHERE
-			po.expense_id =` + expenseID + `
+			pr.purchase_order_id = po.id 
+		WHERE po.expense_id = ` + expenseID + `
 		AND
-			pi.finance_check IS true
+			pr.finance_check IS true
 		AND
 			po.finance_check IS true
-		ORDER BY
-			pi.price*pi.quantity
-		DESC LIMIT 3`
+		`
 	return er.crud.Read(c, query)
 }

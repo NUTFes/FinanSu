@@ -62,9 +62,9 @@ export interface PurchaseReport {
   updatedAt?: string;
 }
 
-// Sponser(協賛関係)
-// // SponserStyle(協賛スタイル)
-export interface SponserStyle {
+// Sponsor(協賛関係)
+// // SponsorStyle(協賛スタイル)
+export interface SponsorStyle {
   id?: number;
   scale: string;
   isColor: boolean;
@@ -76,16 +76,33 @@ export interface SponserStyle {
 // // Activity(協賛活動)
 export interface Activity {
   id?: number;
-  sponserStyleID: number;
+  sponsorStyleID: number;
   userID: number;
   isColor: boolean;
-  sponserID: number;
+  sponsorID: number;
   createdAt?: string;
   updatedAt?: string;
 }
 
-// // Sponser(協賛企業)
-export interface Sponser {
+export interface SponsorActivity {
+  id?: number;
+  sponsorID: number;
+  sponsorStyleID: number;
+  userID: number;
+  isDone: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SponsorActivityView {
+  user: User;
+  sponsor: Sponsor;
+  sponsorStyle: SponsorStyle;
+  sponsorActivity: SponsorActivity;
+}
+
+// // Sponsor(協賛企業)
+export interface Sponsor {
   id?: number;
   name: string;
   tel: number;

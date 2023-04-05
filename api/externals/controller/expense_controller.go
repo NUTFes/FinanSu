@@ -27,6 +27,10 @@ func NewExpenseController(u usecase.ExpenseUseCase) ExpenseController {
 }
 
 func (e *expenseController) IndexExpense(c echo.Context) error {
+	err := e.u.UpdateExpenseTP(c.Request().Context())
+	if err != nil {
+		return err
+	}
 	expenses, err := e.u.GetExpenses(c.Request().Context())
 	if err != nil {
 		return err
@@ -82,6 +86,10 @@ func (e *expenseController) UpdateExpenseTP(c echo.Context) error {
 }
 
 func (e *expenseController) IndexExpenseDetails(c echo.Context) error {
+	err := e.u.UpdateExpenseTP(c.Request().Context())
+	if err != nil {
+		return err
+	}
 	expenseDetails, err := e.u.GetExpenseDetails(c.Request().Context())
 	if err != nil {
 		return err
