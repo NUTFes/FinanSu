@@ -482,6 +482,139 @@ const docTemplate = `{
                 },
             },
         },
+        "/expenses": {
+            "get": {
+                tags: ["expense"],
+                "description": "expenseの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "expenseの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["expense"],
+                "description": "expenseの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたexpenseが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "year_id",
+                        "in": "query",
+                        "description": "year_id",
+                        "type": "string"
+                    }
+                ],
+            },
+        },
+        "/expenses/details": {
+            "get": {
+                tags: ["expense"],
+                "description": "expenseに紐づくpurchase_itemの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "expenseに紐づくpurchase_itemの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/expenses/{id}": {
+            "get": {
+                tags: ["expense"],
+                "description": "IDで指定されたexpenseの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "expenseの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["expense"],
+                "description": "expenseの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたexpenseが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "year_id",
+                        "in": "query",
+                        "description": "year_id",
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["expense"],
+                "description": "IDを指定してexpenseの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "expenseの削除完了",
+                    }
+                },
+            },
+        },
+        "/expenses/{id}/details": {
+            "get": {
+                tags: ["expense"],
+                "description": "IDで指定されたexpenseに紐づくpurchase_itemsを取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたexpenseに紐づくpurchase_itemsを取得",
+                    }
+                }
+            },
+        },
         "/fund_informations": {
             "get": {
                 tags: ["fund_information"],
@@ -894,6 +1027,12 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
+                        "name": "expense_id",
+                        "in": "query",
+                        "description": "expense_id",
+                        "type": "integer"
+                    },
+                    {
                         "name": "finance_check",
                         "in": "query",
                         "description": "finance_check",
@@ -958,6 +1097,12 @@ const docTemplate = `{
                         "name": "user_id",
                         "in": "query",
                         "description": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "expense_id",
+                        "in": "query",
+                        "description": "expense_id",
                         "type": "integer"
                     },
                     {
@@ -1053,7 +1198,7 @@ const docTemplate = `{
                     {
                         "name": "purchase_order_id",
                         "in": "query",
-                        "description": "purchase_order_id",
+                        "description": "購入申請id",
                         "type": "integer"
                     },
                     {
@@ -1138,7 +1283,7 @@ const docTemplate = `{
                     {
                         "name": "purchase_order_id",
                         "in": "query",
-                        "description": "purchase_order_id",
+                        "description": "購入申請id",
                         "type": "integer"
                     },
                     {
