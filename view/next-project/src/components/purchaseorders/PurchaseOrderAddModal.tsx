@@ -87,7 +87,7 @@ export default function AddModal(props: ModalProps) {
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.price} onChange={handler(index, 'price')} />
+          <Input type='number' value={data.price} onChange={handler(index, 'price')} />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
           <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
@@ -95,7 +95,7 @@ export default function AddModal(props: ModalProps) {
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.quantity} onChange={handler(index, 'quantity')} />
+          <Input type='number' value={data.quantity} onChange={handler(index, 'quantity')} />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
           <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
