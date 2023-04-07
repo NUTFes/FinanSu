@@ -5,9 +5,7 @@ export const post = async (url: string, data: SponsorStyle) => {
   const isColor = data.isColor;
   const price = data.price;
 
-  const postUrl = url + '?scale=' + scale + '&is_color=' + isColor + '&price=' + price;
-
-  const res = await fetch(postUrl, {
+  const res = await fetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -23,9 +21,7 @@ export const put = async (url: string, data: SponsorStyle) => {
   const isColor = data.isColor;
   const price = data.price;
 
-  const putUrl = url + '?scale=' + scale + '&is_color=' + isColor + '&price=' + price;
-
-  const res = await fetch(putUrl, {
+  const res = await fetch(url, {
     method: 'PUT',
     mode: 'cors',
     headers: {
