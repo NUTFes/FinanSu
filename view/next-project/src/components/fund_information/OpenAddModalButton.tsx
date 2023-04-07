@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 import { AddButton } from '@components/common';
-import OpenAddModal from './AddModal';
 import { Teacher, Department, User } from '@type/common';
+
+import OpenAddModal from './AddModal';
 
 interface Props {
   children?: React.ReactNode;
@@ -23,7 +24,14 @@ export const OpenAddModalButton = (props: Props) => {
       >
         {props.children}
       </AddButton>
-      {isOpen && <OpenAddModal setShowModal={setIsOpen} teachers={props.teachers} departments={props.departments} users={props.users} />}
+      {isOpen && (
+        <OpenAddModal
+          setShowModal={setIsOpen}
+          teachers={props.teachers}
+          departments={props.departments}
+          users={props.users}
+        />
+      )}
     </>
   );
 };

@@ -99,17 +99,13 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
     <>
       <Modal>
         <div className='w-full'>
-          <div className='w-fit ml-auto'>
+          <div className='ml-auto w-fit'>
             <CloseButton onClick={() => props.setIsOpen(false)} />
           </div>
         </div>
-        <div className='mb-10 w-fit mx-auto text-xl text-black-600'>
-          購入申請の作成
-        </div>
+        <div className='mx-auto mb-10 w-fit text-xl text-black-600'>購入申請の作成</div>
         <div className='mb-10 grid grid-cols-5 items-center justify-items-center gap-4'>
-          <p className='grid-cols-1 text-black-600'>
-            購入期限
-          </p>
+          <p className='grid-cols-1 text-black-600'>購入期限</p>
           <div className='col-span-4 w-full'>
             <Input
               type='date'
@@ -118,9 +114,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               className='w-full'
             />
           </div>
-          <p className='grid-cols-1 text-black-600'>
-            購入した局・団体
-          </p>
+          <p className='grid-cols-1 text-black-600'>購入した局・団体</p>
           <div className='col-span-4 w-full'>
             <Select
               value={formData.expenseID}
@@ -134,9 +128,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               ))}
             </Select>
           </div>
-          <p className='grid-cols-1 text-black-600'>
-            購入物品数
-          </p>
+          <p className='grid-cols-1 text-black-600'>購入物品数</p>
           <div className='col-span-4 w-full'>
             <Select
               value={purchaseItemNum.value}
@@ -151,7 +143,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
             </Select>
           </div>
         </div>
-        <div className='w-fit mx-auto my-3'>
+        <div className='mx-auto my-3 w-fit'>
           <PrimaryButton
             onClick={() => {
               submit(formData);

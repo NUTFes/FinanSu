@@ -167,7 +167,14 @@ export default function PurchaseOrders(props: Props) {
                     }}
                   >
                     <div className={clsx('flex justify-center')}>
-                      <BureauLabel bureauName={props.expenses.find((expense) => expense.id === purchaseOrderViewItem.purchaseOrder.expenseID)?.name || ''} />
+                      <BureauLabel
+                        bureauName={
+                          props.expenses.find(
+                            (expense) =>
+                              expense.id === purchaseOrderViewItem.purchaseOrder.expenseID,
+                          )?.name || ''
+                        }
+                      />
                     </div>
                   </td>
                   <td

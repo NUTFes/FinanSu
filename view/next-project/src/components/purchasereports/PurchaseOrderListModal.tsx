@@ -147,7 +147,11 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {expenses.find((expense) => expense.id === purchaseOrderItem.purchaseOrder.expenseID)?.name}
+                        {
+                          expenses.find(
+                            (expense) => expense.id === purchaseOrderItem.purchaseOrder.expenseID,
+                          )?.name
+                        }
                       </div>
                     </td>
                     <td

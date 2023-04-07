@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { AddButton } from '@components/common';
+
 import SponsorStyleAddModal from './SponsorStyleAddModal';
 
 interface Props {
@@ -19,11 +20,7 @@ export const OpenAddModalButton = (props: Props) => {
       >
         {props.children}
       </AddButton>
-      {isOpen && (
-        <SponsorStyleAddModal
-          setIsOpen={setIsOpen}
-        />
-      )}
+      {isOpen && <SponsorStyleAddModal setIsOpen={setIsOpen} />}
     </>
   );
 };

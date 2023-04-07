@@ -20,7 +20,7 @@ const EditButton: React.FC<Props> = (props) => {
   return (
     <button
       suppressHydrationWarning
-      className={`${buttonClass}  h-6 w-6 min-w-0 rounded-full  p-0 flex items-center justify-center`}
+      className={`${buttonClass}  flex h-6 w-6 min-w-0  items-center justify-center rounded-full p-0`}
       disabled={!isDisabled}
       onClick={onClick}
     >
