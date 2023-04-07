@@ -135,6 +135,7 @@ export default function SponsorStyleAddModal(props: ModalProps) {
         <p className='text-black-600'>金額</p>
         <Input
           className='col-span-4 w-full'
+          type='number'
           id={String(data.id)}
           value={data.price}
           onChange={formDataListHandler('price')}
