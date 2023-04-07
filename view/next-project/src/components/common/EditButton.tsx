@@ -7,7 +7,7 @@ interface Props {
 }
 
 const EditButton: React.FC<Props> = (props) => {
-  const { onClick, isDisabled } = props;
+  const { onClick, isDisabled = true } = props;
 
   const buttonClass = useMemo(() => {
     if (!isDisabled) {
@@ -19,13 +19,12 @@ const EditButton: React.FC<Props> = (props) => {
 
   return (
     <button
-      className={`${buttonClass}  h-6 w-6 min-w-0 rounded-full  p-0`}
+      suppressHydrationWarning
+      className={`${buttonClass}  h-6 w-6 min-w-0 rounded-full  p-0 flex items-center justify-center`}
       disabled={!isDisabled}
       onClick={onClick}
     >
-      <div className='flex items-center justify-center'>
-        <RiPencilFill size={'15px'} color={'white'} />
-      </div>
+      <RiPencilFill size={'15px'} color={'white'} />
     </button>
   );
 };
