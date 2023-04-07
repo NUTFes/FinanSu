@@ -4,7 +4,7 @@ import { RiArrowDropRightLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
-import { get } from '@api/api_methods';
+import { get, del } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
 import { post } from '@api/purchaseReport';
 import {
@@ -180,6 +180,11 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     });
   };
 
+  const deletePurchaseOrder = async () => {
+    const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.purchaseOrderId;
+    await del(deletePurchaseOrderUrl);
+  };
+
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
     <>
@@ -242,6 +247,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
+                deletePurchaseOrder();
                 props.setIsOpen(false);
               }}
             />
