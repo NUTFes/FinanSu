@@ -14,7 +14,6 @@ interface Props {
 
 export default function SponsorEditModal(props: Props) {
   const router = useRouter();
-  const { closeModal } = useUI();
 
   const [formData, setFormData] = useState<Sponsor>(props.sponsor);
 
@@ -31,7 +30,7 @@ export default function SponsorEditModal(props: Props) {
 
   const submit = async (formData: Sponsor) => {
     editSponsor(formData);
-    closeModal();
+    props.setIsOpen(false);
     router.reload();
   };
 
@@ -39,7 +38,7 @@ export default function SponsorEditModal(props: Props) {
     <Modal className='w-1/2'>
       <div className='w-full'>
         <div className='mr-5 ml-auto w-fit'>
-          <CloseButton onClick={closeModal} />
+          <CloseButton onClick={() => props.setIsOpen(false)} />
         </div>
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>企業登録</h1>
