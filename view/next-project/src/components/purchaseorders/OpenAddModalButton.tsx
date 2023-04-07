@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+
 import { AddButton } from '@components/common';
-import PurchaseItemNumModal from './PurchaseItemNumModal';
 import { Expense } from '@type/common';
+
+import PurchaseItemNumModal from './PurchaseItemNumModal';
 
 interface Props {
   children?: React.ReactNode;
@@ -20,9 +22,7 @@ export default function OpenModalButton(props: Props) {
       >
         {props.children}
       </AddButton>
-      {isOpen && (
-        <PurchaseItemNumModal setIsOpen={setIsOpen} expenses={props.expenses} />
-      )}
+      {isOpen && <PurchaseItemNumModal setIsOpen={setIsOpen} expenses={props.expenses} />}
     </>
   );
 }

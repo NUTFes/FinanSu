@@ -9,8 +9,8 @@ const BureauLabel: React.FC<BureauLabelProps> = (props) => {
   const { bureauName } = props;
   const bureauEn = useMemo(() => {
     const bureau = BUREAUS_WITH_EN.find((bureau) => bureau.name === bureauName);
-    if(!bureau) return 'other';
-    return bureau.name_en
+    if (!bureau) return 'other';
+    return bureau.name_en;
   }, []);
 
   return (

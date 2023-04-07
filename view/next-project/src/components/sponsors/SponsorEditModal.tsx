@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 
 import { put } from '@api/sponsor';
 import { PrimaryButton, CloseButton, Input, Modal } from '@components/common';
-import { useUI } from '@components/ui/context';
 import { Sponsor } from '@type/common';
 
 interface Props {

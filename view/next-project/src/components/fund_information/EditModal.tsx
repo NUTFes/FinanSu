@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import { Dispatch,  SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import { Modal, Input, Select, CloseButton, PrimaryButton } from '../common';
 
 import { put } from '@api/fundInformations';
 import { FundInformation, Teacher, User, Department } from '@type/common';
+
+import { Modal, Input, Select, CloseButton, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -80,11 +81,7 @@ export default function EditModal(props: ModalProps) {
         </div>
         <p className='col-span-1 text-black-600'>教員名</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.teacherID}
-            onChange={handler('teacherID')}
-            >
+          <Select className='w-full' value={formData.teacherID} onChange={handler('teacherID')}>
             {props.teachers
               .filter((teacher) => teacher.departmentID === departmentID)
               .map((teacher) => (
@@ -96,11 +93,7 @@ export default function EditModal(props: ModalProps) {
         </div>
         <p className='col-span-1 text-black-600'>担当者</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.userID}
-            onChange={handler('userID')}
-            >
+          <Select className='w-full' value={formData.userID} onChange={handler('userID')}>
             {props.users.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name}

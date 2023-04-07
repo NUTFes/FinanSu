@@ -164,10 +164,7 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div className='text-center text-sm text-black-600'>
@@ -187,10 +184,7 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div className='text-center text-sm text-black-600'>
@@ -204,14 +198,18 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div className={clsx('flex justify-center')}>
-                      <BureauLabel bureauName={props.expenses.find((expense) => expense.id === purchaseReportViewItem.purchaseOrder.expenseID)?.name || ''} />
+                      <BureauLabel
+                        bureauName={
+                          props.expenses.find(
+                            (expense) =>
+                              expense.id === purchaseReportViewItem.purchaseOrder.expenseID,
+                          )?.name || ''
+                        }
+                      />
                     </div>
                   </td>
                   <td
@@ -221,10 +219,7 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div className='text-center text-sm text-black-600'>
@@ -242,10 +237,7 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div className='text-center text-sm text-black-600'>
@@ -259,10 +251,7 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div
@@ -291,10 +280,7 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div className='text-center text-sm text-black-600'>
@@ -311,10 +297,7 @@ export default function PurchaseReports(props: Props) {
                       index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                     onClick={() => {
-                      onOpen(
-                        purchaseReportViewItem.purchaseReport.id || 0,
-                        purchaseReportViewItem,
-                      );
+                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
                   >
                     <div className='text-center text-sm text-black-600'>

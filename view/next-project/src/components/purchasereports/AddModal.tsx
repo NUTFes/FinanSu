@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { CloseButton, Modal, PrimaryButton } from '@components/common';
 import { useUI } from '@components/ui/context';
 
@@ -7,17 +8,15 @@ export default function PurchaseItemNumModal() {
 
   return (
     <Modal className='w-1/2'>
-      <div className='w-fit ml-auto'>
+      <div className='ml-auto w-fit'>
         <CloseButton onClick={closeModal} />
       </div>
-      <p className='mb-10 w-fit mx-auto text-xl text-black-600'>
-        購入報告の登録
-      </p>
-      <div className='flex flex-col gap-2 items-center mb-10 text-black-600'>
+      <p className='mx-auto mb-10 w-fit text-xl text-black-600'>購入報告の登録</p>
+      <div className='mb-10 flex flex-col items-center gap-2 text-black-600'>
         <p>申請した物品としていない物品を同時に購入した場合は</p>
         <p>2回に分けて登録をお願いします</p>
       </div>
-      <div className='flex gap-5 justify-center'>
+      <div className='flex justify-center gap-5'>
         <PrimaryButton
           onClick={() => {
             setModalView('PURCHASE_ORDER_LIST_MODAL');

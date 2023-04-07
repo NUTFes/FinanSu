@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 import { EditButton } from '@components/common';
-import EditModal from './EditModal';
 import { Teacher, Department, User, FundInformation } from '@type/common';
+
+import EditModal from './EditModal';
 
 interface Props {
   teachers: Teacher[];

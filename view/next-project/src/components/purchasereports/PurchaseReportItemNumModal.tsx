@@ -4,18 +4,18 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import * as purchaseItemAPI from '@api/purchaseItem';
 import { post } from '@api/purchaseOrder';
-import { get } from '@utils/api/api_methods';
 import {
   CloseButton,
   Modal,
   OutlinePrimaryButton,
   PrimaryButton,
   PullDown,
-  Select
+  Select,
 } from '@components/common';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
 import { useUI } from '@components/ui/context';
 import { PurchaseItem, PurchaseOrder, Expense } from '@type/common';
+import { get } from '@utils/api/api_methods';
 
 export default function PurchaseReportItemNumModal() {
   const [user] = useRecoilState(userAtom);
@@ -119,17 +119,13 @@ export default function PurchaseReportItemNumModal() {
   return (
     <>
       <Modal className='w-1/2'>
-        <div className='w-fit ml-auto'>
+        <div className='ml-auto w-fit'>
           <CloseButton onClick={closeModal} />
         </div>
-        <p className='mb-10 w-fit mx-auto text-xl text-black-600'>
-          購入報告単体で登録
-        </p>
-        <p className='w-fit mx-auto text-black-600'>
-          報告する物品の個数を入力してください
-        </p>
+        <p className='mx-auto mb-10 w-fit text-xl text-black-600'>購入報告単体で登録</p>
+        <p className='mx-auto w-fit text-black-600'>報告する物品の個数を入力してください</p>
         <div>
-          <div className='flex gap-5 justify-center my-10'>
+          <div className='my-10 flex justify-center gap-5'>
             <p className='text-black-600'>購入物品数</p>
             <div className='w-1/3'>
               <PullDown value={purchaseItemNum.value} onChange={purchaseItemNumHandler('value')}>
@@ -141,7 +137,7 @@ export default function PurchaseReportItemNumModal() {
               </PullDown>
             </div>
           </div>
-          <div className='flex gap-5 justify-center items-center my-10'>
+          <div className='my-10 flex items-center justify-center gap-5'>
             <p>購入した局・団体</p>
             <div className='w-1/3'>
               <Select
@@ -159,7 +155,7 @@ export default function PurchaseReportItemNumModal() {
             </div>
           </div>
         </div>
-        <div className='flex gap-5 justify-center'>
+        <div className='flex justify-center gap-5'>
           <OutlinePrimaryButton
             onClick={() => {
               setModalView('PURCHASE_REPORT_ADD_MODAL');

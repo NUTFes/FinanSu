@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 
 import { userAtom } from '@/store/atoms';
 import { post } from '@api/fundInformations';
 import { Department, FundInformation, Teacher, User } from '@type/common';
+
+import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -69,11 +70,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
         <p className='col-span-1 text-black-600'>所属</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={departmentID}
-            onChange={handleDepartmentID}
-            >
+          <Select className='w-full' value={departmentID} onChange={handleDepartmentID}>
             {props.departments.map((department) => (
               <option key={department.id} value={department.id}>
                 {department.name}
@@ -83,11 +80,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='col-span-1 text-black-600'>教員名</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.teacherID}
-            onChange={handler('teacherID')}
-            >
+          <Select className='w-full' value={formData.teacherID} onChange={handler('teacherID')}>
             {props.teachers
               .filter((teacher) => teacher.departmentID === departmentID)
               .map((teacher) => (
@@ -99,11 +92,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='col-span-1 text-black-600'>担当者</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.userID}
-            onChange={handler('userID')}
-            >
+          <Select className='w-full' value={formData.userID} onChange={handler('userID')}>
             {props.users.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name}
