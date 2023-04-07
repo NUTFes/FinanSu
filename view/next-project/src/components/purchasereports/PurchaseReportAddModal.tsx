@@ -322,12 +322,15 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                     }}
                   >
                     <div className='flex'>
-                      {activeStep === steps.length ? '登録して確認' : '登録して次へ'}
+                      {/* {activeStep === steps.length ? '登録して確認' : '登録して次へ'} */}
+                      {activeStep === steps.length ? '確認へ' : '次へ'}
                       <RiArrowDropRightLine size={23} />
                     </div>
                   </PrimaryButton>
                 </div>
-                {!props.isOnlyReported && (
+                {/* 登録物品(purchaseItem)ページの財務局長チェックがtrueになる */}
+                {/* 登録物品(purchaseItem)ページは現在使われていないのでコメントアウト */}
+                {/* {!props.isOnlyReported && (
                   <div className='col-span-12 grid w-full justify-items-center'>
                     <UnderlinePrimaryButton
                       className={'pr-1'}
@@ -342,7 +345,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                       <RiArrowDropRightLine size={23} />
                     </UnderlinePrimaryButton>
                   </div>
-                )}
+                )} */}
               </div>
             </>
           )}
