@@ -6,15 +6,16 @@ import { BureauLabelProps } from './BureauLabel.type';
 import Label from '../Label';
 
 const BureauLabel: React.FC<BureauLabelProps> = (props) => {
-  const { bureauID } = props;
-  const bureau = useMemo(() => {
-    const bureau = BUREAUS_WITH_EN.find((bureau) => bureau.id === bureauID);
-    return bureau;
-  }, [bureauID]);
+  const { bureauName } = props;
+  const bureauEn = useMemo(() => {
+    const bureau = BUREAUS_WITH_EN.find((bureau) => bureau.name === bureauName);
+    if(!bureau) return 'other';
+    return bureau.name_en
+  }, []);
 
   return (
-    <Label isOutline color={bureau?.name_en}>
-      {bureau?.name}
+    <Label isOutline color={bureauEn}>
+      {bureauName}
     </Label>
   );
 };

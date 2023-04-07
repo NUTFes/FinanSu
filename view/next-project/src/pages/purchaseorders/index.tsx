@@ -11,22 +11,27 @@ import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView } from '@type/common';
+import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@type/common';
 
 interface Props {
   user: User;
   purchaseOrder: PurchaseOrder[];
   purchaseOrderView: PurchaseOrderView[];
+  expenses: Expense[];
 }
 export async function getServerSideProps() {
   const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
   const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
+  const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseOrderRes = await get(getPurchaseOrderUrl);
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
+  const expenseRes = await get(getExpenseUrl);
+
   return {
     props: {
       purchaseOrder: purchaseOrderRes,
       purchaseOrderView: purchaseOrderViewRes,
+      expenses: expenseRes,
     },
   };
 }
@@ -96,7 +101,7 @@ export default function PurchaseOrders(props: Props) {
             </select>
           </div>
           <div className={clsx('flex justify-end')}>
-            <OpenAddModalButton>申請登録</OpenAddModalButton>
+            <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
           </div>
         </div>
         <div className={clsx('w-100 mb-2 p-5')}>
@@ -162,7 +167,7 @@ export default function PurchaseOrders(props: Props) {
                     }}
                   >
                     <div className={clsx('flex justify-center')}>
-                      <BureauLabel bureauID={purchaseOrderViewItem.user.bureauID} />
+                      <BureauLabel bureauName={props.expenses.find((expense) => expense.id === purchaseOrderViewItem.purchaseOrder.expenseID)?.name || ''} />
                     </div>
                   </td>
                   <td
