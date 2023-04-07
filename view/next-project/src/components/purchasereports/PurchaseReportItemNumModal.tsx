@@ -1,23 +1,35 @@
-import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
 import * as purchaseItemAPI from '@api/purchaseItem';
 import { post } from '@api/purchaseOrder';
+import { get } from '@utils/api/api_methods';
 import {
   CloseButton,
   Modal,
   OutlinePrimaryButton,
   PrimaryButton,
   PullDown,
+  Select
 } from '@components/common';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseItem, PurchaseOrder } from '@type/common';
+import { PurchaseItem, PurchaseOrder, Expense } from '@type/common';
 
 export default function PurchaseReportItemNumModal() {
   const [user] = useRecoilState(userAtom);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [expenseID, setExpenseID] = useState(1);
+
+  useEffect(() => {
+    const getExpensesUrl = process.env.CSR_API_URI + '/expenses';
+    const getExpenses = async () => {
+      const res = await get(getExpensesUrl);
+      setExpenses(res);
+    };
+    getExpenses();
+  }, []);
 
   const { setModalView, openModal, closeModal } = useUI();
 
@@ -63,9 +75,10 @@ export default function PurchaseReportItemNumModal() {
     }
 
     const data: PurchaseOrder = {
-      deadline: String(year) + monthStr + dayStr,
+      deadline: String(year) + '-' + monthStr + '-' + dayStr,
       userID: user.id,
       financeCheck: false,
+      expenseID: expenseID,
     };
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     const postRes = await post(addPurchaseOrderUrl, data);
@@ -104,33 +117,21 @@ export default function PurchaseReportItemNumModal() {
   };
 
   return (
-    <Modal>
-      <div className={clsx('w-full')}>
-        <div className={clsx('mr-5 grid w-full justify-items-end')}>
+    <>
+      <Modal className='w-1/2'>
+        <div className='w-fit ml-auto'>
           <CloseButton onClick={closeModal} />
         </div>
-      </div>
-      <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
-        購入報告単体で登録
-      </div>
-      <div className={clsx('mb-5 grid grid-cols-12 gap-4')}>
-        <div className={clsx('col-span-1 grid')} />
-        <div className={clsx('col-span-10 grid')}>
-          <div className={clsx('mb-5 grid w-full grid-cols-12')}>
-            <div className={clsx('col-span-1 grid')} />
-            <div className={clsx('col-span-10 mr-2 grid justify-items-center')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>
-                報告する物品の個数を入力してください
-              </div>
-            </div>
-          </div>
-          <div className={clsx('col-span-1 grid')} />
-          <div className={clsx('grid w-full grid-cols-12')}>
-            <div className={clsx('col-span-3 grid')} />
-            <div className={clsx('h-100 col-span-3 mr-2 grid justify-items-center')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>購入物品数</div>
-            </div>
-            <div className={clsx('col-span-2 ml-2 grid w-full')}>
+        <p className='mb-10 w-fit mx-auto text-xl text-black-600'>
+          購入報告単体で登録
+        </p>
+        <p className='w-fit mx-auto text-black-600'>
+          報告する物品の個数を入力してください
+        </p>
+        <div>
+          <div className='flex gap-5 justify-center my-10'>
+            <p className='text-black-600'>購入物品数</p>
+            <div className='w-1/3'>
               <PullDown value={purchaseItemNum.value} onChange={purchaseItemNumHandler('value')}>
                 {purchaseItemNumArray.map((data) => (
                   <option key={data} value={data}>
@@ -139,43 +140,52 @@ export default function PurchaseReportItemNumModal() {
                 ))}
               </PullDown>
             </div>
-            <div className={clsx('col-span-4 grid')} />
+          </div>
+          <div className='flex gap-5 justify-center items-center my-10'>
+            <p>購入した局・団体</p>
+            <div className='w-1/3'>
+              <Select
+                value={expenseID}
+                onChange={(e) => {
+                  setExpenseID(Number(e.target.value));
+                }}
+              >
+                {expenses.map((data) => (
+                  <option key={data.id} value={data.id}>
+                    {data.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
           </div>
         </div>
-        <div className={clsx('col-span-1 grid ')} />
-      </div>
-      <div className={clsx('mb-3 grid justify-items-center py-3')}>
-        <div className={clsx('flex')}>
-          <div className={clsx('mx-2')}>
-            <OutlinePrimaryButton
-              onClick={() => {
-                setModalView('PURCHASE_REPORT_ADD_MODAL');
-                openModal();
-              }}
-            >
-              戻る
-            </OutlinePrimaryButton>
-          </div>
-          <div className={clsx('mx-2')}>
-            <PrimaryButton
-              onClick={() => {
-                addPurchaseOrder();
-              }}
-            >
-              報告へ進む
-            </PrimaryButton>
-            {isOpen && (
-              <PurchaseReportAddModal
-                purchaseOrderId={purchaseOrderId}
-                purchaseItemNum={purchaseItemNum.value}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                isOnlyReported={true}
-              />
-            )}
-          </div>
+        <div className='flex gap-5 justify-center'>
+          <OutlinePrimaryButton
+            onClick={() => {
+              setModalView('PURCHASE_REPORT_ADD_MODAL');
+              openModal();
+            }}
+          >
+            戻る
+          </OutlinePrimaryButton>
+          <PrimaryButton
+            onClick={() => {
+              addPurchaseOrder();
+            }}
+          >
+            報告へ進む
+          </PrimaryButton>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+      {isOpen && (
+        <PurchaseReportAddModal
+          purchaseOrderId={purchaseOrderId}
+          purchaseItemNum={purchaseItemNum.value}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          isOnlyReported={true}
+        />
+      )}
+    </>
   );
 }

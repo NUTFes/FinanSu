@@ -196,6 +196,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         <p className='text-black-600'>単価</p>
         <div className='col-span-4 w-full'>
           <Input
+            type='number'
             className='w-full'
             id={String(data.id)}
             value={data.price}
@@ -205,6 +206,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         <p className='text-black-600'>個数</p>
         <div className='col-span-4 w-full'>
           <Input
+            type='number'
             className='w-full'
             id={String(data.id)}
             value={data.quantity}

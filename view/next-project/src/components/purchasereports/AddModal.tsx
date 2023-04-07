@@ -8,97 +8,38 @@ import { CloseButton, Modal, PrimaryButton, PullDown } from '@components/common'
 import { useUI } from '@components/ui/context';
 
 export default function PurchaseItemNumModal() {
-  const [user] = useRecoilState(userAtom);
-
   const { setModalView, openModal, closeModal } = useUI();
 
-  const [bureauID, setBureauID] = useState<number>(user.bureauID);
-
-  // 申請する局用のhandler
-  const bureauHandler = () => (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setBureauID(Number(e.target.value));
-  };
-
   return (
-    <Modal>
-      <div className={clsx('w-full')}>
-        <div className={clsx('mr-5 grid w-full justify-items-end')}>
-          <CloseButton onClick={closeModal} />
-        </div>
+    <Modal className='w-1/2'>
+      <div className='w-fit ml-auto'>
+        <CloseButton onClick={closeModal} />
       </div>
-      <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
+      <p className='mb-10 w-fit mx-auto text-xl text-black-600'>
         購入報告の登録
+      </p>
+      <div className='flex flex-col gap-2 items-center mb-10 text-black-600'>
+        <p>申請した物品としていない物品を同時に購入した場合は</p>
+        <p>2回に分けて登録をお願いします</p>
       </div>
-      <div className={clsx('mb-10 grid grid-cols-12 gap-4')}>
-        <div className={clsx('col-span-1 grid')} />
-        <div className={clsx('col-span-10 grid')}>
-          <div className={clsx('my-2 w-full')}>
-            <div className={clsx('text-md grid justify-items-end text-center text-black-600')}>
-              申請した物品としていない物品を同時に購入した場合は
-              <br />
-              2回に分けて登録をお願いします。
-            </div>
-          </div>
-          <div className={clsx('mt-5 grid w-full grid-cols-12')}>
-            <div className={clsx('h-100 col-span-2 grid')} />
-            <div
-              className={clsx(
-                'text-md h-100 col-span-4 flex grid w-full items-center justify-items-end pr-3 text-right text-black-600',
-              )}
-            >
-              申請する局
-            </div>
-            <div
-              className={clsx(
-                'text-md h-100 col-span-4 mr-2 grid w-full justify-items-start text-right font-bold text-black-600',
-              )}
-            >
-              <PullDown value={bureauID} onChange={bureauHandler()}>
-                {BUREAUS.map((data) => (
-                  <option key={data.id} value={data.id}>
-                    {data.name}
-                  </option>
-                ))}
-              </PullDown>
-            </div>
-            <div className={clsx('h-100 col-span-2 grid')} />
-          </div>
-        </div>
-        <div className={clsx('col-span-1 grid ')} />
-      </div>
-      <div className={clsx('grid w-full grid-cols-12 pb-5')}>
-        <div className={clsx('h-100 col-span-1 grid')} />
-        <div
-          className={clsx(
-            'text-md h-100 col-span-10 grid w-full justify-items-center pr-3 text-black-600',
-          )}
+      <div className='flex gap-5 justify-center'>
+        <PrimaryButton
+          onClick={() => {
+            setModalView('PURCHASE_ORDER_LIST_MODAL');
+            openModal();
+          }}
         >
-          <div className={clsx('flex')}>
-            <div className={clsx('mx-2')}>
-              <PrimaryButton
-                onClick={() => {
-                  setModalView('PURCHASE_ORDER_LIST_MODAL');
-                  openModal();
-                }}
-              >
-                購入申請から登録
-              </PrimaryButton>
-            </div>
-            <div className={clsx('mx-2')}>
-              <PrimaryButton
-                onClick={() => {
-                  setModalView('PURCHASE_REPORT_ITEM_NUM_MODAL');
-                  openModal();
-                }}
-              >
-                単体で登録
-              </PrimaryButton>
-            </div>
-          </div>
-        </div>
-        <div className={clsx('h-100 col-span-1 grid')} />
+          購入申請から登録
+        </PrimaryButton>
+        <PrimaryButton
+          onClick={() => {
+            setModalView('PURCHASE_REPORT_ITEM_NUM_MODAL');
+            openModal();
+          }}
+        >
+          申請していない物品を登録
+        </PrimaryButton>
       </div>
-      <div className={clsx('grid justify-items-center px-1')}></div>
     </Modal>
   );
 }

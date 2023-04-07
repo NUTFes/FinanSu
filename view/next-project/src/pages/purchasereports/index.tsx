@@ -11,7 +11,7 @@ import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
+import { PurchaseItem, PurchaseOrder, PurchaseReport, User, Expense } from '@type/common';
 
 export interface PurchaseReportView {
   purchaseReport: PurchaseReport;
@@ -26,17 +26,21 @@ interface Props {
   purchaseReportView: PurchaseReportView[];
   user: User;
   purchaseOrder: PurchaseOrder[];
+  expenses: Expense[];
 }
 
 export async function getServerSideProps() {
   const getPurchaseReportUrl = process.env.SSR_API_URI + '/purchasereports';
   const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/purchasereports/details';
+  const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseReportRes = await get(getPurchaseReportUrl);
   const purchaseReportViewRes = await get(getPurchaseReportViewUrl);
+  const expenseRes = await get(getExpenseUrl);
   return {
     props: {
       purchaseReport: purchaseReportRes,
       purchaseReportView: purchaseReportViewRes,
+      expenses: expenseRes,
     },
   };
 }
@@ -60,23 +64,6 @@ export default function PurchaseReports(props: Props) {
     initPurchaseReportList.push(props.purchaseReportView[i].purchaseReport);
   }
   const purchaseReports: PurchaseReport[] = initPurchaseReportList;
-
-  // // 購入申請
-  // const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
-  //   const initPurchaseOederList = [];
-  //   for (let i = 0; i < props.purchaseReportView.length; i++) {
-  //     initPurchaseOederList.push(props.purchaseReportView[i].purchaseOrder);
-  //   }
-  //   return initPurchaseOederList;
-  // });
-  // // 購入申請者
-  // const [orderUsers, setOrderUsers] = useState<User[]>(() => {
-  //   const initOederUserList = [];
-  //   for (let i = 0; i < props.purchaseReportView.length; i++) {
-  //     initOederUserList.push(props.purchaseReportView[i].orderUser);
-  //   }
-  //   return initOederUserList;
-  // });
 
   // 日付のフォーマットを変更
   const formatDate = (date: string) => {
@@ -208,7 +195,7 @@ export default function PurchaseReports(props: Props) {
                     }}
                   >
                     <div className={clsx('flex justify-center')}>
-                      <BureauLabel bureauID={purchaseReportViewItem.orderUser.bureauID} />
+                      <BureauLabel bureauName={props.expenses.find((expense) => expense.id === purchaseReportViewItem.purchaseOrder.expenseID)?.name || ''} />
                     </div>
                   </td>
                   <td
