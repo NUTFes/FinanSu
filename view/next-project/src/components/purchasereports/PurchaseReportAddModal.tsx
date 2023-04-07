@@ -181,7 +181,8 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   };
 
   const deletePurchaseOrder = async () => {
-    const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.purchaseOrderId;
+    const deletePurchaseOrderUrl =
+      process.env.CSR_API_URI + '/purchaseorders/' + props.purchaseOrderId;
     await del(deletePurchaseOrderUrl);
   };
 
