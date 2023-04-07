@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-
 import { put } from '@api/fundInformations';
 import { FundInformation, Teacher, User, Department } from '@type/common';
 
