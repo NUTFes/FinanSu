@@ -31,7 +31,7 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛企業の削除</div>
+      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>購入報告の削除</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
       <div className=''>
         <div className='flex flex-row justify-center gap-5'>
