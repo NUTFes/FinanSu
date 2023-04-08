@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
@@ -72,15 +72,25 @@ export default function PurchaseReports(props: Props) {
     return datetime2;
   };
 
-  // 購入報告の合計金額を計算
   const TotalFee = (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
     purchaseItems.map((purchaseItem: PurchaseItem) => {
-      totalFee += purchaseItem.price * purchaseItem.quantity;
+      if (purchaseItem.financeCheck) {
+        totalFee += purchaseItem.price * purchaseItem.quantity;
+      }
     });
     totalFee += purchaseReport.addition - purchaseReport.discount;
     return totalFee;
   };
+
+  // すべてのpurchaseReportの合計金額
+  const totalReportFee = useMemo(() => {
+    let totalFee = 0;
+    props.purchaseReportView.map((purchaseReportView: PurchaseReportView) => {
+      totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
+    });
+    return totalFee;
+  }, [props.purchaseReportView]);
 
   // 変更可能なcheckboxの描画
   const changeableCheckboxContent = (isChecked: boolean) => {
@@ -161,7 +171,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -181,7 +191,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -195,7 +205,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -216,7 +226,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -234,7 +244,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -248,7 +258,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -260,24 +270,28 @@ export default function PurchaseReports(props: Props) {
                       )}
                     >
                       {purchaseReportViewItem.purchaseItems &&
-                        purchaseReportViewItem.purchaseItems.map(
-                          (purchaseItem: PurchaseItem, index: number) => (
-                            <div key={index}>
-                              {purchaseReportViewItem.purchaseItems.length - 1 === index ? (
-                                <>{purchaseItem.item}</>
-                              ) : (
-                                <>{purchaseItem.item},</>
-                              )}
-                            </div>
-                          ),
-                        )}
+                      purchaseReportViewItem.purchaseItems.some((purchaseItem) => {
+                        return purchaseItem.financeCheck;
+                      }) ? (
+                        purchaseReportViewItem.purchaseItems.map((purchaseItem) => {
+                          if (purchaseItem.financeCheck) {
+                            return (
+                              <div key={purchaseItem.id}>
+                                {purchaseItem.item} ({purchaseItem.quantity})
+                              </div>
+                            );
+                          }
+                        })
+                      ) : (
+                        <div>購入物品なし</div>
+                      )}
                     </div>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -294,7 +308,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
@@ -308,7 +322,7 @@ export default function PurchaseReports(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === purchaseReports.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                   >
                     <div className='flex'>
@@ -346,6 +360,19 @@ export default function PurchaseReports(props: Props) {
                   </td>
                 </tr>
               ))}
+              <tr>
+                <td className='px-1 py-3 border-b border-primary-1' colSpan={6}>
+                  <div className='text-right text-sm text-black-600'>合計</div>
+                </td>
+                <td className='px-1 py-3 border-b border-primary-1'>
+                  <div className='text-center text-sm text-black-600'>
+                    {totalReportFee}
+                  </div>
+                </td>
+                <td className='px-1 py-3 border-b border-primary-1' colSpan={2}>
+                  <div className='text-center text-sm text-black-600' />
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
