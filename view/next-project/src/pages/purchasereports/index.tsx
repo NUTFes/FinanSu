@@ -134,7 +134,7 @@ export default function PurchaseReports(props: Props) {
                   <div className='text-center text-sm text-black-600'>ID</div>
                 </th>
                 <th className='w-2/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>報告した局</div>
+                  <div className='text-center text-sm text-black-600'>購入した局</div>
                 </th>
                 <th className='w-1/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>報告日</div>
@@ -355,6 +355,7 @@ export default function PurchaseReports(props: Props) {
           id={purchaseReportID}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          expenses={props.expenses}
           purchaseReportViewItem={purchaseReportViewItem}
           isDelete={false}
         />
