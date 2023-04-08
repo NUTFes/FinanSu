@@ -248,7 +248,7 @@ func (e *expenseUseCase) GetExpenseDetailByID(c context.Context, id string) (dom
 				&purchaseItem.Quantity,
 				&purchaseItem.Detail,
 				&purchaseItem.Url,
-				&purchaseItem.ID,
+				&purchaseItem.PurchaseOrderID,
 				&purchaseItem.FinanceCheck,
 				&purchaseItem.CreatedAt,
 				&purchaseItem.UpdatedAt,
