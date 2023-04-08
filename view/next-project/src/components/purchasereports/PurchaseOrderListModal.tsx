@@ -174,15 +174,13 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {
-                            purchaseOrderItem.purchaseItem &&
-                              purchaseOrderItem.purchaseItem.map((purchaseItem) => (
-                                <div key={purchaseItem.id}>
-                                  {purchaseItem.item}
-                                  <br />
-                                </div>
-                              ))
-                        }
+                        {purchaseOrderItem.purchaseItem &&
+                          purchaseOrderItem.purchaseItem.map((purchaseItem) => (
+                            <div key={purchaseItem.id}>
+                              {purchaseItem.item}
+                              <br />
+                            </div>
+                          ))}
                       </div>
                     </td>
                     <td

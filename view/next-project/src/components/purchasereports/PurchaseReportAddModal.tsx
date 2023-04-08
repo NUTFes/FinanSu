@@ -15,7 +15,7 @@ import {
   PrimaryButton,
   Stepper,
   Textarea,
-  UnderlinePrimaryButton
+  UnderlinePrimaryButton,
 } from '@components/common';
 import PurchaseReportConfirmModal from '@components/purchasereports/PurchaseReportConfirmModal';
 import { PurchaseItem, PurchaseOrder, PurchaseReport, User } from '@type/common';
@@ -323,7 +323,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                     }}
                   >
                     <div className='flex'>
-                      {activeStep === steps.length ? '購入物品として登録して確認へ' : '購入物品として登録して次へ'}
+                      {activeStep === steps.length
+                        ? '購入物品として登録して確認へ'
+                        : '購入物品として登録して次へ'}
                       <RiArrowDropRightLine size={23} />
                     </div>
                   </PrimaryButton>
@@ -339,7 +341,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                         isFinanceCheckHandler(formDataList[activeStep - 1].id, false);
                       }}
                     >
-                      {activeStep === steps.length ? '購入しなかった物品として登録して確認へ' : '購入しなかった物品として登録して次へ'}
+                      {activeStep === steps.length
+                        ? '購入しなかった物品として登録して確認へ'
+                        : '購入しなかった物品として登録して次へ'}
                       <RiArrowDropRightLine size={23} />
                     </UnderlinePrimaryButton>
                   </div>

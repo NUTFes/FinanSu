@@ -143,13 +143,7 @@ export default function PurchaseOrders(props: Props) {
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
               {props.purchaseOrderView.map((purchaseOrderViewItem, index) => (
                 <tr key={purchaseOrderViewItem.purchaseOrder.id}>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
-                  >
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {user.roleID === 3
                         ? changeableCheckboxContent(
@@ -161,11 +155,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -187,11 +177,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -210,11 +196,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -229,11 +211,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -263,11 +241,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -281,13 +255,7 @@ export default function PurchaseOrders(props: Props) {
                       {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-4',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
-                  >
+                  <td className={clsx('px-4', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
                         <OpenEditModalButton

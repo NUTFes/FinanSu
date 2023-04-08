@@ -168,11 +168,7 @@ export default function PurchaseReports(props: Props) {
               {props.purchaseReportView.map((purchaseReportViewItem, index) => (
                 <tr key={purchaseReportViewItem.purchaseReport.id}>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -188,11 +184,7 @@ export default function PurchaseReports(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -202,11 +194,7 @@ export default function PurchaseReports(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -223,11 +211,7 @@ export default function PurchaseReports(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -241,11 +225,7 @@ export default function PurchaseReports(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -255,11 +235,7 @@ export default function PurchaseReports(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -288,11 +264,7 @@ export default function PurchaseReports(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -305,11 +277,7 @@ export default function PurchaseReports(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
                     }}
@@ -318,13 +286,7 @@ export default function PurchaseReports(props: Props) {
                       {purchaseReportViewItem.purchaseReport.remark || '無し'}
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      'border-b py-3',
-                    )}
-                  >
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className='flex'>
                       <div className='mx-1'>
                         <OpenEditModalButton
@@ -361,15 +323,13 @@ export default function PurchaseReports(props: Props) {
                 </tr>
               ))}
               <tr>
-                <td className='px-1 py-3 border-b border-primary-1' colSpan={6}>
+                <td className='border-b border-primary-1 px-1 py-3' colSpan={6}>
                   <div className='text-right text-sm text-black-600'>合計</div>
                 </td>
-                <td className='px-1 py-3 border-b border-primary-1'>
-                  <div className='text-center text-sm text-black-600'>
-                    {totalReportFee}
-                  </div>
+                <td className='border-b border-primary-1 px-1 py-3'>
+                  <div className='text-center text-sm text-black-600'>{totalReportFee}</div>
                 </td>
-                <td className='px-1 py-3 border-b border-primary-1' colSpan={2}>
+                <td className='border-b border-primary-1 px-1 py-3' colSpan={2}>
                   <div className='text-center text-sm text-black-600' />
                 </td>
               </tr>
