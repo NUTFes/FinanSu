@@ -114,7 +114,7 @@ export default function PurchaseOrders(props: Props) {
                   <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
                 </th>
                 <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>申請した局</div>
+                  <div className={clsx('text-center text-sm text-black-600')}>購入したい局</div>
                 </th>
                 <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
@@ -326,6 +326,7 @@ export default function PurchaseOrders(props: Props) {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           purchaseOrderViewItem={purchaseOrderViewItem}
+          expenses={props.expenses}
           isDelete={false}
         />
       )}
