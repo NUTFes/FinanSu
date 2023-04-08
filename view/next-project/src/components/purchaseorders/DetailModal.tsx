@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { PurchaseItem, PurchaseOrderView } from '@type/common';
+import { PurchaseItem, PurchaseOrderView, Expense } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -15,6 +15,7 @@ interface ModalProps {
   children?: React.ReactNode;
   id: number | string;
   purchaseOrderViewItem: PurchaseOrderView;
+  expenses: Expense[];
   isDelete: boolean;
 }
 
@@ -37,6 +38,13 @@ const DetailModal: FC<ModalProps> = (props) => {
     const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
     await del(deletePurchaseOrderUrl);
   };
+
+  const expenseName = useMemo(() => {
+    const expense = props.expenses.find(
+      (expense) => expense.id === props.purchaseOrderViewItem.purchaseOrder.expenseID,
+    );
+    return expense ? expense.name : '';
+  }, [props.expenses, props.purchaseOrderViewItem]);
 
   return (
     <Modal className='w-1/2'>
@@ -80,24 +88,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
-              {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureauID === 1 &&
-                '総務局'}
-              {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureauID === 2 &&
-                '渉外局'}
-              {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureauID === 3 &&
-                '財務局'}
-              {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureauID === 4 &&
-                '企画局'}
-              {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureauID === 5 &&
-                '政策局'}
-              {props.purchaseOrderViewItem &&
-                props.purchaseOrderViewItem.user.bureauID === 6 &&
-                '情報局'}
+              {expenseName}
             </div>
             <div className={clsx('col-span-3 grid')} />
           </div>
