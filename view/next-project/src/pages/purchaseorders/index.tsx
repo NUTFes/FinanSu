@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
@@ -62,6 +62,15 @@ export default function PurchaseOrders(props: Props) {
     });
     return totalFee;
   };
+
+  // 全ての購入申請の合計金額を計算
+  const totalPurchaseOrderFee = useMemo(() => {
+    let totalFee = 0;
+    props.purchaseOrderView?.map((purchaseOrderView: PurchaseOrderView) => {
+      totalFee += TotalFee(purchaseOrderView.purchaseItem);
+    });
+    return totalFee;
+  }, [props.purchaseOrderView]);
 
   // 変更可能なcheckboxの描画
   const changeableCheckboxContent = (isChecked: boolean) => {
@@ -138,7 +147,7 @@ export default function PurchaseOrders(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                   >
                     <div className={clsx('text-center text-sm text-black-600')}>
@@ -155,7 +164,7 @@ export default function PurchaseOrders(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(
@@ -181,7 +190,7 @@ export default function PurchaseOrders(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(
@@ -204,7 +213,7 @@ export default function PurchaseOrders(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(
@@ -223,7 +232,7 @@ export default function PurchaseOrders(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(
@@ -257,7 +266,7 @@ export default function PurchaseOrders(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                     onClick={() => {
                       onOpen(
@@ -276,7 +285,7 @@ export default function PurchaseOrders(props: Props) {
                     className={clsx(
                       'px-4',
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      'border-b py-3',
                     )}
                   >
                     <div className={clsx('grid grid-cols-2 gap-3')}>
@@ -303,7 +312,6 @@ export default function PurchaseOrders(props: Props) {
                               ? purchaseOrderViewItem.purchaseOrder.id
                               : 0
                           }
-                          purchaseOrderViewItem={purchaseOrderViewItem}
                           isDisabled={
                             !purchaseOrderViewItem.purchaseOrder.financeCheck &&
                             (user.roleID === 2 ||
@@ -316,6 +324,18 @@ export default function PurchaseOrders(props: Props) {
                   </td>
                 </tr>
               ))}
+              <tr className={clsx('border-b border-primary-1')}>
+                <td className={clsx('px-1 py-3')} colSpan={5}>
+                  <div className={clsx('flex justify-end')}>
+                    <div className={clsx('text-sm text-black-600')}>合計</div>
+                  </div>
+                </td>
+                <td className={clsx('px-1 py-3')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>
+                    {totalPurchaseOrderFee}
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
