@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { PurchaseItem, PurchaseReport, PurchaseReportView } from '@type/common';
+import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -14,6 +14,7 @@ interface ModalProps {
   children?: React.ReactNode;
   id: number | string;
   purchaseReportViewItem: PurchaseReportView;
+  expenses: Expense[];
   isDelete: boolean;
 }
 
@@ -23,6 +24,13 @@ const DetailModal: FC<ModalProps> = (props) => {
   const onClose = () => {
     props.setIsOpen(false);
   };
+
+  const expenseName = useMemo(() => {
+    const expense = props.expenses.find(
+      (expense) => expense.id === props.purchaseReportViewItem.purchaseOrder.expenseID,
+    );
+    return expense ? expense.name : '';
+  }, [props.expenses, props.purchaseReportViewItem]);
 
   const router = useRouter();
 
@@ -69,26 +77,9 @@ const DetailModal: FC<ModalProps> = (props) => {
               props.purchaseReportViewItem.purchaseItems,
             )}
         </div>
-        <p className='text-black-600'>報告した局</p>
+        <p className='text-black-600'>購入した局</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 1 &&
-            '総務局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 2 &&
-            '渉外局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 3 &&
-            '財務局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 4 &&
-            '企画局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 5 &&
-            '政策局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 6 &&
-            '情報局'}
+          {expenseName}
         </div>
         <p className='text-black-600'>報告日</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
