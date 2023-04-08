@@ -31,7 +31,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
     deadline: '',
     userID: user.id,
     financeCheck: false,
-    expenseID: 0,
+    expenseID: 1,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
@@ -154,7 +154,6 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
           </PrimaryButton>
         </div>
       </Modal>
-
       {isOpen && (
         <AddModal
           purchaseItemNum={purchaseItemNum}
