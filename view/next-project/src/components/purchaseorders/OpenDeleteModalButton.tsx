@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import { DeleteButton } from '@components/common';
+
 import DeleteModal from './DeleteModal';
 
 interface Props {
@@ -17,12 +18,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {isOpen && (
-        <DeleteModal
-          id={props.id}
-          setShowModal={setIsOpen}
-        />
-      )}
+      {isOpen && <DeleteModal id={props.id} setShowModal={setIsOpen} />}
     </>
   );
 };
