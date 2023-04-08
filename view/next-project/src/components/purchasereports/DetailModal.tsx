@@ -78,9 +78,7 @@ const DetailModal: FC<ModalProps> = (props) => {
             )}
         </div>
         <p className='text-black-600'>購入した局</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
-          {expenseName}
-        </div>
+        <div className='w-full border-b border-b-primary-1 text-right'>{expenseName}</div>
         <p className='text-black-600'>報告日</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
           {props.purchaseReportViewItem &&
