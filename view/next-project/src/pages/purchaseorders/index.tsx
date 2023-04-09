@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
@@ -11,22 +11,27 @@ import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView } from '@type/common';
+import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@type/common';
 
 interface Props {
   user: User;
   purchaseOrder: PurchaseOrder[];
   purchaseOrderView: PurchaseOrderView[];
+  expenses: Expense[];
 }
 export async function getServerSideProps() {
   const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
   const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
+  const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseOrderRes = await get(getPurchaseOrderUrl);
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
+  const expenseRes = await get(getExpenseUrl);
+
   return {
     props: {
       purchaseOrder: purchaseOrderRes,
       purchaseOrderView: purchaseOrderViewRes,
+      expenses: expenseRes,
     },
   };
 }
@@ -57,6 +62,15 @@ export default function PurchaseOrders(props: Props) {
     });
     return totalFee;
   };
+
+  // 全ての購入申請の合計金額を計算
+  const totalPurchaseOrderFee = useMemo(() => {
+    let totalFee = 0;
+    props.purchaseOrderView?.map((purchaseOrderView: PurchaseOrderView) => {
+      totalFee += TotalFee(purchaseOrderView.purchaseItem);
+    });
+    return totalFee;
+  }, [props.purchaseOrderView]);
 
   // 変更可能なcheckboxの描画
   const changeableCheckboxContent = (isChecked: boolean) => {
@@ -96,7 +110,7 @@ export default function PurchaseOrders(props: Props) {
             </select>
           </div>
           <div className={clsx('flex justify-end')}>
-            <OpenAddModalButton>申請登録</OpenAddModalButton>
+            <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
           </div>
         </div>
         <div className={clsx('w-100 mb-2 p-5')}>
@@ -109,7 +123,7 @@ export default function PurchaseOrders(props: Props) {
                   <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
                 </th>
                 <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>申請した局</div>
+                  <div className={clsx('text-center text-sm text-black-600')}>購入したい局</div>
                 </th>
                 <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
@@ -129,13 +143,7 @@ export default function PurchaseOrders(props: Props) {
             <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
               {props.purchaseOrderView.map((purchaseOrderViewItem, index) => (
                 <tr key={purchaseOrderViewItem.purchaseOrder.id}>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       {user.roleID === 3
                         ? changeableCheckboxContent(
@@ -147,11 +155,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -162,15 +166,18 @@ export default function PurchaseOrders(props: Props) {
                     }}
                   >
                     <div className={clsx('flex justify-center')}>
-                      <BureauLabel bureauID={purchaseOrderViewItem.user.bureauID} />
+                      <BureauLabel
+                        bureauName={
+                          props.expenses.find(
+                            (expense) =>
+                              expense.id === purchaseOrderViewItem.purchaseOrder.expenseID,
+                          )?.name || ''
+                        }
+                      />
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -189,11 +196,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -208,11 +211,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -242,11 +241,7 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     onClick={() => {
                       onOpen(
                         purchaseOrderViewItem.purchaseOrder.id
@@ -260,13 +255,7 @@ export default function PurchaseOrders(props: Props) {
                       {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-4',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
+                  <td className={clsx('px-4', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('grid grid-cols-2 gap-3')}>
                       <div className={clsx('text-center text-sm text-black-600')}>
                         <OpenEditModalButton
@@ -291,7 +280,6 @@ export default function PurchaseOrders(props: Props) {
                               ? purchaseOrderViewItem.purchaseOrder.id
                               : 0
                           }
-                          purchaseOrderViewItem={purchaseOrderViewItem}
                           isDisabled={
                             !purchaseOrderViewItem.purchaseOrder.financeCheck &&
                             (user.roleID === 2 ||
@@ -304,6 +292,18 @@ export default function PurchaseOrders(props: Props) {
                   </td>
                 </tr>
               ))}
+              <tr className={clsx('border-b border-primary-1')}>
+                <td className={clsx('px-1 py-3')} colSpan={5}>
+                  <div className={clsx('flex justify-end')}>
+                    <div className={clsx('text-sm text-black-600')}>合計</div>
+                  </div>
+                </td>
+                <td className={clsx('px-1 py-3')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>
+                    {totalPurchaseOrderFee}
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -314,6 +314,7 @@ export default function PurchaseOrders(props: Props) {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           purchaseOrderViewItem={purchaseOrderViewItem}
+          expenses={props.expenses}
           isDelete={false}
         />
       )}

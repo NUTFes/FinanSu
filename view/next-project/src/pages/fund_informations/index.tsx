@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
@@ -27,8 +27,7 @@ interface Props {
   departments: Department[];
   fundInformation: FundInformation[];
   fundInformationView: FundInformationView[];
-  currentUser: User;
-  totalFee: number;
+  users: User[];
 }
 
 export const getServerSideProps = async () => {
@@ -36,18 +35,12 @@ export const getServerSideProps = async () => {
   const getDepartmentURL = process.env.SSR_API_URI + '/departments';
   const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
   const getFundInformationViewURL = process.env.SSR_API_URI + '/fund_informations/details';
+  const getUserURL = process.env.SSR_API_URI + '/users';
   const teachersInformationRes = await get(getTeachersInformationURL);
   const fundInformationRes = await get(getFundInformationURL);
   const departmentRes = await get(getDepartmentURL);
   const fundInformationViewRes = await get(getFundInformationViewURL);
-
-  // 合計金額の計算
-  let totalFee = 0;
-  fundInformationRes.map((fundItemRes: FundInformation) => {
-    if (fundItemRes.isLastCheck) {
-      totalFee += fundItemRes.price;
-    }
-  });
+  const userRes = await get(getUserURL);
 
   return {
     props: {
@@ -55,7 +48,7 @@ export const getServerSideProps = async () => {
       departments: departmentRes,
       fundInformation: fundInformationRes,
       fundInformationView: fundInformationViewRes,
-      totalFee: totalFee,
+      users: userRes,
     },
   };
 };
@@ -63,6 +56,7 @@ export const getServerSideProps = async () => {
 export default function FundInformations(props: Props) {
   // 教員一覧
   const teachers: Teacher[] = props.teachers;
+  const users: User[] = props.users;
   const departments: Department[] = [
     {
       id: 1,
@@ -180,19 +174,16 @@ export default function FundInformations(props: Props) {
     }
   }, [router]);
 
-  // Modal用にuserIDを設定
-  const userID = currentUser.id;
-
   // チェック済みの合計金額用のステート
-  const [totalFee, setTotalFee] = useState(props.totalFee);
-
-  const calcTotalFee = (initFundInformation: FundInformation) => {
-    if (initFundInformation.isLastCheck) {
-      setTotalFee(totalFee + initFundInformation.price);
-    } else {
-      setTotalFee(totalFee - initFundInformation.price);
-    }
-  };
+  const totalFee = useMemo(() => {
+    return fundInformation.reduce((sum, fundInformation) => {
+      if (fundInformation.isLastCheck) {
+        return sum + fundInformation.price;
+      } else {
+        return sum;
+      }
+    }, 0);
+  }, [fundInformation]);
 
   // チェックの切り替え
   const switchCheck = async (
@@ -213,7 +204,6 @@ export default function FundInformations(props: Props) {
         createdAt: fundItem.createdAt,
         updatedAt: fundItem.updatedAt,
       };
-      calcTotalFee(initFundInformation);
     }
     setFundInformation(
       fundInformation.map((fundItem: FundInformation) =>
@@ -300,12 +290,7 @@ export default function FundInformations(props: Props) {
             </select>
           </div>
           <div className='flex justify-end'>
-            <OpenAddModalButton
-              teachersInformation={teachers}
-              departments={departments}
-              currentUser={currentUser}
-              userID={userID ? userID : 0}
-            >
+            <OpenAddModalButton teachers={teachers} departments={departments} users={users}>
               学内募金登録
             </OpenAddModalButton>
           </div>
@@ -341,10 +326,7 @@ export default function FundInformations(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationView &&
                 fundInformationView.map((fundViewItem: FundInformationView, index) => (
-                  <tr
-                    key={fundViewItem.fundInformation.id}
-                    // onChange={submit(fundViewItem.fundInformation.id, fundInformation[index])}
-                  >
+                  <tr key={fundViewItem.fundInformation.id}>
                     <td
                       className={clsx(
                         'px-1',
@@ -463,7 +445,10 @@ export default function FundInformations(props: Props) {
                         {fundViewItem.fundInformation.remark}
                       </div>
                     </td>
-                    {!isUser || fundViewItem.fundInformation.userID == currentUser.id ? (
+                    {fundViewItem.fundInformation.userID == currentUser.id ||
+                    isDeveloper ||
+                    isFinanceStaff ||
+                    isFinanceDirector ? (
                       <td
                         className={clsx(
                           'px-1',
@@ -475,18 +460,15 @@ export default function FundInformations(props: Props) {
                       >
                         <div className='flex gap-3'>
                           <OpenEditModalButton
-                            id={
-                              fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0
-                            }
+                            fundInformation={fundViewItem.fundInformation}
                             teachers={teachers}
-                            currentUser={currentUser}
+                            users={users}
+                            departments={departments}
                           />
                           <OpenDeleteModalButton
                             id={
                               fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0
                             }
-                            teacherID={fundViewItem.fundInformation.teacherID}
-                            userID={Number(fundViewItem.fundInformation.userID)}
                           />
                         </div>
                       </td>

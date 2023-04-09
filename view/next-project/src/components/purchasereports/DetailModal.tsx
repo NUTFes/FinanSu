@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { PurchaseItem, PurchaseReport, PurchaseReportView } from '@type/common';
+import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -14,6 +14,7 @@ interface ModalProps {
   children?: React.ReactNode;
   id: number | string;
   purchaseReportViewItem: PurchaseReportView;
+  expenses: Expense[];
   isDelete: boolean;
 }
 
@@ -23,6 +24,13 @@ const DetailModal: FC<ModalProps> = (props) => {
   const onClose = () => {
     props.setIsOpen(false);
   };
+
+  const expenseName = useMemo(() => {
+    const expense = props.expenses.find(
+      (expense) => expense.id === props.purchaseReportViewItem.purchaseOrder.expenseID,
+    );
+    return expense ? expense.name : '';
+  }, [props.expenses, props.purchaseReportViewItem]);
 
   const router = useRouter();
 
@@ -49,7 +57,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal>
+    <Modal className='w-1/2'>
       <div className='ml-auto w-fit'>
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
       </div>
@@ -69,27 +77,8 @@ const DetailModal: FC<ModalProps> = (props) => {
               props.purchaseReportViewItem.purchaseItems,
             )}
         </div>
-        <p className='text-black-600'>報告した局</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 1 &&
-            '総務局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 2 &&
-            '渉外局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 3 &&
-            '財務局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 4 &&
-            '企画局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 5 &&
-            '政策局'}
-          {props.purchaseReportViewItem &&
-            props.purchaseReportViewItem.reportUser.bureauID === 6 &&
-            '情報局'}
-        </div>
+        <p className='text-black-600'>購入した局</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>{expenseName}</div>
         <p className='text-black-600'>報告日</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
           {props.purchaseReportViewItem &&
@@ -143,11 +132,9 @@ const DetailModal: FC<ModalProps> = (props) => {
                 <th className='w-2/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>URL</div>
                 </th>
-                {user.roleID === 3 ? (
-                  <th className='w-2/12 border-b-primary-1 pb-2'>
-                    <div className='text-center text-sm text-black-600'>局長確認</div>
-                  </th>
-                ) : null}
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>購入有無</div>
+                </th>
               </tr>
             </thead>
             <tbody className='w-full border border-x-white-0 border-b-primary-1 border-t-white-0'>
@@ -191,13 +178,11 @@ const DetailModal: FC<ModalProps> = (props) => {
                       </div>
                     </div>
                   </td>
-                  {user.roleID === 3 ? (
-                    <td className='border-b py-3'>
-                      <div className='text-center text-sm text-black-300'>
-                        <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
-                      </div>
-                    </td>
-                  ) : null}
+                  <td className='border-b py-3'>
+                    <div className='text-center text-sm text-black-300'>
+                      <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

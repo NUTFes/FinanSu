@@ -4,7 +4,7 @@ import { RiArrowDropRightLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
-import { get } from '@api/api_methods';
+import { get, del } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
 import { post } from '@api/purchaseReport';
 import {
@@ -180,6 +180,12 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     });
   };
 
+  const deletePurchaseOrder = async () => {
+    const deletePurchaseOrderUrl =
+      process.env.CSR_API_URI + '/purchaseorders/' + props.purchaseOrderId;
+    await del(deletePurchaseOrderUrl);
+  };
+
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
     <>
@@ -196,6 +202,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         <p className='text-black-600'>単価</p>
         <div className='col-span-4 w-full'>
           <Input
+            type='number'
             className='w-full'
             id={String(data.id)}
             value={data.price}
@@ -205,6 +212,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
         <p className='text-black-600'>個数</p>
         <div className='col-span-4 w-full'>
           <Input
+            type='number'
             className='w-full'
             id={String(data.id)}
             value={data.quantity}
@@ -240,6 +248,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
+                if (props.isOnlyReported) deletePurchaseOrder();
                 props.setIsOpen(false);
               }}
             />
@@ -314,7 +323,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                     }}
                   >
                     <div className='flex'>
-                      {activeStep === steps.length ? '登録して確認' : '登録して次へ'}
+                      {activeStep === steps.length
+                        ? '購入物品として登録して確認へ'
+                        : '購入物品として登録して次へ'}
                       <RiArrowDropRightLine size={23} />
                     </div>
                   </PrimaryButton>
@@ -330,7 +341,9 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                         isFinanceCheckHandler(formDataList[activeStep - 1].id, false);
                       }}
                     >
-                      {activeStep === steps.length ? '登録せずに確認' : '登録せずに次へ'}
+                      {activeStep === steps.length
+                        ? '購入しなかった物品として登録して確認へ'
+                        : '購入しなかった物品として登録して次へ'}
                       <RiArrowDropRightLine size={23} />
                     </UnderlinePrimaryButton>
                   </div>

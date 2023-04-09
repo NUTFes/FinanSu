@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 

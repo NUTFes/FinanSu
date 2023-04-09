@@ -52,9 +52,6 @@ export default function SponsorStyleList(props: Props) {
             <thead>
               <tr>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'>ID</p>
-                </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                   <p className='text-center text-sm text-black-600'>広告サイズ</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -71,15 +68,6 @@ export default function SponsorStyleList(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
                 <tr key={sponsorStyleItem.id}>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.id}</p>
-                  </td>
                   <td
                     className={clsx(
                       'px-1',
