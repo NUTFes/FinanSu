@@ -248,7 +248,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
-                deletePurchaseOrder();
+                if (props.isOnlyReported) deletePurchaseOrder();
                 props.setIsOpen(false);
               }}
             />
