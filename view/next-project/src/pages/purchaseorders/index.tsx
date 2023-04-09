@@ -290,9 +290,9 @@ export default function PurchaseOrders(props: Props) {
                       {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>
                   </td>
-                  <td className={clsx('px-4', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
-                    <div className={clsx('grid grid-cols-2 gap-3')}>
-                      <div className={clsx('text-center text-sm text-black-600')}>
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                    <div className='flex'>
+                      <div className='mx-1'>
                         <OpenEditModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
@@ -303,7 +303,7 @@ export default function PurchaseOrders(props: Props) {
                           isDisabled={isDisabled(purchaseOrderViewItem)}
                         />
                       </div>
-                      <div className={clsx('mx-1')}>
+                      <div className='mx-1'>
                         <OpenDeleteModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
