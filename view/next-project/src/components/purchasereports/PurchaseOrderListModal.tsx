@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { get } from '@api/api_methods';
 import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton, Radio } from '@components/common';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, User, PurchaseItem } from 'src/type/common';
+import { PurchaseOrder, User, PurchaseItem, Expense } from '@type/common';
 
 import PurchaseReportAddModal from './PurchaseReportAddModal';
 
@@ -25,6 +25,7 @@ export default function PurchaseItemNumModal() {
   };
 
   const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
   const [purchaseOrderId, setPurchaseOrderId] = useState<number>(1);
   const [purchaseItemNum, setPurchaseItemNum] = useState<number>(0);
@@ -32,12 +33,18 @@ export default function PurchaseItemNumModal() {
   useEffect(() => {
     if (router.isReady) {
       const getPurchaseOrderViewUrl = process.env.CSR_API_URI + '/purchaseorders/details';
+      const getExpensesUrl = process.env.CSR_API_URI + '/expenses';
 
       const getPurchaseOrderView = async (url: string) => {
         const purchaseOrderViewRes: PurchaseOrderView[] = await get(url);
         setPurchaseOrderView(purchaseOrderViewRes);
       };
+      const getExpenses = async (url: string) => {
+        const expensesRes: Expense[] = await get(url);
+        setExpenses(expensesRes);
+      };
       getPurchaseOrderView(getPurchaseOrderViewUrl);
+      getExpenses(getExpensesUrl);
     }
   }, [router]);
 
@@ -140,12 +147,11 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.user.bureauID === 1 && '総務局'}
-                        {purchaseOrderItem.user.bureauID === 2 && '渉外局'}
-                        {purchaseOrderItem.user.bureauID === 3 && '財務局'}
-                        {purchaseOrderItem.user.bureauID === 4 && '企画局'}
-                        {purchaseOrderItem.user.bureauID === 5 && '政策局'}
-                        {purchaseOrderItem.user.bureauID === 6 && '情報局'}
+                        {
+                          expenses.find(
+                            (expense) => expense.id === purchaseOrderItem.purchaseOrder.expenseID,
+                          )?.name
+                        }
                       </div>
                     </td>
                     <td
@@ -168,18 +174,13 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchaseItem?.length === 1 ? (
-                          <>
-                            {purchaseOrderItem.purchaseItem &&
-                              purchaseOrderItem.purchaseItem[0].item}
-                          </>
-                        ) : (
-                          <>
-                            {purchaseOrderItem.purchaseItem &&
-                              purchaseOrderItem.purchaseItem[0].item}
-                            , ...
-                          </>
-                        )}
+                        {purchaseOrderItem.purchaseItem &&
+                          purchaseOrderItem.purchaseItem.map((purchaseItem) => (
+                            <div key={purchaseItem.id}>
+                              {purchaseItem.item}
+                              <br />
+                            </div>
+                          ))}
                       </div>
                     </td>
                     <td

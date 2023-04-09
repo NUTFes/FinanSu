@@ -1,65 +1,40 @@
-import {
-  Box,
-  Center,
-  ChakraProvider,
-  Flex,
-  Grid,
-  GridItem,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Select,
-  Spacer,
-} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { RiCloseCircleLine } from 'react-icons/ri';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
-import theme from '@assets/theme';
-import Button from '@components/common/RegistButton';
-import { FundInformation, Teacher, User } from '@type/common';
+import { FundInformation, Teacher, User, Department } from '@type/common';
+
+import { Modal, Input, Select, CloseButton, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  openModal: boolean;
-  children?: ReactNode;
-  id: number | string;
   teachers: Teacher[];
-  currentUser: User;
+  users: User[];
+  departments: Department[];
+  fundInformation: FundInformation;
 }
 
-export default function FundInformationEditModal(props: ModalProps) {
-  const closeModal = () => {
-    props.setShowModal(false);
-  };
-
+export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<FundInformation>({
-    userID: 0,
-    teacherID: 0,
-    price: 0,
-    remark: '',
+    id: props.fundInformation.id,
+    userID: props.fundInformation.userID,
+    teacherID: props.fundInformation.teacherID,
+    price: props.fundInformation.price,
+    remark: props.fundInformation.remark,
     isFirstCheck: false,
     isLastCheck: false,
   });
 
-  // モーダルを開いているfund_informationを取得
-  const getFundInformation = useCallback(async () => {
-    const getFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + props.id;
-    setFormData(await get(getFundInformationURL));
-  }, [props.id]);
+  const [departmentID, setDepartmentID] = useState<number | string>(1);
 
   useEffect(() => {
-    if (router.isReady) {
-      getFundInformation();
+    const teacher = props.teachers.find((teacher) => teacher.departmentID === departmentID);
+    if (teacher && teacher.id) {
+      setFormData({ ...formData, teacherID: teacher.id });
     }
-  }, [router, getFundInformation]);
+  }, [departmentID]);
 
   const handler =
     (input: string) =>
@@ -72,104 +47,80 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitFundInformation = async (data: FundInformation, id: number | string) => {
-    const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + id;
+  const submitFundInformation = async (data: FundInformation) => {
+    const submitFundInformationURL = process.env.CSR_API_URI + '/fund_informations/' + data.id;
     await put(submitFundInformationURL, data);
     router.reload();
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
-        <ModalOverlay />
-        <ModalContent pb='5' borderRadius='3xl'>
-          <ModalBody p='3'>
-            <Flex mt='5'>
-              <Spacer />
-              <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
-              </Box>
-            </Flex>
-            <Grid templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem rowSpan={1} colSpan={12}>
-                <Center color='black.600' h='100%' fontSize='xl'>
-                  募金の編集
-                </Center>
-              </GridItem>
-              <GridItem colSpan={1} />
-              <GridItem colSpan={10}>
-                <Grid templateColumns='repeat(12, 1fr)' gap={4}>
-                  <GridItem rowSpan={1} colSpan={4}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      教員名
-                    </Flex>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={8}>
-                    <Select
-                      value={formData.teacherID}
-                      onChange={handler('teacherID')}
-                      borderRadius='full'
-                      borderColor='primary.1'
-                      w='224px'
-                    >
-                      {props.teachers.map((data) => (
-                        <option key={data.id} value={data.id}>
-                          {data.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={4}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      金額
-                    </Flex>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={8}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.price}
-                        onChange={handler('price')}
-                      />
-                    </Flex>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={4}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      備考
-                    </Flex>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={8}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.remark}
-                        onChange={handler('remark')}
-                      />
-                    </Flex>
-                  </GridItem>
-                </Grid>
-              </GridItem>
-              <GridItem colSpan={1} />
-            </Grid>
-          </ModalBody>
-          <Center>
-            <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
-                onClick={() => {
-                  submitFundInformation(formData, props.id);
-                }}
-              >
-                編集する
-              </Button>
-            </ModalFooter>
-          </Center>
-        </ModalContent>
-      </Modal>
-    </ChakraProvider>
+    <Modal className='w-1/2'>
+      <div className='w-full'>
+        <div className='mr-5 ml-auto w-fit'>
+          <CloseButton onClick={() => props.setShowModal(false)} />
+        </div>
+      </div>
+      <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>募金の登録</h1>
+      <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+        <p className='col-span-1 text-black-600'>所属</p>
+        <div className='col-span-4 w-full'>
+          <Select
+            className='w-full'
+            value={departmentID}
+            onChange={(e) => {
+              setDepartmentID(Number(e.target.value));
+            }}
+          >
+            {props.departments.map((department) => (
+              <option key={department.id} value={department.id}>
+                {department.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <p className='col-span-1 text-black-600'>教員名</p>
+        <div className='col-span-4 w-full'>
+          <Select className='w-full' value={formData.teacherID} onChange={handler('teacherID')}>
+            {props.teachers
+              .filter((teacher) => teacher.departmentID === departmentID)
+              .map((teacher) => (
+                <option key={teacher.id} value={teacher.id}>
+                  {teacher.name}
+                </option>
+              ))}
+          </Select>
+        </div>
+        <p className='col-span-1 text-black-600'>担当者</p>
+        <div className='col-span-4 w-full'>
+          <Select className='w-full' value={formData.userID} onChange={handler('userID')}>
+            {props.users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <p className='col-span-1 text-black-600'>金額</p>
+        <div className='col-span-4 w-full'>
+          <Input className='w-full' value={formData.price} onChange={handler('price')} />
+        </div>
+        <p className='col-span-1 text-black-600'>備考</p>
+        <div className='col-span-4 w-full'>
+          <Input className='w-full' value={formData.remark} onChange={handler('remark')} />
+        </div>
+      </div>
+      <div className='mx-auto mb-5 w-fit'>
+        <PrimaryButton
+          className={'mx-2'}
+          onClick={() => {
+            submitFundInformation(formData);
+            props.setShowModal(false);
+            router.reload();
+          }}
+        >
+          登録する
+        </PrimaryButton>
+      </div>
+    </Modal>
   );
 }

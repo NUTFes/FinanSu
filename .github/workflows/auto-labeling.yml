@@ -1,0 +1,36 @@
+name: Automatically labeling pull request.
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-labeling-pr:
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # ラベル名を取得する
+      - name: Get label name
+        id: label_name
+        run: |
+          branch_type=$(echo ${{github.head_ref}} | cut -d "/" -f1)
+          if [ $branch_type == 'feature' ]; then
+            label_name=$(echo "enhancement")
+          elif [ $branch_type == 'fix' ] || [ $branch_type == 'hotfix' ]; then
+            label_name=$(echo "bug")
+          else
+            label_name=""
+          fi
+          echo "::set-output name=label_name::$label_name"
+
+      # PRにラベルを付与する
+      - name: Auto labeling
+        if: ${{ steps.label_name.outputs.label_name }}
+        run: |
+          number=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')
+          gh pr edit $number --add-label ${{ steps.label_name.outputs.label_name }}

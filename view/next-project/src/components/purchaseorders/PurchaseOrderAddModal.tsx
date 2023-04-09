@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
+import { del } from '@api/api_methods';
 import { post } from '@api/purchaseItem';
 import {
   PrimaryButton,
@@ -44,6 +45,12 @@ export default function AddModal(props: ModalProps) {
 
   const [isDone, setIsDone] = useState<boolean>(false);
   const router = useRouter();
+
+  const deletePurchaseOrder = async () => {
+    const deletePurchaseOrderUrl =
+      process.env.CSR_API_URI + '/purchaseorders/' + props.formDataList[0].purchaseOrderID;
+    await del(deletePurchaseOrderUrl);
+  };
 
   const handler =
     (stepNumber: number, input: string) =>
@@ -87,7 +94,7 @@ export default function AddModal(props: ModalProps) {
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.price} onChange={handler(index, 'price')} />
+          <Input type='number' value={data.price} onChange={handler(index, 'price')} />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
           <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
@@ -95,7 +102,7 @@ export default function AddModal(props: ModalProps) {
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.quantity} onChange={handler(index, 'quantity')} />
+          <Input type='number' value={data.quantity} onChange={handler(index, 'quantity')} />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
           <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
@@ -229,6 +236,7 @@ export default function AddModal(props: ModalProps) {
           <div className={clsx('mr-5 grid w-full justify-items-end')}>
             <CloseButton
               onClick={() => {
+                deletePurchaseOrder();
                 props.onClose();
                 props.numModalOnClose();
               }}

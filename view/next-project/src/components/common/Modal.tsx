@@ -8,7 +8,7 @@ interface Props {
 
 export default function Modal(props: Props) {
   const className =
-    'relative w-auto my-6 mx-auto max-w-3xl bg-white-0 rounded-lg p-5' +
+    'relative my-6 mx-auto bg-white-0 rounded-lg p-5' +
     (props.className ? ` ${props.className}` : '');
 
   return (
