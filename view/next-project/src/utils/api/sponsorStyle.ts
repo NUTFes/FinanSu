@@ -1,10 +1,6 @@
 import { SponsorStyle } from '@type/common';
 
 export const post = async (url: string, data: SponsorStyle) => {
-  const scale = data.scale;
-  const isColor = data.isColor;
-  const price = data.price;
-
   const res = await fetch(url, {
     method: 'POST',
     mode: 'cors',
@@ -17,10 +13,6 @@ export const post = async (url: string, data: SponsorStyle) => {
 };
 
 export const put = async (url: string, data: SponsorStyle) => {
-  const scale = data.scale;
-  const isColor = data.isColor;
-  const price = data.price;
-
   const res = await fetch(url, {
     method: 'PUT',
     mode: 'cors',
