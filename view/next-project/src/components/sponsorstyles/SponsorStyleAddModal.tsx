@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import { post } from '@api/sponsorStyle';
+import { post } from '@api/api_methods';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { SCALE } from '@constants/scale';
 import { SponsorStyle } from '@type/common';

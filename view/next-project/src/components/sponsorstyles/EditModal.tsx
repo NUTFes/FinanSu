@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import { put } from '@api/sponsorStyle';
+import { put } from '@api/api_methods';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
