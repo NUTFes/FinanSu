@@ -248,7 +248,9 @@ export default function PurchaseReports(props: Props) {
                       {/* name (個数/finasucheck) */}
                       {purchaseReportViewItem.purchaseItems.map((purchaseItem, index) => (
                         <div key={index}>
-                          {`${purchaseItem.financeCheck?'○': 'x'} ${purchaseItem.item} (${purchaseItem.quantity})`}
+                          {`${purchaseItem.financeCheck ? '○' : 'x'} ${purchaseItem.item} (${
+                            purchaseItem.quantity
+                          })`}
                         </div>
                       ))}
                     </div>
