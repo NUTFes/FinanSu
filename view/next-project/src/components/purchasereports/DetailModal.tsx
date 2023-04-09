@@ -132,11 +132,9 @@ const DetailModal: FC<ModalProps> = (props) => {
                 <th className='w-2/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>URL</div>
                 </th>
-                {user.roleID === 3 ? (
-                  <th className='w-2/12 border-b-primary-1 pb-2'>
-                    <div className='text-center text-sm text-black-600'>局長確認</div>
-                  </th>
-                ) : null}
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>購入有無</div>
+                </th>
               </tr>
             </thead>
             <tbody className='w-full border border-x-white-0 border-b-primary-1 border-t-white-0'>
@@ -180,13 +178,11 @@ const DetailModal: FC<ModalProps> = (props) => {
                       </div>
                     </div>
                   </td>
-                  {user.roleID === 3 ? (
-                    <td className='border-b py-3'>
-                      <div className='text-center text-sm text-black-300'>
-                        <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
-                      </div>
-                    </td>
-                  ) : null}
+                  <td className='border-b py-3'>
+                    <div className='text-center text-sm text-black-300'>
+                      <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
