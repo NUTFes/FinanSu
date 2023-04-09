@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useMemo } from 'react';
-import { useRecoilState } from 'recoil';
-
-import { userAtom } from '@/store/atoms';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
+import { getCurrentUser } from '@/utils/api/currentUser';
+import { put } from '@/utils/api/purchaseOrder';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchaseorders/DetailModal';
@@ -15,21 +16,21 @@ import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@
 
 interface Props {
   user: User;
-  purchaseOrder: PurchaseOrder[];
+  purchaseOrders: PurchaseOrder[];
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
 }
 export async function getServerSideProps() {
-  const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
+  const getPurchaseOrdersUrl = process.env.SSR_API_URI + '/purchaseorders';
   const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
-  const purchaseOrderRes = await get(getPurchaseOrderUrl);
+  const purchaseOrdersRes = await get(getPurchaseOrdersUrl);
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
 
   return {
     props: {
-      purchaseOrder: purchaseOrderRes,
+      purchaseOrders: purchaseOrdersRes,
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
     },
@@ -37,7 +38,10 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseOrders(props: Props) {
-  const [user] = useRecoilState(userAtom);
+  const auth = useRecoilValue(authAtom);
+  const [currentUser, setCurrentUser] = useState<User>();
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(props.purchaseOrders);
+  const [purchaseOrderChecks, setPurchaseOrderChecks] = useState<boolean[]>([]);
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -72,26 +76,54 @@ export default function PurchaseOrders(props: Props) {
     return totalFee;
   }, [props.purchaseOrderView]);
 
-  // 変更可能なcheckboxの描画
-  const changeableCheckboxContent = (isChecked: boolean) => {
-    {
-      if (isChecked) {
-        return <Checkbox checked={true} disabled={false} />;
+  const isDisabled = useCallback(
+    (purchaseOrderViewItem: PurchaseOrderView) => {
+      if (
+        !purchaseOrderViewItem.purchaseOrder.financeCheck &&
+        (currentUser?.roleID === 2 ||
+          currentUser?.roleID === 3 ||
+          currentUser?.id === purchaseOrderViewItem.purchaseOrder.userID)
+      ) {
+        return true;
       } else {
-        return <Checkbox disabled={false} />;
+        return false;
       }
-    }
-  };
+    },
+    [currentUser?.roleID, currentUser?.id, currentUser],
+  );
 
-  // 変更不可能なcheckboxの描画
-  const unChangeableCheckboxContent = (isChecked: boolean) => {
-    {
-      if (isChecked) {
-        return <Checkbox checked={isChecked} disabled={true} />;
-      } else {
-        return <Checkbox disabled={true} />;
-      }
+  const isCheckBoxDisabled = useCallback(() => {
+    if (currentUser?.roleID === 3) {
+      return false;
+    } else {
+      return true;
     }
+  }, [currentUser?.roleID, currentUser?.id, currentUser]);
+
+
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await getCurrentUser(auth);
+      setCurrentUser(res);
+    };
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    const purchaseOrderChecks = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.financeCheck;
+    });
+    setPurchaseOrderChecks(purchaseOrderChecks);
+  }, [purchaseOrders, setPurchaseOrders]);
+
+  const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
+    const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;
+    const res = await put(url, purchaseOrder);
+    const newPurchaseOrders = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.id === purchaseOrderID ? res : purchaseOrder;
+    });
+    setPurchaseOrders(newPurchaseOrders);
   };
 
   return (
@@ -145,13 +177,16 @@ export default function PurchaseOrders(props: Props) {
                 <tr key={purchaseOrderViewItem.purchaseOrder.id}>
                   <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {user.roleID === 3
-                        ? changeableCheckboxContent(
-                            purchaseOrderViewItem.purchaseOrder.financeCheck,
-                          )
-                        : unChangeableCheckboxContent(
-                            purchaseOrderViewItem.purchaseOrder.financeCheck,
-                          )}
+                      <Checkbox
+                        checked={purchaseOrderChecks[index]}
+                        disabled={isCheckBoxDisabled()}
+                        onChange={() => {
+                          updatePurchaseOrder(
+                            purchaseOrderViewItem.purchaseOrder.id || 0,
+                            {...purchaseOrderViewItem.purchaseOrder, financeCheck: !purchaseOrderChecks[index]},
+                          );
+                        }}
+                      />
                     </div>
                   </td>
                   <td
@@ -265,12 +300,7 @@ export default function PurchaseOrders(props: Props) {
                               : 0
                           }
                           purchaseItems={purchaseOrderViewItem.purchaseItem}
-                          isDisabled={
-                            !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (user.roleID === 2 ||
-                              user.roleID === 3 ||
-                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
-                          }
+                          isDisabled={isDisabled(purchaseOrderViewItem)}
                         />
                       </div>
                       <div className={clsx('mx-1')}>
@@ -280,12 +310,7 @@ export default function PurchaseOrders(props: Props) {
                               ? purchaseOrderViewItem.purchaseOrder.id
                               : 0
                           }
-                          isDisabled={
-                            !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (user.roleID === 2 ||
-                              user.roleID === 3 ||
-                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
-                          }
+                          isDisabled={isDisabled(purchaseOrderViewItem)}
                         />
                       </div>
                     </div>
