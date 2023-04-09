@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+
 import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
-import { getCurrentUser } from '@/utils/api/currentUser';
 import { put } from '@/utils/api/purchaseOrder';
+import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchaseorders/DetailModal';
@@ -76,6 +77,30 @@ export default function PurchaseOrders(props: Props) {
     return totalFee;
   }, [props.purchaseOrderView]);
 
+  useEffect(() => {
+    const purchaseOrderChecks = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.financeCheck;
+    });
+    setPurchaseOrderChecks(purchaseOrderChecks);
+  }, [purchaseOrders, setPurchaseOrders]);
+
+  const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
+    const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;
+    const res = await put(url, purchaseOrder);
+    const newPurchaseOrders = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.id === purchaseOrderID ? res : purchaseOrder;
+    });
+    setPurchaseOrders(newPurchaseOrders);
+  };
+
+  const isFinanceDirector = useMemo(() => {
+    if (currentUser?.roleID == 3) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [currentUser?.roleID]);
+
   const isDisabled = useCallback(
     (purchaseOrderViewItem: PurchaseOrderView) => {
       if (
@@ -92,16 +117,6 @@ export default function PurchaseOrders(props: Props) {
     [currentUser?.roleID, currentUser?.id, currentUser],
   );
 
-  const isCheckBoxDisabled = useCallback(() => {
-    if (currentUser?.roleID === 3) {
-      return false;
-    } else {
-      return true;
-    }
-  }, [currentUser?.roleID, currentUser?.id, currentUser]);
-
-
-
   useEffect(() => {
     const getUser = async () => {
       const res = await getCurrentUser(auth);
@@ -109,22 +124,6 @@ export default function PurchaseOrders(props: Props) {
     };
     getUser();
   }, []);
-
-  useEffect(() => {
-    const purchaseOrderChecks = purchaseOrders.map((purchaseOrder) => {
-      return purchaseOrder.financeCheck;
-    });
-    setPurchaseOrderChecks(purchaseOrderChecks);
-  }, [purchaseOrders, setPurchaseOrders]);
-
-  const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
-    const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;
-    const res = await put(url, purchaseOrder);
-    const newPurchaseOrders = purchaseOrders.map((purchaseOrder) => {
-      return purchaseOrder.id === purchaseOrderID ? res : purchaseOrder;
-    });
-    setPurchaseOrders(newPurchaseOrders);
-  };
 
   return (
     <MainLayout>
@@ -179,7 +178,7 @@ export default function PurchaseOrders(props: Props) {
                     <div className={clsx('text-center text-sm text-black-600')}>
                       <Checkbox
                         checked={purchaseOrderChecks[index]}
-                        disabled={isCheckBoxDisabled()}
+                        disabled={isFinanceDirector}
                         onChange={() => {
                           updatePurchaseOrder(
                             purchaseOrderViewItem.purchaseOrder.id || 0,
@@ -290,9 +289,9 @@ export default function PurchaseOrders(props: Props) {
                       {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>
                   </td>
-                  <td className={clsx('px-4', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
-                    <div className={clsx('grid grid-cols-2 gap-3')}>
-                      <div className={clsx('text-center text-sm text-black-600')}>
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                    <div className='flex'>
+                      <div className='mx-1'>
                         <OpenEditModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
@@ -303,7 +302,7 @@ export default function PurchaseOrders(props: Props) {
                           isDisabled={isDisabled(purchaseOrderViewItem)}
                         />
                       </div>
-                      <div className={clsx('mx-1')}>
+                      <div className='mx-1'>
                         <OpenDeleteModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id

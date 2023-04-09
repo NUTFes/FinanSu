@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useMemo } from 'react';
-import { useRecoilState } from 'recoil';
+import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
+import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
+import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchasereports/DetailModal';
@@ -46,7 +47,8 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseReports(props: Props) {
-  const [user] = useRecoilState(userAtom);
+  const auth = useRecoilValue(authAtom);
+  const [currentUser, setCurrentUser] = useState<User>();
 
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
   const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
@@ -114,6 +116,30 @@ export default function PurchaseReports(props: Props) {
     }
   };
 
+  const isDisabled = useCallback(
+    (purchaseReportView: PurchaseReportView) => {
+      if (
+        !purchaseReportView.purchaseOrder.financeCheck &&
+        (currentUser?.roleID === 2 ||
+          currentUser?.roleID === 3 ||
+          currentUser?.id === purchaseReportView.purchaseOrder.userID)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [currentUser?.roleID, currentUser?.id, currentUser],
+  );
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await getCurrentUser(auth);
+      setCurrentUser(res);
+    };
+    getUser();
+  }, []);
+
   return (
     <MainLayout>
       <Head>
@@ -174,7 +200,7 @@ export default function PurchaseReports(props: Props) {
                     }}
                   >
                     <div className='text-center text-sm text-black-600'>
-                      {user.roleID === 3
+                      {currentUser?.roleID === 3
                         ? changeableCheckboxContent(
                             purchaseReportViewItem.purchaseReport.financeCheck,
                           )
@@ -287,12 +313,7 @@ export default function PurchaseReports(props: Props) {
                               ? purchaseReportViewItem.purchaseReport.id
                               : 0
                           }
-                          isDisabled={
-                            !purchaseReportViewItem.purchaseOrder.financeCheck &&
-                            (user.roleID === 2 ||
-                              user.roleID === 3 ||
-                              user.id === purchaseReportViewItem.purchaseOrder.userID)
-                          }
+                          isDisabled={isDisabled(purchaseReportViewItem)}
                         />
                       </div>
                       <div className='mx-1'>
@@ -302,12 +323,7 @@ export default function PurchaseReports(props: Props) {
                               ? purchaseReportViewItem.purchaseReport.id
                               : 0
                           }
-                          isDisabled={
-                            !purchaseReportViewItem.purchaseOrder.financeCheck &&
-                            (user.roleID === 2 ||
-                              user.roleID === 3 ||
-                              user.id === purchaseReportViewItem.purchaseOrder.userID)
-                          }
+                          isDisabled={isDisabled(purchaseReportViewItem)}
                         />
                       </div>
                     </div>
