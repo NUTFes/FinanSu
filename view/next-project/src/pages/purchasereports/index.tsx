@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
-import { useRecoilValue } from 'recoil';
 import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
