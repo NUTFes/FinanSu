@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
@@ -11,9 +10,10 @@ import {
   Input,
   Modal,
   Stepper,
-  Title,
+  Tooltip
 } from '@components/common';
 import { PurchaseItem } from '@type/common';
+import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
 
 interface ModalProps {
   purchaseOrderId: number;
@@ -86,36 +86,26 @@ export default function EditModal(props: ModalProps) {
 
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
-    <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
-      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
-        <div className={clsx('text-md flex items-center text-black-600')}>物品名</div>
+    <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+      <p className='text-black-600'>物品名</p>
+      <div className='col-span-4 w-full'>
+        <Input className='w-full' id={String(data.id)} value={data.item} onChange={handler('item')} />
       </div>
-      <div className={clsx('col-span-10 grid w-full')}>
-        <Input id={String(data.id)} value={data.item} onChange={handler('item')} />
+      <p className='text-black-600'>単価</p>
+      <div className='col-span-4 w-full'>
+        <Input className='w-full' id={String(data.id)} value={data.price} onChange={handler('price')} />
       </div>
-      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
-        <div className={clsx('text-md flex items-center text-black-600')}>単価</div>
+      <p className='text-black-600'>個数</p>
+      <div className='col-span-4 w-full'>
+        <Input className='w-full' id={String(data.id)} value={data.quantity} onChange={handler('quantity')} />
       </div>
-      <div className={clsx('col-span-10 grid w-full')}>
-        <Input id={String(data.id)} value={data.price} onChange={handler('price')} />
+      <p className='text-black-600'>詳細</p>
+      <div className='col-span-4 w-full'>
+        <Input className='w-full' id={String(data.id)} value={data.detail} onChange={handler('detail')} />
       </div>
-      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
-        <div className={clsx('text-md flex items-center text-black-600')}>個数</div>
-      </div>
-      <div className={clsx('col-span-10 grid w-full')}>
-        <Input id={String(data.id)} value={data.quantity} onChange={handler('quantity')} />
-      </div>
-      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
-        <div className={clsx('text-md flex items-center text-black-600')}>詳細</div>
-      </div>
-      <div className={clsx('col-span-10 grid w-full')}>
-        <Input id={String(data.id)} value={data.detail} onChange={handler('detail')} />
-      </div>
-      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
-        <div className={clsx('text-md flex items-center text-black-600')}>URL</div>
-      </div>
-      <div className={clsx('col-span-10 grid w-full')}>
-        <Input id={String(data.id)} value={data.url} onChange={handler('url')} />
+      <p className='text-black-600'>URL</p>
+      <div className='col-span-4 w-full'>
+        <Input className='w-full' id={String(data.id)} value={data.url} onChange={handler('url')} />
       </div>
     </div>
   );
@@ -123,101 +113,103 @@ export default function EditModal(props: ModalProps) {
   return (
     <>
       {props.isOpen && (
-        <Modal className='!w-1/2'>
-          <div className={clsx('w-full')}>
-            <div className={clsx('mr-5 grid w-full justify-items-end')}>
-              <CloseButton
-                onClick={() => {
-                  props.setIsOpen(false);
-                }}
-              />
-            </div>
+        <Modal className='w-1/2'>
+          <div className='w-fit ml-auto'>
+            <CloseButton
+              onClick={() => {
+                props.setIsOpen(false);
+              }}
+            />
           </div>
-          <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
+          <p className='mb-10 w-fit mx-auto text-xl text-black-600'>
             購入物品の修正
-          </div>
-          <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
-            <div className={clsx('col-span-1 grid')} />
-            <div className={clsx('col-span-10 grid w-full')}>
-              {/* 購入物品があればステッパで表示、なければないと表示  */}
-              {formDataList.length > 0 ? (
-                <Stepper stepNum={formDataList.length} activeStep={activeStep} isDone={isDone}>
-                  {!isDone && <>{content(formDataList[activeStep - 1])}</>}
-                </Stepper>
-              ) : (
-                <div className={clsx('ml-5 grid justify-items-center')}>
-                  <Title>報告した物品はありません</Title>
-                </div>
-              )}
-              {isDone ? (
-                // 編集完了した時に完了と戻るボタンを表示
-                <div className={clsx('my-10 grid grid-cols-12 gap-4')}>
-                  <div className={clsx('col-span-1 grid')} />
-                  <div className={clsx('col-span-10 grid w-full justify-items-center')}>
-                    <div className={clsx('flex')}>
-                      <OutlinePrimaryButton onClick={reset} className={'mx-2'}>
+          </p>
+          {/* 購入物品があればステッパで表示、なければないと表示  */}
+          {formDataList.length > 0 && (
+            <Stepper stepNum={formDataList.length} activeStep={activeStep} isDone={isDone}>
+              {!isDone && <>{content(formDataList[activeStep - 1])}</>}
+            </Stepper>
+          )}
+          {isDone ? (
+            <div>
+              <table className='w-full'>
+                <thead>
+                  <tr className='border-b border-primary-1 border-gray-300'>
+                    <th className='py-2'>物品名</th>
+                    <th className='py-2'>単価</th>
+                    <th className='py-2'>個数</th>
+                    <th className='py-2'>詳細</th>
+                    <th className='py-2'>URL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {formDataList.map((data) => (
+                    <tr key={data.id} className='border-b border-gray-300'>
+                      <td className='py-2'>{data.item}</td>
+                      <td className='py-2'>{data.price}</td>
+                      <td className='py-2'>{data.quantity}</td>
+                      <td className='py-2'>{data.detail}</td>
+                      <td className='py-2'>
+                      <div className={'flex justify-center'}>
+                        <a
+                          href={data.url}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                        >
+                          <RiExternalLinkLine size={'16px'} />
+                        </a>
+                        <Tooltip text={'copy URL'}>
+                          <RiFileCopyLine
+                            size={'16px'}
+                            className='cursor-pointer'
+                            onClick={() => {
+                              navigator.clipboard.writeText(data.url);
+                            }}
+                          />
+                        </Tooltip>
+                      </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className='flex gap-5 justify-center mt-10 mb-5'>
+                <OutlinePrimaryButton onClick={reset}>
+                  戻る
+                </OutlinePrimaryButton>
+                <PrimaryButton
+                  onClick={() => {
+                    submit(formDataList);
+                  }}
+                >
+                  編集完了
+                </PrimaryButton>
+              </div>
+            </div>
+          ) : (
+              <div className='flex gap-5 justify-center mt-10 mb-5'>
+                {formDataList.length > 0 && (
+                  <>
+                    {activeStep > 1 && (
+                      <OutlinePrimaryButton onClick={prevStep}>
                         戻る
                       </OutlinePrimaryButton>
-                      <PrimaryButton
-                        className={'mx-2'}
-                        onClick={() => {
-                          submit(formDataList);
-                        }}
-                      >
-                        編集完了
-                      </PrimaryButton>
-                    </div>
-                  </div>
-                  <div className={clsx('col-span-1 grid')} />
-                </div>
-              ) : (
-                <>
-                  <div className={clsx('mt-6 grid grid-cols-12 gap-4')}>
-                    <div className={clsx('col-span-1 grid')} />
-                    <div className={clsx('col-span-10 grid justify-items-center')}>
-                      {formDataList.length > 0 ? (
-                        <div className={clsx('flex')}>
-                          {/* stepが1より大きい時のみ戻るボタンを表示 */}
-                          {activeStep > 1 && (
-                            <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
-                              戻る
-                            </OutlinePrimaryButton>
-                          )}
-                          <PrimaryButton
-                            className={'mx-2 pl-4 pr-2'}
-                            onClick={() => {
-                              {
-                                activeStep === formDataList.length ? setIsDone(true) : nextStep();
-                              }
-                              isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
-                            }}
-                          >
-                            <div className={clsx('flex')}>
-                              {activeStep === formDataList.length ? '詳細の編集へ' : '登録して次へ'}
-                              <RiArrowDropRightLine size={23} />
-                            </div>
-                          </PrimaryButton>
-                        </div>
-                      ) : (
-                        <div className={clsx('flex')}>
-                          <OutlinePrimaryButton
-                            onClick={() => {
-                              props.setIsOpen(false);
-                            }}
-                            className={'mx-2'}
-                          >
-                            閉じる
-                          </OutlinePrimaryButton>
-                        </div>
-                      )}
-                    </div>
-                    <div className={clsx('col-span-1 grid')} />
-                  </div>
-                </>
-              )}
-            </div>
-            <div className={clsx('col-span-1 grid')} />
-          </div>
+                    )}
+                    <PrimaryButton
+                      onClick={() => {
+                        {
+                          activeStep === formDataList.length ? setIsDone(true) : nextStep();
+                        }
+                        isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
+                      }}
+                    >
+                        {activeStep === formDataList.length ? '確認へ' : '登録して次へ'}
+                        <RiArrowDropRightLine size={23} />
+                    </PrimaryButton>
+                  </>
+                )}
+              </div>
+            )}
         </Modal>
       )}
     </>
