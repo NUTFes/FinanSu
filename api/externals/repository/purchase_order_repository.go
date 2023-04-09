@@ -71,7 +71,7 @@ func (por *purchaseOrderRepository) Update(
 		SET
 			deadline ='` + deadLine +
 		"', user_id = " + userId +
-		"', expense_id = " + expenseId +
+		", expense_id = " + expenseId +
 		", finance_check = " + financeCheck +
 		" WHERE id = " + id
 	return por.crud.UpdateDB(c, query)
