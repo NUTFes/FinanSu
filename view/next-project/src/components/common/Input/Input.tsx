@@ -10,6 +10,7 @@ interface Props {
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: React.ReactNode;
+  type?: string;
 }
 
 function Input(props: Props): JSX.Element {
@@ -23,6 +24,7 @@ function Input(props: Props): JSX.Element {
       id={props.id}
       value={props.value}
       onChange={props.onChange}
+      type={props.type}
     >
       {props.children}
     </input>

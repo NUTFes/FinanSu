@@ -1,28 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { AddButton } from '@components/common';
-import { useUI } from '@components/ui/context';
+import { Expense } from '@type/common';
+
+import PurchaseItemNumModal from './PurchaseItemNumModal';
 
 interface Props {
-  width?: string;
-  height?: string;
   children?: React.ReactNode;
-  onClick?: () => void;
+  expenses: Expense[];
 }
 
 export default function OpenModalButton(props: Props) {
-  const { setModalView, openModal } = useUI();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <AddButton
         onClick={() => {
-          setModalView('PURCHASE_ITEM_NUM_MODAL');
-          openModal();
+          setIsOpen(true);
         }}
       >
         {props.children}
       </AddButton>
+      {isOpen && <PurchaseItemNumModal setIsOpen={setIsOpen} expenses={props.expenses} />}
     </>
   );
 }

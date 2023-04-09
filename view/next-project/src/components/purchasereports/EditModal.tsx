@@ -309,9 +309,7 @@ export default function EditModal(props: ModalProps) {
                             }}
                           >
                             <div className='flex'>
-                              {activeStep === formDataList.length
-                                ? '登録して編集を完了'
-                                : '登録して次へ'}
+                              {activeStep === formDataList.length ? '詳細の編集へ' : '登録して次へ'}
                               <RiArrowDropRightLine size={23} />
                             </div>
                           </PrimaryButton>

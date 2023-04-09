@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -6,16 +5,18 @@ import { userAtom } from '@/store/atoms';
 import { post } from '@api/purchaseOrder';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
-import { useUI } from '@components/ui/context';
-import { PurchaseItem, PurchaseOrder } from '@type/common';
+import { PurchaseItem, PurchaseOrder, Expense } from '@type/common';
 
-export default function PurchaseItemNumModal() {
+export interface PurchaseItemNumModalProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  expenses: Expense[];
+}
+
+export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
   const [user] = useRecoilState(userAtom);
 
   // 購入物品数用の配列
   const purchaseItemNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  const { closeModal } = useUI();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,10 +27,11 @@ export default function PurchaseItemNumModal() {
     setIsOpen(false);
   };
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PurchaseOrder>({
     deadline: '',
     userID: user.id,
     financeCheck: false,
+    expenseID: 1,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
@@ -96,59 +98,52 @@ export default function PurchaseItemNumModal() {
   return (
     <>
       <Modal>
-        <div className={clsx('w-full')}>
-          <div className={clsx('mr-5 grid w-full justify-items-end')}>
-            <CloseButton onClick={closeModal} />
+        <div className='w-full'>
+          <div className='ml-auto w-fit'>
+            <CloseButton onClick={() => props.setIsOpen(false)} />
           </div>
         </div>
-        <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
-          購入申請の作成
-        </div>
-        <div className={clsx('mb-10 grid grid-cols-12 gap-4')}>
-          <div className={clsx('col-span-1 grid')} />
-          <div className={clsx('col-span-10 grid')}>
-            <div className={clsx('my-2 grid w-full grid-cols-12')}>
-              <div className={clsx('col-span-4 mr-2 grid')}>
-                <div
-                  className={clsx(
-                    'text-md flex grid items-center justify-items-end text-black-600',
-                  )}
-                >
-                  購入期限
-                </div>
-              </div>
-              <div className={clsx('col-span-8 my-2 grid w-full')}>
-                <Input
-                  placeholder=' yyyymmddで入力'
-                  value={formData.deadline}
-                  onChange={formDataHandler('deadline')}
-                />
-              </div>
-            </div>
-            <div className={clsx('grid w-full grid-cols-12')}>
-              <div className={clsx('h-100 col-span-4 mr-2 grid')}>
-                <div
-                  className={clsx(
-                    'text-md flex grid items-center justify-items-end text-black-600',
-                  )}
-                >
-                  購入物品数
-                </div>
-              </div>
-              <div className={clsx('col-span-8 grid w-full')}>
-                <Select value={purchaseItemNum.value} onChange={purchaseItemNumHandler('value')}>
-                  {purchaseItemNumArray.map((data) => (
-                    <option key={data} value={data}>
-                      {data}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-            </div>
+        <div className='mx-auto mb-10 w-fit text-xl text-black-600'>購入申請の作成</div>
+        <div className='mb-10 grid grid-cols-5 items-center justify-items-center gap-4'>
+          <p className='grid-cols-1 text-black-600'>購入期限</p>
+          <div className='col-span-4 w-full'>
+            <Input
+              type='date'
+              value={formData.deadline}
+              onChange={formDataHandler('deadline')}
+              className='w-full'
+            />
           </div>
-          <div className={clsx('col-span-1 grid ')} />
+          <p className='grid-cols-1 text-black-600'>購入したい局・団体</p>
+          <div className='col-span-4 w-full'>
+            <Select
+              value={formData.expenseID}
+              onChange={formDataHandler('expenseID')}
+              className='w-full'
+            >
+              {props.expenses.map((data) => (
+                <option key={data.id} value={data.id}>
+                  {data.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <p className='grid-cols-1 text-black-600'>購入物品数</p>
+          <div className='col-span-4 w-full'>
+            <Select
+              value={purchaseItemNum.value}
+              onChange={purchaseItemNumHandler('value')}
+              className='w-full'
+            >
+              {purchaseItemNumArray.map((data) => (
+                <option key={data} value={data}>
+                  {data}
+                </option>
+              ))}
+            </Select>
+          </div>
         </div>
-        <div className={clsx('grid justify-items-center py-3')}>
+        <div className='mx-auto my-3 w-fit'>
           <PrimaryButton
             onClick={() => {
               submit(formData);
@@ -159,12 +154,11 @@ export default function PurchaseItemNumModal() {
           </PrimaryButton>
         </div>
       </Modal>
-
       {isOpen && (
         <AddModal
           purchaseItemNum={purchaseItemNum}
           isOpen={isOpen}
-          numModalOnClose={closeModal}
+          numModalOnClose={() => props.setIsOpen(false)}
           onClose={onClose}
           setFormDataList={setFormDataList}
           formDataList={formDataList}

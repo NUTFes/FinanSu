@@ -39,12 +39,24 @@ export interface PurchaseItem {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// Expense(支出)
+export interface Expense {
+  id?: number;
+  name: string;
+  totalPrice: number;
+  yearID: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // // PurchaseOrder(購入申請)
 export interface PurchaseOrder {
   id?: number;
   deadline: string;
   userID: number;
   financeCheck: boolean;
+  expenseID: number;
   createdAt?: string;
   updatedAt?: string;
 }
