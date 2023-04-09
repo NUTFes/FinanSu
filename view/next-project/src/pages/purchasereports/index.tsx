@@ -153,7 +153,7 @@ export default function PurchaseReports(props: Props) {
                   <div className='text-center text-sm text-black-600'>期限日</div>
                 </th>
                 <th className='w-3/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>購入物品</div>
+                  <div className='text-center text-sm text-black-600'>購入物品 (個数)</div>
                 </th>
                 <th className='w-1/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>合計金額</div>
@@ -245,22 +245,12 @@ export default function PurchaseReports(props: Props) {
                         'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
                       )}
                     >
-                      {purchaseReportViewItem.purchaseItems &&
-                      purchaseReportViewItem.purchaseItems.some((purchaseItem) => {
-                        return purchaseItem.financeCheck;
-                      }) ? (
-                        purchaseReportViewItem.purchaseItems.map((purchaseItem) => {
-                          if (purchaseItem.financeCheck) {
-                            return (
-                              <div key={purchaseItem.id}>
-                                {purchaseItem.item} ({purchaseItem.quantity})
-                              </div>
-                            );
-                          }
-                        })
-                      ) : (
-                        <div>購入物品なし</div>
-                      )}
+                      {/* name (個数/finasucheck) */}
+                      {purchaseReportViewItem.purchaseItems.map((purchaseItem, index) => (
+                        <div key={index}>
+                          {`${purchaseItem.financeCheck?'○': 'x'} ${purchaseItem.item} (${purchaseItem.quantity})`}
+                        </div>
+                      ))}
                     </div>
                   </td>
                   <td
