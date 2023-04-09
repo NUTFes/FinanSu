@@ -2,7 +2,7 @@ name: Create release tag and release note.
 
 on:
   push:
-    branches: [ feature/imaimai/auto-release-labeling ]
+    branches: [ main ]
 
 jobs:
   create-release-tag:
