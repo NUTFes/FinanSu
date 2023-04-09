@@ -1,0 +1,10 @@
+tunnel: 0aca8328-e2c8-4095-9d78-2c9c03394f7d
+credentials-file: /home/nonroot/.cloudflared/0aca8328-e2c8-4095-9d78-2c9c03394f7d.json
+protocol: http2
+
+ingress:
+ - hostname: finansu.nutfes.net
+   service: http://localhost:3000
+ - hostname: finansu-api.nutfes.net
+   service: http://localhost:1323
+ - service: http_status:404

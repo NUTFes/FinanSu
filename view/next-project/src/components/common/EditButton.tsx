@@ -1,25 +1,32 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
+import React, { useMemo } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
-import * as React from 'react';
-import theme from '@assets/theme';
 
-class EditButton extends React.Component {
-  render() {
-    return (
-      <ChakraProvider theme={theme}>
-        <Button
-          w='25px'
-          h='25px'
-          p='0'
-          minWidth='0'
-          borderRadius='full'
-          bgGradient='linear(to-br, primary.1 ,primary.2)'
-        >
-          <RiPencilFill size={'15px'} color={'white'} />
-        </Button>
-      </ChakraProvider>
-    );
-  }
+interface Props {
+  onClick?: () => void;
+  isDisabled?: boolean;
 }
+
+const EditButton: React.FC<Props> = (props) => {
+  const { onClick, isDisabled = true } = props;
+
+  const buttonClass = useMemo(() => {
+    if (!isDisabled) {
+      return 'cursor-default bg-primary-1 opacity-25';
+    } else {
+      return 'cursor-pointer bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1';
+    }
+  }, [isDisabled]);
+
+  return (
+    <button
+      suppressHydrationWarning
+      className={`${buttonClass}  flex h-6 w-6 min-w-0  items-center justify-center rounded-full p-0`}
+      disabled={!isDisabled}
+      onClick={onClick}
+    >
+      <RiPencilFill size={'15px'} color={'white'} />
+    </button>
+  );
+};
 
 export default EditButton;

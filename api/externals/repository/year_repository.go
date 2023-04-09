@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
-	"github.com/pkg/errors"
-	"fmt"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type yearRepository struct {
-	client db.Client
+	client   db.Client
+	crud abstract.Crud
 }
 
 type YearRepository interface {
@@ -18,51 +19,39 @@ type YearRepository interface {
 	Create(context.Context, string) error
 	Update(context.Context, string, string) error
 	Destroy(context.Context, string) error
+	FindLatestRecord(context.Context) (*sql.Row, error)
 }
 
-func NewYearRepository(client db.Client) YearRepository {
-	return &yearRepository{client}
+func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
+	return &yearRepository{c, ac}
 }
 
-// 全件取得
-func (yr *yearRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from years"
-	rows, err := yr.client.DB().QueryContext(c,query )
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+func (y *yearRepository) All(c context.Context) (*sql.Rows, error) {
+	query := "SELECT * FROM years"
+	return y.crud.Read(c, query)
 }
 
-// 1件取得
-func (yr *yearRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from years where id = "+id
-	row := yr.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row, nil
+func (y *yearRepository) Find(c context.Context, id string) (*sql.Row, error) {
+	query := "SELECT * FROM years WHERE id = " + id
+	return y.crud.ReadByID(c, query)
 }
 
-// 作成
-func (yr *yearRepository) Create(c context.Context, year string) error {
-	query := "insert into years (year) values ('"+year+"')"
-	_, err := yr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+func (y *yearRepository) Create(c context.Context, year string) error {
+	query := `INSERT INTO years (year) VALUES (` + year + ")"
+	return y.crud.UpdateDB(c, query)
 }
 
-// 編集
-func (yr *yearRepository) Update(c context.Context, id string, year string) error {
-	query := "update years set year = '"+year+"' where id = "+id
-	_, err := yr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+func (y *yearRepository) Update(c context.Context, id string, year string) error {
+	query := `UPDATE years SET year =` + year + " WHERE id = " + id
+	return y.crud.UpdateDB(c, query)
 }
 
-// 削除
-func (yr *yearRepository) Destroy(c context.Context, id string) error {
-	query :="delete from years where id = "+id
-	_, err := yr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+func (y *yearRepository) Destroy(c context.Context, id string) error {
+	query := "DELETE FROM years WHERE id = " + id
+	return y.crud.UpdateDB(c, query)
+}
+
+func (y *yearRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `SELECT * FROM years ORDER BY id DESC LIMIT 1`
+	return y.crud.ReadByID(c, query)
 }

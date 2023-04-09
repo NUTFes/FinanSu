@@ -1,59 +1,43 @@
 import {
-  ChakraProvider,
-  Center,
-  Input,
-  Select,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
-  RadioGroup,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
   Radio,
+  RadioGroup,
+  Select,
+  Spacer,
   Stack,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import theme from '@assets/theme';
+import { useRouter } from 'next/router';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
 import { get } from '@api/api_methods';
 import { put } from '@api/teachers';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '@components/common/RegistButton';
-import { useRouter } from 'next/router';
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
+import theme from '@assets/theme';
+import { PrimaryButton } from '@components/common';
+import { Department, Teacher } from '@type/common';
 interface FormData {
   name: string;
   position: string;
-  department_id: number;
+  departmentID: number;
   room: string;
-  is_black: boolean;
+  isBlack: boolean;
   remark: string;
 }
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
   teacher: Teacher;
@@ -70,23 +54,25 @@ export default function FundInformationEditModal(props: ModalProps) {
   const initFormData: FormData = {
     name: '',
     position: '',
-    department_id: 1,
+    departmentID: 1,
     room: '',
-    is_black: false,
+    isBlack: false,
     remark: '',
   };
   const [formData, setFormData] = useState<FormData>(initFormData);
-  const [isBlack, setIsBlack] = useState<string>(props.teacher.is_black.toString());
+  const [isBlack, setIsBlack] = useState<string>(props.teacher.isBlack.toString());
+
+  // teacherを取得
+  const getFormData = useCallback(async () => {
+    const getFormDataURL = process.env.CSR_API_URI + '/teachers/' + props.id;
+    setFormData(await get(getFormDataURL));
+  }, [props.id, setFormData]);
 
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/teachers/' + props.id;
-      const getFormData = async (url: string) => {
-        setFormData(await get(url));
-      };
-      getFormData(getFormDataUrl);
+      getFormData();
     }
-  }, [router]);
+  }, [router, getFormData]);
 
   const handler =
     (input: string) =>
@@ -99,11 +85,11 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const update = async (data: any, id: number | string, is_black: string) => {
-    if (is_black == 'true') {
-      data.is_black = true;
+  const update = async (data: FormData, id: number | string, isBlack: string) => {
+    if (isBlack == 'true') {
+      data.isBlack = true;
     } else {
-      data.is_black = false;
+      data.isBlack = false;
     }
     const updateTeacherURL = process.env.CSR_API_URI + '/teachers/' + id;
     await put(updateTeacherURL, data);
@@ -169,8 +155,8 @@ export default function FundInformationEditModal(props: ModalProps) {
                   </GridItem>
                   <GridItem colSpan={9}>
                     <Select
-                      value={formData.department_id}
-                      onChange={handler('department_id')}
+                      value={formData.departmentID}
+                      onChange={handler('departmentID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='100'
@@ -240,15 +226,14 @@ export default function FundInformationEditModal(props: ModalProps) {
           </ModalBody>
           <Center>
             <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
+              <PrimaryButton
                 onClick={() => {
                   update(formData, props.id, isBlack);
                   router.reload();
                 }}
               >
                 編集する
-              </Button>
+              </PrimaryButton>
             </ModalFooter>
           </Center>
         </ModalContent>

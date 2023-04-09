@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
-	"github.com/pkg/errors"
-	"fmt"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type teacherRepository struct {
 	client db.Client
+	crud   abstract.Crud
 }
 
 type TeacherRepository interface {
@@ -18,51 +19,71 @@ type TeacherRepository interface {
 	Create(context.Context, string, string, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string, string, string) error
 	Destroy(context.Context, string) error
+	FindLatestRecord(c context.Context) (*sql.Row, error)
 }
 
-func NewTeacherRepository(client db.Client) TeacherRepository {
-	return &teacherRepository{client}
+func NewTeacherRepository(c db.Client, ac abstract.Crud) TeacherRepository {
+	return &teacherRepository{c, ac}
 }
 
-// 全件取得
-func (tr *teacherRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from teachers"
-	rows, err := tr.client.DB().QueryContext(c, query)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+func (t *teacherRepository) All(c context.Context) (*sql.Rows, error) {
+	query := "SELECT * FROM teachers"
+	return t.crud.Read(c, query)
 }
 
-// 1件取得
-func (tr *teacherRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from teachers where id = "+id
-	row := tr.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row, nil
+func (t *teacherRepository) Find(c context.Context, id string) (*sql.Row, error) {
+	query := "SELECT * FROM teachers WHERE id = " + id
+	return t.crud.ReadByID(c, query)
 }
 
-// 作成
-func (tr *teacherRepository) Create(c context.Context, name string, position string, departmentID string, room string, isBlack string, remark string) error {
-	query := "insert into teachers (name, position, department_id, room, is_black, remark) values ('"+name+"','"+position+"',"+departmentID+",'"+room+"', "+isBlack+", '"+remark+"')"
-	_, err := tr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+func (t *teacherRepository) Create(
+	c context.Context,
+	name string,
+	position string,
+	departmentID string,
+	room string,
+	isBlack string,
+	remark string) error {
+	query := `
+	INSERT INTO teachers
+		(name, position, department_id, room, is_black, remark) VALUES
+	('` + name +
+		"','" + position +
+		"'," + departmentID +
+		",'" + room +
+		"'," + isBlack +
+		",'" + remark +
+		"')"
+	return t.crud.UpdateDB(c, query)
 }
 
-// 編集
-func (tr *teacherRepository) Update(c context.Context, id string, name string, position string, departmentID string, room string, isBlack string, remark string) error {
-	query := "update teachers set name = '" + name + "', position = '" + position + "', department_id = " + departmentID + ", room = '" + room + "', is_black = " + isBlack + ", remark = '" + remark + "' where id = " + id
-	_, err := tr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+func (t *teacherRepository) Update(
+	c context.Context,
+	id string,
+	name string,
+	position string,
+	departmentID string,
+	room string,
+	isBlack string,
+	remark string) error {
+	query := `
+	UPDATE teachers
+	SET name ='` + name +
+		"', position = '" + position +
+		"', department_id = " + departmentID +
+		", room = '" + room +
+		"', is_black = " + isBlack +
+		", remark = '" + remark +
+		"' WHERE id = " + id
+	return t.crud.UpdateDB(c, query)
 }
 
-// 削除
-func (tr *teacherRepository) Destroy(c context.Context, id string) error {
-	query := "delete from teachers where id = "+id
-	_, err := tr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+func (t *teacherRepository) Destroy(c context.Context, id string) error {
+	query := "DELETE FROM teachers WHERE id = " + id
+	return t.crud.UpdateDB(c, query)
+}
+
+func (t *teacherRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := "SELECT * FROM teachers ORDER BY id DESC LIMIT 1"
+	return t.crud.ReadByID(c, query)
 }

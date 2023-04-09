@@ -5,17 +5,21 @@ import (
 )
 
 type PurchaseReport struct {
-	ID   				ID 					`json:"id"`
-	UserID 				ID 					`json:"user_id"`
-	PurchaseOrderID 	PurchaseOrderID 	`json:"purchase_order_id"`
-	CreatedAt 			time.Time 			`json:"created_at"`
-	UpdatedAt			time.Time 			`json:"updated_at"`
+	ID              int       `json:"id"`
+	UserID          int       `json:"userID"`
+	Discount        int       `json:"discount"`
+	Addition        int       `json:"addition"`
+	FinanceCheck    bool      `json:"financeCheck"`
+	PurchaseOrderID int       `json:"purchaseOrderID"`
+	Remark          string    `json:"remark"`
+	CreatedAt       time.Time `json:"createdAt"`
+	UpdatedAt       time.Time `json:"updatedAt"`
 }
 
-type PurchaseReportWithOrderItem struct {
-	PurchaseReport		PurchaseReport	`json:"purchasereport"`
-	ReportUser			User			`json:"report_user"`
-	PurchaseOrder		PurchaseOrder	`json:"purchaseorder"`
-	OrderUser			User			`json:"order_user"`
-	PurchaseItems		[]PurchaseItem	`json:"purchaseitems"`
+type PurchaseReportDetails struct {
+	PurchaseReport PurchaseReport `json:"purchaseReport"`
+	ReportUser     User           `json:"reportUser"`
+	PurchaseOrder  PurchaseOrder  `json:"purchaseOrder"`
+	OrderUser      User           `json:"orderUser"`
+	PurchaseItems  []PurchaseItem `json:"purchaseItems"`
 }

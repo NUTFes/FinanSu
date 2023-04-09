@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
@@ -14,18 +15,18 @@ type purchaseItemUseCase struct {
 type PurchaseItemUseCase interface {
 	GetPurchaseItem(context.Context) ([]domain.PurchaseItem, error)
 	GetPurchaseItemByID(context.Context, string) (domain.PurchaseItem, error)
-	CreatePurchaseItem(context.Context, string, string, string, string, string, string, string) error
-	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string, string) error
+	CreatePurchaseItem(context.Context, string, string, string, string, string, string, string) (domain.PurchaseItem, error)
+	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string, string) (domain.PurchaseItem, error)
 	DestroyPurchaseItem(context.Context, string) error
-	GetPurchaseItemWithPurchaseOrder(context.Context) ([]domain.PurchaseItemWithOrder, error)
-	GetPurchaseItemWithPurchaseOrderByID(context.Context, string) (domain.PurchaseItemWithOrder, error)
+	GetPurchaseItemDetails(context.Context) ([]domain.PurchaseItemDetails, error)
+	GetPurchaseItemDetailsByID(context.Context, string) (domain.PurchaseItemDetails, error)
 }
 
 func NewPurchaseItemUseCase(rep rep.PurchaseItemRepository) PurchaseItemUseCase {
 	return &purchaseItemUseCase{rep}
 }
 
-//PurchaseItemsの取得(Gets)
+// PurchaseItemsの取得(Gets)
 func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.PurchaseItem, error) {
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
@@ -33,7 +34,7 @@ func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.Purch
 	if err != nil {
 		return nil, err
 	}
-	for rows.Next(){
+	for rows.Next() {
 		err := rows.Scan(
 			&purchaseItem.ID,
 			&purchaseItem.Item,
@@ -42,33 +43,33 @@ func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.Purch
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinansuCheck,
+			&purchaseItem.FinanceCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 		)
 		if err != nil {
-			return nil , err 
+			return nil, err
 		}
 		purchaseItems = append(purchaseItems, purchaseItem)
 	}
 	return purchaseItems, nil
 }
 
-//purchaseItemの取得(Get)
-func(p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) (domain.PurchaseItem, error){
+// purchaseItemの取得(Get)
+func (p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) (domain.PurchaseItem, error) {
 	purchaseItem := domain.PurchaseItem{}
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
-			&purchaseItem.ID,
-			&purchaseItem.Item,
-			&purchaseItem.Price,
-			&purchaseItem.Quantity,
-			&purchaseItem.Detail,
-			&purchaseItem.Url,
-			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinansuCheck,
-			&purchaseItem.CreatedAt,
-			&purchaseItem.UpdatedAt,
+		&purchaseItem.ID,
+		&purchaseItem.Item,
+		&purchaseItem.Price,
+		&purchaseItem.Quantity,
+		&purchaseItem.Detail,
+		&purchaseItem.Url,
+		&purchaseItem.PurchaseOrderID,
+		&purchaseItem.FinanceCheck,
+		&purchaseItem.CreatedAt,
+		&purchaseItem.UpdatedAt,
 	)
 	if err != nil {
 		return purchaseItem, err
@@ -76,9 +77,8 @@ func(p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) (
 	return purchaseItem, nil
 }
 
-
-//purchaseItemの作成
-func(p *purchaseItemUseCase) CreatePurchaseItem(
+// purchaseItemの作成
+func (p *purchaseItemUseCase) CreatePurchaseItem(
 	c context.Context,
 	Item string,
 	Price string,
@@ -86,14 +86,32 @@ func(p *purchaseItemUseCase) CreatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
-	FinansuCheck string,
-)error {
-	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
-	return err
+	FinanceCheck string,
+) (domain.PurchaseItem, error) {
+	latastPurchaseItem := domain.PurchaseItem{}
+
+	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
+	row, err := p.rep.FindNewRecord(c)
+	err = row.Scan(
+		&latastPurchaseItem.ID,
+		&latastPurchaseItem.Item,
+		&latastPurchaseItem.Price,
+		&latastPurchaseItem.Quantity,
+		&latastPurchaseItem.Detail,
+		&latastPurchaseItem.Url,
+		&latastPurchaseItem.PurchaseOrderID,
+		&latastPurchaseItem.FinanceCheck,
+		&latastPurchaseItem.CreatedAt,
+		&latastPurchaseItem.UpdatedAt,
+	)
+	if err != nil {
+		return latastPurchaseItem, err
+	}
+	return latastPurchaseItem, err
 }
 
-//purchaseItemの修正(Update)
-func(p *purchaseItemUseCase) UpdatePurchaseItem(
+// purchaseItemの修正(Update)
+func (p *purchaseItemUseCase) UpdatePurchaseItem(
 	c context.Context,
 	id string,
 	Item string,
@@ -102,78 +120,110 @@ func(p *purchaseItemUseCase) UpdatePurchaseItem(
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
-	FinansuCheck string,
-)error {
-	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinansuCheck)
-	return err
+	FinanceCheck string,
+) (domain.PurchaseItem, error) {
+	updatedPurchaseItem := domain.PurchaseItem{}
+	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
+	row, err := p.rep.Find(c, id)
+	err = row.Scan(
+		&updatedPurchaseItem.ID,
+		&updatedPurchaseItem.Item,
+		&updatedPurchaseItem.Price,
+		&updatedPurchaseItem.Quantity,
+		&updatedPurchaseItem.Detail,
+		&updatedPurchaseItem.Url,
+		&updatedPurchaseItem.PurchaseOrderID,
+		&updatedPurchaseItem.FinanceCheck,
+		&updatedPurchaseItem.CreatedAt,
+		&updatedPurchaseItem.UpdatedAt,
+	)
+	if err != nil {
+		return updatedPurchaseItem, err
+	}
+	return updatedPurchaseItem, err
 }
 
-//purchaseItemの削除(delete)
-func(p *purchaseItemUseCase) DestroyPurchaseItem(
+// purchaseItemの削除(delete)
+func (p *purchaseItemUseCase) DestroyPurchaseItem(
 	c context.Context,
 	id string,
-)error {
+) error {
 	err := p.rep.Delete(c, id)
 	return err
 }
 
-//purchaseOrderに紐づくPurchaseItemの取得(Gets)
-func (p *purchaseItemUseCase) GetPurchaseItemWithPurchaseOrder(c context.Context) ([]domain.PurchaseItemWithOrder, error) {
+// purchaseOrderに紐づくPurchaseItemの取得(Gets)
+func (p *purchaseItemUseCase) GetPurchaseItemDetails(c context.Context) ([]domain.PurchaseItemDetails, error) {
 
-	purchaseItemwithpurchaseorder := domain.PurchaseItemWithOrder{}
-	var purchaseItemwithpurchaseorders []domain.PurchaseItemWithOrder
+	purchaseItemDetail := domain.PurchaseItemDetails{}
+	var purchaseItemDetails []domain.PurchaseItemDetails
 
 	//クエリ実行
-	rows, err := p.rep.AllWithPurchaseOrder(c)
+	rows, err := p.rep.AllDetails(c)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	defer rows.Close()
 
-	for rows.Next(){
+	for rows.Next() {
 		err := rows.Scan(
-			&purchaseItemwithpurchaseorder.ID,
-			&purchaseItemwithpurchaseorder.Item,
-			&purchaseItemwithpurchaseorder.Price,
-			&purchaseItemwithpurchaseorder.Quantity,
-			&purchaseItemwithpurchaseorder.Detail,
-			&purchaseItemwithpurchaseorder.Url,
-			&purchaseItemwithpurchaseorder.DeadLine,
-			&purchaseItemwithpurchaseorder.Name,
-			&purchaseItemwithpurchaseorder.FinansuCheck,
-			&purchaseItemwithpurchaseorder.CreatedAt,
-			&purchaseItemwithpurchaseorder.UpdatedAt,
+			&purchaseItemDetail.PurchaseItem.ID,
+			&purchaseItemDetail.PurchaseItem.Item,
+			&purchaseItemDetail.PurchaseItem.Price,
+			&purchaseItemDetail.PurchaseItem.Quantity,
+			&purchaseItemDetail.PurchaseItem.Detail,
+			&purchaseItemDetail.PurchaseItem.Url,
+			&purchaseItemDetail.PurchaseItem.PurchaseOrderID,
+			&purchaseItemDetail.PurchaseItem.FinanceCheck,
+			&purchaseItemDetail.PurchaseItem.CreatedAt,
+			&purchaseItemDetail.PurchaseItem.UpdatedAt,
+			&purchaseItemDetail.PurchaseOrder.ID,
+			&purchaseItemDetail.PurchaseOrder.DeadLine,
+			&purchaseItemDetail.PurchaseOrder.UserID,
+			&purchaseItemDetail.PurchaseOrder.ExpenseID,
+			&purchaseItemDetail.PurchaseOrder.FinanceCheck,
+			&purchaseItemDetail.User.ID,
+			&purchaseItemDetail.User.Name,
+			&purchaseItemDetail.User.BureauID,
+			&purchaseItemDetail.User.RoleID,
 		)
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
-		purchaseItemwithpurchaseorders = append(purchaseItemwithpurchaseorders, purchaseItemwithpurchaseorder)
+		purchaseItemDetails = append(purchaseItemDetails, purchaseItemDetail)
 	}
-	return purchaseItemwithpurchaseorders, nil
+	return purchaseItemDetails, nil
 }
 
-//purchaseOrderに紐づくPurchaseItemの取得(Get)
-func (p *purchaseItemUseCase) GetPurchaseItemWithPurchaseOrderByID(c context.Context, id string) (domain.PurchaseItemWithOrder, error){
-	purchaseItemwithpurchaseorder := domain.PurchaseItemWithOrder{}
+// purchaseOrderに紐づくPurchaseItemの取得(Get)
+func (p *purchaseItemUseCase) GetPurchaseItemDetailsByID(c context.Context, id string) (domain.PurchaseItemDetails, error) {
+	purchaseItemDetail := domain.PurchaseItemDetails{}
 
-	row, err := p.rep.FindWithPurchaseOrder(c, id)
+	row, err := p.rep.FindDetails(c, id)
 	err = row.Scan(
-		&purchaseItemwithpurchaseorder.ID,
-		&purchaseItemwithpurchaseorder.Item,
-		&purchaseItemwithpurchaseorder.Price,
-		&purchaseItemwithpurchaseorder.Quantity,
-		&purchaseItemwithpurchaseorder.Detail,
-		&purchaseItemwithpurchaseorder.Url,
-		&purchaseItemwithpurchaseorder.DeadLine,
-		&purchaseItemwithpurchaseorder.Name,
-		&purchaseItemwithpurchaseorder.FinansuCheck,
-		&purchaseItemwithpurchaseorder.CreatedAt,
-		&purchaseItemwithpurchaseorder.UpdatedAt,
+		&purchaseItemDetail.PurchaseItem.ID,
+		&purchaseItemDetail.PurchaseItem.Item,
+		&purchaseItemDetail.PurchaseItem.Price,
+		&purchaseItemDetail.PurchaseItem.Quantity,
+		&purchaseItemDetail.PurchaseItem.Detail,
+		&purchaseItemDetail.PurchaseItem.Url,
+		&purchaseItemDetail.PurchaseItem.PurchaseOrderID,
+		&purchaseItemDetail.PurchaseItem.FinanceCheck,
+		&purchaseItemDetail.PurchaseItem.CreatedAt,
+		&purchaseItemDetail.PurchaseItem.UpdatedAt,
+		&purchaseItemDetail.PurchaseOrder.ID,
+		&purchaseItemDetail.PurchaseOrder.DeadLine,
+		&purchaseItemDetail.PurchaseOrder.UserID,
+		&purchaseItemDetail.PurchaseOrder.ExpenseID,
+		&purchaseItemDetail.PurchaseOrder.FinanceCheck,
+		&purchaseItemDetail.User.ID,
+		&purchaseItemDetail.User.Name,
+		&purchaseItemDetail.User.BureauID,
+		&purchaseItemDetail.User.RoleID,
 	)
 	if err != nil {
-		return purchaseItemwithpurchaseorder, err
+		return purchaseItemDetail, err
 	}
-	return purchaseItemwithpurchaseorder, nil
+	return purchaseItemDetail, nil
 
 }
-

@@ -1,8 +1,10 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
-import RegistModal from './RegistModal';
 import { useState } from 'react';
+
+import theme from '@assets/theme';
+
+import RegistModal from './RegistModal';
 
 interface Props {
   width?: string;

@@ -1,35 +1,32 @@
 import {
-  ChakraProvider,
-  Center,
-  Input,
-  Select,
-  Flex,
   Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
+  Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Select,
+  Spacer,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../common/RegistButton';
 import { useRouter } from 'next/router';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
 import { get } from '@api/api_methods';
 import { put } from '@api/user';
-
-interface Bureau {
-  id: number;
-  name: string;
-}
+import theme from '@assets/theme';
+import Button from '@components/common/RegistButton';
+import { Bureau } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  openModal: boolean;
   children?: React.ReactNode;
   id: number | string;
   bureaus: Bureau[];
@@ -38,8 +35,8 @@ interface ModalProps {
 interface FormData {
   id: number;
   name: string;
-  bureau_id: number;
-  role_id: number;
+  bureauID: number;
+  roleID: number;
 }
 
 export default function FundInformationEditModal(props: ModalProps) {
@@ -52,19 +49,21 @@ export default function FundInformationEditModal(props: ModalProps) {
   const [formData, setFormData] = useState<FormData>({
     id: 1,
     name: '',
-    bureau_id: 1,
-    role_id: 1,
+    bureauID: 1,
+    roleID: 1,
   });
+
+  // モーダルを開いているuserを取得
+  const getFormData = useCallback(async () => {
+    const getFormDataURL = process.env.CSR_API_URI + '/users/' + props.id;
+    setFormData(await get(getFormDataURL));
+  }, [props.id, setFormData]);
 
   useEffect(() => {
     if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/users/' + props.id;
-      const getFormData = async (url: string) => {
-        setFormData(await get(url));
-      };
-      getFormData(getFormDataUrl);
+      getFormData();
     }
-  }, [router]);
+  }, [router, getFormData]);
 
   const handler =
     (input: string) =>
@@ -77,9 +76,9 @@ export default function FundInformationEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitUser = async (data: any, id: number | string) => {
+  const submitUser = async (data: FormData, id: number | string) => {
     const submitUserURL = process.env.CSR_API_URI + '/users/' + id;
-    const res = await put(submitUserURL, data);
+    await put(submitUserURL, data);
   };
 
   return (
@@ -126,8 +125,8 @@ export default function FundInformationEditModal(props: ModalProps) {
                   </GridItem>
                   <GridItem rowSpan={1} colSpan={8}>
                     <Select
-                      value={formData.bureau_id}
-                      onChange={handler('bureau_id')}
+                      value={formData.bureauID}
+                      onChange={handler('bureauID')}
                       borderRadius='full'
                       borderColor='primary.1'
                       w='224px'
@@ -150,8 +149,8 @@ export default function FundInformationEditModal(props: ModalProps) {
                         w='100'
                         borderRadius='full'
                         borderColor='primary.1'
-                        value={formData.role_id}
-                        onChange={handler('role_id')}
+                        value={formData.roleID}
+                        onChange={handler('roleID')}
                       />
                     </Flex>
                   </GridItem>

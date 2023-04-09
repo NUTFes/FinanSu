@@ -1,8 +1,10 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
-import AddModal from '@components/budgets/AddModal';
 import { useState } from 'react';
+
+import theme from '@assets/theme';
+import AddModal from '@components/budgets/AddModal';
+import { Source, Year } from '@type/common';
 
 interface Props {
   width?: string;
@@ -10,16 +12,6 @@ interface Props {
   children?: React.ReactNode;
   sources: Source[];
   years: Year[];
-}
-
-interface Source {
-  id: number;
-  name: string;
-}
-
-interface Year {
-  id: number;
-  year: number;
 }
 
 const OpenAddModalButton: React.FC<Props> = (props) => {

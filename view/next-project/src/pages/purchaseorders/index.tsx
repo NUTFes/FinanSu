@@ -1,173 +1,323 @@
+import clsx from 'clsx';
 import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  Flex,
-  Spacer,
-  Select,
-  Grid,
-  GridItem,
-} from '@chakra-ui/react';
-import theme from '@assets/theme';
-import { Center } from '@chakra-ui/react';
-import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/common/Header';
-import { get } from '@api/purchaseOrder';
-import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
-import { useState } from 'react';
-import DetailModal from '@components/purchaseorders/DetailModal';
-import * as React from 'react';
+import { useState, useMemo } from 'react';
+import { useRecoilState } from 'recoil';
+
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
+import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
-
-interface User {
-  id: number;
-  name: string;
-}
-
-interface PurchaseOrder {
-  id: number;
-  deadline: string;
-  user_id: number;
-  created_at: string;
-  updated_at: string;
-}
+import DetailModal from '@components/purchaseorders/DetailModal';
+import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
+import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@type/common';
 
 interface Props {
   user: User;
   purchaseOrder: PurchaseOrder[];
+  purchaseOrderView: PurchaseOrderView[];
+  expenses: Expense[];
 }
 export async function getServerSideProps() {
   const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
+  const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
+  const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseOrderRes = await get(getPurchaseOrderUrl);
+  const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
+  const expenseRes = await get(getExpenseUrl);
+
   return {
     props: {
       purchaseOrder: purchaseOrderRes,
+      purchaseOrderView: purchaseOrderViewRes,
+      expenses: expenseRes,
     },
   };
 }
 
-export default function PurchaseOrder(props: Props) {
+export default function PurchaseOrders(props: Props) {
+  const [user] = useRecoilState(userAtom);
+  const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
+  const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onOpen = (purchaseOrderID: number, purchaseOrderViewItem: PurchaseOrderView) => {
+    setPurchaseOrderID(purchaseOrderID);
+    setPurchaseOrderViewItem(purchaseOrderViewItem);
+    setIsOpen(true);
+  };
+
   const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 4);
+    const datetime = date.replace('T', ' ');
+    const datetime2 = datetime.substring(5, datetime.length - 10).replace('-', '/');
     return datetime2;
   };
 
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
+  // 購入申請の合計金額を計算
+  // // 申請を出した時点では購入物品のチェックはfalseなので、finance_check関係なく計算
+  const TotalFee = (purchaseItems: PurchaseItem[]) => {
+    let totalFee = 0;
+    purchaseItems?.map((purchaseItem: PurchaseItem) => {
+      totalFee += purchaseItem.price * purchaseItem.quantity;
+    });
+    return totalFee;
+  };
+
+  // 全ての購入申請の合計金額を計算
+  const totalPurchaseOrderFee = useMemo(() => {
+    let totalFee = 0;
+    props.purchaseOrderView?.map((purchaseOrderView: PurchaseOrderView) => {
+      totalFee += TotalFee(purchaseOrderView.purchaseItem);
+    });
+    return totalFee;
+  }, [props.purchaseOrderView]);
+
+  // 変更可能なcheckboxの描画
+  const changeableCheckboxContent = (isChecked: boolean) => {
+    {
+      if (isChecked) {
+        return <Checkbox checked={true} disabled={false} />;
+      } else {
+        return <Checkbox disabled={false} />;
+      }
+    }
+  };
+
+  // 変更不可能なcheckboxの描画
+  const unChangeableCheckboxContent = (isChecked: boolean) => {
+    {
+      if (isChecked) {
+        return <Checkbox checked={isChecked} disabled={true} />;
+      } else {
+        return <Checkbox disabled={true} />;
+      }
+    }
   };
 
   return (
     <MainLayout>
-      <Flex justify='center' align='center'>
-        <Box m='10' px='10' boxShadow='base' rounded='lg'>
-          <Box mt='10' mx='5'>
-            <Flex>
-              <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                購入申請一覧
-              </Center>
-              <Select variant='flushed' w='100'>
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-              </Select>
-            </Flex>
-            <Flex>
-              <Spacer />
-              <Box>
-                <Button
-                  textColor='white'
-                  leftIcon={<RiAddCircleLine color={'white'} />}
-                  bgGradient='linear(to-br, primary.1, primary.2)'
-                >
-                  購入申請
-                </Button>
-              </Box>
-            </Flex>
-          </Box>
-          <Box p='5' mb='2'>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      ID
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' mr='1' color='black.600'>
-                      購入期限日
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      申請者
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7' isNumeric>
-                    <Center fontSize='sm' color='black.600'>
-                      申請日
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      金額
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center></Center>
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {props.purchaseOrder.map((purchaseOrderItem) => (
-                  <Tr key={purchaseOrderItem.id}>
-                    <Td onClick={() => ShowModal()}>
-                      <Center color='black.300'>{purchaseOrderItem.id}</Center>
-                    </Td>
-                    <Td onClick={() => ShowModal()}>
-                      <Center color='black.300'>{purchaseOrderItem.deadline}</Center>
-                    </Td>
-                    <Td onClick={() => ShowModal()}>
-                      <Center color='black.300'>{purchaseOrderItem.user_id}</Center>
-                    </Td>
-                    <Td onClick={() => ShowModal()}>
-                      <Center color='black.300'>{formatDate(purchaseOrderItem.created_at)}</Center>
-                    </Td>
-                    <Td onClick={() => ShowModal()}></Td>
-                    <Td>
-                      <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                        <GridItem>
-                          <Center>
-                            <OpenEditModalButton id={purchaseOrderItem.id} />
-                          </Center>
-                        </GridItem>
-                        <GridItem>
-                          <Center>
-                            <OpenDeleteModalButton id={purchaseOrderItem.id} />
-                          </Center>
-                        </GridItem>
-                      </Grid>
-                    </Td>
-                    <DetailModal
-                      id={purchaseOrderItem.id}
-                      openModal={showModal}
-                      setShowModal={setShowModal}
-                    />
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
-        </Box>
-      </Flex>
+      <Head>
+        <title>購入申請一覧</title>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      </Head>
+      <Card>
+        <div className={clsx('mx-5 mt-10')}>
+          <div className={clsx('flex')}>
+            <Title title={'購入申請一覧'} />
+            <select className={clsx('w-100 ')}>
+              <option value='2021'>2021</option>
+              <option value='2022'>2022</option>
+            </select>
+          </div>
+          <div className={clsx('flex justify-end')}>
+            <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
+          </div>
+        </div>
+        <div className={clsx('w-100 mb-2 p-5')}>
+          <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
+            <thead>
+              <tr
+                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
+              >
+                <th className={clsx('w-2/12 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
+                </th>
+                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>購入したい局</div>
+                </th>
+                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
+                </th>
+                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>購入期限</div>
+                </th>
+                <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>購入物品</div>
+                </th>
+                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>合計金額</div>
+                </th>
+                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}></th>
+              </tr>
+            </thead>
+            <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
+              {props.purchaseOrderView.map((purchaseOrderViewItem, index) => (
+                <tr key={purchaseOrderViewItem.purchaseOrder.id}>
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {user.roleID === 3
+                        ? changeableCheckboxContent(
+                            purchaseOrderViewItem.purchaseOrder.financeCheck,
+                          )
+                        : unChangeableCheckboxContent(
+                            purchaseOrderViewItem.purchaseOrder.financeCheck,
+                          )}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
+                    onClick={() => {
+                      onOpen(
+                        purchaseOrderViewItem.purchaseOrder.id
+                          ? purchaseOrderViewItem.purchaseOrder.id
+                          : 0,
+                        purchaseOrderViewItem,
+                      );
+                    }}
+                  >
+                    <div className={clsx('flex justify-center')}>
+                      <BureauLabel
+                        bureauName={
+                          props.expenses.find(
+                            (expense) =>
+                              expense.id === purchaseOrderViewItem.purchaseOrder.expenseID,
+                          )?.name || ''
+                        }
+                      />
+                    </div>
+                  </td>
+                  <td
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
+                    onClick={() => {
+                      onOpen(
+                        purchaseOrderViewItem.purchaseOrder.id
+                          ? purchaseOrderViewItem.purchaseOrder.id
+                          : 0,
+                        purchaseOrderViewItem,
+                      );
+                    }}
+                  >
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {formatDate(
+                        purchaseOrderViewItem.purchaseOrder.createdAt
+                          ? purchaseOrderViewItem.purchaseOrder.createdAt
+                          : '',
+                      )}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
+                    onClick={() => {
+                      onOpen(
+                        purchaseOrderViewItem.purchaseOrder.id
+                          ? purchaseOrderViewItem.purchaseOrder.id
+                          : 0,
+                        purchaseOrderViewItem,
+                      );
+                    }}
+                  >
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {purchaseOrderViewItem.purchaseOrder.deadline}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
+                    onClick={() => {
+                      onOpen(
+                        purchaseOrderViewItem.purchaseOrder.id
+                          ? purchaseOrderViewItem.purchaseOrder.id
+                          : 0,
+                        purchaseOrderViewItem,
+                      );
+                    }}
+                  >
+                    <div
+                      className={clsx(
+                        'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
+                      )}
+                    >
+                      {purchaseOrderViewItem.purchaseItem &&
+                        purchaseOrderViewItem.purchaseItem.map(
+                          (purchaseItem: PurchaseItem, index: number) => (
+                            <>
+                              {purchaseOrderViewItem.purchaseItem.length - 1 === index ? (
+                                <>{purchaseItem.item}</>
+                              ) : (
+                                <>{purchaseItem.item},</>
+                              )}
+                            </>
+                          ),
+                        )}
+                    </div>
+                  </td>
+                  <td
+                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
+                    onClick={() => {
+                      onOpen(
+                        purchaseOrderViewItem.purchaseOrder.id
+                          ? purchaseOrderViewItem.purchaseOrder.id
+                          : 0,
+                        purchaseOrderViewItem,
+                      );
+                    }}
+                  >
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      {TotalFee(purchaseOrderViewItem.purchaseItem)}
+                    </div>
+                  </td>
+                  <td className={clsx('px-4', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                    <div className={clsx('grid grid-cols-2 gap-3')}>
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        <OpenEditModalButton
+                          id={
+                            purchaseOrderViewItem.purchaseOrder.id
+                              ? purchaseOrderViewItem.purchaseOrder.id
+                              : 0
+                          }
+                          purchaseItems={purchaseOrderViewItem.purchaseItem}
+                          isDisabled={
+                            !purchaseOrderViewItem.purchaseOrder.financeCheck &&
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
+                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
+                          }
+                        />
+                      </div>
+                      <div className={clsx('mx-1')}>
+                        <OpenDeleteModalButton
+                          id={
+                            purchaseOrderViewItem.purchaseOrder.id
+                              ? purchaseOrderViewItem.purchaseOrder.id
+                              : 0
+                          }
+                          isDisabled={
+                            !purchaseOrderViewItem.purchaseOrder.financeCheck &&
+                            (user.roleID === 2 ||
+                              user.roleID === 3 ||
+                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
+                          }
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              <tr className={clsx('border-b border-primary-1')}>
+                <td className={clsx('px-1 py-3')} colSpan={5}>
+                  <div className={clsx('flex justify-end')}>
+                    <div className={clsx('text-sm text-black-600')}>合計</div>
+                  </div>
+                </td>
+                <td className={clsx('px-1 py-3')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>
+                    {totalPurchaseOrderFee}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      {isOpen && purchaseOrderViewItem && (
+        <DetailModal
+          id={purchaseOrderID}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          purchaseOrderViewItem={purchaseOrderViewItem}
+          expenses={props.expenses}
+          isDelete={false}
+        />
+      )}
     </MainLayout>
   );
 }

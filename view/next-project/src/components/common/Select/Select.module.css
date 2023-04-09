@@ -1,0 +1,31 @@
+.select:focus {
+  border-color: #48b2cf;
+  border-width: 1.75px;
+  outline: none;
+}
+
+.customSelect {
+  position: relative;
+  width: 100%;
+}
+
+.customSelect select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* 下向きの矢印 */
+.customSelect::after {
+  content: '';
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1697571/chevron-down.svg) no-repeat
+    center;
+  display: block;
+  height: 1rem;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translatey(-50%);
+  width: 1rem;
+  pointer-events: none;
+}

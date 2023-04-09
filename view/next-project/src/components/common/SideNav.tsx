@@ -1,126 +1,101 @@
-import React, { ReactNode } from 'react';
-import {
-  IconButton,
-  Box,
-  CloseButton,
-  Flex,
-  Icon,
-  useColorModeValue,
-  Link,
-  Drawer,
-  DrawerContent,
-  Text,
-  useDisclosure,
-  BoxProps,
-  FlexProps,
-} from '@chakra-ui/react';
-import { MdOutlineDashboard, MdOutlineSchool } from 'react-icons/md';
-import { BiBuildings } from 'react-icons/bi';
-import { HiCurrencyDollar, HiOutlineShoppingCart } from 'react-icons/hi';
-import { RiNewspaperLine } from 'react-icons/ri';
-import { IconType } from 'react-icons';
-import { ReactText } from 'react';
-// import Link from 'next/link';
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import React, { ReactNode, useReducer } from 'react';
 
-interface LinkItemProps {
-  name: string;
-  icon: IconType;
+import { FinanceLinkItems, RelationLinkItems } from '@/constants/linkItem';
+
+interface NavItemProps {
+  icon: ReactNode;
+  children?: React.ReactNode;
   href: string;
+  currentPath: string;
+  isParent?: boolean;
+  isShow?: boolean;
+  onClick?: () => void;
 }
-const LinkItems: Array<LinkItemProps> = [
-  // { name: 'ダッシュボード', icon: MdOutlineDashboard, href: '/' },
-  // { name: '予算', icon: HiCurrencyDollar, href: '/budgets' },
-  // { name: '企業協賛', icon: BiBuildings, href: '/sponseractivity' },
-  // { name: '購入申請', icon: HiOutlineShoppingCart, href: '/purchaseorder' },
-  // { name: '購入報告', icon: RiNewspaperLine, href: '/purchasereport' },
-  { name: '学内募金', icon: MdOutlineSchool, href: '/fund_informations' },
-];
 
-export default function SimpleSidebar({}: { children?: ReactNode }) {
-  const { isOpen, onClose } = useDisclosure();
+export default function SimpleSidebar() {
+  const router = useRouter();
+  const [isFinanceItemsShow, setisFinanceItemsShow] = useReducer((state) => !state, false);
+  const [isRelationItemsShow, setisRelationItemsShow] = useReducer((state) => !state, false);
+
   return (
-    <Box height='full' bg='base.2'>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
-        position='fixed'
-        mt='2px'
-      />
-      <Drawer
-        autoFocus={false}
-        isOpen={isOpen}
-        placement='left'
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
-        size='full'
-      >
-        <DrawerContent>
-          <SidebarContent onClose={onClose} />
-        </DrawerContent>
-      </Drawer>
-    </Box>
+    <div className='fixed right-0 z-50 h-full w-52 bg-primary-4 md:left-0'>
+      <div className='border-b-2 border-primary-1'>
+        {FinanceLinkItems.map((link) => (
+          <NavItem
+            key={link.name}
+            icon={link.icon}
+            href={link.href}
+            currentPath={router.pathname}
+            isParent={link.isParent}
+            isShow={isFinanceItemsShow}
+            onClick={link.isParent ? setisFinanceItemsShow : undefined}
+          >
+            {link.name}
+          </NavItem>
+        ))}
+      </div>
+      <div className='border-b-2 border-primary-1'>
+        {RelationLinkItems.map((link) => (
+          <NavItem
+            key={link.name}
+            icon={link.icon}
+            href={link.href}
+            currentPath={router.pathname}
+            isParent={link.isParent}
+            isShow={isRelationItemsShow}
+            onClick={link.isParent ? setisRelationItemsShow : undefined}
+          >
+            {link.name}
+          </NavItem>
+        ))}
+      </div>
+    </div>
   );
 }
 
-interface SidebarProps extends BoxProps {
-  onClose: () => void;
-}
+const NavItem = (props: NavItemProps) => {
+  let className = '';
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  return (
-    <Box
-      bg='#1F2428'
-      borderRight='1px'
-      borderRightColor='gray.200'
-      w='200.5px'
-      pos='fixed'
-      h='full'
-      textColor='white'
-      {...rest}
-    >
-      {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} href={link.href}>
-          {link.name}
-        </NavItem>
-      ))}
-    </Box>
-  );
-};
+  if (props.currentPath === props.href) {
+    className = 'flex items-center w-full text-primary-5 bg-white-0 px-2 py-4';
+  } else {
+    className =
+      'flex items-center w-full text-white-0 bg-primary-5 px-2 py-4 hover:bg-primary-4 transition-all';
+  }
 
-interface NavItemProps extends FlexProps {
-  icon: IconType;
-  children?: ReactText;
-  href: string;
-}
-const NavItem = ({ href, icon, children, ...rest }: NavItemProps) => {
+  if (props.isShow && !props.isParent) {
+    className += ' hidden';
+  }
+
   return (
-    <Link href={href} _focus={{ boxShadow: 'none' }}>
-      <Flex
-        bg='#2E373F'
-        align='center'
-        p='4'
-        role='group'
-        cursor='pointer'
-        _hover={{
-          bg: 'white',
-          color: '#2E373F',
-        }}
-        {...rest}
-      >
-        {icon && (
-          <Icon
-            color='white'
-            mr='4'
-            fontSize='16'
-            _groupHover={{
-              color: '#2E373F',
-            }}
-            as={icon}
-          />
-        )}
-        {children}
-      </Flex>
-    </Link>
+    <>
+      {props.isParent ? (
+        <div
+          className={clsx(
+            className +
+              ` cursor-pointer ${!props.isShow && 'border-b-2 border-dashed border-primary-1'}`,
+          )}
+          onClick={props.onClick}
+        >
+          <span
+            className={clsx(
+              props.isShow ? 'rotate-180 transition-transform' : 'rotate-0 transition-transform',
+            )}
+          >
+            {props.icon}
+          </span>
+          {props.children}
+        </div>
+      ) : (
+        <a href={props.href}>
+          <div className={clsx(className)}>
+            {props.icon}
+            {props.children}
+          </div>
+        </a>
+      )}
+    </>
   );
 };

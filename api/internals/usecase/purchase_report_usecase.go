@@ -14,11 +14,11 @@ type purchaseReportUseCase struct {
 type PurchaseReportUseCase interface {
 	GetPurchaseReports(context.Context) ([]domain.PurchaseReport, error)
 	GetPurchaseReportByID(context.Context, string) (domain.PurchaseReport, error)
-	CreatePurchaseReport(context.Context, string, string) error
-	UpdatePurchaseReport(context.Context, string, string, string) error
+	CreatePurchaseReport(context.Context, string, string, string, string, string,string) (domain.PurchaseReport, error)
+	UpdatePurchaseReport(context.Context, string, string, string, string, string, string,string) (domain.PurchaseReport, error)
 	DestroyPurchaseReport(context.Context, string) error
-	GetPurchaseReportsWithOrderItem(context.Context) ([]domain.PurchaseReportWithOrderItem, error)
-	GetPurchaseReportWithOrderItemByID(context.Context, string) (domain.PurchaseReportWithOrderItem, error)
+	GetPurchaseReportDetails(context.Context) ([]domain.PurchaseReportDetails, error)
+	GetPurchaseReportDetailByID(context.Context, string) (domain.PurchaseReportDetails, error)
 }
 
 func NewPurchaseReportUseCase(rep rep.PurchaseReportRepository) PurchaseReportUseCase {
@@ -37,7 +37,11 @@ func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.
 		err := rows.Scan(
 			&purchaseReport.ID,
 			&purchaseReport.UserID,
+			&purchaseReport.Discount,
+			&purchaseReport.Addition,
+			&purchaseReport.FinanceCheck,
 			&purchaseReport.PurchaseOrderID,
+			&purchaseReport.Remark,
 			&purchaseReport.CreatedAt,
 			&purchaseReport.UpdatedAt,
 		)
@@ -56,7 +60,11 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 	err = row.Scan(
 		&purchaseReport.ID,
 		&purchaseReport.UserID,
+		&purchaseReport.Discount,
+		&purchaseReport.Addition,
+		&purchaseReport.FinanceCheck,
 		&purchaseReport.PurchaseOrderID,
+		&purchaseReport.Remark,
 		&purchaseReport.CreatedAt,
 		&purchaseReport.UpdatedAt,
 	)
@@ -70,10 +78,30 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 func (p *purchaseReportUseCase) CreatePurchaseReport(
 	c context.Context,
 	UserID string,
+	Discount string,
+	Addition string,
+	FinanceCheck string,
 	PurchaseOrderID string,
-) error {
-	err := p.rep.Create(c, UserID, PurchaseOrderID)
-	return err
+	Remark string,
+) (domain.PurchaseReport, error) {
+	p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID, Remark)
+	latastPurchaseReport := domain.PurchaseReport{}
+	row, err := p.rep.FindNewRecord(c)
+	err = row.Scan(
+		&latastPurchaseReport.ID,
+		&latastPurchaseReport.UserID,
+		&latastPurchaseReport.Discount,
+		&latastPurchaseReport.Addition,
+		&latastPurchaseReport.FinanceCheck,
+		&latastPurchaseReport.PurchaseOrderID,
+		&latastPurchaseReport.Remark,
+		&latastPurchaseReport.CreatedAt,
+		&latastPurchaseReport.UpdatedAt,
+	)
+	if err != nil {
+		return latastPurchaseReport, err
+	}
+	return latastPurchaseReport, nil
 }
 
 //PurchaseReportの修正(update)
@@ -81,10 +109,30 @@ func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	c context.Context,
 	id string,
 	UserID string,
+	Discount string,
+	Addition string,
+	FinanceCheck string,
 	PurchaseOrderID string,
-) error {
-	err := p.rep.Update(c, id, UserID, PurchaseOrderID)
-	return err
+	Remark string,
+) (domain.PurchaseReport, error) {
+	p.rep.Update(c,id, UserID, Discount, Addition, FinanceCheck, PurchaseOrderID, Remark)
+	updatedPurchaseReport := domain.PurchaseReport{}
+	row, err := p.rep.Find(c, id)
+	err = row.Scan(
+		&updatedPurchaseReport.ID,
+		&updatedPurchaseReport.UserID,
+		&updatedPurchaseReport.Discount,
+		&updatedPurchaseReport.Addition,
+		&updatedPurchaseReport.FinanceCheck,
+		&updatedPurchaseReport.PurchaseOrderID,
+		&updatedPurchaseReport.Remark,
+		&updatedPurchaseReport.CreatedAt,
+		&updatedPurchaseReport.UpdatedAt,
+	)
+	if err != nil {
+		return updatedPurchaseReport, err
+	}
+	return updatedPurchaseReport, nil
 }
 
 //PurchaseReportの削除(delate)
@@ -97,44 +145,50 @@ func (p *purchaseReportUseCase) DestroyPurchaseReport(
 }
 
 //Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
-func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Context) ([]domain.PurchaseReportWithOrderItem, error) {
-	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
-	var purchaseReportwithorderitems []domain.PurchaseReportWithOrderItem
+func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]domain.PurchaseReportDetails, error) {
+	purchaseReportDetail:= domain.PurchaseReportDetails{}
+	var purchaseReportDetails []domain.PurchaseReportDetails
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
-	rows, err := p.rep.AllWithOrderItem(c)
+	rows, err := p.rep.AllDetails(c)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		err := rows.Scan(
-			&purchaseReportwithorderitem.PurchaseReport.ID,
-			&purchaseReportwithorderitem.PurchaseReport.UserID,
-			&purchaseReportwithorderitem.PurchaseReport.PurchaseOrderID,
-			&purchaseReportwithorderitem.PurchaseReport.CreatedAt,
-			&purchaseReportwithorderitem.PurchaseReport.UpdatedAt,
-			&purchaseReportwithorderitem.ReportUser.ID,
-			&purchaseReportwithorderitem.ReportUser.Name,
-			&purchaseReportwithorderitem.ReportUser.BureauID,
-			&purchaseReportwithorderitem.ReportUser.RoleID,
-			&purchaseReportwithorderitem.ReportUser.CreatedAt,
-			&purchaseReportwithorderitem.ReportUser.UpdatedAt,
-			&purchaseReportwithorderitem.PurchaseOrder.ID,
-			&purchaseReportwithorderitem.PurchaseOrder.DeadLine,
-			&purchaseReportwithorderitem.PurchaseOrder.UserID,
-			&purchaseReportwithorderitem.PurchaseOrder.CreatedAt,
-			&purchaseReportwithorderitem.PurchaseOrder.UpdatedAt,
-			&purchaseReportwithorderitem.OrderUser.ID,
-			&purchaseReportwithorderitem.OrderUser.Name,
-			&purchaseReportwithorderitem.OrderUser.BureauID,
-			&purchaseReportwithorderitem.OrderUser.RoleID,
-			&purchaseReportwithorderitem.OrderUser.CreatedAt,
-			&purchaseReportwithorderitem.OrderUser.UpdatedAt,
+			&purchaseReportDetail.PurchaseReport.ID,
+			&purchaseReportDetail.PurchaseReport.UserID,
+			&purchaseReportDetail.PurchaseReport.Discount,
+			&purchaseReportDetail.PurchaseReport.Addition,
+			&purchaseReportDetail.PurchaseReport.FinanceCheck,
+			&purchaseReportDetail.PurchaseReport.PurchaseOrderID,
+			&purchaseReportDetail.PurchaseReport.Remark,
+			&purchaseReportDetail.PurchaseReport.CreatedAt,
+			&purchaseReportDetail.PurchaseReport.UpdatedAt,
+			&purchaseReportDetail.ReportUser.ID,
+			&purchaseReportDetail.ReportUser.Name,
+			&purchaseReportDetail.ReportUser.BureauID,
+			&purchaseReportDetail.ReportUser.RoleID,
+			&purchaseReportDetail.ReportUser.CreatedAt,
+			&purchaseReportDetail.ReportUser.UpdatedAt,
+			&purchaseReportDetail.PurchaseOrder.ID,
+			&purchaseReportDetail.PurchaseOrder.DeadLine,
+			&purchaseReportDetail.PurchaseOrder.UserID,
+			&purchaseReportDetail.PurchaseOrder.ExpenseID,
+			&purchaseReportDetail.PurchaseOrder.FinanceCheck,
+			&purchaseReportDetail.PurchaseOrder.CreatedAt,
+			&purchaseReportDetail.PurchaseOrder.UpdatedAt,
+			&purchaseReportDetail.OrderUser.ID,
+			&purchaseReportDetail.OrderUser.Name,
+			&purchaseReportDetail.OrderUser.BureauID,
+			&purchaseReportDetail.OrderUser.RoleID,
+			&purchaseReportDetail.OrderUser.CreatedAt,
+			&purchaseReportDetail.OrderUser.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-		rows, err := p.rep.GetPurchaseItemByPurchaseOrderID(c, strconv.Itoa(int(purchaseReportwithorderitem.PurchaseReport.PurchaseOrderID)))
+		rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,
@@ -144,7 +198,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Contex
 				&purchaseItem.Detail,
 				&purchaseItem.Url,
 				&purchaseItem.PurchaseOrderID,
-				&purchaseItem.FinansuCheck,
+				&purchaseItem.FinanceCheck,
 				&purchaseItem.CreatedAt,
 				&purchaseItem.UpdatedAt,
 			)
@@ -153,47 +207,53 @@ func (p *purchaseReportUseCase) GetPurchaseReportsWithOrderItem(c context.Contex
 			}
 			purchaseItems = append(purchaseItems, purchaseItem)
 		}
-		purchaseReportwithorderitem.PurchaseItems = purchaseItems
-		purchaseReportwithorderitems = append(purchaseReportwithorderitems, purchaseReportwithorderitem)
+		purchaseReportDetail.PurchaseItems = purchaseItems
+		purchaseReportDetails = append(purchaseReportDetails, purchaseReportDetail)
 		purchaseItems = nil
 	}
-	return purchaseReportwithorderitems, nil
+	return purchaseReportDetails, nil
 }
 
 //idで選択しPurchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
-func (p *purchaseReportUseCase) GetPurchaseReportWithOrderItemByID(c context.Context, id string) (domain.PurchaseReportWithOrderItem, error) {
-	purchaseReportwithorderitem := domain.PurchaseReportWithOrderItem{}
+func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, id string) (domain.PurchaseReportDetails, error) {
+	purchaseReportDetail := domain.PurchaseReportDetails{}
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
-	row, err := p.rep.FindWithOrderItem(c, id)
+	row, err := p.rep.FindDetail(c, id)
 	err = row.Scan(
-		&purchaseReportwithorderitem.PurchaseReport.ID,
-		&purchaseReportwithorderitem.PurchaseReport.UserID,
-		&purchaseReportwithorderitem.PurchaseReport.PurchaseOrderID,
-		&purchaseReportwithorderitem.PurchaseReport.CreatedAt,
-		&purchaseReportwithorderitem.PurchaseReport.UpdatedAt,
-		&purchaseReportwithorderitem.ReportUser.ID,
-		&purchaseReportwithorderitem.ReportUser.Name,
-		&purchaseReportwithorderitem.ReportUser.BureauID,
-		&purchaseReportwithorderitem.ReportUser.RoleID,
-		&purchaseReportwithorderitem.ReportUser.CreatedAt,
-		&purchaseReportwithorderitem.ReportUser.UpdatedAt,
-		&purchaseReportwithorderitem.PurchaseOrder.ID,
-		&purchaseReportwithorderitem.PurchaseOrder.DeadLine,
-		&purchaseReportwithorderitem.PurchaseOrder.UserID,
-		&purchaseReportwithorderitem.PurchaseOrder.CreatedAt,
-		&purchaseReportwithorderitem.PurchaseOrder.UpdatedAt,
-		&purchaseReportwithorderitem.OrderUser.ID,
-		&purchaseReportwithorderitem.OrderUser.Name,
-		&purchaseReportwithorderitem.OrderUser.BureauID,
-		&purchaseReportwithorderitem.OrderUser.RoleID,
-		&purchaseReportwithorderitem.OrderUser.CreatedAt,
-		&purchaseReportwithorderitem.OrderUser.UpdatedAt,
+		&purchaseReportDetail.PurchaseReport.ID,
+		&purchaseReportDetail.PurchaseReport.UserID,
+		&purchaseReportDetail.PurchaseReport.Discount,
+		&purchaseReportDetail.PurchaseReport.Addition,
+		&purchaseReportDetail.PurchaseReport.FinanceCheck,
+		&purchaseReportDetail.PurchaseReport.PurchaseOrderID,
+		&purchaseReportDetail.PurchaseReport.Remark,
+		&purchaseReportDetail.PurchaseReport.CreatedAt,
+		&purchaseReportDetail.PurchaseReport.UpdatedAt,
+		&purchaseReportDetail.ReportUser.ID,
+		&purchaseReportDetail.ReportUser.Name,
+		&purchaseReportDetail.ReportUser.BureauID,
+		&purchaseReportDetail.ReportUser.RoleID,
+		&purchaseReportDetail.ReportUser.CreatedAt,
+		&purchaseReportDetail.ReportUser.UpdatedAt,
+		&purchaseReportDetail.PurchaseOrder.ID,
+		&purchaseReportDetail.PurchaseOrder.DeadLine,
+		&purchaseReportDetail.PurchaseOrder.UserID,
+		&purchaseReportDetail.PurchaseOrder.ExpenseID,
+		&purchaseReportDetail.PurchaseOrder.FinanceCheck,
+		&purchaseReportDetail.PurchaseOrder.CreatedAt,
+		&purchaseReportDetail.PurchaseOrder.UpdatedAt,
+		&purchaseReportDetail.OrderUser.ID,
+		&purchaseReportDetail.OrderUser.Name,
+		&purchaseReportDetail.OrderUser.BureauID,
+		&purchaseReportDetail.OrderUser.RoleID,
+		&purchaseReportDetail.OrderUser.CreatedAt,
+		&purchaseReportDetail.OrderUser.UpdatedAt,
 	)
 	if err != nil {
-		return purchaseReportwithorderitem, err
+		return purchaseReportDetail, err
 	}
-	rows, err := p.rep.GetPurchaseItemByPurchaseOrderID(c, strconv.Itoa(int(purchaseReportwithorderitem.PurchaseReport.PurchaseOrderID)))
+	rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
 	for rows.Next() {
 		err := rows.Scan(
 			&purchaseItem.ID,
@@ -203,15 +263,16 @@ func (p *purchaseReportUseCase) GetPurchaseReportWithOrderItemByID(c context.Con
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinansuCheck,
+			&purchaseItem.FinanceCheck,
 			&purchaseItem.CreatedAt,
 			&purchaseItem.UpdatedAt,
 		)
 		if err != nil {
-			return purchaseReportwithorderitem, err
+			return purchaseReportDetail, err
 		}
 		purchaseItems = append(purchaseItems, purchaseItem)
 	}
-	purchaseReportwithorderitem.PurchaseItems = purchaseItems
-	return purchaseReportwithorderitem, nil
+	purchaseReportDetail.PurchaseItems = purchaseItems
+	return purchaseReportDetail, nil
 }
+

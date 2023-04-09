@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
@@ -12,10 +13,10 @@ type bureauUseCase struct {
 }
 
 type BureauUseCase interface {
-	GetBureaus(context.Context) ([]domain.Bureau,error)
-	GetBureauByID(context.Context,string) (domain.Bureau,error)
-	CreateBureau(context.Context,string) error
-	UpdateBureau(context.Context,string,string) error
+	GetBureaus(context.Context) ([]domain.Bureau, error)
+	GetBureauByID(context.Context, string) (domain.Bureau, error)
+	CreateBureau(context.Context, string) (domain.Bureau, error)
+	UpdateBureau(context.Context, string, string) (domain.Bureau, error)
 	DestroyBureau(context.Context, string) error
 }
 
@@ -23,12 +24,12 @@ func NewBureauUseCase(rep rep.BureauRepository) BureauUseCase {
 	return &bureauUseCase{rep}
 }
 
-func (b *bureauUseCase) GetBureaus(c context.Context) ([]domain.Bureau,error) {
+func (b *bureauUseCase) GetBureaus(c context.Context) ([]domain.Bureau, error) {
 	bureau := domain.Bureau{}
 	var bureaus []domain.Bureau
 
 	//クエリ実行
-	rows,err := b.rep.All(c)
+	rows, err := b.rep.All(c)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +47,7 @@ func (b *bureauUseCase) GetBureaus(c context.Context) ([]domain.Bureau,error) {
 		}
 		bureaus = append(bureaus, bureau)
 	}
-	return bureaus,nil
+	return bureaus, nil
 }
 
 func (b *bureauUseCase) GetBureauByID(c context.Context, id string) (domain.Bureau, error) {
@@ -59,22 +60,44 @@ func (b *bureauUseCase) GetBureauByID(c context.Context, id string) (domain.Bure
 		&bureau.UpdatedAt,
 	)
 	if err != nil {
-		return bureau,err
+		return bureau, err
 	}
-	return bureau,nil
-}  
-
-func (b *bureauUseCase) CreateBureau(c context.Context, name string) error {
-	err := b.rep.Create(c,name)
-	return err
+	return bureau, nil
 }
 
-func (b *bureauUseCase) UpdateBureau(c context.Context, id string, name string) error {
-	err := b.rep.Update(c ,id, name)
-	return err
+func (b *bureauUseCase) CreateBureau(c context.Context, name string) (domain.Bureau, error) {
+	latastBureau := domain.Bureau{}
+	err := b.rep.Create(c, name)
+	row, err := b.rep.FindLatestRecord(c)
+	err = row.Scan(
+		&latastBureau.ID,
+		&latastBureau.Name,
+		&latastBureau.CreatedAt,
+		&latastBureau.UpdatedAt,
+	)
+	if err != nil {
+		return latastBureau, err
+	}
+	return latastBureau, nil
 }
 
-func (b *bureauUseCase) DestroyBureau(c context.Context, id string) error{
+func (b *bureauUseCase) UpdateBureau(c context.Context, id string, name string) (domain.Bureau, error) {
+	updatedBureau := domain.Bureau{}
+	err := b.rep.Update(c, id, name)
+	row, err := b.rep.Find(c,id)
+	err = row.Scan(
+		&updatedBureau.ID,
+		&updatedBureau.Name,
+		&updatedBureau.CreatedAt,
+		&updatedBureau.UpdatedAt,
+	)
+	if err != nil {
+		return updatedBureau, err
+	}
+	return updatedBureau, nil
+}
+
+func (b *bureauUseCase) DestroyBureau(c context.Context, id string) error {
 	err := b.rep.Destroy(c, id)
 	return err
 }

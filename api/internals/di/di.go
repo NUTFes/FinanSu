@@ -1,13 +1,15 @@
 package di
 
 import (
+	"log"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/NUTFes/FinanSu/api/router"
-	"log"
 )
 
 func InitializeServer() db.Client {
@@ -17,82 +19,88 @@ func InitializeServer() db.Client {
 		log.Fatal("db error")
 	}
 
+	crud := abstract.NewCrud(client)
+
 	// ↓
 
 	// Repository
-	userRepository := repository.NewUserRepository(client)
+	activityRepository := repository.NewActivityRepository(client, crud)
+	budgetRepository := repository.NewBudgetRepository(client, crud)
+	bureauRepository := repository.NewBureauRepository(client, crud)
+	departmentRepository := repository.NewDepartmentRepository(client, crud)
+	expenseRepository := repository.NewExpenseRepository(client, crud)
+	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client)
+	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
+	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
+	purchaseReportRepository := repository.NewPurchaseReportRepository(client, crud)
 	sessionRepository := repository.NewSessionRepository(client)
-	departmentRepository := repository.NewDepartmentRepository(client)
-	sourceRepository := repository.NewSourceRepository(client)
-	yearRepository := repository.NewYearRepository(client)
-	budgetRepository := repository.NewBudgetRepository(client)
-	fundInformationRepository := repository.NewFundInformationRepository(client)
-	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client)
-	purchaseReportRepository := repository.NewPurchaseReportRepository(client)
-	purchaseItemRepository := repository.NewPurchaseItemRepository(client)
-	sponsorStyleRepository := repository.NewSponsorStyleRepository(client)
-	teacherRepository := repository.NewTeacherRepository(client)
-	activityRepository := repository.NewActivityRepository(client)
-	sponsorRepository := repository.NewSponsorRepository(client)
-	bureauRepository := repository.NewBureauRepository(client)
+	sourceRepository := repository.NewSourceRepository(client, crud)
+	sponsorRepository := repository.NewSponsorRepository(client, crud)
+	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
+	teacherRepository := repository.NewTeacherRepository(client, crud)
+	userRepository := repository.NewUserRepository(client, crud)
+	yearRepository := repository.NewYearRepository(client, crud)
 	// ↓
 
 	// UseCase
-	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
-	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
-	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
-	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
-	yearUseCase := usecase.NewYearUseCase(yearRepository)
+	activityUseCase := usecase.NewActivityUseCase(activityRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
+	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
+	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
+	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
+	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
+	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
-	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
+	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
+	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
 	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
-	activityUseCase := usecase.NewActivityUseCase(activityRepository)
-	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
-	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
+	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
+	yearUseCase := usecase.NewYearUseCase(yearRepository)
 	// ↓
 
 	// Controller
+	activityController := controller.NewActivityController(activityUseCase)
+	budgetController := controller.NewBudgetController(budgetUseCase)
+	bureauController := controller.NewBureauController(bureauUseCase)
+	departmentController := controller.NewDepartmentController(departmentUseCase)
+	expenseController := controller.NewExpenseController(expenseUseCase)
+	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
-	userController := controller.NewUserController(userUseCase)
-	departmentController := controller.NewDepartmentController(departmentUseCase)
-	sourceController := controller.NewSourceController(sourceUseCase)
-	yearController := controller.NewYearController(yearUseCase)
-	budgetController := controller.NewBudgetController(budgetUseCase)
-	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
+	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
 	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
-	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
+	sourceController := controller.NewSourceController(sourceUseCase)
+	sponsorController := controller.NewSponsorController(sponsorUseCase)
 	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
 	teacherController := controller.NewTeacherController(teacherUseCase)
-	activityController := controller.NewActivityController(activityUseCase)
-	sponsorController := controller.NewSponsorController(sponsorUseCase)
-	bureauController := controller.NewBureauController(bureauUseCase)
+	userController := controller.NewUserController(userUseCase)
+	yearController := controller.NewYearController(yearUseCase)
 	// ↓
 
 	// router
 	router := router.NewRouter(
+		activityController,
+		budgetController,
+		bureauController,
+		departmentController,
+		expenseController,
+		fundInformationController,
 		healthcheckController,
 		mailAuthController,
-		userController,
-		departmentController,
-		sourceController,
-		yearController,
-		budgetController,
-		fundInformationController,
+		purchaseItemController,
 		purchaseOrderController,
 		purchaseReportController,
-		purchaseItemController,
+		sourceController,
+		sponsorController,
 		sponsorStyleController,
 		teacherController,
-		activityController,
-		sponsorController,
-		bureauController,
+		userController,
+		yearController,
 	)
 
 	// ↓

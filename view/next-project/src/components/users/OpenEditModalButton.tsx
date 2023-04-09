@@ -1,14 +1,11 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
-import EditModal from '@components/users/EditModal';
 import { useState } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
 
-interface Bureau {
-  id: number;
-  name: string;
-}
+import theme from '@assets/theme';
+import EditModal from '@components/users/EditModal';
+import { Bureau } from '@type/common';
 
 interface Props {
   width?: string;

@@ -3,16 +3,19 @@ package domain
 import (
 	"time"
 )
+
 type PurchaseOrder struct {
-	ID       ID        `json:"id"`
-	DeadLine DeadLine  `json:"deadline"`
-	UserID   ID        `json:"user_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID           int       `json:"id"`
+	DeadLine     string    `json:"deadline"`
+	UserID       int       `json:"userID"`
+	ExpenseID    int       `json:"expenseID"`
+	FinanceCheck bool      `json:"financeCheck"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
-type OrderWithItemAndUser struct {
-	PurchaseOrder PurchaseOrder `json:"purchase_order"`
-	User 					User 					`json:"user"`
-	PurchaseItem 	[]PurchaseItem 	`json:"purchase_item"`
+type OrderDetail struct {
+	PurchaseOrder PurchaseOrder  `json:"purchaseOrder"`
+	User          User           `json:"user"`
+	PurchaseItem  []PurchaseItem `json:"purchaseItem"`
 }

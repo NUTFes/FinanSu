@@ -6,22 +6,23 @@ import (
 )
 
 type router struct {
+	activityController        controller.ActivityController
+	budgetController          controller.BudgetController
+	bureauController          controller.BureauController
+	departmentController      controller.DepartmentController
+	expenseController         controller.ExpenseController
+	fundInformationController controller.FundInformationController
 	healthcheckController     controller.HealthcheckController
 	mailAuthController        controller.MailAuthController
-	userController            controller.UserController
-	departmentController      controller.DepartmentController
-	sourceController          controller.SourceController
-	yearController            controller.YearController
-	budgetController          controller.BudgetController
-	fundInformationController controller.FundInformationController
+	purchaseItemController    controller.PurchaseItemController
 	purchaseOrderController   controller.PurchaseOrderController
 	purchaseReportController  controller.PurchaseReportController
-	purchaseItemController    controller.PurchaseItemController
+	sourceController          controller.SourceController
+	sponsorController         controller.SponsorController
 	sponsorStyleController    controller.SponsorStyleController
 	teacherController         controller.TeacherController
-	activityController        controller.ActivityController
-	sponsorController         controller.SponsorController
-	bureauController					controller.BureauController
+	userController            controller.UserController
+	yearController            controller.YearController
 }
 
 type Router interface {
@@ -29,41 +30,42 @@ type Router interface {
 }
 
 func NewRouter(
+	activityController controller.ActivityController,
+	budgetController controller.BudgetController,
+	bureauController controller.BureauController,
+	departmentController controller.DepartmentController,
+	expenseController controller.ExpenseController,
+	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
 	mailAuthController controller.MailAuthController,
-	userController controller.UserController,
-	departmentController controller.DepartmentController,
-	sourceController controller.SourceController,
-	yearController controller.YearController,
-	budgetController controller.BudgetController,
-	fundInformationController controller.FundInformationController,
+	purchaseItemController controller.PurchaseItemController,
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
-	purchaseItemController controller.PurchaseItemController,
+	sourceController controller.SourceController,
+	sponsorController controller.SponsorController,
 	sponsorStyleController controller.SponsorStyleController,
 	teacherController controller.TeacherController,
-	activityController controller.ActivityController,
-	sponsorController controller.SponsorController,
-	bureauController controller.BureauController,
-
+	userController controller.UserController,
+	yearController controller.YearController,
 ) Router {
 	return router{
+		activityController,
+		budgetController,
+		bureauController,
+		departmentController,
+		expenseController,
+		fundInformationController,
 		healthController,
 		mailAuthController,
-		userController,
-		departmentController,
-		sourceController,
-		yearController,
-		budgetController,
-		fundInformationController,
+		purchaseItemController,
 		purchaseOrderController,
 		purchaseReportController,
-		purchaseItemController,
+		sourceController,
+		sponsorController,
 		sponsorStyleController,
 		teacherController,
-		activityController,
-		sponsorController,
-		bureauController,
+		userController,
+		yearController,
 	}
 }
 
@@ -71,18 +73,29 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// Healthcheck
 	e.GET("/", r.healthcheckController.IndexHealthcheck)
 
-	// mail auth
-	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)
-	e.POST("/mail_auth/signin", r.mailAuthController.SignIn)
-	e.DELETE("/mail_auth/signout", r.mailAuthController.SignOut)
-	e.GET("/mail_auth/is_signin", r.mailAuthController.IsSignIn)
+	// activitiesのRoute
+	e.GET("/activities", r.activityController.IndexActivity)
+	e.GET("/activities/:id", r.activityController.ShowActivity)
+	e.POST("/activities", r.activityController.CreateActivity)
+	e.PUT("/activities/:id", r.activityController.UpdateActivity)
+	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
+	e.GET("/activities/details", r.activityController.IndexActivityDetail)
 
-	// users
-	e.GET("/users", r.userController.IndexUser)
-	e.GET("/users/:id", r.userController.ShowUser)
-	e.POST("/users", r.userController.CreateUser)
-	e.PUT("/users/:id", r.userController.UpdateUser)
-	e.DELETE("/users/:id", r.userController.DestroyUser)
+	// budgetsのRoute
+	e.GET("/budgets", r.budgetController.IndexBudget)
+	e.GET("/budgets/:id", r.budgetController.ShowBudget)
+	e.POST("/budgets", r.budgetController.CreateBudget)
+	e.PUT("/budgets/:id", r.budgetController.UpdateBudget)
+	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
+	e.GET("/budgets/:id/details", r.budgetController.ShowBudgetDetailById)
+	e.GET("/budgets/details", r.budgetController.ShowBudgetDetails)
+
+	//bureauのRoute
+	e.GET("/bureaus", r.bureauController.IndexBureau)
+	e.GET("/bureaus/:id", r.bureauController.ShowBureau)
+	e.POST("/bureaus", r.bureauController.CreateBureau)
+	e.PUT("/bureaus/:id", r.bureauController.UpdateBureau)
+	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
@@ -94,28 +107,15 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/departments/:id", r.departmentController.UpdateDepartment)
 	e.DELETE("/departments/:id", r.departmentController.DestroyDepartment)
 
-	// sources
-	e.GET("/sources", r.sourceController.IndexSource)
-	e.GET("/sources/:id", r.sourceController.ShowSource)
-	e.POST("/sources", r.sourceController.CreateSource)
-	e.PUT("/sources/:id", r.sourceController.UpdateSource)
-	e.DELETE("/sources/:id", r.sourceController.DestroySource)
-
-	// years
-	e.GET("/years", r.yearController.IndexYear)
-	e.GET("/years/:id", r.yearController.ShowYear)
-	e.POST("/years", r.yearController.CreateYear)
-	e.PUT("/years/:id", r.yearController.UpdateYear)
-	e.DELETE("/years/:id", r.yearController.DestroyYear)
-
-	// budgets
-	e.GET("/budgets", r.budgetController.IndexBudget)
-	e.GET("/budgets/:id", r.budgetController.ShowBudget)
-	e.POST("/budgets", r.budgetController.CreateBudget)
-	e.PUT("/budgets/:id", r.budgetController.UpdateBudget)
-	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
-	//budgetに紐づくyearとsourceの取得
-	e.GET("get_budgets_for_view/:id", r.budgetController.ShowBudgetWithYearAndSource)
+	// expenseのRoute
+	e.GET("/expenses", r.expenseController.IndexExpense)
+	e.GET("/expenses/updateTP", r.expenseController.UpdateExpenseTP)
+	e.GET("/expenses/details", r.expenseController.IndexExpenseDetails)
+	e.GET("/expenses/:id", r.expenseController.ShowExpense)
+	e.GET("/expenses/:id/details", r.expenseController.ShowExpenseDetail)
+	e.POST("/expenses", r.expenseController.CreateExpense)
+	e.PUT("/expenses/:id", r.expenseController.UpdateExpense)
+	e.DELETE("/expenses/:id", r.expenseController.DestroyExpense)
 
 	// fund informations
 	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)
@@ -123,29 +123,14 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/fund_informations", r.fundInformationController.CreateFundInformation)
 	e.PUT("/fund_informations/:id", r.fundInformationController.UpdateFundInformation)
 	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
-	e.GET("/get_fund_informations_for_view", r.fundInformationController.IndexFundInforUserAndTeach)
-	e.GET("/get_fund_informations_for_view/:id", r.fundInformationController.ShowFundInforUserAndTeach)
+	e.GET("/fund_informations/details", r.fundInformationController.IndexFundInformationDetails)
+	e.GET("/fund_informations/:id/details", r.fundInformationController.ShowFundInformationDetailByID)
 
-	// parcahseordersのRoute
-	e.GET("/purchaseorders", r.purchaseOrderController.IndexPurchaseOrder)
-	e.GET("/purchaseorders/:id", r.purchaseOrderController.ShowPurchaseOrder)
-	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
-	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
-	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
-	e.GET("/get_purchaseorders_for_view", r.purchaseOrderController.IndexOrderWithUserItem)
-	e.GET("/get_purchaseorders_for_view/:id", r.purchaseOrderController.ShowOrderWithUserItem)
-
-	// purchasereportsのRoute
-	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
-	e.GET("/purchasereports/:id", r.purchaseReportController.ShowPurchaseReport)
-	e.POST("/purchasereports", r.purchaseReportController.CreatePurchaseReport)
-	e.PUT("/purchasereports/:id", r.purchaseReportController.UpdatePurchaseReport)
-	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
-	e.GET("/get_purchasereports_for_view", r.purchaseReportController.IndexPurchaseReportWithOrderItem)
-	e.GET("/get_purchasereports_for_view/:id", r.purchaseReportController.ShowPurchaseReportWithOrderItem)
-
-	// purchasereport_for_viewのRoute
-	
+	// mail auth
+	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)
+	e.POST("/mail_auth/signin", r.mailAuthController.SignIn)
+	e.DELETE("/mail_auth/signout", r.mailAuthController.SignOut)
+	e.GET("/mail_auth/is_signin", r.mailAuthController.IsSignIn)
 
 	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)
@@ -153,8 +138,40 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/purchaseitems", r.purchaseItemController.CreatePurchaseItem)
 	e.PUT("/purchaseitems/:id", r.purchaseItemController.UpdatePurchaseItem)
 	e.DELETE("/purchaseitems/:id", r.purchaseItemController.DestroyPurchaseItem)
-	e.GET("/get_purchaseitems_for_view", r.purchaseItemController.IndexPurchaseItemWithPurchaseOrder)
-	e.GET("/get_purchaseitems_for_view/:id",r.purchaseItemController.ShowPurchaseItemWithPurchaseOrder)
+	e.GET("/purchaseitems/details", r.purchaseItemController.IndexPurchaseItemDetails)
+	e.GET("/purchaseitems/:id/details", r.purchaseItemController.ShowPurchaseItemDetails)
+
+	// parcahseordersのRoute
+	e.GET("/purchaseorders", r.purchaseOrderController.IndexPurchaseOrder)
+	e.GET("/purchaseorders/:id", r.purchaseOrderController.ShowPurchaseOrder)
+	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
+	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
+	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
+	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)
+	e.GET("/purchaseorders/:id/details", r.purchaseOrderController.ShowOrderDetail)
+
+	// purchasereportsのRoute
+	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
+	e.GET("/purchasereports/:id", r.purchaseReportController.ShowPurchaseReport)
+	e.POST("/purchasereports", r.purchaseReportController.CreatePurchaseReport)
+	e.PUT("/purchasereports/:id", r.purchaseReportController.UpdatePurchaseReport)
+	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
+	e.GET("/purchasereports/details", r.purchaseReportController.IndexPurchaseReportDetails)
+	e.GET("/purchasereports/:id/details", r.purchaseReportController.ShowPurchaseReportDetail)
+
+	// sources
+	e.GET("/sources", r.sourceController.IndexSource)
+	e.GET("/sources/:id", r.sourceController.ShowSource)
+	e.POST("/sources", r.sourceController.CreateSource)
+	e.PUT("/sources/:id", r.sourceController.UpdateSource)
+	e.DELETE("/sources/:id", r.sourceController.DestroySource)
+
+	// sponsorのRoute
+	e.GET("/sponsors", r.sponsorController.IndexSponsor)
+	e.GET("/sponsors/:id", r.sponsorController.ShowSponsor)
+	e.POST("/sponsors", r.sponsorController.CreateSponsor)
+	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
+	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
 
 	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
@@ -170,25 +187,18 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/teachers/:id", r.teacherController.UpdateTeacher)
 	e.DELETE("/teachers/:id", r.teacherController.DestroyTeacher)
 
-	// activitiesのRoute
-	e.GET("/activities", r.activityController.IndexActivity)
-	e.GET("/activities/:id", r.activityController.ShowActivity)
-	e.POST("/activities", r.activityController.CreateActivity)
-	e.PUT("/activities/:id", r.activityController.UpdateActivity)
-	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
-	e.GET("/get_activities_for_view", r.activityController.IndexActivityWithSponsorAndStyle)
+	// users
+	e.GET("/users", r.userController.IndexUser)
+	e.GET("/users/:id", r.userController.ShowUser)
+	e.POST("/users", r.userController.CreateUser)
+	e.PUT("/users/:id", r.userController.UpdateUser)
+	e.DELETE("/users/:id", r.userController.DestroyUser)
 
-	// sponsorのRoute
-	e.GET("/sponsors", r.sponsorController.IndexSponsor)
-	e.GET("/sponsors/:id", r.sponsorController.ShowSponsor)
-	e.POST("/sponsors", r.sponsorController.CreateSponsor)
-	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
-	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
+	// years
+	e.GET("/years", r.yearController.IndexYear)
+	e.GET("/years/:id", r.yearController.ShowYear)
+	e.POST("/years", r.yearController.CreateYear)
+	e.PUT("/years/:id", r.yearController.UpdateYear)
+	e.DELETE("/years/:id", r.yearController.DestroyYear)
 
-	//bureauのRoute
-	e.GET("/bureaus", r.bureauController.IndexBureau)
-	e.GET("/bureaus/:id",r.bureauController.ShowBureau)
-	e.POST("/bureaus", r.bureauController.CreateBureau)
-	e.PUT("/bureaus/:id", r.bureauController.UpdateBureau)
-	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
 }

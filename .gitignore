@@ -2,3 +2,8 @@
 /.idea/
 FinanSu.iml
 finansu.env
+api/tmp
+
+# cloudflare
+web/**/*.json
+web/**/cert.pem

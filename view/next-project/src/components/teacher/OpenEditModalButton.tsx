@@ -1,26 +1,11 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
+import { Button, ChakraProvider } from '@chakra-ui/react';
 import * as React from 'react';
-import EditModal from '@components/teacher/EditModal';
 import { useState } from 'react';
 import { RiPencilFill } from 'react-icons/ri';
 
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Department {
-  id: number;
-  name: string;
-}
+import theme from '@assets/theme';
+import EditModal from '@components/teacher/EditModal';
+import { Department, Teacher } from '@type/common';
 
 interface Props {
   width?: string;

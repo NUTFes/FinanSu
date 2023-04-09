@@ -1,67 +1,39 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import * as React from 'react';
-import AddModal from '@components/fund_information/AddModal';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-interface TeachersInformation {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
+import { AddButton } from '@components/common';
+import { Teacher, Department, User } from '@type/common';
 
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import OpenAddModal from './AddModal';
 
 interface Props {
-  width?: string;
-  height?: string;
   children?: React.ReactNode;
-  teachersInformation: TeachersInformation[];
+  teachers: Teacher[];
   departments: Department[];
-  currentUser: User;
-  userID: number | string;
+  users: User[];
 }
 
-export default function OpenAddModalButton(props: Props) {
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
-  };
+export const OpenAddModalButton = (props: Props) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        w={props.width}
-        h={props.height}
-        color='white'
-        bgGradient='linear(to-br, primary.1, primary.2)'
-        onClick={ShowModal}
+    <>
+      <AddButton
+        onClick={() => {
+          setIsOpen(true);
+        }}
       >
         {props.children}
-      </Button>
-      <AddModal
-        teachersInformation={props.teachersInformation}
-        departments={props.departments}
-        openModal={showModal}
-        setShowModal={setShowModal}
-        currentUser={props.currentUser}
-        userID={props.userID}
-      />
-    </ChakraProvider>
+      </AddButton>
+      {isOpen && (
+        <OpenAddModal
+          setShowModal={setIsOpen}
+          teachers={props.teachers}
+          departments={props.departments}
+          users={props.users}
+        />
+      )}
+    </>
   );
-}
+};
+
+export default OpenAddModalButton;

@@ -1,35 +1,26 @@
-export const get = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return await res.json();
-};
+import { PurchaseReport } from '@type/common';
 
-export const get_with_token = async (url: string) => {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'access-token': localStorage.getItem('access-token') || 'none',
-      client: localStorage.getItem('client') || 'none',
-      uid: localStorage.getItem('uid') || 'none',
-    },
-  });
-  return await res.json();
-};
-
-export const post = async (url: string, data: any) => {
-  const user_id = data.user_id;
-  const purchase_order_id = data.purchase_order_id;
+export const post = async (url: string, data: PurchaseReport) => {
+  const userID = data.userID;
+  const discount = data.discount;
+  const addition = data.addition;
+  const financeCheck = data.financeCheck;
+  const remark = data.remark;
+  const purchaseOrderId = data.purchaseOrderID;
   const postUrl =
     url +
     '?user_id=' +
-    user_id +
+    userID +
+    '&discount=' +
+    discount +
+    '&addition=' +
+    addition +
+    '&finance_check=' +
+    financeCheck +
+    '&remark=' +
+    remark +
     '&purchase_order_id=' +
-    purchase_order_id;
+    purchaseOrderId;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -37,20 +28,31 @@ export const post = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
-  return await res.json();
+  }).then((response) => response.json());
+  return res;
 };
 
-export const put = async (url: string, data: any) => {
-  const user_id = data.user_id;
-  const purchase_order_id = data.purchase_order_id;
+export const put = async (url: string, data: PurchaseReport) => {
+  const userID = data.userID;
+  const discount = data.discount;
+  const addition = data.addition;
+  const financeCheck = data.financeCheck;
+  const remark = data.remark;
+  const purchaseOrderId = data.purchaseOrderID;
   const putUrl =
     url +
     '?user_id=' +
-    user_id +
+    userID +
+    '&discount=' +
+    discount +
+    '&addition=' +
+    addition +
+    '&finance_check=' +
+    financeCheck +
+    '&remark=' +
+    remark +
     '&purchase_order_id=' +
-    purchase_order_id;
-  console.log(putUrl, data.item, data.price, data.user_id, data.purchase_order_id);
+    purchaseOrderId;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
@@ -58,11 +60,6 @@ export const put = async (url: string, data: any) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
-  return await res.json();
-};
-
-export const del = async (url: string) => {
-  const res = await fetch(url, { method: 'DELETE' });
-  return await res.json();
+  }).then((response) => response.json());
+  return res;
 };

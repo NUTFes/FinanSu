@@ -1,3 +1,5 @@
+import { Budget } from '@type/common';
+
 export const get = async (url: string) => {
   const res = await fetch(url, {
     method: 'GET',
@@ -21,11 +23,11 @@ export const get_with_token = async (url: string) => {
   return await res.json();
 };
 
-export const post = async (url: string, data: any) => {
+export const post = async (url: string, data: Budget) => {
   const price = data.price;
-  const year_id = data.year_id;
-  const source_id = data.source_id;
-  const postUrl = url + '?price=' + price + '&year_id=' + year_id + '&source_id=' + source_id;
+  const yearID = data.yearID;
+  const sourceID = data.sourceID;
+  const postUrl = url + '?price=' + price + '&year_id=' + yearID + '&source_id=' + sourceID;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -37,12 +39,11 @@ export const post = async (url: string, data: any) => {
   return await res.json();
 };
 
-export const put = async (url: string, data: any) => {
+export const put = async (url: string, data: Budget) => {
   const price = data.price;
-  const year_id = data.year_id;
-  const source_id = data.source_id;
-  const putUrl = url + '?price=' + price + '&year_id=' + year_id + '&source_id=' + source_id;
-  console.log(putUrl, data.price, data.year_id, data.source_id);
+  const yearID = data.yearID;
+  const sourceID = data.sourceID;
+  const putUrl = url + '?price=' + price + '&year_id=' + yearID + '&source_id=' + sourceID;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',

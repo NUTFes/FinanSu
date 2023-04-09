@@ -1,27 +1,31 @@
-import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import {
   Box,
-  ChakraProvider,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Spacer,
-  Select,
   Center,
+  ChakraProvider,
+  Flex,
   Grid,
   GridItem,
+  Select,
+  Spacer,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import { BUREAUS } from '@/constants/bureaus';
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import theme from '@assets/theme';
 import Header from '@components/common/Header';
-import OpenEditModalButton from '@components/users/OpenEditModalButton';
 import OpenDeleteModalButton from '@components/users/OpenDeleteModalButton';
-import { get, get_with_token } from '@api/api_methods';
+import OpenEditModalButton from '@components/users/OpenEditModalButton';
 
 interface Role {
   id: number;
@@ -60,40 +64,8 @@ export const getServerSideProps = async () => {
 
 export default function Users(props: Props) {
   const users = props.users;
-  const bureaus: Bureau[] = [
-    {
-      id: 1,
-      name: '総務局',
-    },
-    {
-      id: 2,
-      name: '渉外局',
-    },
-    {
-      id: 3,
-      name: '財務局',
-    },
-    {
-      id: 4,
-      name: '企画局',
-    },
-    {
-      id: 5,
-      name: '制作局',
-    },
-    {
-      id: 6,
-      name: '情報局',
-    },
-  ];
 
-  // ログイン中のユーザ
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: 1,
-    name: '',
-    bureau_id: 1,
-    role_id: 1,
-  });
+  const user = useRecoilValue(userAtom);
 
   // ログイン中のユーザの権限
   const [isDeveloper, setIsDeveloper] = useState<boolean>(false);
@@ -103,25 +75,17 @@ export default function Users(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-        setCurrentUser(currentUserRes);
-
-        // current_userの権限を開発者に設定
-        if (currentUserRes.role_id == 2) {
-          setIsDeveloper(true);
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      // current_userの権限を開発者に設定
+      if (user.roleID == 2) {
+        setIsDeveloper(true);
+      }
     }
   }, [router]);
 
   for (let i = 0; i < props.users.length; i++) {
-    for (let j = 0; j < bureaus.length; j++) {
-      if (props.users[i].bureau_id == bureaus[j].id) {
-        props.users[i].bureau_id = bureaus[j].name;
+    for (let j = 0; j < BUREAUS.length; j++) {
+      if (props.users[i].bureau_id == BUREAUS[j].id) {
+        props.users[i].bureau_id = BUREAUS[j].name;
       }
     }
   }
@@ -193,12 +157,12 @@ export default function Users(props: Props) {
                         <Grid templateColumns='repeat(2, 1fr)' gap={3}>
                           <GridItem>
                             <Center>
-                              <OpenEditModalButton id={user.id} bureaus={bureaus} />
+                              <OpenEditModalButton id={user.id} bureaus={BUREAUS} />
                             </Center>
                           </GridItem>
                           <GridItem>
                             <Center>
-                              <OpenDeleteModalButton id={user.id} bureaus={bureaus} />
+                              <OpenDeleteModalButton id={user.id} bureaus={BUREAUS} />
                             </Center>
                           </GridItem>
                         </Grid>

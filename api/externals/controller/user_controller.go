@@ -47,11 +47,11 @@ func (u *userController) CreateUser(c echo.Context) error {
 	name := c.QueryParam("name")
 	bureauID := c.QueryParam("bureau_id")
 	roleID := c.QueryParam("role_id")
-	err := u.u.CreateUser(c.Request().Context(), name, bureauID, roleID)
+	latastUser, err := u.u.CreateUser(c.Request().Context(), name, bureauID, roleID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusCreated, "Created User")
+	return c.JSON(http.StatusCreated, latastUser)
 }
 
 // Update
@@ -60,11 +60,11 @@ func (u *userController) UpdateUser(c echo.Context) error {
 	name := c.QueryParam("name")
 	bureauID := c.QueryParam("bureau_id")
 	roleID := c.QueryParam("role_id")
-	err := u.u.UpdateUser(c.Request().Context(), id, name, bureauID, roleID)
+	updatedUser, err := u.u.UpdateUser(c.Request().Context(), id, name, bureauID, roleID)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Updated User")
+	return c.JSON(http.StatusOK, updatedUser)
 }
 
 // Destroy
@@ -90,3 +90,4 @@ func (auth *userController) GetCurrentUser(c echo.Context) error {
 		return nil
 	}
 }
+

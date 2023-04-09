@@ -1,61 +1,39 @@
-import Head from 'next/head';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import {
   Box,
-  Text,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
+  Center,
   Flex,
-  Spacer,
-  Stack,
-  Radio,
-  RadioGroup,
   Grid,
   GridItem,
+  Radio,
+  RadioGroup,
+  Spacer,
+  Stack,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
-import { Center } from '@chakra-ui/react';
-import { get, get_with_token } from '@api/api_methods';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import MainLayout from '@components/layout/MainLayout';
-import OpenAddModalButton from '@components/teachers/OpenAddModalButton';
-import OpenEditModalButton from '@components/teachers/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/teachers/OpenDeleteModalButton';
-import DetailModal from '@components/teachers/DetailModal';
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
-
-interface Department {
-  id: number;
-  name: string;
-}
+import DetailModal from '@components/teacher/DetailModal';
+import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
+import { Department, Teacher } from '@type/common';
 
 interface Props {
   teachers: Teacher[];
 }
 
 export const getServerSideProps = async () => {
-  const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getTeacherURL = process.env.SSR_API_URI + '/teachers';
   const teacherRes = await get(getTeacherURL);
   return {
@@ -134,20 +112,14 @@ export default function TeachersList(props: Props) {
 
   const router = useRouter();
 
+  const currentUser = useRecoilValue(userAtom);
+
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-
-        // current_userの権限がユーザなら前のページに戻る
-        if (currentUserRes.role_id == 1) {
-          router.back();
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      if (currentUser.roleID === 1) {
+        router.back();
+      }
     }
   }, [router]);
 
@@ -157,7 +129,7 @@ export default function TeachersList(props: Props) {
   };
   // 募金先教員のラジオボタンが押されたときの処理
   const investorList = () => {
-    setTeachersList(props.teachers.filter((teacher) => teacher.is_black == false));
+    setTeachersList(props.teachers.filter((teacher) => teacher.isBlack == false));
   };
 
   return (
@@ -225,10 +197,10 @@ export default function TeachersList(props: Props) {
                 {teachersList.map((teachersItem) => (
                   <Tr key={teachersItem.name}>
                     <Td onClick={() => ShowModal()}>
-                      {teachersItem.is_black && (
+                      {teachersItem.isBlack && (
                         <Center color='black.900'>{teachersItem.name}</Center>
                       )}
-                      {!teachersItem.is_black && (
+                      {!teachersItem.isBlack && (
                         <Center color='black.300'>{teachersItem.name}</Center>
                       )}
                     </Td>
@@ -237,30 +209,30 @@ export default function TeachersList(props: Props) {
                     </Td>
                     <Td onClick={() => ShowModal()}>
                       <Center color='black.300'>
-                        {teachersItem.department_id == 1 && (
+                        {teachersItem.departmentID == 1 && (
                           <Text>機械工学分野/機械創造工学課程・機械創造工学専攻</Text>
                         )}
-                        {teachersItem.department_id == 2 && (
+                        {teachersItem.departmentID == 2 && (
                           <Text>
                             電気電子情報工学分野/電気電子情報工学課程/電気電子情報工学専攻
                           </Text>
                         )}
-                        {teachersItem.department_id == 3 && (
+                        {teachersItem.departmentID == 3 && (
                           <Text>
                             情報・経営システム工学分野/情報・経営システム工学課程/情報・経営システム工学専攻
                           </Text>
                         )}
-                        {teachersItem.department_id == 4 && (
+                        {teachersItem.departmentID == 4 && (
                           <Text>
                             物質生物工学分野/物質材料工学課程/生物機能工学課程/物質材料工学専攻/生物機能工学専攻
                           </Text>
                         )}
-                        {teachersItem.department_id == 5 && (
+                        {teachersItem.departmentID == 5 && (
                           <Text>
                             環境社会基盤工学分野/環境社会基盤工学課程/環境社会基盤工学専攻
                           </Text>
                         )}
-                        {teachersItem.department_id == 6 && (
+                        {teachersItem.departmentID == 6 && (
                           <Text>量子・原子力統合工学分野/原子力システム安全工学専攻</Text>
                         )}
                       </Center>
@@ -276,7 +248,7 @@ export default function TeachersList(props: Props) {
                         <GridItem>
                           <Center>
                             <OpenEditModalButton
-                              id={teachersItem.id}
+                              id={teachersItem.id ? teachersItem.id : 0}
                               teacher={teachersItem}
                               departments={departments}
                             />
@@ -285,7 +257,7 @@ export default function TeachersList(props: Props) {
                         <GridItem>
                           <Center>
                             <OpenDeleteModalButton
-                              id={teachersItem.id}
+                              id={teachersItem.id ? teachersItem.id : 0}
                               teacher={teachersItem}
                               departments={departments}
                             />

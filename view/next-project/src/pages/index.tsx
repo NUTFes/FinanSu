@@ -1,92 +1,64 @@
+import Image from 'next/image';
 import { useState } from 'react';
-import LoginLayout from '@components/layout/LoginLayout';
+
+import { PrimaryButton } from '@/components/common';
+
 import SignInView from '@components/auth/SignInView';
 import SignUpView from '@components/auth/SignUpView';
-import { ChakraProvider, Center, Flex, Box, Heading, Link, Spacer } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import { get } from '@api/api_methods';
+import LoginLayout from '@components/layout/LoginLayout';
 
-interface Department {
-  id: number;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Props {
-  departments: Department[];
-}
-
-export async function getServerSideProps() {
-  const getDepartmentsUrl: string = process.env.SSR_API_URI + '/departments';
-  const departmentsRes: Department = await get(getDepartmentsUrl);
-  return {
-    props: {
-      departments: departmentsRes,
-    },
-  };
-}
-
-export default function Home(props: Props) {
-  let [isMember, setIsMember] = useState(true);
+export default function Home() {
+  const [isMember, setIsMember] = useState(true);
   const cardContent = (isMember: boolean) => {
     if (isMember) {
       return (
         <>
-          <Flex justify='center' align='center' mt='1.5rem'>
-            <Center>
-              <Link onClick={() => setIsMember(!isMember)}>
-                <Heading as='h3' size='md'>
-                  ログイン
-                </Heading>
-              </Link>
-            </Center>
-            <Center mx='1rem'>
-              <Heading as='h4' size='md'>
-                /
-              </Heading>
-            </Center>
-            <Center gap='2rem'>
-              <Link onClick={() => setIsMember(!isMember)}>新規登録はこちら</Link>
-            </Center>
-          </Flex>
+          <div className='mt-8 flex items-center justify-center gap-2'>
+            <Image
+              src='/logo-black.svg'
+              alt='logo'
+              width={150}
+              height={40}
+              className='h-fit w-40 md:w-48'
+            />
+            <p className='text-2xl text-black-600 md:text-3xl'>ログイン</p>
+          </div>
           <SignInView />
+          <hr className='border-black-300' />
+          <div className='my-12 flex flex-col items-center justify-center gap-5'>
+            <p className='text-black-600'>登録がまだの方はこちら</p>
+            <PrimaryButton onClick={() => setIsMember(!isMember)}>新規登録</PrimaryButton>
+          </div>
         </>
       );
     } else {
       return (
         <>
-          <Flex justify='center' align='center' mt='1.5rem'>
-            <Center>
-              <Link onClick={() => setIsMember(!isMember)}>
-                <Heading as='h3' size='md'>
-                  新規登録
-                </Heading>
-              </Link>
-            </Center>
-            <Center mx='1rem'>
-              <Heading as='h4' size='md'>
-                /
-              </Heading>
-            </Center>
-            <Center gap='2rem'>
-              <Link onClick={() => setIsMember(!isMember)}>ログインはこちら</Link>
-            </Center>
-          </Flex>
+          <div className='mt-8 flex items-center justify-center gap-2'>
+            <Image
+              src='/logo-black.svg'
+              alt='logo'
+              width={150}
+              height={40}
+              className='h-fit w-48'
+            />
+            <p className='text-3xl text-black-600'>新規登録</p>
+          </div>
           <SignUpView />
+          <hr className='border-black-300' />
+          <div className='my-12 flex flex-col items-center justify-center gap-5'>
+            <p className='text-black-600'>登録済みの方はこちら</p>
+            <PrimaryButton onClick={() => setIsMember(!isMember)}>ログイン</PrimaryButton>
+          </div>
         </>
       );
     }
   };
   return (
     <LoginLayout>
-      <ChakraProvider theme={theme}>
-        <Center>
-          <Box m='2rem' px='10' boxShadow='base' rounded='lg'>
-            <Box gap='gap-s'>{cardContent(isMember)}</Box>
-          </Box>
-        </Center>
-      </ChakraProvider>
+      <div className='m-8 w-fit min-w-[500px] rounded-lg px-10 shadow-md'>
+        {cardContent(isMember)}
+      </div>
     </LoginLayout>
   );
 }

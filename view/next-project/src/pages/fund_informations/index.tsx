@@ -1,70 +1,23 @@
+import clsx from 'clsx';
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Flex,
-  Spacer,
-  Select,
-  Center,
-  Checkbox,
-  Grid,
-  GridItem,
-} from '@chakra-ui/react';
-import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
-import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
-import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
-import DisabledEditModalButton from '@components/fund_information/DisabledEditModalButton';
-import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
+import { useEffect, useState, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
-import { get, get_with_token } from '@api/api_methods';
+import { Title, Card } from '@components/common';
+import DisabledDeleteModalButton from '@components/fund_information/DisabledDeleteModalButton';
+import DisabledEditModalButton from '@components/fund_information/DisabledEditModalButton';
+import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
+import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
+import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
-
-interface FundInformation {
-  id: number;
-  user_id: number;
-  teacher_id: number;
-  price: number;
-  remark: string;
-  is_first_check: boolean;
-  is_last_check: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Teacher {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  bureau_id: number;
-  role_id: number;
-}
+import { Department, FundInformation, Teacher, User } from '@type/common';
 
 interface FundInformationView {
-  fund_information: FundInformation;
+  fundInformation: FundInformation;
   user: User;
   teacher: Teacher;
 }
@@ -74,27 +27,20 @@ interface Props {
   departments: Department[];
   fundInformation: FundInformation[];
   fundInformationView: FundInformationView[];
-  currentUser: User;
-  totalFee: number;
+  users: User[];
 }
 
 export const getServerSideProps = async () => {
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getDepartmentURL = process.env.SSR_API_URI + '/departments';
   const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
-  const getFundInformationViewURL = process.env.SSR_API_URI + '/get_fund_informations_for_view';
+  const getFundInformationViewURL = process.env.SSR_API_URI + '/fund_informations/details';
+  const getUserURL = process.env.SSR_API_URI + '/users';
   const teachersInformationRes = await get(getTeachersInformationURL);
   const fundInformationRes = await get(getFundInformationURL);
   const departmentRes = await get(getDepartmentURL);
   const fundInformationViewRes = await get(getFundInformationViewURL);
-
-  // 合計金額の計算
-  let totalFee = 0;
-  fundInformationRes.map((fundItemRes: FundInformation) => {
-    if (fundItemRes.is_last_check) {
-      totalFee += fundItemRes.price;
-    }
-  });
+  const userRes = await get(getUserURL);
 
   return {
     props: {
@@ -102,7 +48,7 @@ export const getServerSideProps = async () => {
       departments: departmentRes,
       fundInformation: fundInformationRes,
       fundInformationView: fundInformationViewRes,
-      totalFee: totalFee,
+      users: userRes,
     },
   };
 };
@@ -110,74 +56,94 @@ export const getServerSideProps = async () => {
 export default function FundInformations(props: Props) {
   // 教員一覧
   const teachers: Teacher[] = props.teachers;
+  const users: User[] = props.users;
   const departments: Department[] = [
     {
       id: 1,
       name: '電気電子情報',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 2,
       name: '生物機能',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 3,
       name: '機械創造',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 4,
       name: '物質材料',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 5,
       name: '環境社会基盤',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 6,
       name: '情報・経営システム',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 7,
       name: '基盤共通教育',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 8,
       name: '原子力システム安全',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 9,
       name: '技術科学イノベーション',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 10,
       name: 'システム安全',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 11,
       name: '技術支援',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 12,
       name: '産学融合',
+      createdAt: '',
+      updatedAt: '',
     },
     {
       id: 13,
       name: '学長・事務',
+      createdAt: '',
+      updatedAt: '',
     },
   ];
 
+  // ログイン中のユーザ
+  const currentUser = useRecoilValue(userAtom);
+
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
-  const [fundInformationView, setFundInformationView] = useState<FundInformationView[]>(
-    props.fundInformationView,
-  );
-
-  // ログイン中のユーザ
-  const [currentUser, setCurrentUser] = useState<User>({
-    id: 1,
-    name: '',
-    bureau_id: 1,
-    role_id: 1,
-  });
+  const fundInformationView: FundInformationView[] = props.fundInformationView;
 
   // ログイン中のユーザの権限
   const [isFinanceDirector, setIsFinanceDirector] = useState<boolean>(false);
@@ -190,46 +156,34 @@ export default function FundInformations(props: Props) {
   // ページ読み込み時にcurrent_userを取得
   useEffect(() => {
     if (router.isReady) {
-      // current_userの取得とセット
-      const getCurrentUserURL = process.env.CSR_API_URI + '/current_user';
-      const getCurrentUser = async (url: string) => {
-        const currentUserRes = await get_with_token(url);
-        setCurrentUser(currentUserRes);
-
-        // current_userの権限をユーザに設定
-        if (currentUserRes.role_id == 1) {
-          setIsUser(true);
-        }
-        // current_userの権限を開発者に設定
-        else if (currentUserRes.role_id == 2) {
-          setIsDeveloper(true);
-        }
-        // current_userの権限を財務局長に設定
-        else if (currentUserRes.role_id == 3) {
-          setIsFinanceDirector(true);
-        }
-        // current_userの権限を財務局員に設定
-        else if (currentUserRes.role_id == 4) {
-          setIsFinanceStaff(true);
-        }
-      };
-      getCurrentUser(getCurrentUserURL);
+      if (currentUser.roleID == 1) {
+        setIsUser(true);
+      }
+      // current_userの権限を開発者に設定
+      else if (currentUser.roleID == 2) {
+        setIsDeveloper(true);
+      }
+      // current_userの権限を財務局長に設定
+      else if (currentUser.roleID == 3) {
+        setIsFinanceDirector(true);
+      }
+      // current_userの権限を財務局員に設定
+      else if (currentUser.roleID == 4) {
+        setIsFinanceStaff(true);
+      }
     }
   }, [router]);
 
-  // Modal用にuserIDを設定
-  const userID = currentUser.id;
-
   // チェック済みの合計金額用のステート
-  const [totalFee, setTotalFee] = useState(props.totalFee);
-
-  const calcTotalFee = (initFundInformation: FundInformation) => {
-    if (initFundInformation.is_last_check) {
-      setTotalFee(totalFee + initFundInformation.price);
-    } else {
-      setTotalFee(totalFee - initFundInformation.price);
-    }
-  };
+  const totalFee = useMemo(() => {
+    return fundInformation.reduce((sum, fundInformation) => {
+      if (fundInformation.isLastCheck) {
+        return sum + fundInformation.price;
+      } else {
+        return sum;
+      }
+    }, 0);
+  }, [fundInformation]);
 
   // チェックの切り替え
   const switchCheck = async (
@@ -238,19 +192,18 @@ export default function FundInformations(props: Props) {
     input: string,
     fundItem: FundInformation,
   ) => {
-    if (input == 'is_last_check') {
+    if (input == 'isLastCheck') {
       const initFundInformation: FundInformation = {
         id: id,
-        user_id: fundItem.user_id,
-        teacher_id: fundItem.teacher_id,
+        userID: fundItem.userID,
+        teacherID: fundItem.teacherID,
         price: fundItem.price,
         remark: fundItem.remark,
-        is_first_check: fundItem.is_first_check,
-        is_last_check: !isChecked,
-        created_at: fundItem.created_at,
-        updated_at: fundItem.updated_at,
+        isFirstCheck: fundItem.isFirstCheck,
+        isLastCheck: !isChecked,
+        createdAt: fundItem.createdAt,
+        updatedAt: fundItem.updatedAt,
       };
-      calcTotalFee(initFundInformation);
     }
     setFundInformation(
       fundInformation.map((fundItem: FundInformation) =>
@@ -276,24 +229,26 @@ export default function FundInformations(props: Props) {
       if (isChecked) {
         return (
           <>
-            <Checkbox
+            <input
+              type='checkbox'
               defaultChecked
               onChange={() => {
                 switchCheck(isChecked, id, input, fundItem);
                 submit(id, fundItem);
               }}
-            ></Checkbox>
+            />
           </>
         );
       } else {
         return (
           <>
-            <Checkbox
+            <input
+              type='checkbox'
               onChange={() => {
                 switchCheck(isChecked, id, input, fundItem);
                 submit(id, fundItem);
               }}
-            ></Checkbox>
+            />
           </>
         );
       }
@@ -301,18 +256,18 @@ export default function FundInformations(props: Props) {
   };
 
   // 変更不可能なcheckboxの描画
-  const unChangeableCheckboxContent = (isChecked: boolean, id: number, input: string) => {
+  const unChangeableCheckboxContent = (isChecked: boolean) => {
     {
       if (isChecked) {
         return (
           <>
-            <Checkbox defaultChecked isDisabled></Checkbox>
+            <input type='checkbox' defaultChecked disabled></input>
           </>
         );
       } else {
         return (
           <>
-            <Checkbox isDisabled></Checkbox>
+            <input type='checkbox' disabled></input>
           </>
         );
       }
@@ -322,227 +277,233 @@ export default function FundInformations(props: Props) {
   return (
     <MainLayout>
       <Head>
-        <title>募金一覧</title>
+        <title>学内募金一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-
-      <Flex justify='center' align='center'>
-        <Box m='10' px='10' boxShadow='base' rounded='lg'>
-          <Box mt='10' mx='5'>
-            <Flex>
-              <Center mr='5' fontSize='2xl' fontWeight='100' color='black.0'>
-                募金一覧
-              </Center>
-              <Select variant='flushed' w='100'>
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-              </Select>
-            </Flex>
-            <Flex>
-              <Spacer />
-              <Box>
-                <OpenAddModalButton
-                  teachersInformation={teachers}
-                  departments={departments}
-                  currentUser={currentUser}
-                  userID={userID}
-                >
-                  学内募金登録
-                </OpenAddModalButton>
-              </Box>
-            </Flex>
-          </Box>
-          <Box p='5' mb='2'>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      財務局員確認
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      財務局長確認
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      教員名
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      居室
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      担当者
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      金額
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'>
-                    <Center fontSize='sm' color='black.600'>
-                      備考
-                    </Center>
-                  </Th>
-                  <Th borderBottomColor='#76E4F7'></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {fundInformationView &&
-                  fundInformationView.map((fundViewItem: FundInformationView, index) => (
-                    <Tr
-                      key={fundViewItem.fund_information.id}
-                      onUnload={submit(fundViewItem.fund_information.id, fundInformation[index])}
+      <Card>
+        <div className='mx-5 mt-10'>
+          <div className='flex'>
+            <Title title={'学内募金一覧'} />
+            <select className='w-100 '>
+              <option value='2021'>2021</option>
+              <option value='2022'>2022</option>
+            </select>
+          </div>
+          <div className='flex justify-end'>
+            <OpenAddModalButton teachers={teachers} departments={departments} users={users}>
+              学内募金登録
+            </OpenAddModalButton>
+          </div>
+        </div>
+        <div className='w-100 mb-2 p-5'>
+          <table className='mb-5 w-full table-fixed border-collapse'>
+            <thead>
+              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3 '>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>財務局員確認</div>
+                </th>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>財務局長確認</div>
+                </th>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>教員名</div>
+                </th>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>居室</div>
+                </th>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>担当者</div>
+                </th>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>金額</div>
+                </th>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>備考</div>
+                </th>
+                <th className='w-2/12 pb-2'></th>
+              </tr>
+            </thead>
+            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+              {fundInformationView &&
+                fundInformationView.map((fundViewItem: FundInformationView, index) => (
+                  <tr key={fundViewItem.fundInformation.id}>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
+                      )}
                     >
-                      <Td>
-                        <Center color='black.300'>
-                          {isFinanceDirector &&
-                            changeableCheckboxContent(
-                              fundInformation[index].is_first_check,
-                              fundViewItem.fund_information.id,
-                              'is_first_check',
-                              fundInformation[index],
-                            )}
-                          {isFinanceStaff &&
-                            changeableCheckboxContent(
-                              fundInformation[index].is_first_check,
-                              fundViewItem.fund_information.id,
-                              'is_first_check',
-                              fundInformation[index],
-                            )}
-                          {isDeveloper &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].is_first_check,
-                              fundViewItem.fund_information.id,
-                              'is_first_check',
-                            )}
-                          {isUser &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].is_first_check,
-                              fundViewItem.fund_information.id,
-                              'is_first_check',
-                            )}
-                        </Center>
-                      </Td>
-                      <Td>
-                        <Center color='black.300'>
-                          {isFinanceDirector &&
-                            changeableCheckboxContent(
-                              fundInformation[index].is_last_check,
-                              fundViewItem.fund_information.id,
-                              'is_last_check',
-                              fundInformation[index],
-                            )}
-                          {isFinanceStaff &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].is_last_check,
-                              fundViewItem.fund_information.id,
-                              'is_last_check',
-                            )}
-                          {isDeveloper &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].is_last_check,
-                              fundViewItem.fund_information.id,
-                              'is_last_check',
-                            )}
-                          {isUser &&
-                            unChangeableCheckboxContent(
-                              fundInformation[index].is_last_check,
-                              fundViewItem.fund_information.id,
-                              'is_last_check',
-                            )}
-                        </Center>
-                      </Td>
-                      <Td>
-                        <Center color='black.300'>{fundViewItem.teacher.name}</Center>
-                      </Td>
-                      <Td>
-                        <Center color='black.300'>{fundViewItem.teacher.room}</Center>
-                      </Td>
-                      <Td>
-                        <Center color='black.300'>{fundViewItem.user.name}</Center>
-                      </Td>
-                      <Td>
-                        <Center color='black.300'>{fundViewItem.fund_information.price}</Center>
-                      </Td>
-                      <Td>
-                        <Center color='black.300'>{fundViewItem.fund_information.remark}</Center>
-                      </Td>
-                      {(() => {
-                        if (!isUser || fundViewItem.fund_information.user_id == currentUser.id) {
-                          return (
-                            <Td>
-                              <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                                <GridItem>
-                                  <Center>
-                                    <OpenEditModalButton
-                                      id={fundViewItem.fund_information.id}
-                                      teachers={teachers}
-                                      currentUser={currentUser}
-                                    />
-                                  </Center>
-                                </GridItem>
-                                <GridItem>
-                                  <Center>
-                                    <OpenDeleteModalButton
-                                      id={fundViewItem.fund_information.id}
-                                      teacher_id={fundViewItem.fund_information.teacher_id}
-                                      user_id={Number(fundViewItem.fund_information.user_id)}
-                                    />
-                                  </Center>
-                                </GridItem>
-                              </Grid>
-                            </Td>
-                          );
-                        } else {
-                          return (
-                            <Td>
-                              <Grid templateColumns='repeat(2, 1fr)' gap={3}>
-                                <GridItem>
-                                  <Center>
-                                    <DisabledEditModalButton />
-                                  </Center>
-                                </GridItem>
-                                <GridItem>
-                                  <Center>
-                                    <DisabledDeleteModalButton />
-                                  </Center>
-                                </GridItem>
-                              </Grid>
-                            </Td>
-                          );
-                        }
-                      })()}
-                    </Tr>
-                  ))}
-              </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th />
-                  <Th />
-                  <Th />
-                  <Th />
-                  <Th>
-                    <Center fontSize='sm' fontWeight='500' color='black.600'>
-                      合計金額
-                    </Center>
-                  </Th>
-                  <Th isNumeric fontSize='sm' fontWeight='500' color='black.300'>
-                    {totalFee}
-                  </Th>
-                </Tr>
-              </Tfoot>
-            </Table>
-          </Box>
-        </Box>
-      </Flex>
+                      <div className='text-center text-sm text-black-600'>
+                        {isFinanceDirector &&
+                          changeableCheckboxContent(
+                            fundInformation[index].isFirstCheck,
+                            fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0,
+                            'isFirstCheck',
+                            fundInformation[index],
+                          )}
+                        {isFinanceStaff &&
+                          changeableCheckboxContent(
+                            fundInformation[index].isFirstCheck,
+                            fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0,
+                            'isFirstCheck',
+                            fundInformation[index],
+                          )}
+                        {isDeveloper &&
+                          unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
+                        {isUser && unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
+                      </div>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
+                      )}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {isFinanceDirector &&
+                          changeableCheckboxContent(
+                            fundInformation[index].isLastCheck,
+                            fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0,
+                            'isLastCheck',
+                            fundInformation[index],
+                          )}
+                        {isFinanceStaff &&
+                          unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
+                        {isDeveloper &&
+                          unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
+                        {isUser && unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
+                      </div>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
+                      )}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.teacher.name}
+                      </div>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
+                      )}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.teacher.room}
+                      </div>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
+                      )}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.user.name}
+                      </div>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
+                      )}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.fundInformation.price}
+                      </div>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === props.fundInformationView.length - 1
+                          ? 'pb-4 pt-3'
+                          : 'border-b py-3',
+                      )}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.fundInformation.remark}
+                      </div>
+                    </td>
+                    {fundViewItem.fundInformation.userID == currentUser.id ||
+                    isDeveloper ||
+                    isFinanceStaff ||
+                    isFinanceDirector ? (
+                      <td
+                        className={clsx(
+                          'px-1',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === props.fundInformationView.length - 1
+                            ? 'pb-4 pt-3'
+                            : 'border-b py-3',
+                        )}
+                      >
+                        <div className='flex gap-3'>
+                          <OpenEditModalButton
+                            fundInformation={fundViewItem.fundInformation}
+                            teachers={teachers}
+                            users={users}
+                            departments={departments}
+                          />
+                          <OpenDeleteModalButton
+                            id={
+                              fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0
+                            }
+                          />
+                        </div>
+                      </td>
+                    ) : (
+                      <td
+                        className={clsx(
+                          'px-1',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === props.fundInformationView.length - 1
+                            ? 'pb-4 pt-3'
+                            : 'border-b py-3',
+                        )}
+                      >
+                        <div className='flex gap-3'>
+                          <DisabledEditModalButton />
+                          <DisabledDeleteModalButton />
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th />
+                <th />
+                <th />
+                <th />
+                <th className='text-center text-sm text-black-600'>合計金額</th>
+                <th className='text-center text-sm text-black-600'>{totalFee}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </Card>
     </MainLayout>
   );
 }

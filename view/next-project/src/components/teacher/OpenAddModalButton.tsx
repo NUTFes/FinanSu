@@ -1,31 +1,16 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
+import { Button, ChakraProvider } from '@chakra-ui/react';
 import * as React from 'react';
-import AddModal from '@components/teacher/AddModal';
 import { useState } from 'react';
 
-interface TeachersInformation {
-  id: number;
-  name: string;
-  position: string;
-  department_id: number;
-  room: string;
-  is_black: boolean;
-  remark: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Department {
-  id: number;
-  name: string;
-}
+import theme from '@assets/theme';
+import AddModal from '@components/teacher/AddModal';
+import { Department, Teacher } from '@type/common';
 
 interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;
-  teachersInformation: TeachersInformation[];
+  teachersInformation: Teacher[];
   departments: Department[];
 }
 

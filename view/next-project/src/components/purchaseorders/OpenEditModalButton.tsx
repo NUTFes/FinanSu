@@ -1,38 +1,33 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import * as React from 'react';
+import React, { useState } from 'react';
+
+import { EditButton } from '@components/common';
 import EditModal from '@components/purchaseorders/EditModal';
-import { useState } from 'react';
-import { RiPencilFill } from 'react-icons/ri';
+import { PurchaseItem } from '@type/common';
 
 interface Props {
-  width?: string;
-  height?: string;
   children?: React.ReactNode;
+  purchaseItems: PurchaseItem[];
   id: number;
+  isDisabled: boolean;
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const onOpen = () => {
+    setIsOpen(true);
   };
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        w='25px'
-        h='25px'
-        p='0'
-        minWidth='0'
-        borderRadius='full'
-        bgGradient='linear(to-br, primary.1 ,primary.2)'
-        onClick={ShowModal}
-      >
-        <RiPencilFill size={'15px'} color={'white'} />
-        {props.children}
-      </Button>
-      <EditModal id={props.id} openModal={showModal} setShowModal={setShowModal} />
-    </ChakraProvider>
+    <>
+      <EditButton onClick={onOpen} isDisabled={props.isDisabled} />
+      {isOpen && (
+        <EditModal
+          purchaseOrderId={props.id}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          purchaseItems={props.purchaseItems}
+        />
+      )}
+    </>
   );
 };
 

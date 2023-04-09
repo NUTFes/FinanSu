@@ -1,141 +1,225 @@
-import {
-  ChakraProvider,
-  Center,
-  Input,
-  Flex,
-  Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  Grid,
-  GridItem,
-} from '@chakra-ui/react';
-import React, { FC, useEffect, useState } from 'react';
-import theme from '@assets/theme';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import Button from '../common/RegistButton';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import { get, put } from '@api/purchaseOrder';
+import React, { useState } from 'react';
+import { RiArrowDropRightLine } from 'react-icons/ri';
+
+import { put } from '@api/purchaseItem';
+import {
+  PrimaryButton,
+  OutlinePrimaryButton,
+  CloseButton,
+  Input,
+  Modal,
+  Stepper,
+  Title,
+} from '@components/common';
+import { PurchaseItem } from '@type/common';
 
 interface ModalProps {
-  setShowModal: any;
-  openModal: any;
-  children?: React.ReactNode;
-  id: number | string;
+  purchaseOrderId: number;
+  purchaseItems: PurchaseItem[];
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
-const PurchaseOrderEditModal: FC<ModalProps> = (props) => {
-  const closeModal = () => {
-    props.setShowModal(false);
-  };
-
+export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    deadline: '',
-    user_id: '',
-  });
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const nextStep = () => {
+    setActiveStep(activeStep + 1);
+  };
+  const prevStep = () => {
+    setActiveStep(activeStep - 1);
+  };
+  const reset = () => {
+    setActiveStep(1);
+    setIsDone(false);
+  };
 
-  useEffect(() => {
-    if (router.isReady) {
-      const getFormDataUrl = process.env.CSR_API_URI + '/purchaseorders/' + props.id;
-      const getFormData = async (url: string) => {
-        setFormData(await get(url));
-      };
-      getFormData(getFormDataUrl);
-    }
-  }, [router]);
+  // 購入報告を登録するかどうかのフラグ
+  const [isDone, setIsDone] = useState<boolean>(false);
+
+  // 購入物品数だけステップを用意
+  const steps = [];
+  for (let i = 0; i < 1; i++) {
+    steps.push({ label: '' });
+  }
+
+  // 購入物品のリスト
+  const [formDataList, setFormDataList] = useState<PurchaseItem[]>(props.purchaseItems);
 
   const handler =
     (input: string) =>
-    (
-      e:
-        | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
-        | React.ChangeEvent<HTMLSelectElement>,
-    ) => {
-      setFormData({ ...formData, [input]: e.target.value });
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormDataList(
+        formDataList.map((formData: PurchaseItem) =>
+          formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
+        ),
+      );
     };
 
-  const submitPurchaseOrder = async (data: any, id: number | string) => {
-    const submitPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;
-    await put(submitPurchaseOrderUrl, data);
+  // finance_checkのtrue,falseを切り替え
+  const isFinanceCheckHandler = (purchaseItemId: number | undefined, finance_check: boolean) => {
+    setFormDataList(
+      formDataList.map((formData: PurchaseItem) =>
+        formData.id === purchaseItemId
+          ? { ...formData, ['finance_check']: finance_check }
+          : formData,
+      ),
+    );
   };
 
-  return (
-    <ChakraProvider theme={theme}>
-      <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
-        <ModalOverlay />
-        <ModalContent pb='5' borderRadius='3xl'>
-          <ModalBody p='3'>
-            <Flex mt='5'>
-              <Spacer />
-              <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
-              </Box>
-            </Flex>
-            <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem rowSpan={1} colSpan={12}>
-                <Center color='black.600' h='100%' fontSize='xl'>
-                  購入報告の編集
-                </Center>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h='100%' justify='end' align='center'>
-                  購入期限日
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Input
-                  w='100'
-                  borderRadius='full'
-                  borderColor='primary.1'
-                  value={formData.deadline}
-                  onChange={handler('deadline')}
-                />
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={3}>
-                <Flex color='black.600' h='100%' justify='end' align='center'>
-                  申請者
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={7}>
-                <Flex>
-                  <Input
-                    w='100'
-                    borderRadius='full'
-                    borderColor='primary.1'
-                    value={formData.user_id}
-                    onChange={handler('user_id')}
-                  />
-                </Flex>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-            </Grid>
-          </ModalBody>
-          <Center>
-            <ModalFooter mt='5' mb='10'>
-              <Button
-                width='220px'
-                onClick={() => {
-                  submitPurchaseOrder(formData, props.id);
-                  router.reload();
-                }}
-              >
-                編集する
-              </Button>
-            </ModalFooter>
-          </Center>
-        </ModalContent>
-      </Modal>
-    </ChakraProvider>
-  );
-};
+  // 購入報告の登録と購入物品の更新を行い、ページをリロード
+  const submit = (data: PurchaseItem[]) => {
+    updatePurchaseItem(data);
+    router.reload();
+  };
 
-export default PurchaseOrderEditModal;
+  // 購入物品を更新
+  const updatePurchaseItem = async (data: PurchaseItem[]) => {
+    data.map(async (item) => {
+      const updatePurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems/' + item.id;
+      await put(updatePurchaseItemUrl, item);
+    });
+  };
+
+  // 購入物品の情報
+  const content = (data: PurchaseItem) => (
+    <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>物品名</div>
+      </div>
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.item} onChange={handler('item')} />
+      </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>単価</div>
+      </div>
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.price} onChange={handler('price')} />
+      </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>個数</div>
+      </div>
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.quantity} onChange={handler('quantity')} />
+      </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>詳細</div>
+      </div>
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.detail} onChange={handler('detail')} />
+      </div>
+      <div className={clsx('col-span-2 mr-2 grid justify-items-end')}>
+        <div className={clsx('text-md flex items-center text-black-600')}>URL</div>
+      </div>
+      <div className={clsx('col-span-10 grid w-full')}>
+        <Input id={String(data.id)} value={data.url} onChange={handler('url')} />
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {props.isOpen && (
+        <Modal className='!w-1/2'>
+          <div className={clsx('w-full')}>
+            <div className={clsx('mr-5 grid w-full justify-items-end')}>
+              <CloseButton
+                onClick={() => {
+                  props.setIsOpen(false);
+                }}
+              />
+            </div>
+          </div>
+          <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
+            購入物品の修正
+          </div>
+          <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
+            <div className={clsx('col-span-1 grid')} />
+            <div className={clsx('col-span-10 grid w-full')}>
+              {/* 購入物品があればステッパで表示、なければないと表示  */}
+              {formDataList.length > 0 ? (
+                <Stepper stepNum={formDataList.length} activeStep={activeStep} isDone={isDone}>
+                  {!isDone && <>{content(formDataList[activeStep - 1])}</>}
+                </Stepper>
+              ) : (
+                <div className={clsx('ml-5 grid justify-items-center')}>
+                  <Title>報告した物品はありません</Title>
+                </div>
+              )}
+              {isDone ? (
+                // 編集完了した時に完了と戻るボタンを表示
+                <div className={clsx('my-10 grid grid-cols-12 gap-4')}>
+                  <div className={clsx('col-span-1 grid')} />
+                  <div className={clsx('col-span-10 grid w-full justify-items-center')}>
+                    <div className={clsx('flex')}>
+                      <OutlinePrimaryButton onClick={reset} className={'mx-2'}>
+                        戻る
+                      </OutlinePrimaryButton>
+                      <PrimaryButton
+                        className={'mx-2'}
+                        onClick={() => {
+                          submit(formDataList);
+                        }}
+                      >
+                        編集完了
+                      </PrimaryButton>
+                    </div>
+                  </div>
+                  <div className={clsx('col-span-1 grid')} />
+                </div>
+              ) : (
+                <>
+                  <div className={clsx('mt-6 grid grid-cols-12 gap-4')}>
+                    <div className={clsx('col-span-1 grid')} />
+                    <div className={clsx('col-span-10 grid justify-items-center')}>
+                      {formDataList.length > 0 ? (
+                        <div className={clsx('flex')}>
+                          {/* stepが1より大きい時のみ戻るボタンを表示 */}
+                          {activeStep > 1 && (
+                            <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
+                              戻る
+                            </OutlinePrimaryButton>
+                          )}
+                          <PrimaryButton
+                            className={'mx-2 pl-4 pr-2'}
+                            onClick={() => {
+                              {
+                                activeStep === formDataList.length ? setIsDone(true) : nextStep();
+                              }
+                              isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
+                            }}
+                          >
+                            <div className={clsx('flex')}>
+                              {activeStep === formDataList.length ? '詳細の編集へ' : '登録して次へ'}
+                              <RiArrowDropRightLine size={23} />
+                            </div>
+                          </PrimaryButton>
+                        </div>
+                      ) : (
+                        <div className={clsx('flex')}>
+                          <OutlinePrimaryButton
+                            onClick={() => {
+                              props.setIsOpen(false);
+                            }}
+                            className={'mx-2'}
+                          >
+                            閉じる
+                          </OutlinePrimaryButton>
+                        </div>
+                      )}
+                    </div>
+                    <div className={clsx('col-span-1 grid')} />
+                  </div>
+                </>
+              )}
+            </div>
+            <div className={clsx('col-span-1 grid')} />
+          </div>
+        </Modal>
+      )}
+    </>
+  );
+}

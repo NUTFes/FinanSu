@@ -1,14 +1,11 @@
 import { ChakraProvider, Button } from '@chakra-ui/react';
-import theme from '@assets/theme';
 import * as React from 'react';
-import DeleteModal from '@components/users/DeleteModal';
 import { useState } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
-interface Bureau {
-  id: number;
-  name: string;
-}
+import theme from '@assets/theme';
+import DeleteModal from '@components/users/DeleteModal';
+import { Bureau } from '@type/common';
 
 interface Props {
   width?: string;

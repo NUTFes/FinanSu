@@ -14,15 +14,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
-    "paths": {
-      "@assets/*": ["src/assets/*"],
-      "@images/*": ["public/*"],
-      "@components/*": ["src/components/*"],
-      "@api/*": ["src/utils/api/*"],
-      "@utils/*": ["src/utils/*"]
-    },
-    "incremental": true
+    "incremental": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true
   },
+  "extends": "./tsconfig.paths.json",
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

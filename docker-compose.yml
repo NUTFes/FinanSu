@@ -5,7 +5,7 @@ services:
     container_name: "nutfes-finansu-db"
     volumes:
       - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
-#      - ./mysql/data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_DATABASE: finansu_db
       MYSQL_USER: finansu
@@ -21,7 +21,7 @@ services:
     container_name: "nutfes-finansu-view"
     volumes:
       - ./view:/app
-    command: "npm run dev"
+    command: sh -c "npm install && npm run dev"
     ports:
       - "3000:3000"
     stdin_open: true
@@ -32,13 +32,13 @@ services:
     container_name: "nutfes-finansu-api"
     volumes:
       - ./api:/app
-    command: go run cmd/main.go
-#    command: "air"
+    #シェルスクリプトを実行するコマンド
+    command: "./start.sh"
     ports:
       - "1323:1323"
     stdin_open: true
     tty: true
-      # depends_on:
-      #   db:
-      #     condition: service_started
+    depends_on:
+      db:
+        condition: service_started
 

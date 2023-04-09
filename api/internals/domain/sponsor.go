@@ -1,14 +1,16 @@
 package domain
 
-import("time")
+import (
+	"time"
+)
 
 type Sponsor struct {
-	ID             ID             `json:"id"`
-	Name           Name           `json:"name"`
-	Tel            Tel            `json:"tel"`
-	Email          Email          `json:"email"`
-	Address        Address        `json:"address"`
-	Representative Representative `json:"representative"`
-	CreatedAt      time.Time      `json:"created_at"`
-	UpdatedAt      time.Time      `json:"updated_at"`
+	ID             int       `json:"id"`
+	Name           string    `json:"name"`
+	Tel            string    `json:"tel"`
+	Email          string    `json:"email"`
+	Address        string    `json:"address"`
+	Representative string    `json:"representative"`
+	CreatedAt      time.Time `json:"createdAt"`
+	UpdatedAt      time.Time `json:"updatedAt"`
 }

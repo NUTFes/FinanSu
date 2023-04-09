@@ -1,41 +1,30 @@
-import Head from 'next/head';
-import { Box, ChakraProvider } from '@chakra-ui/react';
-import EditButton from '@components/common/EditButton';
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
+  Box,
   Button,
+  Center,
   Flex,
-  Spacer,
   Select,
+  Spacer,
+  Table,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
-import theme from '@assets/theme';
-import { Center } from '@chakra-ui/react';
+import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
-import Header from '@components/common/Header';
-import { get } from '@api/purchaseOrder';
-import MainLayout from '@components/layout/MainLayout';
 
-interface PurchaseItem {
-  id: number;
-  item: string;
-  price: number;
-  quantity: number;
-  detail: string;
-  url: string;
-  purchase_order_id: number;
-  finance_check: boolean;
-}
+import { get } from '@api/api_methods';
+import EditButton from '@components/common/EditButton';
+import MainLayout from '@components/layout/MainLayout';
+import { PurchaseItem } from '@type/common';
 
 interface Props {
   purchaseItem: PurchaseItem[];
 }
-export async function getServerSideProps({ params }: any) {
+export async function getServerSideProps() {
   const getPurchaseItemUrl = process.env.SSR_API_URI + '/purchaseitems';
   const purchaseItemRes = await get(getPurchaseItemUrl);
   return {
@@ -45,16 +34,9 @@ export async function getServerSideProps({ params }: any) {
   };
 }
 
-export default function PurchaseItem(props: Props) {
-  // 日付整形
-  const formatDate = (date: string) => {
-    let datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 5);
-    return datetime2;
-  };
-
+export default function PurchaseItems(props: Props) {
   // 合計金額計算
-  let totalPriceArray: number[] = [];
+  const totalPriceArray: number[] = [];
   const calcItemTotalPrice = (quantity: number, price: number) => {
     // 合計金額の計算
     const totalPrice = quantity * price;
@@ -77,6 +59,10 @@ export default function PurchaseItem(props: Props) {
   return (
     <>
       <MainLayout>
+        <Head>
+          <title>協賛物品一覧</title>
+          <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+        </Head>
         <Flex justify='center' align='center'>
           <Center>
             <Box m='10' px='10' boxShadow='base' rounded='lg'>

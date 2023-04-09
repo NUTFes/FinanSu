@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
-	"github.com/pkg/errors"
-	"fmt"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type sourceRepository struct {
 	client db.Client
+	crud   abstract.Crud
 }
 
 type SourceRepository interface {
@@ -18,50 +19,45 @@ type SourceRepository interface {
 	Create(context.Context, string) error
 	Update(context.Context, string, string) error
 	Destroy(context.Context, string) error
+	FindLatestRecord(context.Context) (*sql.Row, error)
 }
 
-func NewSourceRepository(client db.Client) SourceRepository {
-	return &sourceRepository{client}
+func NewSourceRepository(c db.Client, ac abstract.Crud) SourceRepository {
+	return &sourceRepository{c, ac}
 }
 
 // 全件取得
 func (sr *sourceRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "select * from sources"
-	rows, err := sr.client.DB().QueryContext(c, query)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot connect SQL")
-	}
-	fmt.Printf("\x1b[36m%s\n", query)
-	return rows, nil
+	query := "SELECT * FROM sources"
+	return sr.crud.Read(c, query)
 }
 
 // 1件取得
 func (sr *sourceRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "select * from sources where id = "+id
-	row := sr.client.DB().QueryRowContext(c, query)
-	return row, nil
+	query := "SELECT * FROM sources WHERE id = " + id
+	return sr.crud.ReadByID(c, query)
 }
 
 // 作成
 func (sr *sourceRepository) Create(c context.Context, name string) error {
-	query := "insert into sources (name) values ('"+name+"')"
-	_, err := sr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	query := "INSERT INTO sources (name) VALUES ('" + name + "')"
+	return sr.crud.UpdateDB(c, query)
 }
 
 // 編集
 func (sr *sourceRepository) Update(c context.Context, id string, name string) error {
-	query := "update sources set name = '"+name+"' where id = "+id
-	_, err := sr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	query := "UPDATE sources SET name = '" + name + "' WHERE id = " + id
+	return sr.crud.UpdateDB(c, query)
 }
 
 // 削除
 func (sr *sourceRepository) Destroy(c context.Context, id string) error {
-	query := "delete from sources where id = "+id
-	_, err := sr.client.DB().ExecContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return err
+	query := "DELETE FROM sources WHERE id = " + id
+	return sr.crud.UpdateDB(c, query)
+}
+
+// 最新のsourceを取得する
+func (sr *sourceRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `SELECT * FROM sources ORDER BY id DESC LIMIT 1`
+	return sr.crud.ReadByID(c, query)
 }
