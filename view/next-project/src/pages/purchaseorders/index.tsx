@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useMemo } from 'react';
-import { useRecoilState } from 'recoil';
+import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
+import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
+import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchaseorders/DetailModal';
@@ -37,7 +38,9 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseOrders(props: Props) {
-  const [user] = useRecoilState(userAtom);
+  const auth = useRecoilValue(authAtom);
+  const [currentUser, setCurrentUser] = useState<User>();
+
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -94,6 +97,38 @@ export default function PurchaseOrders(props: Props) {
     }
   };
 
+  const isFinanceDirector = useMemo(() => {
+    if (currentUser?.roleID == 3) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [currentUser?.roleID]);
+
+  const isDisabled = useCallback(
+    (purchaseOrderViewItem: PurchaseOrderView) => {
+      if (
+        !purchaseOrderViewItem.purchaseOrder.financeCheck &&
+        (currentUser?.roleID === 2 ||
+          currentUser?.roleID === 3 ||
+          currentUser?.id === purchaseOrderViewItem.purchaseOrder.userID)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [currentUser?.roleID, currentUser?.id, currentUser],
+  );
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await getCurrentUser(auth);
+      setCurrentUser(res);
+    };
+    getUser();
+  }, []);
+
   return (
     <MainLayout>
       <Head>
@@ -145,7 +180,7 @@ export default function PurchaseOrders(props: Props) {
                 <tr key={purchaseOrderViewItem.purchaseOrder.id}>
                   <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-600')}>
-                      {user.roleID === 3
+                      {isFinanceDirector
                         ? changeableCheckboxContent(
                             purchaseOrderViewItem.purchaseOrder.financeCheck,
                           )
@@ -255,9 +290,9 @@ export default function PurchaseOrders(props: Props) {
                       {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>
                   </td>
-                  <td className={clsx('px-4', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
-                    <div className={clsx('grid grid-cols-2 gap-3')}>
-                      <div className={clsx('text-center text-sm text-black-600')}>
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                    <div className='flex'>
+                      <div className='mx-1'>
                         <OpenEditModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
@@ -265,27 +300,17 @@ export default function PurchaseOrders(props: Props) {
                               : 0
                           }
                           purchaseItems={purchaseOrderViewItem.purchaseItem}
-                          isDisabled={
-                            !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (user.roleID === 2 ||
-                              user.roleID === 3 ||
-                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
-                          }
+                          isDisabled={isDisabled(purchaseOrderViewItem)}
                         />
                       </div>
-                      <div className={clsx('mx-1')}>
+                      <div className='mx-1'>
                         <OpenDeleteModalButton
                           id={
                             purchaseOrderViewItem.purchaseOrder.id
                               ? purchaseOrderViewItem.purchaseOrder.id
                               : 0
                           }
-                          isDisabled={
-                            !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-                            (user.roleID === 2 ||
-                              user.roleID === 3 ||
-                              user.id === purchaseOrderViewItem.purchaseOrder.userID)
-                          }
+                          isDisabled={isDisabled(purchaseOrderViewItem)}
                         />
                       </div>
                     </div>
