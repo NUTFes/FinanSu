@@ -8,7 +8,6 @@ import { EditButton } from '../common';
 interface Props {
   id: number;
   bureaus: Bureau[];
-  isDisabled?: boolean;
   user: User;
 }
 
@@ -17,7 +16,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
 
   return (
     <>
-      <EditButton onClick={() => setShowModal(true)} isDisabled={props.isDisabled || false} />
+      <EditButton onClick={() => setShowModal(true)} />
       {showModal && (
         <EditModal
           id={props.id}
