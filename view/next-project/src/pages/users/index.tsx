@@ -31,6 +31,7 @@ export const getServerSideProps = async () => {
 
 export default function Users(props: Props) {
   const { users } = props;
+  const router = useRouter();
 
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
@@ -44,12 +45,19 @@ export default function Users(props: Props) {
 
   // ログイン中のユーザの権限
   const isDeveloper = useMemo(() => {
-    if (currentUser?.roleID == 2) {
+    if (currentUser?.roleID === 2) {
       return true;
     } else {
       return false;
     }
   }, [currentUser?.roleID]);
+
+  useEffect(() => {
+    if(!currentUser?.roleID) return;
+    if (!isDeveloper){
+      router.push('/purchaseorders');
+    }
+  }, [isDeveloper, currentUser?.roleID]);
 
   return (
     <MainLayout>
@@ -117,7 +125,7 @@ export default function Users(props: Props) {
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <OpenEditModalButton id={user.id} bureaus={BUREAUS} isDisabled={!isDeveloper} user={user} />
+                    <OpenEditModalButton id={user.id} bureaus={BUREAUS} user={user} />
                   </td>
                 </tr>
               ))}
