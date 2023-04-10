@@ -94,7 +94,7 @@ export default function PurchaseOrders(props: Props) {
   };
 
   const isFinanceDirector = useMemo(() => {
-    if (currentUser?.roleID == 3) {
+    if (currentUser?.roleID === 3) {
       return true;
     } else {
       return false;
@@ -178,7 +178,7 @@ export default function PurchaseOrders(props: Props) {
                     <div className={clsx('text-center text-sm text-black-600')}>
                       <Checkbox
                         checked={purchaseOrderChecks[index]}
-                        disabled={isFinanceDirector}
+                        disabled={!isFinanceDirector}
                         onChange={() => {
                           updatePurchaseOrder(
                             purchaseOrderViewItem.purchaseOrder.id || 0,
