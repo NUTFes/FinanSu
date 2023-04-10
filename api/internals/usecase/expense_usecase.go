@@ -177,7 +177,7 @@ func (e *expenseUseCase) GetExpenseDetails(c context.Context) ([]domain.ExpenseD
 					&purchaseItem.Quantity,
 					&purchaseItem.Detail,
 					&purchaseItem.Url,
-					&purchaseItem.ID,
+					&purchaseItem.PurchaseOrderID,
 					&purchaseItem.FinanceCheck,
 					&purchaseItem.CreatedAt,
 					&purchaseItem.UpdatedAt,
