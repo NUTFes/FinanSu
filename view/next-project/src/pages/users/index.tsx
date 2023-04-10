@@ -4,15 +4,15 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
+import { authAtom } from '@/store/atoms';
+import { getCurrentUser } from '@/utils/api/currentUser';
+import { get } from '@api/api_methods';
+import { Card, Title } from '@components/common';
+import MainLayout from '@components/layout/MainLayout/MainLayout';
+import OpenEditModalButton from '@components/users/OpenEditModalButton';
 import { BUREAUS } from '@constants/bureaus';
 import { ROLES } from '@constants/role';
-import { get } from '@api/api_methods';
-import OpenEditModalButton from '@components/users/OpenEditModalButton';
-import MainLayout from '@components/layout/MainLayout/MainLayout';
 import { User } from '@type/common';
-import { getCurrentUser } from '@/utils/api/currentUser';
-import { authAtom } from '@/store/atoms';
-import { Card, Title } from '@components/common';
 
 interface Props {
   users: User[];
@@ -53,8 +53,8 @@ export default function Users(props: Props) {
   }, [currentUser?.roleID]);
 
   useEffect(() => {
-    if(!currentUser?.roleID) return;
-    if (!isDeveloper){
+    if (!currentUser?.roleID) return;
+    if (!isDeveloper) {
       router.push('/purchaseorders');
     }
   }, [isDeveloper, currentUser?.roleID]);
@@ -107,7 +107,9 @@ export default function Users(props: Props) {
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <p className='text-center text-sm text-black-600'>{BUREAUS.find((bureau) => bureau.id === user.bureauID)?.name}</p>
+                    <p className='text-center text-sm text-black-600'>
+                      {BUREAUS.find((bureau) => bureau.id === user.bureauID)?.name}
+                    </p>
                   </td>
                   <td
                     className={clsx(
@@ -116,7 +118,9 @@ export default function Users(props: Props) {
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <p className='text-center text-sm text-black-600'>{ROLES.find((role) => role.id === user.roleID)?.name}</p>
+                    <p className='text-center text-sm text-black-600'>
+                      {ROLES.find((role) => role.id === user.roleID)?.name}
+                    </p>
                   </td>
                   <td
                     className={clsx(

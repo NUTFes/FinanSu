@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
+import { ROLES } from '@/constants/role';
 import { put } from '@api/user';
 import { Bureau, User } from '@type/common';
+
 import { Modal, PrimaryButton, CloseButton, Input, Select } from '../common';
-import { ROLES } from '@/constants/role';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -31,7 +32,7 @@ export default function FundInformationEditModal(props: ModalProps) {
 
   const submitUser = async (data: User, id: number | string) => {
     const submitUserURL = process.env.CSR_API_URI + '/users/' + id;
-    console.log(data)
+    console.log(data);
     await put(submitUserURL, data);
   };
 
@@ -45,7 +46,7 @@ export default function FundInformationEditModal(props: ModalProps) {
         />
       </div>
       <div className='mx-auto mb-10 w-fit text-xl text-black-600'>ユーザの編集</div>
-      <div className='text-black-600 grid grid-cols-5 gap-4 items-center justify-items-center'>
+      <div className='grid grid-cols-5 items-center justify-items-center gap-4 text-black-600'>
         <p>氏名</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.name} onChange={handler('name')} />
@@ -71,7 +72,7 @@ export default function FundInformationEditModal(props: ModalProps) {
           </Select>
         </div>
       </div>
-      <div className='mx-auto w-fit mt-10'>
+      <div className='mx-auto mt-10 w-fit'>
         <PrimaryButton
           onClick={() => {
             submitUser(formData, props.id);

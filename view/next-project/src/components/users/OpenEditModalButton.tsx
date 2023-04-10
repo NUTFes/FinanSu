@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import EditModal from '@components/users/EditModal';
 import { Bureau, User } from '@type/common';
+
 import { EditButton } from '../common';
 
 interface Props {
