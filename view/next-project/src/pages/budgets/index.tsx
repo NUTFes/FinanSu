@@ -3,63 +3,61 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { RiAddCircleLine } from 'react-icons/ri';
 
-import { get } from '@api/budget';
+import { get } from '@api/api_methods';
 import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/budgets/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/budgets/OpenEditModalButton';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
-import { Budget, Source, Year } from '@type/common';
+import { BudgetView, Source, Year, ExpenseView } from '@type/common';
+import DetailModal from '@components/budgets/DetailModal';
+import { useState } from 'react';
 
 interface Props {
-  budgets: Budget[];
+  budgets: BudgetView[];
   sources: Source[];
   years: Year[];
+  expenses: ExpenseView[];
 }
 
 export async function getServerSideProps() {
-  const getBudgetUrl = process.env.SSR_API_URI + '/budgets';
+  const getBudgetUrl = process.env.SSR_API_URI + '/budgets/details';
   const getSourceUrl = process.env.SSR_API_URI + '/sources';
   const getYearUrl = process.env.SSR_API_URI + '/years';
-  const getUrl = process.env.SSR_API_URI + '/budgets/1/details';
+  const getExpenseUrl = process.env.SSR_API_URI + '/expenses/details';
 
   const budgetRes = await get(getBudgetUrl);
   const sourceRes = await get(getSourceUrl);
   const yearRes = await get(getYearUrl);
-  const getRes = await get(getUrl);
+  const expenseRes = await get(getExpenseUrl);
   return {
     props: {
       budgets: budgetRes,
       sources: sourceRes,
       years: yearRes,
-      res: getRes,
+      expenses: expenseRes,
     },
   };
 }
 
 export default function BudgetList(props: Props) {
-  const sources = props.sources;
-  const years = props.years;
+  const { budgets, sources, years, expenses } = props;
+
+  const [expenseView, setExpenseView] = useState<ExpenseView>(props.expenses[0]);
+  const [isOpen, setIsOpen] = useState(false);
+  const onOpen = (expenseID: number, expenseView: ExpenseView) => {
+    setExpenseView(expenseView);
+    setIsOpen(true);
+  };
+
   // 合計金額用の変数
-  let totalFee = 0;
+  const budgetsTotalFee = budgets.reduce((prev, current) => {
+    return prev + current.budget.price;
+  }, 0);
 
-  // yearIDからyearを取得するための処理（後々APIから取得する）
-  // 合計金額を計算するための処理
-  for (let i = 0; i < props.budgets.length; i++) {
-    for (let j = 0; j < years.length; j++) {
-      if (props.budgets[i].yearID == years[j].id) {
-        props.budgets[i].yearID = years[j].year;
-      }
-    }
-
-    // for (let j = 0; j < sources.length; j++) {
-    //   if (props.budgets[i].sourceID == sources[j].id) {
-    //     props.budgets[i].source = sources[j].name;
-    //   }
-    // }
-    // 合計金額を計算
-    totalFee += props.budgets[i].price;
-  }
+  const expensesTotalFee = expenses.reduce((prev, current) => {
+    return prev + current.expense.totalPrice;
+  }, 0);
 
   const formatDate = (date: string) => {
     const datetime = date.replace('T', ' ');
@@ -73,23 +71,23 @@ export default function BudgetList(props: Props) {
         <title>予算一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-      <Tabs variant='soft-rounded' className={clsx('primary-1')}>
-        <TabList className={clsx('mx-20 mt-10')}>
+      <Tabs variant='soft-rounded' className='primary-1'>
+        <TabList className='mx-20 mt-10'>
           <Tab>収入</Tab>
           <Tab>支出</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
             <Card>
-              <div className={clsx('mx-5 mt-10')}>
-                <div className={clsx('flex')}>
+              <div className='mx-5 mt-10'>
+                <div className='flex'>
                   <Title title={'収入一覧'} />
-                  <select className={clsx('w-100 ')}>
+                  <select className='w-100 '>
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
                   </select>
                 </div>
-                <div className={clsx('flex justify-end')}>
+                <div className='flex justify-end'>
                   <OpenAddModalButton sources={sources} years={years}>
                     <RiAddCircleLine
                       size={20}
@@ -100,73 +98,65 @@ export default function BudgetList(props: Props) {
                     収入登録
                   </OpenAddModalButton>
                 </div>
-                <div className={clsx('w-100 mb-2 p-5')}>
-                  <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
+                <div className='w-100 mb-2 p-5'>
+                  <table className='mb-5 w-full table-fixed border-collapse'>
                     <thead>
-                      <tr
-                        className={clsx(
-                          'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
-                        )}
-                      >
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>収入元</div>
+                      <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>収入元</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>年度</div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>年度</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>金額</div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>金額</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>作成日時</div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>作成日時</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>更新日時</div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>更新日時</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}></div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'></div>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {props.budgets.map((budgetItem, index) => (
-                        <tr key={budgetItem.id}>
-                          {props.sources.map((sourceItem) => (
-                            <td
-                              key={sourceItem.id}
-                              className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}
-                            >
-                              {sourceItem.name}
-                            </td>
-                          ))}
-                          {props.years.map((yearItem) => (
-                            <td
-                              key={yearItem.id}
-                              className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}
-                            >
-                              {yearItem.year}
-                            </td>
-                          ))}
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            {budgetItem.price}
+                      {budgets.map((budgetView, index) => (
+                        <tr key={budgetView.budget.id}
+                          className={clsx(index !== budgets.length-1 && 'border-b')}
+                        >
+                          <td
+                            className='py-3 pt-4 pb-3 text-center text-black-600'
+                          >
+                            {budgetView.source.name}
                           </td>
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            {formatDate(budgetItem.createdAt ? budgetItem.createdAt : '')}
+                          <td
+                            className='py-3 pt-4 pb-3 text-center text-black-600'
+                          >
+                            {budgetView.year.year}
                           </td>
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            {formatDate(budgetItem.updatedAt ? budgetItem.updatedAt : '')}
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {budgetView.budget.price}
                           </td>
-                          <td className={clsx('content-center p-3 text-black-600')}>
-                            <div className={clsx('flex text-center')}>
-                              <div className={clsx('flex-auto')}>
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {formatDate(budgetView.budget.createdAt ? budgetView.budget.createdAt : '')}
+                          </td>
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {formatDate(budgetView.budget.updatedAt ? budgetView.budget.updatedAt : '')}
+                          </td>
+                          <td className='content-center p-3 text-black-600'>
+                            <div className='flex text-center'>
+                              <div className='flex-auto'>
                                 <OpenEditModalButton
-                                  id={budgetItem.id ? budgetItem.id : 0}
+                                  id={budgetView.budget.id ? budgetView.budget.id : 0}
                                   sources={sources}
                                   years={years}
                                 />
                               </div>
-                              <div className={clsx('flex-auto')}>
-                                <OpenDeleteModalButton id={budgetItem.id ? budgetItem.id : 0} />
+                              <div className='flex-auto'>
+                                <OpenDeleteModalButton id={budgetView.budget.id ? budgetView.budget.id : 0} />
                               </div>
                             </div>
                           </td>
@@ -180,11 +170,11 @@ export default function BudgetList(props: Props) {
                     >
                       <tr>
                         <th />
-                        <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
                           合計金額
                         </th>
-                        <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                          {totalFee}
+                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          {budgetsTotalFee}
                         </th>
                         <th />
                       </tr>
@@ -196,84 +186,54 @@ export default function BudgetList(props: Props) {
           </TabPanel>
           <TabPanel>
             <Card>
-              <div className={clsx('mx-5 mt-10')}>
-                <div className={clsx('flex')}>
+              <div className='mx-5 mt-10'>
+                <div className='flex'>
                   <Title title={'支出一覧'} />
-                  <select className={clsx('w-100 ')}>
+                  <select className='w-100 '>
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
                   </select>
                 </div>
-                <div className={clsx('flex justify-end')}>
-                  <OpenAddModalButton sources={sources} years={years}>
-                    <RiAddCircleLine
-                      size={20}
-                      style={{
-                        marginRight: 5,
-                      }}
-                    />
-                    支出登録
-                  </OpenAddModalButton>
-                </div>
-                <div className={clsx('w-100 mb-2 p-5')}>
-                  <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
+                <div className='w-100 mb-2 p-5'>
+                  <table className='mb-5 w-full table-fixed border-collapse'>
                     <thead>
                       <tr
                         className={clsx(
                           'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
                         )}
                       >
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>支出元</div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>支出元</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>項目</div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>金額</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>金額</div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>作成日時</div>
                         </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>作成日時</div>
-                        </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}>更新日時</div>
-                        </th>
-                        <th className={clsx('w-1/6 border-b-primary-1 pb-2')}>
-                          <div className={clsx('text-center text-sm text-black-600')}></div>
+                        <th className='w-1/6 border-b-primary-1 pb-2'>
+                          <div className='text-center text-sm text-black-600'>更新日時</div>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {props.budgets.map((budgetItem, index) => (
-                        <tr key={budgetItem.id}>
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            総務局
+                      {expenses.map((expenseView, index) => (
+                        <tr 
+                          key={expenseView.expense.id}
+                          className={clsx(index !== expenses.length-1 && 'border-b')} 
+                          onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                        >
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {expenseView.expense.name}
                           </td>
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            消耗品代
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {expenseView.expense.totalPrice}
                           </td>
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            {budgetItem.price}
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {formatDate(expenseView.expense.createdAt ? expenseView.expense.createdAt : '')}
                           </td>
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            {formatDate(budgetItem.createdAt ? budgetItem.createdAt : '')}
-                          </td>
-                          <td className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                            {formatDate(budgetItem.updatedAt ? budgetItem.updatedAt : '')}
-                          </td>
-                          <td className={clsx('content-center p-3 text-black-600')}>
-                            <div className={clsx('flex text-center')}>
-                              <div className={clsx('flex-auto')}>
-                                <OpenEditModalButton
-                                  id={budgetItem.id ? budgetItem.id : 0}
-                                  sources={sources}
-                                  years={years}
-                                />
-                              </div>
-                              <div className={clsx('flex-auto')}>
-                                <OpenDeleteModalButton id={budgetItem.id ? budgetItem.id : 0} />
-                              </div>
-                            </div>
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {formatDate(expenseView.expense.updatedAt ? expenseView.expense.updatedAt : '')}
                           </td>
                         </tr>
                       ))}
@@ -285,11 +245,11 @@ export default function BudgetList(props: Props) {
                     >
                       <tr>
                         <th />
-                        <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
+                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
                           合計金額
                         </th>
-                        <th className={clsx('py-3 pt-4 pb-3 text-center text-black-600')}>
-                          {totalFee}
+                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          {expensesTotalFee}
                         </th>
                         <th />
                       </tr>
@@ -301,6 +261,12 @@ export default function BudgetList(props: Props) {
           </TabPanel>
         </TabPanels>
       </Tabs>
+      {isOpen && (
+        <DetailModal
+          setIsOpen={setIsOpen}
+          expenseView={expenseView}
+        />
+      )}
     </MainLayout>
   );
 }
