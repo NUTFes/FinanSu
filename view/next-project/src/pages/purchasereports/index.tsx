@@ -191,14 +191,15 @@ export default function PurchaseReports(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {props.purchaseReportView.map((purchaseReportViewItem, index) => (
-                <tr key={purchaseReportViewItem.purchaseReport.id}>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+              {props.purchaseReportView.map((purchaseReportViewItem) => (
+                <tr 
+                  className='border-b'
+                  onClick={() => {
+                    onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
+                  }}
+                  key={purchaseReportViewItem.purchaseReport.id}
+                >
+                  <td className='py-3'>
                     <div className='text-center text-sm text-black-600'>
                       {currentUser?.roleID === 3
                         ? changeableCheckboxContent(
@@ -209,22 +210,12 @@ export default function PurchaseReports(props: Props) {
                           )}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {purchaseReportViewItem.purchaseReport.id}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className={clsx('flex justify-center')}>
                       <BureauLabel
                         bureauName={
@@ -236,12 +227,7 @@ export default function PurchaseReports(props: Props) {
                       />
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {formatDate(
                         purchaseReportViewItem.purchaseReport.createdAt
@@ -250,22 +236,12 @@ export default function PurchaseReports(props: Props) {
                       )}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {purchaseReportViewItem.purchaseOrder.deadline}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div
                       className={clsx(
                         'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
@@ -281,12 +257,7 @@ export default function PurchaseReports(props: Props) {
                       ))}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {TotalFee(
                         purchaseReportViewItem.purchaseReport,
@@ -294,17 +265,12 @@ export default function PurchaseReports(props: Props) {
                       )}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {purchaseReportViewItem.purchaseReport.remark || '無し'}
                     </div>
                   </td>
-                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                  <td>
                     <div className='flex'>
                       <div className='mx-1'>
                         <OpenEditModalButton
