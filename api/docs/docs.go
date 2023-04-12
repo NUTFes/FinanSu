@@ -2051,8 +2051,8 @@ const docTemplate = `{
                     "example": "false",
                 },
                 "price":{
-                    "type": "string",
-                    "example": "30000",
+                    "type": "int",
+                    "example": 30000,
                 },
             },
             "required":{

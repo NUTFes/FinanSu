@@ -46,7 +46,7 @@ func (s *sponsorStyleController) ShowSponsorStyle(c echo.Context) error {
 
 // Create
 func (s *sponsorStyleController) CreateSponsorStyle(c echo.Context) error {
-	sponsorStyle := new(domain.SponsorStyle2)
+	sponsorStyle := new(domain.SponsorStyle)
 	if err := c.Bind(sponsorStyle); err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (s *sponsorStyleController) CreateSponsorStyle(c echo.Context) error {
 // Update
 func (s *sponsorStyleController) UpdateSponsorStyle(c echo.Context) error {
 	id := c.Param("id")
-	sponsorStyle := new(domain.SponsorStyle2)
+	sponsorStyle := new(domain.SponsorStyle)
 	if err := c.Bind(sponsorStyle); err != nil {
 		return err
 	}
