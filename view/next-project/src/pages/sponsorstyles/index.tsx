@@ -67,23 +67,16 @@ export default function SponsorStyleList(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
-                <tr key={sponsorStyleItem.id}>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
+                <tr 
+                  className={clsx(
+                    index !== sponsorStyleList.length - 1 && 'border-b',
+                  )}
+                  key={sponsorStyleItem.id}
+                >
+                  <td className='py-3'>
                     <p className='text-center text-sm text-black-600'>{sponsorStyleItem.scale}</p>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
+                  <td>
                     {sponsorStyleItem.isColor && (
                       <p className='text-center text-sm text-black-600'>カラー</p>
                     )}
@@ -91,22 +84,10 @@ export default function SponsorStyleList(props: Props) {
                       <p className='text-center text-sm text-black-600'>モノクロ</p>
                     )}
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1 text-center text-black-300',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
+                  <td>
                     {sponsorStyleItem.price}
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === sponsorStyleList.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
+                  <td>
                     <div className='flex flex-row gap-3'>
                       <OpenEditModalButton
                         id={sponsorStyleItem.id || 0}
