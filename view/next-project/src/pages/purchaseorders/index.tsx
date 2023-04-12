@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
+import { put } from '@/utils/api/purchaseOrder';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -16,21 +17,21 @@ import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@
 
 interface Props {
   user: User;
-  purchaseOrder: PurchaseOrder[];
+  purchaseOrders: PurchaseOrder[];
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
 }
 export async function getServerSideProps() {
-  const getPurchaseOrderUrl = process.env.SSR_API_URI + '/purchaseorders';
+  const getPurchaseOrdersUrl = process.env.SSR_API_URI + '/purchaseorders';
   const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
-  const purchaseOrderRes = await get(getPurchaseOrderUrl);
+  const purchaseOrdersRes = await get(getPurchaseOrdersUrl);
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
 
   return {
     props: {
-      purchaseOrder: purchaseOrderRes,
+      purchaseOrders: purchaseOrdersRes,
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
     },
@@ -40,7 +41,8 @@ export async function getServerSideProps() {
 export default function PurchaseOrders(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
-
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(props.purchaseOrders);
+  const [purchaseOrderChecks, setPurchaseOrderChecks] = useState<boolean[]>([]);
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -75,30 +77,24 @@ export default function PurchaseOrders(props: Props) {
     return totalFee;
   }, [props.purchaseOrderView]);
 
-  // 変更可能なcheckboxの描画
-  const changeableCheckboxContent = (isChecked: boolean) => {
-    {
-      if (isChecked) {
-        return <Checkbox checked={true} disabled={false} />;
-      } else {
-        return <Checkbox disabled={false} />;
-      }
-    }
-  };
+  useEffect(() => {
+    const purchaseOrderChecks = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.financeCheck;
+    });
+    setPurchaseOrderChecks(purchaseOrderChecks);
+  }, [purchaseOrders, setPurchaseOrders]);
 
-  // 変更不可能なcheckboxの描画
-  const unChangeableCheckboxContent = (isChecked: boolean) => {
-    {
-      if (isChecked) {
-        return <Checkbox checked={isChecked} disabled={true} />;
-      } else {
-        return <Checkbox disabled={true} />;
-      }
-    }
+  const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
+    const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;
+    const res = await put(url, purchaseOrder);
+    const newPurchaseOrders = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.id === purchaseOrderID ? res : purchaseOrder;
+    });
+    setPurchaseOrders(newPurchaseOrders);
   };
 
   const isFinanceDirector = useMemo(() => {
-    if (currentUser?.roleID == 3) {
+    if (currentUser?.roleID === 3) {
       return true;
     } else {
       return false;
@@ -187,13 +183,16 @@ export default function PurchaseOrders(props: Props) {
                 >
                   <td className='py-3'>
                     <div className='text-center text-sm text-black-600'>
-                      {isFinanceDirector
-                        ? changeableCheckboxContent(
-                            purchaseOrderViewItem.purchaseOrder.financeCheck,
-                          )
-                        : unChangeableCheckboxContent(
-                            purchaseOrderViewItem.purchaseOrder.financeCheck,
-                          )}
+                      <Checkbox
+                        checked={purchaseOrderChecks[index]}
+                        disabled={!isFinanceDirector}
+                        onChange={() => {
+                          updatePurchaseOrder(
+                            purchaseOrderViewItem.purchaseOrder.id || 0,
+                            {...purchaseOrderViewItem.purchaseOrder, financeCheck: !purchaseOrderChecks[index]},
+                          );
+                        }}
+                      />
                     </div>
                   </td>
                   <td

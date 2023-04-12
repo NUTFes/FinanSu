@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
+import { put } from '@/utils/api/purchaseReport';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -23,7 +24,7 @@ export interface PurchaseReportView {
 }
 
 interface Props {
-  purchaseReport: PurchaseReport[];
+  purchaseReports: PurchaseReport[];
   purchaseReportView: PurchaseReportView[];
   user: User;
   purchaseOrder: PurchaseOrder[];
@@ -31,15 +32,15 @@ interface Props {
 }
 
 export async function getServerSideProps() {
-  const getPurchaseReportUrl = process.env.SSR_API_URI + '/purchasereports';
+  const getPurchaseReportsUrl = process.env.SSR_API_URI + '/purchasereports';
   const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/purchasereports/details';
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
-  const purchaseReportRes = await get(getPurchaseReportUrl);
+  const purchaseReportsRes = await get(getPurchaseReportsUrl);
   const purchaseReportViewRes = await get(getPurchaseReportViewUrl);
   const expenseRes = await get(getExpenseUrl);
   return {
     props: {
-      purchaseReport: purchaseReportRes,
+      purchaseReports: purchaseReportsRes,
       purchaseReportView: purchaseReportViewRes,
       expenses: expenseRes,
     },
@@ -53,6 +54,10 @@ export default function PurchaseReports(props: Props) {
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
   const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
 
+  const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(props.purchaseReports);
+  const [purchaseReportChecks, setPurchaseReportChecks] = useState<boolean[]>([]);
+
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = (purchaseOrderID: number, purchaseReportViewItem: PurchaseReportView) => {
     setPurchaseReportID(purchaseOrderID);
@@ -60,30 +65,25 @@ export default function PurchaseReports(props: Props) {
     setIsOpen(true);
   };
 
-  // 購入報告
-  const initPurchaseReportList = [];
-  for (let i = 0; i < props.purchaseReportView.length; i++) {
-    initPurchaseReportList.push(props.purchaseReportView[i].purchaseReport);
-  }
-  const purchaseReports: PurchaseReport[] = initPurchaseReportList;
-
-  // 日付のフォーマットを変更
-  const formatDate = (date: string) => {
+  const formatDate = useCallback((date: string) => {
     const datetime = date.replace('T', ' ');
     const datetime2 = datetime.substring(5, datetime.length - 10).replace('-', '/');
     return datetime2;
-  };
+  }, []);
 
-  const TotalFee = (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
-    let totalFee = 0;
-    purchaseItems.map((purchaseItem: PurchaseItem) => {
-      if (purchaseItem.financeCheck) {
-        totalFee += purchaseItem.price * purchaseItem.quantity;
-      }
-    });
-    totalFee += purchaseReport.addition - purchaseReport.discount;
-    return totalFee;
-  };
+  const TotalFee = useCallback(
+    (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
+      let totalFee = 0;
+      purchaseItems.map((purchaseItem: PurchaseItem) => {
+        if (purchaseItem.financeCheck) {
+          totalFee += purchaseItem.price * purchaseItem.quantity;
+        }
+      });
+      totalFee += purchaseReport.addition - purchaseReport.discount;
+      return totalFee;
+    },
+    [],
+  );
 
   // すべてのpurchaseReportの合計金額
   const totalReportFee = useMemo(() => {
@@ -94,35 +94,14 @@ export default function PurchaseReports(props: Props) {
     return totalFee;
   }, [props.purchaseReportView]);
 
-  // 変更可能なcheckboxの描画
-  const changeableCheckboxContent = (isChecked: boolean) => {
-    {
-      if (isChecked) {
-        return <Checkbox checked={true} disabled={false} />;
-      } else {
-        return <Checkbox disabled={false} />;
-      }
-    }
-  };
-
-  // 変更不可能なcheckboxの描画
-  const unChangeableCheckboxContent = (isChecked: boolean) => {
-    {
-      if (isChecked) {
-        return <Checkbox checked={isChecked} disabled={true} />;
-      } else {
-        return <Checkbox disabled={true} />;
-      }
-    }
-  };
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
       if (
-        !purchaseReportView.purchaseOrder.financeCheck &&
+        !purchaseReportView.purchaseReport.financeCheck &&
         (currentUser?.roleID === 2 ||
           currentUser?.roleID === 3 ||
-          currentUser?.id === purchaseReportView.purchaseOrder.userID)
+          currentUser?.id === purchaseReportView.purchaseReport.userID)
       ) {
         return true;
       } else {
@@ -131,6 +110,30 @@ export default function PurchaseReports(props: Props) {
     },
     [currentUser?.roleID, currentUser?.id, currentUser],
   );
+
+  const updatePurchaseReport = async (purchaseReportID: number, purchaseReport: PurchaseReport) => {
+    const url = process.env.CSR_API_URI + '/purchasereports/' + purchaseReportID;
+    const res = await put(url, purchaseReport);
+    const newPurchaseReports = purchaseReports.map((purchaseReport) => {
+      return purchaseReport.id === purchaseReportID ? res : purchaseReport;
+    });
+    setPurchaseReports(newPurchaseReports);
+  };
+
+  useEffect(() => {
+    const purchaseReportChecks = purchaseReports.map((purchaseReport) => {
+      return purchaseReport.financeCheck;
+    });
+    setPurchaseReportChecks(purchaseReportChecks);
+  }, [purchaseReports, setPurchaseReports]);
+
+  const isFinanceDirector = useMemo(() => {
+    if (currentUser?.roleID === 3) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [currentUser?.roleID]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -191,23 +194,29 @@ export default function PurchaseReports(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {props.purchaseReportView.map((purchaseReportViewItem) => (
+              {props.purchaseReportView.map((purchaseReportViewItem, index) => (
                 <tr 
                   className='border-b'
                   onClick={() => {
-                    onOpen(purchaseReportViewItem.purchaseReport.id || 0, purchaseReportViewItem);
+                    onOpen(
+                      purchaseReportViewItem.purchaseOrder.id || 0,
+                      purchaseReportViewItem,
+                    );
                   }}
                   key={purchaseReportViewItem.purchaseReport.id}
                 >
-                  <td className='py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {currentUser?.roleID === 3
-                        ? changeableCheckboxContent(
-                            purchaseReportViewItem.purchaseReport.financeCheck,
-                          )
-                        : unChangeableCheckboxContent(
-                            purchaseReportViewItem.purchaseReport.financeCheck,
-                          )}
+                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                    <div className={clsx('text-center text-sm text-black-600')}>
+                      <Checkbox
+                        checked={purchaseReportChecks[index]}
+                        disabled={!isFinanceDirector}
+                        onChange={() => {
+                          updatePurchaseReport(
+                            purchaseReportViewItem.purchaseReport.id || 0,
+                            {...purchaseReportViewItem.purchaseReport, financeCheck: !purchaseReportChecks[index]},
+                          );
+                        }}
+                      />
                     </div>
                   </td>
                   <td>

@@ -21,7 +21,15 @@ INSERT into expense (expense_name,yearID) values ("備品整備費",2);
 INSERT into expense (expense_name,yearID) values ("備品整備準備費",2);
 INSERT into expense (expense_name,yearID) values ("翌年度繰越金",2);
 
-CREATE TABLE tmp (
+
+-- 終端文字の変更
+DELIMITER //
+-- ストアドプロシージャ作成
+CREATE PROCEDURE updateExpense()
+BEGIN
+
+-- 1 テンポラリテーブル作成tmp,tmp
+CREATE TEMPORARY TABLE tmp (
   id int(10) NOT NULL,
   totalPrice int(10),
   purchase_reports_id int(10),
@@ -32,21 +40,11 @@ CREATE TABLE tmp (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE tmp2 (
+CREATE TEMPORARY TABLE tmp2 (
   id int(10) NOT NULL,
   totalPrice int(10) NOT NULL,
   PRIMARY KEY (`id`)
 );
-
--- 終端文字の変更
-DELIMITER //
--- ストアドプロシージャ作成
-CREATE PROCEDURE updateExpense()
-BEGIN
-
--- 1 tmp,tmp2のテーブルデータを削除
-DELETE FROM tmp;
-DELETE FROM tmp2;
 
 -- 2 mpにpurchase_itemsのfinansu_checkがtrueのものをpurchase_orderごとに和を入れる
 INSERT INTO
@@ -111,6 +109,9 @@ ON
 	expense.id = tmp2.id
 SET
 	expense.totalPrice = tmp2.totalPrice;
+
+-- テンポラリテーブル削除
+DROP TEMPORARY TABLE tmp,tmp2;
 
 END;
 //
