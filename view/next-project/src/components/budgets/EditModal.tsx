@@ -19,7 +19,8 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { SOURCES } from '@/constants/sources';
-import { get, put } from '@api/budget';
+import { put } from '@api/budget';
+import { get } from '@api/api_methods';
 import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { Budget, Source, Year } from '@type/common';

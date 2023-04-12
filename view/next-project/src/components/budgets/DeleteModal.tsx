@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { FC, Dispatch, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { del } from '@api/budget';
+import { del } from '@api/api_methods';
 import theme from '@assets/theme';
 
 interface ModalProps {
