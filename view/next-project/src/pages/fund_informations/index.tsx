@@ -324,7 +324,7 @@ export default function FundInformations(props: Props) {
         <div className='w-100 mb-2 p-5'>
           <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3 '>
+              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
                 <th className='w-2/12 pb-2'>
                   <div className='text-center text-sm text-black-600'>財務局員確認</div>
                 </th>
@@ -352,16 +352,11 @@ export default function FundInformations(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationView &&
                 fundInformationView.map((fundViewItem: FundInformationView, index) => (
-                  <tr key={fundViewItem.fundInformation.id}>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                  <tr 
+                    key={fundViewItem.fundInformation.id}
+                    className={clsx(index !== fundInformationView.length - 1 && 'border-b')}
+                  >
+                    <td className='py-3'>
                       <div className='text-center text-sm text-black-600'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
@@ -382,15 +377,7 @@ export default function FundInformations(props: Props) {
                         {isUser && unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
                       </div>
                     </td>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                    <td>
                       <div className='text-center text-sm text-black-600'>
                         {isFinanceDirector &&
                           changeableCheckboxContent(
@@ -406,80 +393,32 @@ export default function FundInformations(props: Props) {
                         {isUser && unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
                       </div>
                     </td>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                    <td>
                       <div className='text-center text-sm text-black-600'>
                         {fundViewItem.teacher.name}
                       </div>
                     </td>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                    <td>
                       <div className='text-center text-sm text-black-600'>
                         {fundViewItem.teacher.room}
                       </div>
                     </td>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                    <td>
                       <div className='text-center text-sm text-black-600'>
                         {fundViewItem.user.name}
                       </div>
                     </td>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                    <td>
                       <div className='text-center text-sm text-black-600'>
                         {fundViewItem.fundInformation.price}
                       </div>
                     </td>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                    <td>
                       <div className='text-center text-sm text-black-600'>
                         {fundViewItem.fundInformation.remark}
                       </div>
                     </td>
-                    <td
-                      className={clsx(
-                        'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === props.fundInformationView.length - 1
-                          ? 'pb-4 pt-3'
-                          : 'border-b py-3',
-                      )}
-                    >
+                    <td>
                       <div className='flex gap-3'>
                         <OpenEditModalButton
                           fundInformation={fundViewItem.fundInformation}
