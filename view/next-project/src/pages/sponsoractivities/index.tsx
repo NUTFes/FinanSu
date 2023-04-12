@@ -50,6 +50,7 @@ export default function SponsorActivities(props: Props) {
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  
   const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SponsorActivityView) => {
     setSponsorActivitiesID(sponsorActivitiesID);
     setSponsorActivitiesViewItem(sponsorActivitiesItem);
@@ -110,69 +111,31 @@ export default function SponsorActivities(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {props.sponsorActivitiesView.map((sponsorActivitiesItem, index) => (
-                <tr key={sponsorActivitiesItem.sponsorActivity.id}>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.sponsorActivitiesView.length - 1
-                        ? 'pb-4 pt-3'
-                        : 'border-b py-3',
-                    )}
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                <tr 
+                  onClick={() => {
+                    onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
+                  }}
+                  className={clsx(props.sponsorActivitiesView.length-1 !== index && 'border-b')}
+                  key={sponsorActivitiesItem.sponsorActivity.id}
+                >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {sponsorActivitiesItem.sponsor.name}
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.sponsorActivitiesView.length - 1
-                        ? 'pb-4 pt-3'
-                        : 'border-b py-3',
-                    )}
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td className='py-3'>
                     <div className='text-center text-sm text-black-600'>
                       <p>{sponsorActivitiesItem.sponsorStyle.scale}</p>
                       <p>{sponsorActivitiesItem.sponsorStyle.isColor ? 'カラー' : 'モノクロ'}</p>
                       <p>{sponsorActivitiesItem.sponsorStyle.price} 円</p>
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.sponsorActivitiesView.length - 1
-                        ? 'pb-4 pt-3'
-                        : 'border-b py-3',
-                    )}
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {sponsorActivitiesItem.user.name}
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.sponsorActivitiesView.length - 1
-                        ? 'pb-4 pt-3'
-                        : 'border-b py-3',
-                    )}
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     {sponsorActivitiesItem.sponsorActivity.isDone && (
                       <div className='text-center text-sm text-black-600'>回収完了</div>
                     )}
@@ -180,47 +143,17 @@ export default function SponsorActivities(props: Props) {
                       <div className='text-center text-sm text-black-600'>未回収</div>
                     )}
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.sponsorActivitiesView.length - 1
-                        ? 'pb-4 pt-3'
-                        : 'border-b py-3',
-                    )}
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.sponsorActivitiesView.length - 1
-                        ? 'pb-4 pt-3'
-                        : 'border-b py-3',
-                    )}
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {formatDate(sponsorActivitiesItem.sponsorActivity.updatedAt)}
                     </div>
                   </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
-                      index === props.sponsorActivitiesView.length - 1
-                        ? 'pb-4 pt-3'
-                        : 'border-b py-3',
-                    )}
-                  >
+                  <td>
                     <div className='flex'>
                       <div className='mx-1'>
                         <OpenEditModalButton
