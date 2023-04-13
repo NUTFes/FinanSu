@@ -3,6 +3,7 @@ import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { HiOutlineShoppingCart, HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
 import { IoIosArrowDropup } from 'react-icons/io';
 import { MdOutlineSavings, MdOutlineWorkOutline } from 'react-icons/md';
+import { FaChalkboardTeacher } from 'react-icons/fa';
 
 interface LinkItemProps {
   name: string;
@@ -27,6 +28,11 @@ export const FinanceLinkItems: LinkItemProps[] = [
     name: '学内募金',
     icon: <MdOutlineSavings className='mx-2 text-xl' />,
     href: '/fund_informations',
+  },
+  {
+    name: '教員一覧',
+    icon: <FaChalkboardTeacher className='mx-2 text-xl' />,
+    href: '/teachers',
   },
   {
     name: '購入申請',
