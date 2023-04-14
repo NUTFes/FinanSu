@@ -12,6 +12,7 @@ import MainLayout from '@components/layout/MainLayout';
 import { BudgetView, Source, Year, ExpenseView } from '@type/common';
 import DetailModal from '@components/budgets/DetailModal';
 import { useState } from 'react';
+import { formatDate } from '@utils/formatDate';
 
 interface Props {
   budgets: BudgetView[];
@@ -58,12 +59,6 @@ export default function BudgetList(props: Props) {
   const expensesTotalFee = expenses.reduce((prev, current) => {
     return prev + current.expense.totalPrice;
   }, 0);
-
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(10, datetime.length - 20);
-    return datetime2;
-  };
 
   return (
     <MainLayout>

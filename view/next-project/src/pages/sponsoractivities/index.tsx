@@ -12,6 +12,7 @@ import OpenAddModalButton from '@components/sponsoractivities/OpenAddModalButton
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
 import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User } from '@type/common';
+import { formatDate } from '@utils/formatDate';
 
 interface Props {
   sponsorActivities: SponsorActivity[];
@@ -55,12 +56,6 @@ export default function SponsorActivities(props: Props) {
     setSponsorActivitiesID(sponsorActivitiesID);
     setSponsorActivitiesViewItem(sponsorActivitiesItem);
     setIsOpen(true);
-  };
-
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ').replace('Z', '');
-    const datetime2 = datetime.substring(5, datetime.length - 3).replace('-', '/');
-    return datetime2;
   };
 
   return (

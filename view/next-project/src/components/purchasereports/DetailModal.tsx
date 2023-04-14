@@ -7,6 +7,7 @@ import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
 import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
+import { formatDate } from '@/utils/formatDate';
 
 interface ModalProps {
   isOpen: boolean;
@@ -33,12 +34,6 @@ const DetailModal: FC<ModalProps> = (props) => {
   }, [props.expenses, props.purchaseReportViewItem]);
 
   const router = useRouter();
-
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 10);
-    return datetime2;
-  };
 
   const deletePurchaseOrders = async (id: number | string) => {
     const deletePurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders/' + id;

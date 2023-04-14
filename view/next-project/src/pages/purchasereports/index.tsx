@@ -14,6 +14,7 @@ import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
 import { PurchaseItem, PurchaseOrder, PurchaseReport, User, Expense } from '@type/common';
+import { formatDate } from '@utils/formatDate';
 
 export interface PurchaseReportView {
   purchaseReport: PurchaseReport;
@@ -64,12 +65,6 @@ export default function PurchaseReports(props: Props) {
     setPurchaseReportViewItem(purchaseReportViewItem);
     setIsOpen(true);
   };
-
-  const formatDate = useCallback((date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(5, datetime.length - 10).replace('-', '/');
-    return datetime2;
-  }, []);
 
   const TotalFee = useCallback(
     (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {

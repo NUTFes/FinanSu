@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -14,6 +13,7 @@ import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
 import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@type/common';
+import { formatDate } from '@utils/formatDate';
 
 interface Props {
   user: User;
@@ -50,12 +50,6 @@ export default function PurchaseOrders(props: Props) {
     setPurchaseOrderID(purchaseOrderID);
     setPurchaseOrderViewItem(purchaseOrderViewItem);
     setIsOpen(true);
-  };
-
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(5, datetime.length - 10).replace('-', '/');
-    return datetime2;
   };
 
   // 購入申請の合計金額を計算

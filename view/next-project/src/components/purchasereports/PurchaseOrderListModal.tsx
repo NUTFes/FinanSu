@@ -6,7 +6,7 @@ import { get } from '@api/api_methods';
 import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton, Radio } from '@components/common';
 import { useUI } from '@components/ui/context';
 import { PurchaseOrder, User, PurchaseItem, Expense } from '@type/common';
-
+import { formatDate } from '@utils/formatDate';
 import PurchaseReportAddModal from './PurchaseReportAddModal';
 
 interface PurchaseOrderView {
@@ -47,18 +47,6 @@ export default function PurchaseItemNumModal() {
       getExpenses(getExpensesUrl);
     }
   }, [router]);
-
-  // 日付のフォーマットを変更
-  const formatDate = (date: string | undefined) => {
-    let datetime2 = '';
-    if (date != undefined && date.length > 10) {
-      const datetime = date.replace('T', ' ');
-      datetime2 = datetime.substring(0, datetime.length - 10);
-    } else {
-      datetime2 = '';
-    }
-    return datetime2;
-  };
 
   // 合計金額を計算
   const calcTotalFee = (purchaseItems: PurchaseItem[]) => {
@@ -202,7 +190,7 @@ export default function PurchaseItemNumModal() {
                       )}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
+                        {formatDate(purchaseOrderItem.purchaseOrder?.createdAt || '')}
                       </div>
                     </td>
                   </tr>

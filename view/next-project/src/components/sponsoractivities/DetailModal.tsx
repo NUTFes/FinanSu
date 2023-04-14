@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import { Modal } from '@components/common';
 import { SponsorActivityView } from '@type/common';
+import { formatDate } from '@utils/formatDate';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,12 +21,6 @@ const DetailModal: FC<ModalProps> = (props) => {
 
   const onClose = () => {
     props.setIsOpen(false);
-  };
-
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 10);
-    return datetime2;
   };
 
   return (
