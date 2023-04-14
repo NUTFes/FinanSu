@@ -1,16 +1,8 @@
 import React, { FC, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
 import Input from '../Input/Input';
 import CloseButton from '../CloseButton';
-
-interface Column {
-  name: ReactNode;
-  selector: (row: any) => string;
-  sortable: boolean;
-  style?: any;
-}
+import { Column } from '@type/column';
 
 interface TableContentProps {
   columns: Column[];
@@ -47,7 +39,6 @@ const CUSTOM_STYLES = {
 };
 
 const Table: FC<TableContentProps> = (props) => {
-  const router = useRouter();
   const [filterText, setFilterText] = useState('');
 
   const filteredItems = props.data.filter(
