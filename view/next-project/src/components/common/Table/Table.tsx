@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import s from './Table.module.css';
 import DataTable from 'react-data-table-component';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
