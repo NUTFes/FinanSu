@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -16,8 +17,8 @@ type sponsorStyleRepository struct {
 type SponsorStyleRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string) error
-	Update(context.Context, string, string, string, string) error
+	Create(context.Context, string, string, int) error
+	Update(context.Context, string, string, string, int) error
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 }
@@ -43,12 +44,12 @@ func (ssr *sponsorStyleRepository) Create(
 	c context.Context,
 	scale string,
 	isColor string,
-	price string,
+	price int,
 ) error {
 	query := `
 		INSERT INTO
 			sponsor_styles (scale, is_color, price)
-		VALUES ('` + scale + "'," + isColor + "," + price + ")"
+		VALUES ('` + scale + "'," + isColor + "," + strconv.Itoa(price) + ")"
 	return ssr.crud.UpdateDB(c, query)
 }
 
@@ -58,7 +59,7 @@ func (ssr *sponsorStyleRepository) Update(
 	id string,
 	scale string,
 	isColor string,
-	price string,
+	price int,
 ) error {
 	query := `
 		UPDATE
@@ -66,7 +67,7 @@ func (ssr *sponsorStyleRepository) Update(
 		SET
 			scale = '` + scale +
 		"' , is_color = " + isColor +
-		", price = " + price +
+		", price = " + strconv.Itoa(price) +
 		" where id = " + id
 	return ssr.crud.UpdateDB(c, query)
 }
