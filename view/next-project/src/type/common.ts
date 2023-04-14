@@ -9,6 +9,12 @@ export interface Budget {
   updatedAt?: string;
 }
 
+export interface BudgetView {
+  budget: Budget;
+  year: Year;
+  source: Source;
+}
+
 // // Source(予算の出所)
 export interface Source {
   id?: number;
@@ -48,6 +54,17 @@ export interface Expense {
   yearID: number;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface ExpenseView {
+  expense: Expense;
+  purchaseDetails: [
+    {
+      purchaseOrder: PurchaseOrder;
+      purchaseReport: PurchaseReport;
+      purchaseItems: PurchaseItem[];
+    }
+  ]
 }
 
 // // PurchaseOrder(購入申請)

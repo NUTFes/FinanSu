@@ -29,7 +29,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal>
+    <Modal className='w-1/2'>
       <div className='w-full'>
         <div className='mr-5 ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />

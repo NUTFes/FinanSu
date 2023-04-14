@@ -132,50 +132,57 @@ export default function PurchaseOrders(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className={clsx('mx-5 mt-10')}>
-          <div className={clsx('flex')}>
+        <div className='mx-5 mt-10'>
+          <div className='flex'>
             <Title title={'購入申請一覧'} />
-            <select className={clsx('w-100 ')}>
+            <select className='w-100 '>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
             </select>
           </div>
-          <div className={clsx('flex justify-end')}>
+          <div className='flex justify-end'>
             <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
           </div>
         </div>
-        <div className={clsx('w-100 mb-2 p-5')}>
-          <table className={clsx('mb-5 w-full table-fixed border-collapse')}>
+        <div className='w-100 mb-2 p-5'>
+          <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
-              <tr
-                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
-              >
-                <th className={clsx('w-2/12 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>財務局長チェック</div>
+              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-2/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'>財務局長チェック</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>購入したい局</div>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>購入したい局</div>
                 </th>
-                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>申請日</div>
                 </th>
-                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>購入期限</div>
+                <th className='w-2/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>購入期限</div>
                 </th>
-                <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>購入物品</div>
+                <th className='w-3/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>購入物品</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>合計金額</div>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>合計金額</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}></th>
+                <th className='w-1/12 border-b-primary-1 pb-2'></th>
               </tr>
             </thead>
-            <tbody className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}>
+            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {props.purchaseOrderView.map((purchaseOrderViewItem, index) => (
-                <tr key={purchaseOrderViewItem.purchaseOrder.id}>
-                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                <tr 
+                  className='border-b'
+                  key={purchaseOrderViewItem.purchaseOrder.id}
+                  onClick={() => {
+                    onOpen(
+                      purchaseOrderViewItem.purchaseOrder.id || 0,
+                      purchaseOrderViewItem,
+                    );
+                  }}
+                >
+                  <td className='py-3'>
+                    <div className='text-center text-sm text-black-600'>
                       <Checkbox
                         checked={purchaseOrderChecks[index]}
                         disabled={!isFinanceDirector}
@@ -189,17 +196,8 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(
-                        purchaseOrderViewItem.purchaseOrder.id
-                          ? purchaseOrderViewItem.purchaseOrder.id
-                          : 0,
-                        purchaseOrderViewItem,
-                      );
-                    }}
                   >
-                    <div className={clsx('flex justify-center')}>
+                    <div className='flex justify-center'>
                       <BureauLabel
                         bureauName={
                           props.expenses.find(
@@ -211,17 +209,8 @@ export default function PurchaseOrders(props: Props) {
                     </div>
                   </td>
                   <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(
-                        purchaseOrderViewItem.purchaseOrder.id
-                          ? purchaseOrderViewItem.purchaseOrder.id
-                          : 0,
-                        purchaseOrderViewItem,
-                      );
-                    }}
                   >
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                    <div className='text-center text-sm text-black-600'>
                       {formatDate(
                         purchaseOrderViewItem.purchaseOrder.createdAt
                           ? purchaseOrderViewItem.purchaseOrder.createdAt
@@ -229,37 +218,13 @@ export default function PurchaseOrders(props: Props) {
                       )}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(
-                        purchaseOrderViewItem.purchaseOrder.id
-                          ? purchaseOrderViewItem.purchaseOrder.id
-                          : 0,
-                        purchaseOrderViewItem,
-                      );
-                    }}
-                  >
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                  <td>
+                    <div className='text-center text-sm text-black-600'>
                       {purchaseOrderViewItem.purchaseOrder.deadline}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(
-                        purchaseOrderViewItem.purchaseOrder.id
-                          ? purchaseOrderViewItem.purchaseOrder.id
-                          : 0,
-                        purchaseOrderViewItem,
-                      );
-                    }}
-                  >
-                    <div
-                      className={clsx(
-                        'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
-                      )}
-                    >
+                  <td>
+                    <div className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'>
                       {purchaseOrderViewItem.purchaseItem &&
                         purchaseOrderViewItem.purchaseItem.map(
                           (purchaseItem: PurchaseItem, index: number) => (
@@ -274,22 +239,12 @@ export default function PurchaseOrders(props: Props) {
                         )}
                     </div>
                   </td>
-                  <td
-                    className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
-                    onClick={() => {
-                      onOpen(
-                        purchaseOrderViewItem.purchaseOrder.id
-                          ? purchaseOrderViewItem.purchaseOrder.id
-                          : 0,
-                        purchaseOrderViewItem,
-                      );
-                    }}
-                  >
-                    <div className={clsx('text-center text-sm text-black-600')}>
+                  <td>
+                    <div className='text-center text-sm text-black-600'>
                       {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>
                   </td>
-                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
+                  <td>
                     <div className='flex'>
                       <div className='mx-1'>
                         <OpenEditModalButton
@@ -316,14 +271,14 @@ export default function PurchaseOrders(props: Props) {
                   </td>
                 </tr>
               ))}
-              <tr className={clsx('border-b border-primary-1')}>
-                <td className={clsx('px-1 py-3')} colSpan={5}>
-                  <div className={clsx('flex justify-end')}>
-                    <div className={clsx('text-sm text-black-600')}>合計</div>
+              <tr className='border-b border-primary-1'>
+                <td className='px-1 py-3' colSpan={5}>
+                  <div className='flex justify-end'>
+                    <div className='text-sm text-black-600'>合計</div>
                   </div>
                 </td>
-                <td className={clsx('px-1 py-3')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>
+                <td className='px-1 py-3'>
+                  <div className='text-center text-sm text-black-600'>
                     {totalPurchaseOrderFee}
                   </div>
                 </td>
