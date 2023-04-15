@@ -29,7 +29,7 @@ export default function DeleteModal(props: ModalProps) {
         <CloseButton onClick={() => props.setShowModal(false)} />
       </div>
     </div>
-    <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛スタイルの削除</div>
+    <div className='mx-auto mb-5 w-fit text-xl text-black-600'>教員データの削除</div>
     <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
     <div className=''>
       <div className='flex flex-row justify-center gap-5'>
