@@ -2,10 +2,9 @@ import React, { FC, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Input from '../Input/Input';
 import CloseButton from '../CloseButton';
-import { Column } from '@type/column';
 
 interface TableContentProps {
-  columns: Column[];
+  columns: any;
   data: any;
 }
 
@@ -47,7 +46,7 @@ const Table: FC<TableContentProps> = (props) => {
 
   return (
     <>
-      <div className='flex gap-3'>
+      <div className='flex gap-3 items-center'>
         <Input
           placeholder='絞り込み'
           value={filterText}

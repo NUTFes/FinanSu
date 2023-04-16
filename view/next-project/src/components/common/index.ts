@@ -24,3 +24,4 @@ export { default as Label } from './Label';
 export { default as BureauLabel } from './BureauLabel';
 export { default as Header } from './Header';
 export { default as SideNav } from './SideNav';
+export { default as Table } from './Table';

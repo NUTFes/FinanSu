@@ -4,12 +4,21 @@ import Head from 'next/head';
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
 import { get } from '@/utils/api/api_methods';
-import { Card, Title } from '@components/common';
+import { Card, Title, Table } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
 import { Sponsor } from '@type/common';
+import { ReactNode } from 'react';
 
 import type { NextPage } from 'next';
+
+export interface Column {
+  name: string;
+  selector?: (row: Sponsor) => string;
+  sortable?: boolean;
+  style?: any;
+  cell?: (row: Sponsor) => ReactNode;
+}
 
 interface Props {
   sponsor: Sponsor[];
@@ -28,6 +37,44 @@ export const getServerSideProps = async () => {
 
 const sponsorship: NextPage<Props> = (props: Props) => {
   const sponsorList: Sponsor[] = props.sponsor;
+
+  const sponsorColumns: Column[] = [
+    {
+      name: '企業名',
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: '電話番号',
+      selector: (row) => row.tel,
+      sortable: true,
+    },
+    {
+      name: 'メール',
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: '住所',
+      selector: (row) => row.address,
+      sortable: true,
+    },
+    {
+      name: '代表者名',
+      selector: (row) => row.representative,
+      sortable: true,
+    },
+    {
+      name: '編集・削除',
+      cell: (row) => (
+        <div className='flex justify-center'>
+          <OpenEditModalButton sponsor={row} />
+          <OpenDeleteModalButton id={row.id || 0} />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <MainLayout>
       <Head>
@@ -50,7 +97,8 @@ const sponsorship: NextPage<Props> = (props: Props) => {
           </div>
         </div>
         <div className='mb-2 p-5'>
-          <table className='mb-5 w-full table-fixed border-collapse'>
+          <Table columns={sponsorColumns} data={sponsorList} />
+          {/* <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-1/8 border-b-primary-1 pb-2'>
@@ -103,7 +151,7 @@ const sponsorship: NextPage<Props> = (props: Props) => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
         </div>
       </Card>
     </MainLayout>
