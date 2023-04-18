@@ -1,37 +1,14 @@
-import {
-  Box,
-  Center,
-  ChakraProvider,
-  Flex,
-  Grid,
-  GridItem,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Radio,
-  RadioGroup,
-  Select,
-  Spacer,
-  Stack,
-} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/teachers';
-import theme from '@assets/theme';
-import { PrimaryButton } from '@components/common';
-import { Department, Teacher } from '@type/common';
+import { PrimaryButton, Modal, Select, Input } from '@components/common';
+import { Teacher } from '@type/common';
+import { DEPARTMENTS } from '@/constants/departments';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  openModal: boolean;
-  children?: React.ReactNode;
-  teachersInformation: Teacher[];
-  departments: Department[];
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
@@ -70,149 +47,79 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Modal closeOnOverlayClick={false} isOpen={props.openModal} onClose={closeModal} isCentered>
-        <ModalOverlay />
-        <ModalContent pb='5' borderRadius='3xl'>
-          <ModalBody p='3'>
-            <Flex mt='5'>
-              <Spacer />
-              <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
-              </Box>
-            </Flex>
-            <Grid templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem colSpan={12}>
-                <Center color='black.600' h='100%' fontSize='xl' mb={5}>
-                  教員の登録
-                </Center>
-              </GridItem>
-              <GridItem colSpan={1} />
-              <GridItem colSpan={10}>
-                <Grid templateColumns='repeat(12, 1fr)' gap={4}>
-                  <GridItem colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      教員名
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={9}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.name}
-                        onChange={handler('name')}
-                      />
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      職位
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={9}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.position}
-                        onChange={handler('position')}
-                      />
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      学科
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={9}>
-                    <Select
-                      value={formData.departmentID}
-                      onChange={handler('departmentID')}
-                      borderRadius='full'
-                      borderColor='primary.1'
-                      w='100'
-                    >
-                      {props.departments.map((data) => (
-                        <option key={data.id} value={data.id}>
-                          {data.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      居室
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={9}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.room}
-                        onChange={handler('room')}
-                      />
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      ブラックリスト
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={9}>
-                    <Flex>
-                      <RadioGroup defaultValue='false' onChange={setIsBlack}>
-                        <Stack spacing={5} direction='row'>
-                          <Radio color='primary.2' value='true'>
-                            追加する
-                          </Radio>
-                          <Radio color='primary.2' value='false'>
-                            追加しない
-                          </Radio>
-                        </Stack>
-                      </RadioGroup>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      備考
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={9}>
-                    <Flex>
-                      <Input
-                        w='100'
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.remark}
-                        onChange={handler('remark')}
-                      />
-                    </Flex>
-                  </GridItem>
-                </Grid>
-              </GridItem>
-              <GridItem colSpan={1} />
-            </Grid>
-          </ModalBody>
-          <Center>
-            <ModalFooter mt='5' mb='10'>
-              <PrimaryButton
-                onClick={() => {
-                  addTeacher(formData, isBlack);
-                  router.reload();
-                }}
-              >
-                登録する
-              </PrimaryButton>
-            </ModalFooter>
-          </Center>
-        </ModalContent>
-      </Modal>
-    </ChakraProvider>
+    <Modal className='w-1/2'>
+      <div className='ml-auto w-fit'>
+        <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
+      </div>
+      <div className='mx-auto w-fit text-xl'>教員の登録</div>
+      <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+        <p>教員名</p>
+        <div className='col-span-4 w-full'>
+          <Input className='w-full' value={formData.name} onChange={handler('name')} />
+        </div>
+        <p>職位</p>
+        <div className='col-span-4 w-full'>
+          <Input className='w-full' value={formData.position} onChange={handler('position')} />
+        </div>
+        <p>学科</p>
+        <div className='col-span-4 w-full'>
+          <Select
+            className='w-full'
+            value={formData.departmentID}
+            onChange={handler('departmentID')}
+          >
+            {DEPARTMENTS.map((data) => (
+              <option key={data.id} value={data.id}>
+                {data.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <p>居室</p>
+        <div className='col-span-4 w-full'>
+          <Input className='w-full' value={formData.room} onChange={handler('room')} />
+        </div>
+        <p>ブラックリスト</p>
+        <div className='col-span-4 flex justify-center gap-10'>
+          <div key='black' className='flex gap-3 items-center'>
+            <input
+              id='black'
+              type='radio'
+              name='isBlack'
+              value='true'
+              checked={isBlack === 'true'}
+              onChange={() => setIsBlack('true')}
+            />
+            <label htmlFor='black'>はい</label>
+          </div>
+          <div key='notBlack' className='flex gap-3 items-center'>
+            <input
+              id='notBlack'
+              type='radio'
+              name='isBlack'
+              value='false'
+              checked={isBlack === 'false'}
+              onChange={() => setIsBlack('false')}
+            />
+            <label htmlFor='notBlack'>いいえ</label>
+          </div>
+        </div>
+        <p>備考</p>
+        <div className='col-span-4 w-full'>
+          <Input className='w-full' value={formData.remark} onChange={handler('remark')} />
+        </div>
+      </div>
+      <div className='mx-auto w-fit'>
+        <PrimaryButton
+          onClick={() => {
+            addTeacher(formData, isBlack);
+            router.reload();
+          }}
+        >
+          登録する
+        </PrimaryButton>
+      </div>
+    </Modal>
   );
 };
 

@@ -13,6 +13,7 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { Department, FundInformation, Teacher, User } from '@type/common';
+import { DEPARTMENTS } from '@constants/departments';
 
 interface FundInformationView {
   fundInformation: FundInformation;
@@ -55,86 +56,6 @@ export default function FundInformations(props: Props) {
   // 教員一覧
   const teachers: Teacher[] = props.teachers;
   const users: User[] = props.users;
-  const departments: Department[] = [
-    {
-      id: 1,
-      name: '電気電子情報',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 2,
-      name: '生物機能',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 3,
-      name: '機械創造',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 4,
-      name: '物質材料',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 5,
-      name: '環境社会基盤',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 6,
-      name: '情報・経営システム',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 7,
-      name: '基盤共通教育',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 8,
-      name: '原子力システム安全',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 9,
-      name: '技術科学イノベーション',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 10,
-      name: 'システム安全',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 11,
-      name: '技術支援',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 12,
-      name: '産学融合',
-      createdAt: '',
-      updatedAt: '',
-    },
-    {
-      id: 13,
-      name: '学長・事務',
-      createdAt: '',
-      updatedAt: '',
-    },
-  ];
 
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
@@ -316,7 +237,7 @@ export default function FundInformations(props: Props) {
             </select>
           </div>
           <div className='flex justify-end'>
-            <OpenAddModalButton teachers={teachers} departments={departments} users={users}>
+            <OpenAddModalButton teachers={teachers} departments={DEPARTMENTS} users={users}>
               学内募金登録
             </OpenAddModalButton>
           </div>
@@ -424,7 +345,7 @@ export default function FundInformations(props: Props) {
                           fundInformation={fundViewItem.fundInformation}
                           teachers={teachers}
                           users={users}
-                          departments={departments}
+                          departments={DEPARTMENTS}
                           isDisabled={isDisabled(fundViewItem)}
                         />
                         <OpenDeleteModalButton
