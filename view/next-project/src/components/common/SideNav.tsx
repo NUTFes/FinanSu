@@ -16,8 +16,8 @@ interface NavItemProps {
 
 export default function SimpleSidebar() {
   const router = useRouter();
-  const [isFinanceItemsShow, setisFinanceItemsShow] = useReducer((state) => !state, false);
-  const [isRelationItemsShow, setisRelationItemsShow] = useReducer((state) => !state, false);
+  const [isFinanceItemsShow, setIsFinanceItemsShow] = useReducer((state) => !state, false);
+  const [isRelationItemsShow, setIsRelationItemsShow] = useReducer((state) => !state, false);
 
   return (
     <div className='fixed right-0 z-50 h-full w-52 bg-primary-4 md:left-0'>
@@ -30,7 +30,7 @@ export default function SimpleSidebar() {
             currentPath={router.pathname}
             isParent={link.isParent}
             isShow={isFinanceItemsShow}
-            onClick={link.isParent ? setisFinanceItemsShow : undefined}
+            onClick={link.isParent ? setIsFinanceItemsShow : undefined}
           >
             {link.name}
           </NavItem>
@@ -45,7 +45,7 @@ export default function SimpleSidebar() {
             currentPath={router.pathname}
             isParent={link.isParent}
             isShow={isRelationItemsShow}
-            onClick={link.isParent ? setisRelationItemsShow : undefined}
+            onClick={link.isParent ? setIsRelationItemsShow : undefined}
           >
             {link.name}
           </NavItem>

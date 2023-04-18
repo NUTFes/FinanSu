@@ -1586,32 +1586,20 @@ const docTemplate = `{
             "post": {
                 tags: ["sponsorstyle"],
                 "description": "sponsorstyleの作成",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "sponsorStyle",
+                        "schema":{
+                            "$ref": "#/definitions/sponsorStyle"
+                        },
+                    },
+                ],
                 responses: {
                     "200": {
                         "description": "作成されたsponsorstyleが返ってくる",
-                    }
+                    },
                 },
-                "parameters": [
-                    {
-                        "name": "scale",
-                        "in": "query",
-                        "description": "scale",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "is_color",
-                        "in": "query",
-                        "description": "is_color",
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "price",
-                        "in": "query",
-                        "description": "広告値段",
-                        "type": "integer"
-                    },
-                ],
             },
         },
         "/sponsorstyles/{id}": {
@@ -1650,23 +1638,11 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
-                        "name": "scale",
-                        "in": "query",
-                        "description": "scale",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "is_color",
-                        "in": "query",
-                        "description": "is_color",
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "price",
-                        "in": "query",
-                        "description": "広告値段",
-                        "type": "integer"
+                        "in": "body",
+                        "name": "sponsorStyle",
+                        "schema":{
+                            "$ref": "#/definitions/sponsorStyle"
+                        },
                     },
                 ],
             },
@@ -2057,16 +2033,40 @@ const docTemplate = `{
                 responses: {
                     "200": {
                         "description": "yearの削除完了",
-                    }
+                    },
                 },
             },
         },
-    }
+    },
+    "definitions":{
+        "sponsorStyle":{
+            "properties":{
+                "scale":{
+                    "type": "string",
+                    "example": "1分の1",
+
+                },
+                "isColor":{
+                    "type": "boolean",
+                    "example": "false",
+                },
+                "price":{
+                    "type": "int",
+                    "example": 30000,
+                },
+            },
+            "required":{
+                    "scale",
+                    "isColor",
+                    "price",
+            },
+        },
+    },
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "2.0.0",
 	Host:             "localhost:1323",
 	BasePath:         "/",
 	Schemes:          []string{"http"},

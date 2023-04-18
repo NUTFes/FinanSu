@@ -14,8 +14,8 @@ type sponsorStyleUseCase struct {
 type SponsorStyleUseCase interface {
 	GetSponsorStyles(context.Context) ([]domain.SponsorStyle, error)
 	GetSponsorStylesByID(context.Context, string) (domain.SponsorStyle, error)
-	CreateSponsorStyle(context.Context, string, string, string) (domain.SponsorStyle, error)
-	UpdateSponsorStyle(context.Context, string, string, string, string) (domain.SponsorStyle, error)
+	CreateSponsorStyle(context.Context, string, string, int) (domain.SponsorStyle, error)
+	UpdateSponsorStyle(context.Context, string, string, string, int) (domain.SponsorStyle, error)
 	DestroySponsorStyle(context.Context, string) error
 }
 
@@ -71,7 +71,7 @@ func (s *sponsorStyleUseCase) CreateSponsorStyle(
 	c context.Context,
 	Scale string,
 	IsColor string,
-	Price string,
+	Price int,
 ) (domain.SponsorStyle, error) {
 	latastSponsorStyle := domain.SponsorStyle{}
 	err := s.rep.Create(c, Scale, IsColor, Price)
@@ -96,7 +96,7 @@ func (s *sponsorStyleUseCase) UpdateSponsorStyle(
 	id string,
 	Scale string,
 	IsColor string,
-	Price string,
+	Price int,
 ) (domain.SponsorStyle, error) {
 	updatedSponsorStyle := domain.SponsorStyle{}
 	err := s.rep.Update(c, id, Scale, IsColor, Price)

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import { post } from '@api/sponsorStyle';
+import { post } from '@api/api_methods';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { SCALE } from '@constants/scale';
 import { SponsorStyle } from '@type/common';
@@ -26,8 +26,12 @@ export default function SponsorAddModal(props: ModalProps) {
     };
 
   const addSponsorStyle = async (data: SponsorStyle) => {
+    const submitData: SponsorStyle = {
+      ...data,
+      price: Number(data.price),
+    };
     const addSponsorUrl = process.env.CSR_API_URI + '/sponsorstyles';
-    await post(addSponsorUrl, data);
+    await post(addSponsorUrl, submitData);
   };
 
   const submit = async (formData: SponsorStyle) => {
@@ -74,6 +78,7 @@ export default function SponsorAddModal(props: ModalProps) {
         <div className='text-black-600'>金額</div>
         <div className='col-span-4 w-full'>
           <Input
+            type='number'
             className='w-full'
             id={String(formData.id)}
             value={formData.price}

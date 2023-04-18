@@ -10,6 +10,7 @@ interface Props {
   departments: Department[];
   users: User[];
   fundInformation: FundInformation;
+  isDisabled: boolean;
 }
 
 export const OpenAddModalButton = (props: Props) => {
@@ -21,6 +22,7 @@ export const OpenAddModalButton = (props: Props) => {
         onClick={() => {
           setIsOpen(true);
         }}
+        isDisabled={props.isDisabled}
       />
       {isOpen && (
         <EditModal

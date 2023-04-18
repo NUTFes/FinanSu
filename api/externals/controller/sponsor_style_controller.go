@@ -2,7 +2,9 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -44,11 +46,11 @@ func (s *sponsorStyleController) ShowSponsorStyle(c echo.Context) error {
 
 // Create
 func (s *sponsorStyleController) CreateSponsorStyle(c echo.Context) error {
-	Scale := c.QueryParam("scale")
-	IsColor := c.QueryParam("is_color")
-	price := c.QueryParam("price")
-
-	latastSponsorStyle, err := s.u.CreateSponsorStyle(c.Request().Context(), Scale, IsColor, price)
+	sponsorStyle := new(domain.SponsorStyle)
+	if err := c.Bind(sponsorStyle); err != nil {
+		return err
+	}
+	latastSponsorStyle, err := s.u.CreateSponsorStyle(c.Request().Context(), sponsorStyle.Scale, strconv.FormatBool(sponsorStyle.IsColor), sponsorStyle.Price)
 	if err != nil {
 		return err
 	}
@@ -58,11 +60,11 @@ func (s *sponsorStyleController) CreateSponsorStyle(c echo.Context) error {
 // Update
 func (s *sponsorStyleController) UpdateSponsorStyle(c echo.Context) error {
 	id := c.Param("id")
-	Scale := c.QueryParam("scale")
-	IsColor := c.QueryParam("is_color")
-	price := c.QueryParam("price")
-
-	updatedSponsorStyle, err := s.u.UpdateSponsorStyle(c.Request().Context(), id, Scale, IsColor, price)
+	sponsorStyle := new(domain.SponsorStyle)
+	if err := c.Bind(sponsorStyle); err != nil {
+		return err
+	}
+	updatedSponsorStyle, err := s.u.UpdateSponsorStyle(c.Request().Context(), id, sponsorStyle.Scale, strconv.FormatBool(sponsorStyle.IsColor), sponsorStyle.Price)
 	if err != nil {
 		return err
 	}
@@ -72,7 +74,6 @@ func (s *sponsorStyleController) UpdateSponsorStyle(c echo.Context) error {
 // Destory
 func (s *sponsorStyleController) DestroySponsorStyle(c echo.Context) error {
 	id := c.Param("id")
-
 	err := s.u.DestroySponsorStyle(c.Request().Context(), id)
 	if err != nil {
 		return err

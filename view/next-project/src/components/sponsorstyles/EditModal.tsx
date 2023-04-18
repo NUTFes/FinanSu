@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import { put } from '@api/sponsorStyle';
+import { put } from '@api/api_methods';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -39,8 +39,12 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛スタイルを更新
   const updateSponsorStyle = async (data: SponsorStyle) => {
+    const submitData: SponsorStyle = {
+      ...data,
+      price: Number(data.price),
+    };
     const updateSponsorStyleUrl = process.env.CSR_API_URI + '/sponsorstyles/' + data.id;
-    await put(updateSponsorStyleUrl, data);
+    await put(updateSponsorStyleUrl, submitData);
   };
 
   // 協賛スタイルの情報
