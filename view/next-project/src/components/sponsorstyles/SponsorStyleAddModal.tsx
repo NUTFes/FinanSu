@@ -58,7 +58,7 @@ export default function SponsorAddModal(props: ModalProps) {
             onChange={handler('style')}
           />
         </div>
-          <div className='text-black-600'>オプション</div>
+        <div className='text-black-600'>オプション</div>
         <div className='col-span-4 grid w-full'>
           <Input
             type='text'

@@ -158,9 +158,7 @@ export default function SponsorActivitiesAddModal() {
             </td>
             <td className='flex flex-col gap-2 py-3'>
               <p className='text-center text-sm text-black-600'>{sponsorStyleView?.style}</p>
-              <p className='text-center text-sm text-black-600'>
-                {sponsorStyleView?.feature}
-              </p>
+              <p className='text-center text-sm text-black-600'>{sponsorStyleView?.feature}</p>
               <p className='text-center text-sm text-black-600'>{sponsorStyleView?.price}</p>
             </td>
             <td className='py-3'>
