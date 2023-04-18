@@ -4,7 +4,6 @@ import React, { Dispatch, FC, SetStateAction } from 'react';
 import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '../common';
 import { del } from '@api/api_methods';
 
-
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   id: number | string;

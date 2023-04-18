@@ -7,7 +7,6 @@ import { userAtom } from '@/store/atoms';
 import { post } from '@api/fundInformations';
 import { Department, FundInformation, Teacher, User } from '@type/common';
 
-
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   teachers: Teacher[];

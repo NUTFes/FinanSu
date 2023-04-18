@@ -4,7 +4,6 @@ import OpenAddModal from './AddModal';
 import { AddButton } from '@components/common';
 import { Teacher, Department, User } from '@type/common';
 
-
 interface Props {
   children?: React.ReactNode;
   teachers: Teacher[];

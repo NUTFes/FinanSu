@@ -63,8 +63,8 @@ export interface ExpenseView {
       purchaseOrder: PurchaseOrder;
       purchaseReport: PurchaseReport;
       purchaseItems: PurchaseItem[];
-    }
-  ]
+    },
+  ];
 }
 
 // // PurchaseOrder(購入申請)

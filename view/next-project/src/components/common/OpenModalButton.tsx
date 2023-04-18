@@ -5,7 +5,6 @@ import { useState } from 'react';
 import RegistModal from './RegistModal';
 import theme from '@assets/theme';
 
-
 interface Props {
   width?: string;
   height?: string;

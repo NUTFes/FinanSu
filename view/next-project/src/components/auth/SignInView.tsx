@@ -10,7 +10,6 @@ import { signIn } from '@api/signIn';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignIn } from '@type/common';
 
-
 export default function SignInView() {
   // ログイン中フラグ
   const [isSignInNow, setIsSignInNow] = useState<boolean>(false);

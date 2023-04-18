@@ -10,7 +10,6 @@ import { del } from '@api/signOut';
 import { ChakraUIDropdown } from '@components/common';
 import { User } from '@type/common';
 
-
 const Header = (props: HeaderProps) => {
   const { onSideNavOpen } = props;
   const [auth, setAuth] = useRecoilState(authAtom);

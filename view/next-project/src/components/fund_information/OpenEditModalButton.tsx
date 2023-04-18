@@ -4,7 +4,6 @@ import EditModal from './EditModal';
 import { EditButton } from '@components/common';
 import { Teacher, Department, User, FundInformation } from '@type/common';
 
-
 interface Props {
   teachers: Teacher[];
   departments: Department[];

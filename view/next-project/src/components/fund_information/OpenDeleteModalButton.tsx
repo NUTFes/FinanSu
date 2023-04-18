@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import DeleteModal from './DeleteModal';
 import { DeleteButton } from '@components/common';
 
-
 interface Props {
   children?: React.ReactNode;
   id: number;

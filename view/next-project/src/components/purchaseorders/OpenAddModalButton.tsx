@@ -4,7 +4,6 @@ import PurchaseItemNumModal from './PurchaseItemNumModal';
 import { AddButton } from '@components/common';
 import { Expense } from '@type/common';
 
-
 interface Props {
   children?: React.ReactNode;
   expenses: Expense[];

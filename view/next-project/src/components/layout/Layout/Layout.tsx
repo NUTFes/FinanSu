@@ -8,7 +8,6 @@ import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderLis
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
 import { useUI } from '@components/ui/context';
 
-
 const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
   return (
     <>

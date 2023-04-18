@@ -12,7 +12,6 @@ import { post } from '@api/user';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignUp, User } from '@type/common';
 
-
 export default function SignUpView() {
   const [, setAuth] = useRecoilState(authAtom);
   const [, setUser] = useRecoilState(userAtom);
