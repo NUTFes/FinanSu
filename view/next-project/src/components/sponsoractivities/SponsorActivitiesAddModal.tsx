@@ -99,9 +99,7 @@ export default function SponsorActivitiesAddModal() {
         <Select value={data.sponsorStyleID} onChange={formDataHandler('sponsorStyleID')}>
           {sponsorStyles.map((sponsorStyle: SponsorStyle) => (
             <option key={sponsorStyle.id} value={sponsorStyle.id}>
-              {`${sponsorStyle.scale} / ${sponsorStyle.isColor ? 'カラー' : 'モノクロ'} / ${
-                sponsorStyle.price
-              } 円`}
+              {`${sponsorStyle.style} / ${sponsorStyle.feature} / ${sponsorStyle.price} 円`}
             </option>
           ))}
         </Select>
@@ -159,9 +157,9 @@ export default function SponsorActivitiesAddModal() {
               <p className='text-center text-sm text-black-600'>{sponsorView?.name}</p>
             </td>
             <td className='flex flex-col gap-2 py-3'>
-              <p className='text-center text-sm text-black-600'>{sponsorStyleView?.scale}</p>
+              <p className='text-center text-sm text-black-600'>{sponsorStyleView?.style}</p>
               <p className='text-center text-sm text-black-600'>
-                {sponsorStyleView?.isColor ? 'カラー' : 'モノクロ'}
+                {sponsorStyleView?.feature}
               </p>
               <p className='text-center text-sm text-black-600'>{sponsorStyleView?.price}</p>
             </td>

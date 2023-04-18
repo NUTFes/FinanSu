@@ -52,10 +52,10 @@ export default function SponsorStyleList(props: Props) {
             <thead>
               <tr>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'>広告サイズ</p>
+                  <p className='text-center text-sm text-black-600'>協賛内容</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='mr-1 text-center text-sm text-black-600'>カラー，モノクロ</p>
+                  <p className='mr-1 text-center text-sm text-black-600'>オプション</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                   <p className='text-center text-sm text-black-600'>金額</p>
@@ -72,17 +72,14 @@ export default function SponsorStyleList(props: Props) {
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.scale}</p>
+                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.style}</p>
                   </td>
                   <td>
-                    {sponsorStyleItem.isColor && (
-                      <p className='text-center text-sm text-black-600'>カラー</p>
-                    )}
-                    {!sponsorStyleItem.isColor && (
-                      <p className='text-center text-sm text-black-600'>モノクロ</p>
-                    )}
+                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.feature}</p>
                   </td>
-                  <td>{sponsorStyleItem.price}</td>
+                  <td className='py-3'>
+                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.price}</p>
+                  </td>
                   <td>
                     <div className='flex flex-row gap-3'>
                       <OpenEditModalButton
