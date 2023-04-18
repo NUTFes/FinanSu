@@ -49,7 +49,7 @@ func (ssr *sponsorStyleRepository) Create(
 	query := `
 		INSERT INTO
 			sponsor_styles (style, feature, price)
-		VALUES ('` + style + "'," + feature + "," + strconv.Itoa(price) + ")"
+		VALUES ('` + style + "','" + feature + "'," + strconv.Itoa(price) + ")"
 	return ssr.crud.UpdateDB(c, query)
 }
 
@@ -66,8 +66,8 @@ func (ssr *sponsorStyleRepository) Update(
 			sponsor_styles
 		SET
 			style = '` + style +
-		"' , feature = " + feature +
-		", price = " + strconv.Itoa(price) +
+		"' , feature = '" + feature +
+		"', price = " + strconv.Itoa(price) +
 		" where id = " + id
 	return ssr.crud.UpdateDB(c, query)
 }
