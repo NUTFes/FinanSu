@@ -42,27 +42,19 @@ const DetailModal: FC<ModalProps> = (props) => {
       <div className='my-10 flex flex-wrap justify-center gap-8'>
         <div className='flex gap-3'>
           <p className='text-black-600'>支出元</p>
-          <p className='border-b border-primary-1'>
-            {props.expenseView.expense.name}
-          </p>
+          <p className='border-b border-primary-1'>{props.expenseView.expense.name}</p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>合計金額</p>
-          <p className='border-b border-primary-1'>
-            {props.expenseView.expense.totalPrice}
-          </p>
+          <p className='border-b border-primary-1'>{props.expenseView.expense.totalPrice}</p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>割引合計</p>
-          <p className='border-b border-primary-1'>
-            {discountTotal}
-          </p>
+          <p className='border-b border-primary-1'>{discountTotal}</p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>加算合計</p>
-          <p className='border-b border-primary-1'>
-            {additionTotal}
-          </p>
+          <p className='border-b border-primary-1'>{additionTotal}</p>
         </div>
       </div>
       <p className='my-5 mx-auto w-fit text-xl text-black-600'>購入物品</p>
@@ -81,32 +73,28 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </thead>
         <tbody className='border border-x-white-0 border-b-primary-1'>
-          {props.expenseView.purchaseDetails ? (props.expenseView.purchaseDetails.map((purchaseDetail) => (
-            purchaseDetail.purchaseItems.map((purchaseItem) => (
-              <tr>
-                <td className='py-3'>
-                  <div className='text-center text-sm text-black-600'>
-                    {purchaseItem.item}
-                  </div>
-                </td>
-                <td className='py-3'>
-                  <div className='text-center text-sm text-black-600'>
-                    {purchaseItem.quantity}
-                  </div>
-                </td>
-                <td className='py-3'>
-                  <div className='text-center text-sm text-black-600'>
-                    {purchaseItem.price}
-                  </div>
-                </td>
-              </tr>
-            ))
-          ))) : (
+          {props.expenseView.purchaseDetails ? (
+            props.expenseView.purchaseDetails.map((purchaseDetail) =>
+              purchaseDetail.purchaseItems.map((purchaseItem) => (
+                <tr key={purchaseItem.id}>
+                  <td className='py-3'>
+                    <div className='text-center text-sm text-black-600'>{purchaseItem.item}</div>
+                  </td>
+                  <td className='py-3'>
+                    <div className='text-center text-sm text-black-600'>
+                      {purchaseItem.quantity}
+                    </div>
+                  </td>
+                  <td className='py-3'>
+                    <div className='text-center text-sm text-black-600'>{purchaseItem.price}</div>
+                  </td>
+                </tr>
+              )),
+            )
+          ) : (
             <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               <td className='py-3' colSpan={3}>
-                <div className='text-center text-sm text-black-600'>
-                  購入物品がありません
-                </div>
+                <div className='text-center text-sm text-black-600'>購入物品がありません</div>
               </td>
             </tr>
           )}

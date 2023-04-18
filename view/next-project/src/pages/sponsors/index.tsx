@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import type { NextPage } from 'next';
 import Head from 'next/head';
 
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
@@ -8,8 +9,6 @@ import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
 import { Sponsor } from '@type/common';
-
-import type { NextPage } from 'next';
 
 interface Props {
   sponsor: Sponsor[];

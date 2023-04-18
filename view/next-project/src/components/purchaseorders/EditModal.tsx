@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
+import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { put } from '@api/purchaseItem';
 import {
   PrimaryButton,
@@ -10,10 +11,9 @@ import {
   Input,
   Modal,
   Stepper,
-  Tooltip
+  Tooltip,
 } from '@components/common';
 import { PurchaseItem } from '@type/common';
-import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
 
 interface ModalProps {
   purchaseOrderId: number;
@@ -89,19 +89,39 @@ export default function EditModal(props: ModalProps) {
     <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
       <p className='text-black-600'>物品名</p>
       <div className='col-span-4 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.item} onChange={handler('item')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.item}
+          onChange={handler('item')}
+        />
       </div>
       <p className='text-black-600'>単価</p>
       <div className='col-span-4 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.price} onChange={handler('price')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.price}
+          onChange={handler('price')}
+        />
       </div>
       <p className='text-black-600'>個数</p>
       <div className='col-span-4 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.quantity} onChange={handler('quantity')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.quantity}
+          onChange={handler('quantity')}
+        />
       </div>
       <p className='text-black-600'>詳細</p>
       <div className='col-span-4 w-full'>
-        <Input className='w-full' id={String(data.id)} value={data.detail} onChange={handler('detail')} />
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.detail}
+          onChange={handler('detail')}
+        />
       </div>
       <p className='text-black-600'>URL</p>
       <div className='col-span-4 w-full'>
@@ -114,16 +134,14 @@ export default function EditModal(props: ModalProps) {
     <>
       {props.isOpen && (
         <Modal className='w-1/2'>
-          <div className='w-fit ml-auto'>
+          <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
                 props.setIsOpen(false);
               }}
             />
           </div>
-          <p className='mb-10 w-fit mx-auto text-xl text-black-600'>
-            購入物品の修正
-          </p>
+          <p className='mx-auto mb-10 w-fit text-xl text-black-600'>購入物品の修正</p>
           {/* 購入物品があればステッパで表示、なければないと表示  */}
           {formDataList.length > 0 && (
             <Stepper stepNum={formDataList.length} activeStep={activeStep} isDone={isDone}>
@@ -134,7 +152,7 @@ export default function EditModal(props: ModalProps) {
             <div>
               <table className='w-full'>
                 <thead>
-                  <tr className='border-b border-primary-1 border-gray-300'>
+                  <tr className='border-gray-300 border-b border-primary-1'>
                     <th className='py-2'>物品名</th>
                     <th className='py-2'>単価</th>
                     <th className='py-2'>個数</th>
@@ -144,39 +162,33 @@ export default function EditModal(props: ModalProps) {
                 </thead>
                 <tbody>
                   {formDataList.map((data) => (
-                    <tr key={data.id} className='border-b border-gray-300'>
+                    <tr key={data.id} className='border-gray-300 border-b'>
                       <td className='py-2'>{data.item}</td>
                       <td className='py-2'>{data.price}</td>
                       <td className='py-2'>{data.quantity}</td>
                       <td className='py-2'>{data.detail}</td>
                       <td className='py-2'>
-                      <div className={'flex justify-center'}>
-                        <a
-                          href={data.url}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          <RiExternalLinkLine size={'16px'} />
-                        </a>
-                        <Tooltip text={'copy URL'}>
-                          <RiFileCopyLine
-                            size={'16px'}
-                            className='cursor-pointer'
-                            onClick={() => {
-                              navigator.clipboard.writeText(data.url);
-                            }}
-                          />
-                        </Tooltip>
-                      </div>
+                        <div className={'flex justify-center'}>
+                          <a href={data.url} target='_blank' rel='noopener noreferrer'>
+                            <RiExternalLinkLine size={'16px'} />
+                          </a>
+                          <Tooltip text={'copy URL'}>
+                            <RiFileCopyLine
+                              size={'16px'}
+                              className='cursor-pointer'
+                              onClick={() => {
+                                navigator.clipboard.writeText(data.url);
+                              }}
+                            />
+                          </Tooltip>
+                        </div>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <div className='flex gap-5 justify-center mt-10 mb-5'>
-                <OutlinePrimaryButton onClick={reset}>
-                  戻る
-                </OutlinePrimaryButton>
+              <div className='mt-10 mb-5 flex justify-center gap-5'>
+                <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
                 <PrimaryButton
                   onClick={() => {
                     submit(formDataList);
@@ -187,29 +199,27 @@ export default function EditModal(props: ModalProps) {
               </div>
             </div>
           ) : (
-              <div className='flex gap-5 justify-center mt-10 mb-5'>
-                {formDataList.length > 0 && (
-                  <>
-                    {activeStep > 1 && (
-                      <OutlinePrimaryButton onClick={prevStep}>
-                        戻る
-                      </OutlinePrimaryButton>
-                    )}
-                    <PrimaryButton
-                      onClick={() => {
-                        {
-                          activeStep === formDataList.length ? setIsDone(true) : nextStep();
-                        }
-                        isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
-                      }}
-                    >
-                        {activeStep === formDataList.length ? '確認へ' : '登録して次へ'}
-                        <RiArrowDropRightLine size={23} />
-                    </PrimaryButton>
-                  </>
-                )}
-              </div>
-            )}
+            <div className='mt-10 mb-5 flex justify-center gap-5'>
+              {formDataList.length > 0 && (
+                <>
+                  {activeStep > 1 && (
+                    <OutlinePrimaryButton onClick={prevStep}>戻る</OutlinePrimaryButton>
+                  )}
+                  <PrimaryButton
+                    onClick={() => {
+                      {
+                        activeStep === formDataList.length ? setIsDone(true) : nextStep();
+                      }
+                      isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
+                    }}
+                  >
+                    {activeStep === formDataList.length ? '確認へ' : '登録して次へ'}
+                    <RiArrowDropRightLine size={23} />
+                  </PrimaryButton>
+                </>
+              )}
+            </div>
+          )}
         </Modal>
       )}
     </>

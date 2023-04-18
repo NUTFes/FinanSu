@@ -14,7 +14,7 @@
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "project": ["./view/next-project/tsconfig.json"],
+    "project": ["./tsconfig.json"],
     "sourceType": "module"
   },
   "settings": {
@@ -35,6 +35,6 @@
           "order": "asc"
         }
       }
-    ],
+    ]
   }
 }

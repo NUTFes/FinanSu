@@ -4,8 +4,8 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { put } from '@api/teachers';
 import { PrimaryButton, Modal, Input, Select } from '@components/common';
+import { DEPARTMENTS } from '@constants/departments';
 import { Teacher } from '@type/common';
-import { DEPARTMENTS } from '@/constants/departments';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;

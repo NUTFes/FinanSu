@@ -1,9 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 
-import { DeleteButton } from '@components/common';
-
 import DeleteModal from './DeleteModal';
+import { DeleteButton } from '@components/common';
 
 interface Props {
   id: number;

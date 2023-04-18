@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
-import { get } from '@api/api_methods';
 import { put } from '@/utils/api/purchaseReport';
+import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -57,7 +57,6 @@ export default function PurchaseReports(props: Props) {
   const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(props.purchaseReports);
   const [purchaseReportChecks, setPurchaseReportChecks] = useState<boolean[]>([]);
 
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = (purchaseOrderID: number, purchaseReportViewItem: PurchaseReportView) => {
     setPurchaseReportID(purchaseOrderID);
@@ -71,19 +70,16 @@ export default function PurchaseReports(props: Props) {
     return datetime2;
   }, []);
 
-  const TotalFee = useCallback(
-    (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
-      let totalFee = 0;
-      purchaseItems.map((purchaseItem: PurchaseItem) => {
-        if (purchaseItem.financeCheck) {
-          totalFee += purchaseItem.price * purchaseItem.quantity;
-        }
-      });
-      totalFee += purchaseReport.addition - purchaseReport.discount;
-      return totalFee;
-    },
-    [],
-  );
+  const TotalFee = useCallback((purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
+    let totalFee = 0;
+    purchaseItems.map((purchaseItem: PurchaseItem) => {
+      if (purchaseItem.financeCheck) {
+        totalFee += purchaseItem.price * purchaseItem.quantity;
+      }
+    });
+    totalFee += purchaseReport.addition - purchaseReport.discount;
+    return totalFee;
+  }, []);
 
   // すべてのpurchaseReportの合計金額
   const totalReportFee = useMemo(() => {
@@ -93,7 +89,6 @@ export default function PurchaseReports(props: Props) {
     });
     return totalFee;
   }, [props.purchaseReportView]);
-
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
@@ -195,13 +190,10 @@ export default function PurchaseReports(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {props.purchaseReportView.map((purchaseReportViewItem, index) => (
-                <tr 
+                <tr
                   className='border-b'
                   onClick={() => {
-                    onOpen(
-                      purchaseReportViewItem.purchaseOrder.id || 0,
-                      purchaseReportViewItem,
-                    );
+                    onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
                   }}
                   key={purchaseReportViewItem.purchaseReport.id}
                 >
@@ -211,10 +203,10 @@ export default function PurchaseReports(props: Props) {
                         checked={purchaseReportChecks[index]}
                         disabled={!isFinanceDirector}
                         onChange={() => {
-                          updatePurchaseReport(
-                            purchaseReportViewItem.purchaseReport.id || 0,
-                            {...purchaseReportViewItem.purchaseReport, financeCheck: !purchaseReportChecks[index]},
-                          );
+                          updatePurchaseReport(purchaseReportViewItem.purchaseReport.id || 0, {
+                            ...purchaseReportViewItem.purchaseReport,
+                            financeCheck: !purchaseReportChecks[index],
+                          });
                         }}
                       />
                     </div>
