@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
+import { PrimaryButton } from '../common';
 import { BUREAUS } from '@/constants/bureaus';
 import { authAtom, userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
@@ -11,7 +12,6 @@ import { post } from '@api/user';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignUp, User } from '@type/common';
 
-import { PrimaryButton } from '../common';
 
 export default function SignUpView() {
   const [, setAuth] = useRecoilState(authAtom);

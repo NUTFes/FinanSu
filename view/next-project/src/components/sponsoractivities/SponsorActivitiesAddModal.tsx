@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
+import { useUI } from '../ui/context';
 import { post } from '@/utils/api/sponsorActivities';
 import {
   CloseButton,
@@ -11,8 +12,6 @@ import {
   Select,
 } from '@components/common';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
-
-import { useUI } from '../ui/context';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
 

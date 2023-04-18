@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
+import { Modal, Input, Select, CloseButton, PrimaryButton } from '../common';
 import { put } from '@api/fundInformations';
 import { FundInformation, Teacher, User, Department } from '@type/common';
 
-import { Modal, Input, Select, CloseButton, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;

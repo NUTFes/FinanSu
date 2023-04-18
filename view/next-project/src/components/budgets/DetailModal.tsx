@@ -83,7 +83,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <tbody className='border border-x-white-0 border-b-primary-1'>
           {props.expenseView.purchaseDetails ? (props.expenseView.purchaseDetails.map((purchaseDetail) => (
             purchaseDetail.purchaseItems.map((purchaseItem) => (
-              <tr>
+              <tr key={purchaseItem.id}>
                 <td className='py-3'>
                   <div className='text-center text-sm text-black-600'>
                     {purchaseItem.item}

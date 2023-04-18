@@ -1,12 +1,9 @@
-import { Button, ChakraProvider } from '@chakra-ui/react';
 import * as React from 'react';
 import { useState } from 'react';
-import { RiPencilFill } from 'react-icons/ri';
 
-import theme from '@assets/theme';
-import EditModal from '@components/teacher/EditModal';
-import { Department, Teacher } from '@type/common';
 import { EditButton } from '../common';
+import EditModal from '@components/teacher/EditModal';
+import { Teacher } from '@type/common';
 
 interface Props {
   id: number;

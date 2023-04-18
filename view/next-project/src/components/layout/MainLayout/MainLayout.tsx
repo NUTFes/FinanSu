@@ -3,12 +3,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import s from './MainLayout.module.css';
 
 import { authAtom } from '@/store/atoms';
 import 'tailwindcss/tailwind.css';
 import { Header, SideNav } from '@components/common';
-
-import s from './MainLayout.module.css';
 
 interface LayoutProps {
   children?: React.ReactNode;

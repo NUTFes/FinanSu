@@ -1,17 +1,17 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import clsx from 'clsx';
 import Head from 'next/head';
+import { useState } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
 
 import { get } from '@api/api_methods';
+import DetailModal from '@components/budgets/DetailModal';
 import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/budgets/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/budgets/OpenEditModalButton';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import { BudgetView, Source, Year, ExpenseView } from '@type/common';
-import DetailModal from '@components/budgets/DetailModal';
-import { useState } from 'react';
 
 interface Props {
   budgets: BudgetView[];
@@ -124,27 +124,28 @@ export default function BudgetList(props: Props) {
                     </thead>
                     <tbody>
                       {budgets.map((budgetView, index) => (
-                        <tr key={budgetView.budget.id}
-                          className={clsx(index !== budgets.length-1 && 'border-b')}
+                        <tr
+                          key={budgetView.budget.id}
+                          className={clsx(index !== budgets.length - 1 && 'border-b')}
                         >
-                          <td
-                            className='py-3 pt-4 pb-3 text-center text-black-600'
-                          >
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
                             {budgetView.source.name}
                           </td>
-                          <td
-                            className='py-3 pt-4 pb-3 text-center text-black-600'
-                          >
+                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
                             {budgetView.year.year}
                           </td>
                           <td className='py-3 pt-4 pb-3 text-center text-black-600'>
                             {budgetView.budget.price}
                           </td>
                           <td className='py-3 pt-4 pb-3 text-center text-black-600'>
-                            {formatDate(budgetView.budget.createdAt ? budgetView.budget.createdAt : '')}
+                            {formatDate(
+                              budgetView.budget.createdAt ? budgetView.budget.createdAt : '',
+                            )}
                           </td>
                           <td className='py-3 pt-4 pb-3 text-center text-black-600'>
-                            {formatDate(budgetView.budget.updatedAt ? budgetView.budget.updatedAt : '')}
+                            {formatDate(
+                              budgetView.budget.updatedAt ? budgetView.budget.updatedAt : '',
+                            )}
                           </td>
                           <td className='content-center p-3 text-black-600'>
                             <div className='flex text-center'>
@@ -156,7 +157,9 @@ export default function BudgetList(props: Props) {
                                 />
                               </div>
                               <div className='flex-auto'>
-                                <OpenDeleteModalButton id={budgetView.budget.id ? budgetView.budget.id : 0} />
+                                <OpenDeleteModalButton
+                                  id={budgetView.budget.id ? budgetView.budget.id : 0}
+                                />
                               </div>
                             </div>
                           </td>
@@ -170,9 +173,7 @@ export default function BudgetList(props: Props) {
                     >
                       <tr>
                         <th />
-                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
-                          合計金額
-                        </th>
+                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
                         <th className='py-3 pt-4 pb-3 text-center text-black-600'>
                           {budgetsTotalFee}
                         </th>
@@ -218,9 +219,9 @@ export default function BudgetList(props: Props) {
                     </thead>
                     <tbody>
                       {expenses.map((expenseView, index) => (
-                        <tr 
+                        <tr
                           key={expenseView.expense.id}
-                          className={clsx(index !== expenses.length-1 && 'border-b')} 
+                          className={clsx(index !== expenses.length - 1 && 'border-b')}
                           onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
                         >
                           <td className='py-3 pt-4 pb-3 text-center text-black-600'>
@@ -230,10 +231,14 @@ export default function BudgetList(props: Props) {
                             {expenseView.expense.totalPrice}
                           </td>
                           <td className='py-3 pt-4 pb-3 text-center text-black-600'>
-                            {formatDate(expenseView.expense.createdAt ? expenseView.expense.createdAt : '')}
+                            {formatDate(
+                              expenseView.expense.createdAt ? expenseView.expense.createdAt : '',
+                            )}
                           </td>
                           <td className='py-3 pt-4 pb-3 text-center text-black-600'>
-                            {formatDate(expenseView.expense.updatedAt ? expenseView.expense.updatedAt : '')}
+                            {formatDate(
+                              expenseView.expense.updatedAt ? expenseView.expense.updatedAt : '',
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -245,9 +250,7 @@ export default function BudgetList(props: Props) {
                     >
                       <tr>
                         <th />
-                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
-                          合計金額
-                        </th>
+                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
                         <th className='py-3 pt-4 pb-3 text-center text-black-600'>
                           {expensesTotalFee}
                         </th>
@@ -261,12 +264,7 @@ export default function BudgetList(props: Props) {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      {isOpen && (
-        <DetailModal
-          setIsOpen={setIsOpen}
-          expenseView={expenseView}
-        />
-      )}
+      {isOpen && <DetailModal setIsOpen={setIsOpen} expenseView={expenseView} />}
     </MainLayout>
   );
 }

@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
+import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
 import { put } from '@api/purchaseItem';
 import {
   PrimaryButton,
@@ -13,7 +14,6 @@ import {
   Tooltip
 } from '@components/common';
 import { PurchaseItem } from '@type/common';
-import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri'
 
 interface ModalProps {
   purchaseOrderId: number;
