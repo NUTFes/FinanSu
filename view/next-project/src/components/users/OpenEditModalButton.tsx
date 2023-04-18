@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 
+import { EditButton } from '../common';
 import EditModal from '@components/users/EditModal';
 import { Bureau, User } from '@type/common';
-
-import { EditButton } from '../common';
 
 interface Props {
   id: number;
