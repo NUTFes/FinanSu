@@ -4,8 +4,8 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/teachers';
 import { PrimaryButton, Modal, Select, Input } from '@components/common';
+import { DEPARTMENTS } from '@constants/departments';
 import { Teacher } from '@type/common';
-import { DEPARTMENTS } from '@/constants/departments';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -81,7 +81,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p>ブラックリスト</p>
         <div className='col-span-4 flex justify-center gap-10'>
-          <div key='black' className='flex gap-3 items-center'>
+          <div key='black' className='flex items-center gap-3'>
             <input
               id='black'
               type='radio'
@@ -92,7 +92,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
             />
             <label htmlFor='black'>はい</label>
           </div>
-          <div key='notBlack' className='flex gap-3 items-center'>
+          <div key='notBlack' className='flex items-center gap-3'>
             <input
               id='notBlack'
               type='radio'

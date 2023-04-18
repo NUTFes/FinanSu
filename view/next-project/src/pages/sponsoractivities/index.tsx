@@ -50,7 +50,7 @@ export default function SponsorActivities(props: Props) {
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  
+
   const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SponsorActivityView) => {
     setSponsorActivitiesID(sponsorActivitiesID);
     setSponsorActivitiesViewItem(sponsorActivitiesItem);
@@ -111,11 +111,11 @@ export default function SponsorActivities(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {props.sponsorActivitiesView.map((sponsorActivitiesItem, index) => (
-                <tr 
+                <tr
                   onClick={() => {
                     onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
                   }}
-                  className={clsx(props.sponsorActivitiesView.length-1 !== index && 'border-b')}
+                  className={clsx(props.sponsorActivitiesView.length - 1 !== index && 'border-b')}
                   key={sponsorActivitiesItem.sponsorActivity.id}
                 >
                   <td>

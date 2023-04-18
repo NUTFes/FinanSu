@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import AddModal from '@components/teacher/AddModal';
 import { AddButton } from '../common';
+import AddModal from '@components/teacher/AddModal';
 
 interface Props {
   children?: React.ReactNode;

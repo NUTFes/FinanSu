@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { BsBuilding, BsVectorPen } from 'react-icons/bs';
+import { FaChalkboardTeacher } from 'react-icons/fa';
 import { HiOutlineShoppingCart, HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
 import { IoIosArrowDropup } from 'react-icons/io';
 import { MdOutlineSavings, MdOutlineWorkOutline } from 'react-icons/md';
-import { FaChalkboardTeacher } from 'react-icons/fa';
 
 interface LinkItemProps {
   name: string;

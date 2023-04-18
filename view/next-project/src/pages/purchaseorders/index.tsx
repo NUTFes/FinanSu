@@ -1,11 +1,10 @@
-import clsx from 'clsx';
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { authAtom } from '@/store/atoms';
-import { get } from '@api/api_methods';
 import { put } from '@/utils/api/purchaseOrder';
+import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -171,14 +170,11 @@ export default function PurchaseOrders(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {props.purchaseOrderView.map((purchaseOrderViewItem, index) => (
-                <tr 
+                <tr
                   className='border-b'
                   key={purchaseOrderViewItem.purchaseOrder.id}
                   onClick={() => {
-                    onOpen(
-                      purchaseOrderViewItem.purchaseOrder.id || 0,
-                      purchaseOrderViewItem,
-                    );
+                    onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
                   }}
                 >
                   <td className='py-3'>
@@ -187,16 +183,15 @@ export default function PurchaseOrders(props: Props) {
                         checked={purchaseOrderChecks[index]}
                         disabled={!isFinanceDirector}
                         onChange={() => {
-                          updatePurchaseOrder(
-                            purchaseOrderViewItem.purchaseOrder.id || 0,
-                            {...purchaseOrderViewItem.purchaseOrder, financeCheck: !purchaseOrderChecks[index]},
-                          );
+                          updatePurchaseOrder(purchaseOrderViewItem.purchaseOrder.id || 0, {
+                            ...purchaseOrderViewItem.purchaseOrder,
+                            financeCheck: !purchaseOrderChecks[index],
+                          });
                         }}
                       />
                     </div>
                   </td>
-                  <td
-                  >
+                  <td>
                     <div className='flex justify-center'>
                       <BureauLabel
                         bureauName={
@@ -208,8 +203,7 @@ export default function PurchaseOrders(props: Props) {
                       />
                     </div>
                   </td>
-                  <td
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {formatDate(
                         purchaseOrderViewItem.purchaseOrder.createdAt
@@ -278,9 +272,7 @@ export default function PurchaseOrders(props: Props) {
                   </div>
                 </td>
                 <td className='px-1 py-3'>
-                  <div className='text-center text-sm text-black-600'>
-                    {totalPurchaseOrderFee}
-                  </div>
+                  <div className='text-center text-sm text-black-600'>{totalPurchaseOrderFee}</div>
                 </td>
               </tr>
             </tbody>

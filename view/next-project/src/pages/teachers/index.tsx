@@ -1,17 +1,17 @@
 import clsx from 'clsx';
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import Head from 'next/head';
+import { useMemo, useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { DEPARTMENTS } from '@/constants/departments';
+import { authAtom } from '@/store/atoms';
+import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';
+import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
 import { Teacher, User } from '@type/common';
-import { DEPARTMENTS } from '@/constants/departments';
-import Head from 'next/head';
-import { Card, Title } from '@components/common';
-import { authAtom } from '@/store/atoms';
-import { useRecoilValue } from 'recoil';
-import { getCurrentUser } from '@/utils/api/currentUser';
 
 interface Props {
   teachers: Teacher[];

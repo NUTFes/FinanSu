@@ -67,10 +67,8 @@ export default function SponsorStyleList(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
-                <tr 
-                  className={clsx(
-                    index !== sponsorStyleList.length - 1 && 'border-b',
-                  )}
+                <tr
+                  className={clsx(index !== sponsorStyleList.length - 1 && 'border-b')}
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>
@@ -84,9 +82,7 @@ export default function SponsorStyleList(props: Props) {
                       <p className='text-center text-sm text-black-600'>モノクロ</p>
                     )}
                   </td>
-                  <td>
-                    {sponsorStyleItem.price}
-                  </td>
+                  <td>{sponsorStyleItem.price}</td>
                   <td>
                     <div className='flex flex-row gap-3'>
                       <OpenEditModalButton

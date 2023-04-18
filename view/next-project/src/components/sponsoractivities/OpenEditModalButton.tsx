@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { SponsorActivity, SponsorStyle, Sponsor, User } from '@/type/common';
-
-import EditModal from './EditModal';
 import { EditButton } from '../common';
+import EditModal from './EditModal';
+import { SponsorActivity, SponsorStyle, Sponsor, User } from '@/type/common';
 
 interface Props {
   children?: React.ReactNode;

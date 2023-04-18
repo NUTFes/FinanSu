@@ -12,8 +12,8 @@ import OpenAddModalButton from '@components/fund_information/OpenAddModalButton'
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
-import { Department, FundInformation, Teacher, User } from '@type/common';
 import { DEPARTMENTS } from '@constants/departments';
+import { Department, FundInformation, Teacher, User } from '@type/common';
 
 interface FundInformationView {
   fundInformation: FundInformation;
@@ -273,7 +273,7 @@ export default function FundInformations(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationView &&
                 fundInformationView.map((fundViewItem: FundInformationView, index) => (
-                  <tr 
+                  <tr
                     key={fundViewItem.fundInformation.id}
                     className={clsx(index !== fundInformationView.length - 1 && 'border-b')}
                   >

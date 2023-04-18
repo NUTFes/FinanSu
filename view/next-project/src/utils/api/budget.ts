@@ -31,4 +31,3 @@ export const put = async (url: string, data: Budget) => {
   });
   return await res.json();
 };
-

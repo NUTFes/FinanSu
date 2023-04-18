@@ -2,11 +2,10 @@ import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
+import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
 import { post } from '@api/fundInformations';
 import { Department, FundInformation, Teacher, User } from '@type/common';
-
-import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
