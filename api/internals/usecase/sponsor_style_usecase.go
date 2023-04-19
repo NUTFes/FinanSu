@@ -34,8 +34,8 @@ func (s *sponsorStyleUseCase) GetSponsorStyles(c context.Context) ([]domain.Spon
 	for rows.Next() {
 		err := rows.Scan(
 			&sponsorStyle.ID,
-			&sponsorStyle.Scale,
-			&sponsorStyle.IsColor,
+			&sponsorStyle.Style,
+			&sponsorStyle.Feature,
 			&sponsorStyle.Price,
 			&sponsorStyle.CreatedAt,
 			&sponsorStyle.UpdatedAt,
@@ -54,8 +54,8 @@ func (s *sponsorStyleUseCase) GetSponsorStylesByID(c context.Context, id string)
 	row, err := s.rep.Find(c, id)
 	err = row.Scan(
 		&sponsorStyle.ID,
-		&sponsorStyle.Scale,
-		&sponsorStyle.IsColor,
+		&sponsorStyle.Style,
+		&sponsorStyle.Feature,
 		&sponsorStyle.Price,
 		&sponsorStyle.CreatedAt,
 		&sponsorStyle.UpdatedAt,
@@ -69,17 +69,17 @@ func (s *sponsorStyleUseCase) GetSponsorStylesByID(c context.Context, id string)
 // SponsorStyleの作成(Create)
 func (s *sponsorStyleUseCase) CreateSponsorStyle(
 	c context.Context,
-	Scale string,
-	IsColor string,
+	Style string,
+	Feature string,
 	Price int,
 ) (domain.SponsorStyle, error) {
 	latastSponsorStyle := domain.SponsorStyle{}
-	err := s.rep.Create(c, Scale, IsColor, Price)
+	err := s.rep.Create(c, Style, Feature, Price)
 	row, err := s.rep.FindLatestRecord(c)
 	err = row.Scan(
 		&latastSponsorStyle.ID,
-		&latastSponsorStyle.Scale,
-		&latastSponsorStyle.IsColor,
+		&latastSponsorStyle.Style,
+		&latastSponsorStyle.Feature,
 		&latastSponsorStyle.Price,
 		&latastSponsorStyle.CreatedAt,
 		&latastSponsorStyle.UpdatedAt,
@@ -94,17 +94,17 @@ func (s *sponsorStyleUseCase) CreateSponsorStyle(
 func (s *sponsorStyleUseCase) UpdateSponsorStyle(
 	c context.Context,
 	id string,
-	Scale string,
-	IsColor string,
+	Style string,
+	Feature string,
 	Price int,
 ) (domain.SponsorStyle, error) {
 	updatedSponsorStyle := domain.SponsorStyle{}
-	err := s.rep.Update(c, id, Scale, IsColor, Price)
+	err := s.rep.Update(c, id, Style, Feature, Price)
 	row, err := s.rep.Find(c, id)
 	err = row.Scan(
 		&updatedSponsorStyle.ID,
-		&updatedSponsorStyle.Scale,
-		&updatedSponsorStyle.IsColor,
+		&updatedSponsorStyle.Style,
+		&updatedSponsorStyle.Feature,
 		&updatedSponsorStyle.Price,
 		&updatedSponsorStyle.CreatedAt,
 		&updatedSponsorStyle.UpdatedAt,

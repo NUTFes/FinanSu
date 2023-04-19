@@ -125,8 +125,8 @@ export default function SponsorActivities(props: Props) {
                   </td>
                   <td className='py-3'>
                     <div className='text-center text-sm text-black-600'>
-                      <p>{sponsorActivitiesItem.sponsorStyle.scale}</p>
-                      <p>{sponsorActivitiesItem.sponsorStyle.isColor ? 'カラー' : 'モノクロ'}</p>
+                      <p>{sponsorActivitiesItem.sponsorStyle.style}</p>
+                      <p>{sponsorActivitiesItem.sponsorStyle.feature}</p>
                       <p>{sponsorActivitiesItem.sponsorStyle.price} 円</p>
                     </div>
                   </td>

@@ -112,10 +112,10 @@ const DetailModal: FC<ModalProps> = (props) => {
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>広告サイズ</div>
+              <div className='text-center text-sm text-black-600'>協賛内容</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>カラーorモノクロ</div>
+              <div className='text-center text-sm text-black-600'>オプション</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
               <div className='text-center text-sm text-black-600'>値段</div>
@@ -126,12 +126,12 @@ const DetailModal: FC<ModalProps> = (props) => {
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
             <td className='py-3'>
               <div className='text-center text-sm text-black-600'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.scale}
+                {props.sponsorActivitiesViewItem.sponsorStyle.style}
               </div>
             </td>
             <td className='py-3'>
               <div className='text-center text-sm text-black-600'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.isColor ? 'カラー' : 'モノクロ'}
+                {props.sponsorActivitiesViewItem.sponsorStyle.feature}
               </div>
             </td>
             <td className='py-3'>

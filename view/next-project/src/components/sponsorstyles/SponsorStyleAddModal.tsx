@@ -2,8 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 import { post } from '@api/api_methods';
-import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
-import { SCALE } from '@constants/scale';
+import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import { SponsorStyle } from '@type/common';
 
 interface ModalProps {
@@ -14,8 +13,8 @@ export default function SponsorAddModal(props: ModalProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<SponsorStyle>({
-    scale: SCALE[0],
-    isColor: false,
+    style: '',
+    feature: '',
     price: 0,
   });
 
@@ -49,31 +48,25 @@ export default function SponsorAddModal(props: ModalProps) {
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛スタイルの登録</h1>
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
-        <p className='text-black-600'>広告サイズ</p>
+        <p className='text-black-600'>協賛内容</p>
         <div className='col-span-4 w-full'>
-          <Select className='w-full' value={formData.scale} onChange={handler('scale')}>
-            {SCALE.map((scale) => (
-              <option key={scale} value={scale}>
-                {scale}
-              </option>
-            ))}
-          </Select>
-        </div>
-        <div>
-          <div className='text-black-600'>カラー</div>
-          <div className='text-black-600'>モノクロ</div>
-        </div>
-        <div className='col-span-4 grid w-full'>
-          <Select
+          <Input
+            type='text'
             className='w-full'
-            value={formData.isColor ? 'カラー' : 'モノクロ'}
-            onChange={(e) => {
-              setFormData({ ...formData, isColor: e.target.value === 'カラー' ? true : false });
-            }}
-          >
-            <option value={'カラー'}>カラー</option>
-            <option value={'モノクロ'}>モノクロ</option>
-          </Select>
+            id={String(formData.id)}
+            value={formData.style}
+            onChange={handler('style')}
+          />
+        </div>
+        <div className='text-black-600'>オプション</div>
+        <div className='col-span-4 grid w-full'>
+          <Input
+            type='text'
+            className='w-full'
+            id={String(formData.id)}
+            value={formData.feature}
+            onChange={handler('feature')}
+          />
         </div>
         <div className='text-black-600'>金額</div>
         <div className='col-span-4 w-full'>

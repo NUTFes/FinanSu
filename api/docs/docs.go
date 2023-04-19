@@ -2041,14 +2041,14 @@ const docTemplate = `{
     "definitions":{
         "sponsorStyle":{
             "properties":{
-                "scale":{
+                "style":{
                     "type": "string",
                     "example": "1分の1",
 
                 },
-                "isColor":{
-                    "type": "boolean",
-                    "example": "false",
+                "feature":{
+                    "type": "string",
+                    "example": "カラー",
                 },
                 "price":{
                     "type": "int",
@@ -2056,8 +2056,8 @@ const docTemplate = `{
                 },
             },
             "required":{
-                    "scale",
-                    "isColor",
+                    "style",
+                    "feature",
                     "price",
             },
         },

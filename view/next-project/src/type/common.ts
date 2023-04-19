@@ -95,24 +95,14 @@ export interface PurchaseReport {
 // // SponsorStyle(協賛スタイル)
 export interface SponsorStyle {
   id?: number;
-  scale: string;
-  isColor: boolean;
+  style: string;
+  feature: string;
   price: number;
   createdAt?: string;
   updatedAt?: string;
 }
 
 // // Activity(協賛活動)
-export interface Activity {
-  id?: number;
-  sponsorStyleID: number;
-  userID: number;
-  isColor: boolean;
-  sponsorID: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 export interface SponsorActivity {
   id?: number;
   sponsorID: number;

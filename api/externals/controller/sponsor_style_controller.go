@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
@@ -50,7 +49,7 @@ func (s *sponsorStyleController) CreateSponsorStyle(c echo.Context) error {
 	if err := c.Bind(sponsorStyle); err != nil {
 		return err
 	}
-	latastSponsorStyle, err := s.u.CreateSponsorStyle(c.Request().Context(), sponsorStyle.Scale, strconv.FormatBool(sponsorStyle.IsColor), sponsorStyle.Price)
+	latastSponsorStyle, err := s.u.CreateSponsorStyle(c.Request().Context(), sponsorStyle.Style, sponsorStyle.Feature, sponsorStyle.Price)
 	if err != nil {
 		return err
 	}
@@ -64,7 +63,7 @@ func (s *sponsorStyleController) UpdateSponsorStyle(c echo.Context) error {
 	if err := c.Bind(sponsorStyle); err != nil {
 		return err
 	}
-	updatedSponsorStyle, err := s.u.UpdateSponsorStyle(c.Request().Context(), id, sponsorStyle.Scale, strconv.FormatBool(sponsorStyle.IsColor), sponsorStyle.Price)
+	updatedSponsorStyle, err := s.u.UpdateSponsorStyle(c.Request().Context(), id, sponsorStyle.Style, sponsorStyle.Feature, sponsorStyle.Price)
 	if err != nil {
 		return err
 	}

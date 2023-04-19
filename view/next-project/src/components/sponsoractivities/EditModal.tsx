@@ -66,9 +66,7 @@ export default function EditModal(props: ModalProps) {
               value={sponsorStyle.id}
               selected={sponsorStyle.id === data.sponsorStyleID}
             >
-              {`${sponsorStyle.scale} / ${sponsorStyle.isColor ? 'カラー' : 'モノクロ'} / ${
-                sponsorStyle.price
-              } 円`}
+              {`${sponsorStyle.style} / ${sponsorStyle.feature} / ${sponsorStyle.price} 円`}
             </option>
           ))}
         </Select>
