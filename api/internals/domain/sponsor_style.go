@@ -6,8 +6,8 @@ import (
 
 type SponsorStyle struct {
 	ID        int       `json:"id"`
-	Scale     string    `json:"scale"`
-	IsColor   bool      `json:"isColor"`
+	Style     string    `json:"style"`
+	Feature    string    `json:"feature"`
 	Price     int       `json:"price"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`

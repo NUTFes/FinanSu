@@ -42,14 +42,14 @@ func (ssr *sponsorStyleRepository) Find(c context.Context, id string) (*sql.Row,
 // 作成
 func (ssr *sponsorStyleRepository) Create(
 	c context.Context,
-	scale string,
-	isColor string,
+	style string,
+	feature string,
 	price int,
 ) error {
 	query := `
 		INSERT INTO
-			sponsor_styles (scale, is_color, price)
-		VALUES ('` + scale + "'," + isColor + "," + strconv.Itoa(price) + ")"
+			sponsor_styles (style, feature, price)
+		VALUES ('` + style + "','" + feature + "'," + strconv.Itoa(price) + ")"
 	return ssr.crud.UpdateDB(c, query)
 }
 
@@ -57,17 +57,17 @@ func (ssr *sponsorStyleRepository) Create(
 func (ssr *sponsorStyleRepository) Update(
 	c context.Context,
 	id string,
-	scale string,
-	isColor string,
+	style string,
+	feature string,
 	price int,
 ) error {
 	query := `
 		UPDATE
 			sponsor_styles
 		SET
-			scale = '` + scale +
-		"' , is_color = " + isColor +
-		", price = " + strconv.Itoa(price) +
+			style = '` + style +
+		"' , feature = '" + feature +
+		"', price = " + strconv.Itoa(price) +
 		" where id = " + id
 	return ssr.crud.UpdateDB(c, query)
 }

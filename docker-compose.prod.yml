@@ -17,7 +17,9 @@ services:
     depends_on: ["api"]
 
   api:
-    build: "./api"
+    build:
+      context: ./api
+      dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
     volumes: ["./api:/app"]
     command: "./start.sh"
