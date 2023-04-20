@@ -22,6 +22,6 @@ services:
       dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
     volumes: ["./api:/app"]
-    command: "./start.sh"
+    command: "go run main.go"
     env_file: ["./finansu.env"]
     ports: ["1323:1323"]
