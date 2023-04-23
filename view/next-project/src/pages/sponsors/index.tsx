@@ -73,7 +73,7 @@ const sponsorship: NextPage<Props> = (props: Props) => {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {sponsorList.map((sponsor, index) => (
+              {sponsorList && sponsorList.map((sponsor, index) => (
                 <tr
                   className={clsx(index !== sponsorList.length - 1 && 'border-b')}
                   key={sponsor.id}
@@ -101,6 +101,13 @@ const sponsorship: NextPage<Props> = (props: Props) => {
                   </td>
                 </tr>
               ))}
+              {!sponsorList && (
+                <tr>
+                  <td colSpan={6} className='py-3'>
+                    <div className='text-center text-black-300'>データがありません</div>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

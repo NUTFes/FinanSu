@@ -107,80 +107,105 @@ export default function SponsorActivities(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {props.sponsorActivitiesView.map((sponsorActivitiesItem, index) => (
-                <tr
-                  className={clsx(props.sponsorActivitiesView.length - 1 !== index && 'border-b')}
-                  key={sponsorActivitiesItem.sponsorActivity.id}
-                >
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
+              {props.sponsorActivitiesView &&
+                props.sponsorActivitiesView.map((sponsorActivitiesItem, index) => (
+                  <tr
+                    className={clsx(props.sponsorActivitiesView.length - 1 !== index && 'border-b')}
+                    key={sponsorActivitiesItem.sponsorActivity.id}
                   >
-                    <div className='text-center text-sm text-black-600'>
-                      {sponsorActivitiesItem.sponsor.name}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                    className='py-3'
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      <p>{sponsorActivitiesItem.sponsorStyle.style}</p>
-                      <p>{sponsorActivitiesItem.sponsorStyle.feature}</p>
-                      <p>{sponsorActivitiesItem.sponsorStyle.price} 円</p>
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {sponsorActivitiesItem.user.name}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
-                    {sponsorActivitiesItem.sponsorActivity.isDone && (
-                      <div className='text-center text-sm text-black-600'>回収完了</div>
-                    )}
-                    {!sponsorActivitiesItem.sponsorActivity.isDone && (
-                      <div className='text-center text-sm text-black-600'>未回収</div>
-                    )}
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
-                    </div>
-                  </td>
-                  <td>
-                    <div className='flex'>
-                      <div className='mx-1'>
-                        <OpenEditModalButton
-                          id={sponsorActivitiesItem.sponsorActivity.id || '0'}
-                          sponsorActivity={sponsorActivitiesItem.sponsorActivity}
-                          sponsors={props.sponsors}
-                          sponsorStyles={props.sponsorStyles}
-                          users={props.users}
-                        />
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          sponsorActivitiesItem.sponsorActivity.id || 0,
+                          sponsorActivitiesItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {sponsorActivitiesItem.sponsor.name}
                       </div>
-                      <div className='mx-1'>
-                        <OpenDeleteModalButton id={sponsorActivitiesItem.sponsorActivity.id || 0} />
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          sponsorActivitiesItem.sponsorActivity.id || 0,
+                          sponsorActivitiesItem,
+                        );
+                      }}
+                      className='py-3'
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        <p>{sponsorActivitiesItem.sponsorStyle.style}</p>
+                        <p>{sponsorActivitiesItem.sponsorStyle.feature}</p>
+                        <p>{sponsorActivitiesItem.sponsorStyle.price} 円</p>
                       </div>
-                    </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          sponsorActivitiesItem.sponsorActivity.id || 0,
+                          sponsorActivitiesItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {sponsorActivitiesItem.user.name}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          sponsorActivitiesItem.sponsorActivity.id || 0,
+                          sponsorActivitiesItem,
+                        );
+                      }}
+                    >
+                      {sponsorActivitiesItem.sponsorActivity.isDone && (
+                        <div className='text-center text-sm text-black-600'>回収完了</div>
+                      )}
+                      {!sponsorActivitiesItem.sponsorActivity.isDone && (
+                        <div className='text-center text-sm text-black-600'>未回収</div>
+                      )}
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          sponsorActivitiesItem.sponsorActivity.id || 0,
+                          sponsorActivitiesItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
+                      </div>
+                    </td>
+                    <td>
+                      <div className='flex'>
+                        <div className='mx-1'>
+                          <OpenEditModalButton
+                            id={sponsorActivitiesItem.sponsorActivity.id || '0'}
+                            sponsorActivity={sponsorActivitiesItem.sponsorActivity}
+                            sponsors={props.sponsors}
+                            sponsorStyles={props.sponsorStyles}
+                            users={props.users}
+                          />
+                        </div>
+                        <div className='mx-1'>
+                          <OpenDeleteModalButton
+                            id={sponsorActivitiesItem.sponsorActivity.id || 0}
+                          />
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              {!props.sponsorActivitiesView && (
+                <tr>
+                  <td colSpan={6} className='py-3'>
+                    <div className='text-center text-sm text-black-600'>データがありません</div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
