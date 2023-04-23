@@ -1,9 +1,15 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
 
+import { useRecoilValue } from 'recoil';
+import OpenExpenseAddModalButton from '@/components/budgets/OpenExpenseAddModalButton';
+import OpenExpenseDeleteModalButton from '@/components/budgets/OpenExpenseDeleteModalButton';
+import OpenExpenseEditModalButton from '@/components/budgets/OpenExpenseEditModalButton';
+import { authAtom } from '@/store/atoms';
+import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';
 import DetailModal from '@components/budgets/DetailModal';
 import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
@@ -11,7 +17,7 @@ import OpenDeleteModalButton from '@components/budgets/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/budgets/OpenEditModalButton';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
-import { BudgetView, Source, Year, ExpenseView } from '@type/common';
+import { BudgetView, Source, Year, ExpenseView, User } from '@type/common';
 
 interface Props {
   budgets: BudgetView[];
@@ -42,6 +48,23 @@ export async function getServerSideProps() {
 
 export default function BudgetList(props: Props) {
   const { budgets, sources, years, expenses } = props;
+  const auth = useRecoilValue(authAtom);
+  const [currentUser, setCurrentUser] = useState<User>();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await getCurrentUser(auth);
+      setCurrentUser(res);
+    };
+    getUser();
+  }, [auth]);
+
+  const isDisabled = useMemo(() => {
+    if (currentUser) {
+      return !(currentUser.roleID === 2 || currentUser.roleID === 3);
+    }
+    return true;
+  }, [currentUser]);
 
   const [expenseView, setExpenseView] = useState<ExpenseView>(props.expenses[0]);
   const [isOpen, setIsOpen] = useState(false);
@@ -99,69 +122,58 @@ export default function BudgetList(props: Props) {
                   </OpenAddModalButton>
                 </div>
                 <div className='w-100 mb-2 p-5'>
-                  <table className='mb-5 w-full table-fixed border-collapse'>
+                  <table className='mb-5 w-full table-auto border-collapse'>
                     <thead>
-                      <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>収入元</div>
+                      <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 text-sm text-black-600'>
+                        <th className='pb-3'>
+                          <div>収入元</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>年度</div>
+                        <th className='pb-3'>
+                          <div>年度</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>金額</div>
+                        <th className='pb-3'>
+                          <div>金額</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>作成日時</div>
+                        <th className='pb-3'>
+                          <div>作成日時</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>更新日時</div>
+                        <th className='pb-3'>
+                          <div>更新日時</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'></div>
-                        </th>
+                        <th className='pb-3' />
                       </tr>
                     </thead>
                     <tbody>
                       {budgets.map((budgetView, index) => (
                         <tr
                           key={budgetView.budget.id}
-                          className={clsx(index !== budgets.length - 1 && 'border-b')}
+                          className={clsx(
+                            index !== budgets.length - 1 && 'border-b',
+                            'py-3 text-black-600',
+                          )}
                         >
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
-                            {budgetView.source.name}
-                          </td>
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
-                            {budgetView.year.year}
-                          </td>
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
-                            {budgetView.budget.price}
-                          </td>
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <td className='py-3 text-center'>{budgetView.source.name}</td>
+                          <td className='py-3 text-center'>{budgetView.year.year}</td>
+                          <td className='py-3 text-center'>{budgetView.budget.price}</td>
+                          <td className='py-3 text-center'>
                             {formatDate(
                               budgetView.budget.createdAt ? budgetView.budget.createdAt : '',
                             )}
                           </td>
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <td className='py-3 text-center'>
                             {formatDate(
                               budgetView.budget.updatedAt ? budgetView.budget.updatedAt : '',
                             )}
                           </td>
-                          <td className='content-center p-3 text-black-600'>
-                            <div className='flex text-center'>
-                              <div className='flex-auto'>
-                                <OpenEditModalButton
-                                  id={budgetView.budget.id ? budgetView.budget.id : 0}
-                                  sources={sources}
-                                  years={years}
-                                />
-                              </div>
-                              <div className='flex-auto'>
-                                <OpenDeleteModalButton
-                                  id={budgetView.budget.id ? budgetView.budget.id : 0}
-                                />
-                              </div>
-                            </div>
+                          <td className='flex items-center justify-center gap-3 py-3'>
+                            <OpenEditModalButton
+                              id={budgetView.budget.id ? budgetView.budget.id : 0}
+                              sources={sources}
+                              years={years}
+                            />
+                            <OpenDeleteModalButton
+                              id={budgetView.budget.id ? budgetView.budget.id : 0}
+                            />
                           </td>
                         </tr>
                       ))}
@@ -195,50 +207,81 @@ export default function BudgetList(props: Props) {
                     <option value='2022'>2022</option>
                   </select>
                 </div>
+                <div className='flex justify-end'>
+                  <OpenExpenseAddModalButton years={years} disabled={isDisabled}>
+                    支出元登録
+                  </OpenExpenseAddModalButton>
+                </div>
                 <div className='w-100 mb-2 p-5'>
                   <table className='mb-5 w-full table-fixed border-collapse'>
                     <thead>
                       <tr
                         className={clsx(
-                          'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
+                          'border border-x-white-0 border-b-primary-1 border-t-white-0 text-sm text-black-600',
                         )}
                       >
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>支出元</div>
+                        <th className='pb-3'>
+                          <div>支出元</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>金額</div>
+                        <th className='pb-3'>
+                          <div className='text-center'>金額</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>作成日時</div>
+                        <th className='pb-3'>
+                          <div className='text-center'>作成日時</div>
                         </th>
-                        <th className='w-1/6 border-b-primary-1 pb-2'>
-                          <div className='text-center text-sm text-black-600'>更新日時</div>
+                        <th className='pb-3'>
+                          <div className='text-center'>更新日時</div>
                         </th>
+                        <th className='pb-3' />
                       </tr>
                     </thead>
                     <tbody>
                       {expenses.map((expenseView, index) => (
                         <tr
                           key={expenseView.expense.id}
-                          className={clsx(index !== expenses.length - 1 && 'border-b')}
-                          onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                          className={clsx(
+                            index !== expenses.length - 1 && 'border-b',
+                            'py-3 text-black-600',
+                          )}
                         >
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <td
+                            className='py-3 text-center'
+                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                          >
                             {expenseView.expense.name}
                           </td>
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <td
+                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                            className='py-3 text-center'
+                          >
                             {expenseView.expense.totalPrice}
                           </td>
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <td
+                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                            className='py-3 text-center'
+                          >
                             {formatDate(
                               expenseView.expense.createdAt ? expenseView.expense.createdAt : '',
                             )}
                           </td>
-                          <td className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <td
+                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                            className='py-3 text-center'
+                          >
                             {formatDate(
                               expenseView.expense.updatedAt ? expenseView.expense.updatedAt : '',
                             )}
+                          </td>
+                          <td className='flex justify-center gap-3 py-3'>
+                            <OpenExpenseEditModalButton
+                              disabled={isDisabled}
+                              id={expenseView.expense.id ? expenseView.expense.id : 0}
+                              expense={expenseView.expense}
+                            />
+                            <OpenExpenseDeleteModalButton
+                              disabled={isDisabled}
+                              id={expenseView.expense.id ? expenseView.expense.id : 0}
+                            />
                           </td>
                         </tr>
                       ))}
@@ -249,7 +292,6 @@ export default function BudgetList(props: Props) {
                       )}
                     >
                       <tr>
-                        <th />
                         <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
                         <th className='py-3 pt-4 pb-3 text-center text-black-600'>
                           {expensesTotalFee}

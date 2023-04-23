@@ -12,7 +12,7 @@ interface Props {
   sponsorStyles: SponsorStyle[];
   sponsors: Sponsor[];
   users: User[];
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
