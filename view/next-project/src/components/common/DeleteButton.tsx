@@ -7,10 +7,10 @@ interface Props {
 }
 
 const DeleteButton = (props: Props) => {
-  const { onClick, isDisabled } = props;
+  const { onClick, isDisabled=false } = props;
 
   const buttonClass = useMemo(() => {
-    if (!isDisabled) {
+    if (isDisabled) {
       return 'cursor-default opacity-25';
     } else {
       return 'cursor-pointer hover:bg-gradient-to-br hover:from-red-600 hover:to-red-500';
@@ -19,7 +19,7 @@ const DeleteButton = (props: Props) => {
 
   return (
     <button
-      disabled={!isDisabled}
+      disabled={isDisabled}
       className={`${buttonClass} flex h-6 w-6 min-w-0 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 p-0`}
       onClick={onClick}
       suppressHydrationWarning
