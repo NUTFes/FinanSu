@@ -87,11 +87,12 @@ export default function SponsorActivitiesAddModal() {
       <p className='text-black-600'>協賛企業</p>
       <div className='col-span-4 w-full'>
         <Select value={data.sponsorID} onChange={formDataHandler('sponsorID')}>
-          {sponsors && sponsors.map((sponsor: Sponsor) => (
-            <option key={sponsor.id} value={sponsor.id}>
-              {sponsor.name}
-            </option>
-          ))}
+          {sponsors &&
+            sponsors.map((sponsor: Sponsor) => (
+              <option key={sponsor.id} value={sponsor.id}>
+                {sponsor.name}
+              </option>
+            ))}
           {!sponsors && <option>企業が登録されていません</option>}
         </Select>
       </div>
