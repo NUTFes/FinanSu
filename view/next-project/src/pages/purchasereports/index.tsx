@@ -25,7 +25,7 @@ export interface PurchaseReportView {
 
 interface Props {
   purchaseReports: PurchaseReport[];
-  purchaseReportViews: PurchaseReportView[];
+  purchaseReportView: PurchaseReportView[];
   user: User;
   purchaseOrder: PurchaseOrder[];
   expenses: Expense[];
@@ -41,7 +41,7 @@ export async function getServerSideProps() {
   return {
     props: {
       purchaseReports: purchaseReportsRes,
-      purchaseReportViews: purchaseReportViewRes,
+      purchaseReportView: purchaseReportViewRes,
       expenses: expenseRes,
     },
   };
@@ -53,10 +53,8 @@ export default function PurchaseReports(props: Props) {
 
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
   const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
-  const [purchaseReportViews, setPurchaseReportViews] = useState<PurchaseReportView[]>(
-    props.purchaseReportViews,
-  );
 
+  const [purchaseReports, setPurchaseReports] = useState<PurchaseReport[]>(props.purchaseReports);
   const [purchaseReportChecks, setPurchaseReportChecks] = useState<boolean[]>([]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -86,11 +84,11 @@ export default function PurchaseReports(props: Props) {
   // すべてのpurchaseReportの合計金額
   const totalReportFee = useMemo(() => {
     let totalFee = 0;
-    purchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
+    props.purchaseReportView.map((purchaseReportView: PurchaseReportView) => {
       totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
     });
     return totalFee;
-  }, [purchaseReportViews]);
+  }, [props.purchaseReportView]);
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
@@ -100,32 +98,29 @@ export default function PurchaseReports(props: Props) {
           currentUser?.roleID === 3 ||
           currentUser?.id === purchaseReportView.purchaseReport.userID)
       ) {
-        return false;
-      } else {
         return true;
+      } else {
+        return false;
       }
     },
-    [currentUser?.roleID, currentUser?.id, purchaseReportViews],
+    [currentUser?.roleID, currentUser?.id, currentUser],
   );
 
   const updatePurchaseReport = async (purchaseReportID: number, purchaseReport: PurchaseReport) => {
     const url = process.env.CSR_API_URI + '/purchasereports/' + purchaseReportID;
-    const res: PurchaseReport = await put(url, purchaseReport);
-    const newPurchaseReportViews = purchaseReportViews.map((purchaseReportView) => {
-      if (purchaseReportView.purchaseReport.id === purchaseReportID) {
-        purchaseReportView.purchaseReport = res;
-      }
-      return purchaseReportView;
+    const res = await put(url, purchaseReport);
+    const newPurchaseReports = purchaseReports.map((purchaseReport) => {
+      return purchaseReport.id === purchaseReportID ? res : purchaseReport;
     });
-    setPurchaseReportViews(newPurchaseReportViews);
+    setPurchaseReports(newPurchaseReports);
   };
 
   useEffect(() => {
-    const purchaseReportChecks = purchaseReportViews.map((purchaseReportView) => {
-      return purchaseReportView.purchaseReport.financeCheck;
+    const purchaseReportChecks = purchaseReports.map((purchaseReport) => {
+      return purchaseReport.financeCheck;
     });
     setPurchaseReportChecks(purchaseReportChecks);
-  }, [purchaseReportViews]);
+  }, [purchaseReports, setPurchaseReports]);
 
   const isFinanceDirector = useMemo(() => {
     if (currentUser?.roleID === 3) {
@@ -194,8 +189,14 @@ export default function PurchaseReports(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {purchaseReportViews.map((purchaseReportViewItem, index) => (
-                <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
+              {props.purchaseReportView.map((purchaseReportViewItem, index) => (
+                <tr
+                  className='border-b'
+                  onClick={() => {
+                    onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
+                  }}
+                  key={purchaseReportViewItem.purchaseReport.id}
+                >
                   <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-600')}>
                       <Checkbox
@@ -210,20 +211,12 @@ export default function PurchaseReports(props: Props) {
                       />
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {purchaseReportViewItem.purchaseReport.id}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className={clsx('flex justify-center')}>
                       <BureauLabel
                         bureauName={
@@ -235,11 +228,7 @@ export default function PurchaseReports(props: Props) {
                       />
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {formatDate(
                         purchaseReportViewItem.purchaseReport.createdAt
@@ -248,20 +237,12 @@ export default function PurchaseReports(props: Props) {
                       )}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {purchaseReportViewItem.purchaseOrder.deadline}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div
                       className={clsx(
                         'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
@@ -277,11 +258,7 @@ export default function PurchaseReports(props: Props) {
                       ))}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {TotalFee(
                         purchaseReportViewItem.purchaseReport,
@@ -289,11 +266,7 @@ export default function PurchaseReports(props: Props) {
                       )}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {purchaseReportViewItem.purchaseReport.remark || '無し'}
                     </div>

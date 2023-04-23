@@ -16,17 +16,21 @@ import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@
 
 interface Props {
   user: User;
+  purchaseOrders: PurchaseOrder[];
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
 }
 export async function getServerSideProps() {
+  const getPurchaseOrdersUrl = process.env.SSR_API_URI + '/purchaseorders';
   const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
+  const purchaseOrdersRes = await get(getPurchaseOrdersUrl);
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
 
   return {
     props: {
+      purchaseOrders: purchaseOrdersRes,
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
     },
@@ -36,11 +40,9 @@ export async function getServerSideProps() {
 export default function PurchaseOrders(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(props.purchaseOrders);
   const [purchaseOrderChecks, setPurchaseOrderChecks] = useState<boolean[]>([]);
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
-  const [purchaseOrderViews, setPurchaseOrderViews] = useState<PurchaseOrderView[]>(
-    props.purchaseOrderView,
-  );
   const [purchaseOrderViewItem, setPurchaseOrderViewItem] = useState<PurchaseOrderView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = (purchaseOrderID: number, purchaseOrderViewItem: PurchaseOrderView) => {
@@ -68,31 +70,26 @@ export default function PurchaseOrders(props: Props) {
   // 全ての購入申請の合計金額を計算
   const totalPurchaseOrderFee = useMemo(() => {
     let totalFee = 0;
-    purchaseOrderViews.map((purchaseOrderView: PurchaseOrderView) => {
+    props.purchaseOrderView?.map((purchaseOrderView: PurchaseOrderView) => {
       totalFee += TotalFee(purchaseOrderView.purchaseItem);
     });
     return totalFee;
-  }, [purchaseOrderViews]);
+  }, [props.purchaseOrderView]);
 
   useEffect(() => {
-    const purchaseOrderChecks = purchaseOrderViews.map((purchaseOrderView) => {
-      return purchaseOrderView.purchaseOrder.financeCheck;
+    const purchaseOrderChecks = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.financeCheck;
     });
     setPurchaseOrderChecks(purchaseOrderChecks);
-  }, [purchaseOrderViews]);
+  }, [purchaseOrders, setPurchaseOrders]);
 
   const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
     const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;
-    const res: PurchaseOrder = await put(url, purchaseOrder);
-    const newPurchaseOrderViews = purchaseOrderViews.map(
-      (purchaseOrderView) => {
-        if (purchaseOrderView.purchaseOrder.id === res.id) {
-          purchaseOrderView.purchaseOrder = res;
-        }
-        return purchaseOrderView;
-      },
-    );
-    setPurchaseOrderViews(newPurchaseOrderViews);
+    const res = await put(url, purchaseOrder);
+    const newPurchaseOrders = purchaseOrders.map((purchaseOrder) => {
+      return purchaseOrder.id === purchaseOrderID ? res : purchaseOrder;
+    });
+    setPurchaseOrders(newPurchaseOrders);
   };
 
   const isFinanceDirector = useMemo(() => {
@@ -111,12 +108,12 @@ export default function PurchaseOrders(props: Props) {
           currentUser?.roleID === 3 ||
           currentUser?.id === purchaseOrderViewItem.purchaseOrder.userID)
       ) {
-        return false;
-      } else {
         return true;
+      } else {
+        return false;
       }
     },
-    [currentUser?.id, currentUser?.roleID, purchaseOrderViews],
+    [currentUser?.roleID, currentUser?.id, currentUser],
   );
 
   useEffect(() => {
@@ -172,8 +169,14 @@ export default function PurchaseOrders(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {purchaseOrderViews.map((purchaseOrderViewItem, index) => (
-                <tr className='border-b' key={purchaseOrderViewItem.purchaseOrder.id}>
+              {props.purchaseOrderView.map((purchaseOrderViewItem, index) => (
+                <tr
+                  className='border-b'
+                  key={purchaseOrderViewItem.purchaseOrder.id}
+                  onClick={() => {
+                    onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
+                  }}
+                >
                   <td className='py-3'>
                     <div className='text-center text-sm text-black-600'>
                       <Checkbox
@@ -188,11 +191,7 @@ export default function PurchaseOrders(props: Props) {
                       />
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='flex justify-center'>
                       <BureauLabel
                         bureauName={
@@ -204,11 +203,7 @@ export default function PurchaseOrders(props: Props) {
                       />
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {formatDate(
                         purchaseOrderViewItem.purchaseOrder.createdAt
@@ -217,20 +212,12 @@ export default function PurchaseOrders(props: Props) {
                       )}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {purchaseOrderViewItem.purchaseOrder.deadline}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'>
                       {purchaseOrderViewItem.purchaseItem &&
                         purchaseOrderViewItem.purchaseItem.map(
@@ -246,11 +233,7 @@ export default function PurchaseOrders(props: Props) {
                         )}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {TotalFee(purchaseOrderViewItem.purchaseItem)}
                     </div>

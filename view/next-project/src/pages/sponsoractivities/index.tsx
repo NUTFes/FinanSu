@@ -101,6 +101,9 @@ export default function SponsorActivities(props: Props) {
                 <th className='w-2/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>作成日時</div>
                 </th>
+                <th className='w-2/11 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>更新日時</div>
+                </th>
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'></div>
                 </th>
@@ -109,44 +112,30 @@ export default function SponsorActivities(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {props.sponsorActivitiesView.map((sponsorActivitiesItem, index) => (
                 <tr
+                  onClick={() => {
+                    onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
+                  }}
                   className={clsx(props.sponsorActivitiesView.length - 1 !== index && 'border-b')}
                   key={sponsorActivitiesItem.sponsorActivity.id}
                 >
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {sponsorActivitiesItem.sponsor.name}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                    className='py-3'
-                  >
+                  <td className='py-3'>
                     <div className='text-center text-sm text-black-600'>
                       <p>{sponsorActivitiesItem.sponsorStyle.style}</p>
                       <p>{sponsorActivitiesItem.sponsorStyle.feature}</p>
                       <p>{sponsorActivitiesItem.sponsorStyle.price} 円</p>
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {sponsorActivitiesItem.user.name}
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     {sponsorActivitiesItem.sponsorActivity.isDone && (
                       <div className='text-center text-sm text-black-600'>回収完了</div>
                     )}
@@ -154,13 +143,14 @@ export default function SponsorActivities(props: Props) {
                       <div className='text-center text-sm text-black-600'>未回収</div>
                     )}
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(sponsorActivitiesItem.sponsorActivity.id || 0, sponsorActivitiesItem);
-                    }}
-                  >
+                  <td>
                     <div className='text-center text-sm text-black-600'>
                       {formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
+                    </div>
+                  </td>
+                  <td>
+                    <div className='text-center text-sm text-black-600'>
+                      {formatDate(sponsorActivitiesItem.sponsorActivity.updatedAt)}
                     </div>
                   </td>
                   <td>
@@ -172,10 +162,24 @@ export default function SponsorActivities(props: Props) {
                           sponsors={props.sponsors}
                           sponsorStyles={props.sponsorStyles}
                           users={props.users}
+                          isDisabled={
+                            user.bureauID === 2 ||
+                            user.bureauID === 3 ||
+                            user.bureauID === 6 ||
+                            user.id === sponsorActivitiesItem.sponsorActivity.id
+                          }
                         />
                       </div>
                       <div className='mx-1'>
-                        <OpenDeleteModalButton id={sponsorActivitiesItem.sponsorActivity.id || 0} />
+                        <OpenDeleteModalButton
+                          id={sponsorActivitiesItem.sponsorActivity.id || 0}
+                          isDisabled={
+                            user.bureauID === 2 ||
+                            user.bureauID === 3 ||
+                            user.bureauID === 6 ||
+                            user.id === sponsorActivitiesItem.sponsorActivity.id
+                          }
+                        />
                       </div>
                     </div>
                   </td>
