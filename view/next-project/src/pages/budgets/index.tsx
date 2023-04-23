@@ -208,7 +208,9 @@ export default function BudgetList(props: Props) {
                   </select>
                 </div>
                 <div className='flex justify-end'>
-                  <OpenExpenseAddModalButton years={years} disabled={isDisabled}>支出元登録</OpenExpenseAddModalButton>
+                  <OpenExpenseAddModalButton years={years} disabled={isDisabled}>
+                    支出元登録
+                  </OpenExpenseAddModalButton>
                 </div>
                 <div className='w-100 mb-2 p-5'>
                   <table className='mb-5 w-full table-fixed border-collapse'>

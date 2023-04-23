@@ -7,7 +7,7 @@ interface Props {
 }
 
 const DeleteButton = (props: Props) => {
-  const { onClick, isDisabled=false } = props;
+  const { onClick, isDisabled = false } = props;
 
   const buttonClass = useMemo(() => {
     if (isDisabled) {

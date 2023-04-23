@@ -13,7 +13,11 @@ interface Props {
 
 function AddButton(props: Props): JSX.Element {
   return (
-    <PrimaryButton className={clsx(props.className)} onClick={props.onClick} disabled={props.disabled}>
+    <PrimaryButton
+      className={clsx(props.className)}
+      onClick={props.onClick}
+      disabled={props.disabled}
+    >
       <RiAddCircleLine
         size={20}
         style={{

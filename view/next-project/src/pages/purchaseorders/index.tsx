@@ -84,14 +84,12 @@ export default function PurchaseOrders(props: Props) {
   const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
     const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;
     const res: PurchaseOrder = await put(url, purchaseOrder);
-    const newPurchaseOrderViews = purchaseOrderViews.map(
-      (purchaseOrderView) => {
-        if (purchaseOrderView.purchaseOrder.id === res.id) {
-          purchaseOrderView.purchaseOrder = res;
-        }
-        return purchaseOrderView;
-      },
-    );
+    const newPurchaseOrderViews = purchaseOrderViews.map((purchaseOrderView) => {
+      if (purchaseOrderView.purchaseOrder.id === res.id) {
+        purchaseOrderView.purchaseOrder = res;
+      }
+      return purchaseOrderView;
+    });
     setPurchaseOrderViews(newPurchaseOrderViews);
   };
 

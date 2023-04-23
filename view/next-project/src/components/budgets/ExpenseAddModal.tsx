@@ -51,20 +51,11 @@ export default function ExpenseAddModal(props: ModalProps) {
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
         <p className='text-black-600'>支出元名</p>
         <div className='col-span-4 w-full'>
-          <Input
-            type='text'
-            className='w-full'
-            value={formData.name}
-            onChange={handler('name')}
-          />
+          <Input type='text' className='w-full' value={formData.name} onChange={handler('name')} />
         </div>
         <div className='text-black-600'>年</div>
         <div className='col-span-4 grid w-full'>
-          <Select
-            className='w-full'
-            value={formData.yearID}
-            onChange={handler('yearID')}
-          >
+          <Select className='w-full' value={formData.yearID} onChange={handler('yearID')}>
             {props.years.map((year) => (
               <option key={year.id} value={year.id}>
                 {year.year}

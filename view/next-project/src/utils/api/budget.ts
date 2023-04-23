@@ -46,7 +46,7 @@ export const expensePut = async (url: string, data: Expense) => {
     body: JSON.stringify(data),
   });
   return await res.json();
-}
+};
 
 // dataはExpenseからtotalPriceを削除したもの
 export const expensePost = async (url: string, data: Omit<Expense, 'totalPrice'>) => {
@@ -62,4 +62,4 @@ export const expensePost = async (url: string, data: Omit<Expense, 'totalPrice'>
     body: JSON.stringify(data),
   });
   return await res.json();
-}
+};
