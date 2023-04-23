@@ -7,10 +7,10 @@ interface Props {
 }
 
 const EditButton: React.FC<Props> = (props) => {
-  const { onClick, isDisabled = false } = props;
+  const { onClick, isDisabled = true } = props;
 
   const buttonClass = useMemo(() => {
-    if (isDisabled) {
+    if (!isDisabled) {
       return 'cursor-default bg-primary-1 opacity-25';
     } else {
       return 'cursor-pointer bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1';
@@ -21,7 +21,7 @@ const EditButton: React.FC<Props> = (props) => {
     <button
       suppressHydrationWarning
       className={`${buttonClass}  flex h-6 w-6 min-w-0  items-center justify-center rounded-full p-0`}
-      disabled={isDisabled}
+      disabled={!isDisabled}
       onClick={onClick}
     >
       <RiPencilFill size={'15px'} color={'white'} />
