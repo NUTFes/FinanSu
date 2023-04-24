@@ -2,7 +2,9 @@ name: Build Docker image and push to Docker Hub
 
 on:
   push:
-    branches: develop
+    branches:
+      - main
+      - develop
 
   workflow_dispatch:
 
