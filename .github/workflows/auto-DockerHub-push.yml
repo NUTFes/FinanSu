@@ -33,16 +33,20 @@ jobs:
           docker tag finansu-prod-api ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-api:latest
           docker tag finansu-prod-view ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-view:latest
       
-      - name: Push Api image to Docker Hub
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-api:latest
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-api:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-view:latest
+      # - name: Push Api image to Docker Hub
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-api:latest
 
-      - name: Push View image to Docker Hub
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-view:latest
+      # - name: Push View image to Docker Hub
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-view:latest
