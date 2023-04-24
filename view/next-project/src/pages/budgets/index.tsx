@@ -88,6 +88,13 @@ export default function BudgetList(props: Props) {
     return datetime2;
   };
 
+  const initYear: Year = {year: 2021}
+  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
+  const handleSelectedYear = (selectedYear: number) => {
+    const year: Year = {year: selectedYear}
+    setSelectedYear(year)
+  }
+
   return (
     <MainLayout>
       <Head>
@@ -105,9 +112,10 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'収入一覧'} />
-                  <select className='w-100 '>
+                  <select className='w-100 ' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
+                    <option value='2023'>2023</option>
                   </select>
                 </div>
                 <div className='flex justify-end'>
@@ -144,7 +152,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {budgets.map((budgetView, index) => (
+                      {budgets.filter((budgetView) => (budgetView.year.year == selectedYear.year)).map((budgetView, index) => (
                         <tr
                           key={budgetView.budget.id}
                           className={clsx(
