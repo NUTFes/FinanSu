@@ -3,12 +3,12 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
+import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
-import OpenAddModalButton from '@components/sponsoractivities/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
 import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User } from '@type/common';
@@ -79,7 +79,13 @@ export default function SponsorActivities(props: Props) {
             </select>
           </div>
           <div className='flex justify-end'>
-            <OpenAddModalButton>協賛活動登録</OpenAddModalButton>
+            <OpenModalButton
+              users={props.users}
+              sponsors={props.sponsors}
+              sponsorStyles={props.sponsorStyles}
+            >
+              協賛活動登録
+            </OpenModalButton>
           </div>
         </div>
         <div className='w-100 mb-2 p-5'>
