@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
-import { useUI } from '../ui/context';
 import { post } from '@/utils/api/sponsorActivities';
 import {
   CloseButton,
@@ -15,48 +14,27 @@ import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
 
-export default function SponsorActivitiesAddModal() {
+interface Props {
+  users: User[];
+  sponsors: Sponsor[];
+  sponsorStyles: SponsorStyle[];
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function SponsorActivitiesAddModal(props: Props) {
   const router = useRouter();
-  const { closeModal } = useUI();
   const reset = () => {
     setIsDone(false);
   };
 
-  // 協賛活動を登録するかどうかのフラグ
-  const [isDone, setIsDone] = useState<boolean>(false);
-
-  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
-  const [sponsorStyles, setSponsorStyles] = useState<SponsorStyle[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  useEffect(() => {
-    const getSponsor = async () => {
-      const sponsorUrl = process.env.CSR_API_URI + '/sponsors';
-      const res = await fetch(sponsorUrl);
-      const data = await res.json();
-      setSponsors(data);
-    };
-    const getSponsorStyle = async () => {
-      const sponsorStyleUrl = process.env.CSR_API_URI + '/sponsorstyles';
-      const res = await fetch(sponsorStyleUrl);
-      const data = await res.json();
-      setSponsorStyles(data);
-    };
-    const getUsers = async () => {
-      const usersUrl = process.env.CSR_API_URI + '/users';
-      const res = await fetch(usersUrl);
-      const data = await res.json();
-      setUsers(data);
-    };
-    getSponsor();
-    getSponsorStyle();
-    getUsers();
-  }, []);
+  const [isDone, setIsDone] = useState(false);
+  const { users, sponsors, sponsorStyles } = props;
 
   const [formData, setFormData] = useState<SponsorActivity>({
     id: 0,
-    sponsorID: 1,
-    sponsorStyleID: 1,
-    userID: 1,
+    sponsorID: sponsors[0].id || 0,
+    sponsorStyleID: sponsorStyles[0].id || 0,
+    userID: users[0].id || 0,
     isDone: false,
     createdAt: '',
     updatedAt: '',
@@ -71,7 +49,7 @@ export default function SponsorActivitiesAddModal() {
   // 協賛活動の登録と更新を行い、ページをリロード
   const submit = (data: SponsorActivity) => {
     addSponsorActivities(data);
-    closeModal();
+    props.setIsOpen(false);
     router.reload();
   };
 
@@ -87,11 +65,13 @@ export default function SponsorActivitiesAddModal() {
       <p className='text-black-600'>協賛企業</p>
       <div className='col-span-4 w-full'>
         <Select value={data.sponsorID} onChange={formDataHandler('sponsorID')}>
-          {sponsors.map((sponsor: Sponsor) => (
-            <option key={sponsor.id} value={sponsor.id}>
-              {sponsor.name}
-            </option>
-          ))}
+          {sponsors &&
+            sponsors.map((sponsor: Sponsor) => (
+              <option key={sponsor.id} value={sponsor.id}>
+                {sponsor.name}
+              </option>
+            ))}
+          {!sponsors && <option>企業が登録されていません</option>}
         </Select>
       </div>
       <p className='text-black-600'>協賛スタイル</p>
@@ -182,7 +162,7 @@ export default function SponsorActivitiesAddModal() {
           <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
-                closeModal();
+                props.setIsOpen(false);
               }}
             />
           </div>
@@ -210,6 +190,7 @@ export default function SponsorActivitiesAddModal() {
                 onClick={() => {
                   setIsDone(true);
                 }}
+                disabled={!sponsors}
               >
                 <p>確認へ</p>
                 <RiArrowDropRightLine size={23} />

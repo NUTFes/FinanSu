@@ -6,7 +6,7 @@ import { DeleteButton } from '@components/common';
 interface Props {
   children?: React.ReactNode;
   id: number | string;
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
