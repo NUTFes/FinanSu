@@ -13,7 +13,7 @@ ENV NODE_ENV production
 
 COPY --from=builder /app/next-project/next.config.js ./
 COPY --from=builder /app/next-project/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/next-project/.next ./.next
+COPY --from=builder --chown=nonroot:nonroot /app/next-project/.next ./.next
 COPY --from=builder /app/next-project/node_modules ./node_modules
 COPY --from=builder /app/next-project/package.json ./package.json
 
