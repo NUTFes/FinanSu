@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - feature/Kubosaka/auto_DockerHub_push
 
   workflow_dispatch:
 
