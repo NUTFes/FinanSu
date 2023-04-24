@@ -1,0 +1,45 @@
+name: Build Docker image and push to Docker Hub
+
+on:
+  push:
+    branches: main
+
+  workflow_dispatch:
+  
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2.0.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build Docker image
+        run: | 
+          docker build -f ./prod.api.Dockerfile -t finansu-prod-api  .
+          docker build -f ./prod.view.Dockerfile -t finansu-prod-view .
+      
+      - name: Tag Docker image
+        run: |
+          docker tag finansu-prod-api ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-api:latest
+          docker tag finansu-prod-view ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-view:latest
+      
+      - name: Push Api image to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-api:latest
+
+      - name: Push View image to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/finansu-view:latest
