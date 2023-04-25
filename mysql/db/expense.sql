@@ -110,6 +110,18 @@ ON
 SET
 	expense.totalPrice = tmp2.totalPrice;
 
+-- tmp2のidがNULLのexpenseのtotalPriceを0にする
+UPDATE
+	expense
+LEFT JOIN 
+	tmp2
+ON
+	expense.id = tmp2.id
+SET
+	expense.totalPrice = 0
+WHERE
+	tmp2.id IS NULL;
+
 -- テンポラリテーブル削除
 DROP TEMPORARY TABLE tmp,tmp2;
 
