@@ -36,10 +36,6 @@ export default function SponsorStyleList(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title>協賛スタイル一覧</Title>
-            <select className='w-fit'>
-              <option value='2021'>2021</option>
-              <option value='2022'>2022</option>
-            </select>
           </div>
           <div className='flex justify-end'>
             <div>

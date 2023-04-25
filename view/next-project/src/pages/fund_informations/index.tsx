@@ -13,7 +13,7 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { DEPARTMENTS } from '@constants/departments';
-import { Department, FundInformation, Teacher, User } from '@type/common';
+import { Department, FundInformation, Teacher, User, Year} from '@type/common';
 
 interface FundInformationView {
   fundInformation: FundInformation;
@@ -221,6 +221,13 @@ export default function FundInformations(props: Props) {
     }
   };
 
+  const initYear: Year = {year: 2021}
+  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
+  const handleSelectedYear = (selectedYear: number) => {
+    const year: Year = {year: selectedYear}
+    setSelectedYear(year)
+  }
+
   return (
     <MainLayout>
       <Head>
@@ -231,9 +238,10 @@ export default function FundInformations(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'学内募金一覧'} />
-            <select className='w-100 '>
+            <select className='w-100 ' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
+              <option value='2023'>2023</option>
             </select>
           </div>
           <div className='flex justify-end'>
@@ -272,7 +280,7 @@ export default function FundInformations(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationView &&
-                fundInformationView.map((fundViewItem: FundInformationView, index) => (
+                fundInformationView.filter((fundViewItem: FundInformationView) => (fundViewItem.fundInformation.createdAt?.includes(String(selectedYear.year)))).map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}
                     className={clsx(index !== fundInformationView.length - 1 && 'border-b')}
