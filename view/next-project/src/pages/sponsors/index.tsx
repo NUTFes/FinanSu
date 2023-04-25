@@ -73,34 +73,42 @@ const sponsorship: NextPage<Props> = (props: Props) => {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {sponsorList.map((sponsor, index) => (
-                <tr
-                  className={clsx(index !== sponsorList.length - 1 && 'border-b')}
-                  key={sponsor.id}
-                >
-                  <td className='py-3'>
-                    <div className='text-center text-black-300'>{sponsor.name}</div>
-                  </td>
-                  <td>
-                    <div className='text-center text-black-300'>{sponsor.tel}</div>
-                  </td>
-                  <td>
-                    <div className='text-center text-black-300'>{sponsor.email}</div>
-                  </td>
-                  <td>
-                    <div className='text-center text-black-300'>{sponsor.address}</div>
-                  </td>
-                  <td>
-                    <div className='text-center text-black-300'>{sponsor.representative}</div>
-                  </td>
-                  <td>
-                    <div className='flex gap-3'>
-                      <OpenEditModalButton sponsor={sponsor} />
-                      <OpenDeleteModalButton id={sponsor.id || 0} />
-                    </div>
+              {sponsorList &&
+                sponsorList.map((sponsor, index) => (
+                  <tr
+                    className={clsx(index !== sponsorList.length - 1 && 'border-b')}
+                    key={sponsor.id}
+                  >
+                    <td className='py-3'>
+                      <div className='text-center text-black-300'>{sponsor.name}</div>
+                    </td>
+                    <td>
+                      <div className='text-center text-black-300'>{sponsor.tel}</div>
+                    </td>
+                    <td>
+                      <div className='text-center text-black-300'>{sponsor.email}</div>
+                    </td>
+                    <td>
+                      <div className='text-center text-black-300'>{sponsor.address}</div>
+                    </td>
+                    <td>
+                      <div className='text-center text-black-300'>{sponsor.representative}</div>
+                    </td>
+                    <td>
+                      <div className='flex gap-3'>
+                        <OpenEditModalButton sponsor={sponsor} />
+                        <OpenDeleteModalButton id={sponsor.id || 0} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              {!sponsorList && (
+                <tr>
+                  <td colSpan={6} className='py-3'>
+                    <div className='text-center text-black-300'>データがありません</div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

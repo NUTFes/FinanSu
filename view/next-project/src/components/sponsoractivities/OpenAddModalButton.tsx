@@ -1,26 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import AddButton from '../common/AddButton';
-import { useUI } from '../ui/context';
+import SponsorActivitiesAddModal from './SponsorActivitiesAddModal';
+import { User, Sponsor, SponsorStyle } from '@type/common';
 
 interface Props {
-  width?: string;
-  height?: string;
-  children?: React.ReactNode;
-  onClick?: () => void;
+  users: User[];
+  sponsors: Sponsor[];
+  sponsorStyles: SponsorStyle[];
+  children: React.ReactNode;
 }
 
 export default function OpenModalButton(props: Props) {
-  const { setModalView, openModal } = useUI();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <AddButton
-      onClick={() => {
-        setModalView('SPONSOR_ACTIVITIES_ADD_MODAL');
-        openModal();
-      }}
-    >
-      {props.children}
-    </AddButton>
+    <>
+      <AddButton
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        {props.children}
+      </AddButton>
+      {isOpen && (
+        <SponsorActivitiesAddModal
+          users={props.users}
+          sponsors={props.sponsors}
+          sponsorStyles={props.sponsorStyles}
+          setIsOpen={setIsOpen}
+        />
+      )}
+    </>
   );
 }
