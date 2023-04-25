@@ -73,12 +73,19 @@ export default function BudgetList(props: Props) {
     setIsOpen(true);
   };
 
+  const initYear: Year = {year: 2021}
+  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
+  const handleSelectedYear = (selectedYear: number) => {
+    const year: Year = {year: selectedYear}
+    setSelectedYear(year)
+  }
+
   // 合計金額用の変数
-  const budgetsTotalFee = budgets.reduce((prev, current) => {
+  const budgetsTotalFee = budgets.filter((e) => (e.year.year == selectedYear.year)).reduce((prev, current) => {
     return prev + current.budget.price;
   }, 0);
 
-  const expensesTotalFee = expenses.reduce((prev, current) => {
+  const expensesTotalFee = expenses.filter((e) => (e.expense.createdAt?.includes(String(selectedYear.year)))).reduce((prev, current) => {
     return prev + current.expense.totalPrice;
   }, 0);
 
@@ -88,12 +95,6 @@ export default function BudgetList(props: Props) {
     return datetime2;
   };
 
-  const initYear: Year = {year: 2021}
-  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
-  const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = {year: selectedYear}
-    setSelectedYear(year)
-  }
 
   return (
     <MainLayout>
@@ -210,9 +211,10 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'支出一覧'} />
-                  <select className='w-100 '>
+                  <select className='w-100 ' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
+                    <option value='2023'>2023</option>
                   </select>
                 </div>
                 <div className='flex justify-end'>
@@ -244,7 +246,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {expenses.map((expenseView, index) => (
+                      {expenses.filter((expenseView) => (expenseView.expense.createdAt?.includes(String(selectedYear.year)))).map((expenseView, index) => (
                         <tr
                           key={expenseView.expense.id}
                           className={clsx(
