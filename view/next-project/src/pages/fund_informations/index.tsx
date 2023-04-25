@@ -121,16 +121,23 @@ export default function FundInformations(props: Props) {
     getUser();
   }, []);
 
+  const initYear: Year = {year: 2021}
+  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
+  const handleSelectedYear = (selectedYear: number) => {
+    const year: Year = {year: selectedYear}
+    setSelectedYear(year)
+  }
+
   // チェック済みの合計金額用のステート
   const totalFee = useMemo(() => {
-    return fundInformation.reduce((sum, fundInformation) => {
+    return fundInformation.filter((fundInformation) => (fundInformation.createdAt?.includes(String(selectedYear.year)))).reduce((sum, fundInformation) => {
       if (fundInformation.isLastCheck) {
         return sum + fundInformation.price;
       } else {
         return sum;
       }
     }, 0);
-  }, [fundInformation]);
+  }, [fundInformation, selectedYear]);
 
   // チェックの切り替え
   const switchCheck = async (
@@ -220,13 +227,6 @@ export default function FundInformations(props: Props) {
       }
     }
   };
-
-  const initYear: Year = {year: 2021}
-  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
-  const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = {year: selectedYear}
-    setSelectedYear(year)
-  }
 
   return (
     <MainLayout>
