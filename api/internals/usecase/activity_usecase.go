@@ -15,8 +15,8 @@ type activityUseCase struct {
 type ActivityUseCase interface {
 	GetActivity(context.Context) ([]domain.Activity, error)
 	GetActivityByID(context.Context, string) (domain.Activity, error)
-	CreateActivity(context.Context, string, string, string, string) (domain.Activity, error)
-	UpdateActivity(context.Context, string, string, string, string, string) (domain.Activity, error)
+	CreateActivity(context.Context, string, string, string, string, string, string, string) (domain.Activity, error)
+	UpdateActivity(context.Context, string, string, string, string, string, string, string, string) (domain.Activity, error)
 	DestroyActivity(context.Context, string) error
 	GetActivityDetail(context.Context) ([]domain.ActivityDetail, error)
 }
@@ -44,6 +44,9 @@ func (a *activityUseCase) GetActivity(c context.Context) ([]domain.Activity, err
 			&activity.UserID,
 			&activity.IsDone,
 			&activity.SponsorID,
+			&activity.Feature,
+			&activity.Expense,
+			&activity.Remark,
 			&activity.CreatedAt,
 			&activity.UpdatedAt,
 		)
@@ -67,6 +70,9 @@ func (a *activityUseCase) GetActivityByID(c context.Context, id string) (domain.
 		&activity.UserID,
 		&activity.IsDone,
 		&activity.SponsorID,
+		&activity.Feature,
+		&activity.Expense,
+		&activity.Remark,
 		&activity.CreatedAt,
 		&activity.UpdatedAt,
 	)
@@ -83,10 +89,13 @@ func (a *activityUseCase) CreateActivity(
 	sponsorStyleID string,
 	userID string,
 	isDone string,
-	sponsorID string) (domain.Activity, error) {
+	sponsorID string,
+	feature string,
+	expense string,
+	remark string) (domain.Activity, error) {
 	latastActivity := domain.Activity{}
 
-	err := a.rep.Create(c, sponsorStyleID, userID, isDone, sponsorID)
+	err := a.rep.Create(c, sponsorStyleID, userID, isDone, sponsorID, feature, expense, remark)
 	row, err := a.rep.FindLatestRecord(c)
 	err = row.Scan(
 		&latastActivity.ID,
@@ -94,6 +103,9 @@ func (a *activityUseCase) CreateActivity(
 		&latastActivity.UserID,
 		&latastActivity.IsDone,
 		&latastActivity.SponsorID,
+		&latastActivity.Feature,
+		&latastActivity.Expense,
+		&latastActivity.Remark,
 		&latastActivity.CreatedAt,
 		&latastActivity.UpdatedAt,
 	)
@@ -110,9 +122,12 @@ func (a *activityUseCase) UpdateActivity(
 	sponsorStyleID string,
 	userID string,
 	isDone string,
-	sponsorID string) (domain.Activity, error) {
+	sponsorID string,
+	feature string,
+	expense string,
+	remark string) (domain.Activity, error) {
 	updatedActivity := domain.Activity{}
-	err := a.rep.Update(c, id, sponsorStyleID, userID, isDone, sponsorID)
+	err := a.rep.Update(c, id, sponsorStyleID, userID, isDone, sponsorID, feature, expense, remark)
 	row, err := a.rep.Find(c, id)
 	err = row.Scan(
 		&updatedActivity.ID,
@@ -120,6 +135,9 @@ func (a *activityUseCase) UpdateActivity(
 		&updatedActivity.UserID,
 		&updatedActivity.IsDone,
 		&updatedActivity.SponsorID,
+		&updatedActivity.Feature,
+		&updatedActivity.Expense,
+		&updatedActivity.Remark,		
 		&updatedActivity.CreatedAt,
 		&updatedActivity.UpdatedAt,
 	)
@@ -153,6 +171,9 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 			&activity.Activity.UserID,
 			&activity.Activity.IsDone,
 			&activity.Activity.SponsorID,
+			&activity.Activity.Feature,
+			&activity.Activity.Expense,
+			&activity.Activity.Remark,
 			&activity.Activity.CreatedAt,
 			&activity.Activity.UpdatedAt,
 			&activity.Sponsor.ID,

@@ -59,6 +59,24 @@ const docTemplate = `{
                         "in": "query",
                         "description": "sponsor_id",
                         "type": "integer"
+                    },
+                    {
+                        "name": "feature",
+                        "in": "query",
+                        "description": "feature",
+                        "type": "string"
+                    },
+                    {
+                        "name": "expense",
+                        "in": "query",
+                        "description": "expense",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
                     }
                 ],
             },
@@ -134,6 +152,24 @@ const docTemplate = `{
                         "description": "sponsor_id",
                         "type": "integer"
                     },
+                    {
+                        "name": "feature",
+                        "in": "query",
+                        "description": "feature",
+                        "type": "string"
+                    },
+                    {
+                        "name": "expense",
+                        "in": "query",
+                        "description": "expense",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "remark",
+                        "in": "query",
+                        "description": "remark",
+                        "type": "string"
+                    }
                 ],
             },
             "delete": {

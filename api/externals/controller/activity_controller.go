@@ -49,7 +49,10 @@ func (a *activityController) CreateActivity(c echo.Context) error {
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
 	sponsorID := c.QueryParam("sponsor_id")
-	latastActivity, err := a.u.CreateActivity(c.Request().Context(), sponsorStyleID, userID, isDone, sponsorID)
+	feature := c.QueryParam("feature")
+	expense := c.QueryParam("expense")
+	remark := c.QueryParam("remark")
+	latastActivity, err := a.u.CreateActivity(c.Request().Context(), sponsorStyleID, userID, isDone, sponsorID, feature, expense, remark)
 	if err != nil {
 		return err
 	}
@@ -63,7 +66,10 @@ func (a *activityController) UpdateActivity(c echo.Context) error {
 	userID := c.QueryParam("user_id")
 	isDone := c.QueryParam("is_done")
 	sponsorID := c.QueryParam("sponsor_id")
-	updatedActivity, err := a.u.UpdateActivity(c.Request().Context(), id, sponsorStyleID, userID, isDone, sponsorID)
+	feature := c.QueryParam("feature")
+	expense := c.QueryParam("expense")
+	remark := c.QueryParam("remark")
+	updatedActivity, err := a.u.UpdateActivity(c.Request().Context(), id, sponsorStyleID, userID, isDone, sponsorID, feature, expense, remark)
 	if err != nil {
 		return err
 	}
