@@ -13,7 +13,7 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { DEPARTMENTS } from '@constants/departments';
-import { Department, FundInformation, Teacher, User} from '@type/common';
+import { Department, FundInformation, Teacher, User } from '@type/common';
 
 interface FundInformationView {
   fundInformation: FundInformation;
@@ -65,20 +65,20 @@ export default function FundInformations(props: Props) {
   const fundInformationView: FundInformationView[] = props.fundInformationView;
 
   //年の指定
-  const currentYear = new Date().getFullYear().toString()
+  const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
 
   const filteredFundInformation = useMemo(() => {
     return fundInformation.filter((fundInformation) => {
       return fundInformation.createdAt?.includes(selectedYear);
     });
-  }, [fundInformation, selectedYear])
-  
+  }, [fundInformation, selectedYear]);
+
   const filteredFundInformationViews = useMemo(() => {
     return fundInformationView.filter((fundViewItem: FundInformationView) => {
       return fundViewItem.fundInformation.createdAt?.includes(selectedYear);
     });
-  }, [fundInformationView, selectedYear])
+  }, [fundInformationView, selectedYear]);
 
   // ログイン中のユーザの権限
   const isUser = useMemo(() => {
@@ -247,7 +247,11 @@ export default function FundInformations(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'学内募金一覧'} />
-            <select className='w-100 ' defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)}>
+            <select
+              className='w-100 '
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>

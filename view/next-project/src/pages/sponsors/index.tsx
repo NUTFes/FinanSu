@@ -29,15 +29,15 @@ export const getServerSideProps = async () => {
 const sponsorship: NextPage<Props> = (props: Props) => {
   const sponsorList: Sponsor[] = props.sponsor;
 
-  const currentYear = new Date().getFullYear().toString()
+  const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = UseState<string>(currentYear);
 
   const filteredSponsorListViews = UseMemo(() => {
     return sponsorList.filter((sponsor) => {
       return sponsor.createdAt?.includes(selectedYear);
     });
-  }, [sponsorList, selectedYear])
-  
+  }, [sponsorList, selectedYear]);
+
   return (
     <MainLayout>
       <Head>
@@ -48,7 +48,11 @@ const sponsorship: NextPage<Props> = (props: Props) => {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'協賛企業一覧'} />
-            <select className='w-100' defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)}>
+            <select
+              className='w-100'
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>

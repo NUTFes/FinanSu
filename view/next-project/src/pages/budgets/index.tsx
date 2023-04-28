@@ -73,25 +73,24 @@ export default function BudgetList(props: Props) {
     setIsOpen(true);
   };
 
-  const currentYear: Year = {year: new Date().getFullYear()}
+  const currentYear: Year = { year: new Date().getFullYear() };
   const [selectedYear, setSelectedYear] = useState<Year>(currentYear);
   const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = {year: selectedYear}
-    setSelectedYear(year)
-  }
+    const year: Year = { year: selectedYear };
+    setSelectedYear(year);
+  };
 
   const filteredBudgets = useMemo(() => {
     return budgets.filter((budgetView) => {
       return budgetView.year.year == selectedYear.year;
     });
-  }, [budgets, selectedYear])
+  }, [budgets, selectedYear]);
 
   const filteredExpenses = useMemo(() => {
     return expenses.filter((expenseView) => {
       expenseView.expense.createdAt?.includes(String(selectedYear.year));
     });
-  }, [expenses, selectedYear])
-
+  }, [expenses, selectedYear]);
 
   // 合計金額用の変数
   const budgetsTotalFee = filteredBudgets.reduce((prev, current) => {
@@ -107,7 +106,6 @@ export default function BudgetList(props: Props) {
     const datetime2 = datetime.substring(10, datetime.length - 20);
     return datetime2;
   };
-
 
   return (
     <MainLayout>
@@ -126,7 +124,11 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'収入一覧'} />
-                  <select className='w-100 ' defaultValue={currentYear.year} onChange={(e) => handleSelectedYear(Number(e.target.value))}>
+                  <select
+                    className='w-100 '
+                    defaultValue={currentYear.year}
+                    onChange={(e) => handleSelectedYear(Number(e.target.value))}
+                  >
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
                     <option value='2023'>2023</option>
@@ -224,7 +226,11 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'支出一覧'} />
-                  <select className='w-100 ' defaultValue={currentYear.year} onChange={(e) => handleSelectedYear(Number(e.target.value))}>
+                  <select
+                    className='w-100 '
+                    defaultValue={currentYear.year}
+                    onChange={(e) => handleSelectedYear(Number(e.target.value))}
+                  >
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
                     <option value='2023'>2023</option>

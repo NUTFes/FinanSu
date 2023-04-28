@@ -63,14 +63,14 @@ export default function SponsorActivities(props: Props) {
     return datetime2;
   };
 
-  const currentYear = new Date().getFullYear().toString()
+  const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
 
   const filteredSponsorActivitiesViews = useMemo(() => {
     return props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
       return sponsorActivitiesItem.sponsorActivity.createdAt.includes(selectedYear);
     });
-  }, [props, selectedYear])
+  }, [props, selectedYear]);
 
   return (
     <MainLayout>
@@ -82,7 +82,11 @@ export default function SponsorActivities(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'協賛活動一覧'} />
-            <select className={'w-100'} defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)} >
+            <select
+              className={'w-100'}
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>

@@ -55,14 +55,14 @@ export default function PurchaseOrders(props: Props) {
     return datetime2;
   };
 
-  const currentYear = new Date().getFullYear().toString()
+  const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
 
   const filteredPurchaseOrderViews = useMemo(() => {
     return purchaseOrderViews.filter((purchaseOrderView: PurchaseOrderView) => {
       return purchaseOrderView.purchaseOrder.deadline.includes(selectedYear);
     });
-  }, [purchaseOrderViews, selectedYear])
+  }, [purchaseOrderViews, selectedYear]);
 
   // 購入申請の合計金額を計算
   // // 申請を出した時点では購入物品のチェックはfalseなので、finance_check関係なく計算
@@ -149,7 +149,11 @@ export default function PurchaseOrders(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'購入申請一覧'} />
-            <select className='w-100 ' defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)}>
+            <select
+              className='w-100 '
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
