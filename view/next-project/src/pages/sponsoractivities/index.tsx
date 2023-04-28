@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
@@ -11,7 +11,7 @@ import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenAddModalButton from '@components/sponsoractivities/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
-import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User, Year } from '@type/common';
+import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User } from '@type/common';
 
 interface Props {
   sponsorActivities: SponsorActivity[];
@@ -63,12 +63,14 @@ export default function SponsorActivities(props: Props) {
     return datetime2;
   };
 
-  const initYear: Year = {year: 2021}
-  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
-  const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = {year: selectedYear}
-    setSelectedYear(year)
-  }
+  const currentYear = new Date().getFullYear().toString()
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const filteredSponsorActivitiesViews = useMemo(() => {
+    return props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
+      sponsorActivitiesItem.sponsorActivity.createdAt.includes(selectedYear)
+    })
+  }, [props, selectedYear])
 
   return (
     <MainLayout>
@@ -80,7 +82,7 @@ export default function SponsorActivities(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'協賛活動一覧'} />
-            <select className={'w-100'} onChange={(e) => handleSelectedYear(Number(e.target.value))} >
+            <select className={'w-100'} defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)} >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
@@ -115,7 +117,7 @@ export default function SponsorActivities(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {props.sponsorActivitiesView.filter((sponsorActivitiesItem) => (sponsorActivitiesItem.sponsorActivity.createdAt.includes(String(selectedYear.year)))).map((sponsorActivitiesItem, index) => (
+              {filteredSponsorActivitiesViews.map((sponsorActivitiesItem, index) => (
                 <tr
                   className={clsx(props.sponsorActivitiesView.length - 1 !== index && 'border-b')}
                   key={sponsorActivitiesItem.sponsorActivity.id}

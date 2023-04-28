@@ -13,7 +13,7 @@ import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, PurchaseReport, User, Expense, Year } from '@type/common';
+import { PurchaseItem, PurchaseOrder, PurchaseReport, User, Expense } from '@type/common';
 
 export interface PurchaseReportView {
   purchaseReport: PurchaseReport;
@@ -72,12 +72,14 @@ export default function PurchaseReports(props: Props) {
     return datetime2;
   }, []);
 
-  const initYear: Year = {year: 2021}
-  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
-  const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = {year: selectedYear}
-    setSelectedYear(year)
-  }
+  const currentYear = new Date().getFullYear().toString()
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const filteredPurchaseReportViews = useMemo(() => {
+    return purchaseReportViews.filter((purchaseReportViewItem) => {
+      return purchaseReportViewItem.purchaseOrder.deadline.includes(selectedYear)
+    })
+  }, [purchaseReportViews, selectedYear])
 
   const TotalFee = useCallback((purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
@@ -93,7 +95,7 @@ export default function PurchaseReports(props: Props) {
   // すべてのpurchaseReportの合計金額
   const totalReportFee = useMemo(() => {
     let totalFee = 0;
-    purchaseReportViews.filter((purchaseReportView: PurchaseReportView) => (purchaseReportView.purchaseOrder.deadline.includes(String(selectedYear.year)))).map((purchaseReportView: PurchaseReportView) => {
+    filteredPurchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
       totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
     });
     return totalFee;
@@ -160,7 +162,7 @@ export default function PurchaseReports(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'購入報告一覧'} />
-            <select className='w-100 ' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
+            <select className='w-100 ' defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)}>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
@@ -202,7 +204,7 @@ export default function PurchaseReports(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {purchaseReportViews.filter((purchaseReportViewItem) => (purchaseReportViewItem.purchaseOrder.deadline.includes(String(selectedYear.year)))).map((purchaseReportViewItem, index) => (
+              {filteredPurchaseReportViews.map((purchaseReportViewItem, index) => (
                 <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
                   <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-600')}>

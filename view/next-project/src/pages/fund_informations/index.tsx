@@ -13,7 +13,7 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { DEPARTMENTS } from '@constants/departments';
-import { Department, FundInformation, Teacher, User, Year} from '@type/common';
+import { Department, FundInformation, Teacher, User} from '@type/common';
 
 interface FundInformationView {
   fundInformation: FundInformation;
@@ -63,6 +63,21 @@ export default function FundInformations(props: Props) {
   // 募金一覧
   const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
   const fundInformationView: FundInformationView[] = props.fundInformationView;
+
+  //年の指定
+  const currentYear = new Date().getFullYear().toString()
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const filteredFundInformation = useMemo(() => {
+    return fundInformation.filter((fundInformation) => {
+      return fundInformation.createdAt?.includes(selectedYear)
+    })
+  }, [fundInformation, currentYear])
+  const filteredFundInformationViews = useMemo(() => {
+    return fundInformationView.filter((fundViewItem: FundInformationView) => {
+      return fundViewItem.fundInformation.createdAt?.includes(selectedYear)
+    })
+  }, [fundInformationView, currentYear])
 
   // ログイン中のユーザの権限
   const isUser = useMemo(() => {
@@ -121,16 +136,9 @@ export default function FundInformations(props: Props) {
     getUser();
   }, []);
 
-  const initYear: Year = {year: 2021}
-  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
-  const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = {year: selectedYear}
-    setSelectedYear(year)
-  }
-
   // チェック済みの合計金額用のステート
   const totalFee = useMemo(() => {
-    return fundInformation.filter((fundInformation) => (fundInformation.createdAt?.includes(String(selectedYear.year)))).reduce((sum, fundInformation) => {
+    return filteredFundInformation.reduce((sum, fundInformation) => {
       if (fundInformation.isLastCheck) {
         return sum + fundInformation.price;
       } else {
@@ -238,7 +246,7 @@ export default function FundInformations(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'学内募金一覧'} />
-            <select className='w-100 ' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
+            <select className='w-100 ' defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)}>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
@@ -280,7 +288,7 @@ export default function FundInformations(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationView &&
-                fundInformationView.filter((fundViewItem: FundInformationView) => (fundViewItem.fundInformation.createdAt?.includes(String(selectedYear.year)))).map((fundViewItem: FundInformationView, index) => (
+                filteredFundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}
                     className={clsx(index !== fundInformationView.length - 1 && 'border-b')}

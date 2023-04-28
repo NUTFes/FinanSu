@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState as UseState } from 'react';
+import { useState as UseState, useMemo as UseMemo } from 'react';
 
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
@@ -9,7 +9,7 @@ import { get } from '@/utils/api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
-import { Sponsor, Year } from '@type/common';
+import { Sponsor } from '@type/common';
 
 interface Props {
   sponsor: Sponsor[];
@@ -29,12 +29,14 @@ export const getServerSideProps = async () => {
 const sponsorship: NextPage<Props> = (props: Props) => {
   const sponsorList: Sponsor[] = props.sponsor;
 
-  const initYear: Year = {year: 2021}
-  const [selectedYear, setSelectedYear] = UseState<Year>(initYear);
-  const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = { year: selectedYear }
-    setSelectedYear(year)
-  }
+  const currentYear = new Date().getFullYear().toString()
+  const [selectedYear, setSelectedYear] = UseState<string>(currentYear);
+
+  const filteredSponsorListViews = UseMemo(() => {
+    return sponsorList.filter((sponsor) => {
+      return sponsor.createdAt?.includes(selectedYear)
+    })
+  }, [sponsorList, selectedYear])
   
   return (
     <MainLayout>
@@ -46,7 +48,7 @@ const sponsorship: NextPage<Props> = (props: Props) => {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'協賛企業一覧'} />
-            <select className='w-100' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
+            <select className='w-100' defaultValue={currentYear} onChange={(e) => setSelectedYear(e.target.value)}>
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
@@ -83,7 +85,7 @@ const sponsorship: NextPage<Props> = (props: Props) => {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {sponsorList.filter((sponsor) => (sponsor.createdAt?.includes(String(selectedYear.year)))).map((sponsor, index) => (
+              {filteredSponsorListViews.map((sponsor, index) => (
                 <tr
                   className={clsx(index !== sponsorList.length - 1 && 'border-b')}
                   key={sponsor.id}

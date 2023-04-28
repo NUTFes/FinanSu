@@ -73,8 +73,8 @@ export default function BudgetList(props: Props) {
     setIsOpen(true);
   };
 
-  const initYear: Year = {year: 2021}
-  const [selectedYear, setSelectedYear] = useState<Year>(initYear);
+  const currentYear: Year = {year: new Date().getFullYear()}
+  const [selectedYear, setSelectedYear] = useState<Year>(currentYear);
   const handleSelectedYear = (selectedYear: number) => {
     const year: Year = {year: selectedYear}
     setSelectedYear(year)
@@ -113,7 +113,7 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'収入一覧'} />
-                  <select className='w-100 ' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
+                  <select className='w-100 ' defaultValue={currentYear.year} onChange={(e) => handleSelectedYear(Number(e.target.value))}>
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
                     <option value='2023'>2023</option>
@@ -211,7 +211,7 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'支出一覧'} />
-                  <select className='w-100 ' onChange={(e) => handleSelectedYear(Number(e.target.value))}>
+                  <select className='w-100 ' defaultValue={currentYear.year} onChange={(e) => handleSelectedYear(Number(e.target.value))}>
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
                     <option value='2023'>2023</option>
