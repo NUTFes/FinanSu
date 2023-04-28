@@ -77,8 +77,8 @@ export default function PurchaseReports(props: Props) {
 
   const filteredPurchaseReportViews = useMemo(() => {
     return purchaseReportViews.filter((purchaseReportViewItem) => {
-      return purchaseReportViewItem.purchaseOrder.deadline.includes(selectedYear)
-    })
+      return purchaseReportViewItem.purchaseOrder.deadline.includes(selectedYear);
+    });
   }, [purchaseReportViews, selectedYear])
 
   const TotalFee = useCallback((purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
@@ -94,12 +94,15 @@ export default function PurchaseReports(props: Props) {
 
   // すべてのpurchaseReportの合計金額
   const totalReportFee = useMemo(() => {
-    let totalFee = 0;
-    filteredPurchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
-      totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
-    });
-    return totalFee;
-  }, [purchaseReportViews, selectedYear]);
+    if (purchaseReportViews) {
+      let totalFee = 0;
+      filteredPurchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
+        totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
+      });
+      return totalFee;
+    }
+    return 0;
+  }, [filteredPurchaseReportViews, purchaseReportViews]);
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
@@ -130,10 +133,12 @@ export default function PurchaseReports(props: Props) {
   };
 
   useEffect(() => {
-    const purchaseReportChecks = purchaseReportViews.map((purchaseReportView) => {
-      return purchaseReportView.purchaseReport.financeCheck;
-    });
-    setPurchaseReportChecks(purchaseReportChecks);
+    if (purchaseReportViews) {
+      const purchaseReportChecks = purchaseReportViews.map((purchaseReportView) => {
+        return purchaseReportView.purchaseReport.financeCheck;
+      });
+      setPurchaseReportChecks(purchaseReportChecks);
+    }
   }, [purchaseReportViews]);
 
   const isFinanceDirector = useMemo(() => {
@@ -204,147 +209,180 @@ export default function PurchaseReports(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredPurchaseReportViews.map((purchaseReportViewItem, index) => (
-                <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
-                  <td className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>
-                      <Checkbox
-                        checked={purchaseReportChecks[index]}
-                        disabled={!isFinanceDirector}
-                        onChange={() => {
-                          updatePurchaseReport(purchaseReportViewItem.purchaseReport.id || 0, {
-                            ...purchaseReportViewItem.purchaseReport,
-                            financeCheck: !purchaseReportChecks[index],
-                          });
-                        }}
-                      />
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {purchaseReportViewItem.purchaseReport.id}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
-                    <div className={clsx('flex justify-center')}>
-                      <BureauLabel
-                        bureauName={
-                          props.expenses.find(
-                            (expense) =>
-                              expense.id === purchaseReportViewItem.purchaseOrder.expenseID,
-                          )?.name || ''
-                        }
-                      />
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {formatDate(
-                        purchaseReportViewItem.purchaseReport.createdAt
-                          ? purchaseReportViewItem.purchaseReport.createdAt
-                          : '',
-                      )}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {purchaseReportViewItem.purchaseOrder.deadline}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
-                    <div
-                      className={clsx(
-                        'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
-                      )}
+              {filteredPurchaseReportViews &&
+                filteredPurchaseReportViews.map((purchaseReportViewItem, index) => (
+                  <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
+                    <td
+                      className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
                     >
-                      {/* name (個数/finasucheck) */}
-                      {purchaseReportViewItem.purchaseItems.map((purchaseItem, index) => (
-                        <div key={index}>
-                          {`${purchaseItem.financeCheck ? '○' : 'x'} ${purchaseItem.item} (${
-                            purchaseItem.quantity
-                          })`}
+                      <div className={clsx('text-center text-sm text-black-600')}>
+                        <Checkbox
+                          checked={purchaseReportChecks[index]}
+                          disabled={!isFinanceDirector}
+                          onChange={() => {
+                            updatePurchaseReport(purchaseReportViewItem.purchaseReport.id || 0, {
+                              ...purchaseReportViewItem.purchaseReport,
+                              financeCheck: !purchaseReportChecks[index],
+                            });
+                          }}
+                        />
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {purchaseReportViewItem.purchaseReport.id}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div className={clsx('flex justify-center')}>
+                        <BureauLabel
+                          bureauName={
+                            props.expenses.find(
+                              (expense) =>
+                                expense.id === purchaseReportViewItem.purchaseOrder.expenseID,
+                            )?.name || ''
+                          }
+                        />
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {formatDate(
+                          purchaseReportViewItem.purchaseReport.createdAt
+                            ? purchaseReportViewItem.purchaseReport.createdAt
+                            : '',
+                        )}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {purchaseReportViewItem.purchaseOrder.deadline}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div
+                        className={clsx(
+                          'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
+                        )}
+                      >
+                        {/* name (個数/finasucheck) */}
+                        {purchaseReportViewItem.purchaseItems.map((purchaseItem, index) => (
+                          <div key={index}>
+                            {`${purchaseItem.financeCheck ? '○' : 'x'} ${purchaseItem.item} (${
+                              purchaseItem.quantity
+                            })`}
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {TotalFee(
+                          purchaseReportViewItem.purchaseReport,
+                          purchaseReportViewItem.purchaseItems,
+                        )}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {purchaseReportViewItem.purchaseReport.remark || '無し'}
+                      </div>
+                    </td>
+                    <td>
+                      <div className='flex'>
+                        <div className='mx-1'>
+                          <OpenEditModalButton
+                            id={
+                              purchaseReportViewItem.purchaseReport.id
+                                ? purchaseReportViewItem.purchaseReport.id
+                                : 0
+                            }
+                            isDisabled={isDisabled(purchaseReportViewItem)}
+                          />
                         </div>
-                      ))}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {TotalFee(
-                        purchaseReportViewItem.purchaseReport,
-                        purchaseReportViewItem.purchaseItems,
-                      )}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseReportViewItem.purchaseOrder.id || 0, purchaseReportViewItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {purchaseReportViewItem.purchaseReport.remark || '無し'}
-                    </div>
-                  </td>
-                  <td>
-                    <div className='flex'>
-                      <div className='mx-1'>
-                        <OpenEditModalButton
-                          id={
-                            purchaseReportViewItem.purchaseReport.id
-                              ? purchaseReportViewItem.purchaseReport.id
-                              : 0
-                          }
-                          isDisabled={isDisabled(purchaseReportViewItem)}
-                        />
+                        <div className='mx-1'>
+                          <OpenDeleteModalButton
+                            id={
+                              purchaseReportViewItem.purchaseReport.id
+                                ? purchaseReportViewItem.purchaseReport.id
+                                : 0
+                            }
+                            isDisabled={isDisabled(purchaseReportViewItem)}
+                          />
+                        </div>
                       </div>
-                      <div className='mx-1'>
-                        <OpenDeleteModalButton
-                          id={
-                            purchaseReportViewItem.purchaseReport.id
-                              ? purchaseReportViewItem.purchaseReport.id
-                              : 0
-                          }
-                          isDisabled={isDisabled(purchaseReportViewItem)}
-                        />
-                      </div>
-                    </div>
+                    </td>
+                  </tr>
+                ))}
+              {filteredPurchaseReportViews.length > 0 && (
+                <tr>
+                  <td className='border-b border-primary-1 px-1 py-3' colSpan={6}>
+                    <div className='text-right text-sm text-black-600'>合計</div>
+                  </td>
+                  <td className='border-b border-primary-1 px-1 py-3'>
+                    <div className='text-center text-sm text-black-600'>{totalReportFee}</div>
+                  </td>
+                  <td className='border-b border-primary-1 px-1 py-3' colSpan={2}>
+                    <div className='text-center text-sm text-black-600' />
                   </td>
                 </tr>
-              ))}
-              <tr>
-                <td className='border-b border-primary-1 px-1 py-3' colSpan={6}>
-                  <div className='text-right text-sm text-black-600'>合計</div>
-                </td>
-                <td className='border-b border-primary-1 px-1 py-3'>
-                  <div className='text-center text-sm text-black-600'>{totalReportFee}</div>
-                </td>
-                <td className='border-b border-primary-1 px-1 py-3' colSpan={2}>
-                  <div className='text-center text-sm text-black-600' />
-                </td>
-              </tr>
+              )}
+              {!filteredPurchaseReportViews.length && (
+                <tr>
+                  <td className='border-b border-primary-1 px-1 py-3' colSpan={9}>
+                    <div className='text-center text-sm text-black-600'>データがありません</div>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

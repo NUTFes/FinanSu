@@ -80,12 +80,25 @@ export default function BudgetList(props: Props) {
     setSelectedYear(year)
   }
 
+  const filteredBudgets = useMemo(() => {
+    return budgets.filter((budgetView) => {
+      return budgetView.year.year == selectedYear.year;
+    });
+  }, [budgets, selectedYear])
+
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter((expenseView) => {
+      expenseView.expense.createdAt?.includes(String(selectedYear.year));
+    });
+  }, [expenses, selectedYear])
+
+
   // 合計金額用の変数
-  const budgetsTotalFee = budgets.filter((e) => (e.year.year == selectedYear.year)).reduce((prev, current) => {
+  const budgetsTotalFee = filteredBudgets.reduce((prev, current) => {
     return prev + current.budget.price;
   }, 0);
 
-  const expensesTotalFee = expenses.filter((e) => (e.expense.createdAt?.includes(String(selectedYear.year)))).reduce((prev, current) => {
+  const expensesTotalFee = filteredExpenses.reduce((prev, current) => {
     return prev + current.expense.totalPrice;
   }, 0);
 
@@ -153,7 +166,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {budgets.filter((budgetView) => (budgetView.year.year == selectedYear.year)).map((budgetView, index) => (
+                      {filteredBudgets.map((budgetView, index) => (
                         <tr
                           key={budgetView.budget.id}
                           className={clsx(
@@ -246,7 +259,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {expenses.filter((expenseView) => (expenseView.expense.createdAt?.includes(String(selectedYear.year)))).map((expenseView, index) => (
+                      {filteredExpenses.map((expenseView, index) => (
                         <tr
                           key={expenseView.expense.id}
                           className={clsx(

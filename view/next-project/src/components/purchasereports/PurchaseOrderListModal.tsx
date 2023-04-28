@@ -26,7 +26,7 @@ export default function PurchaseItemNumModal() {
   const [purchaseOrderView, setPurchaseOrderView] = useState<PurchaseOrderView[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
 
-  const [purchaseOrderId, setPurchaseOrderId] = useState<number>(1);
+  const [purchaseOrderId, setPurchaseOrderId] = useState<number>();
   const [purchaseItemNum, setPurchaseItemNum] = useState<number>(0);
 
   useEffect(() => {
@@ -119,93 +119,103 @@ export default function PurchaseItemNumModal() {
               <tbody
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}
               >
-                {purchaseOrderView.map((purchaseOrderItem, index) => (
-                  <tr key={purchaseOrderItem.purchaseOrder?.id}>
-                    <td
-                      className={clsx(
-                        'px-4',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                      )}
-                    >
-                      {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchaseItem && (
-                          <Radio
-                            value={purchaseOrderItem.purchaseOrder?.id}
-                            onClick={handler(purchaseOrderItem.purchaseItem.length)}
-                          />
+                {purchaseOrderView &&
+                  purchaseOrderView.map((purchaseOrderItem, index) => (
+                    <tr key={purchaseOrderItem.purchaseOrder?.id}>
+                      <td
+                        className={clsx(
+                          'px-4',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                         )}
-                      </div>
-                    </td>
-                    <td
-                      className={clsx(
-                        'px-4',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                      )}
-                    >
+                      >
+                        {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
+                        <div className={clsx('text-center text-sm text-black-600')}>
+                          {purchaseOrderItem.purchaseItem && (
+                            <Radio
+                              value={purchaseOrderItem.purchaseOrder?.id}
+                              onClick={handler(purchaseOrderItem.purchaseItem.length)}
+                            />
+                          )}
+                        </div>
+                      </td>
+                      <td
+                        className={clsx(
+                          'px-4',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        )}
+                      >
+                        <div className={clsx('text-center text-sm text-black-600')}>
+                          {
+                            expenses.find(
+                              (expense) => expense.id === purchaseOrderItem.purchaseOrder.expenseID,
+                            )?.name
+                          }
+                        </div>
+                      </td>
+                      <td
+                        className={clsx(
+                          'px-4',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        )}
+                      >
+                        <div className={clsx('text-center text-sm text-black-600')}>
+                          {purchaseOrderItem.purchaseItem &&
+                            calcTotalFee(purchaseOrderItem.purchaseItem)}
+                        </div>
+                      </td>
+                      <td
+                        className={clsx(
+                          'px-4',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        )}
+                      >
+                        <div className={clsx('text-center text-sm text-black-600')}>
+                          {purchaseOrderItem.purchaseItem &&
+                            purchaseOrderItem.purchaseItem.map((purchaseItem) => (
+                              <div key={purchaseItem.id}>
+                                {purchaseItem.item}
+                                <br />
+                              </div>
+                            ))}
+                        </div>
+                      </td>
+                      <td
+                        className={clsx(
+                          'px-4',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        )}
+                      >
+                        <div className={clsx('text-center text-sm text-black-600')}>
+                          {purchaseOrderItem.purchaseItem && purchaseOrderItem.purchaseItem.length}
+                        </div>
+                      </td>
+                      <td
+                        className={clsx(
+                          'px-4',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        )}
+                      >
+                        <div className={clsx('text-center text-sm text-black-600')}>
+                          {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                {!purchaseOrderView && (
+                  <tr>
+                    <td className={clsx('px-4 py-3')} colSpan={6}>
                       <div className={clsx('text-center text-sm text-black-600')}>
-                        {
-                          expenses.find(
-                            (expense) => expense.id === purchaseOrderItem.purchaseOrder.expenseID,
-                          )?.name
-                        }
-                      </div>
-                    </td>
-                    <td
-                      className={clsx(
-                        'px-4',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                      )}
-                    >
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchaseItem &&
-                          calcTotalFee(purchaseOrderItem.purchaseItem)}
-                      </div>
-                    </td>
-                    <td
-                      className={clsx(
-                        'px-4',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                      )}
-                    >
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchaseItem &&
-                          purchaseOrderItem.purchaseItem.map((purchaseItem) => (
-                            <div key={purchaseItem.id}>
-                              {purchaseItem.item}
-                              <br />
-                            </div>
-                          ))}
-                      </div>
-                    </td>
-                    <td
-                      className={clsx(
-                        'px-4',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                      )}
-                    >
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        {purchaseOrderItem.purchaseItem && purchaseOrderItem.purchaseItem.length}
-                      </div>
-                    </td>
-                    <td
-                      className={clsx(
-                        'px-4',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                      )}
-                    >
-                      <div className={clsx('text-center text-sm text-black-600')}>
-                        {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
+                        申請がありません
                       </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -237,13 +247,14 @@ export default function PurchaseItemNumModal() {
             </div>
             <div className={clsx('mx-2')}>
               <PrimaryButton
+                disabled={!purchaseOrderId}
                 onClick={() => {
                   onOpen();
                 }}
               >
                 報告へ進む
               </PrimaryButton>
-              {isOpen && (
+              {isOpen && purchaseOrderId && (
                 <PurchaseReportAddModal
                   purchaseOrderId={purchaseOrderId}
                   purchaseItemNum={purchaseItemNum}

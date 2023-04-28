@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 
 import s from './Layout.module.css';
-import SponsorActivitiesAddModal from '@/components/sponsoractivities/SponsorActivitiesAddModal';
 import SponsorAddModal from '@/components/sponsors/SponsorAddModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
@@ -15,7 +14,6 @@ const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
       {modalView === 'PURCHASE_REPORT_ADD_MODAL' && <PurchaseReportAddModal />}
       {modalView === 'PURCHASE_ORDER_LIST_MODAL' && <PurchaseOrderListModal />}
       {modalView === 'PURCHASE_REPORT_ITEM_NUM_MODAL' && <PurchaseReportItemNumModal />}
-      {modalView === 'SPONSOR_ACTIVITIES_ADD_MODAL' && <SponsorActivitiesAddModal />}
     </>
   );
 };

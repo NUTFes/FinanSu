@@ -70,14 +70,15 @@ export default function FundInformations(props: Props) {
 
   const filteredFundInformation = useMemo(() => {
     return fundInformation.filter((fundInformation) => {
-      return fundInformation.createdAt?.includes(selectedYear)
-    })
-  }, [fundInformation, currentYear])
+      return fundInformation.createdAt?.includes(selectedYear);
+    });
+  }, [fundInformation, selectedYear])
+  
   const filteredFundInformationViews = useMemo(() => {
     return fundInformationView.filter((fundViewItem: FundInformationView) => {
-      return fundViewItem.fundInformation.createdAt?.includes(selectedYear)
-    })
-  }, [fundInformationView, currentYear])
+      return fundViewItem.fundInformation.createdAt?.includes(selectedYear);
+    });
+  }, [fundInformationView, selectedYear])
 
   // ログイン中のユーザの権限
   const isUser = useMemo(() => {
@@ -287,7 +288,7 @@ export default function FundInformations(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {fundInformationView &&
+              {filteredFundInformationViews &&
                 filteredFundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}

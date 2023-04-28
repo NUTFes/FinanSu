@@ -60,8 +60,8 @@ export default function PurchaseOrders(props: Props) {
 
   const filteredPurchaseOrderViews = useMemo(() => {
     return purchaseOrderViews.filter((purchaseOrderView: PurchaseOrderView) => {
-      return purchaseOrderView.purchaseOrder.deadline.includes(selectedYear)
-    })
+      return purchaseOrderView.purchaseOrder.deadline.includes(selectedYear);
+    });
   }, [purchaseOrderViews, selectedYear])
 
   // 購入申請の合計金額を計算
@@ -76,18 +76,23 @@ export default function PurchaseOrders(props: Props) {
 
   // 全ての購入申請の合計金額を計算
   const totalPurchaseOrderFee = useMemo(() => {
-    let totalFee = 0;
-    filteredPurchaseOrderViews.map((purchaseOrderView: PurchaseOrderView) => {
-      totalFee += TotalFee(purchaseOrderView.purchaseItem);
-    });
-    return totalFee;
-  }, [purchaseOrderViews, selectedYear]);
+    if (purchaseOrderViews) {
+      let totalFee = 0;
+      filteredPurchaseOrderViews.map((purchaseOrderView: PurchaseOrderView) => {
+        totalFee += TotalFee(purchaseOrderView.purchaseItem);
+      });
+      return totalFee;
+    }
+    return 0;
+  }, [filteredPurchaseOrderViews, purchaseOrderViews]);
 
   useEffect(() => {
-    const purchaseOrderChecks = purchaseOrderViews.map((purchaseOrderView) => {
-      return purchaseOrderView.purchaseOrder.financeCheck;
-    });
-    setPurchaseOrderChecks(purchaseOrderChecks);
+    if (purchaseOrderViews) {
+      const purchaseOrderChecks = purchaseOrderViews.map((purchaseOrderView) => {
+        return purchaseOrderView.purchaseOrder.financeCheck;
+      });
+      setPurchaseOrderChecks(purchaseOrderChecks);
+    }
   }, [purchaseOrderViews]);
 
   const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
@@ -180,126 +185,140 @@ export default function PurchaseOrders(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredPurchaseOrderViews.map((purchaseOrderViewItem, index) => (
-                <tr className='border-b' key={purchaseOrderViewItem.purchaseOrder.id}>
-                  <td className='py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      <Checkbox
-                        checked={purchaseOrderChecks[index]}
-                        disabled={!isFinanceDirector}
-                        onChange={() => {
-                          updatePurchaseOrder(purchaseOrderViewItem.purchaseOrder.id || 0, {
-                            ...purchaseOrderViewItem.purchaseOrder,
-                            financeCheck: !purchaseOrderChecks[index],
-                          });
-                        }}
-                      />
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
-                    <div className='flex justify-center'>
-                      <BureauLabel
-                        bureauName={
-                          props.expenses.find(
-                            (expense) =>
-                              expense.id === purchaseOrderViewItem.purchaseOrder.expenseID,
-                          )?.name || ''
-                        }
-                      />
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {formatDate(
-                        purchaseOrderViewItem.purchaseOrder.createdAt
-                          ? purchaseOrderViewItem.purchaseOrder.createdAt
-                          : '',
-                      )}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
-                    <div className='text-center text-sm text-black-600'>
-                      {purchaseOrderViewItem.purchaseOrder.deadline}
-                    </div>
-                  </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
-                    <div className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'>
-                      {purchaseOrderViewItem.purchaseItem &&
-                        purchaseOrderViewItem.purchaseItem.map(
-                          (purchaseItem: PurchaseItem, index: number) => (
-                            <>
-                              {purchaseOrderViewItem.purchaseItem.length - 1 === index ? (
-                                <>{purchaseItem.item}</>
-                              ) : (
-                                <>{purchaseItem.item},</>
-                              )}
-                            </>
-                          ),
+              {filteredPurchaseOrderViews &&
+                filteredPurchaseOrderViews.map((purchaseOrderViewItem, index) => (
+                  <tr className='border-b' key={purchaseOrderViewItem.purchaseOrder.id}>
+                    <td className='py-3'>
+                      <div className='text-center text-sm text-black-600'>
+                        <Checkbox
+                          checked={purchaseOrderChecks[index]}
+                          disabled={!isFinanceDirector}
+                          onChange={() => {
+                            updatePurchaseOrder(purchaseOrderViewItem.purchaseOrder.id || 0, {
+                              ...purchaseOrderViewItem.purchaseOrder,
+                              financeCheck: !purchaseOrderChecks[index],
+                            });
+                          }}
+                        />
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
+                      }}
+                    >
+                      <div className='flex justify-center'>
+                        <BureauLabel
+                          bureauName={
+                            props.expenses.find(
+                              (expense) =>
+                                expense.id === purchaseOrderViewItem.purchaseOrder.expenseID,
+                            )?.name || ''
+                          }
+                        />
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {formatDate(
+                          purchaseOrderViewItem.purchaseOrder.createdAt
+                            ? purchaseOrderViewItem.purchaseOrder.createdAt
+                            : '',
                         )}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {purchaseOrderViewItem.purchaseOrder.deadline}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
+                      }}
+                    >
+                      <div className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'>
+                        {purchaseOrderViewItem.purchaseItem &&
+                          purchaseOrderViewItem.purchaseItem.map(
+                            (purchaseItem: PurchaseItem, index: number) => (
+                              <>
+                                {purchaseOrderViewItem.purchaseItem.length - 1 === index ? (
+                                  <>{purchaseItem.item}</>
+                                ) : (
+                                  <>{purchaseItem.item},</>
+                                )}
+                              </>
+                            ),
+                          )}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {TotalFee(purchaseOrderViewItem.purchaseItem)}
+                      </div>
+                    </td>
+                    <td>
+                      <div className='flex'>
+                        <div className='mx-1'>
+                          <OpenEditModalButton
+                            id={
+                              purchaseOrderViewItem.purchaseOrder.id
+                                ? purchaseOrderViewItem.purchaseOrder.id
+                                : 0
+                            }
+                            purchaseItems={purchaseOrderViewItem.purchaseItem}
+                            isDisabled={isDisabled(purchaseOrderViewItem)}
+                          />
+                        </div>
+                        <div className='mx-1'>
+                          <OpenDeleteModalButton
+                            id={
+                              purchaseOrderViewItem.purchaseOrder.id
+                                ? purchaseOrderViewItem.purchaseOrder.id
+                                : 0
+                            }
+                            isDisabled={isDisabled(purchaseOrderViewItem)}
+                          />
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              {filteredPurchaseOrderViews.length > 0 && (
+                <tr className='border-b border-primary-1'>
+                  <td className='px-1 py-3' colSpan={5}>
+                    <div className='flex justify-end'>
+                      <div className='text-sm text-black-600'>合計</div>
                     </div>
                   </td>
-                  <td
-                    onClick={() => {
-                      onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
-                    }}
-                  >
+                  <td className='px-1 py-3'>
                     <div className='text-center text-sm text-black-600'>
-                      {TotalFee(purchaseOrderViewItem.purchaseItem)}
-                    </div>
-                  </td>
-                  <td>
-                    <div className='flex'>
-                      <div className='mx-1'>
-                        <OpenEditModalButton
-                          id={
-                            purchaseOrderViewItem.purchaseOrder.id
-                              ? purchaseOrderViewItem.purchaseOrder.id
-                              : 0
-                          }
-                          purchaseItems={purchaseOrderViewItem.purchaseItem}
-                          isDisabled={isDisabled(purchaseOrderViewItem)}
-                        />
-                      </div>
-                      <div className='mx-1'>
-                        <OpenDeleteModalButton
-                          id={
-                            purchaseOrderViewItem.purchaseOrder.id
-                              ? purchaseOrderViewItem.purchaseOrder.id
-                              : 0
-                          }
-                          isDisabled={isDisabled(purchaseOrderViewItem)}
-                        />
-                      </div>
+                      {totalPurchaseOrderFee}
                     </div>
                   </td>
                 </tr>
-              ))}
-              <tr className='border-b border-primary-1'>
-                <td className='px-1 py-3' colSpan={5}>
-                  <div className='flex justify-end'>
-                    <div className='text-sm text-black-600'>合計</div>
-                  </div>
-                </td>
-                <td className='px-1 py-3'>
-                  <div className='text-center text-sm text-black-600'>{totalPurchaseOrderFee}</div>
-                </td>
-              </tr>
+              )}
+              {!filteredPurchaseOrderViews.length && (
+                <tr className='border-b border-primary-1'>
+                  <td className='px-1 py-3' colSpan={7}>
+                    <div className='flex justify-center'>
+                      <div className='text-sm text-black-600'>データがありません</div>
+                    </div>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
