@@ -73,12 +73,31 @@ export default function BudgetList(props: Props) {
     setIsOpen(true);
   };
 
+  const currentYear: Year = { year: new Date().getFullYear() };
+  const [selectedYear, setSelectedYear] = useState<Year>(currentYear);
+  const handleSelectedYear = (selectedYear: number) => {
+    const year: Year = { year: selectedYear };
+    setSelectedYear(year);
+  };
+
+  const filteredBudgets = useMemo(() => {
+    return budgets.filter((budgetView) => {
+      return budgetView.year.year == selectedYear.year;
+    });
+  }, [budgets, selectedYear]);
+
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter((expenseView) => {
+      expenseView.expense.createdAt?.includes(String(selectedYear.year));
+    });
+  }, [expenses, selectedYear]);
+
   // 合計金額用の変数
-  const budgetsTotalFee = budgets.reduce((prev, current) => {
+  const budgetsTotalFee = filteredBudgets.reduce((prev, current) => {
     return prev + current.budget.price;
   }, 0);
 
-  const expensesTotalFee = expenses.reduce((prev, current) => {
+  const expensesTotalFee = filteredExpenses.reduce((prev, current) => {
     return prev + current.expense.totalPrice;
   }, 0);
 
@@ -105,9 +124,14 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'収入一覧'} />
-                  <select className='w-100 '>
+                  <select
+                    className='w-100 '
+                    defaultValue={currentYear.year}
+                    onChange={(e) => handleSelectedYear(Number(e.target.value))}
+                  >
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
+                    <option value='2023'>2023</option>
                   </select>
                 </div>
                 <div className='flex justify-end'>
@@ -144,7 +168,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {budgets.map((budgetView, index) => (
+                      {filteredBudgets.map((budgetView, index) => (
                         <tr
                           key={budgetView.budget.id}
                           className={clsx(
@@ -202,9 +226,14 @@ export default function BudgetList(props: Props) {
               <div className='mx-5 mt-10'>
                 <div className='flex'>
                   <Title title={'支出一覧'} />
-                  <select className='w-100 '>
+                  <select
+                    className='w-100 '
+                    defaultValue={currentYear.year}
+                    onChange={(e) => handleSelectedYear(Number(e.target.value))}
+                  >
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
+                    <option value='2023'>2023</option>
                   </select>
                 </div>
                 <div className='flex justify-end'>
@@ -236,7 +265,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {expenses.map((expenseView, index) => (
+                      {filteredExpenses.map((expenseView, index) => (
                         <tr
                           key={expenseView.expense.id}
                           className={clsx(

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
@@ -63,6 +63,15 @@ export default function SponsorActivities(props: Props) {
     return datetime2;
   };
 
+  const currentYear = new Date().getFullYear().toString();
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const filteredSponsorActivitiesViews = useMemo(() => {
+    return props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
+      return sponsorActivitiesItem.sponsorActivity.createdAt.includes(selectedYear);
+    });
+  }, [props, selectedYear]);
+
   return (
     <MainLayout>
       <Head>
@@ -73,9 +82,14 @@ export default function SponsorActivities(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'協賛活動一覧'} />
-            <select className={'w-100'}>
+            <select
+              className={'w-100'}
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
+              <option value='2023'>2023</option>
             </select>
           </div>
           <div className='flex justify-end'>
@@ -113,8 +127,8 @@ export default function SponsorActivities(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {props.sponsorActivitiesView &&
-                props.sponsorActivitiesView.map((sponsorActivitiesItem, index) => (
+              {filteredSponsorActivitiesViews &&
+                filteredSponsorActivitiesViews.map((sponsorActivitiesItem, index) => (
                   <tr
                     className={clsx(props.sponsorActivitiesView.length - 1 !== index && 'border-b')}
                     key={sponsorActivitiesItem.sponsorActivity.id}
@@ -205,7 +219,7 @@ export default function SponsorActivities(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {!props.sponsorActivitiesView && (
+              {!filteredSponsorActivitiesViews.length && (
                 <tr>
                   <td colSpan={6} className='py-3'>
                     <div className='text-center text-sm text-black-600'>データがありません</div>
