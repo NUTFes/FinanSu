@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import { useState as UseState, useMemo as UseMemo } from 'react';
 
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
@@ -27,6 +28,16 @@ export const getServerSideProps = async () => {
 
 const sponsorship: NextPage<Props> = (props: Props) => {
   const sponsorList: Sponsor[] = props.sponsor;
+
+  const currentYear = new Date().getFullYear().toString();
+  const [selectedYear, setSelectedYear] = UseState<string>(currentYear);
+
+  const filteredSponsorListViews = UseMemo(() => {
+    return sponsorList.filter((sponsor) => {
+      return sponsor.createdAt?.includes(selectedYear);
+    });
+  }, [sponsorList, selectedYear]);
+
   return (
     <MainLayout>
       <Head>
@@ -37,9 +48,14 @@ const sponsorship: NextPage<Props> = (props: Props) => {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'協賛企業一覧'} />
-            <select className='w-100'>
+            <select
+              className='w-100'
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
+              <option value='2023'>2023</option>
             </select>
           </div>
           <div className='flex justify-end'>
@@ -73,8 +89,8 @@ const sponsorship: NextPage<Props> = (props: Props) => {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {sponsorList &&
-                sponsorList.map((sponsor, index) => (
+              {filteredSponsorListViews &&
+                filteredSponsorListViews.map((sponsor, index) => (
                   <tr
                     className={clsx(index !== sponsorList.length - 1 && 'border-b')}
                     key={sponsor.id}
@@ -102,7 +118,7 @@ const sponsorship: NextPage<Props> = (props: Props) => {
                     </td>
                   </tr>
                 ))}
-              {!sponsorList && (
+              {!filteredSponsorListViews.length && (
                 <tr>
                   <td colSpan={6} className='py-3'>
                     <div className='text-center text-black-300'>データがありません</div>

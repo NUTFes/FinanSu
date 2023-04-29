@@ -55,6 +55,15 @@ export default function PurchaseOrders(props: Props) {
     return datetime2;
   };
 
+  const currentYear = new Date().getFullYear().toString();
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const filteredPurchaseOrderViews = useMemo(() => {
+    return purchaseOrderViews.filter((purchaseOrderView: PurchaseOrderView) => {
+      return purchaseOrderView.purchaseOrder.deadline.includes(selectedYear);
+    });
+  }, [purchaseOrderViews, selectedYear]);
+
   // 購入申請の合計金額を計算
   // // 申請を出した時点では購入物品のチェックはfalseなので、finance_check関係なく計算
   const TotalFee = (purchaseItems: PurchaseItem[]) => {
@@ -69,13 +78,13 @@ export default function PurchaseOrders(props: Props) {
   const totalPurchaseOrderFee = useMemo(() => {
     if (purchaseOrderViews) {
       let totalFee = 0;
-      purchaseOrderViews.map((purchaseOrderView: PurchaseOrderView) => {
+      filteredPurchaseOrderViews.map((purchaseOrderView: PurchaseOrderView) => {
         totalFee += TotalFee(purchaseOrderView.purchaseItem);
       });
       return totalFee;
     }
     return 0;
-  }, [purchaseOrderViews]);
+  }, [filteredPurchaseOrderViews, purchaseOrderViews]);
 
   useEffect(() => {
     if (purchaseOrderViews) {
@@ -140,9 +149,14 @@ export default function PurchaseOrders(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'購入申請一覧'} />
-            <select className='w-100 '>
+            <select
+              className='w-100 '
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
+              <option value='2023'>2023</option>
             </select>
           </div>
           <div className='flex justify-end'>
@@ -175,8 +189,8 @@ export default function PurchaseOrders(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {purchaseOrderViews &&
-                purchaseOrderViews.map((purchaseOrderViewItem, index) => (
+              {filteredPurchaseOrderViews &&
+                filteredPurchaseOrderViews.map((purchaseOrderViewItem, index) => (
                   <tr className='border-b' key={purchaseOrderViewItem.purchaseOrder.id}>
                     <td className='py-3'>
                       <div className='text-center text-sm text-black-600'>
@@ -286,7 +300,7 @@ export default function PurchaseOrders(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {purchaseOrderViews && (
+              {filteredPurchaseOrderViews.length > 0 && (
                 <tr className='border-b border-primary-1'>
                   <td className='px-1 py-3' colSpan={5}>
                     <div className='flex justify-end'>
@@ -300,7 +314,7 @@ export default function PurchaseOrders(props: Props) {
                   </td>
                 </tr>
               )}
-              {!purchaseOrderViews && (
+              {!filteredPurchaseOrderViews.length && (
                 <tr className='border-b border-primary-1'>
                   <td className='px-1 py-3' colSpan={7}>
                     <div className='flex justify-center'>

@@ -72,6 +72,15 @@ export default function PurchaseReports(props: Props) {
     return datetime2;
   }, []);
 
+  const currentYear = new Date().getFullYear().toString();
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const filteredPurchaseReportViews = useMemo(() => {
+    return purchaseReportViews.filter((purchaseReportViewItem) => {
+      return purchaseReportViewItem.purchaseOrder.deadline.includes(selectedYear);
+    });
+  }, [purchaseReportViews, selectedYear]);
+
   const TotalFee = useCallback((purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
     purchaseItems.map((purchaseItem: PurchaseItem) => {
@@ -87,13 +96,13 @@ export default function PurchaseReports(props: Props) {
   const totalReportFee = useMemo(() => {
     if (purchaseReportViews) {
       let totalFee = 0;
-      purchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
+      filteredPurchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
         totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
       });
       return totalFee;
     }
     return 0;
-  }, [purchaseReportViews]);
+  }, [filteredPurchaseReportViews, purchaseReportViews]);
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
@@ -158,9 +167,14 @@ export default function PurchaseReports(props: Props) {
         <div className='mx-5 mt-10'>
           <div className='flex'>
             <Title title={'購入報告一覧'} />
-            <select className='w-100 '>
+            <select
+              className='w-100 '
+              defaultValue={currentYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               <option value='2021'>2021</option>
               <option value='2022'>2022</option>
+              <option value='2023'>2023</option>
             </select>
           </div>
           <div className='flex justify-end'>
@@ -199,8 +213,8 @@ export default function PurchaseReports(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {purchaseReportViews &&
-                purchaseReportViews.map((purchaseReportViewItem, index) => (
+              {filteredPurchaseReportViews &&
+                filteredPurchaseReportViews.map((purchaseReportViewItem, index) => (
                   <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
                     <td
                       className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
@@ -353,7 +367,7 @@ export default function PurchaseReports(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {purchaseReportViews && (
+              {filteredPurchaseReportViews.length > 0 && (
                 <tr>
                   <td className='border-b border-primary-1 px-1 py-3' colSpan={6}>
                     <div className='text-right text-sm text-black-600'>合計</div>
@@ -366,7 +380,7 @@ export default function PurchaseReports(props: Props) {
                   </td>
                 </tr>
               )}
-              {!purchaseReportViews && (
+              {!filteredPurchaseReportViews.length && (
                 <tr>
                   <td className='border-b border-primary-1 px-1 py-3' colSpan={9}>
                     <div className='text-center text-sm text-black-600'>データがありません</div>
