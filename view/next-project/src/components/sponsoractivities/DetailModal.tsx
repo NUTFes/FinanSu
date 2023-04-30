@@ -56,6 +56,29 @@ const DetailModal: FC<ModalProps> = (props) => {
           <p className='border-b border-primary-1'>{props.sponsorActivitiesViewItem.user.name}</p>
         </div>
       </div>
+      <div  className='my-10 flex flex-wrap justify-center gap-8'>
+        <div className='flex gap-3'>
+          <p>オプション</p>
+          <p className='border-b border-primary-1'>
+            {props.sponsorActivitiesViewItem.sponsorActivity.feature}
+          </p>
+        </div>
+        <div className='flex gap-3'>
+          <p>交通費</p>
+          <p className='border-b border-primary-1'>
+            {props.sponsorActivitiesViewItem.sponsorActivity.expense}円
+          </p>
+        </div>
+        <div className='flex gap-3'>
+          <p>備考</p>
+          <p className='border-b border-primary-1'>
+            {props.sponsorActivitiesViewItem.sponsorActivity.remark == '' &&(
+                        <div>なし</div>
+            )}            
+            {props.sponsorActivitiesViewItem.sponsorActivity.remark}
+          </p>
+        </div>
+      </div>
       <p className='my-5 mx-auto w-fit text-xl text-black-600'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>

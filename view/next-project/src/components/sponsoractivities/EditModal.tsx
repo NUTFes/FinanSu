@@ -8,6 +8,7 @@ import {
   CloseButton,
   Modal,
   Select,
+  Input,
 } from '@components/common';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 
@@ -96,6 +97,37 @@ export default function EditModal(props: ModalProps) {
             回収完了
           </option>
         </Select>
+      </div>
+      <p className='text-black-600'>オプション</p>
+      <div className='col-span-4 w-full'>
+        <Select
+          value={data.feature}
+          onChange={handler('feature')}
+        >
+          <option value={'ポスター'}>
+            ポスター
+          </option>
+          <option value={'クーポン'}>クーポン</option>
+          <option value={'なし'}>なし</option>
+        </Select>
+      </div>
+      <p className='text-black-600'>交通費</p>
+      <div className='col-span-4 w-full'>
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.expense}
+          onChange={handler('expense')}
+        />
+      </div>
+      <p className='text-black-600'>備考</p>
+      <div className='col-span-4 w-full'>
+        <Input
+          className='w-full'
+          id={String(data.id)}
+          value={data.remark}
+          onChange={handler('remark')}
+        />
       </div>
     </div>
   );

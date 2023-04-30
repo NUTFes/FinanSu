@@ -9,10 +9,11 @@ import {
   OutlinePrimaryButton,
   PrimaryButton,
   Select,
+  Input
 } from '@components/common';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 
-const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
+const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況', 'オプション', '交通費', '備考'];
 
 interface Props {
   users: User[];
@@ -36,6 +37,9 @@ export default function SponsorActivitiesAddModal(props: Props) {
     sponsorStyleID: sponsorStyles[0].id || 0,
     userID: users[0].id || 0,
     isDone: false,
+    feature: '',
+    expense: 0,
+    remark: '',
     createdAt: '',
     updatedAt: '',
   });
@@ -108,6 +112,39 @@ export default function SponsorActivitiesAddModal(props: Props) {
           <option value={'回収済み'}>回収済み</option>
         </Select>
       </div>
+      <p className='text-black-600'>オプション</p>
+      <div className='col-span-4 w-full'>
+        <Select
+          value={data.feature}
+          onChange={formDataHandler('feature')}
+        >
+          <option value={'ポスター'}>
+            ポスター
+          </option>
+          <option value={'クーポン'}>クーポン</option>
+          <option value={'なし'}>なし</option>
+        </Select>
+      </div>
+      <p className='text-black-600'>交通費</p>
+      <div className='col-span-4 w-full'>
+        <Input
+          type='number'
+          className='w-full'
+          id={String(formData.id)}
+          value={formData.expense}
+          onChange={formDataHandler('expense')}
+        />
+      </div>
+      <p className='text-black-600'>備考</p>
+      <div className='col-span-4 w-full'>
+        <Input
+          type='string'
+          className='w-full'
+          id={String(formData.id)}
+          value={formData.remark}
+          onChange={formDataHandler('remark')}
+        />
+      </div>
     </div>
   );
 
@@ -147,6 +184,21 @@ export default function SponsorActivitiesAddModal(props: Props) {
             <td className='py-3'>
               <div className='text-center text-sm text-black-600'>
                 {sponsorActivities.isDone ? '回収済み' : '未回収'}
+              </div>
+            </td>
+            <td className='py-3'>
+              <div className='text-center text-sm text-black-600'>
+                {sponsorActivities.feature}
+              </div>
+            </td>
+            <td className='py-3'>
+              <div className='text-center text-sm text-black-600'>
+                {sponsorActivities.expense}
+              </div>
+            </td>
+            <td className='py-3'>
+              <div className='text-center text-sm text-black-600'>
+                {sponsorActivities.remark}
               </div>
             </td>
           </tr>

@@ -5,6 +5,9 @@ export const post = async (url: string, data: SponsorActivity) => {
   const sponsorStyleID = data.sponsorStyleID;
   const userID = data.userID;
   const isDone = data.isDone;
+  const feature = data.feature;
+  const expense = data.expense;
+  const remark = data.remark;
   const postUrl =
     url +
     '?sponsor_id=' +
@@ -14,7 +17,13 @@ export const post = async (url: string, data: SponsorActivity) => {
     '&user_id=' +
     userID +
     '&is_done=' +
-    isDone;
+    isDone +
+    '&feature=' +
+    feature +
+    '&expense=' +
+    expense +
+    '&remark=' +
+    remark;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -31,6 +40,9 @@ export const put = async (url: string, data: SponsorActivity) => {
   const sponsorStyleID = data.sponsorStyleID;
   const userID = data.userID;
   const isDone = data.isDone;
+  const feature = data.feature;
+  const expense = data.expense;
+  const remark = data.remark;
   const putUrl =
     url +
     '?sponsor_id=' +
@@ -40,7 +52,13 @@ export const put = async (url: string, data: SponsorActivity) => {
     '&user_id=' +
     userID +
     '&is_done=' +
-    isDone;
+    isDone +
+    '&feature=' +
+    feature +
+    '&expense=' +
+    expense +
+    '&remark=' +
+    remark;
 
   console.log('putUrl: ', putUrl);
   const res = await fetch(putUrl, {
