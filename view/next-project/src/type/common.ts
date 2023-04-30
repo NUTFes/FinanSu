@@ -109,9 +109,6 @@ export interface SponsorActivity {
   sponsorStyleID: number;
   userID: number;
   isDone: boolean;
-  feature: string;
-  expense: number;
-  remark: string;
   createdAt: string;
   updatedAt: string;
 }

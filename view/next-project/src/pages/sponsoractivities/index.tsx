@@ -101,14 +101,8 @@ export default function SponsorActivities(props: Props) {
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>担当者名</div>
                 </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
+                <th className='w-2/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>回収状況</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>オプション</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>交通費</div>
                 </th>
                 <th className='w-2/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>作成日時</div>
@@ -178,30 +172,6 @@ export default function SponsorActivities(props: Props) {
                       {!sponsorActivitiesItem.sponsorActivity.isDone && (
                         <div className='text-center text-sm text-black-600'>未回収</div>
                       )}
-                    </td>
-                    <td
-                      onClick={() => {
-                        onOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='text-center text-sm text-black-600'>
-                        {sponsorActivitiesItem.sponsorActivity.feature}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='text-center text-sm text-black-600'>
-                        {sponsorActivitiesItem.sponsorActivity.expense}
-                      </div>
                     </td>
                     <td
                       onClick={() => {
