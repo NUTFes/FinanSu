@@ -115,14 +115,22 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <p className='text-black-600'>オプション</p>
       <div className='col-span-4 w-full'>
         <Select
-          value={data.feature}
-          onChange={formDataHandler('feature')}
+            value={data.feature}
+            onChange={formDataHandler('feature')}
         >
-          <option value={'ポスター'}>
-            ポスター
-          </option>
-          <option value={'クーポン'}>クーポン</option>
-          <option value={'なし'}>なし</option>
+          {sponsorStyles[data.sponsorStyleID-1]?.style !== '企業ブース' ?(
+            <>
+              <option value={'なし'} selected>なし</option>
+              <option value={'ポスター'} >ポスター</option>
+              <option value={'クーポン'} >クーポン</option>
+            </>
+          ):(
+            <>
+              <option value={'なし'} selected>なし</option>
+              <option value={'ポスター'} disabled>ポスター</option>
+              <option value={'クーポン'} disabled>クーポン</option>
+            </>
+          )}
         </Select>
       </div>
       <p className='text-black-600'>交通費</p>
@@ -130,8 +138,8 @@ export default function SponsorActivitiesAddModal(props: Props) {
         <Input
           type='number'
           className='w-full'
-          id={String(formData.id)}
-          value={formData.expense}
+          id={String(data.id)}
+          value={data.expense}
           onChange={formDataHandler('expense')}
         />
       </div>
@@ -140,8 +148,8 @@ export default function SponsorActivitiesAddModal(props: Props) {
         <Input
           type='string'
           className='w-full'
-          id={String(formData.id)}
-          value={formData.remark}
+          id={String(data.id)}
+          value={data.remark}
           onChange={formDataHandler('remark')}
         />
       </div>
@@ -156,7 +164,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       (sponsorStyle) => sponsorStyle.id === Number(sponsorActivities.sponsorStyleID),
     );
     const userView = users.find((user) => user.id === Number(sponsorActivities.userID));
-
+    
     return (
       <table className='mb-10 w-full table-fixed border-collapse'>
         <thead>
