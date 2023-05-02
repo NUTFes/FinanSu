@@ -25,8 +25,9 @@ export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
   // 協賛企業のリスト
-  const [formData, setFormData] = useState<SponsorActivity>(props.sponsorActivity);
+  const [formData, setFormData] = useState<SponsorActivity>({...props.sponsorActivity, expense:Number((props.sponsorActivity.expense/11).toFixed(1))});
 
+  const { users, sponsors, sponsorStyles } = props;
   const handler =
     (input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,12 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛企業の登録の更新を行い、ページをリロード
   const submit = (data: SponsorActivity) => {
-    updateSponsorStyle(data);
+    const {expense, ...rest} = data;
+    const submitData:SponsorActivity  = {
+      expense:Math.round(expense*11),
+      ...rest
+    }
+    updateSponsorStyle(submitData);
     router.reload();
   };
 
@@ -51,7 +57,7 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>企業名</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('sponsorID')}>
-          {props.sponsors.map((sponsor) => (
+          {sponsors.map((sponsor) => (
             <option key={sponsor.id} value={sponsor.id} selected={sponsor.id === data.sponsorID}>
               {sponsor.name}
             </option>
@@ -60,8 +66,13 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' onChange={handler('sponsorStyleID')}>
-          {props.sponsorStyles.map((sponsorStyle) => (
+        <Select className='w-full' onChange={(e)=>{
+          setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
+          if(sponsorStyles[Number(e.target.value)-1]?.style === '企業ブース'){
+            setFormData({ ...formData, feature: "なし" ,sponsorStyleID: Number(e.target.value)});
+          }
+        }}>
+          {sponsorStyles.map((sponsorStyle) => (
             <option
               key={sponsorStyle.id}
               value={sponsorStyle.id}
@@ -75,7 +86,7 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('userID')}>
-          {props.users.map((user) => (
+          {users.map((user) => (
             <option key={user.id} value={user.id} selected={user.id === data.userID}>
               {user.name}
             </option>
@@ -104,14 +115,12 @@ export default function EditModal(props: ModalProps) {
           value={data.feature}
           onChange={handler('feature')}
         >
-          <option value={'ポスター'}>
-            ポスター
-          </option>
-          <option value={'クーポン'}>クーポン</option>
-          <option value={'なし'}>なし</option>
+          <option value={'なし'} selected>なし</option>
+          <option value={'ポスター'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>ポスター</option>
+          <option value={'クーポン'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>クーポン</option>
         </Select>
       </div>
-      <p className='text-black-600'>交通費</p>
+      <p className='text-black-600'>移動距離(km)</p>
       <div className='col-span-4 w-full'>
         <Input
           className='w-full'
@@ -119,6 +128,10 @@ export default function EditModal(props: ModalProps) {
           value={data.expense}
           onChange={handler('expense')}
         />
+      </div>
+      <p className='text-black-600'>交通費</p>
+      <div className='col-span-4 w-full'>
+        <p className='w-full' >{Math.round(data.expense*11)}円</p>
       </div>
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>

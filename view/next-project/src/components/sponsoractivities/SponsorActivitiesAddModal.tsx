@@ -9,11 +9,12 @@ import {
   OutlinePrimaryButton,
   PrimaryButton,
   Select,
-  Input
+  Input,
 } from '@components/common';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
+import SponsorActivities from '@/pages/sponsoractivities';
 
-const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況', 'オプション', '交通費', '備考'];
+const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況', 'オプション', '移動距離(km)', '交通費', '備考'];
 
 interface Props {
   users: User[];
@@ -52,7 +53,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   // 協賛活動の登録と更新を行い、ページをリロード
   const submit = (data: SponsorActivity) => {
-    addSponsorActivities(data);
+    const {expense, ...rest} = data;
+    const submitData:SponsorActivity  = {
+      expense:Math.round(expense*11),
+      ...rest
+    }
+    addSponsorActivities(submitData);
     props.setIsOpen(false);
     router.reload();
   };
@@ -80,7 +86,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
-        <Select value={data.sponsorStyleID} onChange={formDataHandler('sponsorStyleID')}>
+        <Select value={data.sponsorStyleID} onChange={(e)=>{
+          setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
+          if(sponsorStyles[Number(e.target.value)-1]?.style === '企業ブース'){
+            setFormData({ ...formData, feature: "なし" ,sponsorStyleID: Number(e.target.value)});
+          }
+        }}>
           {sponsorStyles.map((sponsorStyle: SponsorStyle) => (
             <option key={sponsorStyle.id} value={sponsorStyle.id}>
               {`${sponsorStyle.style} / ${sponsorStyle.feature} / ${sponsorStyle.price} 円`}
@@ -118,22 +129,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
             value={data.feature}
             onChange={formDataHandler('feature')}
         >
-          {sponsorStyles[data.sponsorStyleID-1]?.style !== '企業ブース' ?(
-            <>
-              <option value={'なし'} selected>なし</option>
-              <option value={'ポスター'} >ポスター</option>
-              <option value={'クーポン'} >クーポン</option>
-            </>
-          ):(
-            <>
-              <option value={'なし'} selected>なし</option>
-              <option value={'ポスター'} disabled>ポスター</option>
-              <option value={'クーポン'} disabled>クーポン</option>
-            </>
-          )}
+          <option value={'なし'} selected>なし</option>
+          <option value={'ポスター'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>ポスター</option>
+          <option value={'クーポン'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>クーポン</option>
         </Select>
       </div>
-      <p className='text-black-600'>交通費</p>
+      <p className='text-black-600'>移動距離(km)</p>
       <div className='col-span-4 w-full'>
         <Input
           type='number'
@@ -142,6 +143,10 @@ export default function SponsorActivitiesAddModal(props: Props) {
           value={data.expense}
           onChange={formDataHandler('expense')}
         />
+      </div>
+      <p className='text-black-600'>交通費</p>
+      <div className='col-span-4 w-full'>
+        <p className='w-full' >{Math.round(data.expense*11)}円</p>
       </div>
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>
@@ -202,6 +207,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
             <td className='py-3'>
               <div className='text-center text-sm text-black-600'>
                 {sponsorActivities.expense}
+              </div>
+            </td>
+            <td className='py-3'>
+              <div className='text-center text-sm text-black-600'>
+                {Math.round(sponsorActivities.expense * 11)}
               </div>
             </td>
             <td className='py-3'>
