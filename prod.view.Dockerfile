@@ -10,6 +10,7 @@ FROM gcr.io/distroless/nodejs16-debian11:nonroot
 WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/FinanSu"
 ENV NODE_ENV production
+ENV NEXT_PUBLIC_APP_ENV production
 
 COPY --from=builder /app/next-project/next.config.js ./
 COPY --from=builder /app/next-project/public ./public
