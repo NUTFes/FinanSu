@@ -9,6 +9,7 @@ import {
   Modal,
   Select,
   Input,
+  Textarea,
 } from '@components/common';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 
@@ -30,7 +31,7 @@ export default function EditModal(props: ModalProps) {
   const { users, sponsors, sponsorStyles } = props;
   const handler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
@@ -51,6 +52,12 @@ export default function EditModal(props: ModalProps) {
     await put(updateSponsorStyleUrl, data);
   };
 
+  const remarkCoupon = 
+  `【クーポン】[詳細 :  ○○],
+  【広告掲載内容】[企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+    const remarkElse =
+  `【広告掲載内容】[企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
     <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
@@ -69,7 +76,7 @@ export default function EditModal(props: ModalProps) {
         <Select className='w-full' onChange={(e)=>{
           setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
           if(sponsorStyles[Number(e.target.value)-1]?.style === '企業ブース'){
-            setFormData({ ...formData, feature: "なし" ,sponsorStyleID: Number(e.target.value)});
+            setFormData({ ...formData, feature: "なし" ,sponsorStyleID: Number(e.target.value),remark: ''});
           }
         }}>
           {sponsorStyles.map((sponsorStyle) => (
@@ -112,8 +119,16 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>オプション</p>
       <div className='col-span-4 w-full'>
         <Select
-          value={data.feature}
-          onChange={handler('feature')}
+            value={data.feature}
+            onChange={(e)=>{
+              if(e.target.value === 'クーポン'){
+                setFormData({ ...formData, feature: e.target.value ,remark: remarkCoupon});
+              }else if(e.target.value === 'ポスター'){
+                setFormData({ ...formData, feature: e.target.value ,remark: remarkElse});
+              }else{
+                setFormData({ ...formData, feature: e.target.value ,remark: ''});
+              }
+            }}
         >
           <option value={'なし'} selected>なし</option>
           <option value={'ポスター'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>ポスター</option>
@@ -135,7 +150,7 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>
-        <Input
+        <Textarea
           className='w-full'
           id={String(data.id)}
           value={data.remark}

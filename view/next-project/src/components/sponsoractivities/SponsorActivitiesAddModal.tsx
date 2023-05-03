@@ -10,11 +10,13 @@ import {
   PrimaryButton,
   Select,
   Input,
+  Textarea,
 } from '@components/common';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 import SponsorActivities from '@/pages/sponsoractivities';
+import { m } from 'framer-motion';
 
-const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況', 'オプション', '移動距離(km)', '交通費', '備考'];
+const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況', 'オプション', '移動距離(km)', '交通費'];
 
 interface Props {
   users: User[];
@@ -38,22 +40,22 @@ export default function SponsorActivitiesAddModal(props: Props) {
     sponsorStyleID: sponsorStyles[0].id || 0,
     userID: users[0].id || 0,
     isDone: false,
-    feature: '',
+    feature: 'なし',
     expense: 0,
-    remark: '',
+    remark:'',
     createdAt: '',
     updatedAt: '',
   });
 
   const formDataHandler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
   // 協賛活動の登録と更新を行い、ページをリロード
   const submit = (data: SponsorActivity) => {
-    const {expense, ...rest} = data;
+  const {expense, ...rest} = data;
     const submitData:SponsorActivity  = {
       expense:Math.round(expense*11),
       ...rest
@@ -68,6 +70,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
     const sponsorActivitiesUrl = process.env.CSR_API_URI + '/activities';
     await post(sponsorActivitiesUrl, data);
   };
+
+  const remarkCoupon = 
+`【クーポン】[詳細 :  ○○],
+【広告掲載内容】[企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+  const remarkElse =
+`【広告掲載内容】[企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
@@ -89,7 +97,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         <Select value={data.sponsorStyleID} onChange={(e)=>{
           setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
           if(sponsorStyles[Number(e.target.value)-1]?.style === '企業ブース'){
-            setFormData({ ...formData, feature: "なし" ,sponsorStyleID: Number(e.target.value)});
+            setFormData({ ...formData, feature: "なし" ,sponsorStyleID: Number(e.target.value), remark: ''});
           }
         }}>
           {sponsorStyles.map((sponsorStyle: SponsorStyle) => (
@@ -127,7 +135,15 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <div className='col-span-4 w-full'>
         <Select
             value={data.feature}
-            onChange={formDataHandler('feature')}
+            onChange={(e)=>{
+              if(e.target.value === 'クーポン'){
+                setFormData({ ...formData, feature: e.target.value ,remark: remarkCoupon});
+              }else if(e.target.value === 'ポスター'){
+                setFormData({ ...formData, feature: e.target.value ,remark: remarkElse});
+              }else{
+                setFormData({ ...formData, feature: e.target.value ,remark: ''});
+              }
+            }}
         >
           <option value={'なし'} selected>なし</option>
           <option value={'ポスター'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>ポスター</option>
@@ -150,13 +166,13 @@ export default function SponsorActivitiesAddModal(props: Props) {
       </div>
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>
-        <Input
+        <Textarea
           type='string'
           className='w-full'
           id={String(data.id)}
           value={data.remark}
           onChange={formDataHandler('remark')}
-        />
+        ></Textarea>
       </div>
     </div>
   );
@@ -169,8 +185,9 @@ export default function SponsorActivitiesAddModal(props: Props) {
       (sponsorStyle) => sponsorStyle.id === Number(sponsorActivities.sponsorStyleID),
     );
     const userView = users.find((user) => user.id === Number(sponsorActivities.userID));
-    
+
     return (
+      <div>
       <table className='mb-10 w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -214,14 +231,36 @@ export default function SponsorActivitiesAddModal(props: Props) {
                 {Math.round(sponsorActivities.expense * 11)}
               </div>
             </td>
-            <td className='py-3'>
-              <div className='text-center text-sm text-black-600'>
-                {sponsorActivities.remark}
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>
+      <table className='mb-10 w-full table-fixed border-collapse'>
+        <thead>
+          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <th className='border-b-primary-1 px-6 pb-2'>
+              <div className='text-center text-sm text-black-600'>備考</div>
+            </th>
+          </tr>
+        </thead>
+        <tr>
+          <td>
+            <div className='text-sm text-black-600'>
+              {sponsorActivities.remark.length<36 ?(
+                    <div className = 'text-center'>
+                      {sponsorActivities.remark ==="" &&(
+                        <div>なし</div>
+                      )}
+                      {sponsorActivities.remark}
+                    </div>
+                  ):(
+                    <div>{sponsorActivities.remark}</div>
+              )}
+            </div>
+          </td>
+        </tr>
+      </table>        
+      </div>
+
     );
   };
 
