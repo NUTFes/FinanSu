@@ -26,24 +26,32 @@ export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
   // 協賛企業のリスト
-  const [formData, setFormData] = useState<SponsorActivity>({...props.sponsorActivity, expense:Number((props.sponsorActivity.expense/11).toFixed(1))});
+  const [formData, setFormData] = useState<SponsorActivity>({
+    ...props.sponsorActivity,
+    expense: Number((props.sponsorActivity.expense / 11).toFixed(1)),
+  });
 
   const { users, sponsors, sponsorStyles } = props;
   const handler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    (
+      e:
+        | React.ChangeEvent<HTMLSelectElement>
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLTextAreaElement>,
+    ) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
   // 協賛企業の登録の更新を行い、ページをリロード
   const submit = (data: SponsorActivity) => {
-    const {expense, userID, sponsorID, ...rest} = data;
-    const submitData:SponsorActivity  = {
-      expense:Math.round(expense*11),
+    const { expense, userID, sponsorID, ...rest } = data;
+    const submitData: SponsorActivity = {
+      expense: Math.round(expense * 11),
       userID: Number(userID),
       sponsorID: Number(sponsorID),
-      ...rest
-    }
+      ...rest,
+    };
     updateSponsorStyle(submitData);
     router.reload();
   };
@@ -54,11 +62,9 @@ export default function EditModal(props: ModalProps) {
     await put(updateSponsorStyleUrl, data);
   };
 
-  const remarkCoupon = 
-`<クーポン> [詳細 :  ○○],
+  const remarkCoupon = `<クーポン> [詳細 :  ○○],
 <広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
-  const remarkElse =
-`<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+  const remarkElse = `<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
 
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
@@ -75,12 +81,20 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' onChange={(e)=>{
-          setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
-          if(sponsorStyles[Number(e.target.value)-1]?.style === '企業ブース'){
-            setFormData({ ...formData, feature: "なし" ,sponsorStyleID: Number(e.target.value),remark: ''});
-          }
-        }}>
+        <Select
+          className='w-full'
+          onChange={(e) => {
+            setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
+            if (sponsorStyles[Number(e.target.value) - 1]?.style === '企業ブース') {
+              setFormData({
+                ...formData,
+                feature: 'なし',
+                sponsorStyleID: Number(e.target.value),
+                remark: '',
+              });
+            }
+          }}
+        >
           {sponsorStyles.map((sponsorStyle) => (
             <option
               key={sponsorStyle.id}
@@ -121,20 +135,32 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>オプション</p>
       <div className='col-span-4 w-full'>
         <Select
-            value={data.feature}
-            onChange={(e)=>{
-              if(e.target.value === 'クーポン'){
-                setFormData({ ...formData, feature: e.target.value ,remark: remarkCoupon});
-              }else if(e.target.value === 'ポスター'){
-                setFormData({ ...formData, feature: e.target.value ,remark: remarkElse});
-              }else{
-                setFormData({ ...formData, feature: e.target.value ,remark: ''});
-              }
-            }}
+          value={data.feature}
+          onChange={(e) => {
+            if (e.target.value === 'クーポン') {
+              setFormData({ ...formData, feature: e.target.value, remark: remarkCoupon });
+            } else if (e.target.value === 'ポスター') {
+              setFormData({ ...formData, feature: e.target.value, remark: remarkElse });
+            } else {
+              setFormData({ ...formData, feature: e.target.value, remark: '' });
+            }
+          }}
         >
-          <option value={'なし'} selected>なし</option>
-          <option value={'ポスター'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>ポスター</option>
-          <option value={'クーポン'} disabled={sponsorStyles[data.sponsorStyleID-1]?.style === '企業ブース'}>クーポン</option>
+          <option value={'なし'} selected>
+            なし
+          </option>
+          <option
+            value={'ポスター'}
+            disabled={sponsorStyles[data.sponsorStyleID - 1]?.style === '企業ブース'}
+          >
+            ポスター
+          </option>
+          <option
+            value={'クーポン'}
+            disabled={sponsorStyles[data.sponsorStyleID - 1]?.style === '企業ブース'}
+          >
+            クーポン
+          </option>
         </Select>
       </div>
       <p className='text-black-600'>移動距離(km)</p>
@@ -148,7 +174,7 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>交通費</p>
       <div className='col-span-4 w-full'>
-        <p className='w-full' >{Math.round(data.expense*11)}円</p>
+        <p className='w-full'>{Math.round(data.expense * 11)}円</p>
       </div>
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>

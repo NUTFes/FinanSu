@@ -28,7 +28,6 @@ const DetailModal: FC<ModalProps> = (props) => {
     return datetime2;
   };
 
-
   return (
     <Modal className='w-1/2'>
       <div className='w-full'>
@@ -43,7 +42,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <div className='flex gap-3'>
           <p className='text-black-600'>作成日</p>
           <p className='border-b border-primary-1'>
-            {formatDate(props.sponsorActivitiesViewItem.sponsorActivity.createdAt||"")}
+            {formatDate(props.sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}
           </p>
         </div>
         <div className='flex gap-3'>
@@ -57,7 +56,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           <p className='border-b border-primary-1'>{props.sponsorActivitiesViewItem.user.name}</p>
         </div>
       </div>
-      <div  className='my-10 flex flex-wrap justify-center gap-8'>
+      <div className='my-10 flex flex-wrap justify-center gap-8'>
         <div className='flex gap-3'>
           <p className='text-black-600'>オプション</p>
           <p className='border-b border-primary-1'>
@@ -74,22 +73,21 @@ const DetailModal: FC<ModalProps> = (props) => {
       <p className='my-5 mx-auto w-fit text-xl text-black-600'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-          </tr>
+          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></tr>
         </thead>
         <tbody>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
             <td className='py-3'>
               <div>
                 <p className='border-primary-1'>
-                  {props.sponsorActivitiesViewItem.sponsorActivity.remark.length<36 ?(
-                    <div className = 'text-center'>
-                      {props.sponsorActivitiesViewItem.sponsorActivity.remark ==="" &&(
+                  {props.sponsorActivitiesViewItem.sponsorActivity.remark.length < 36 ? (
+                    <div className='text-center'>
+                      {props.sponsorActivitiesViewItem.sponsorActivity.remark === '' && (
                         <div>なし</div>
                       )}
                       {props.sponsorActivitiesViewItem.sponsorActivity.remark}
                     </div>
-                  ):(
+                  ) : (
                     <div>{props.sponsorActivitiesViewItem.sponsorActivity.remark}</div>
                   )}
                 </p>
