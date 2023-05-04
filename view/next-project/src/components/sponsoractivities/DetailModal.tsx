@@ -43,7 +43,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <div className='flex gap-3'>
           <p className='text-black-600'>作成日</p>
           <p className='border-b border-primary-1'>
-            {formatDate(props.sponsorActivitiesViewItem.sponsorActivity.createdAt)}
+            {formatDate(props.sponsorActivitiesViewItem.sponsorActivity.createdAt||"")}
           </p>
         </div>
         <div className='flex gap-3'>

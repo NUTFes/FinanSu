@@ -112,8 +112,8 @@ export interface SponsorActivity {
   feature: string;
   expense: number;
   remark: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SponsorActivityView {

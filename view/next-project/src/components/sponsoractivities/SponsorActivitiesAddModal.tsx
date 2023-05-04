@@ -43,8 +43,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
     feature: 'なし',
     expense: 0,
     remark:'',
-    createdAt: '',
-    updatedAt: '',
   });
 
   const formDataHandler =
@@ -55,9 +53,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   // 協賛活動の登録と更新を行い、ページをリロード
   const submit = (data: SponsorActivity) => {
-  const {expense, ...rest} = data;
+  const {expense, userID, sponsorID, ...rest} = data;
     const submitData:SponsorActivity  = {
       expense:Math.round(expense*11),
+      userID: Number(userID),
+      sponsorID: Number(sponsorID),
       ...rest
     }
     addSponsorActivities(submitData);
@@ -72,10 +72,10 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   const remarkCoupon = 
-`【クーポン】[詳細 :  ○○],
-【広告掲載内容】[企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+`<クーポン> [詳細 :  ○○],
+<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
   const remarkElse =
-`【広告掲載内容】[企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+`<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (

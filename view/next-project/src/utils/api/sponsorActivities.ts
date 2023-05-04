@@ -1,30 +1,7 @@
 import { SponsorActivity } from '@type/common';
 
 export const post = async (url: string, data: SponsorActivity) => {
-  const sponsorID = data.sponsorID;
-  const sponsorStyleID = data.sponsorStyleID;
-  const userID = data.userID;
-  const isDone = data.isDone;
-  const feature = data.feature;
-  const expense = data.expense;
-  const remark = data.remark;
-  const postUrl =
-    url +
-    '?sponsor_id=' +
-    sponsorID +
-    '&sponsor_style_id=' +
-    sponsorStyleID +
-    '&user_id=' +
-    userID +
-    '&is_done=' +
-    isDone +
-    '&feature=' +
-    feature +
-    '&expense=' +
-    expense +
-    '&remark=' +
-    remark;
-  const res = await fetch(postUrl, {
+  const res = await fetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -36,32 +13,8 @@ export const post = async (url: string, data: SponsorActivity) => {
 };
 
 export const put = async (url: string, data: SponsorActivity) => {
-  const sponsorID = data.sponsorID;
-  const sponsorStyleID = data.sponsorStyleID;
-  const userID = data.userID;
-  const isDone = data.isDone;
-  const feature = data.feature;
-  const expense = data.expense;
-  const remark = data.remark;
-  const putUrl =
-    url +
-    '?sponsor_id=' +
-    sponsorID +
-    '&sponsor_style_id=' +
-    sponsorStyleID +
-    '&user_id=' +
-    userID +
-    '&is_done=' +
-    isDone +
-    '&feature=' +
-    feature +
-    '&expense=' +
-    expense +
-    '&remark=' +
-    remark;
-
-  console.log('putUrl: ', putUrl);
-  const res = await fetch(putUrl, {
+  console.log('putUrl: ', url);
+  const res = await fetch(url, {
     method: 'PUT',
     mode: 'cors',
     headers: {
