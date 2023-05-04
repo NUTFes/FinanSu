@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import { Modal } from '@components/common';
 import { SponsorActivityView } from '@type/common';
+import { clsx } from 'clsx';
 
 interface ModalProps {
   isOpen: boolean;
@@ -81,17 +82,13 @@ const DetailModal: FC<ModalProps> = (props) => {
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
             <td className='py-3'>
               <div>
-                <p className='border-primary-1'>
-                  {props.sponsorActivitiesViewItem.sponsorActivity.remark.length<36 ?(
-                    <div className = 'text-center'>
-                      {props.sponsorActivitiesViewItem.sponsorActivity.remark ==="" &&(
-                        <div>なし</div>
-                      )}
-                      {props.sponsorActivitiesViewItem.sponsorActivity.remark}
-                    </div>
-                  ):(
-                    <div>{props.sponsorActivitiesViewItem.sponsorActivity.remark}</div>
+                <p className={clsx('border-primary-1', {
+                  'text-center': props.sponsorActivitiesViewItem.sponsorActivity.remark.length < 36,
+                })}>
+                  {props.sponsorActivitiesViewItem.sponsorActivity.remark === '' && (
+                    <div>なし</div>
                   )}
+                  {props.sponsorActivitiesViewItem.sponsorActivity.remark}
                 </p>
               </div>
             </td>

@@ -15,6 +15,7 @@ import {
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 import SponsorActivities from '@/pages/sponsoractivities';
 import { m } from 'framer-motion';
+import { clsx } from 'clsx';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況', 'オプション', '移動距離(km)', '交通費'];
 
@@ -244,16 +245,14 @@ export default function SponsorActivitiesAddModal(props: Props) {
         <tr>
           <td>
             <div className='text-sm text-black-600'>
-              {sponsorActivities.remark.length<36 ?(
-                    <div className = 'text-center'>
-                      {sponsorActivities.remark ==="" &&(
-                        <div>なし</div>
-                      )}
-                      {sponsorActivities.remark}
-                    </div>
-                  ):(
-                    <div>{sponsorActivities.remark}</div>
-              )}
+              <p className={clsx('border-primary-1', {
+                  'text-center': sponsorActivities.remark.length < 36,
+                })}>
+                  {sponsorActivities.remark === '' && (
+                    <div>なし</div>
+                  )}
+                  {sponsorActivities.remark}
+              </p>
             </div>
           </td>
         </tr>
