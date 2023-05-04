@@ -25,6 +25,12 @@ interface Props {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const REMARK_COUPON = 
+`<クーポン> [詳細 :  ○○],
+<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+const REMARK_POSTER =
+`<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+
 export default function SponsorActivitiesAddModal(props: Props) {
   const router = useRouter();
   const reset = () => {
@@ -70,12 +76,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
     const sponsorActivitiesUrl = process.env.CSR_API_URI + '/activities';
     await post(sponsorActivitiesUrl, data);
   };
-
-  const remarkCoupon = 
-`<クーポン> [詳細 :  ○○],
-<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
-  const remarkElse =
-`<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
@@ -137,9 +137,9 @@ export default function SponsorActivitiesAddModal(props: Props) {
             value={data.feature}
             onChange={(e)=>{
               if(e.target.value === 'クーポン'){
-                setFormData({ ...formData, feature: e.target.value ,remark: remarkCoupon});
+                setFormData({ ...formData, feature: e.target.value ,remark: REMARK_COUPON});
               }else if(e.target.value === 'ポスター'){
-                setFormData({ ...formData, feature: e.target.value ,remark: remarkElse});
+                setFormData({ ...formData, feature: e.target.value ,remark: REMARK_POSTER});
               }else{
                 setFormData({ ...formData, feature: e.target.value ,remark: ''});
               }
@@ -167,12 +167,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>
         <Textarea
-          type='string'
           className='w-full'
           id={String(data.id)}
           value={data.remark}
           onChange={formDataHandler('remark')}
-        ></Textarea>
+        />
       </div>
     </div>
   );

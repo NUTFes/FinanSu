@@ -12,7 +12,6 @@ interface Props {
     e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>,
   ) => void;
   children?: React.ReactNode;
-  type?: string;
 }
 
 function Textarea(props: Props): JSX.Element {
@@ -23,6 +22,7 @@ function Textarea(props: Props): JSX.Element {
     <textarea
       className={clsx(s.textarea, className)}
       placeholder={props.placeholder}
+      id={props.id}
       value={props.value}
       onChange={props.onChange}
     >

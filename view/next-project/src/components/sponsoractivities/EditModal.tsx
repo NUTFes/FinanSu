@@ -22,6 +22,12 @@ interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
+const REMARK_COUPON = 
+`<クーポン> [詳細 :  ○○],
+<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+const REMARK_POSTER =
+`<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+
 export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
@@ -53,12 +59,6 @@ export default function EditModal(props: ModalProps) {
     const updateSponsorStyleUrl = process.env.CSR_API_URI + '/activities/' + data.id;
     await put(updateSponsorStyleUrl, data);
   };
-
-  const remarkCoupon = 
-`<クーポン> [詳細 :  ○○],
-<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
-  const remarkElse =
-`<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
 
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
@@ -124,9 +124,9 @@ export default function EditModal(props: ModalProps) {
             value={data.feature}
             onChange={(e)=>{
               if(e.target.value === 'クーポン'){
-                setFormData({ ...formData, feature: e.target.value ,remark: remarkCoupon});
+                setFormData({ ...formData, feature: e.target.value ,remark: REMARK_COUPON});
               }else if(e.target.value === 'ポスター'){
-                setFormData({ ...formData, feature: e.target.value ,remark: remarkElse});
+                setFormData({ ...formData, feature: e.target.value ,remark: REMARK_POSTER});
               }else{
                 setFormData({ ...formData, feature: e.target.value ,remark: ''});
               }
