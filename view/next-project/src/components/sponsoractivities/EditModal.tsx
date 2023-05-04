@@ -142,6 +142,7 @@ export default function EditModal(props: ModalProps) {
         <Input
           className='w-full'
           id={String(data.id)}
+          type='number'
           value={data.expense}
           onChange={handler('expense')}
         />
