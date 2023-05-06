@@ -6,6 +6,7 @@ import s from './Textarea.module.css';
 interface Props {
   className?: string;
   placeholder?: string;
+  id?: string;
   value?: string | number;
   onChange?: (
     e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>,
@@ -21,6 +22,7 @@ function Textarea(props: Props): JSX.Element {
     <textarea
       className={clsx(s.textarea, className)}
       placeholder={props.placeholder}
+      id={props.id}
       value={props.value}
       onChange={props.onChange}
     >
