@@ -112,7 +112,7 @@ export interface SponsorActivity {
   feature: string;
   expense: number;
   remark: string;
-  createdAt?: string;
+  createdAt: string;
   updatedAt?: string;
 }
 
