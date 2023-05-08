@@ -29,38 +29,20 @@ const docTemplate = `{
             "post": {
                 tags: ["activity"],
                 "description": "activitiesの作成",
-                responses: {
-                    "200": {
-                        "description": "create されたactivitiestが返ってくる",
-                    }
-                },
                 "parameters": [
                     {
-                        "name": "sponsor_style_id",
-                        "in": "query",
-                        "description": "sponsor_style_id",
-                        "required": true,
-                        "type": "integer"
+                        "in": "body",
+                        "name": "activity",
+                        "schema":{
+                            "$ref": "#/definitions/activity"
+                        },
                     },
-                    {
-                        "name": "user_id",
-                        "in": "query",
-                        "description": "user_id",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "is_done",
-                        "in": "query",
-                        "description": "is_done",
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "sponsor_id",
-                        "in": "query",
-                        "description": "sponsor_id",
-                        "type": "integer"
-                    }
                 ],
+                responses: {
+                    "200": {
+                        "description": "create されたactivityが返ってくる",
+                    }
+                },
             },
         },
         "/activities/details": {
@@ -110,29 +92,11 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
-                        "name": "sponsor_style_id",
-                        "in": "query",
-                        "description": "sponsor_style_id",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "user_id",
-                        "in": "query",
-                        "description": "user_id",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "is_done",
-                        "in": "query",
-                        "description": "is_done",
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "sponsor_id",
-                        "in": "query",
-                        "description": "sponsor_id",
-                        "type": "integer"
+                        "in": "body",
+                        "name": "activity",
+                        "schema":{
+                            "$ref": "#/definitions/activity"
+                        },
                     },
                 ],
             },
@@ -2059,6 +2023,50 @@ const docTemplate = `{
                     "style",
                     "feature",
                     "price",
+            },
+        },
+        "activity":{
+            "properties":{
+                "sponsorStyleID":{
+                    "type": "int",
+                    "example": 1,
+
+                },
+                "sponsorID":{
+                    "type": "int",
+                    "example": 1,
+
+                },
+                "userID":{
+                    "type": "int",
+                    "example": 1,
+                },
+                "isDone":{
+                    "type": "boolean",
+                    "example": false,
+                },
+                "feature":{
+                    "type": "string",
+                    "example": "なし",
+
+                },
+                "expense":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "remark":{
+                    "type": "string",
+                    "example": "なし",
+                },
+            },
+            "required":{
+                    "sponsorStyleID",
+                    "sponsorID",
+                    "userID",
+                    "isDone",
+                    "feature",
+                    "expense",
+                    "remark",
             },
         },
     },
