@@ -54,7 +54,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
     feature: 'なし',
     expense: 0,
     remark: '',
-    createdAt: '',
   });
 
   const formDataHandler =

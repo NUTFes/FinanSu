@@ -68,7 +68,7 @@ export default function SponsorActivities(props: Props) {
 
   const filteredSponsorActivitiesViews = useMemo(() => {
     return props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
-      return sponsorActivitiesItem.sponsorActivity.createdAt.includes(selectedYear);
+      return sponsorActivitiesItem.sponsorActivity.createdAt?.includes(selectedYear);
     });
   }, [props, selectedYear]);
 
@@ -226,7 +226,8 @@ export default function SponsorActivities(props: Props) {
                       }}
                     >
                       <div className='text-center text-sm text-black-600'>
-                        {formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
+                        {sponsorActivitiesItem.sponsorActivity.createdAt &&
+                          formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
                       </div>
                     </td>
                     <td>
