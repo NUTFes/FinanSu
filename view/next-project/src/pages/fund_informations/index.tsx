@@ -121,9 +121,9 @@ export default function FundInformations(props: Props) {
         isFinanceStaff ||
         isFinanceDirector
       ) {
-        return true;
-      } else {
         return false;
+      } else {
+        return true;
       }
     },
     [currentUser?.id, isDeveloper, isFinanceStaff, isFinanceDirector],
