@@ -247,7 +247,7 @@ export default function FundInformations(props: Props) {
       </Head>
       <Card>
         <div className='-mx-4 md:visible mx-5 mt-10'>
-          <div className='flex -mx-4'>
+          <div className='flex'>
             <Title title={'学内募金一覧'} />
             <select
               className='w-50 md:w-100'
