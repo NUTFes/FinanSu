@@ -7,7 +7,7 @@ import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { put } from '@api/fundInformations';
-import { Title, Card } from '@components/common';
+import { Title, Card, Select, Card2 } from '@components/common';
 import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
@@ -19,6 +19,7 @@ interface FundInformationView {
   fundInformation: FundInformation;
   user: User;
   teacher: Teacher;
+  department: Department;
 }
 
 interface Props {
@@ -56,6 +57,7 @@ export default function FundInformations(props: Props) {
   // 教員一覧
   const teachers: Teacher[] = props.teachers;
   const users: User[] = props.users;
+  const departments: Department[] = props.departments;
 
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
@@ -244,27 +246,74 @@ export default function FundInformations(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className='mx-5 mt-10'>
-          <div className='flex'>
+        <div className='-mx-4 md:visible mx-5 mt-10'>
+          <div className='flex -mx-4'>
             <Title title={'学内募金一覧'} />
             <select
-              className='w-100 '
+              className='w-50 md:w-100'
               defaultValue={currentYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              <option value='2021'>2021</option>
-              <option value='2022'>2022</option>
-              <option value='2023'>2023</option>
+              <option value='2021' >2021</option>
+              <option value='2022' >2022</option>
+              <option value='2023' >2023</option>
             </select>
           </div>
-          <div className='flex justify-end'>
-            <OpenAddModalButton teachers={teachers} departments={DEPARTMENTS} users={users}>
+          <div className='hidden md:flex justify-end block '>
+            <OpenAddModalButton teachers={teachers} departments={departments} users={users}>
               学内募金登録
             </OpenAddModalButton>
           </div>
+          <div className='fixed right-5 bottom-5 justify-end md:hidden '>
+            <OpenAddModalButton teachers={teachers} departments={departments} users={users} />
+          </div>
         </div>
-        <div className='w-100 mb-2 p-5'>
-          <table className='mb-5 w-full table-fixed border-collapse'>
+        <div className='md:hidden'> 
+          <div className='my-2 mx-2'>合計金額 {totalFee}円</div>       
+          {filteredFundInformationViews &&
+                filteredFundInformationViews.map((fundViewItem: FundInformationView, index) => (
+                  <div
+                  key={fundViewItem.fundInformation.id}
+                  >
+                    <Card2>
+                      <div className='mt-2 text-sm'>
+                      {fundViewItem.fundInformation.isLastCheck&&fundViewItem.fundInformation.isFirstCheck && (
+                        <div className='flex'><p className='text-[#7087FF]'>●&nbsp;</p>
+                        <p className=''>確認済</p>
+                        </div>
+                      )}
+                      {!fundViewItem.fundInformation.isLastCheck&&fundViewItem.fundInformation.isFirstCheck && (
+                        <div className='flex'><p className='text-[#4FDE6E]'>●&nbsp;</p>
+                        <p className=''>受取済</p>
+                        </div>
+                      )}
+                      {!fundViewItem.fundInformation.isFirstCheck && (
+                        <div className='flex'><p className='text-[#FFA53C]'>●&nbsp;</p>
+                        <p className=''>未受取</p>
+                        </div>
+                      )}
+                      </div>
+                      <div className='mx-2 my-1 text-lg'>
+                        {fundViewItem.teacher.name}
+                      </div>
+                      <div className='mx-4 text-sm'>
+                        所属 : {fundViewItem.department.name}
+                      </div>
+                      <div className='mx-4 text-sm'>
+                        居室 : {fundViewItem.teacher.room}
+                      </div>
+                      <div className='mx-4 text-sm'>
+                        担当 : {fundViewItem.user.name}
+                      </div>
+                      <div className='mx-4 mb-2 text-sm'>
+                        金額 : {fundViewItem.fundInformation.price}円
+                      </div>
+                    </Card2>
+                  </div>
+                ))}
+        </div>
+        <div className='hidden md:block w-100 mb-2 p-5'>
+          <table className='md:mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
                 <th className='w-2/12 pb-2'>
