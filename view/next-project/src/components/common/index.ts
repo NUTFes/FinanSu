@@ -1,6 +1,7 @@
 export { default as AddButton } from './AddButton';
 export { default as Button } from './Button';
 export { default as Card } from './Card';
+export { default as Card2 } from './Card2';
 export { default as ChakraUIDropdown } from './ChakraUIDropdown';
 export { default as Checkbox } from './Checkbox';
 export { default as CloseButton } from './CloseButton';
