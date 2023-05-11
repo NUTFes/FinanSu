@@ -56,13 +56,13 @@ export default function AddModal(props: ModalProps) {
 
   const handler =
     (stepNumber: number, input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        props.setFormDataList(
-          props.formDataList.map((formData: PurchaseItem) =>
-            formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
-          ),
-        );
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      props.setFormDataList(
+        props.formDataList.map((formData: PurchaseItem) =>
+          formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
+        ),
+      );
+    };
 
   const addPurchaseItem = async (data: PurchaseItem[]) => {
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
@@ -112,11 +112,7 @@ export default function AddModal(props: ModalProps) {
           </div>
         </div>
         <div className='col-span-10 w-full'>
-          <Select
-            value={data.sourceID}
-            onChange={handler(index, 'sourceID')}
-            className='w-full'
-          >
+          <Select value={data.sourceID} onChange={handler(index, 'sourceID')} className='w-full'>
             {props.sources.map((data) => (
               <option key={data.id} value={data.id}>
                 {data.name}
@@ -204,9 +200,7 @@ export default function AddModal(props: ModalProps) {
                 )}
               >
                 <div className={clsx('text-center text-sm text-black-300')}>
-                  {props.sources.find(
-                    (source) => source.id === purchaseItem.sourceID
-                  )?.name}
+                  {props.sources.find((source) => source.id === purchaseItem.sourceID)?.name}
                 </div>
               </td>
               <td
