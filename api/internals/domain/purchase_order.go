@@ -9,6 +9,7 @@ type PurchaseOrder struct {
 	DeadLine     string    `json:"deadline"`
 	UserID       int       `json:"userID"`
 	ExpenseID    int       `json:"expenseID"`
+	SourceID	 int	   `json:"sourceID"`
 	FinanceCheck bool      `json:"financeCheck"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`
