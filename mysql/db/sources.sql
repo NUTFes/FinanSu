@@ -9,3 +9,4 @@ CREATE TABLE sources (
 );
 
 INSERT into sources (name) values ('教育振興会費');
+INSERT into sources (name) values ('その他');
