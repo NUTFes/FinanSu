@@ -99,7 +99,7 @@ export default function FundInformations(props: Props) {
   const isFinanceStaff = useMemo(() => {
     if (currentUser?.bureauID == 3) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }, [currentUser?.bureauID]);
@@ -144,7 +144,10 @@ export default function FundInformations(props: Props) {
   // チェック済みの合計金額用のステート
   const totalFee = useMemo(() => {
     return filteredFundInformationViews.reduce((sum, fundInformationView) => {
-      if (fundInformationView.fundInformation.isLastCheck && fundInformationView.fundInformation.isFirstCheck) {
+      if (
+        fundInformationView.fundInformation.isLastCheck &&
+        fundInformationView.fundInformation.isFirstCheck
+      ) {
         return sum + fundInformationView.fundInformation.price;
       } else {
         return sum;
