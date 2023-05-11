@@ -33,7 +33,6 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
     userID: user.id,
     financeCheck: false,
     expenseID: 1,
-    sourceID: 1,
   });
   const [purchaseItemNum, setPurchaseItemNum] = useState({
     value: 1,
@@ -49,6 +48,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
         item: '',
         price: 0,
         quantity: 0,
+        sourceID: 1,
         detail: '',
         url: '',
         purchaseOrderID: purchaseOrderId,
@@ -85,6 +85,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
         item: '',
         price: 0,
         quantity: 0,
+        sourceID: 1,
         detail: '',
         url: '',
         purchaseOrderID: purchaseOrderId ? purchaseOrderId : 0,
@@ -130,20 +131,6 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               ))}
             </Select>
           </div>
-          <p className='grid-cols-1 text-black-600'>収入源</p>
-          <div className='col-span-4 w-full'>
-            <Select
-              value={formData.sourceID}
-              onChange={formDataHandler('sourceID')}
-              className='w-full'
-            >
-              {props.sources.map((data) => (
-                <option key={data.id} value={data.id}>
-                  {data.name}
-                </option>
-              ))}
-            </Select>
-          </div>
           <p className='grid-cols-1 text-black-600'>購入物品数</p>
           <div className='col-span-4 w-full'>
             <Select
@@ -178,6 +165,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
           onClose={onClose}
           setFormDataList={setFormDataList}
           formDataList={formDataList}
+          sources={props.sources}
         />
       )}
     </>

@@ -38,6 +38,7 @@ export interface PurchaseItem {
   item: string;
   price: number;
   quantity: number;
+  sourceID: number;
   detail: string;
   url: string;
   purchaseOrderID: number;
@@ -74,7 +75,6 @@ export interface PurchaseOrder {
   userID: number;
   financeCheck: boolean;
   expenseID: number;
-  sourceID: number;
   createdAt?: string;
   updatedAt?: string;
 }

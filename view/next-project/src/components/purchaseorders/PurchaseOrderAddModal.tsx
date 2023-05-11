@@ -14,8 +14,9 @@ import {
   Modal,
   Stepper,
   Tooltip,
+  Select,
 } from '@components/common';
-import { PurchaseItem } from '@type/common';
+import { PurchaseItem, Source } from '@type/common';
 
 interface ModalProps {
   purchaseItemNum: PurchaseItemNum;
@@ -24,6 +25,7 @@ interface ModalProps {
   onClose: () => void;
   setFormDataList: (formDataList: PurchaseItem[]) => void;
   formDataList: PurchaseItem[];
+  sources: Source[];
 }
 
 interface PurchaseItemNum {
@@ -104,6 +106,20 @@ export default function AddModal(props: ModalProps) {
         <div className={clsx('col-span-10 grid w-full')}>
           <Input type='number' value={data.quantity} onChange={handler(index, 'quantity')} />
         </div>
+        <p className='grid-cols-1 text-black-600'>収入源</p>
+          <div className='col-span-4 w-full'>
+            <Select
+              value={data.sourceID}
+              onChange={handler(index, 'sourceID')}
+              className='w-full'
+            >
+              {props.sources.map((data) => (
+                <option key={data.id} value={data.id}>
+                  {data.name}
+                </option>
+              ))}
+            </Select>
+          </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
           <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
             詳細
@@ -125,7 +141,7 @@ export default function AddModal(props: ModalProps) {
   );
 
   // 購入物品テーブルのカラム
-  const tableColumns = ['物品名', '単価', '個数', '備考', 'URL'];
+  const tableColumns = ['物品名', '単価', '個数', '収入源', '備考', 'URL'];
 
   // 購入物品の確認用テーブル
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
@@ -174,6 +190,19 @@ export default function AddModal(props: ModalProps) {
               >
                 <div className={clsx('text-center text-sm text-black-300')}>
                   {purchaseItem.quantity}
+                </div>
+              </td>
+              <td
+                className={clsx(
+                  'px-4',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                )}
+              >
+                <div className={clsx('text-center text-sm text-black-300')}>
+                  {props.sources.find(
+                      (source) => source.id === purchaseItem.sourceID
+                    )?.name || ''}
                 </div>
               </td>
               <td

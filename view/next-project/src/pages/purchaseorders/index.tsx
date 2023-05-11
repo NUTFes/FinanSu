@@ -277,9 +277,24 @@ export default function PurchaseOrders(props: Props) {
                       }}
                     >
                       <div className='text-center text-sm text-black-600'>
-                        {props.sources.find(
-                            (source) => source.id === purchaseOrderViewItem.purchaseOrder.sourceID
-                          )?.name || ''}
+                        {purchaseOrderViewItem.purchaseItem &&
+                          purchaseOrderViewItem.purchaseItem.map(
+                            (purchaseItem: PurchaseItem, index: number) => (
+                              <>
+                                {purchaseOrderViewItem.purchaseItem.length - 1 === index ? (
+                                  <>{props.sources.find(
+                                    (source) => source.id === purchaseItem.sourceID
+                                  )?.name || ''}
+                                  </>
+                                ) : (
+                                  <>{props.sources.find(
+                                    (source) => source.id === purchaseItem.sourceID
+                                  )?.name || ''}
+                                    ,</>
+                                )}
+                              </>
+                            ),
+                          )}
                       </div>
                     </td>
                     <td
