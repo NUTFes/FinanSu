@@ -10,7 +10,7 @@ function Card2(props: Props): JSX.Element {
   return (
     <div
       className={clsx(
-        'm-auto mt-3 mb-2 w-full  border border-opacity-10 px-5 shadow-md rounded-lg md:hidden',
+        'm-auto mt-3 mb-2 w-full  rounded-lg border border-opacity-10 px-5 shadow-md md:hidden',
       )}
     >
       {props.children}
