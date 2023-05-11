@@ -196,6 +196,11 @@ const DetailModal: FC<ModalProps> = (props) => {
                   </td>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>
+                      {props.sources.find((source) => source.id === purchaseItem.sourceID)?.name }
+                    </div>
+                  </td>
+                  <td className={clsx('border-b py-3')}>
+                    <div className={clsx('text-center text-sm text-black-300')}>
                       {purchaseItem.detail}
                     </div>
                   </td>

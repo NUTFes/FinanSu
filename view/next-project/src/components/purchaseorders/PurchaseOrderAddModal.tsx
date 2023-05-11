@@ -56,13 +56,13 @@ export default function AddModal(props: ModalProps) {
 
   const handler =
     (stepNumber: number, input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      props.setFormDataList(
-        props.formDataList.map((formData: PurchaseItem) =>
-          formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
-        ),
-      );
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        props.setFormDataList(
+          props.formDataList.map((formData: PurchaseItem) =>
+            formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
+          ),
+        );
+      };
 
   const addPurchaseItem = async (data: PurchaseItem[]) => {
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
@@ -106,20 +106,24 @@ export default function AddModal(props: ModalProps) {
         <div className={clsx('col-span-10 grid w-full')}>
           <Input type='number' value={data.quantity} onChange={handler(index, 'quantity')} />
         </div>
-        <p className='grid-cols-1 text-black-600'>収入源</p>
-          <div className='col-span-4 w-full'>
-            <Select
-              value={data.sourceID}
-              onChange={handler(index, 'sourceID')}
-              className='w-full'
-            >
-              {props.sources.map((data) => (
-                <option key={data.id} value={data.id}>
-                  {data.name}
-                </option>
-              ))}
-            </Select>
+        <div className={clsx('col-span-2 mr-2 grid')}>
+          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+            収入源
           </div>
+        </div>
+        <div className='col-span-10 w-full'>
+          <Select
+            value={data.sourceID}
+            onChange={handler(index, 'sourceID')}
+            className='w-full'
+          >
+            {props.sources.map((data) => (
+              <option key={data.id} value={data.id}>
+                {data.name}
+              </option>
+            ))}
+          </Select>
+        </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
           <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
             詳細
@@ -201,8 +205,8 @@ export default function AddModal(props: ModalProps) {
               >
                 <div className={clsx('text-center text-sm text-black-300')}>
                   {props.sources.find(
-                      (source) => source.id === purchaseItem.sourceID
-                    )?.name || ''}
+                    (source) => source.id === purchaseItem.sourceID
+                  )?.name || ''}
                 </div>
               </td>
               <td
