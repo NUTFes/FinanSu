@@ -4,6 +4,7 @@ export const post = async (url: string, data: PurchaseItem) => {
   const item: string = data.item;
   const price: number = data.price;
   const quantity: number = data.quantity;
+  const sourceId: number = data.sourceID;
   const detail: string = data.detail;
   const itemUrl: string = data.url;
   const purchaseOrderId: number = data.purchaseOrderID;
@@ -16,6 +17,8 @@ export const post = async (url: string, data: PurchaseItem) => {
     price +
     '&quantity=' +
     quantity +
+    '&source_id=' +
+    sourceId +
     '&detail=' +
     detail +
     '&url=' +
@@ -39,6 +42,7 @@ export const put = async (url: string, data: PurchaseItem) => {
   const item: string = data.item;
   const price: number = data.price;
   const quantity: number = data.quantity;
+  const sourceId: number = data.sourceID;
   const detail: string = data.detail;
   const itemUrl: string = data.url;
   const purchaseOrderId: number = data.purchaseOrderID;
@@ -51,6 +55,8 @@ export const put = async (url: string, data: PurchaseItem) => {
     price +
     '&quantity=' +
     quantity +
+    '&source_id=' +
+    sourceId +
     '&detail=' +
     detail +
     '&url=' +

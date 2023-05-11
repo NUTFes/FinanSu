@@ -317,6 +317,7 @@ export default function PurchaseOrders(props: Props) {
                             }
                             purchaseItems={purchaseOrderViewItem.purchaseItem}
                             isDisabled={isDisabled(purchaseOrderViewItem)}
+                            sources={props.sources}
                           />
                         </div>
                         <div className='mx-1'>

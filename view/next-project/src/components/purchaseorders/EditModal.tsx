@@ -12,14 +12,16 @@ import {
   Modal,
   Stepper,
   Tooltip,
+  Select,
 } from '@components/common';
-import { PurchaseItem } from '@type/common';
+import { PurchaseItem, Source } from '@type/common';
 
 interface ModalProps {
   purchaseOrderId: number;
   purchaseItems: PurchaseItem[];
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  sources: Source[];
 }
 
 export default function EditModal(props: ModalProps) {
@@ -51,13 +53,13 @@ export default function EditModal(props: ModalProps) {
 
   const handler =
     (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormDataList(
-        formDataList.map((formData: PurchaseItem) =>
-          formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
-        ),
-      );
-    };
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormDataList(
+          formDataList.map((formData: PurchaseItem) =>
+            formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
+          ),
+        );
+      };
 
   // finance_checkのtrue,falseを切り替え
   const isFinanceCheckHandler = (purchaseItemId: number | undefined, finance_check: boolean) => {
@@ -114,6 +116,21 @@ export default function EditModal(props: ModalProps) {
           onChange={handler('quantity')}
         />
       </div>
+      <p className='text-black-600'>収入源</p>
+      <div className='col-span-4 w-full'>
+        <Select
+          className='w-full'
+          id={String(data.id)}
+          value={data.sourceID}
+          onChange={handler('sourceID')}
+        >
+          {props.sources.map((data) => (
+            <option key={data.id} value={data.id}>
+              {data.name}
+            </option>
+          ))}
+        </Select>
+      </div>
       <p className='text-black-600'>詳細</p>
       <div className='col-span-4 w-full'>
         <Input
@@ -156,6 +173,7 @@ export default function EditModal(props: ModalProps) {
                     <th className='py-2'>物品名</th>
                     <th className='py-2'>単価</th>
                     <th className='py-2'>個数</th>
+                    <th className='py-2'>収入源</th>
                     <th className='py-2'>詳細</th>
                     <th className='py-2'>URL</th>
                   </tr>
@@ -166,6 +184,7 @@ export default function EditModal(props: ModalProps) {
                       <td className='py-2'>{data.item}</td>
                       <td className='py-2'>{data.price}</td>
                       <td className='py-2'>{data.quantity}</td>
+                      <td className='py-2'>{props.sources.find((source) => source.id === data.sourceID)?.name}</td>
                       <td className='py-2'>{data.detail}</td>
                       <td className='py-2'>
                         <div className={'flex justify-center'}>

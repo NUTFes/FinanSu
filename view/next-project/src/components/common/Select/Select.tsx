@@ -6,6 +6,7 @@ import s from './Select.module.css';
 interface Props {
   className?: string;
   placeholder?: string;
+  id?: string;
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   children?: React.ReactNode;
@@ -20,6 +21,7 @@ function Select(props: Props): JSX.Element {
       <select
         placeholder={props.placeholder}
         className={clsx(s.select, className)}
+        id={props.id}
         value={props.value}
         onChange={props.onChange}
       >

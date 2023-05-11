@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 
 import { EditButton } from '@components/common';
 import EditModal from '@components/purchaseorders/EditModal';
-import { PurchaseItem } from '@type/common';
+import { PurchaseItem, Source } from '@type/common';
 
 interface Props {
   children?: React.ReactNode;
   purchaseItems: PurchaseItem[];
   id: number;
   isDisabled: boolean;
+  sources: Source[];
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -25,6 +26,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           purchaseItems={props.purchaseItems}
+          sources={props.sources}
         />
       )}
     </>
