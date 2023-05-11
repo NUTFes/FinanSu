@@ -16,8 +16,8 @@ type purchaseItemRepository struct {
 type PurchaseItemRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string, string, string, string) error
+	Create(context.Context, string, string, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
 	AllDetails(context.Context) (*sql.Rows, error)
 	FindDetails(context.Context, string) (*sql.Row, error)
@@ -46,6 +46,7 @@ func (pir *purchaseItemRepository) Create(
 	item string,
 	price string,
 	quantity string,
+	sourceId string,
 	detail string,
 	url string,
 	purchaseOrderId string,
@@ -53,8 +54,8 @@ func (pir *purchaseItemRepository) Create(
 ) error {
 	query := `
 		INSERT INTO
-			purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check)
-		VALUES ( '` + item + "'," + price + "," + quantity + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + financeCheck + ")"
+			purchase_items (item, price, quantity,source_id,  detail, url, purchase_order_id, finance_check)
+		VALUES ( '` + item + "'," + price + "," + quantity + "," + sourceId + ",'" + detail + "','" + url + "'," + purchaseOrderId + "," + financeCheck + ")"
 	return pir.crud.UpdateDB(c, query)
 }
 
@@ -65,6 +66,7 @@ func (pir *purchaseItemRepository) Update(
 	item string,
 	price string,
 	quantity string,
+	sourceId string,
 	detail string,
 	url string,
 	purchaseOrderId string,
@@ -77,6 +79,7 @@ func (pir *purchaseItemRepository) Update(
 			item = '` + item +
 		"' , price = " + price +
 		", quantity = " + quantity +
+		", source_id = " + sourceId + 
 		", detail ='" + detail +
 		"', url = '" + url +
 		"', purchase_order_id = " + purchaseOrderId +
@@ -102,6 +105,7 @@ func (pir *purchaseItemRepository) AllDetails(c context.Context) (*sql.Rows, err
 			purchase_items.item,
 			purchase_items.price,
 			purchase_items.quantity,
+			purchase_items.source_id,
 			purchase_items.detail,
 			purchase_items.url,
 			purchase_items.purchase_order_id,
@@ -136,6 +140,7 @@ func (pir *purchaseItemRepository) FindDetails(c context.Context, id string) (*s
 			purchase_items.item,
 			purchase_items.price,
 			purchase_items.quantity,
+			purchase_items.source_id,
 			purchase_items.detail,
 			purchase_items.url,
 			purchase_items.purchase_order_id,

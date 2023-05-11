@@ -15,8 +15,8 @@ type purchaseItemUseCase struct {
 type PurchaseItemUseCase interface {
 	GetPurchaseItem(context.Context) ([]domain.PurchaseItem, error)
 	GetPurchaseItemByID(context.Context, string) (domain.PurchaseItem, error)
-	CreatePurchaseItem(context.Context, string, string, string, string, string, string, string) (domain.PurchaseItem, error)
-	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string, string) (domain.PurchaseItem, error)
+	CreatePurchaseItem(context.Context, string, string, string, string, string, string, string, string) (domain.PurchaseItem, error)
+	UpdatePurchaseItem(context.Context, string, string, string, string, string, string, string, string, string) (domain.PurchaseItem, error)
 	DestroyPurchaseItem(context.Context, string) error
 	GetPurchaseItemDetails(context.Context) ([]domain.PurchaseItemDetails, error)
 	GetPurchaseItemDetailsByID(context.Context, string) (domain.PurchaseItemDetails, error)
@@ -40,6 +40,7 @@ func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.Purch
 			&purchaseItem.Item,
 			&purchaseItem.Price,
 			&purchaseItem.Quantity,
+			&purchaseItem.SourceID,
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
@@ -64,6 +65,7 @@ func (p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) 
 		&purchaseItem.Item,
 		&purchaseItem.Price,
 		&purchaseItem.Quantity,
+		&purchaseItem.SourceID,
 		&purchaseItem.Detail,
 		&purchaseItem.Url,
 		&purchaseItem.PurchaseOrderID,
@@ -83,6 +85,7 @@ func (p *purchaseItemUseCase) CreatePurchaseItem(
 	Item string,
 	Price string,
 	Quantity string,
+	SourceID string,
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
@@ -90,13 +93,14 @@ func (p *purchaseItemUseCase) CreatePurchaseItem(
 ) (domain.PurchaseItem, error) {
 	latastPurchaseItem := domain.PurchaseItem{}
 
-	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
+	err := p.rep.Create(c, Item, Price, Quantity, SourceID, Detail, Url, PurchaseOrderID, FinanceCheck)
 	row, err := p.rep.FindNewRecord(c)
 	err = row.Scan(
 		&latastPurchaseItem.ID,
 		&latastPurchaseItem.Item,
 		&latastPurchaseItem.Price,
 		&latastPurchaseItem.Quantity,
+		&latastPurchaseItem.SourceID,
 		&latastPurchaseItem.Detail,
 		&latastPurchaseItem.Url,
 		&latastPurchaseItem.PurchaseOrderID,
@@ -117,19 +121,21 @@ func (p *purchaseItemUseCase) UpdatePurchaseItem(
 	Item string,
 	Price string,
 	Quantity string,
+	SourceID string,
 	Detail string,
 	Url string,
 	PurchaseOrderID string,
 	FinanceCheck string,
 ) (domain.PurchaseItem, error) {
 	updatedPurchaseItem := domain.PurchaseItem{}
-	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
+	err := p.rep.Update(c, id, Item, Price, Quantity, SourceID, Detail, Url, PurchaseOrderID, FinanceCheck)
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
 		&updatedPurchaseItem.ID,
 		&updatedPurchaseItem.Item,
 		&updatedPurchaseItem.Price,
 		&updatedPurchaseItem.Quantity,
+		&updatedPurchaseItem.SourceID,
 		&updatedPurchaseItem.Detail,
 		&updatedPurchaseItem.Url,
 		&updatedPurchaseItem.PurchaseOrderID,
@@ -171,6 +177,7 @@ func (p *purchaseItemUseCase) GetPurchaseItemDetails(c context.Context) ([]domai
 			&purchaseItemDetail.PurchaseItem.Item,
 			&purchaseItemDetail.PurchaseItem.Price,
 			&purchaseItemDetail.PurchaseItem.Quantity,
+			&purchaseItemDetail.PurchaseItem.SourceID,
 			&purchaseItemDetail.PurchaseItem.Detail,
 			&purchaseItemDetail.PurchaseItem.Url,
 			&purchaseItemDetail.PurchaseItem.PurchaseOrderID,
@@ -205,6 +212,7 @@ func (p *purchaseItemUseCase) GetPurchaseItemDetailsByID(c context.Context, id s
 		&purchaseItemDetail.PurchaseItem.Item,
 		&purchaseItemDetail.PurchaseItem.Price,
 		&purchaseItemDetail.PurchaseItem.Quantity,
+		&purchaseItemDetail.PurchaseItem.SourceID,
 		&purchaseItemDetail.PurchaseItem.Detail,
 		&purchaseItemDetail.PurchaseItem.Url,
 		&purchaseItemDetail.PurchaseItem.PurchaseOrderID,

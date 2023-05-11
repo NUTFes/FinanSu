@@ -9,6 +9,7 @@ type PurchaseItem struct {
 	Item            string    `json:"item"`
 	Price           int       `json:"price"`
 	Quantity        int       `json:"quantity"`
+	SourceID	 	int	   `json:"sourceID"`
 	Detail          string    `json:"detail"`
 	Url             string    `json:"url"`
 	PurchaseOrderID int       `json:"purchaseOrderID"`

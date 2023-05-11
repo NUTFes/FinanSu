@@ -48,11 +48,12 @@ func (p *purchaseItemController) CreatePurchaseItem(c echo.Context)error{
 	item := c.QueryParam("item")
 	price := c.QueryParam("price")
 	quantity := c.QueryParam("quantity")
+	sourceID := c.QueryParam("source_id")
 	detail := c.QueryParam("detail")
 	url := c.QueryParam("url")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
 	financeCheck := c.QueryParam("finance_check")
-	latastPurchaseItem, err := p.u.CreatePurchaseItem(c.Request().Context(),item, price, quantity, detail, url, purchaseOrderID, financeCheck)
+	latastPurchaseItem, err := p.u.CreatePurchaseItem(c.Request().Context(),item, price, quantity, sourceID, detail, url, purchaseOrderID, financeCheck)
 	if err != nil {
 		return err
 	}
@@ -65,11 +66,12 @@ func(p *purchaseItemController) UpdatePurchaseItem(c echo.Context)error{
 	item := c.QueryParam("item")
 	price := c.QueryParam("price")
 	quantity := c.QueryParam("quantity")
+	sourceID := c.QueryParam("source_id")
 	detail := c.QueryParam("detail")
 	url := c.QueryParam("url")
 	purchaseOrderID := c.QueryParam("purchase_order_id")
 	financeCheck := c.QueryParam("finance_check")
-	updatedPurchaseItem, err := p.u.UpdatePurchaseItem(c.Request().Context(), id, item, price, quantity, detail, url, purchaseOrderID,financeCheck)
+	updatedPurchaseItem, err := p.u.UpdatePurchaseItem(c.Request().Context(), id, item, price, quantity, sourceID, detail, url, purchaseOrderID,financeCheck)
 	if err != nil {
 		return err
 	}

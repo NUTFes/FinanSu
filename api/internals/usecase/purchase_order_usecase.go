@@ -15,8 +15,8 @@ type purchaseOrderUseCase struct {
 type PurchaseOrderUseCase interface {
 	GetPurchaseOrders(context.Context) ([]domain.PurchaseOrder, error)
 	GetPurchaseOrderByID(context.Context, string) (domain.PurchaseOrder, error)
-	CreatePurchaseOrder(context.Context, string, string, string, string, string) (domain.PurchaseOrder, error)
-	UpdatePurchaseOrder(context.Context, string, string, string, string, string, string) (domain.PurchaseOrder, error)
+	CreatePurchaseOrder(context.Context, string, string, string, string) (domain.PurchaseOrder, error)
+	UpdatePurchaseOrder(context.Context, string, string, string, string, string) (domain.PurchaseOrder, error)
 	DestroyPurchaseOrder(context.Context, string) error
 	GetPurchaseOrderDetails(context.Context) ([]domain.OrderDetail, error)
 	GetPurchaseOrderDetailByID(context.Context, string) (domain.OrderDetail, error)
@@ -40,7 +40,6 @@ func (p *purchaseOrderUseCase) GetPurchaseOrders(c context.Context) ([]domain.Pu
 			&purchaseOrder.DeadLine,
 			&purchaseOrder.UserID,
 			&purchaseOrder.ExpenseID,
-			&purchaseOrder.SourceID,
 			&purchaseOrder.FinanceCheck,
 			&purchaseOrder.CreatedAt,
 			&purchaseOrder.UpdatedAt,
@@ -62,7 +61,6 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderByID(c context.Context, id string
 		&purchaseOrder.DeadLine,
 		&purchaseOrder.UserID,
 		&purchaseOrder.ExpenseID,
-		&purchaseOrder.SourceID,
 		&purchaseOrder.FinanceCheck,
 		&purchaseOrder.CreatedAt,
 		&purchaseOrder.UpdatedAt,
@@ -79,18 +77,16 @@ func (p *purchaseOrderUseCase) CreatePurchaseOrder(
 	deadLine string,
 	userID string,
 	expenseID string,
-	sourceID string,
 	finansuCheck string,
 ) (domain.PurchaseOrder, error) {
 	latastPurchaseOrder := domain.PurchaseOrder{}
-	p.rep.Create(c, deadLine, userID, expenseID, sourceID, finansuCheck)
+	p.rep.Create(c, deadLine, userID, expenseID, finansuCheck)
 	row, err := p.rep.FindNewRecord(c)
 	err = row.Scan(
 		&latastPurchaseOrder.ID,
 		&latastPurchaseOrder.DeadLine,
 		&latastPurchaseOrder.UserID,
 		&latastPurchaseOrder.ExpenseID,
-		&latastPurchaseOrder.SourceID,
 		&latastPurchaseOrder.FinanceCheck,
 		&latastPurchaseOrder.CreatedAt,
 		&latastPurchaseOrder.UpdatedAt,
@@ -108,18 +104,16 @@ func (p *purchaseOrderUseCase) UpdatePurchaseOrder(
 	deadLine string,
 	userID string,
 	expenseID string,
-	sourceID string,
 	finansuCheck string,
 ) (domain.PurchaseOrder, error) {
 	updatedPurchaseOrder := domain.PurchaseOrder{}
-	p.rep.Update(c, id, deadLine, userID, expenseID, sourceID, finansuCheck)
+	p.rep.Update(c, id, deadLine, userID, expenseID, finansuCheck)
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
 		&updatedPurchaseOrder.ID,
 		&updatedPurchaseOrder.DeadLine,
 		&updatedPurchaseOrder.UserID,
 		&updatedPurchaseOrder.ExpenseID,
-		&updatedPurchaseOrder.SourceID,
 		&updatedPurchaseOrder.FinanceCheck,
 		&updatedPurchaseOrder.CreatedAt,
 		&updatedPurchaseOrder.UpdatedAt,
@@ -155,7 +149,6 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetails(c context.Context) ([]dom
 			&orderDetail.PurchaseOrder.DeadLine,
 			&orderDetail.PurchaseOrder.UserID,
 			&orderDetail.PurchaseOrder.ExpenseID,
-			&orderDetail.PurchaseOrder.SourceID,
 			&orderDetail.PurchaseOrder.FinanceCheck,
 			&orderDetail.PurchaseOrder.CreatedAt,
 			&orderDetail.PurchaseOrder.UpdatedAt,
@@ -176,6 +169,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetails(c context.Context) ([]dom
 				&purchaseItem.Item,
 				&purchaseItem.Price,
 				&purchaseItem.Quantity,
+				&purchaseItem.SourceID,
 				&purchaseItem.Detail,
 				&purchaseItem.Url,
 				&purchaseItem.PurchaseOrderID,
@@ -206,7 +200,6 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 		&orderDetail.PurchaseOrder.DeadLine,
 		&orderDetail.PurchaseOrder.UserID,
 		&orderDetail.PurchaseOrder.ExpenseID,
-		&orderDetail.PurchaseOrder.SourceID,
 		&orderDetail.PurchaseOrder.FinanceCheck,
 		&orderDetail.PurchaseOrder.CreatedAt,
 		&orderDetail.PurchaseOrder.UpdatedAt,
@@ -227,6 +220,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 			&purchaseItem.Item,
 			&purchaseItem.Price,
 			&purchaseItem.Quantity,
+			&purchaseItem.SourceID,
 			&purchaseItem.Detail,
 			&purchaseItem.Url,
 			&purchaseItem.PurchaseOrderID,
