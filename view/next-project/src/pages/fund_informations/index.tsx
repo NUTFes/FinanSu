@@ -264,13 +264,10 @@ export default function FundInformations(props: Props) {
               学内募金登録
             </OpenAddModalButton>
           </div>
-          <div className='fixed right-5 bottom-5 justify-end md:hidden '>
-            <OpenAddModalButton teachers={teachers} departments={departments} users={users} />
-          </div>
         </div>
-        <div className='md:hidden'> 
-          <div className='my-2 mx-2'>合計金額 {totalFee}円</div>       
-          {filteredFundInformationViews &&
+        <div className='mb-7 md:hidden'> 
+          {filteredFundInformationViews.length!=0 && ( <div className='my-2 mx-2'>合計金額 {totalFee}円</div> )}      
+            {filteredFundInformationViews &&
                 filteredFundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <div
                   key={fundViewItem.fundInformation.id}
@@ -278,40 +275,56 @@ export default function FundInformations(props: Props) {
                     <Card2>
                       <div className='mt-2 text-sm'>
                       {fundViewItem.fundInformation.isLastCheck&&fundViewItem.fundInformation.isFirstCheck && (
-                        <div className='flex'><p className='text-[#7087FF]'>●&nbsp;</p>
-                        <p className=''>確認済</p>
+                        <div className='flex'><p className='text-[#7087FF]'>●</p>
+                        <p className='mx-1'>確認済</p>
                         </div>
                       )}
                       {!fundViewItem.fundInformation.isLastCheck&&fundViewItem.fundInformation.isFirstCheck && (
-                        <div className='flex'><p className='text-[#4FDE6E]'>●&nbsp;</p>
-                        <p className=''>受取済</p>
+                        <div className='flex'><p className='text-[#4FDE6E]'>●</p>
+                        <p className='mx-1'>受取済</p>
                         </div>
                       )}
                       {!fundViewItem.fundInformation.isFirstCheck && (
-                        <div className='flex'><p className='text-[#FFA53C]'>●&nbsp;</p>
-                        <p className=''>未受取</p>
+                        <div className='flex'><p className='text-[#FFA53C]'>●</p>
+                        <p className='mx-1'>未受取</p>
                         </div>
                       )}
                       </div>
-                      <div className='mx-2 my-1 text-lg'>
+                      <div className='my-2 text-lg font-medium'>
                         {fundViewItem.teacher.name}
                       </div>
                       <div className='mx-4 text-sm'>
-                        所属 : {fundViewItem.department.name}
+                        {fundViewItem.department.name}
                       </div>
                       <div className='mx-4 text-sm'>
-                        居室 : {fundViewItem.teacher.room}
+                        {fundViewItem.teacher.room}
                       </div>
                       <div className='mx-4 text-sm'>
                         担当 : {fundViewItem.user.name}
                       </div>
-                      <div className='mx-4 mb-2 text-sm'>
+                      <div className='flex mx-4 mb-2 text-sm'>
                         金額 : {fundViewItem.fundInformation.price}円
+                        <div className='flex gap-2 absolute right-14'>
+                        <OpenEditModalButton
+                          fundInformation={fundViewItem.fundInformation}
+                          teachers={teachers}
+                          users={users}
+                          departments={DEPARTMENTS}
+                          isDisabled={isDisabled(fundViewItem)}
+                        />
+                        <OpenDeleteModalButton
+                          id={fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0}
+                          isDisabled={isDisabled(fundViewItem)}
+                        />
+                      </div>
                       </div>
                     </Card2>
                   </div>
                 ))}
-        </div>
+                {!filteredFundInformationViews.length && (
+                  <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
+                )}
+        </div>  
         <div className='hidden md:block w-100 mb-2 p-5'>
           <table className='md:mb-5 w-full table-fixed border-collapse'>
             <thead>
@@ -438,6 +451,9 @@ export default function FundInformations(props: Props) {
               </tr>
             </tfoot>
           </table>
+        </div>
+        <div className='fixed right-4 bottom-3 justify-end md:hidden '>
+            <OpenAddModalButton teachers={teachers} departments={departments} users={users} />
         </div>
       </Card>
     </MainLayout>

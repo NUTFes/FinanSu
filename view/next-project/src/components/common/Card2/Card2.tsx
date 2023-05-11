@@ -6,7 +6,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function Card(props: Props): JSX.Element {
+function Card2(props: Props): JSX.Element {
   return (
     <div
       className={clsx(
@@ -18,4 +18,4 @@ function Card(props: Props): JSX.Element {
   );
 }
 
-export default Card;
+export default Card2;
