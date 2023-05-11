@@ -130,7 +130,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               ))}
             </Select>
           </div>
-          <p className='grid-cols-1 text-black-600'>収入元</p>
+          <p className='grid-cols-1 text-black-600'>収入源</p>
           <div className='col-span-4 w-full'>
             <Select
               value={formData.sourceID}

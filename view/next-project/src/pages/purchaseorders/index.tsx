@@ -164,7 +164,7 @@ export default function PurchaseOrders(props: Props) {
             </select>
           </div>
           <div className='flex justify-end'>
-            <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
+            <OpenAddModalButton expenses={props.expenses} sources={props.sources}>申請登録</OpenAddModalButton>
           </div>
         </div>
         <div className='w-100 mb-2 p-5'>
@@ -187,7 +187,7 @@ export default function PurchaseOrders(props: Props) {
                   <div className='text-center text-sm text-black-600'>購入物品</div>
                 </th>
                 <th className='w-3/15 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>収入元</div>
+                  <div className='text-center text-sm text-black-600'>収入源</div>
                 </th>
                 <th className='w-1/15 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>合計金額</div>
@@ -352,6 +352,7 @@ export default function PurchaseOrders(props: Props) {
           setIsOpen={setIsOpen}
           purchaseOrderViewItem={purchaseOrderViewItem}
           expenses={props.expenses}
+          sources={props.sources}
           isDelete={false}
         />
       )}

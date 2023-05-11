@@ -7,7 +7,7 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
-import { PurchaseItem, PurchaseOrderView, Expense } from '@type/common';
+import { PurchaseItem, PurchaseOrderView, Expense, Source } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -16,6 +16,7 @@ interface ModalProps {
   id: number | string;
   purchaseOrderViewItem: PurchaseOrderView;
   expenses: Expense[];
+  sources: Source[];
   isDelete: boolean;
 }
 
@@ -157,7 +158,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                   <div className={clsx('text-center text-sm text-black-600')}>個数</div>
                 </th>
                 <th className={clsx('w-2/14 border-b-primary-1 pb-2')}>
-                  <div className={clsx('text-center text-sm text-black-600')}>収入元</div>
+                  <div className={clsx('text-center text-sm text-black-600')}>収入源</div>
                 </th>
                 <th className={clsx('w-3/14 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>詳細</div>
