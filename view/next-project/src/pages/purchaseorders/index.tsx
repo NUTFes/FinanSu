@@ -277,7 +277,9 @@ export default function PurchaseOrders(props: Props) {
                       }}
                     >
                       <div className='text-center text-sm text-black-600'>
-                        {props.sources.find((source) => (source.id === purchaseOrderViewItem.purchaseOrder.sourceID))?.name || ''}
+                        {props.sources.find(
+                            (source) => source.id === purchaseOrderViewItem.purchaseOrder.sourceID
+                          )?.name || ''}
                       </div>
                     </td>
                     <td

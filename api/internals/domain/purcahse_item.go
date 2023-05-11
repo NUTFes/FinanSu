@@ -28,6 +28,7 @@ type PurchaseOrderInfo struct {
 	DeadLine     string `json:"deadline"`
 	UserID       int    `json:"userID"`
 	ExpenseID    int    `json:"expenseID"`
+	SourceID 	 int    `json:"sourceID"`
 	FinanceCheck bool   `json:"financeCheck"`
 }
 

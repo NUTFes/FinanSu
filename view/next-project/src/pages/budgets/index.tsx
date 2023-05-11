@@ -88,7 +88,7 @@ export default function BudgetList(props: Props) {
 
   const filteredExpenses = useMemo(() => {
     return expenses.filter((expenseView) => {
-      expenseView.expense.createdAt?.includes(String(selectedYear.year));
+      return expenseView.expense.createdAt?.includes(String(selectedYear.year));
     });
   }, [expenses, selectedYear]);
 

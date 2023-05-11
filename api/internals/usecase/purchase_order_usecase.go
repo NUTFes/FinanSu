@@ -15,8 +15,8 @@ type purchaseOrderUseCase struct {
 type PurchaseOrderUseCase interface {
 	GetPurchaseOrders(context.Context) ([]domain.PurchaseOrder, error)
 	GetPurchaseOrderByID(context.Context, string) (domain.PurchaseOrder, error)
-	CreatePurchaseOrder(context.Context, string, string, string, string) (domain.PurchaseOrder, error)
-	UpdatePurchaseOrder(context.Context, string, string, string, string, string) (domain.PurchaseOrder, error)
+	CreatePurchaseOrder(context.Context, string, string, string, string, string) (domain.PurchaseOrder, error)
+	UpdatePurchaseOrder(context.Context, string, string, string, string, string, string) (domain.PurchaseOrder, error)
 	DestroyPurchaseOrder(context.Context, string) error
 	GetPurchaseOrderDetails(context.Context) ([]domain.OrderDetail, error)
 	GetPurchaseOrderDetailByID(context.Context, string) (domain.OrderDetail, error)
@@ -79,10 +79,11 @@ func (p *purchaseOrderUseCase) CreatePurchaseOrder(
 	deadLine string,
 	userID string,
 	expenseID string,
+	sourceID string,
 	finansuCheck string,
 ) (domain.PurchaseOrder, error) {
 	latastPurchaseOrder := domain.PurchaseOrder{}
-	p.rep.Create(c, deadLine, userID, expenseID, finansuCheck)
+	p.rep.Create(c, deadLine, userID, expenseID, sourceID, finansuCheck)
 	row, err := p.rep.FindNewRecord(c)
 	err = row.Scan(
 		&latastPurchaseOrder.ID,
@@ -107,10 +108,11 @@ func (p *purchaseOrderUseCase) UpdatePurchaseOrder(
 	deadLine string,
 	userID string,
 	expenseID string,
+	sourceID string,
 	finansuCheck string,
 ) (domain.PurchaseOrder, error) {
 	updatedPurchaseOrder := domain.PurchaseOrder{}
-	p.rep.Update(c, id, deadLine, userID, expenseID, finansuCheck)
+	p.rep.Update(c, id, deadLine, userID, expenseID, sourceID, finansuCheck)
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
 		&updatedPurchaseOrder.ID,

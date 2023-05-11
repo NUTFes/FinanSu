@@ -142,28 +142,31 @@ const DetailModal: FC<ModalProps> = (props) => {
                 className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}
               >
                 {user.roleID === 1 ? (
-                  <th className={clsx('w-3/12 pb-2')}>
+                  <th className={clsx('w-3/14 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>品名</div>
                   </th>
                 ) : (
-                  <th className={clsx('w-4/12 pb-2')}>
+                  <th className={clsx('w-4/14 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>品名</div>
                   </th>
                 )}
-                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                <th className={clsx('w-2/14 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>単価</div>
                 </th>
-                <th className={clsx('w-1/12 border-b-primary-1 pb-2')}>
+                <th className={clsx('w-1/14 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>個数</div>
                 </th>
-                <th className={clsx('w-3/12 border-b-primary-1 pb-2')}>
+                <th className={clsx('w-2/14 border-b-primary-1 pb-2')}>
+                  <div className={clsx('text-center text-sm text-black-600')}>収入元</div>
+                </th>
+                <th className={clsx('w-3/14 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>詳細</div>
                 </th>
-                <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                <th className={clsx('w-2/14 border-b-primary-1 pb-2')}>
                   <div className={clsx('text-center text-sm text-black-600')}>URL</div>
                 </th>
                 {user.roleID === 3 ? (
-                  <th className={clsx('w-2/12 border-b-primary-1 pb-2')}>
+                  <th className={clsx('w-2/14 border-b-primary-1 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>局長確認</div>
                   </th>
                 ) : null}
