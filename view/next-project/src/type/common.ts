@@ -74,6 +74,7 @@ export interface PurchaseOrder {
   userID: number;
   financeCheck: boolean;
   expenseID: number;
+  sourceID: number;
   createdAt?: string;
   updatedAt?: string;
 }

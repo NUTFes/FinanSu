@@ -12,23 +12,27 @@ import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@type/common';
+import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense, Source } from '@type/common';
 
 interface Props {
   user: User;
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
+  sources: Source[];
 }
 export async function getServerSideProps() {
   const getPurchaseOrderViewUrl = process.env.SSR_API_URI + '/purchaseorders/details';
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
+  const getSourceUrl = process.env.SSR_API_URI + '/sources';
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
+  const sourceRes = await get(getSourceUrl);
 
   return {
     props: {
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
+      sources: sourceRes,
     },
   };
 }
@@ -167,25 +171,28 @@ export default function PurchaseOrders(props: Props) {
           <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/15 pb-2'>
                   <div className='text-center text-sm text-black-600'>財務局長チェック</div>
                 </th>
-                <th className='w-1/12 border-b-primary-1 pb-2'>
+                <th className='w-1/15 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>購入したい局</div>
                 </th>
-                <th className='w-2/12 border-b-primary-1 pb-2'>
+                <th className='w-2/15 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>申請日</div>
                 </th>
-                <th className='w-2/12 border-b-primary-1 pb-2'>
+                <th className='w-2/15 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>購入期限</div>
                 </th>
-                <th className='w-3/12 border-b-primary-1 pb-2'>
+                <th className='w-3/15 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>購入物品</div>
                 </th>
-                <th className='w-1/12 border-b-primary-1 pb-2'>
+                <th className='w-3/15 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>収入元</div>
+                </th>
+                <th className='w-1/15 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>合計金額</div>
                 </th>
-                <th className='w-1/12 border-b-primary-1 pb-2'></th>
+                <th className='w-1/15 border-b-primary-1 pb-2'></th>
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
@@ -262,6 +269,15 @@ export default function PurchaseOrders(props: Props) {
                               </>
                             ),
                           )}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {props.sources.find((source) => (source.id === purchaseOrderViewItem.purchaseOrder.sourceID))?.name || ''}
                       </div>
                     </td>
                     <td
