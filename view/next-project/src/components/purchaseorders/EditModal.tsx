@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
@@ -181,11 +182,11 @@ export default function EditModal(props: ModalProps) {
                 <tbody>
                   {formDataList.map((data) => (
                     <tr key={data.id} className='border-gray-300 border-b'>
-                      <td className='py-2'>{data.item}</td>
-                      <td className='py-2'>{data.price}</td>
-                      <td className='py-2'>{data.quantity}</td>
-                      <td className='py-2'>{props.sources.find((source) => source.id === data.sourceID)?.name}</td>
-                      <td className='py-2'>{data.detail}</td>
+                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.item}</div></td>
+                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.price}</div></td>
+                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.quantity}</div></td>
+                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{props.sources.find((source) => source.id === data.sourceID)?.name}</div></td>
+                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.detail}</div></td>
                       <td className='py-2'>
                         <div className={'flex justify-center'}>
                           <a href={data.url} target='_blank' rel='noopener noreferrer'>
