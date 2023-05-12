@@ -16,7 +16,7 @@ CREATE TABLE activities (
 INSERT into activities (user_id, is_done, sponsor_id, feature, expense, remark) values (1, false, 1, "なし", 11, "");
 INSERT into activities (user_id, is_done, sponsor_id, feature, expense, remark) values (2, false, 2, "クーポン", 22, "味玉or大盛無料");
 
-CREATE TABLE activitiy_styles (
+CREATE TABLE activity_styles (
   id int(10) unsigned not null auto_increment,
   activity_id int(10),
   sponsor_style_id int(10),
@@ -25,5 +25,5 @@ CREATE TABLE activitiy_styles (
   PRIMARY KEY (id)
 );
 
-INSERT into activitiy_styles (activity_id, sponsor_style_id) values (1, 1);
-INSERT into activitiy_styles (activity_id, sponsor_style_id) values (2, 2);
+INSERT into activity_styles (activity_id, sponsor_style_id) values (1, 1);
+INSERT into activity_styles (activity_id, sponsor_style_id) values (2, 2);
