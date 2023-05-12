@@ -102,6 +102,7 @@ export default function PurchaseOrders(props: Props) {
   const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
     const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;
     const res: PurchaseOrder = await put(url, purchaseOrder);
+    console.log(res)
     const newPurchaseOrderViews = purchaseOrderViews.map((purchaseOrderView) => {
       if (purchaseOrderView.purchaseOrder.id === res.id) {
         purchaseOrderView.purchaseOrder = res;
@@ -336,7 +337,7 @@ export default function PurchaseOrders(props: Props) {
                 ))}
               {filteredPurchaseOrderViews.length > 0 && (
                 <tr className='border-b border-primary-1'>
-                  <td className='px-1 py-3' colSpan={5}>
+                  <td className='px-1 py-3' colSpan={6}>
                     <div className='flex justify-end'>
                       <div className='text-sm text-black-600'>合計</div>
                     </div>

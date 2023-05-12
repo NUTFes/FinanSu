@@ -1,10 +1,5 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "eslint.workingDirectories": [
-    "./view/next-project"
-  ],
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-  },
+  "eslint.workingDirectories": ["./view/next-project"],
 }
