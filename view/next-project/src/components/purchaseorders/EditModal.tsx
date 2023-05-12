@@ -54,13 +54,13 @@ export default function EditModal(props: ModalProps) {
 
   const handler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormDataList(
-          formDataList.map((formData: PurchaseItem) =>
-            formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
-          ),
-        );
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormDataList(
+        formDataList.map((formData: PurchaseItem) =>
+          formData.id === Number(e.target.id) ? { ...formData, [input]: e.target.value } : formData,
+        ),
+      );
+    };
 
   // finance_checkのtrue,falseを切り替え
   const isFinanceCheckHandler = (purchaseItemId: number | undefined, finance_check: boolean) => {
@@ -182,11 +182,31 @@ export default function EditModal(props: ModalProps) {
                 <tbody>
                   {formDataList.map((data) => (
                     <tr key={data.id} className='border-gray-300 border-b'>
-                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.item}</div></td>
-                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.price}</div></td>
-                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.quantity}</div></td>
-                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{props.sources.find((source) => source.id === data.sourceID)?.name}</div></td>
-                      <td className='py-2'><div className={clsx('text-center text-sm text-black-300')}>{data.detail}</div></td>
+                      <td className='py-2'>
+                        <div className={clsx('text-center text-sm text-black-300')}>
+                          {data.item}
+                        </div>
+                      </td>
+                      <td className='py-2'>
+                        <div className={clsx('text-center text-sm text-black-300')}>
+                          {data.price}
+                        </div>
+                      </td>
+                      <td className='py-2'>
+                        <div className={clsx('text-center text-sm text-black-300')}>
+                          {data.quantity}
+                        </div>
+                      </td>
+                      <td className='py-2'>
+                        <div className={clsx('text-center text-sm text-black-300')}>
+                          {props.sources.find((source) => source.id === data.sourceID)?.name}
+                        </div>
+                      </td>
+                      <td className='py-2'>
+                        <div className={clsx('text-center text-sm text-black-300')}>
+                          {data.detail}
+                        </div>
+                      </td>
                       <td className='py-2'>
                         <div className={'flex justify-center'}>
                           <a href={data.url} target='_blank' rel='noopener noreferrer'>

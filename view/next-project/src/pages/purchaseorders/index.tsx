@@ -12,7 +12,14 @@ import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense, Source } from '@type/common';
+import {
+  PurchaseItem,
+  PurchaseOrder,
+  User,
+  PurchaseOrderView,
+  Expense,
+  Source,
+} from '@type/common';
 
 interface Props {
   user: User;
@@ -165,7 +172,9 @@ export default function PurchaseOrders(props: Props) {
             </select>
           </div>
           <div className='flex justify-end'>
-            <OpenAddModalButton expenses={props.expenses} sources={props.sources}>申請登録</OpenAddModalButton>
+            <OpenAddModalButton expenses={props.expenses} sources={props.sources}>
+              申請登録
+            </OpenAddModalButton>
           </div>
         </div>
         <div className='w-100 mb-2 p-5'>
@@ -283,15 +292,18 @@ export default function PurchaseOrders(props: Props) {
                             (purchaseItem: PurchaseItem, index: number) => (
                               <>
                                 {purchaseOrderViewItem.purchaseItem.length - 1 === index ? (
-                                  <>{props.sources.find(
-                                    (source) => source.id === purchaseItem.sourceID
-                                  )?.name || ''}
+                                  <>
+                                    {props.sources.find(
+                                      (source) => source.id === purchaseItem.sourceID,
+                                    )?.name || ''}
                                   </>
                                 ) : (
-                                  <>{props.sources.find(
-                                    (source) => source.id === purchaseItem.sourceID
-                                  )?.name || ''}
-                                    ,</>
+                                  <>
+                                    {props.sources.find(
+                                      (source) => source.id === purchaseItem.sourceID,
+                                    )?.name || ''}
+                                    ,
+                                  </>
                                 )}
                               </>
                             ),
