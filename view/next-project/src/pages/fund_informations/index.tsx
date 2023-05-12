@@ -7,7 +7,7 @@ import { authAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { put } from '@api/fundInformations';
-import { Title, Card, Card2 } from '@components/common';
+import { Title, Card } from '@components/common';
 import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
@@ -123,9 +123,9 @@ export default function FundInformations(props: Props) {
         isFinanceStaff ||
         isFinanceDirector
       ) {
-        return true;
-      } else {
         return false;
+      } else {
+        return true;
       }
     },
     [currentUser?.id, isDeveloper, isFinanceStaff, isFinanceDirector],
@@ -246,7 +246,7 @@ export default function FundInformations(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className='-mx-4 mx-5 mt-10 md:visible'>
+        <div className='mx-2 mt-10'>
           <div className='flex'>
             <Title title={'学内募金一覧'} />
             <select
@@ -259,20 +259,20 @@ export default function FundInformations(props: Props) {
               <option value='2023'>2023</option>
             </select>
           </div>
-          <div className='block hidden justify-end md:flex '>
+          <div className='hidden justify-end md:flex '>
             <OpenAddModalButton teachers={teachers} departments={departments} users={users}>
               学内募金登録
             </OpenAddModalButton>
           </div>
+          {filteredFundInformationViews.length != 0 && (
+            <div className='my-2'>合計金額 {totalFee}円</div>
+          )}
         </div>
         <div className='mb-7 md:hidden'>
-          {filteredFundInformationViews.length != 0 && (
-            <div className='my-2 mx-2'>合計金額 {totalFee}円</div>
-          )}
           {filteredFundInformationViews &&
             filteredFundInformationViews.map((fundViewItem: FundInformationView, index) => (
               <div key={fundViewItem.fundInformation.id}>
-                <Card2>
+                <Card>
                   <div className='mt-2 text-sm'>
                     {fundViewItem.fundInformation.isLastCheck &&
                       fundViewItem.fundInformation.isFirstCheck && (
@@ -315,7 +315,7 @@ export default function FundInformations(props: Props) {
                       />
                     </div>
                   </div>
-                </Card2>
+                </Card>
               </div>
             ))}
           {!filteredFundInformationViews.length && (
