@@ -237,7 +237,7 @@ export default function FundInformations(props: Props) {
                       <div>金額 : {fundViewItem.fundInformation.price}円</div>
                     </div>
                   </div>
-                  <div className='flex gap-4 ml-auto'>
+                  <div className='ml-auto flex gap-4'>
                     <OpenEditModalButton
                       fundInformation={fundViewItem.fundInformation}
                       teachers={teachers}
