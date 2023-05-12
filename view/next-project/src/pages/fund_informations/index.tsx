@@ -8,6 +8,7 @@ import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { put } from '@api/fundInformations';
 import { Title, Card } from '@components/common';
+import { Checkbox } from '@components/common';
 import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
@@ -63,33 +64,23 @@ export default function FundInformations(props: Props) {
   const [currentUser, setCurrentUser] = useState<User>();
 
   // 募金一覧
-  const [fundInformation, setFundInformation] = useState<FundInformation[]>(props.fundInformation);
-  const fundInformationView: FundInformationView[] = props.fundInformationView;
+  const [fundInformationViews, setFundInformationViews] = useState<FundInformationView[]>(
+    props.fundInformationView,
+  );
 
   //年の指定
   const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
 
-  const filteredFundInformation = useMemo(() => {
-    return fundInformation.filter((fundInformation) => {
-      return fundInformation.createdAt?.includes(selectedYear);
-    });
-  }, [fundInformation, selectedYear]);
+  // checkしたかどうか
+  const [isFirstChecks, setIsFirstChecks] = useState<boolean[]>([]);
+  const [isLastChecks, setIsLastChecks] = useState<boolean[]>([]);
 
   const filteredFundInformationViews = useMemo(() => {
-    return fundInformationView.filter((fundViewItem: FundInformationView) => {
-      return fundViewItem.fundInformation.createdAt?.includes(selectedYear);
+    return fundInformationViews.filter((fundInformationView) => {
+      return fundInformationView.fundInformation.createdAt?.includes(selectedYear);
     });
-  }, [fundInformationView, selectedYear]);
-
-  // ログイン中のユーザの権限
-  const isUser = useMemo(() => {
-    if (currentUser?.roleID == 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
+  }, [fundInformationViews, selectedYear]);
 
   const isDeveloper = useMemo(() => {
     if (currentUser?.roleID == 2) {
@@ -108,12 +99,12 @@ export default function FundInformations(props: Props) {
   }, [currentUser?.roleID]);
 
   const isFinanceStaff = useMemo(() => {
-    if (currentUser?.roleID == 4) {
+    if (currentUser?.bureauID == 3) {
       return true;
     } else {
       return false;
     }
-  }, [currentUser?.roleID]);
+  }, [currentUser?.bureauID]);
 
   const isDisabled = useCallback(
     (fundViewItem: FundInformationView) => {
@@ -139,104 +130,49 @@ export default function FundInformations(props: Props) {
     getUser();
   }, []);
 
+  useEffect(() => {
+    if (fundInformationViews) {
+      const firstChecks = fundInformationViews.map((fundInformationView) => {
+        return fundInformationView.fundInformation.isFirstCheck;
+      });
+      const lastChecks = fundInformationViews.map((fundInformationView) => {
+        return fundInformationView.fundInformation.isLastCheck;
+      });
+      setIsFirstChecks(firstChecks);
+      setIsLastChecks(lastChecks);
+    }
+  }, [fundInformationViews]);
+
   // チェック済みの合計金額用のステート
   const totalFee = useMemo(() => {
-    return filteredFundInformation.reduce((sum, fundInformation) => {
-      if (fundInformation.isLastCheck) {
-        return sum + fundInformation.price;
+    return filteredFundInformationViews.reduce((sum, fundInformationView) => {
+      if (
+        fundInformationView.fundInformation.isLastCheck &&
+        fundInformationView.fundInformation.isFirstCheck
+      ) {
+        return sum + fundInformationView.fundInformation.price;
       } else {
         return sum;
       }
     }, 0);
-  }, [fundInformation, selectedYear]);
-
-  // チェックの切り替え
-  const switchCheck = async (
-    isChecked: boolean,
-    id: number,
-    input: string,
-    fundItem: FundInformation,
-  ) => {
-    if (input == 'isLastCheck') {
-      const initFundInformation: FundInformation = {
-        id: id,
-        userID: fundItem.userID,
-        teacherID: fundItem.teacherID,
-        price: fundItem.price,
-        remark: fundItem.remark,
-        isFirstCheck: fundItem.isFirstCheck,
-        isLastCheck: !isChecked,
-        createdAt: fundItem.createdAt,
-        updatedAt: fundItem.updatedAt,
-      };
-    }
-    setFundInformation(
-      fundInformation.map((fundItem: FundInformation) =>
-        fundItem.id === id ? { ...fundItem, [input]: !isChecked } : fundItem,
-      ),
-    );
-  };
+  }, [fundInformationViews, selectedYear]);
 
   // checkboxの値が変わったときに更新
   const submit = async (id: number, fundItem: FundInformation) => {
     const putURL = process.env.CSR_API_URI + '/fund_informations/' + id;
     await put(putURL, fundItem);
-  };
 
-  // 変更可能なcheckboxの描画
-  const changeableCheckboxContent = (
-    isChecked: boolean,
-    id: number,
-    input: string,
-    fundItem: FundInformation,
-  ) => {
-    {
-      if (isChecked) {
-        return (
-          <>
-            <input
-              type='checkbox'
-              defaultChecked
-              onChange={() => {
-                switchCheck(isChecked, id, input, fundItem);
-                submit(id, fundItem);
-              }}
-            />
-          </>
-        );
+    const newFundInformationViews = fundInformationViews.map((fundInformationView) => {
+      if (fundInformationView.fundInformation.id == id) {
+        return {
+          ...fundInformationView,
+          fundInformation: fundItem,
+        };
       } else {
-        return (
-          <>
-            <input
-              type='checkbox'
-              onChange={() => {
-                switchCheck(isChecked, id, input, fundItem);
-                submit(id, fundItem);
-              }}
-            />
-          </>
-        );
+        return fundInformationView;
       }
-    }
-  };
-
-  // 変更不可能なcheckboxの描画
-  const unChangeableCheckboxContent = (isChecked: boolean) => {
-    {
-      if (isChecked) {
-        return (
-          <>
-            <input type='checkbox' defaultChecked disabled></input>
-          </>
-        );
-      } else {
-        return (
-          <>
-            <input type='checkbox' disabled></input>
-          </>
-        );
-      }
-    }
+    });
+    setFundInformationViews(newFundInformationViews);
   };
 
   return (
@@ -355,43 +291,36 @@ export default function FundInformations(props: Props) {
                 filteredFundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}
-                    className={clsx(index !== fundInformationView.length - 1 && 'border-b')}
+                    className={clsx(index !== fundInformationViews.length - 1 && 'border-b')}
                   >
                     <td className='py-3'>
                       <div className='text-center text-sm text-black-600'>
-                        {isFinanceDirector &&
-                          changeableCheckboxContent(
-                            fundInformation[index].isFirstCheck,
-                            fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0,
-                            'isFirstCheck',
-                            fundInformation[index],
-                          )}
-                        {isFinanceStaff &&
-                          changeableCheckboxContent(
-                            fundInformation[index].isFirstCheck,
-                            fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0,
-                            'isFirstCheck',
-                            fundInformation[index],
-                          )}
-                        {isDeveloper &&
-                          unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
-                        {isUser && unChangeableCheckboxContent(fundInformation[index].isFirstCheck)}
+                        <Checkbox
+                          checked={isFirstChecks[index]}
+                          disabled={!(isFinanceStaff || isFinanceDirector)}
+                          onChange={() => {
+                            const fund_information = {
+                              ...fundViewItem.fundInformation,
+                              isFirstCheck: !isFirstChecks[index],
+                            };
+                            submit(fund_information.id || 0, fund_information);
+                          }}
+                        />
                       </div>
                     </td>
                     <td>
                       <div className='text-center text-sm text-black-600'>
-                        {isFinanceDirector &&
-                          changeableCheckboxContent(
-                            fundInformation[index].isLastCheck,
-                            fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0,
-                            'isLastCheck',
-                            fundInformation[index],
-                          )}
-                        {isFinanceStaff &&
-                          unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
-                        {isDeveloper &&
-                          unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
-                        {isUser && unChangeableCheckboxContent(fundInformation[index].isLastCheck)}
+                        <Checkbox
+                          checked={isLastChecks[index]}
+                          disabled={!isFinanceDirector}
+                          onChange={() => {
+                            const fund_information = {
+                              ...fundViewItem.fundInformation,
+                              isLastCheck: !isLastChecks[index],
+                            };
+                            submit(fund_information.id || 0, fund_information);
+                          }}
+                        />
                       </div>
                     </td>
                     <td>
