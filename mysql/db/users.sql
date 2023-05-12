@@ -10,7 +10,14 @@ CREATE TABLE users (
   PRIMARY KEY (id)
 );
 
+-- 一般ユーザー
 INSERT into users (name, bureau_id, role_id) values ('技大太郎1', 1, 1);
-INSERT into users (name, bureau_id, role_id) values ('技大太郎2', 1, 2);
-INSERT into users (name, bureau_id, role_id) values ('技大太郎3', 1, 3);
-INSERT into users (name, bureau_id, role_id) values ('技大太郎4', 1, 4);
+
+-- 管理者ユーザー
+INSERT into users (name, bureau_id, role_id) values ('技大太郎2', 6, 2);
+
+-- 財務局長
+INSERT into users (name, bureau_id, role_id) values ('技大太郎3', 3, 3);
+
+-- 一般ユーザー（財務局員）
+INSERT into users (name, bureau_id, role_id) values ('技大太郎4', 3, 1);
