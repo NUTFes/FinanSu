@@ -32,9 +32,11 @@ interface Props {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const REMARK_COUPON = `<クーポン> [詳細 :  ○○],
-<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
-const REMARK_POSTER = `<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
+const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
+const REMARK_PAMPHLET_SPONSOR = `<パンフレット掲載内容> 企業が作成\n`;
+const REMARK_PAMPHLET_OTHER = `<パンフレット掲載内容> 去年のものを使用\n`;
+const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
 const REMARK_DESIGN_STUDENT = `<デザイン作成> 学生が作成\n`;
 const REMARK_DESIGN_SPONSOR = `<デザイン作成> 企業が作成\n`;
 const REMARK_DESIGN_OTHER = `<デザイン作成> 去年のものを使用\n`;
@@ -61,19 +63,19 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   const [design, setDesign] = useState<string>('学生が作成');
   useEffect(() => {
-    if (design === '学生が作成') {
-      if (formData.feature === 'ポスター') {
-        setFormData({ ...formData, remark: REMARK_DESIGN_STUDENT + REMARK_POSTER });
-      } else if (formData.feature === 'クーポン') {
-        setFormData({ ...formData, remark: REMARK_DESIGN_STUDENT + REMARK_COUPON });
-      } else {
-        setFormData({ ...formData, remark: REMARK_DESIGN_STUDENT });
-      }
-    } else if (design === '企業が作成') {
-      setFormData({ ...formData, remark: REMARK_DESIGN_SPONSOR });
-    } else if (design === '去年のものを使用') {
-      setFormData({ ...formData, remark: REMARK_DESIGN_OTHER });
-    }
+    const newRemark =
+      design === '学生が作成'
+        ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+        : design === '企業が作成'
+        ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+        : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+    const newRemarkFeature =
+      formData.feature === 'ポスター'
+        ? REMARK_POSTER
+        : formData.feature === 'クーポン'
+        ? REMARK_COUPON
+        : '';
+    setFormData({ ...formData, remark: newRemark + newRemarkFeature });
   }, [design, formData]);
 
   const formDataHandler =
@@ -174,13 +176,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         <Select
           value={data.feature}
           onChange={(e) => {
-            if (e.target.value === 'クーポン') {
-              setFormData({ ...formData, feature: e.target.value, remark: REMARK_COUPON });
-            } else if (e.target.value === 'ポスター') {
-              setFormData({ ...formData, feature: e.target.value, remark: REMARK_POSTER });
-            } else {
-              setFormData({ ...formData, feature: e.target.value, remark: '' });
-            }
+            setFormData({ ...formData, feature: e.target.value });
           }}
         >
           <option value={'なし'} selected>
