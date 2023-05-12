@@ -16,8 +16,8 @@ type activityRepository struct {
 type ActivityRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string,string, string, string) error
+	Create(context.Context, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string,string, string) error
 	Destroy(context.Context, string) error
 	FindDetail(context.Context) (*sql.Rows, error)
 	FindLatestRecord(c context.Context) (*sql.Row, error)
@@ -42,7 +42,6 @@ func (ar *activityRepository) Find(c context.Context, id string) (*sql.Row, erro
 // 作成
 func (ar *activityRepository) Create(
 	c context.Context,
-	sponsorStyleID string,
 	userID string,
 	isDone string,
 	sponsorID string,
@@ -52,9 +51,9 @@ func (ar *activityRepository) Create(
 
 	query := `
 	INSERT INTO	activities
-		(sponsor_style_id, user_id, is_done, sponsor_id, feature, expense, remark)
+		(user_id, is_done, sponsor_id, feature, expense, remark)
 	VALUES
-		(` + sponsorStyleID + "," + userID + "," + isDone + "," + sponsorID + ",'" + feature + "'," + expense +",'" + remark +"')"
+		(` +userID + "," + isDone + "," + sponsorID + ",'" + feature + "'," + expense +",'" + remark +"')"
 
 	return ar.crud.UpdateDB(c, query)
 }
@@ -63,7 +62,6 @@ func (ar *activityRepository) Create(
 func (ar *activityRepository) Update(
 	c context.Context,
 	id string,
-	sponsorStyleID string,
 	userID string,
 	isDone string,
 	sponsorID string,
@@ -74,8 +72,7 @@ func (ar *activityRepository) Update(
 	query := `
 	UPDATE activities
 	SET
-		sponsor_style_id =` + sponsorStyleID +
-		", user_id = " + userID +
+		user_id = ` + userID +
 		", is_done = " + isDone +
 		", sponsor_id = " + sponsorID +
 		", feature = '" + feature +

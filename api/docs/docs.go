@@ -2027,11 +2027,6 @@ const docTemplate = `{
         },
         "activity":{
             "properties":{
-                "sponsorStyleID":{
-                    "type": "int",
-                    "example": 1,
-
-                },
                 "sponsorID":{
                     "type": "int",
                     "example": 1,
@@ -2060,7 +2055,6 @@ const docTemplate = `{
                 },
             },
             "required":{
-                    "sponsorStyleID",
                     "sponsorID",
                     "userID",
                     "isDone",

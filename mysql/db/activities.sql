@@ -2,7 +2,6 @@ use finansu_db;
 
 CREATE TABLE activities (
   id int(10) unsigned not null auto_increment,
-  sponsor_style_id int(10),
   user_id int(10),
   is_done boolean,
   sponsor_id int(10),
@@ -14,8 +13,8 @@ CREATE TABLE activities (
   PRIMARY KEY (id)
 );
 
-INSERT into activities (sponsor_style_id, user_id, is_done, sponsor_id, feature, expense, remark) values (1, 1, false, 1, "なし", 11, "");
-INSERT into activities (sponsor_style_id, user_id, is_done, sponsor_id, feature, expense, remark) values (2, 2, false, 2, "クーポン", 22, "味玉or大盛無料");
+INSERT into activities (user_id, is_done, sponsor_id, feature, expense, remark) values (1, false, 1, "なし", 11, "");
+INSERT into activities (user_id, is_done, sponsor_id, feature, expense, remark) values (2, false, 2, "クーポン", 22, "味玉or大盛無料");
 
 CREATE TABLE activitiy_styles (
   id int(10) unsigned not null auto_increment,
