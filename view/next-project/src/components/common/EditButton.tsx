@@ -23,7 +23,7 @@ const EditButton: React.FC<Props> = (props) => {
       className={`${buttonClass}  flex h-6 w-6 min-w-0  items-center justify-center rounded-full p-0`}
       disabled={isDisabled}
       onClick={(e) => {
-        if(onClick) onClick()
+        if (onClick) onClick();
         e.stopPropagation();
       }}
     >
