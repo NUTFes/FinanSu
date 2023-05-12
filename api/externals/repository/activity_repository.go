@@ -21,6 +21,7 @@ type ActivityRepository interface {
 	Destroy(context.Context, string) error
 	FindDetail(context.Context) (*sql.Rows, error)
 	FindLatestRecord(c context.Context) (*sql.Row, error)
+	FindSponsorStyle(context.Context, string) (*sql.Rows, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -98,10 +99,6 @@ func (ar *activityRepository) FindDetail(c context.Context) (*sql.Rows, error) {
 	ON
 		activities.sponsor_id = sponsors.id
 	INNER JOIN
-		sponsor_styles
-	ON
-		activities.sponsor_style_id = sponsor_styles.id
-	INNER JOIN
 		users
 	ON
 		activities.user_id = users.id`
@@ -120,4 +117,19 @@ func (ar *activityRepository) FindLatestRecord(c context.Context) (*sql.Row, err
 		DESC LIMIT 1
 	`
 	return ar.crud.ReadByID(c, query)
+}
+
+// 指定したorder_idのitemを取得する
+func (ar *activityRepository) FindSponsorStyle(c context.Context, sponsorStyleID string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			ss.*
+		FROM
+			activity_styles
+		INNER JOIN
+			sponsor_styles AS ss
+		ON
+			activity_styles.sponsor_style_id = ss.id
+		WHERE activity_styles.activity_id = ` + sponsorStyleID
+	return ar.crud.Read(c, query)
 }

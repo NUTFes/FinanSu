@@ -27,3 +27,5 @@ CREATE TABLE activity_styles (
 
 INSERT into activity_styles (activity_id, sponsor_style_id) values (1, 1);
 INSERT into activity_styles (activity_id, sponsor_style_id) values (2, 2);
+INSERT into activity_styles (activity_id, sponsor_style_id) values (1, 2);
+INSERT into activity_styles (activity_id, sponsor_style_id) values (2, 1);

@@ -19,6 +19,6 @@ type Activity struct {
 type ActivityDetail struct {
 	Activity		Activity		`json:"sponsorActivity"`
 	Sponsor			Sponsor			`json:"sponsor"`
-	SponsorStyle	SponsorStyle	`json:"sponsorStyle"`
+	SponsorStyle	[]SponsorStyle	`json:"sponsorStyle"`
 	User			User			`json:"user"`
 }

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -150,7 +151,8 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
-
+	sposorStyle := domain.SponsorStyle{}
+	var sponsorStyles []domain.SponsorStyle
 	// クエリー実行
 	rows, err := a.rep.FindDetail(c)
 	if err != nil {
@@ -177,12 +179,6 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 			&activity.Sponsor.Representative,
 			&activity.Sponsor.CreatedAt,
 			&activity.Sponsor.UpdatedAt,
-			&activity.SponsorStyle.ID,
-			&activity.SponsorStyle.Style,
-			&activity.SponsorStyle.Feature,
-			&activity.SponsorStyle.Price,
-			&activity.SponsorStyle.CreatedAt,
-			&activity.SponsorStyle.UpdatedAt,
 			&activity.User.ID,
 			&activity.User.Name,
 			&activity.User.BureauID,
@@ -190,12 +186,27 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 			&activity.User.CreatedAt,
 			&activity.User.UpdatedAt,
 		)
-
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
-
+		rows, err := a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&sposorStyle.ID,
+				&sposorStyle.Style,
+				&sposorStyle.Feature,
+				&sposorStyle.Price,
+				&sposorStyle.CreatedAt,
+				&sposorStyle.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			sponsorStyles = append(sponsorStyles, sposorStyle)
+		}
+		activity.SponsorStyle = sponsorStyles
 		activities = append(activities, activity)
+		sponsorStyles = nil
 	}
 	return activities, nil
 }
