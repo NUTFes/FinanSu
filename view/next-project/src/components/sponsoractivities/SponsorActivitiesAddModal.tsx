@@ -291,49 +291,47 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   return (
-    <>
-      <Modal className='w-1/2'>
-        <div className='w-full'>
-          <div className='ml-auto w-fit'>
-            <CloseButton
-              onClick={() => {
-                props.setIsOpen(false);
-              }}
-            />
-          </div>
+    <Modal className='mt-64 md:mt-0 md:w-1/2'>
+      <div className='w-full'>
+        <div className='ml-auto w-fit'>
+          <CloseButton
+            onClick={() => {
+              props.setIsOpen(false);
+            }}
+          />
         </div>
-        <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛活動の登録</div>
-        {!isDone && <>{content(formData)}</>}
-        {isDone ? (
-          <>
-            <div className='mx-auto w-fit'>{SponsorActivityTable(formData)}</div>
-            <div className='flex flex-row justify-center gap-5'>
-              <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
-              <PrimaryButton
-                onClick={() => {
-                  submit(formData);
-                }}
-              >
-                登録を確定する
-              </PrimaryButton>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className='mx-auto flex w-fit flex-row gap-5'>
-              <PrimaryButton
-                onClick={() => {
-                  setIsDone(true);
-                }}
-                disabled={!sponsors}
-              >
-                <p>確認へ</p>
-                <RiArrowDropRightLine size={23} />
-              </PrimaryButton>
-            </div>
-          </>
-        )}
-      </Modal>
-    </>
+      </div>
+      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛活動の登録</div>
+      {!isDone && <>{content(formData)}</>}
+      {isDone ? (
+        <>
+          <div className='mx-auto w-fit'>{SponsorActivityTable(formData)}</div>
+          <div className='flex flex-row justify-center gap-5'>
+            <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
+            <PrimaryButton
+              onClick={() => {
+                submit(formData);
+              }}
+            >
+              登録を確定する
+            </PrimaryButton>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className='mx-auto flex w-fit flex-row gap-5'>
+            <PrimaryButton
+              onClick={() => {
+                setIsDone(true);
+              }}
+              disabled={!sponsors}
+            >
+              <p>確認へ</p>
+              <RiArrowDropRightLine size={23} />
+            </PrimaryButton>
+          </div>
+        </>
+      )}
+    </Modal>
   );
 }

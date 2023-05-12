@@ -22,7 +22,10 @@ const EditButton: React.FC<Props> = (props) => {
       suppressHydrationWarning
       className={`${buttonClass}  flex h-6 w-6 min-w-0  items-center justify-center rounded-full p-0`}
       disabled={isDisabled}
-      onClick={onClick}
+      onClick={(e) => {
+        if(onClick) onClick()
+        e.stopPropagation();
+      }}
     >
       <RiPencilFill size={'15px'} color={'white'} />
     </button>

@@ -1,12 +1,10 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useMemo } from 'react';
-import { useRecoilState } from 'recoil';
 
 import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
-import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
-import { Card, Title, Card2 } from '@components/common';
+import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
@@ -46,7 +44,6 @@ export async function getServerSideProps() {
 }
 
 export default function SponsorActivities(props: Props) {
-  const [user] = useRecoilState(userAtom);
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -79,7 +76,7 @@ export default function SponsorActivities(props: Props) {
         <meta name='viewpoinst' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className='mx-6 mt-5 mt-10 md:mx-5'>
+        <div className='mx-6 mt-10 md:mx-5'>
           <div className='flex'>
             <Title title={'協賛活動一覧'} />
             <select
@@ -92,7 +89,7 @@ export default function SponsorActivities(props: Props) {
               <option value='2023'>2023</option>
             </select>
           </div>
-          <div className='block hidden justify-end md:flex '>
+          <div className='hidden justify-end md:flex '>
             <OpenModalButton
               users={props.users}
               sponsors={props.sponsors}
@@ -102,77 +99,76 @@ export default function SponsorActivities(props: Props) {
             </OpenModalButton>
           </div>
         </div>
-        <div className='mb-7'>
+        <div className='mb-7 md:hidden'>
           {filteredSponsorActivitiesViews &&
-            filteredSponsorActivitiesViews.map((sponsorActivitiesItem, index) => (
-              <div key={sponsorActivitiesItem.sponsorActivity.id}>
-                <Card2>
-                  {sponsorActivitiesItem.sponsorActivity.isDone && (
-                    <div className='my-1 flex'>
-                      <p className='text-[#7087FF]'>●</p>
-                      <p className='mx-1'>回収完了</p>
-                    </div>
-                  )}
-                  {!sponsorActivitiesItem.sponsorActivity.isDone && (
-                    <div className='my-1 flex'>
-                      <p className='text-[#FFA53C]'>●</p>
-                      <p className='mx-1'>未回収</p>
-                    </div>
-                  )}
-                  <div className=' my-1 text-lg font-medium'>
-                    {sponsorActivitiesItem.sponsor.name}
-                  </div>
-                  <p className='mx-2 text-sm text-black-600'>協賛スタイル</p>
-                  <table className='my-1 ml-3 mb-2 w-full table-fixed border-collapse text-sm'>
-                    <tbody>
-                      <tr className='border border-b-primary-1'></tr>
-                      <tr>
-                        <td className='text-center'>{sponsorActivitiesItem.sponsorStyle.style}</td>
-                        <td className='text-center'>
-                          {sponsorActivitiesItem.sponsorStyle.feature}
-                        </td>
-                        <td className='text-center'>
-                          {sponsorActivitiesItem.sponsorStyle.price}円
-                        </td>
-                      </tr>
-                      <tr className='border border-b-primary-1'></tr>
-                    </tbody>
-                  </table>
-                  <div className='my-1 flex text-sm'>
-                    <p className='mx-2 text-black-600'>担当者</p>
-                    <p className='mx-7 border-b border-primary-1'>
-                      {sponsorActivitiesItem.user.name}
-                    </p>
-                  </div>
-                  <div className='my-1 flex text-sm'>
-                    <p className='mx-2 text-black-600'>オプション</p>
-                    <p className='border-b border-primary-1'>
-                      {sponsorActivitiesItem.sponsorActivity.feature}
-                    </p>
-                  </div>
-                  <div className='my-1 mb-2 flex text-sm'>
-                    <p className='mx-2 text-black-600'>交通費</p>
-                    <p className='ml-7 border-b border-primary-1'>
-                      {sponsorActivitiesItem.sponsorActivity.expense}
-                    </p>
-                    円
-                    <div className='absolute right-14 flex'>
-                      <div className='mx-50 right-10'>
-                        <OpenEditModalButton
-                          id={sponsorActivitiesItem.sponsorActivity.id || '0'}
-                          sponsorActivity={sponsorActivitiesItem.sponsorActivity}
-                          sponsors={props.sponsors}
-                          sponsorStyles={props.sponsorStyles}
-                          users={props.users}
-                        />
+            filteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
+              <Card key={sponsorActivitiesItem.sponsorActivity.id}>
+                <div className='flex items-end justify-between p-4'>
+                  <div>
+                    {sponsorActivitiesItem.sponsorActivity.isDone && (
+                      <div className='flex items-center gap-1'>
+                        <div className='h-4 w-4 rounded-full bg-[#7087FF]' />
+                        <p>回収完了</p>
                       </div>
-                      <div className='mx-2'>
-                        <OpenDeleteModalButton id={sponsorActivitiesItem.sponsorActivity.id || 0} />
+                    )}
+                    {!sponsorActivitiesItem.sponsorActivity.isDone && (
+                      <div className='flex items-center gap-1'>
+                        <div className='h-4 w-4 rounded-full bg-[#FFA53C]' />
+                        <p>未回収</p>
+                      </div>
+                    )}
+                    <div className='ml-4 text-sm text-black-600'>
+                      <div className='text-lg font-medium'>
+                        {sponsorActivitiesItem.sponsor.name}
+                      </div>
+                      <p>協賛スタイル</p>
+                      <table className='my-1 w-full table-fixed border-collapse'>
+                        <tbody>
+                          <tr className='border border-b-primary-1'></tr>
+                          <tr>
+                            <td className='text-center'>
+                              {sponsorActivitiesItem.sponsorStyle.style}
+                            </td>
+                            <td className='text-center'>
+                              {sponsorActivitiesItem.sponsorStyle.feature}
+                            </td>
+                            <td className='text-center'>
+                              {sponsorActivitiesItem.sponsorStyle.price}円
+                            </td>
+                          </tr>
+                          <tr className='border border-b-primary-1'></tr>
+                        </tbody>
+                      </table>
+                      <div className='grid grid-cols-2'>
+                        <p>担当者</p>
+                        <p className='w-fit border-b border-primary-1'>
+                          {sponsorActivitiesItem.user.name}
+                        </p>
+                        <p>オプション</p>
+                        <p className='w-fit border-b border-primary-1'>
+                          {sponsorActivitiesItem.sponsorActivity.feature}
+                        </p>
+                        <p>交通費</p>
+                        <p className='w-fit border-b border-primary-1'>
+                          {sponsorActivitiesItem.sponsorActivity.expense}円
+                        </p>
                       </div>
                     </div>
                   </div>
-                </Card2>
-              </div>
+                  <div className='mx-50 right-10'>
+                    <OpenEditModalButton
+                      id={sponsorActivitiesItem.sponsorActivity.id || '0'}
+                      sponsorActivity={sponsorActivitiesItem.sponsorActivity}
+                      sponsors={props.sponsors}
+                      sponsorStyles={props.sponsorStyles}
+                      users={props.users}
+                    />
+                  </div>
+                  <div className='mx-2'>
+                    <OpenDeleteModalButton id={sponsorActivitiesItem.sponsorActivity.id || 0} />
+                  </div>
+                </div>
+              </Card>
             ))}
           {!filteredSponsorActivitiesViews.length && (
             <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
@@ -336,12 +332,12 @@ export default function SponsorActivities(props: Props) {
             </tbody>
           </table>
         </div>
-        <div className='fixed right-4 bottom-3 justify-end md:hidden '>
+        <div className='fixed right-4 bottom-4 md:hidden '>
           <OpenModalButton
             users={props.users}
             sponsors={props.sponsors}
             sponsorStyles={props.sponsorStyles}
-          ></OpenModalButton>
+          />
         </div>
       </Card>
       {isOpen && sponsorActivitiesItem && (
