@@ -103,7 +103,7 @@ export default function SponsorActivities(props: Props) {
           {filteredSponsorActivitiesViews &&
             filteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
               <Card key={sponsorActivitiesItem.sponsorActivity.id}>
-                <div className='flex items-end justify-between p-4'>
+                <div className='flex flex-col gap-2 p-4'>
                   <div>
                     {sponsorActivitiesItem.sponsorActivity.isDone && (
                       <div className='flex items-center gap-1'>
@@ -155,7 +155,7 @@ export default function SponsorActivities(props: Props) {
                       </div>
                     </div>
                   </div>
-                  <div className='mx-50 right-10'>
+                  <div className='ml-auto flex flex-row gap-4'>
                     <OpenEditModalButton
                       id={sponsorActivitiesItem.sponsorActivity.id || '0'}
                       sponsorActivity={sponsorActivitiesItem.sponsorActivity}
@@ -163,8 +163,6 @@ export default function SponsorActivities(props: Props) {
                       sponsorStyles={props.sponsorStyles}
                       users={props.users}
                     />
-                  </div>
-                  <div className='mx-2'>
                     <OpenDeleteModalButton id={sponsorActivitiesItem.sponsorActivity.id || 0} />
                   </div>
                 </div>

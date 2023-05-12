@@ -205,9 +205,9 @@ export default function FundInformations(props: Props) {
           {filteredFundInformationViews &&
             filteredFundInformationViews.map((fundViewItem: FundInformationView) => (
               <Card key={fundViewItem.fundInformation.id}>
-                <div className='flex items-end justify-between p-4'>
+                <div className='flex flex-col gap-2 p-4'>
                   <div>
-                    <div className='mt-2 text-sm'>
+                    <div className='mt-2'>
                       {fundViewItem.fundInformation.isLastCheck &&
                         fundViewItem.fundInformation.isFirstCheck && (
                           <div className='flex items-center gap-1'>
@@ -237,7 +237,7 @@ export default function FundInformations(props: Props) {
                       <div>金額 : {fundViewItem.fundInformation.price}円</div>
                     </div>
                   </div>
-                  <div className='flex gap-2'>
+                  <div className='flex gap-4 ml-auto'>
                     <OpenEditModalButton
                       fundInformation={fundViewItem.fundInformation}
                       teachers={teachers}
