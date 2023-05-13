@@ -123,7 +123,7 @@ func (ar *activityRepository) FindLatestRecord(c context.Context) (*sql.Row, err
 func (ar *activityRepository) FindSponsorStyle(c context.Context, sponsorStyleID string) (*sql.Rows, error) {
 	query := `
 		SELECT
-			ss.*
+			*
 		FROM
 			activity_styles
 		INNER JOIN
