@@ -151,8 +151,8 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
-	sposorStyle := domain.SponsorStyle{}
-	var sponsorStyles []domain.SponsorStyle
+	styleDetail := domain.StyleDetail{}
+	var styleDetails []domain.StyleDetail
 	// クエリー実行
 	rows, err := a.rep.FindDetail(c)
 	if err != nil {
@@ -192,21 +192,26 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 		rows, err := a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
 		for rows.Next(){
 			err := rows.Scan(
-				&sposorStyle.ID,
-				&sposorStyle.Style,
-				&sposorStyle.Feature,
-				&sposorStyle.Price,
-				&sposorStyle.CreatedAt,
-				&sposorStyle.UpdatedAt,
+				&styleDetail.ActivityStyle.ID,
+				&styleDetail.ActivityStyle.ActivityID,
+				&styleDetail.ActivityStyle.SponsoStyleID,
+				&styleDetail.ActivityStyle.CreatedAt,
+				&styleDetail.ActivityStyle.UpdatedAt,
+				&styleDetail.SponsorStyle.ID,
+				&styleDetail.SponsorStyle.Style,
+				&styleDetail.SponsorStyle.Feature,
+				&styleDetail.SponsorStyle.Price,
+				&styleDetail.SponsorStyle.CreatedAt,
+				&styleDetail.SponsorStyle.UpdatedAt,
 			)
 			if err != nil {
 				return nil, err
 			}
-			sponsorStyles = append(sponsorStyles, sposorStyle)
+			styleDetails = append(styleDetails, styleDetail)
 		}
-		activity.SponsorStyle = sponsorStyles
+		activity.StyleDetail = styleDetails
 		activities = append(activities, activity)
-		sponsorStyles = nil
+		styleDetails = nil
 	}
 	return activities, nil
 }
