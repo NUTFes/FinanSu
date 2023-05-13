@@ -204,13 +204,13 @@ export default function BudgetList(props: Props) {
                     </tbody>
                     <tfoot
                       className={clsx(
-                        'border border-x-white-0 border-t-primary-1 border-b-white-0',
+                        'border border-x-white-0 border-b-white-0 border-t-primary-1',
                       )}
                     >
                       <tr>
                         <th />
-                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
-                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
+                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>
                           {budgetsTotalFee}
                         </th>
                         <th />
@@ -317,12 +317,12 @@ export default function BudgetList(props: Props) {
                     </tbody>
                     <tfoot
                       className={clsx(
-                        'border border-x-white-0 border-t-primary-1 border-b-white-0',
+                        'border border-x-white-0 border-b-white-0 border-t-primary-1',
                       )}
                     >
                       <tr>
-                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
-                        <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
+                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>
                           {expensesTotalFee}
                         </th>
                         <th />

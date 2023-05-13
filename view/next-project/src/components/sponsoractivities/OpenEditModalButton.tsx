@@ -3,7 +3,14 @@ import { useState } from 'react';
 
 import { EditButton } from '../common';
 import EditModal from './EditModal';
-import { SponsorActivity, SponsorStyle, Sponsor, User, SponsorStyleDetail, ActivityStyle } from '@/type/common';
+import {
+  SponsorActivity,
+  SponsorStyle,
+  Sponsor,
+  User,
+  SponsorStyleDetail,
+  ActivityStyle,
+} from '@/type/common';
 
 interface Props {
   children?: React.ReactNode;

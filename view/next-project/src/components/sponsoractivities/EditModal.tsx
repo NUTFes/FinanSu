@@ -39,9 +39,11 @@ export default function EditModal(props: ModalProps) {
     ...props.sponsorActivity,
     expense: Number((props.sponsorActivity.expense / 11).toFixed(1)),
   });
-  const initStyleIds = sponsorStyleDetails.map((sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID);
+  const initStyleIds = sponsorStyleDetails.map(
+    (sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID,
+  );
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(initStyleIds);
-  console.log(selectedStyleIds)
+  console.log(selectedStyleIds);
 
   const [isStyleError, setIsStyleError] = useState(false);
   useEffect(() => {

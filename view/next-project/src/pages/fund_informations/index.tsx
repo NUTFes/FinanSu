@@ -377,7 +377,7 @@ export default function FundInformations(props: Props) {
             </tfoot>
           </table>
         </div>
-        <div className='fixed right-4 bottom-3 justify-end md:hidden '>
+        <div className='fixed bottom-3 right-4 justify-end md:hidden '>
           <OpenAddModalButton teachers={teachers} departments={departments} users={users} />
         </div>
       </Card>

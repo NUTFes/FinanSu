@@ -9,7 +9,14 @@ import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
-import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User, ActivityStyle } from '@type/common';
+import {
+  SponsorActivity,
+  SponsorActivityView,
+  Sponsor,
+  SponsorStyle,
+  User,
+  ActivityStyle,
+} from '@type/common';
 
 interface Props {
   sponsorActivities: SponsorActivity[];
@@ -337,7 +344,7 @@ export default function SponsorActivities(props: Props) {
             </tbody>
           </table>
         </div>
-        <div className='fixed right-4 bottom-4 md:hidden '>
+        <div className='fixed bottom-4 right-4 md:hidden '>
           <OpenModalButton
             users={props.users}
             sponsors={props.sponsors}

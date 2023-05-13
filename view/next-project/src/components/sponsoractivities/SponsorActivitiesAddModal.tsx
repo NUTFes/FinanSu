@@ -341,7 +341,9 @@ export default function SponsorActivitiesAddModal(props: Props) {
       ) : (
         <>
           <div className='mx-auto flex w-fit flex-col items-center gap-2'>
-            {isStyleError && <div className='text-sm text-red-600'>協賛スタイルを選択してください</div>}
+            {isStyleError && (
+              <div className='text-sm text-red-600'>協賛スタイルを選択してください</div>
+            )}
             <PrimaryButton
               onClick={() => {
                 setIsDone(true);
