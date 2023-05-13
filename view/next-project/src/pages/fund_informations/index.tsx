@@ -20,6 +20,7 @@ interface FundInformationView {
   fundInformation: FundInformation;
   user: User;
   teacher: Teacher;
+  department: Department;
 }
 
 interface Props {
@@ -57,6 +58,7 @@ export default function FundInformations(props: Props) {
   // 教員一覧
   const teachers: Teacher[] = props.teachers;
   const users: User[] = props.users;
+  const departments: Department[] = props.departments;
 
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
@@ -180,11 +182,11 @@ export default function FundInformations(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Card>
-        <div className='mx-5 mt-10'>
+        <div className='mx-4 my-4'>
           <div className='flex'>
             <Title title={'学内募金一覧'} />
             <select
-              className='w-100 '
+              className='w-50 md:w-100'
               defaultValue={currentYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
@@ -193,14 +195,70 @@ export default function FundInformations(props: Props) {
               <option value='2023'>2023</option>
             </select>
           </div>
-          <div className='flex justify-end'>
-            <OpenAddModalButton teachers={teachers} departments={DEPARTMENTS} users={users}>
+          <div className='hidden justify-end md:flex '>
+            <OpenAddModalButton teachers={teachers} departments={departments} users={users}>
               学内募金登録
             </OpenAddModalButton>
           </div>
         </div>
-        <div className='w-100 mb-2 p-5'>
-          <table className='mb-5 w-full table-fixed border-collapse'>
+        <div className='mb-4 md:hidden'>
+          {filteredFundInformationViews &&
+            filteredFundInformationViews.map((fundViewItem: FundInformationView) => (
+              <Card key={fundViewItem.fundInformation.id}>
+                <div className='flex flex-col gap-2 p-4'>
+                  <div>
+                    <div className='mt-2'>
+                      {fundViewItem.fundInformation.isLastCheck &&
+                        fundViewItem.fundInformation.isFirstCheck && (
+                          <div className='flex items-center gap-1'>
+                            <div className='h-4 w-4 rounded-full bg-[#7087FF]' />
+                            <p>確認済</p>
+                          </div>
+                        )}
+                      {!fundViewItem.fundInformation.isLastCheck &&
+                        fundViewItem.fundInformation.isFirstCheck && (
+                          <div className='flex items-center gap-1'>
+                            <div className='h-4 w-4 rounded-full bg-[#4FDE6E]' />
+                            <p>受取済</p>
+                          </div>
+                        )}
+                      {!fundViewItem.fundInformation.isFirstCheck && (
+                        <div className='flex items-center gap-1'>
+                          <div className='h-4 w-4 rounded-full bg-[#FFA53C]' />
+                          <p>未受取</p>
+                        </div>
+                      )}
+                    </div>
+                    <div className='ml-6 flex flex-col text-sm'>
+                      <div className='mb-4 text-lg font-medium'>{fundViewItem.teacher.name}</div>
+                      <div>{fundViewItem.department.name}</div>
+                      <div>{fundViewItem.teacher.room}</div>
+                      <div>担当 : {fundViewItem.user.name}</div>
+                      <div>金額 : {fundViewItem.fundInformation.price}円</div>
+                    </div>
+                  </div>
+                  <div className='ml-auto flex gap-4'>
+                    <OpenEditModalButton
+                      fundInformation={fundViewItem.fundInformation}
+                      teachers={teachers}
+                      users={users}
+                      departments={DEPARTMENTS}
+                      isDisabled={isDisabled(fundViewItem)}
+                    />
+                    <OpenDeleteModalButton
+                      id={fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0}
+                      isDisabled={isDisabled(fundViewItem)}
+                    />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          {!filteredFundInformationViews.length && (
+            <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
+          )}
+        </div>
+        <div className='w-100 mb-2 hidden p-5 md:block'>
+          <table className='w-full table-fixed border-collapse md:mb-5'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
                 <th className='w-2/12 pb-2'>
@@ -318,6 +376,9 @@ export default function FundInformations(props: Props) {
               </tr>
             </tfoot>
           </table>
+        </div>
+        <div className='fixed right-4 bottom-3 justify-end md:hidden '>
+          <OpenAddModalButton teachers={teachers} departments={departments} users={users} />
         </div>
       </Card>
     </MainLayout>

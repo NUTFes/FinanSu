@@ -18,13 +18,10 @@ function AddButton(props: Props): JSX.Element {
       onClick={props.onClick}
       disabled={props.disabled}
     >
-      <RiAddCircleLine
-        size={20}
-        style={{
-          marginRight: 5,
-        }}
-      />
-      {props.children}
+      <div className='flex items-center gap-2'>
+        <RiAddCircleLine size={20} />
+        {props.children}
+      </div>
     </PrimaryButton>
   );
 }
