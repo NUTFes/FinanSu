@@ -82,14 +82,14 @@ export default function SignUpView() {
       <div className='my-16 flex w-full flex-col items-center'>
         <div className='mb-10 flex flex-col gap-3'>
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
-            <p className='whitespace-nowrap text-black-300'>名前</p>
+            <p className='whitespace-nowrap text-black-300 text-sm md:text-md'>名前</p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='text'
               value={postUserData.name}
               onChange={userDataHandler('name')}
             />
-            <p className='whitespace-nowrap text-black-300'>学科</p>
+            <p className='whitespace-nowrap text-black-300 text-sm md:text-md'>学科</p>
             <select
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               value={postUserData.bureauID}
@@ -101,7 +101,7 @@ export default function SignUpView() {
                 </option>
               ))}
             </select>
-            <p className='whitespace-nowrap text-black-300'>メールアドレス</p>
+            <p className='whitespace-nowrap text-black-300 text-sm md:text-md'>メールアドレス</p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='text'
@@ -114,7 +114,7 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p className='whitespace-nowrap text-black-300'>パスワード</p>
+            <p className='whitespace-nowrap text-black-300 text-sm md:text-md'>パスワード</p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='password'
@@ -126,7 +126,7 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p className='whitespace-nowrap text-black-300'>パスワード確認</p>
+            <p className='whitespace-nowrap text-black-300 text-sm md:text-md'>パスワード確認</p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='password'
