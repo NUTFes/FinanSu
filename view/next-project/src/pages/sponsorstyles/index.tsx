@@ -79,7 +79,6 @@ export default function SponsorStyleList(props: Props) {
                       <OpenEditModalButton
                         id={sponsorStyleItem.id || 0}
                         sponsorStyle={sponsorStyleItem}
-                        
                       />
                       <OpenDeleteModalButton id={sponsorStyleItem.id || 0} />
                     </div>
@@ -90,7 +89,7 @@ export default function SponsorStyleList(props: Props) {
           </table>
         </div>
       </Card>
-      <div className='md:hidden fixed bottom-4 right-4'>
+      <div className='fixed bottom-4 right-4 md:hidden'>
         <OpenAddModalButton />
       </div>
     </MainLayout>

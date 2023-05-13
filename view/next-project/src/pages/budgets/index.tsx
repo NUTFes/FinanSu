@@ -148,8 +148,8 @@ export default function BudgetList(props: Props) {
                     収入登録
                   </OpenAddModalButton>
                 </div>
-                <div className='overflow-scroll mt-4 mb-2 md:p-5'>
-                  <table className='mb-5 w-max md:w-full table-auto border-collapse'>
+                <div className='mt-4 mb-2 overflow-scroll md:p-5'>
+                  <table className='mb-5 w-max table-auto border-collapse md:w-full'>
                     <thead>
                       <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 text-sm text-black-600'>
                         <th className='pb-3'>
@@ -253,8 +253,8 @@ export default function BudgetList(props: Props) {
                     <option value='2023'>2023</option>
                   </select>
                 </div>
-                <div className='overflow-scroll mt-4 mb-2 md:p-5'>
-                  <table className='mb-5 w-max md:w-full table-auto border-collapse'>
+                <div className='mt-4 mb-2 overflow-scroll md:p-5'>
+                  <table className='mb-5 w-max table-auto border-collapse md:w-full'>
                     <thead>
                       <tr
                         className={clsx(

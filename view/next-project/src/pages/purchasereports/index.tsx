@@ -181,8 +181,8 @@ export default function PurchaseReports(props: Props) {
             <OpenAddModalButton>報告登録</OpenAddModalButton>
           </div>
         </div>
-        <div className='overflow-scroll w-100 mb-2 p-5'>
-          <table className='mb-5 w-max md:w-full table-fixed border-collapse'>
+        <div className='w-100 mb-2 overflow-scroll p-5'>
+          <table className='mb-5 w-max table-fixed border-collapse md:w-full'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-1/12 pb-2'>
