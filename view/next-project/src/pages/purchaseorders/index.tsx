@@ -159,12 +159,12 @@ export default function PurchaseOrders(props: Props) {
               <option value='2023'>2023</option>
             </select>
           </div>
-          <div className='flex justify-end'>
+          <div className='hidden justify-end md:flex'>
             <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
           </div>
         </div>
-        <div className='w-100 mb-2 p-5'>
-          <table className='mb-5 w-full table-fixed border-collapse'>
+        <div className='w-100 mb-2 p-5 overflow-scroll'>
+          <table className='mb-5 w-max md:w-full table-fixed border-collapse'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-2/12 pb-2'>
@@ -337,6 +337,9 @@ export default function PurchaseOrders(props: Props) {
           isDelete={false}
         />
       )}
+      <div className='fixed bottom-4 right-4 md:hidden'>
+        <OpenAddModalButton expenses={props.expenses} />
+      </div>
     </MainLayout>
   );
 }

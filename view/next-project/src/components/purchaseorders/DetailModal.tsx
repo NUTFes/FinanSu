@@ -47,7 +47,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   }, [props.expenses, props.purchaseOrderViewItem]);
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className={clsx('w-full')}>
         <div className={clsx('mr-5 grid w-full justify-items-end')}>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
