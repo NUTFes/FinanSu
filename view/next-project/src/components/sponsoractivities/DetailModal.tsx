@@ -1,9 +1,7 @@
 import { clsx } from 'clsx';
 import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
 import { Modal } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
@@ -17,8 +15,6 @@ interface ModalProps {
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
-  const [user] = useRecoilState(userAtom);
-
   const onClose = () => {
     props.setIsOpen(false);
   };
@@ -30,7 +26,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='mt-64 md:mt-0 md:w-1/2'>
       <div className='w-full'>
         <div className='mr-5 ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />

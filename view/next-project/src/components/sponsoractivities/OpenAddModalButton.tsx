@@ -8,7 +8,7 @@ interface Props {
   users: User[];
   sponsors: Sponsor[];
   sponsorStyles: SponsorStyle[];
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function OpenModalButton(props: Props) {

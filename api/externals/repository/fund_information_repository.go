@@ -113,7 +113,11 @@ func (fir *fundInformationRepository) FindDetails(c context.Context) (*sql.Rows,
 		INNER JOIN
 			teachers
 		ON
-			fund_informations.teacher_id = teachers.id;`
+			fund_informations.teacher_id = teachers.id
+		INNER JOIN
+			departments
+		ON
+			teachers.department_id = departments.id;`
 	return fir.crud.Read(c, query)
 }
 
@@ -132,6 +136,10 @@ func (fir *fundInformationRepository) FindDetailByID(c context.Context, id strin
 			teachers
 		ON
 			fund_informations.teacher_id = teachers.id
+		INNER JOIN
+			departments
+		ON
+			teachers.department_id = departments.id
 		WHERE fund_informations.id = ` + id
 	return fir.crud.ReadByID(c, query)
 }

@@ -119,6 +119,98 @@ const docTemplate = `{
                 },
             },
         },
+        "/activity_styles": {
+            "get": {
+                tags: ["activity_style"],
+                "description": "activity_styleの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activity_styleの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["activity_style"],
+                "description": "activity_styleの作成",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "activity_style",
+                        "schema":{
+                            "$ref": "#/definitions/activity_style"
+                        },
+                    },
+                ],
+                responses: {
+                    "200": {
+                        "description": "createされたactivity_styleが返ってくる",
+                    }
+                },
+            },
+        },
+        "/activity_styles/{id}": {
+            "get": {
+                tags: ["activity_style"],
+                "description": "IDで指定されたactivity_styleの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activity_styleの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["activity_style"],
+                "description": "activity_styleの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたactivity_styleが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "activity_style",
+                        "schema":{
+                            "$ref": "#/definitions/activity_style"
+                        },
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["activity_style"],
+                "description": "IDを指定してactivity_styleの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "activity_styleの削除完了",
+                    }
+                },
+            },
+        },
         "/budgets": {
             "get": {
                 tags: ["budget"],
@@ -2027,11 +2119,6 @@ const docTemplate = `{
         },
         "activity":{
             "properties":{
-                "sponsorStyleID":{
-                    "type": "int",
-                    "example": 1,
-
-                },
                 "sponsorID":{
                     "type": "int",
                     "example": 1,
@@ -2060,13 +2147,29 @@ const docTemplate = `{
                 },
             },
             "required":{
-                    "sponsorStyleID",
                     "sponsorID",
                     "userID",
                     "isDone",
                     "feature",
                     "expense",
                     "remark",
+            },
+        },
+        "activity_style":{
+            "properties":{
+                "activityID":{
+                    "type": "int",
+                    "example": 1,
+
+                },
+                "sponsorStyleID":{
+                    "type": "int",
+                    "example": 1,
+                },
+            },
+            "required":{
+                    "activityID",
+                    "sponsorStyleID",
             },
         },
     },
