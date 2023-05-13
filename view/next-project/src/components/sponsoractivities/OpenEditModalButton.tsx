@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { EditButton } from '../common';
 import EditModal from './EditModal';
-import { SponsorActivity, SponsorStyle, Sponsor, User } from '@/type/common';
+import { SponsorActivity, SponsorStyle, Sponsor, User, SponsorStyleDetail, ActivityStyle } from '@/type/common';
 
 interface Props {
   children?: React.ReactNode;
@@ -13,6 +13,8 @@ interface Props {
   sponsors: Sponsor[];
   users: User[];
   isDisabled?: boolean;
+  sponsorStyleDetails: SponsorStyleDetail[];
+  activityStyles: ActivityStyle[];
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -20,6 +22,9 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   const onOpen = () => {
     setIsOpen(true);
   };
+  const sponsorStyleDetails = props.sponsorStyleDetails.map((sponsorStyleDetail) => {
+    return sponsorStyleDetail.activityStyle;
+  });
   return (
     <>
       <EditButton onClick={onOpen} isDisabled={props.isDisabled} />
@@ -31,6 +36,8 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
           sponsors={props.sponsors}
           users={props.users}
           setIsOpen={setIsOpen}
+          sponsorStyleDetails={sponsorStyleDetails}
+          activityStyles={props.activityStyles}
         />
       )}
     </>

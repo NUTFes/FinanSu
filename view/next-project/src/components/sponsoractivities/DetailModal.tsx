@@ -157,23 +157,24 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <td className='py-3'>
-              <div className='text-center text-sm'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.style}
-              </div>
-            </td>
-            <td className='py-3'>
-              <div className='text-center text-sm'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.feature}
-              </div>
-            </td>
-            <td className='py-3'>
-              <div className='text-center text-sm'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.price}
-              </div>
-            </td>
-          </tr>
+          {props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
+            <tr
+              key={index}
+              className={clsx('border border-x-white-0 border-t-white-0', {
+                'border-b-primary-1': index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
+              })}
+            >
+              <td className='py-3'>
+                <div className='text-center text-sm'>{styleDetail.sponsorStyle.style}</div>
+              </td>
+              <td className='py-3'>
+                <div className='text-center text-sm'>{styleDetail.sponsorStyle.feature}</div>
+              </td>
+              <td className='py-3'>
+                <div className='text-center text-sm'>{styleDetail.sponsorStyle.price} 円</div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Modal>
