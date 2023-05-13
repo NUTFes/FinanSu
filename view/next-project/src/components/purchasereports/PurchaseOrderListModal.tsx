@@ -76,7 +76,7 @@ export default function PurchaseItemNumModal() {
   };
 
   return (
-    <Modal className='md:m-0 mt-32'>
+    <Modal className='mt-32 md:m-0'>
       <div className={clsx('w-full')}>
         <div className={clsx('mr-5 grid w-full justify-items-end')}>
           <CloseButton onClick={closeModal} />
@@ -88,8 +88,8 @@ export default function PurchaseItemNumModal() {
       <div className={clsx('mb-4 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
-          <div className={clsx('w-full overflow-scroll mb-2 p-5')}>
-            <table className={clsx('w-max md:w-full table-fixed border-collapse')}>
+          <div className={clsx('mb-2 w-full overflow-scroll p-5')}>
+            <table className={clsx('w-max table-fixed border-collapse md:w-full')}>
               <thead>
                 <tr
                   className={clsx(

@@ -133,7 +133,7 @@ export default function EditModal(props: ModalProps) {
   return (
     <>
       {props.isOpen && (
-        <Modal className='md:w-1/2 w-full'>
+        <Modal className='w-full md:w-1/2'>
           <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
