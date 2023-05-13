@@ -199,7 +199,7 @@ export default function EditModal(props: ModalProps) {
                       </td>
                       <td className='py-2'>
                         <div className={clsx('text-center text-sm text-black-300')}>
-                          {props.sources.find((source) => source.id === data.sourceID)?.name}
+                          {props.sources.find((source) => source.id == data.sourceID)?.name}
                         </div>
                       </td>
                       <td className='py-2'>
