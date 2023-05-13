@@ -200,7 +200,7 @@ export default function AddModal(props: ModalProps) {
                 )}
               >
                 <div className={clsx('text-center text-sm text-black-300')}>
-                  {props.sources.find((source) => source.id === purchaseItem.sourceID)?.name}
+                  {props.sources.find((source) => source.id == purchaseItem.sourceID)?.name || ''}
                 </div>
               </td>
               <td
