@@ -58,14 +58,12 @@ const sponsorship: NextPage<Props> = (props: Props) => {
               <option value='2023'>2023</option>
             </select>
           </div>
-          <div className='flex justify-end'>
-            <div>
-              <OpenAddModalButton>協賛企業登録</OpenAddModalButton>
-            </div>
+          <div className='hidden justify-end md:flex'>
+            <OpenAddModalButton>協賛企業登録</OpenAddModalButton>
           </div>
         </div>
-        <div className='mb-2 p-5'>
-          <table className='mb-5 w-full table-fixed border-collapse'>
+        <div className='mb-2 p-5 overflow-scroll'>
+          <table className='mb-5 w-max md:w-full table-fixed border-collapse'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-1/8 border-b-primary-1 pb-2'>
@@ -129,6 +127,9 @@ const sponsorship: NextPage<Props> = (props: Props) => {
           </table>
         </div>
       </Card>
+      <div className='fixed bottom-4 right-4 md:hidden'>
+        <OpenAddModalButton />
+      </div>
     </MainLayout>
   );
 };
