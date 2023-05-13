@@ -62,8 +62,8 @@ export default function TeachersList(props: Props) {
             <OpenAddModalButton>教員登録</OpenAddModalButton>
           </div>
         </div>
-        <div className='mb-2 p-5 overflow-scroll'>
-          <table className='mb-5 w-max md:w-full table-auto border-collapse'>
+        <div className='mb-2 overflow-scroll p-5'>
+          <table className='mb-5 w-max table-auto border-collapse md:w-full'>
             <thead className='text-sm text-black-600'>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th>
@@ -130,7 +130,7 @@ export default function TeachersList(props: Props) {
           </table>
         </div>
       </Card>
-      <div className='md:hidden fixed bottom-4 right-4'>
+      <div className='fixed bottom-4 right-4 md:hidden'>
         <OpenAddModalButton />
       </div>
     </MainLayout>
