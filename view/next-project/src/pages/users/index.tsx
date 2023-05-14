@@ -94,7 +94,7 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1 py-3',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
@@ -103,7 +103,7 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
@@ -114,7 +114,7 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
@@ -125,7 +125,7 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >

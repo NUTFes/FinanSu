@@ -33,9 +33,9 @@ export default function TeachersList(props: Props) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const isDisabled = useMemo(() => {
     if (currentUser?.roleID === 2 || currentUser?.roleID === 3 || currentUser?.id === 4) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }, [currentUser?.roleID, currentUser?.id, currentUser]);
 
@@ -58,12 +58,12 @@ export default function TeachersList(props: Props) {
           <div className='flex'>
             <Title title={'教員一覧'} />
           </div>
-          <div className='flex justify-end'>
+          <div className='hidden justify-end md:flex'>
             <OpenAddModalButton>教員登録</OpenAddModalButton>
           </div>
         </div>
-        <div className='mb-2 p-5'>
-          <table className='mb-5 w-full table-auto border-collapse'>
+        <div className='mb-2 overflow-scroll p-5'>
+          <table className='mb-5 w-max table-auto border-collapse md:w-full'>
             <thead className='text-sm text-black-600'>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th>
@@ -130,6 +130,9 @@ export default function TeachersList(props: Props) {
           </table>
         </div>
       </Card>
+      <div className='fixed bottom-4 right-4 md:hidden'>
+        <OpenAddModalButton />
+      </div>
     </MainLayout>
   );
 }

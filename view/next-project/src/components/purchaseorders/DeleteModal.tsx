@@ -22,7 +22,7 @@ const DeleteModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton onClick={() => props.setShowModal(false)} />
@@ -30,7 +30,7 @@ const DeleteModal: FC<ModalProps> = (props) => {
       </div>
       <div className='mx-auto mb-5 w-fit text-xl text-black-600'>購入申請の削除</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
-      <div className=''>
+      <div>
         <div className='flex flex-row justify-center gap-5'>
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton

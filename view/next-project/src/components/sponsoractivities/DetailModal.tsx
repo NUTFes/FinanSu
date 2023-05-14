@@ -1,9 +1,7 @@
 import { clsx } from 'clsx';
 import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
 import { Modal } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
@@ -17,8 +15,6 @@ interface ModalProps {
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
-  const [user] = useRecoilState(userAtom);
-
   const onClose = () => {
     props.setIsOpen(false);
   };
@@ -30,9 +26,9 @@ const DetailModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='mt-64 md:mt-0 md:w-1/2'>
       <div className='w-full'>
-        <div className='mr-5 ml-auto w-fit'>
+        <div className='ml-auto mr-5 w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
@@ -71,7 +67,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           </p>
         </div>
       </div>
-      <p className='my-5 mx-auto w-fit text-xl text-black-600'>備考</p>
+      <p className='mx-auto my-5 w-fit text-xl text-black-600'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></tr>
@@ -94,7 +90,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='my-5 mx-auto w-fit text-xl text-black-600'>協賛企業</p>
+      <p className='mx-auto my-5 w-fit text-xl text-black-600'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -161,23 +157,25 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <td className='py-3'>
-              <div className='text-center text-sm'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.style}
-              </div>
-            </td>
-            <td className='py-3'>
-              <div className='text-center text-sm'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.feature}
-              </div>
-            </td>
-            <td className='py-3'>
-              <div className='text-center text-sm'>
-                {props.sponsorActivitiesViewItem.sponsorStyle.price}
-              </div>
-            </td>
-          </tr>
+          {props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
+            <tr
+              key={index}
+              className={clsx('border border-x-white-0 border-t-white-0', {
+                'border-b-primary-1':
+                  index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
+              })}
+            >
+              <td className='py-3'>
+                <div className='text-center text-sm'>{styleDetail.sponsorStyle.style}</div>
+              </td>
+              <td className='py-3'>
+                <div className='text-center text-sm'>{styleDetail.sponsorStyle.feature}</div>
+              </td>
+              <td className='py-3'>
+                <div className='text-center text-sm'>{styleDetail.sponsorStyle.price} 円</div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Modal>

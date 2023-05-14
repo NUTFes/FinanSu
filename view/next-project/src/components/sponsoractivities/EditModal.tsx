@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
-import { put } from '@/utils/api/sponsorActivities';
+import { put, post, del } from '@/utils/api/api_methods';
+
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -11,7 +12,8 @@ import {
   Input,
   Textarea,
 } from '@components/common';
-import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
+import { MultiSelect } from '@components/common';
+import { SponsorActivity, Sponsor, SponsorStyle, User, ActivityStyle } from '@type/common';
 
 interface ModalProps {
   sponsorActivityId: number | string;
@@ -19,6 +21,8 @@ interface ModalProps {
   sponsorStyles: SponsorStyle[];
   sponsors: Sponsor[];
   users: User[];
+  sponsorStyleDetails: ActivityStyle[];
+  activityStyles: ActivityStyle[];
   setIsOpen: (isOpen: boolean) => void;
 }
 
@@ -32,6 +36,7 @@ const REMARK_DESIGN_SPONSOR = `<デザイン作成> 企業が作成\n`;
 const REMARK_DESIGN_OTHER = `<デザイン作成> 去年のものを使用\n`;
 
 export default function EditModal(props: ModalProps) {
+  const { users, sponsors, sponsorStyles, sponsorStyleDetails, activityStyles } = props;
   const router = useRouter();
 
   // 協賛企業のリスト
@@ -39,6 +44,52 @@ export default function EditModal(props: ModalProps) {
     ...props.sponsorActivity,
     expense: Number((props.sponsorActivity.expense / 11).toFixed(1)),
   });
+  const initStyleIds = sponsorStyleDetails.map(
+    (sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID,
+  );
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(initStyleIds);
+
+  const [isStyleError, setIsStyleError] = useState(false);
+  useEffect(() => {
+    if (selectedStyleIds.length === 0) {
+      setIsStyleError(true);
+    } else {
+      setIsStyleError(false);
+    }
+  }, [selectedStyleIds]);
+
+  const styleOotions = useMemo(() => {
+    const options = sponsorStyles.map((style) => {
+      return {
+        value: String(style.id || 0),
+        label: `${style.style} / ${style.feature} / ${style.price} 円`,
+      };
+    });
+    return options;
+  }, [sponsorStyles]);
+
+  const isSelectSponsorBooth = useMemo(() => {
+    const isBooth = selectedStyleIds.some((id) => {
+      return sponsorStyles[id - 1]?.style === '企業ブース';
+    });
+    return isBooth;
+  }, [selectedStyleIds, sponsorStyles]);
+
+  useEffect(() => {
+    if (isSelectSponsorBooth) {
+      const newRemark =
+        design === '学生が作成'
+          ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+          : design === '企業が作成'
+          ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+          : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+      setFormData({
+        ...formData,
+        feature: '企業ブース',
+        remark: newRemark,
+      });
+    }
+  }, [isSelectSponsorBooth]);
 
   const [design, setDesign] = useState<string>('学生が作成');
   const changeDesign = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +112,6 @@ export default function EditModal(props: ModalProps) {
     });
   };
 
-  const { users, sponsors, sponsorStyles } = props;
   const handler =
     (input: string) =>
     (
@@ -90,6 +140,22 @@ export default function EditModal(props: ModalProps) {
   const updateSponsorStyle = async (data: SponsorActivity) => {
     const updateSponsorStyleUrl = process.env.CSR_API_URI + '/activities/' + data.id;
     await put(updateSponsorStyleUrl, data);
+
+    const deleteActivityStyles = activityStyles.filter((activityStyle) => {
+      return activityStyle.activityID === data.id;
+    });
+    const ActivityStylesUrl = process.env.CSR_API_URI + '/activity_styles';
+    deleteActivityStyles.forEach(async (activityStyle) => {
+      const submitUrl = ActivityStylesUrl + '/' + activityStyle.id;
+      await del(submitUrl);
+    });
+
+    const activityStylesData = selectedStyleIds.map((id) => {
+      return { activityID: data.id, sponsorStyleID: id };
+    });
+    activityStylesData.forEach(async (activityStyleData) => {
+      await post(ActivityStylesUrl, activityStyleData);
+    });
   };
 
   // 協賛企業の情報
@@ -107,30 +173,13 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
-        <Select
-          className='w-full'
-          onChange={(e) => {
-            setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
-            if (sponsorStyles[Number(e.target.value) - 1]?.style === '企業ブース') {
-              setFormData({
-                ...formData,
-                feature: 'なし',
-                sponsorStyleID: Number(e.target.value),
-                remark: '',
-              });
-            }
+        <MultiSelect
+          options={styleOotions}
+          values={styleOotions.filter((option) => selectedStyleIds.includes(Number(option.value)))}
+          onChange={(value) => {
+            setSelectedStyleIds(value.map((v) => Number(v.value)));
           }}
-        >
-          {sponsorStyles.map((sponsorStyle) => (
-            <option
-              key={sponsorStyle.id}
-              value={sponsorStyle.id}
-              selected={sponsorStyle.id === data.sponsorStyleID}
-            >
-              {`${sponsorStyle.style} / ${sponsorStyle.feature} / ${sponsorStyle.price} 円`}
-            </option>
-          ))}
-        </Select>
+        />
       </div>
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
@@ -185,16 +234,10 @@ export default function EditModal(props: ModalProps) {
           <option value={'なし'} selected>
             なし
           </option>
-          <option
-            value={'ポスター'}
-            disabled={sponsorStyles[data.sponsorStyleID - 1]?.style === '企業ブース'}
-          >
+          <option value={'ポスター'} disabled={isSelectSponsorBooth}>
             ポスター
           </option>
-          <option
-            value={'クーポン'}
-            disabled={sponsorStyles[data.sponsorStyleID - 1]?.style === '企業ブース'}
-          >
+          <option value={'クーポン'} disabled={isSelectSponsorBooth}>
             クーポン
           </option>
         </Select>
@@ -262,7 +305,7 @@ export default function EditModal(props: ModalProps) {
   );
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='mt-64 md:mt-0 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
@@ -275,6 +318,11 @@ export default function EditModal(props: ModalProps) {
       <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛企業の修正</div>
       <div className=''>
         {content(formData)}
+        {isStyleError && (
+          <div className='text-center text-red-600'>
+            <p>協賛スタイルを選択してください</p>
+          </div>
+        )}
         <div className='flex flex-row justify-center gap-5'>
           <OutlinePrimaryButton
             onClick={() => {
@@ -287,6 +335,7 @@ export default function EditModal(props: ModalProps) {
             onClick={() => {
               submit(formData);
             }}
+            disabled={isStyleError}
           >
             編集完了
           </PrimaryButton>

@@ -1,9 +1,10 @@
 import { clsx } from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
+import { post } from '@/utils/api/api_methods';
+import { MultiSelect } from '@components/common';
 
-import { post } from '@/utils/api/sponsorActivities';
 import {
   CloseButton,
   Modal,
@@ -53,7 +54,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
   const [formData, setFormData] = useState<SponsorActivity>({
     id: 0,
     sponsorID: sponsors[0].id || 0,
-    sponsorStyleID: sponsorStyles[0].id || 0,
     userID: users[0].id || 0,
     isDone: false,
     feature: 'なし',
@@ -77,6 +77,16 @@ export default function SponsorActivitiesAddModal(props: Props) {
         : '';
     setFormData({ ...formData, remark: newRemark + newRemarkFeature });
   }, [design, formData]);
+
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([sponsorStyles[0].id || 0]);
+  const [isStyleError, setIsStyleError] = useState(false);
+  useEffect(() => {
+    if (selectedStyleIds.length === 0) {
+      setIsStyleError(true);
+    } else {
+      setIsStyleError(false);
+    }
+  }, [selectedStyleIds]);
 
   const formDataHandler =
     (input: string) =>
@@ -106,8 +116,49 @@ export default function SponsorActivitiesAddModal(props: Props) {
   // 協賛活動の追加
   const addSponsorActivities = async (data: SponsorActivity) => {
     const sponsorActivitiesUrl = process.env.CSR_API_URI + '/activities';
-    await post(sponsorActivitiesUrl, data);
+    const res = await post(sponsorActivitiesUrl, data);
+
+    const activityStyleUrl = process.env.CSR_API_URI + '/activity_styles';
+    const activityStyleData = selectedStyleIds.map((id) => {
+      return { activityID: res.id, sponsorStyleID: id };
+    });
+    activityStyleData.map(async (data) => {
+      await post(activityStyleUrl, data);
+    });
   };
+
+  const styleOotions = useMemo(() => {
+    const options = sponsorStyles.map((style) => {
+      return {
+        value: String(style.id || 0),
+        label: `${style.style} / ${style.feature} / ${style.price} 円`,
+      };
+    });
+    return options;
+  }, [sponsorStyles]);
+
+  const isSelectSponsorBooth = useMemo(() => {
+    const isBooth = selectedStyleIds.some((id) => {
+      return sponsorStyles[id - 1]?.style === '企業ブース';
+    });
+    return isBooth;
+  }, [selectedStyleIds, sponsorStyles]);
+
+  useEffect(() => {
+    if (isSelectSponsorBooth) {
+      const newRemark =
+        design === '学生が作成'
+          ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+          : design === '企業が作成'
+          ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+          : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+      setFormData({
+        ...formData,
+        feature: '企業ブース',
+        remark: newRemark,
+      });
+    }
+  }, [isSelectSponsorBooth]);
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
@@ -126,26 +177,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
-        <Select
-          value={data.sponsorStyleID}
-          onChange={(e) => {
-            setFormData({ ...formData, sponsorStyleID: Number(e.target.value) });
-            if (sponsorStyles[Number(e.target.value) - 1]?.style === '企業ブース') {
-              setFormData({
-                ...formData,
-                feature: 'なし',
-                sponsorStyleID: Number(e.target.value),
-                remark: '',
-              });
-            }
+        <MultiSelect
+          options={styleOotions}
+          onChange={(value) => {
+            setSelectedStyleIds(value.map((v) => Number(v.value)));
           }}
-        >
-          {sponsorStyles.map((sponsorStyle: SponsorStyle) => (
-            <option key={sponsorStyle.id} value={sponsorStyle.id}>
-              {`${sponsorStyle.style} / ${sponsorStyle.feature} / ${sponsorStyle.price} 円`}
-            </option>
-          ))}
-        </Select>
+        />
       </div>
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
@@ -182,16 +219,10 @@ export default function SponsorActivitiesAddModal(props: Props) {
           <option value={'なし'} selected>
             なし
           </option>
-          <option
-            value={'ポスター'}
-            disabled={sponsorStyles[data.sponsorStyleID - 1]?.style === '企業ブース'}
-          >
+          <option value={'ポスター'} disabled={isSelectSponsorBooth}>
             ポスター
           </option>
-          <option
-            value={'クーポン'}
-            disabled={sponsorStyles[data.sponsorStyleID - 1]?.style === '企業ブース'}
-          >
+          <option value={'クーポン'} disabled={isSelectSponsorBooth}>
             クーポン
           </option>
         </Select>
@@ -262,9 +293,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
     const sponsorView = sponsors.find(
       (sponsor) => sponsor.id === Number(sponsorActivities.sponsorID),
     );
-    const sponsorStyleView = sponsorStyles.find(
-      (sponsorStyle) => sponsorStyle.id === Number(sponsorActivities.sponsorStyleID),
-    );
+
+    const sponsorStyleView = sponsorStyles.filter((style) => {
+      if (style.id) return selectedStyleIds.includes(style.id);
+      return false;
+    });
     const userView = users.find((user) => user.id === Number(sponsorActivities.userID));
 
     return (
@@ -285,9 +318,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
                 <p className='text-center text-sm text-black-600'>{sponsorView?.name}</p>
               </td>
               <td className='flex flex-col gap-2 py-3'>
-                <p className='text-center text-sm text-black-600'>{sponsorStyleView?.style}</p>
-                <p className='text-center text-sm text-black-600'>{sponsorStyleView?.feature}</p>
-                <p className='text-center text-sm text-black-600'>{sponsorStyleView?.price}</p>
+                {sponsorStyleView.map((style) => (
+                  <div key={style.id} className='text-center text-sm text-black-600'>
+                    {style.style} / {style.feature} / {style.price} 円
+                  </div>
+                ))}
               </td>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>{userView?.name}</div>
@@ -323,69 +358,72 @@ export default function SponsorActivitiesAddModal(props: Props) {
               </th>
             </tr>
           </thead>
-          <tr>
-            <td>
-              <div className='text-sm text-black-600'>
-                <p
-                  className={clsx('border-primary-1', {
-                    'text-center': sponsorActivities.remark.length < 36,
-                  })}
-                >
-                  {sponsorActivities.remark === '' && <div>なし</div>}
-                  {sponsorActivities.remark}
-                </p>
-              </div>
-            </td>
-          </tr>
+          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tr>
+              <td>
+                <div className='py-3 text-sm text-black-600'>
+                  <p
+                    className={clsx('border-primary-1', {
+                      'text-center': sponsorActivities.remark.length < 36,
+                    })}
+                  >
+                    {sponsorActivities.remark === '' && <div>なし</div>}
+                    {sponsorActivities.remark}
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
   };
 
   return (
-    <>
-      <Modal className='w-1/2'>
-        <div className='w-full'>
-          <div className='ml-auto w-fit'>
-            <CloseButton
-              onClick={() => {
-                props.setIsOpen(false);
-              }}
-            />
-          </div>
+    <Modal className='mt-64 md:mt-0 md:w-1/2'>
+      <div className='w-full'>
+        <div className='ml-auto w-fit'>
+          <CloseButton
+            onClick={() => {
+              props.setIsOpen(false);
+            }}
+          />
         </div>
-        <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛活動の登録</div>
-        {!isDone && <>{content(formData)}</>}
-        {isDone ? (
-          <>
-            <div className='mx-auto w-fit'>{SponsorActivityTable(formData)}</div>
-            <div className='flex flex-row justify-center gap-5'>
-              <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
-              <PrimaryButton
-                onClick={() => {
-                  submit(formData);
-                }}
-              >
-                登録を確定する
-              </PrimaryButton>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className='mx-auto flex w-fit flex-row gap-5'>
-              <PrimaryButton
-                onClick={() => {
-                  setIsDone(true);
-                }}
-                disabled={!sponsors}
-              >
-                <p>確認へ</p>
-                <RiArrowDropRightLine size={23} />
-              </PrimaryButton>
-            </div>
-          </>
-        )}
-      </Modal>
-    </>
+      </div>
+      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛活動の登録</div>
+      {!isDone && <>{content(formData)}</>}
+      {isDone ? (
+        <>
+          <div className='mx-auto w-fit'>{SponsorActivityTable(formData)}</div>
+          <div className='flex flex-row justify-center gap-5'>
+            <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
+            <PrimaryButton
+              onClick={() => {
+                submit(formData);
+              }}
+            >
+              登録を確定する
+            </PrimaryButton>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className='mx-auto flex w-fit flex-col items-center gap-2'>
+            {isStyleError && (
+              <div className='text-sm text-red-600'>協賛スタイルを選択してください</div>
+            )}
+            <PrimaryButton
+              onClick={() => {
+                setIsDone(true);
+              }}
+              disabled={!sponsors || isStyleError}
+            >
+              <p>確認へ</p>
+              <RiArrowDropRightLine size={23} />
+            </PrimaryButton>
+          </div>
+        </>
+      )}
+    </Modal>
   );
 }

@@ -7,6 +7,7 @@ import (
 
 type router struct {
 	activityController        controller.ActivityController
+	activityStyleController   controller.ActivityStyleController
 	budgetController          controller.BudgetController
 	bureauController          controller.BureauController
 	departmentController      controller.DepartmentController
@@ -31,6 +32,7 @@ type Router interface {
 
 func NewRouter(
 	activityController controller.ActivityController,
+	activitystyleController controller.ActivityStyleController,
 	budgetController controller.BudgetController,
 	bureauController controller.BureauController,
 	departmentController controller.DepartmentController,
@@ -50,6 +52,7 @@ func NewRouter(
 ) Router {
 	return router{
 		activityController,
+		activitystyleController,
 		budgetController,
 		bureauController,
 		departmentController,
@@ -80,6 +83,13 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 	e.GET("/activities/details", r.activityController.IndexActivityDetail)
+
+	// activityStyleのRoute
+	e.GET("/activity_styles", r.activityStyleController.IndexActivityStyle)
+	e.GET("/activity_styles/:id", r.activityStyleController.ShowActivityStyle)
+	e.POST("/activity_styles", r.activityStyleController.CreateActivityStyle)
+	e.PUT("/activity_styles/:id", r.activityStyleController.UpdateActivityStyle)
+	e.DELETE("/activity_styles/:id", r.activityStyleController.DestroyActivityStyle)
 
 	// budgetsのRoute
 	e.GET("/budgets", r.budgetController.IndexBudget)

@@ -1,17 +1,22 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useMemo } from 'react';
-import { useRecoilState } from 'recoil';
 
 import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
-import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
-import { SponsorActivity, SponsorActivityView, Sponsor, SponsorStyle, User } from '@type/common';
+import {
+  SponsorActivity,
+  SponsorActivityView,
+  Sponsor,
+  SponsorStyle,
+  User,
+  ActivityStyle,
+} from '@type/common';
 
 interface Props {
   sponsorActivities: SponsorActivity[];
@@ -19,6 +24,7 @@ interface Props {
   sponsorStyles: SponsorStyle[];
   sponsors: Sponsor[];
   users: User[];
+  activityStyles: ActivityStyle[];
 }
 
 export async function getServerSideProps() {
@@ -27,12 +33,14 @@ export async function getServerSideProps() {
   const getSponsorStylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const getSponsorsUrl = process.env.SSR_API_URI + '/sponsors';
   const getUsersUrl = process.env.SSR_API_URI + '/users';
+  const getActivityStylesUrl = process.env.SSR_API_URI + '/activity_styles';
 
   const sponsorActivitiesRes = await get(getSponsorActivitiesUrl);
   const sponsorActivitiesViewRes = await get(getSponsorActivitiesViewUrl);
   const sponsorStylesRes = await get(getSponsorStylesUrl);
   const sponsorsRes = await get(getSponsorsUrl);
   const usersRes = await get(getUsersUrl);
+  const activityStylesRes = await get(getActivityStylesUrl);
 
   return {
     props: {
@@ -41,12 +49,12 @@ export async function getServerSideProps() {
       sponsorStyles: sponsorStylesRes,
       sponsors: sponsorsRes,
       users: usersRes,
+      activityStyles: activityStylesRes,
     },
   };
 }
 
 export default function SponsorActivities(props: Props) {
-  const [user] = useRecoilState(userAtom);
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -78,8 +86,8 @@ export default function SponsorActivities(props: Props) {
         <title>協賛活動一覧</title>
         <meta name='viewpoinst' content='initial-scale=1.0, width=device-width' />
       </Head>
-      <Card>
-        <div className='mx-5 mt-10'>
+      <Card w='w-full'>
+        <div className='mx-6 mt-10 md:mx-5'>
           <div className='flex'>
             <Title title={'協賛活動一覧'} />
             <select
@@ -92,7 +100,7 @@ export default function SponsorActivities(props: Props) {
               <option value='2023'>2023</option>
             </select>
           </div>
-          <div className='flex justify-end'>
+          <div className='hidden justify-end md:flex '>
             <OpenModalButton
               users={props.users}
               sponsors={props.sponsors}
@@ -102,7 +110,78 @@ export default function SponsorActivities(props: Props) {
             </OpenModalButton>
           </div>
         </div>
-        <div className='w-100 mb-2 p-5'>
+        <div className='mb-7 md:hidden'>
+          {filteredSponsorActivitiesViews &&
+            filteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
+              <Card key={sponsorActivitiesItem.sponsorActivity.id}>
+                <div className='flex flex-col gap-2 p-4'>
+                  <div>
+                    {sponsorActivitiesItem.sponsorActivity.isDone && (
+                      <div className='flex items-center gap-1'>
+                        <div className='h-4 w-4 rounded-full bg-[#7087FF]' />
+                        <p>回収完了</p>
+                      </div>
+                    )}
+                    {!sponsorActivitiesItem.sponsorActivity.isDone && (
+                      <div className='flex items-center gap-1'>
+                        <div className='h-4 w-4 rounded-full bg-[#FFA53C]' />
+                        <p>未回収</p>
+                      </div>
+                    )}
+                    <div className='ml-4 text-sm text-black-600'>
+                      <div className='text-lg font-medium'>
+                        {sponsorActivitiesItem.sponsor.name}
+                      </div>
+                      <p>協賛スタイル</p>
+                      <table className='my-1 w-full table-fixed border-collapse'>
+                        <tbody>
+                          <tr className='border border-b-primary-1'></tr>
+                          {sponsorActivitiesItem.styleDetail.map((styleDetail) => (
+                            <tr key={styleDetail.sponsorStyle.id}>
+                              <td className='text-center'>{styleDetail.sponsorStyle.style}</td>
+                              <td className='text-center'>{styleDetail.sponsorStyle.feature}</td>
+                              <td className='text-center'>{styleDetail.sponsorStyle.price}円</td>
+                            </tr>
+                          ))}
+                          <tr className='border border-b-primary-1'></tr>
+                        </tbody>
+                      </table>
+                      <div className='grid grid-cols-2'>
+                        <p>担当者</p>
+                        <p className='w-fit border-b border-primary-1'>
+                          {sponsorActivitiesItem.user.name}
+                        </p>
+                        <p>オプション</p>
+                        <p className='w-fit border-b border-primary-1'>
+                          {sponsorActivitiesItem.sponsorActivity.feature}
+                        </p>
+                        <p>交通費</p>
+                        <p className='w-fit border-b border-primary-1'>
+                          {sponsorActivitiesItem.sponsorActivity.expense}円
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='ml-auto flex flex-row gap-4'>
+                    <OpenEditModalButton
+                      id={sponsorActivitiesItem.sponsorActivity.id || '0'}
+                      sponsorActivity={sponsorActivitiesItem.sponsorActivity}
+                      sponsors={props.sponsors}
+                      sponsorStyles={props.sponsorStyles}
+                      users={props.users}
+                      sponsorStyleDetails={sponsorActivitiesItem.styleDetail}
+                      activityStyles={props.activityStyles}
+                    />
+                    <OpenDeleteModalButton id={sponsorActivitiesItem.sponsorActivity.id || 0} />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          {!filteredSponsorActivitiesViews.length && (
+            <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
+          )}
+        </div>
+        <div className='w-100 mb-2 hidden p-5 md:block'>
           <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -161,9 +240,12 @@ export default function SponsorActivities(props: Props) {
                       className='py-3'
                     >
                       <div className='text-center text-sm text-black-600'>
-                        <p>{sponsorActivitiesItem.sponsorStyle.style}</p>
-                        <p>{sponsorActivitiesItem.sponsorStyle.feature}</p>
-                        <p>{sponsorActivitiesItem.sponsorStyle.price} 円</p>
+                        {sponsorActivitiesItem.styleDetail.map((styleDetail) => (
+                          <div key={styleDetail.sponsorStyle.id}>
+                            <p>{`${styleDetail.sponsorStyle.style} / ${styleDetail.sponsorStyle.feature} / ${styleDetail.sponsorStyle.price} 円`}</p>
+                            <p></p>
+                          </div>
+                        ))}
                       </div>
                     </td>
                     <td
@@ -239,6 +321,8 @@ export default function SponsorActivities(props: Props) {
                             sponsors={props.sponsors}
                             sponsorStyles={props.sponsorStyles}
                             users={props.users}
+                            sponsorStyleDetails={sponsorActivitiesItem.styleDetail}
+                            activityStyles={props.activityStyles}
                           />
                         </div>
                         <div className='mx-1'>
@@ -259,6 +343,13 @@ export default function SponsorActivities(props: Props) {
               )}
             </tbody>
           </table>
+        </div>
+        <div className='fixed bottom-4 right-4 md:hidden '>
+          <OpenModalButton
+            users={props.users}
+            sponsors={props.sponsors}
+            sponsorStyles={props.sponsorStyles}
+          />
         </div>
       </Card>
       {isOpen && sponsorActivitiesItem && (

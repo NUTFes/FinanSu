@@ -36,7 +36,7 @@ export default function FundInformationEditModal(props: ModalProps) {
   };
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='ml-auto w-fit'>
         <CloseButton
           onClick={() => {

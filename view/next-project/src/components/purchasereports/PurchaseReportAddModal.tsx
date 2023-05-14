@@ -189,7 +189,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
     <>
-      <div className='my-6 mx-auto grid w-9/10 grid-cols-5 gap-4'>
+      <div className='mx-auto my-6 grid w-9/10 grid-cols-5 gap-4'>
         <p className='text-black-600'>物品名</p>
         <div className='col-span-4 w-full'>
           <Input
@@ -244,7 +244,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   return (
     <>
       {props.isOpen && (
-        <Modal className='w-1/2'>
+        <Modal className='md:w-1/2'>
           <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
@@ -259,7 +259,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           </Stepper>
           {isDone ? (
             <>
-              <div className='mx-auto mt-3 mb-10 grid w-9/10 grid-cols-5 items-center justify-items-center gap-4'>
+              <div className='mx-auto mb-10 mt-3 grid w-9/10 grid-cols-5 items-center justify-items-center gap-4'>
                 <p className='text-black-600'>割引</p>
                 <div className='col-span-4 w-full'>
                   <Input

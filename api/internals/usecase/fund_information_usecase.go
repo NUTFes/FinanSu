@@ -178,6 +178,10 @@ func (f *fundInformationUseCase) GetFundInformationDetails(c context.Context) ([
 			&fundInformationDetail.Teacher.Remark,
 			&fundInformationDetail.Teacher.CreatedAt,
 			&fundInformationDetail.Teacher.UpdatedAt,
+			&fundInformationDetail.Department.ID,
+			&fundInformationDetail.Department.Name,
+			&fundInformationDetail.Department.CreatedAt,
+			&fundInformationDetail.Department.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -218,6 +222,10 @@ func (f *fundInformationUseCase) GetFundInformationDetailByID(c context.Context,
 		&fundInformationDetail.Teacher.Remark,
 		&fundInformationDetail.Teacher.CreatedAt,
 		&fundInformationDetail.Teacher.UpdatedAt,
+		&fundInformationDetail.Department.ID,
+		&fundInformationDetail.Department.Name,
+		&fundInformationDetail.Department.CreatedAt,
+		&fundInformationDetail.Department.UpdatedAt,
 	)
 	if err != nil {
 		return fundInformationDetail, err

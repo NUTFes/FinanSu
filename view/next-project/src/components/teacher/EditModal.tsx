@@ -39,11 +39,11 @@ export default function FundInformationEditModal(props: ModalProps) {
   };
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='ml-auto w-fit'>
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
       </div>
-      <div className='mx-auto w-fit text-xl'>教員の登録</div>
+      <div className='mx-auto w-fit text-xl'>教員情報の編集</div>
       <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
         <p>教員名</p>
         <div className='col-span-4 w-full'>

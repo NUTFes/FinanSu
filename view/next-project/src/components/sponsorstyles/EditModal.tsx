@@ -74,7 +74,7 @@ export default function EditModal(props: ModalProps) {
   );
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
