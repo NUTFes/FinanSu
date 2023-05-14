@@ -38,7 +38,7 @@ export default function SponsorAddModal() {
   return (
     <Modal className='w-1/2'>
       <div className='w-full'>
-        <div className='mr-5 ml-auto w-fit'>
+        <div className='ml-auto mr-5 w-fit'>
           <CloseButton onClick={closeModal} />
         </div>
       </div>

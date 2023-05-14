@@ -217,7 +217,7 @@ export default function PurchaseReports(props: Props) {
                 filteredPurchaseReportViews.map((purchaseReportViewItem, index) => (
                   <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
                     <td
-                      className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
+                      className={clsx('px-1', index === 0 ? 'pb-3 pt-4' : 'py-3', 'border-b py-3')}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
                         <Checkbox

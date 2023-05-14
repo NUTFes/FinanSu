@@ -129,7 +129,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         </div>
       </div>
 
-      <div className={clsx('mt-2 mb-5 grid w-full justify-items-center text-base text-black-600')}>
+      <div className={clsx('mb-5 mt-2 grid w-full justify-items-center text-base text-black-600')}>
         購入物品
       </div>
       <div className={clsx('grid h-[20rem] w-full justify-items-center')}>

@@ -64,7 +64,7 @@ const DetailModal: FC<ModalProps> = (props) => {
       <div className='mx-auto mb-10 w-fit'>
         <p className='text-2xl font-thin text-black-600'>報告の詳細</p>
       </div>
-      <div className='mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-y-3 gap-x-10'>
+      <div className='mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-x-10 gap-y-3'>
         <p className='text-black-600'>ID</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
           <p>{props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}</p>
