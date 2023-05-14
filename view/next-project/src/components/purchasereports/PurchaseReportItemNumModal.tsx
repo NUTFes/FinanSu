@@ -118,7 +118,7 @@ export default function PurchaseReportItemNumModal() {
 
   return (
     <>
-      <Modal className='w-1/2'>
+      <Modal className='md:w-1/2'>
         <div className='ml-auto w-fit'>
           <CloseButton onClick={closeModal} />
         </div>

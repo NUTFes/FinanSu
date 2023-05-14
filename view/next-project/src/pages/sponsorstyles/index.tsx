@@ -37,10 +37,8 @@ export default function SponsorStyleList(props: Props) {
           <div className='flex'>
             <Title>協賛スタイル一覧</Title>
           </div>
-          <div className='flex justify-end'>
-            <div>
-              <OpenAddModalButton>協賛スタイル登録</OpenAddModalButton>
-            </div>
+          <div className='hidden justify-end md:flex'>
+            <OpenAddModalButton>協賛スタイル登録</OpenAddModalButton>
           </div>
         </div>
         <div className='mb-2 p-5'>
@@ -91,6 +89,9 @@ export default function SponsorStyleList(props: Props) {
           </table>
         </div>
       </Card>
+      <div className='fixed bottom-4 right-4 md:hidden'>
+        <OpenAddModalButton />
+      </div>
     </MainLayout>
   );
 }

@@ -75,6 +75,9 @@ export default function BudgetList(props: Props) {
 
   const currentYear: Year = { year: new Date().getFullYear() };
   const [selectedYear, setSelectedYear] = useState<Year>(currentYear);
+  const [selectedExpenseYear, setSelectedExpenseYear] = useState<string>(
+    currentYear.year.toString(),
+  );
   const handleSelectedYear = (selectedYear: number) => {
     const year: Year = { year: selectedYear };
     setSelectedYear(year);
@@ -88,9 +91,9 @@ export default function BudgetList(props: Props) {
 
   const filteredExpenses = useMemo(() => {
     return expenses.filter((expenseView) => {
-      expenseView.expense.createdAt?.includes(String(selectedYear.year));
+      return expenseView.expense.createdAt?.includes(selectedExpenseYear);
     });
-  }, [expenses, selectedYear]);
+  }, [expenses, selectedExpenseYear]);
 
   // 合計金額用の変数
   const budgetsTotalFee = filteredBudgets.reduce((prev, current) => {
@@ -114,7 +117,7 @@ export default function BudgetList(props: Props) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Tabs variant='soft-rounded' className='primary-1'>
-        <TabList className='mx-20 mt-10'>
+        <TabList className='mx-5 mt-10 md:mx-20'>
           <Tab>収入</Tab>
           <Tab>支出</Tab>
         </TabList>
@@ -134,7 +137,7 @@ export default function BudgetList(props: Props) {
                     <option value='2023'>2023</option>
                   </select>
                 </div>
-                <div className='flex justify-end'>
+                <div className='hidden justify-end md:flex'>
                   <OpenAddModalButton sources={sources} years={years}>
                     <RiAddCircleLine
                       size={20}
@@ -145,8 +148,8 @@ export default function BudgetList(props: Props) {
                     収入登録
                   </OpenAddModalButton>
                 </div>
-                <div className='w-100 mb-2 p-5'>
-                  <table className='mb-5 w-full table-auto border-collapse'>
+                <div className='mt-4 mb-2 overflow-scroll md:p-5'>
+                  <table className='mb-5 w-max table-auto border-collapse md:w-full'>
                     <thead>
                       <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 text-sm text-black-600'>
                         <th className='pb-3'>
@@ -201,25 +204,39 @@ export default function BudgetList(props: Props) {
                           </td>
                         </tr>
                       ))}
-                    </tbody>
-                    <tfoot
-                      className={clsx(
-                        'border border-x-white-0 border-b-white-0 border-t-primary-1',
+                      {!filteredBudgets.length && (
+                        <tr>
+                          <td colSpan={6} className='py-3 text-center text-sm text-black-600'>
+                            データがありません
+                          </td>
+                        </tr>
                       )}
-                    >
-                      <tr>
-                        <th />
-                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
-                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>
-                          {budgetsTotalFee}
-                        </th>
-                        <th />
-                      </tr>
-                    </tfoot>
+                    </tbody>
+                    {filteredBudgets.length > 0 && (
+                      <tfoot
+                        className={clsx(
+                          'border border-x-white-0 border-t-primary-1 border-b-white-0',
+                        )}
+                      >
+                        <tr>
+                          <th />
+                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
+                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {budgetsTotalFee}
+                          </th>
+                          <th />
+                        </tr>
+                      </tfoot>
+                    )}
                   </table>
                 </div>
               </div>
             </Card>
+            <div className='fixed bottom-4 right-4 md:hidden'>
+              <OpenAddModalButton sources={sources} years={years}>
+                <RiAddCircleLine size={20} />
+              </OpenAddModalButton>
+            </div>
           </TabPanel>
           <TabPanel>
             <Card>
@@ -229,20 +246,15 @@ export default function BudgetList(props: Props) {
                   <select
                     className='w-100 '
                     defaultValue={currentYear.year}
-                    onChange={(e) => handleSelectedYear(Number(e.target.value))}
+                    onChange={(e) => setSelectedExpenseYear(e.target.value)}
                   >
                     <option value='2021'>2021</option>
                     <option value='2022'>2022</option>
                     <option value='2023'>2023</option>
                   </select>
                 </div>
-                <div className='flex justify-end'>
-                  <OpenExpenseAddModalButton years={years} disabled={isDisabled}>
-                    支出元登録
-                  </OpenExpenseAddModalButton>
-                </div>
-                <div className='w-100 mb-2 p-5'>
-                  <table className='mb-5 w-full table-fixed border-collapse'>
+                <div className='mt-4 mb-2 overflow-scroll md:p-5'>
+                  <table className='mb-5 w-max table-auto border-collapse md:w-full'>
                     <thead>
                       <tr
                         className={clsx(
@@ -314,24 +326,36 @@ export default function BudgetList(props: Props) {
                           </td>
                         </tr>
                       ))}
-                    </tbody>
-                    <tfoot
-                      className={clsx(
-                        'border border-x-white-0 border-b-white-0 border-t-primary-1',
+                      {!filteredExpenses.length && (
+                        <tr>
+                          <td colSpan={6} className='py-3 text-center text-sm text-black-600'>
+                            データがありません
+                          </td>
+                        </tr>
                       )}
-                    >
-                      <tr>
-                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
-                        <th className='py-3 pb-3 pt-4 text-center text-black-600'>
-                          {expensesTotalFee}
-                        </th>
-                        <th />
-                      </tr>
-                    </tfoot>
+                    </tbody>
+                    {filteredExpenses.length > 0 && (
+                      <tfoot
+                        className={clsx(
+                          'border border-x-white-0 border-t-primary-1 border-b-white-0',
+                        )}
+                      >
+                        <tr>
+                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
+                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                            {expensesTotalFee}
+                          </th>
+                          <th />
+                        </tr>
+                      </tfoot>
+                    )}
                   </table>
                 </div>
               </div>
             </Card>
+            <div className='fixed bottom-4 right-4 md:hidden'>
+              <OpenExpenseAddModalButton years={years} disabled={isDisabled} />
+            </div>
           </TabPanel>
         </TabPanels>
       </Tabs>
