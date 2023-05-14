@@ -26,9 +26,14 @@ interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const REMARK_COUPON = `<クーポン> [詳細 :  ○○],
-<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
-const REMARK_POSTER = `<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
+const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
+const REMARK_PAMPHLET_SPONSOR = `<パンフレット掲載内容> 企業が作成\n`;
+const REMARK_PAMPHLET_OTHER = `<パンフレット掲載内容> 去年のものを使用\n`;
+const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
+const REMARK_DESIGN_STUDENT = `<デザイン作成> 学生が作成\n`;
+const REMARK_DESIGN_SPONSOR = `<デザイン作成> 企業が作成\n`;
+const REMARK_DESIGN_OTHER = `<デザイン作成> 去年のものを使用\n`;
 
 export default function EditModal(props: ModalProps) {
   const { users, sponsors, sponsorStyles, sponsorStyleDetails, activityStyles } = props;
@@ -43,7 +48,6 @@ export default function EditModal(props: ModalProps) {
     (sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID,
   );
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(initStyleIds);
-  console.log(selectedStyleIds);
 
   const [isStyleError, setIsStyleError] = useState(false);
   useEffect(() => {
@@ -70,6 +74,43 @@ export default function EditModal(props: ModalProps) {
     });
     return isBooth;
   }, [selectedStyleIds, sponsorStyles]);
+
+  useEffect(() => {
+    if (isSelectSponsorBooth) {
+      const newRemark =
+        design === '学生が作成'
+          ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+          : design === '企業が作成'
+          ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+          : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+      setFormData({
+        ...formData,
+        feature: '企業ブース',
+        remark: newRemark,
+      });
+    }
+  }, [isSelectSponsorBooth]);
+
+  const [design, setDesign] = useState<string>('学生が作成');
+  const changeDesign = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDesign(e.target.value);
+    const newRemark =
+      e.target.value === '学生が作成'
+        ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+        : e.target.value === '企業が作成'
+        ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+        : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+    const newRemarkFeature =
+      formData.feature === 'ポスター'
+        ? REMARK_POSTER
+        : formData.feature === 'クーポン'
+        ? REMARK_COUPON
+        : '';
+    setFormData({
+      ...formData,
+      remark: newRemark + newRemarkFeature,
+    });
+  };
 
   const handler =
     (input: string) =>
@@ -171,13 +212,23 @@ export default function EditModal(props: ModalProps) {
         <Select
           value={data.feature}
           onChange={(e) => {
-            if (e.target.value === 'クーポン') {
-              setFormData({ ...formData, feature: e.target.value, remark: REMARK_COUPON });
-            } else if (e.target.value === 'ポスター') {
-              setFormData({ ...formData, feature: e.target.value, remark: REMARK_POSTER });
-            } else {
-              setFormData({ ...formData, feature: e.target.value, remark: '' });
-            }
+            const newRemark =
+              design === '学生が作成'
+                ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+                : design === '企業が作成'
+                ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+                : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+            const newRemarkFeature =
+              e.target.value === 'ポスター'
+                ? REMARK_POSTER
+                : e.target.value === 'クーポン'
+                ? REMARK_COUPON
+                : '';
+            setFormData({
+              ...formData,
+              remark: newRemark + newRemarkFeature,
+              feature: e.target.value,
+            });
           }}
         >
           <option value={'なし'} selected>
@@ -190,6 +241,42 @@ export default function EditModal(props: ModalProps) {
             クーポン
           </option>
         </Select>
+      </div>
+      <p className='text-black-600'>デザイン作成</p>
+      <div className='col-span-4 flex w-full justify-around'>
+        <div className='flex gap-3'>
+          <input
+            type='radio'
+            id='student'
+            name='design'
+            value='学生が作成'
+            checked={design === '学生が作成'}
+            onChange={changeDesign}
+          />
+          <label htmlFor='student'>学生が作成</label>
+        </div>
+        <div className='flex gap-3'>
+          <input
+            type='radio'
+            id='company'
+            name='design'
+            value='企業が作成'
+            checked={design === '企業が作成'}
+            onChange={changeDesign}
+          />
+          <label htmlFor='company'>企業が作成</label>
+        </div>
+        <div className='flex gap-3'>
+          <input
+            type='radio'
+            id='lastYear'
+            name='design'
+            value='去年のものを使用'
+            checked={design === '去年のものを使用'}
+            onChange={changeDesign}
+          />
+          <label htmlFor='lastYear'>去年のものを使用</label>
+        </div>
       </div>
       <p className='text-black-600'>移動距離(km)</p>
       <div className='col-span-4 w-full'>

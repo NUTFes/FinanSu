@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 import { post } from '@/utils/api/api_methods';
 import { MultiSelect } from '@components/common';
@@ -33,9 +33,14 @@ interface Props {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const REMARK_COUPON = `<クーポン> [詳細 :  ○○],
-<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
-const REMARK_POSTER = `<広告掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]`;
+const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
+const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
+const REMARK_PAMPHLET_SPONSOR = `<パンフレット掲載内容> 企業が作成\n`;
+const REMARK_PAMPHLET_OTHER = `<パンフレット掲載内容> 去年のものを使用\n`;
+const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
+const REMARK_DESIGN_STUDENT = `<デザイン作成> 学生が作成\n`;
+const REMARK_DESIGN_SPONSOR = `<デザイン作成> 企業が作成\n`;
+const REMARK_DESIGN_OTHER = `<デザイン作成> 去年のものを使用\n`;
 
 export default function SponsorActivitiesAddModal(props: Props) {
   const router = useRouter();
@@ -55,6 +60,23 @@ export default function SponsorActivitiesAddModal(props: Props) {
     expense: 0,
     remark: '',
   });
+
+  const [design, setDesign] = useState<string>('学生が作成');
+  useEffect(() => {
+    const newRemark =
+      design === '学生が作成'
+        ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+        : design === '企業が作成'
+        ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+        : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+    const newRemarkFeature =
+      formData.feature === 'ポスター'
+        ? REMARK_POSTER
+        : formData.feature === 'クーポン'
+        ? REMARK_COUPON
+        : '';
+    setFormData({ ...formData, remark: newRemark + newRemarkFeature });
+  }, [design, formData]);
 
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([sponsorStyles[0].id || 0]);
   const [isStyleError, setIsStyleError] = useState(false);
@@ -122,6 +144,22 @@ export default function SponsorActivitiesAddModal(props: Props) {
     return isBooth;
   }, [selectedStyleIds, sponsorStyles]);
 
+  useEffect(() => {
+    if (isSelectSponsorBooth) {
+      const newRemark =
+        design === '学生が作成'
+          ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
+          : design === '企業が作成'
+          ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
+          : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
+      setFormData({
+        ...formData,
+        feature: '企業ブース',
+        remark: newRemark,
+      });
+    }
+  }, [isSelectSponsorBooth]);
+
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
     <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-5'>
@@ -175,13 +213,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         <Select
           value={data.feature}
           onChange={(e) => {
-            if (e.target.value === 'クーポン') {
-              setFormData({ ...formData, feature: e.target.value, remark: REMARK_COUPON });
-            } else if (e.target.value === 'ポスター') {
-              setFormData({ ...formData, feature: e.target.value, remark: REMARK_POSTER });
-            } else {
-              setFormData({ ...formData, feature: e.target.value, remark: '' });
-            }
+            setFormData({ ...formData, feature: e.target.value });
           }}
         >
           <option value={'なし'} selected>
@@ -194,6 +226,42 @@ export default function SponsorActivitiesAddModal(props: Props) {
             クーポン
           </option>
         </Select>
+      </div>
+      <p className='text-black-600'>デザイン作成</p>
+      <div className='col-span-4 flex w-full justify-around'>
+        <div className='flex gap-3'>
+          <input
+            type='radio'
+            id='student'
+            name='design'
+            value='学生が作成'
+            checked={design === '学生が作成'}
+            onChange={(e) => setDesign(e.target.value)}
+          />
+          <label htmlFor='student'>学生が作成</label>
+        </div>
+        <div className='flex gap-3'>
+          <input
+            type='radio'
+            id='company'
+            name='design'
+            value='企業が作成'
+            checked={design === '企業が作成'}
+            onChange={(e) => setDesign(e.target.value)}
+          />
+          <label htmlFor='company'>企業が作成</label>
+        </div>
+        <div className='flex gap-3'>
+          <input
+            type='radio'
+            id='lastYear'
+            name='design'
+            value='去年のものを使用'
+            checked={design === '去年のものを使用'}
+            onChange={(e) => setDesign(e.target.value)}
+          />
+          <label htmlFor='lastYear'>去年のものを使用</label>
+        </div>
       </div>
       <p className='text-black-600'>移動距離(km)</p>
       <div className='col-span-4 w-full'>

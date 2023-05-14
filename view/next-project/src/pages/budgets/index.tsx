@@ -148,7 +148,7 @@ export default function BudgetList(props: Props) {
                     収入登録
                   </OpenAddModalButton>
                 </div>
-                <div className='mt-4 mb-2 overflow-scroll md:p-5'>
+                <div className='mb-2 mt-4 overflow-scroll md:p-5'>
                   <table className='mb-5 w-max table-auto border-collapse md:w-full'>
                     <thead>
                       <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 text-sm text-black-600'>
@@ -215,13 +215,13 @@ export default function BudgetList(props: Props) {
                     {filteredBudgets.length > 0 && (
                       <tfoot
                         className={clsx(
-                          'border border-x-white-0 border-t-primary-1 border-b-white-0',
+                          'border border-x-white-0 border-b-white-0 border-t-primary-1',
                         )}
                       >
                         <tr>
                           <th />
-                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
-                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
+                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>
                             {budgetsTotalFee}
                           </th>
                           <th />
@@ -253,7 +253,7 @@ export default function BudgetList(props: Props) {
                     <option value='2023'>2023</option>
                   </select>
                 </div>
-                <div className='mt-4 mb-2 overflow-scroll md:p-5'>
+                <div className='mb-2 mt-4 overflow-scroll md:p-5'>
                   <table className='mb-5 w-max table-auto border-collapse md:w-full'>
                     <thead>
                       <tr
@@ -337,12 +337,12 @@ export default function BudgetList(props: Props) {
                     {filteredExpenses.length > 0 && (
                       <tfoot
                         className={clsx(
-                          'border border-x-white-0 border-t-primary-1 border-b-white-0',
+                          'border border-x-white-0 border-b-white-0 border-t-primary-1',
                         )}
                       >
                         <tr>
-                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>合計金額</th>
-                          <th className='py-3 pt-4 pb-3 text-center text-black-600'>
+                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
+                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>
                             {expensesTotalFee}
                           </th>
                           <th />
