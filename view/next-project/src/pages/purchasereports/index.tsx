@@ -177,12 +177,12 @@ export default function PurchaseReports(props: Props) {
               <option value='2023'>2023</option>
             </select>
           </div>
-          <div className='flex justify-end'>
+          <div className='hidden justify-end md:flex'>
             <OpenAddModalButton>報告登録</OpenAddModalButton>
           </div>
         </div>
-        <div className='w-100 mb-2 p-5'>
-          <table className='mb-5 w-full table-fixed border-collapse'>
+        <div className='w-100 mb-2 overflow-scroll p-5'>
+          <table className='mb-5 w-max table-fixed border-collapse md:w-full'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-1/12 pb-2'>
@@ -217,7 +217,7 @@ export default function PurchaseReports(props: Props) {
                 filteredPurchaseReportViews.map((purchaseReportViewItem, index) => (
                   <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
                     <td
-                      className={clsx('px-1', index === 0 ? 'pt-4 pb-3' : 'py-3', 'border-b py-3')}
+                      className={clsx('px-1', index === 0 ? 'pb-3 pt-4' : 'py-3', 'border-b py-3')}
                     >
                       <div className={clsx('text-center text-sm text-black-600')}>
                         <Checkbox
@@ -401,6 +401,9 @@ export default function PurchaseReports(props: Props) {
           isDelete={false}
         />
       )}
+      <div className='fixed bottom-4 right-4 md:hidden'>
+        <OpenAddModalButton />
+      </div>
     </MainLayout>
   );
 }

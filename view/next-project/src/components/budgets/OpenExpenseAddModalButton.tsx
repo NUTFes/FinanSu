@@ -5,7 +5,7 @@ import { AddButton } from '@components/common';
 import { Year } from '@type/common';
 
 interface Props {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   years: Year[];
   disabled: boolean;
 }

@@ -169,7 +169,7 @@ export default function EditModal(props: ModalProps) {
 
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
-    <div className='my-6 mx-auto grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
+    <div className='mx-auto my-6 grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
       <p className='text-lg text-black-600'>物品名</p>
       <div className='col-span-3 w-full'>
         <Input
@@ -221,7 +221,7 @@ export default function EditModal(props: ModalProps) {
   return (
     <>
       {props.isOpen && (
-        <Modal className='w-1/2'>
+        <Modal className='md:w-1/2'>
           <div className='w-full'>
             <div className='ml-auto w-fit'>
               <CloseButton

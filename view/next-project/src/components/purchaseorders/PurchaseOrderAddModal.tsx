@@ -130,7 +130,7 @@ export default function AddModal(props: ModalProps) {
   // 購入物品の確認用テーブル
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
     return (
-      <table className={clsx('table-fixed border-collapse')}>
+      <table className={clsx('w-max table-fixed border-collapse md:w-full')}>
         <thead>
           <tr className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0 py-3')}>
             {tableColumns.map((tableColumn: string) => (
@@ -146,7 +146,7 @@ export default function AddModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === 0 ? 'pb-3 pt-4' : 'py-3',
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
@@ -157,7 +157,7 @@ export default function AddModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === 0 ? 'pb-3 pt-4' : 'py-3',
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
@@ -168,7 +168,7 @@ export default function AddModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === 0 ? 'pb-3 pt-4' : 'py-3',
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
@@ -179,7 +179,7 @@ export default function AddModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === 0 ? 'pb-3 pt-4' : 'py-3',
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
@@ -190,7 +190,7 @@ export default function AddModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === 0 ? 'pb-3 pt-4' : 'py-3',
                   index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                 )}
               >
@@ -231,7 +231,7 @@ export default function AddModal(props: ModalProps) {
 
   return (
     <>
-      <Modal className='!w-1/2'>
+      <Modal className='mt-32 md:m-0 md:w-1/2'>
         <div className={clsx('w-full')}>
           <div className={clsx('mr-5 grid w-full justify-items-end')}>
             <CloseButton
@@ -261,7 +261,9 @@ export default function AddModal(props: ModalProps) {
                 >
                   購入物品
                 </div>
-                <div className={clsx('mb-2 grid w-full justify-items-center p-5')}>
+                <div
+                  className={clsx('mb-2 grid w-full justify-items-center overflow-scroll md:p-5')}
+                >
                   {PurchaseItemTable(props.formDataList)}
                 </div>
                 <div className={clsx('my-10 grid grid-cols-12 gap-4')}>

@@ -102,11 +102,23 @@ export interface SponsorStyle {
   updatedAt?: string;
 }
 
+export interface ActivityStyle {
+  id?: number;
+  activityID: number;
+  sponsorStyleID: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SponsorStyleDetail {
+  activityStyle: ActivityStyle;
+  sponsorStyle: SponsorStyle;
+}
+
 // // Activity(協賛活動)
 export interface SponsorActivity {
   id?: number;
   sponsorID: number;
-  sponsorStyleID: number;
   userID: number;
   isDone: boolean;
   feature: string;
@@ -119,8 +131,8 @@ export interface SponsorActivity {
 export interface SponsorActivityView {
   user: User;
   sponsor: Sponsor;
-  sponsorStyle: SponsorStyle;
   sponsorActivity: SponsorActivity;
+  styleDetail: SponsorStyleDetail[];
 }
 
 // // Sponsor(協賛企業)

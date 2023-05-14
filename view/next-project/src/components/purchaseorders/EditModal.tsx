@@ -133,7 +133,7 @@ export default function EditModal(props: ModalProps) {
   return (
     <>
       {props.isOpen && (
-        <Modal className='w-1/2'>
+        <Modal className='w-full md:w-1/2'>
           <div className='ml-auto w-fit'>
             <CloseButton
               onClick={() => {
@@ -187,7 +187,7 @@ export default function EditModal(props: ModalProps) {
                   ))}
                 </tbody>
               </table>
-              <div className='mt-10 mb-5 flex justify-center gap-5'>
+              <div className='mb-5 mt-10 flex justify-center gap-5'>
                 <OutlinePrimaryButton onClick={reset}>戻る</OutlinePrimaryButton>
                 <PrimaryButton
                   onClick={() => {
@@ -199,7 +199,7 @@ export default function EditModal(props: ModalProps) {
               </div>
             </div>
           ) : (
-            <div className='mt-10 mb-5 flex justify-center gap-5'>
+            <div className='mb-5 mt-10 flex justify-center gap-5'>
               {formDataList.length > 0 && (
                 <>
                   {activeStep > 1 && (

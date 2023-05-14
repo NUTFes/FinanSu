@@ -32,7 +32,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   return (
     <Modal className='w-1/2'>
       <div className='w-full'>
-        <div className='mr-5 ml-auto w-fit'>
+        <div className='ml-auto mr-5 w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
@@ -57,7 +57,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           <p className='border-b border-primary-1'>{additionTotal}</p>
         </div>
       </div>
-      <p className='my-5 mx-auto w-fit text-xl text-black-600'>購入物品</p>
+      <p className='mx-auto my-5 w-fit text-xl text-black-600'>購入物品</p>
       <table className='w-full table-auto border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>

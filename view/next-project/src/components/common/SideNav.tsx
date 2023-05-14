@@ -20,7 +20,7 @@ export default function SimpleSidebar() {
   const [isRelationItemsShow, setIsRelationItemsShow] = useReducer((state) => !state, false);
 
   return (
-    <div className='fixed right-0 z-50 h-full w-52 bg-primary-4 md:left-0'>
+    <div className='fixed right-0 z-10 h-full w-52 bg-primary-4 md:left-0'>
       <div className='border-b-2 border-primary-1'>
         {FinanceLinkItems.map((link) => (
           <NavItem
