@@ -204,6 +204,7 @@ export default function BudgetList(props: Props) {
                           </td>
                         </tr>
                       ))}
+<<<<<<< HEAD
                       {!filteredBudgets.length && (
                         <tr>
                           <td colSpan={6} className='py-3 text-center text-sm text-black-600'>
@@ -326,6 +327,7 @@ export default function BudgetList(props: Props) {
                           </td>
                         </tr>
                       ))}
+<<<<<<< HEAD
                       {!filteredExpenses.length && (
                         <tr>
                           <td colSpan={6} className='py-3 text-center text-sm text-black-600'>

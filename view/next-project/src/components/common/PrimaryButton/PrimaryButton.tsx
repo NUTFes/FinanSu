@@ -11,7 +11,7 @@ interface Props {
 
 function PrimaryButton(props: Props): JSX.Element {
   const className =
-    'px-4 py-2 text-white-0 font-bold text-md rounded-lg bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1' +
+    'flex items-center w-fit justify-center px-4 py-2 text-white-0 font-bold text-md rounded-lg bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1' +
     (props.className ? ` ${props.className}` : '') +
     (props.disabled ? ' cursor-not-allowed opacity-20' : '');
   return (

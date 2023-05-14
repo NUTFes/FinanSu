@@ -125,7 +125,7 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                         )}
                       >
@@ -142,7 +142,7 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                         )}
                       >
@@ -157,7 +157,7 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                         )}
                       >
@@ -169,7 +169,7 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                         )}
                       >
@@ -186,7 +186,7 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                         )}
                       >
@@ -197,7 +197,7 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                         )}
                       >
