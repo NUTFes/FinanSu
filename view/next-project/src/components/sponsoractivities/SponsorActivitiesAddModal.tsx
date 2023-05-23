@@ -76,7 +76,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         ? REMARK_COUPON
         : '';
     setFormData({ ...formData, remark: newRemark + newRemarkFeature });
-  }, [design, formData]);
+  }, [design]);
 
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([sponsorStyles[0].id || 0]);
   const [isStyleError, setIsStyleError] = useState(false);
