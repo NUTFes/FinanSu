@@ -380,7 +380,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   return (
-    <Modal className='mt-64 md:mt-0 md:w-1/2'>
+    <Modal className='mt-64 md:mt-32 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
