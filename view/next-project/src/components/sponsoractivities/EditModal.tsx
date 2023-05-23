@@ -85,7 +85,7 @@ export default function EditModal(props: ModalProps) {
           : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
       setFormData({
         ...formData,
-        feature: '企業ブース',
+        feature: 'なし',
         remark: newRemark,
       });
     }

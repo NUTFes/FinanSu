@@ -76,7 +76,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         ? REMARK_COUPON
         : '';
     setFormData({ ...formData, remark: newRemark + newRemarkFeature });
-  }, [design, formData]);
+  }, [design]);
 
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([sponsorStyles[0].id || 0]);
   const [isStyleError, setIsStyleError] = useState(false);
@@ -154,7 +154,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
           : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
       setFormData({
         ...formData,
-        feature: '企業ブース',
+        feature: 'なし',
         remark: newRemark,
       });
     }
@@ -380,7 +380,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   return (
-    <Modal className='mt-64 md:mt-0 md:w-1/2'>
+    <Modal className='mt-64 md:mt-32 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
