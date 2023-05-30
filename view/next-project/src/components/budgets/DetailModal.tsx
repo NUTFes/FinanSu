@@ -30,7 +30,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   }, [props.expenseView.purchaseDetails]);
 
   return (
-    <Modal className='w-1/2'>
+    <Modal className='w-fit'>
       <div className='w-full'>
         <div className='ml-auto mr-5 w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />

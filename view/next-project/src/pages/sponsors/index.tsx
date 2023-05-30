@@ -63,7 +63,7 @@ const sponsorship: NextPage<Props> = (props: Props) => {
           </div>
         </div>
         <div className='mb-2 overflow-scroll p-5'>
-          <table className='mb-5 w-max table-fixed border-collapse md:w-full'>
+          <table className='mb-5 w-max table-auto border-collapse md:w-full md:table-fixed'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-1/8 border-b-primary-1 pb-2'>
