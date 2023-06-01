@@ -1494,48 +1494,20 @@ const docTemplate = `{
             "post": {
                 tags: ["sponsor"],
                 "description": "sponsorの作成",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "sponsor",
+                        "schema":{
+                            "$ref": "#/definitions/sponsor"
+                        },
+                    },
+                ],
                 responses: {
                     "200": {
                         "description": "作成されたsponsorが返ってくる",
-                    }
+                    },
                 },
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "tel",
-                        "in": "query",
-                        "description": "tel",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "email",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "description": "address",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "representative",
-                        "in": "query",
-                        "description": "representative",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
             },
         },
         "/sponsors/{id}": {
@@ -1574,40 +1546,12 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
-                        "name": "name",
-                        "in": "query",
-                        "description": "name",
-                        "required": true,
-                        "type": "string"
+                        "in": "body",
+                        "name": "sponsor",
+                        "schema":{
+                            "$ref": "#/definitions/sponsor"
+                        },
                     },
-                    {
-                        "name": "tel",
-                        "in": "query",
-                        "description": "tel",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "email",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "description": "address",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "representative",
-                        "in": "query",
-                        "description": "representative",
-                        "required": true,
-                        "type": "string"
-                    }
                 ],
             },
             "delete": {
@@ -2095,28 +2039,6 @@ const docTemplate = `{
         },
     },
     "definitions":{
-        "sponsorStyle":{
-            "properties":{
-                "style":{
-                    "type": "string",
-                    "example": "1分の1",
-
-                },
-                "feature":{
-                    "type": "string",
-                    "example": "カラー",
-                },
-                "price":{
-                    "type": "int",
-                    "example": 30000,
-                },
-            },
-            "required":{
-                    "style",
-                    "feature",
-                    "price",
-            },
-        },
         "activity":{
             "properties":{
                 "sponsorID":{
@@ -2170,6 +2092,60 @@ const docTemplate = `{
             "required":{
                     "activityID",
                     "sponsorStyleID",
+            },
+        },
+        "sponsorStyle":{
+            "properties":{
+                "style":{
+                    "type": "string",
+                    "example": "1分の1",
+
+                },
+                "feature":{
+                    "type": "string",
+                    "example": "カラー",
+                },
+                "price":{
+                    "type": "int",
+                    "example": 30000,
+                },
+            },
+            "required":{
+                    "style",
+                    "feature",
+                    "price",
+            },
+        },
+        "sponsor":{
+            "properties":{
+                "name":{
+                    "type": "string",
+                    "example": "企業1",
+
+                },
+                "tel":{
+                    "type": "string",
+                    "example": "09000000000",
+                },
+                "email":{
+                    "type": "string",
+                    "example": "test@example.com",
+                },
+                "address":{
+                    "type": "string",
+                    "example": "○○1-1",
+                },
+                "representative":{
+                    "type": "string",
+                    "example": "長岡太郎(社長)",
+                },
+            },
+            "required":{
+                    "name",
+                    "tel",
+                    "email",
+                    "address",
+                    "representative"
             },
         },
     },
