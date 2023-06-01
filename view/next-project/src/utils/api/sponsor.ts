@@ -1,25 +1,7 @@
 import { Sponsor } from '@type/common';
 
 export const post = async (url: string, data: Sponsor) => {
-  const name = data.name;
-  const tel = data.tel;
-  const email = data.email;
-  const address = data.address;
-  const representative = data.representative;
-  const postUrl =
-    url +
-    '?name=' +
-    name +
-    '&tel=' +
-    tel +
-    '&email=' +
-    email +
-    '&address=' +
-    address +
-    '&representative=' +
-    representative;
-
-  const res = await fetch(postUrl, {
+  const res = await fetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -31,25 +13,7 @@ export const post = async (url: string, data: Sponsor) => {
 };
 
 export const put = async (url: string, data: Sponsor) => {
-  const name = data.name;
-  const tel = data.tel;
-  const email = data.email;
-  const address = data.address;
-  const representative = data.representative;
-  const postUrl =
-    url +
-    '?name=' +
-    name +
-    '&tel=' +
-    tel +
-    '&email=' +
-    email +
-    '&address=' +
-    address +
-    '&representative=' +
-    representative;
-
-  const res = await fetch(postUrl, {
+  const res = await fetch(url, {
     method: 'PUT',
     mode: 'cors',
     headers: {
