@@ -46,10 +46,10 @@ export default function EditModal(props: ModalProps) {
   });
   const initStyleIds = sponsorStyleDetails
     ? sponsorStyleDetails.map((sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID)
-    : null;
-  const [selectedStyleIds, setSelectedStyleIds] = useState<number[] | null>(initStyleIds);
+    : [];
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(initStyleIds);
 
-  const [isStyleError, setIsStyleError] = useState(false);
+  const [isStyleError, setIsStyleError] = useState(!sponsorStyleDetails);
   useEffect(() => {
     if (selectedStyleIds && selectedStyleIds.length === 0) {
       setIsStyleError(true);
