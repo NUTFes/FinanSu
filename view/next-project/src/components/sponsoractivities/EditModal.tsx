@@ -21,7 +21,7 @@ interface ModalProps {
   sponsorStyles: SponsorStyle[];
   sponsors: Sponsor[];
   users: User[];
-  sponsorStyleDetails: ActivityStyle[];
+  sponsorStyleDetails: ActivityStyle[] | null;
   activityStyles: ActivityStyle[];
   setIsOpen: (isOpen: boolean) => void;
 }
@@ -44,14 +44,14 @@ export default function EditModal(props: ModalProps) {
     ...props.sponsorActivity,
     expense: Number((props.sponsorActivity.expense / 11).toFixed(1)),
   });
-  const initStyleIds = sponsorStyleDetails.map(
-    (sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID,
-  );
-  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(initStyleIds);
+  const initStyleIds = sponsorStyleDetails
+    ? sponsorStyleDetails.map((sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID)
+    : null;
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[] | null>(initStyleIds);
 
   const [isStyleError, setIsStyleError] = useState(false);
   useEffect(() => {
-    if (selectedStyleIds.length === 0) {
+    if (selectedStyleIds && selectedStyleIds.length === 0) {
       setIsStyleError(true);
     } else {
       setIsStyleError(false);
@@ -69,6 +69,7 @@ export default function EditModal(props: ModalProps) {
   }, [sponsorStyles]);
 
   const isSelectSponsorBooth = useMemo(() => {
+    if (!selectedStyleIds) return false;
     const isBooth = selectedStyleIds.some((id) => {
       return sponsorStyles[id - 1]?.style === '企業ブース';
     });
@@ -125,6 +126,11 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛企業の登録の更新を行い、ページをリロード
   const submit = (data: SponsorActivity) => {
+    if (!selectedStyleIds) {
+      setIsStyleError(true);
+      return;
+    }
+
     const { expense, userID, sponsorID, ...rest } = data;
     const submitData: SponsorActivity = {
       expense: Math.round(expense * 11),
@@ -138,6 +144,8 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛企業を更新
   const updateSponsorStyle = async (data: SponsorActivity) => {
+    if (!selectedStyleIds) return;
+
     const updateSponsorStyleUrl = process.env.CSR_API_URI + '/activities/' + data.id;
     await put(updateSponsorStyleUrl, data);
 
@@ -175,7 +183,11 @@ export default function EditModal(props: ModalProps) {
       <div className='col-span-4 w-full'>
         <MultiSelect
           options={styleOotions}
-          values={styleOotions.filter((option) => selectedStyleIds.includes(Number(option.value)))}
+          values={
+            selectedStyleIds
+              ? styleOotions.filter((option) => selectedStyleIds.includes(Number(option.value)))
+              : []
+          }
           onChange={(value) => {
             setSelectedStyleIds(value.map((v) => Number(v.value)));
           }}

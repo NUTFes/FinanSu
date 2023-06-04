@@ -157,25 +157,33 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
-            <tr
-              key={index}
-              className={clsx('border border-x-white-0 border-t-white-0', {
-                'border-b-primary-1':
-                  index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
-              })}
-            >
-              <td className='py-3'>
-                <div className='text-center text-sm'>{styleDetail.sponsorStyle.style}</div>
-              </td>
-              <td className='py-3'>
-                <div className='text-center text-sm'>{styleDetail.sponsorStyle.feature}</div>
-              </td>
-              <td className='py-3'>
-                <div className='text-center text-sm'>{styleDetail.sponsorStyle.price} 円</div>
+          {props.sponsorActivitiesViewItem.styleDetail ? (
+            props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
+              <tr
+                key={index}
+                className={clsx('border border-x-white-0 border-t-white-0', {
+                  'border-b-primary-1':
+                    index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
+                })}
+              >
+                <td className='py-3'>
+                  <div className='text-center text-sm'>{styleDetail.sponsorStyle.style}</div>
+                </td>
+                <td className='py-3'>
+                  <div className='text-center text-sm'>{styleDetail.sponsorStyle.feature}</div>
+                </td>
+                <td className='py-3'>
+                  <div className='text-center text-sm'>{styleDetail.sponsorStyle.price} 円</div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+              <td colSpan={3} className='py-3'>
+                <div className='text-center text-sm text-red-500'>協賛スタイルを登録してください</div>
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </Modal>
