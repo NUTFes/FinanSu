@@ -180,7 +180,9 @@ const DetailModal: FC<ModalProps> = (props) => {
           ) : (
             <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               <td colSpan={3} className='py-3'>
-                <div className='text-center text-sm text-red-500'>協賛スタイルを登録してください</div>
+                <div className='text-center text-sm text-red-500'>
+                  協賛スタイルを登録してください
+                </div>
               </td>
             </tr>
           )}
