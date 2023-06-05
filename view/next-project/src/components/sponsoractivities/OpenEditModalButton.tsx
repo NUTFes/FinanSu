@@ -29,9 +29,11 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   const onOpen = () => {
     setIsOpen(true);
   };
-  const sponsorStyleDetails = props.sponsorStyleDetails.map((sponsorStyleDetail) => {
-    return sponsorStyleDetail.activityStyle;
-  });
+  const sponsorStyleDetails = props.sponsorStyleDetails
+    ? props.sponsorStyleDetails.map((sponsorStyleDetail) => {
+        return sponsorStyleDetail.activityStyle;
+      })
+    : null;
   return (
     <>
       <EditButton onClick={onOpen} isDisabled={props.isDisabled} />
