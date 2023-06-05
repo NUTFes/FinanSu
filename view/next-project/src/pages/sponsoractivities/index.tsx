@@ -136,13 +136,14 @@ export default function SponsorActivities(props: Props) {
                       <table className='my-1 w-full table-fixed border-collapse'>
                         <tbody>
                           <tr className='border border-b-primary-1'></tr>
-                          {sponsorActivitiesItem.styleDetail.map((styleDetail) => (
-                            <tr key={styleDetail.sponsorStyle.id}>
-                              <td className='text-center'>{styleDetail.sponsorStyle.style}</td>
-                              <td className='text-center'>{styleDetail.sponsorStyle.feature}</td>
-                              <td className='text-center'>{styleDetail.sponsorStyle.price}円</td>
-                            </tr>
-                          ))}
+                          {sponsorActivitiesItem.styleDetail &&
+                            sponsorActivitiesItem.styleDetail.map((styleDetail) => (
+                              <tr key={styleDetail.sponsorStyle.id}>
+                                <td className='text-center'>{styleDetail.sponsorStyle.style}</td>
+                                <td className='text-center'>{styleDetail.sponsorStyle.feature}</td>
+                                <td className='text-center'>{styleDetail.sponsorStyle.price}円</td>
+                              </tr>
+                            ))}
                           <tr className='border border-b-primary-1'></tr>
                         </tbody>
                       </table>
@@ -240,12 +241,16 @@ export default function SponsorActivities(props: Props) {
                       className='py-3'
                     >
                       <div className='text-center text-sm text-black-600'>
-                        {sponsorActivitiesItem.styleDetail.map((styleDetail) => (
-                          <div key={styleDetail.sponsorStyle.id}>
-                            <p>{`${styleDetail.sponsorStyle.style} / ${styleDetail.sponsorStyle.feature} / ${styleDetail.sponsorStyle.price} 円`}</p>
-                            <p></p>
-                          </div>
-                        ))}
+                        {sponsorActivitiesItem.styleDetail ? (
+                          sponsorActivitiesItem.styleDetail.map((styleDetail) => (
+                            <div key={styleDetail.sponsorStyle.id}>
+                              <p>{`${styleDetail.sponsorStyle.style} / ${styleDetail.sponsorStyle.feature} / ${styleDetail.sponsorStyle.price} 円`}</p>
+                              <p></p>
+                            </div>
+                          ))
+                        ) : (
+                          <div className='text-red-500'>協賛スタイルを登録してください</div>
+                        )}
                       </div>
                     </td>
                     <td
