@@ -128,7 +128,7 @@ export default function BudgetList(props: Props) {
                 <div className='flex'>
                   <Title title={'収入一覧'} />
                   <select
-                    className='w-100 '
+                    className='w-100'
                     defaultValue={currentYear.year}
                     onChange={(e) => handleSelectedYear(Number(e.target.value))}
                   >
@@ -139,12 +139,6 @@ export default function BudgetList(props: Props) {
                 </div>
                 <div className='hidden justify-end md:flex'>
                   <OpenAddModalButton sources={sources} years={years}>
-                    <RiAddCircleLine
-                      size={20}
-                      style={{
-                        marginRight: 5,
-                      }}
-                    />
                     収入登録
                   </OpenAddModalButton>
                 </div>
@@ -197,9 +191,11 @@ export default function BudgetList(props: Props) {
                               id={budgetView.budget.id ? budgetView.budget.id : 0}
                               sources={sources}
                               years={years}
+                              isDisabled={isDisabled}
                             />
                             <OpenDeleteModalButton
                               id={budgetView.budget.id ? budgetView.budget.id : 0}
+                              isDisabled={isDisabled}
                             />
                           </td>
                         </tr>

@@ -1,43 +1,29 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
 import * as React from 'react';
 import { useState } from 'react';
 
-import theme from '@assets/theme';
+import { AddButton } from '../common';
 import AddModal from '@components/budgets/AddModal';
 import { Source, Year } from '@type/common';
 
 interface Props {
-  width?: string;
-  height?: string;
   children?: React.ReactNode;
   sources: Source[];
   years: Year[];
 }
 
-const OpenAddModalButton: React.FC<Props> = (props) => {
+export default function OpenAddModalButton(props: Props) {
   const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
-  };
+
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        w={props.width}
-        h={props.height}
-        color='white'
-        bgGradient='linear(to-br, primary.1, primary.2)'
-        onClick={ShowModal}
+    <>
+      <AddButton
+        onClick={() => {
+          setShowModal(true);
+        }}
       >
         {props.children}
-      </Button>
-      <AddModal
-        openModal={showModal}
-        setShowModal={setShowModal}
-        sources={props.sources}
-        years={props.years}
-      />
-    </ChakraProvider>
+      </AddButton>
+      {showModal && <AddModal setShowModal={setShowModal} />}
+    </>
   );
 };
-
-export default OpenAddModalButton;
