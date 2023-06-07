@@ -2,7 +2,9 @@ package controller
 
 import (
 	"net/http"
+	"strings"
 
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -41,11 +43,16 @@ func (s *sponsorController) ShowSponsor(c echo.Context) error {
 }
 
 func (s *sponsorController) CreateSponsor(c echo.Context) error {
-	Name := c.QueryParam("name")
-	Tel := c.QueryParam("tel")
-	Email := c.QueryParam("email")
-	Address := c.QueryParam("address")
-	Representative := c.QueryParam("representative")
+	sponsor := new(domain.Sponsor)
+	if err := c.Bind(sponsor); err != nil {
+		return err
+	}
+	//エスケープ処理
+	Name := strings.ReplaceAll(sponsor.Name, `"`, `\"`)
+	Tel := strings.ReplaceAll(sponsor.Tel, `"`, `\"`)
+	Email := strings.ReplaceAll(sponsor.Email, `"`, `\"`)
+	Address := strings.ReplaceAll(sponsor.Address, `"`, `\"`)
+	Representative := strings.ReplaceAll(sponsor.Representative, `"`, `\"`)
 
 	latastSponsor, err := s.u.CreateSponsor(c.Request().Context(), Name, Tel, Email, Address, Representative)
 	if err != nil {
@@ -56,11 +63,16 @@ func (s *sponsorController) CreateSponsor(c echo.Context) error {
 
 func (s *sponsorController) UpdateSponsor(c echo.Context) error {
 	id := c.Param("id")
-	Name := c.QueryParam("name")
-	Tel := c.QueryParam("tel")
-	Email := c.QueryParam("email")
-	Address := c.QueryParam("address")
-	Representative := c.QueryParam("representative")
+	sponsor := new(domain.Sponsor)
+	if err := c.Bind(sponsor); err != nil {
+		return err
+	}
+	//エスケープ処理
+	Name := strings.ReplaceAll(sponsor.Name, `"`, `\"`)
+	Tel := strings.ReplaceAll(sponsor.Tel, `"`, `\"`)
+	Email := strings.ReplaceAll(sponsor.Email, `"`, `\"`)
+	Address := strings.ReplaceAll(sponsor.Address, `"`, `\"`)
+	Representative := strings.ReplaceAll(sponsor.Representative, `"`, `\"`)
 
 	updatedSponsor, err := s.u.UpdateSponsor(c.Request().Context(), id, Name, Tel, Email, Address, Representative)
 	if err != nil {

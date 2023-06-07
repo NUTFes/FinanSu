@@ -50,7 +50,7 @@ func (sr *sponsorRepository) Create(
 	query := `
 		INSERT  INTO
 			sponsors (name, tel, email, address, representative)
-		VALUES ('` + name + "','" + tel + "','" + email + "','" + address + "','" + representative + "')"
+		VALUES ("` + name + `","` + tel + `","` + email + `","` + address + `","` + representative + `")`
 	return sr.crud.UpdateDB(c, query)
 }
 
@@ -68,12 +68,12 @@ func (sr *sponsorRepository) Update(
 		UPDATE
 			sponsors
 		SET
-			name = '` + name +
-		"', tel='" + tel +
-		"', email = '" + email +
-		"', address = '" + address +
-		"', representative = '" + representative +
-		"' WHERE id = " + id
+			name = "` + name +
+		`", tel="` + tel +
+		`", email = "` + email +
+		`", address = "` + address +
+		`", representative = "` + representative +
+		`" WHERE id = ` + id
 	return sr.crud.UpdateDB(c, query)
 }
 
