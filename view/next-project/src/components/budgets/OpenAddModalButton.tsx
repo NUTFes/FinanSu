@@ -26,4 +26,4 @@ export default function OpenAddModalButton(props: Props) {
       {showModal && <AddModal setShowModal={setShowModal} />}
     </>
   );
-};
+}

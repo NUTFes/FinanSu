@@ -1,9 +1,3 @@
-import {
-  PrimaryButton,
-  Input,
-  Modal,
-  Select
-} from '@components/common';
 import { useRouter } from 'next/router';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -11,7 +5,7 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { SOURCES } from '@/constants/sources';
 import { get } from '@api/api_methods';
 import { put } from '@api/budget';
-import RegistButton from '@components/common/RegistButton';
+import { PrimaryButton, Input, Modal, Select } from '@components/common';
 import { Budget, Source, Year } from '@type/common';
 
 interface BudgetProps {
@@ -71,11 +65,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
       <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
         <p>年度</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.yearID}
-            onChange={handler('yearID')}
-          >
+          <Select className='w-full' value={formData.yearID} onChange={handler('yearID')}>
             {props.years.map((data) => (
               <option key={data.id} value={data.id}>
                 {data.year}
@@ -85,11 +75,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
         </div>
         <p>項目</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.sourceID}
-            onChange={handler('sourceID')}
-          >
+          <Select className='w-full' value={formData.sourceID} onChange={handler('sourceID')}>
             {SOURCES.map((source) => (
               <option key={source.id} value={source.id}>
                 {source.name}
@@ -99,17 +85,13 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
         </div>
         <p>金額</p>
         <div className='col-span-4 w-full'>
-          <Input
-            className='w-full'
-            value={formData.price}
-            onChange={handler('price')}
-          />
+          <Input className='w-full' value={formData.price} onChange={handler('price')} />
         </div>
         <div className='mx-auto w-fit'>
           <PrimaryButton
             onClick={() => {
-            submitBudget(formData, props.id);
-            router.reload();
+              submitBudget(formData, props.id);
+              router.reload();
             }}
           >
             更新

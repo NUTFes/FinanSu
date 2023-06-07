@@ -1,9 +1,3 @@
-import {
-  PrimaryButton,
-  Input,
-  Modal,
-  Select
-} from '@components/common';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -13,7 +7,8 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { SOURCES } from '@/constants/sources';
 import { YEARS } from '@/constants/years';
 import { post } from '@api/budget';
-import { Budget, Source, Year } from '@type/common';
+import { PrimaryButton, Input, Modal, Select } from '@components/common';
+import { Budget } from '@type/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -57,11 +52,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
       <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
         <p>年度</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.yearID}
-            onChange={handler('yearID')}
-          >
+          <Select className='w-full' value={formData.yearID} onChange={handler('yearID')}>
             {YEARS.map((year) => (
               <option key={year.id} value={year.id}>
                 {year.name}
@@ -71,11 +62,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
         </div>
         <p>項目</p>
         <div className='col-span-4 w-full'>
-          <Select
-            className='w-full'
-            value={formData.sourceID}
-            onChange={handler('sourceID')}
-          >
+          <Select className='w-full' value={formData.sourceID} onChange={handler('sourceID')}>
             {SOURCES.map((source) => (
               <option key={source.id} value={source.id}>
                 {source.name}
@@ -85,18 +72,14 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
         </div>
         <p>金額</p>
         <div className='col-span-4 w-full'>
-          <Input
-            className='w-full'
-            value={formData.price}
-            onChange={handler('price')}
-          />
+          <Input className='w-full' value={formData.price} onChange={handler('price')} />
         </div>
       </div>
       <div className='flex justify-center'>
         <PrimaryButton
           onClick={() => {
-          registBudget(formData);
-          router.reload();
+            registBudget(formData);
+            router.reload();
           }}
         >
           登録する

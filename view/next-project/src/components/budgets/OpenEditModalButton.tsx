@@ -1,10 +1,7 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
 import * as React from 'react';
 import { useState } from 'react';
-import { RiPencilFill } from 'react-icons/ri';
 import { EditButton } from '../common';
 
-import theme from '@assets/theme';
 import EditModal from '@components/budgets/EditModal';
 import { Source, Year } from '@type/common';
 
@@ -25,16 +22,17 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   };
   return (
     <>
-    <EditButton onClick={() => setShowModal(true)} isDisabled={props.isDisabled} />
-    {showModal && 
-      <EditModal 
-      id={props.id ? props.id : 0} 
-      openModal={showModal} 
-      setShowModal={setShowModal} 
-      sources={props.sources}
-      years={props.years} 
-      />}
-  </>
+      <EditButton onClick={() => setShowModal(true)} isDisabled={props.isDisabled} />
+      {showModal && (
+        <EditModal
+          id={props.id ? props.id : 0}
+          openModal={showModal}
+          setShowModal={setShowModal}
+          sources={props.sources}
+          years={props.years}
+        />
+      )}
+    </>
     // <ChakraProvider theme={theme}>
     //   <Button
     //     w='25px'

@@ -1,11 +1,8 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
 import * as React from 'react';
 import { useState } from 'react';
-import { RiDeleteBinLine } from 'react-icons/ri';
+import DeleteModal from '@components/budgets/DeleteModal';
 import { DeleteButton } from '@components/common';
 
-import theme from '@assets/theme';
-import DeleteModal from '@components/budgets/DeleteModal';
 
 interface Props {
   width?: string;
