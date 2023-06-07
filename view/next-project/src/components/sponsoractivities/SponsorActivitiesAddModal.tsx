@@ -138,10 +138,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
   }, [sponsorStyles]);
 
   const isSelectSponsorBooth = useMemo(() => {
+    const isBoothOnly = (selectedStyleIds.length == 1);
     const isBooth = selectedStyleIds.some((id) => {
       return sponsorStyles[id - 1]?.style === '企業ブース';
     });
-    return isBooth;
+    return isBooth && isBoothOnly;
   }, [selectedStyleIds, sponsorStyles]);
 
   useEffect(() => {
