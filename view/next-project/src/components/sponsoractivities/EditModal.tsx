@@ -70,7 +70,7 @@ export default function EditModal(props: ModalProps) {
 
   const isSelectSponsorBooth = useMemo(() => {
     if (!selectedStyleIds) return false;
-    const isBoothOnly = (selectedStyleIds.length == 1);
+    const isBoothOnly = (selectedStyleIds.length === 1);
     const isBooth = selectedStyleIds.some((id) => {
       return sponsorStyles[id - 1]?.style === '企業ブース';
     });
