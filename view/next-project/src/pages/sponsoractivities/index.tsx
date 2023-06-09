@@ -80,6 +80,27 @@ export default function SponsorActivities(props: Props) {
     });
   }, [props, selectedYear]);
 
+  const TotalTransportationFee = useMemo(() => {
+    let totalFee = 0;
+    filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
+      totalFee += sponsorActivityItem.sponsorActivity.expense;
+    });
+    return totalFee;
+  }, [filteredSponsorActivitiesViews]);
+
+  const TotalActivityStyleFee = useMemo(() => {
+    let totalFee = 0;
+    filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
+      const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail.map((styleDetail) => {
+        return styleDetail.sponsorStyle.price;
+      });
+      totalFee += sponsorActivitiesStylesPrice.reduce((fee, price) => {
+        return fee + price;
+      })
+    });
+    return totalFee;
+  }, [filteredSponsorActivitiesViews]);
+
   return (
     <MainLayout>
       <Head>
@@ -216,7 +237,7 @@ export default function SponsorActivities(props: Props) {
               {filteredSponsorActivitiesViews &&
                 filteredSponsorActivitiesViews.map((sponsorActivitiesItem, index) => (
                   <tr
-                    className={clsx(props.sponsorActivitiesView.length - 1 !== index && 'border-b')}
+                    className={clsx('border-b')}
                     key={sponsorActivitiesItem.sponsorActivity.id}
                   >
                     <td
@@ -339,6 +360,30 @@ export default function SponsorActivities(props: Props) {
                     </td>
                   </tr>
                 ))}
+              {filteredSponsorActivitiesViews.length > 0 && (
+                <tr className='border-b border-primary-1'>
+                  <td className='px-1 py-3' colSpan={1}>
+                    <div className='flex justify-end'>
+                      <div className='text-sm text-black-600'>合計</div>
+                    </div>
+                  </td>
+                  <td className='px-1 py-3'>
+                    <div className='text-center text-sm text-black-600'>
+                      {TotalActivityStyleFee}
+                    </div>
+                  </td>
+                  <td className='px-1 py-3' colSpan={3}>
+                    <div className='flex justify-end'>
+                      <div className='text-sm text-black-600'>合計</div>
+                    </div>
+                  </td>
+                  <td className='px-1 py-3'>
+                    <div className='text-center text-sm text-black-600'>
+                      {TotalTransportationFee}
+                    </div>
+                  </td>
+                </tr>
+              )}
               {!filteredSponsorActivitiesViews.length && (
                 <tr>
                   <td colSpan={6} className='py-3'>
