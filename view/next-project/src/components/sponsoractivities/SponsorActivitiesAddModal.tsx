@@ -89,10 +89,19 @@ export default function SponsorActivitiesAddModal(props: Props) {
     }
   }, [selectedStyleIds]);
 
+  // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
+  const filteredUsersByBureau = useMemo(() => {
+    return users.filter((user) => {
+      return (user.bureauID === bureauId);
+    });
+  }, [bureauId]);
   const filteredUsers = useMemo(() => {
-    return users.filter((user) => { return (user.bureauID === bureauId); });
-  }, [bureauId])
+    return filteredUsersByBureau.filter((user, index) => {
+      const usernames = filteredUsersByBureau.map((e) => { return e.name; })
+      return usernames.indexOf(user.name) === index;
+    });
+  }, [filteredUsersByBureau]);
 
   const formDataHandler =
     (input: string) =>
