@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useEffect, useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
 import { post } from '@api/fundInformations';
+import { BUREAUS } from '@constants/bureaus';
 import { Department, FundInformation, Teacher, User } from '@type/common';
 
 interface ModalProps {
@@ -41,6 +42,20 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       setFormData(initFormData);
     }
   }, [user, router.isReady]);
+
+  // 担当者を局でフィルタを適用
+  const [bureauId, setBureauId] = useState<number>(1);
+  const filteredUsersByBureau = useMemo(() => {
+    return props.users.filter((user) => {
+      return (user.bureauID === bureauId);
+    });
+  }, [bureauId]);
+  const filteredUsers = useMemo(() => {
+    return filteredUsersByBureau.filter((user, index) => {
+      const usernames = filteredUsersByBureau.map((e) => { return e.name; })
+      return usernames.indexOf(user.name) === index;
+    });
+  }, [filteredUsersByBureau]);
 
   const handler =
     (input: string) =>
@@ -88,10 +103,20 @@ const OpenAddModal: FC<ModalProps> = (props) => {
               ))}
           </Select>
         </div>
+        <p className='text-black-600'>所属している局</p>
+        <div className='col-span-4 w-full'>
+        <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
+          {BUREAUS.map((bureaus) => (
+            <option key={bureaus.id} value={bureaus.id}>
+              {bureaus.name}
+            </option>
+          ))}
+        </Select>
+        </div>
         <p className='col-span-1 text-black-600'>担当者</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.userID} onChange={handler('userID')}>
-            {props.users.map((user) => (
+            {filteredUsers.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name}
               </option>
