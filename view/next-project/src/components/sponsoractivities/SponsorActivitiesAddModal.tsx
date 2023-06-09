@@ -14,6 +14,7 @@ import {
   Input,
   Textarea,
 } from '@components/common';
+import { BUREAUS } from '@constants/bureaus';
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 
 const TABLE_COLUMNS = [
@@ -87,6 +88,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
       setIsStyleError(false);
     }
   }, [selectedStyleIds]);
+
+  const [bureauId, setBureauId] = useState<number>(1);
+  const filteredUsers = useMemo(() => {
+    return users.filter((user) => { return (user.bureauID === bureauId); });
+  }, [bureauId])
 
   const formDataHandler =
     (input: string) =>
@@ -184,10 +190,20 @@ export default function SponsorActivitiesAddModal(props: Props) {
           }}
         />
       </div>
+      <p className='text-black-600'>所属している局</p>
+      <div className='col-span-4 w-full'>
+        <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
+          {BUREAUS.map((bureaus) => (
+            <option key={bureaus.id} value={bureaus.id}>
+              {bureaus.name}
+            </option>
+          ))}
+        </Select>
+      </div>
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
         <Select value={data.userID} onChange={formDataHandler('userID')}>
-          {users.map((user: User) => (
+          {filteredUsers.map((user: User) => (
             <option key={user.id} value={user.id}>
               {user.name}
             </option>
