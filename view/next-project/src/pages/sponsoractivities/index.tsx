@@ -96,7 +96,7 @@ export default function SponsorActivities(props: Props) {
       });
       totalFee += sponsorActivitiesStylesPrice.reduce((fee, price) => {
         return fee + price;
-      })
+      });
     });
     return totalFee;
   }, [filteredSponsorActivitiesViews]);
@@ -236,10 +236,7 @@ export default function SponsorActivities(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {filteredSponsorActivitiesViews &&
                 filteredSponsorActivitiesViews.map((sponsorActivitiesItem, index) => (
-                  <tr
-                    className={clsx('border-b')}
-                    key={sponsorActivitiesItem.sponsorActivity.id}
-                  >
+                  <tr className={clsx('border-b')} key={sponsorActivitiesItem.sponsorActivity.id}>
                     <td
                       onClick={() => {
                         onOpen(
