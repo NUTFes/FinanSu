@@ -93,12 +93,14 @@ export default function SponsorActivitiesAddModal(props: Props) {
   const [bureauId, setBureauId] = useState<number>(1);
   const filteredUsersByBureau = useMemo(() => {
     return users.filter((user) => {
-      return (user.bureauID === bureauId);
+      return user.bureauID === bureauId;
     });
   }, [bureauId]);
   const filteredUsers = useMemo(() => {
     return filteredUsersByBureau.filter((user, index) => {
-      const usernames = filteredUsersByBureau.map((e) => { return e.name; })
+      const usernames = filteredUsersByBureau.map((e) => {
+        return e.name;
+      });
       return usernames.indexOf(user.name) === index;
     });
   }, [filteredUsersByBureau]);
