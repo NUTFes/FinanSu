@@ -91,12 +91,16 @@ export default function SponsorActivities(props: Props) {
   const TotalActivityStyleFee = useMemo(() => {
     let totalFee = 0;
     filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
-      const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail.map((styleDetail) => {
-        return styleDetail.sponsorStyle.price;
-      });
-      totalFee += sponsorActivitiesStylesPrice.reduce((fee, price) => {
-        return fee + price;
-      });
+      const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail
+        ? sponsorActivityItem.styleDetail.map((styleDetail) => {
+            return styleDetail.sponsorStyle.price;
+          })
+        : 0;
+      totalFee +=
+        sponsorActivitiesStylesPrice &&
+        sponsorActivitiesStylesPrice.reduce((fee, price) => {
+          return fee + price;
+        });
     });
     return totalFee;
   }, [filteredSponsorActivitiesViews]);
