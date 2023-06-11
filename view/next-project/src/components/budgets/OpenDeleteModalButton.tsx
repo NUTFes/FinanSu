@@ -3,7 +3,6 @@ import { useState } from 'react';
 import DeleteModal from '@components/budgets/DeleteModal';
 import { DeleteButton } from '@components/common';
 
-
 interface Props {
   width?: string;
   height?: string;

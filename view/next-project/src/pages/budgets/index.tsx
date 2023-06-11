@@ -84,7 +84,7 @@ export default function BudgetList(props: Props) {
   };
 
   const filteredBudgets = useMemo(() => {
-    if(!budgets || budgets.length === 0) return [];
+    if (!budgets || budgets.length === 0) return [];
     return budgets.filter((budgetView) => {
       return budgetView.year.year == selectedYear.year;
     });

@@ -30,7 +30,7 @@ const BudgetDeleteModal: FC<ModalProps> = (props) => {
       </div>
       <div className='mx-auto mb-5 w-fit text-xl text-black-600'>予算の削除</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
-      <div className='flex gap-4 justify-center'>
+      <div className='flex justify-center gap-4'>
         <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
         <PrimaryButton
           onClick={() => {
