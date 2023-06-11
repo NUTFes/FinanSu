@@ -45,19 +45,15 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
-  const filteredUsersByBureau = useMemo(() => {
-    return props.users.filter((user) => {
-      return user.bureauID === bureauId;
-    });
-  }, [bureauId]);
   const filteredUsers = useMemo(() => {
-    return filteredUsersByBureau.filter((user, index) => {
-      const usernames = filteredUsersByBureau.map((e) => {
-        return e.name;
+    const filteredUsers = props.users.filter((user) => {
+      return user.bureauID === bureauId;
+    })
+      .filter((user, index, self) => {
+        return self.findIndex((u) => u.name === user.name) === index;
       });
-      return usernames.indexOf(user.name) === index;
-    });
-  }, [filteredUsersByBureau]);
+    return filteredUsers;
+  }, [bureauId]);
 
   const handler =
     (input: string) =>

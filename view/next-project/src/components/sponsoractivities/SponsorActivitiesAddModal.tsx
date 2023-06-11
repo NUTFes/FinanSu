@@ -91,19 +91,13 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
-  const filteredUsersByBureau = useMemo(() => {
+  const filteredUsers = useMemo(() => {
     return users.filter((user) => {
       return user.bureauID === bureauId;
-    });
+    }).filter((user, index, self) => {
+      return self.findIndex((u) => u.name === user.name) === index;
+    })
   }, [bureauId]);
-  const filteredUsers = useMemo(() => {
-    return filteredUsersByBureau.filter((user, index) => {
-      const usernames = filteredUsersByBureau.map((e) => {
-        return e.name;
-      });
-      return usernames.indexOf(user.name) === index;
-    });
-  }, [filteredUsersByBureau]);
 
   const formDataHandler =
     (input: string) =>
