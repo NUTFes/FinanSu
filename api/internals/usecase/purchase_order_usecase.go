@@ -130,6 +130,14 @@ func (p *purchaseOrderUseCase) DestroyPurchaseOrder(
 	id string,
 ) error {
 	err := p.rep.Delete(c, id)
+	if err != nil {
+		return err
+	}
+	err = p.rep.DeleteItems(c,id)
+	if err != nil {
+		return err
+	}
+	err = p.rep.DeleteReport(c,id)
 	return err
 }
 
