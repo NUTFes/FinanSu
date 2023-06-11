@@ -3,15 +3,15 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-
-import { SOURCES } from '@/constants/sources';
-import { YEARS } from '@/constants/years';
 import { post } from '@api/budget';
 import { PrimaryButton, Input, Modal, Select } from '@components/common';
 import { Budget } from '@type/common';
+import { Year, Source } from '@type/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  years: Year[];
+  sources: Source[];
 }
 
 const BudgetAddModal: FC<ModalProps> = (props) => {
@@ -44,18 +44,18 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='md:w-1/5'>
+    <Modal className='md:w-1/2'>
       <div className='ml-auto w-fit'>
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
       </div>
-      <div className='mx-auto w-fit text-xl'>予算の編集</div>
+      <div className='mx-auto w-fit text-xl'>予算の登録</div>
       <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
         <p>年度</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.yearID} onChange={handler('yearID')}>
-            {YEARS.map((year) => (
+            {props.years.map((year) => (
               <option key={year.id} value={year.id}>
-                {year.name}
+                {year.year}
               </option>
             ))}
           </Select>
@@ -63,7 +63,7 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
         <p>項目</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.sourceID} onChange={handler('sourceID')}>
-            {SOURCES.map((source) => (
+            {props.sources.map((source) => (
               <option key={source.id} value={source.id}>
                 {source.name}
               </option>

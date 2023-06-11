@@ -84,6 +84,7 @@ export default function BudgetList(props: Props) {
   };
 
   const filteredBudgets = useMemo(() => {
+    if(!budgets || budgets.length === 0) return [];
     return budgets.filter((budgetView) => {
       return budgetView.year.year == selectedYear.year;
     });
@@ -132,9 +133,11 @@ export default function BudgetList(props: Props) {
                     defaultValue={currentYear.year}
                     onChange={(e) => handleSelectedYear(Number(e.target.value))}
                   >
-                    <option value='2021'>2021</option>
-                    <option value='2022'>2022</option>
-                    <option value='2023'>2023</option>
+                    {years.map((year) => (
+                      <option key={year.year} value={year.year}>
+                        {year.year}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className='hidden justify-end md:flex'>

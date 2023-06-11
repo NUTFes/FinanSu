@@ -23,7 +23,9 @@ export default function OpenAddModalButton(props: Props) {
       >
         {props.children}
       </AddButton>
-      {showModal && <AddModal setShowModal={setShowModal} />}
+      {showModal && (
+        <AddModal setShowModal={setShowModal} years={props.years} sources={props.sources} />
+      )}
     </>
   );
 }

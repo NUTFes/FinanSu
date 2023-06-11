@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { SOURCES } from '@/constants/sources';
 import { get } from '@api/api_methods';
 import { put } from '@api/budget';
 import { PrimaryButton, Input, Modal, Select } from '@components/common';
@@ -76,7 +75,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
         <p>項目</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.sourceID} onChange={handler('sourceID')}>
-            {SOURCES.map((source) => (
+            {props.sources.map((source) => (
               <option key={source.id} value={source.id}>
                 {source.name}
               </option>
@@ -87,16 +86,16 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.price} onChange={handler('price')} />
         </div>
-        <div className='mx-auto w-fit'>
-          <PrimaryButton
-            onClick={() => {
-              submitBudget(formData, props.id);
-              router.reload();
-            }}
-          >
-            更新
-          </PrimaryButton>
-        </div>
+      </div>
+      <div className='mx-auto w-fit'>
+        <PrimaryButton
+          onClick={() => {
+            submitBudget(formData, props.id);
+            router.reload();
+          }}
+        >
+          更新
+        </PrimaryButton>
       </div>
     </Modal>
   );
