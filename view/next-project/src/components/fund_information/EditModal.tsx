@@ -56,9 +56,10 @@ export default function EditModal(props: ModalProps) {
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
   const filteredUsers = useMemo(() => {
-    const filteredUsers = props.users.filter((user) => {
-      return user.bureauID === bureauId;
-    })
+    const filteredUsers = props.users
+      .filter((user) => {
+        return user.bureauID === bureauId;
+      })
       .filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
