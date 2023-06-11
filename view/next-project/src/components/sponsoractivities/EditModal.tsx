@@ -13,6 +13,7 @@ import {
   Textarea,
 } from '@components/common';
 import { MultiSelect } from '@components/common';
+import { BUREAUS } from '@constants/bureaus';
 import { SponsorActivity, Sponsor, SponsorStyle, User, ActivityStyle } from '@type/common';
 
 interface ModalProps {
@@ -167,6 +168,20 @@ export default function EditModal(props: ModalProps) {
     });
   };
 
+  // 担当者を局でフィルタを適用
+  const [bureauId, setBureauId] = useState<number>(1);
+  const filteredUsers = useMemo(() => {
+    const res = users
+      .filter((user) => {
+        return user.bureauID === bureauId;
+      })
+      .filter((user, index, self) => {
+        return self.findIndex((u) => u.name === user.name) === index;
+      });
+    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
+    return res;
+  }, [bureauId]);
+
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
     <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
@@ -194,10 +209,20 @@ export default function EditModal(props: ModalProps) {
           }}
         />
       </div>
+      <p className='text-black-600'>所属している局</p>
+      <div className='col-span-4 w-full'>
+        <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
+          {BUREAUS.map((bureaus) => (
+            <option key={bureaus.id} value={bureaus.id}>
+              {bureaus.name}
+            </option>
+          ))}
+        </Select>
+      </div>
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('userID')}>
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <option key={user.id} value={user.id} selected={user.id === data.userID}>
               {user.name}
             </option>
@@ -318,7 +343,7 @@ export default function EditModal(props: ModalProps) {
   );
 
   return (
-    <Modal className='mt-64 md:mt-0 md:w-1/2'>
+    <Modal className='mt-64 md:mt-32 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
