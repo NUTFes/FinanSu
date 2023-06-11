@@ -46,14 +46,13 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
   const filteredUsers = useMemo(() => {
-    const filteredUsers = props.users
-      .filter((user) => {
+    const res = props.users.filter((user) => {
         return user.bureauID === bureauId;
-      })
-      .filter((user, index, self) => {
+      }).filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
-    return filteredUsers;
+    if(res.length !== 0) setFormData({ ...formData, userID: res[0].id });
+    return res;
   }, [bureauId]);
 
   const handler =
