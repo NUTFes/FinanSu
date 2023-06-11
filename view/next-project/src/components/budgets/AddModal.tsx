@@ -1,37 +1,17 @@
-import {
-  ChakraProvider,
-  Select,
-  Center,
-  Input,
-  Flex,
-  Box,
-  Spacer,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  Grid,
-  GridItem,
-} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-
-import { SOURCES } from '@/constants/sources';
 import { post } from '@api/budget';
-import theme from '@assets/theme';
-import { PrimaryButton } from '@components/common';
-import { Budget, Source, Year } from '@type/common';
+import { PrimaryButton, Input, Modal, Select } from '@components/common';
+import { Budget } from '@type/common';
+import { Year, Source } from '@type/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  openModal: boolean;
-  children?: React.ReactNode;
-  sources: Source[];
   years: Year[];
+  sources: Source[];
 }
 
 const BudgetAddModal: FC<ModalProps> = (props) => {
@@ -64,101 +44,48 @@ const BudgetAddModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
-        <ModalOverlay />
-        <ModalContent pb='5' borderRadius='3xl'>
-          <ModalBody p='3'>
-            <Flex mt='5'>
-              <Spacer />
-              <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
-              </Box>
-            </Flex>
-            <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem rowSpan={1} colSpan={12}>
-                <Center color='black.600' h='100%' fontSize='xl'>
-                  予算の登録
-                </Center>
-              </GridItem>
-            </Grid>
-            <Grid templateColumns='repeat(12, 1fr)' gap={4}>
-              <GridItem rowSpan={1} colSpan={1} />
-              <GridItem rowSpan={1} colSpan={10}>
-                <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(12, 1fr)' gap={4}>
-                  <GridItem rowSpan={1} colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      年度
-                    </Flex>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={9}>
-                    <Select
-                      value={formData.yearID}
-                      onChange={handler('yearID')}
-                      borderRadius='full'
-                      borderColor='primary.1'
-                    >
-                      {props.years.map((data) => (
-                        <option key={data.id} value={data.id}>
-                          {data.year}
-                        </option>
-                      ))}
-                    </Select>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      項目
-                    </Flex>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={9}>
-                    <Select
-                      borderRadius='full'
-                      borderColor='primary.1'
-                      value={formData.sourceID}
-                      onChange={handler('sourceID')}
-                    >
-                      {SOURCES.map((source) => (
-                        <option key={source.id} value={source.id}>
-                          {source.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={3}>
-                    <Flex color='black.600' h='100%' justify='end' align='center'>
-                      金額
-                    </Flex>
-                  </GridItem>
-                  <GridItem rowSpan={1} colSpan={9}>
-                    <Flex>
-                      <Input
-                        borderRadius='full'
-                        borderColor='primary.1'
-                        value={formData.price}
-                        onChange={handler('price')}
-                      />
-                    </Flex>
-                  </GridItem>
-                </Grid>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1} />
-            </Grid>
-          </ModalBody>
-          <Center>
-            <ModalFooter mt='5' mb='10'>
-              <PrimaryButton
-                onClick={() => {
-                  registBudget(formData);
-                  router.reload();
-                }}
-              >
-                登録する
-              </PrimaryButton>
-            </ModalFooter>
-          </Center>
-        </ModalContent>
-      </Modal>
-    </ChakraProvider>
+    <Modal className='md:w-1/2'>
+      <div className='ml-auto w-fit'>
+        <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
+      </div>
+      <div className='mx-auto w-fit text-xl'>予算の登録</div>
+      <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+        <p>年度</p>
+        <div className='col-span-4 w-full'>
+          <Select className='w-full' value={formData.yearID} onChange={handler('yearID')}>
+            {props.years.map((year) => (
+              <option key={year.id} value={year.id}>
+                {year.year}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <p>項目</p>
+        <div className='col-span-4 w-full'>
+          <Select className='w-full' value={formData.sourceID} onChange={handler('sourceID')}>
+            {props.sources.map((source) => (
+              <option key={source.id} value={source.id}>
+                {source.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <p>金額</p>
+        <div className='col-span-4 w-full'>
+          <Input className='w-full' value={formData.price} onChange={handler('price')} />
+        </div>
+      </div>
+      <div className='flex justify-center'>
+        <PrimaryButton
+          onClick={() => {
+            registBudget(formData);
+            router.reload();
+          }}
+        >
+          登録する
+        </PrimaryButton>
+      </div>
+    </Modal>
   );
 };
 
