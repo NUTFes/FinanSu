@@ -23,6 +23,8 @@ type PurchaseOrderRepository interface {
 	FindUserInfo(context.Context, string) (*sql.Row, error)
 	FindPurchaseItem(context.Context, string) (*sql.Rows, error)
 	FindNewRecord(context.Context) (*sql.Row, error)
+	DeleteItems(context.Context, string) error
+	DeleteReport(context.Context, string) error
 }
 
 func NewPurchaseOrderRepository(c db.Client, ac abstract.Crud) PurchaseOrderRepository {
@@ -139,4 +141,22 @@ func (por *purchaseOrderRepository) FindNewRecord(c context.Context) (*sql.Row, 
 			id
 		DESC LIMIT 1`
 	return por.crud.ReadByID(c, query)
+}
+
+// 紐づいたitemの削除
+func (por *purchaseOrderRepository) DeleteItems(
+	c context.Context,
+	id string,
+) error {
+	query := `DELETE FROM purchase_items WHERE purchase_order_id =` + id
+	return por.crud.UpdateDB(c, query)
+}
+
+// 紐づいたreportの削除
+func (por *purchaseOrderRepository) DeleteReport(
+	c context.Context,
+	id string,
+) error {
+	query := `DELETE FROM purchase_reports WHERE purchase_order_id =` + id
+	return por.crud.UpdateDB(c, query)
 }

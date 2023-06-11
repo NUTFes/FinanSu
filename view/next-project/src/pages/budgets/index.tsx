@@ -84,6 +84,7 @@ export default function BudgetList(props: Props) {
   };
 
   const filteredBudgets = useMemo(() => {
+    if (!budgets || budgets.length === 0) return [];
     return budgets.filter((budgetView) => {
       return budgetView.year.year == selectedYear.year;
     });
@@ -128,23 +129,19 @@ export default function BudgetList(props: Props) {
                 <div className='flex'>
                   <Title title={'収入一覧'} />
                   <select
-                    className='w-100 '
+                    className='w-100'
                     defaultValue={currentYear.year}
                     onChange={(e) => handleSelectedYear(Number(e.target.value))}
                   >
-                    <option value='2021'>2021</option>
-                    <option value='2022'>2022</option>
-                    <option value='2023'>2023</option>
+                    {years.map((year) => (
+                      <option key={year.year} value={year.year}>
+                        {year.year}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className='hidden justify-end md:flex'>
                   <OpenAddModalButton sources={sources} years={years}>
-                    <RiAddCircleLine
-                      size={20}
-                      style={{
-                        marginRight: 5,
-                      }}
-                    />
                     収入登録
                   </OpenAddModalButton>
                 </div>
@@ -197,9 +194,11 @@ export default function BudgetList(props: Props) {
                               id={budgetView.budget.id ? budgetView.budget.id : 0}
                               sources={sources}
                               years={years}
+                              isDisabled={isDisabled}
                             />
                             <OpenDeleteModalButton
                               id={budgetView.budget.id ? budgetView.budget.id : 0}
+                              isDisabled={isDisabled}
                             />
                           </td>
                         </tr>
