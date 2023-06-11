@@ -171,12 +171,14 @@ export default function EditModal(props: ModalProps) {
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
   const filteredUsers = useMemo(() => {
-    const res =  users.filter((user) => {
+    const res = users
+      .filter((user) => {
         return user.bureauID === bureauId;
-      }).filter((user, index, self) => {
+      })
+      .filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
-    if(res.length !== 0) setFormData({ ...formData, userID: res[0].id });
+    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
     return res;
   }, [bureauId]);
 
