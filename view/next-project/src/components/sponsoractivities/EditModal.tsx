@@ -169,7 +169,7 @@ export default function EditModal(props: ModalProps) {
   };
 
   // 担当者を局でフィルタを適用
-  const [bureauId, setBureauId] = useState<number>(1);
+  const [bureauId, setBureauId] = useState<number>(BUREAUS.find((b) => { return (b.id === (users.find((u) => { return (u.id === props.sponsorActivity.userID); }))?.bureauID); })?.id ?? 1);
   const filteredUsers = useMemo(() => {
     const res = users
       .filter((user) => {
@@ -221,7 +221,7 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' onChange={handler('userID')}>
+        <Select value={data.userID} className='w-full' onChange={handler('userID')}>
           {filteredUsers.map((user) => (
             <option key={user.id} value={user.id} selected={user.id === data.userID}>
               {user.name}
