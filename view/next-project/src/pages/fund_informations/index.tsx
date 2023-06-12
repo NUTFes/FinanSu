@@ -129,7 +129,7 @@ export default function FundInformations(props: Props) {
     };
     getUser();
   }, []);
-  
+
   useEffect(() => {
     if (filteredFundInformationViews) {
       const firstChecks = filteredFundInformationViews.map((fundInformationView) => {
