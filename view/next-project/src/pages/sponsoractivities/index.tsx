@@ -96,8 +96,8 @@ export default function SponsorActivities(props: Props) {
       filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
         const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail
           ? sponsorActivityItem.styleDetail.map((styleDetail) => {
-            return styleDetail.sponsorStyle.price;
-          })
+              return styleDetail.sponsorStyle.price;
+            })
           : 0;
         totalFee +=
           sponsorActivitiesStylesPrice &&
