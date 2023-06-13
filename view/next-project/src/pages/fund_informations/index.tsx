@@ -131,17 +131,17 @@ export default function FundInformations(props: Props) {
   }, []);
 
   useEffect(() => {
-    if (fundInformationViews) {
-      const firstChecks = fundInformationViews.map((fundInformationView) => {
+    if (filteredFundInformationViews) {
+      const firstChecks = filteredFundInformationViews.map((fundInformationView) => {
         return fundInformationView.fundInformation.isFirstCheck;
       });
-      const lastChecks = fundInformationViews.map((fundInformationView) => {
+      const lastChecks = filteredFundInformationViews.map((fundInformationView) => {
         return fundInformationView.fundInformation.isLastCheck;
       });
       setIsFirstChecks(firstChecks);
       setIsLastChecks(lastChecks);
     }
-  }, [fundInformationViews]);
+  }, [filteredFundInformationViews]);
 
   // チェック済みの合計金額用のステート
   const totalFee = useMemo(() => {
@@ -155,7 +155,7 @@ export default function FundInformations(props: Props) {
         return sum;
       }
     }, 0);
-  }, [fundInformationViews, selectedYear]);
+  }, [filteredFundInformationViews]);
 
   // checkboxの値が変わったときに更新
   const submit = async (id: number, fundItem: FundInformation) => {
