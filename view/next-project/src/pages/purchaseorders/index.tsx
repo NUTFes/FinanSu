@@ -76,7 +76,7 @@ export default function PurchaseOrders(props: Props) {
 
   // 全ての購入申請の合計金額を計算
   const totalPurchaseOrderFee = useMemo(() => {
-    if (purchaseOrderViews) {
+    if (filteredPurchaseOrderViews) {
       let totalFee = 0;
       filteredPurchaseOrderViews.map((purchaseOrderView: PurchaseOrderView) => {
         totalFee += TotalFee(purchaseOrderView.purchaseItem);
@@ -84,7 +84,7 @@ export default function PurchaseOrders(props: Props) {
       return totalFee;
     }
     return 0;
-  }, [filteredPurchaseOrderViews, purchaseOrderViews]);
+  }, [filteredPurchaseOrderViews]);
 
   useEffect(() => {
     if (purchaseOrderViews) {

@@ -94,7 +94,7 @@ export default function PurchaseReports(props: Props) {
 
   // すべてのpurchaseReportの合計金額
   const totalReportFee = useMemo(() => {
-    if (purchaseReportViews) {
+    if (filteredPurchaseReportViews) {
       let totalFee = 0;
       filteredPurchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
         totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
@@ -102,7 +102,7 @@ export default function PurchaseReports(props: Props) {
       return totalFee;
     }
     return 0;
-  }, [filteredPurchaseReportViews, purchaseReportViews]);
+  }, [filteredPurchaseReportViews]);
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
