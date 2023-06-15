@@ -171,8 +171,8 @@ export default function EditModal(props: ModalProps) {
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(
     users.find((user) => {
-      return (user.id === props.sponsorActivity.userID)
-    })?.bureauID || 1
+      return user.id === props.sponsorActivity.userID;
+    })?.bureauID || 1,
   );
   const filteredUsers = useMemo(() => {
     const res = users
