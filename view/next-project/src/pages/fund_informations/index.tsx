@@ -109,8 +109,8 @@ export default function FundInformations(props: Props) {
   // 日時のデータ修正
   const formatDate = (date: string) => {
     const datetime = date.replace('T', ' ').replace('Z', '');
-    const datetime2 = datetime.substring(5, datetime.length - 3).replace('-', '/');
-    return datetime2;
+    const datetimeset = datetime.substring(5, datetime.length - 3).replace('-', '/');
+    return datetimeset;
   };
 
   const isDisabled = useCallback(
