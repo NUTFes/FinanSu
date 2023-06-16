@@ -25,6 +25,7 @@ export default function EditModal(props: ModalProps) {
     remark: props.fundInformation.remark,
     isFirstCheck: false,
     isLastCheck: false,
+    recievedAt: props.fundInformation.recievedAt,
   });
 
   const [departmentID, setDepartmentID] = useState<number | string>(1);
@@ -123,6 +124,15 @@ export default function EditModal(props: ModalProps) {
               </option>
             ))}
           </Select>
+        </div>
+        <p className='cols-span-1 text-black-600'>受け取り日時</p>
+        <div className='col-span-4 w-full'>
+          <Input
+            type='date'
+            value={formData.recievedAt}
+            onChange={handler('recievedAt')}
+            className='w-full'
+          />
         </div>
         <p className='col-span-1 text-black-600'>金額</p>
         <div className='col-span-4 w-full'>
