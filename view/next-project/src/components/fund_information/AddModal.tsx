@@ -127,12 +127,12 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='grid-cols-1 text-black-600'>受け取り日時</p>
         <div className='col-span-4 w-full'>
-            <Input
-              type='date'
-              value={formData.recievedAt}
-              onChange={handler('recievedAt')}
-              className='w-full'
-            />
+          <Input
+            type='date'
+            value={formData.recievedAt}
+            onChange={handler('recievedAt')}
+            className='w-full'
+          />
         </div>
         <p className='col-span-1 text-black-600'>金額</p>
         <div className='col-span-4 w-full'>
