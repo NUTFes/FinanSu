@@ -52,8 +52,9 @@ func (f *fundInformationController) CreateFundInformation(c echo.Context) error 
 	remark := c.QueryParam("remark")
 	isFirstCheck := c.QueryParam("is_first_check")
 	isLastCheck := c.QueryParam("is_last_check")
+	recievedAt := c.QueryParam("recieved_at")
 
-	latastFundInformation, err := f.u.CreateFundInformation(c.Request().Context(), userID, teacherID, price, remark, isFirstCheck, isLastCheck)
+	latastFundInformation, err := f.u.CreateFundInformation(c.Request().Context(), userID, teacherID, price, remark, isFirstCheck, isLastCheck, recievedAt)
 	if err != nil {
 		return err
 	}
@@ -69,8 +70,9 @@ func (f *fundInformationController) UpdateFundInformation(c echo.Context) error 
 	remark := c.QueryParam("remark")
 	isFirstCheck := c.QueryParam("is_first_check")
 	isLastCheck := c.QueryParam("is_last_check")
+	recievedAt := c.QueryParam("recieved_at")
 
-	updatedFundInformation, err := f.u.UpdateFundInformation(c.Request().Context(), id, userID, teacherID, price, remark, isFirstCheck, isLastCheck)
+	updatedFundInformation, err := f.u.UpdateFundInformation(c.Request().Context(), id, userID, teacherID, price, remark, isFirstCheck, isLastCheck, recievedAt)
 	if err != nil {
 		return err
 	}
