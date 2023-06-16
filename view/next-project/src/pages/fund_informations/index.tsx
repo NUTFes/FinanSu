@@ -106,6 +106,13 @@ export default function FundInformations(props: Props) {
     }
   }, [currentUser?.bureauID]);
 
+  // 日時のデータ修正
+  const formatDate = (date: string) => {
+    const datetime = date.replace('T', ' ').replace('Z', '');
+    const datetimeset = datetime.substring(5, datetime.length - 3).replace('-', '/');
+    return datetimeset;
+  };
+
   const isDisabled = useCallback(
     (fundViewItem: FundInformationView) => {
       if (
@@ -261,28 +268,31 @@ export default function FundInformations(props: Props) {
           <table className='w-full table-fixed border-collapse md:mb-5'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>財務局員確認</div>
                 </th>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>財務局長確認</div>
                 </th>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>教員名</div>
                 </th>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>居室</div>
                 </th>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>担当者</div>
                 </th>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>金額</div>
                 </th>
-                <th className='w-2/12 pb-2'>
+                <th className='w-2/14 pb-2'>
+                  <div className='text-center text-sm text-black-600'>作成日時</div>
+                </th>
+                <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>備考</div>
                 </th>
-                <th className='w-2/12 pb-2'></th>
+                <th className='w-2/14 pb-2'></th>
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
@@ -340,6 +350,12 @@ export default function FundInformations(props: Props) {
                     <td>
                       <div className='text-center text-sm text-black-600'>
                         {fundViewItem.fundInformation.price}
+                      </div>
+                    </td>
+                    <td>
+                      <div className='text-center text-sm text-black-600'>
+                        {fundViewItem.fundInformation.createdAt &&
+                          formatDate(fundViewItem.fundInformation.createdAt)}
                       </div>
                     </td>
                     <td>
