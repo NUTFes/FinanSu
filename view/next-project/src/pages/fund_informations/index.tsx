@@ -106,13 +106,6 @@ export default function FundInformations(props: Props) {
     }
   }, [currentUser?.bureauID]);
 
-  // 日時のデータ修正
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ').replace('Z', '');
-    const datetimeset = datetime.substring(5, datetime.length - 3).replace('-', '/');
-    return datetimeset;
-  };
-
   const isDisabled = useCallback(
     (fundViewItem: FundInformationView) => {
       if (
@@ -354,8 +347,7 @@ export default function FundInformations(props: Props) {
                     </td>
                     <td>
                       <div className='text-center text-sm text-black-600'>
-                        {fundViewItem.fundInformation.createdAt &&
-                          formatDate(fundViewItem.fundInformation.createdAt)}
+                        {fundViewItem.fundInformation.recievedAt}
                       </div>
                     </td>
                     <td>
