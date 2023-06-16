@@ -78,7 +78,7 @@ export default function FundInformations(props: Props) {
 
   const filteredFundInformationViews = useMemo(() => {
     return fundInformationViews.filter((fundInformationView) => {
-      return fundInformationView.fundInformation.createdAt?.includes(selectedYear);
+      return fundInformationView.fundInformation.recievedAt.includes(selectedYear);
     });
   }, [fundInformationViews, selectedYear]);
 

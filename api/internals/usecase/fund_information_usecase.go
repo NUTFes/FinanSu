@@ -14,8 +14,8 @@ type fundInformationUseCase struct {
 type FundInformationUseCase interface {
 	GetFundInformations(context.Context) ([]domain.FundInformation, error)
 	GetFundInformationByID(context.Context, string) (domain.FundInformation, error)
-	CreateFundInformation(context.Context, string, string, string, string, string, string) (domain.FundInformation, error)
-	UpdateFundInformation(context.Context, string, string, string, string, string, string, string) (domain.FundInformation, error)
+	CreateFundInformation(context.Context, string, string, string, string, string, string, string) (domain.FundInformation, error)
+	UpdateFundInformation(context.Context, string, string, string, string, string, string, string, string) (domain.FundInformation, error)
 	DestroyFundInformation(context.Context, string) error
 	GetFundInformationDetails(context.Context) ([]domain.FundInformationDetail, error)
 	GetFundInformationDetailByID(context.Context, string) (domain.FundInformationDetail, error)
