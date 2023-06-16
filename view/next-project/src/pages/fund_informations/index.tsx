@@ -280,7 +280,7 @@ export default function FundInformations(props: Props) {
                   <div className='text-center text-sm text-black-600'>金額</div>
                 </th>
                 <th className='w-2/14 pb-2'>
-                  <div className='text-center text-sm text-black-600'>作成日時</div>
+                  <div className='text-center text-sm text-black-600'>受け取り日時</div>
                 </th>
                 <th className='w-2/14 pb-2'>
                   <div className='text-center text-sm text-black-600'>備考</div>
