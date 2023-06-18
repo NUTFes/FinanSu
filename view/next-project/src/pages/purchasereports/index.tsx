@@ -133,13 +133,13 @@ export default function PurchaseReports(props: Props) {
   };
 
   useEffect(() => {
-    if (purchaseReportViews) {
-      const purchaseReportChecks = purchaseReportViews.map((purchaseReportView) => {
+    if (filteredPurchaseReportViews) {
+      const purchaseReportChecks = filteredPurchaseReportViews.map((purchaseReportView) => {
         return purchaseReportView.purchaseReport.financeCheck;
       });
       setPurchaseReportChecks(purchaseReportChecks);
     }
-  }, [purchaseReportViews]);
+  }, [filteredPurchaseReportViews]);
 
   const isFinanceDirector = useMemo(() => {
     if (currentUser?.roleID === 3) {
