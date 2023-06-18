@@ -67,6 +67,7 @@ export default function EditModal(props: ModalProps) {
       .filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
+    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
     return res;
   }, [bureauId]);
 
