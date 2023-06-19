@@ -78,7 +78,7 @@ export default function FundInformations(props: Props) {
 
   const filteredFundInformationViews = useMemo(() => {
     return fundInformationViews.filter((fundInformationView) => {
-      return fundInformationView.fundInformation.recievedAt.includes(selectedYear);
+      return fundInformationView.fundInformation.receivedAt.includes(selectedYear);
     });
   }, [fundInformationViews, selectedYear]);
 
@@ -347,7 +347,7 @@ export default function FundInformations(props: Props) {
                     </td>
                     <td>
                       <div className='text-center text-sm text-black-600'>
-                        {fundViewItem.fundInformation.recievedAt}
+                        {fundViewItem.fundInformation.receivedAt}
                       </div>
                     </td>
                     <td>

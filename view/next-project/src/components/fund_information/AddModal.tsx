@@ -27,7 +27,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     remark: '',
     isFirstCheck: false,
     isLastCheck: false,
-    recievedAt: '',
+    receivedAt: '',
   });
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         remark: '',
         isFirstCheck: false,
         isLastCheck: false,
-        recievedAt: '',
+        receivedAt: '',
       };
       setFormData(initFormData);
     }
@@ -129,8 +129,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         <div className='col-span-4 w-full'>
           <Input
             type='date'
-            value={formData.recievedAt}
-            onChange={handler('recievedAt')}
+            value={formData.receivedAt}
+            onChange={handler('receivedAt')}
             className='w-full'
           />
         </div>

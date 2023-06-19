@@ -49,7 +49,7 @@ func (fir *fundInformationRepository) Create(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
-	recievedAt string,
+	receivedAt string,
 ) error {
 	query := `
 		INSERT INTO
@@ -59,7 +59,7 @@ func (fir *fundInformationRepository) Create(
 				price, remark,
 				is_first_check,
 				is_last_check,
-				recieved_at
+				received_at
 			) VALUES (
 				` + userID +
 				"," + teacherID +
@@ -67,7 +67,7 @@ func (fir *fundInformationRepository) Create(
 				",'" + remark +
 				"'," + isFirstCheck +
 				"," + isLastCheck + 
-				"," + recievedAt + ")"
+				"," + receivedAt + ")"
 	return fir.crud.UpdateDB(c, query)
 }
 
@@ -81,7 +81,7 @@ func (fir *fundInformationRepository) Update(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
-	recievedAt string,
+	receivedAt string,
 ) error {
 	query := `
 		UPDATE
@@ -93,7 +93,7 @@ func (fir *fundInformationRepository) Update(
 		", remark ='" + remark +
 		"', is_first_check = " + isFirstCheck +
 		", is_last_check = " + isLastCheck +
-		", recieved_at = " + recievedAt + 
+		", received_at = " + receivedAt + 
 		" WHERE id = " + id
 	return fir.crud.UpdateDB(c, query)
 }

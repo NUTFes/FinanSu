@@ -43,7 +43,7 @@ func (f *fundInformationUseCase) GetFundInformations(c context.Context) ([]domai
 			&fundInformation.Remark,
 			&fundInformation.IsFirstCheck,
 			&fundInformation.IsLastCheck,
-			&fundInformation.RecievedAt,
+			&fundInformation.ReceivedAt,
 			&fundInformation.CreatedAt,
 			&fundInformation.UpdatedAt,
 		)
@@ -68,7 +68,7 @@ func (f *fundInformationUseCase) GetFundInformationByID(c context.Context, id st
 		&fundInformation.Remark,
 		&fundInformation.IsFirstCheck,
 		&fundInformation.IsLastCheck,
-		&fundInformation.RecievedAt,
+		&fundInformation.ReceivedAt,
 		&fundInformation.CreatedAt,
 		&fundInformation.UpdatedAt,
 	)
@@ -87,10 +87,10 @@ func (f *fundInformationUseCase) CreateFundInformation(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
-	recievedAt string,
+	receivedAt string,
 ) (domain.FundInformation, error) {
 	latastFundInformation := domain.FundInformation{}
-	err := f.rep.Create(c, userID, teacherID, price, remark, isFirstCheck, isLastCheck, recievedAt)
+	err := f.rep.Create(c, userID, teacherID, price, remark, isFirstCheck, isLastCheck, receivedAt)
 	row, err := f.rep.FindLatestRecord(c)
 	err = row.Scan(
 		&latastFundInformation.ID,
@@ -100,7 +100,7 @@ func (f *fundInformationUseCase) CreateFundInformation(
 		&latastFundInformation.Remark,
 		&latastFundInformation.IsFirstCheck,
 		&latastFundInformation.IsLastCheck,
-		&latastFundInformation.RecievedAt,
+		&latastFundInformation.ReceivedAt,
 		&latastFundInformation.CreatedAt,
 		&latastFundInformation.UpdatedAt,
 	)
@@ -120,10 +120,10 @@ func (f *fundInformationUseCase) UpdateFundInformation(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
-	recievedAt string,
+	receivedAt string,
 ) (domain.FundInformation, error) {
 	updatedFundInformation := domain.FundInformation{}
-	err := f.rep.Update(c, id, userID, teacherID, price, remark, isFirstCheck, isLastCheck, recievedAt)
+	err := f.rep.Update(c, id, userID, teacherID, price, remark, isFirstCheck, isLastCheck, receivedAt)
 	row, err := f.rep.Find(c, id)
 	err = row.Scan(
 		&updatedFundInformation.ID,
@@ -133,7 +133,7 @@ func (f *fundInformationUseCase) UpdateFundInformation(
 		&updatedFundInformation.Remark,
 		&updatedFundInformation.IsFirstCheck,
 		&updatedFundInformation.IsLastCheck,
-		&updatedFundInformation.RecievedAt,
+		&updatedFundInformation.ReceivedAt,
 		&updatedFundInformation.CreatedAt,
 		&updatedFundInformation.UpdatedAt,
 	)
@@ -167,7 +167,7 @@ func (f *fundInformationUseCase) GetFundInformationDetails(c context.Context) ([
 			&fundInformationDetail.FundInformation.Remark,
 			&fundInformationDetail.FundInformation.IsFirstCheck,
 			&fundInformationDetail.FundInformation.IsLastCheck,
-			&fundInformationDetail.FundInformation.RecievedAt,
+			&fundInformationDetail.FundInformation.ReceivedAt,
 			&fundInformationDetail.FundInformation.CreatedAt,
 			&fundInformationDetail.FundInformation.UpdatedAt,
 			&fundInformationDetail.User.ID,
@@ -212,7 +212,7 @@ func (f *fundInformationUseCase) GetFundInformationDetailByID(c context.Context,
 		&fundInformationDetail.FundInformation.Remark,
 		&fundInformationDetail.FundInformation.IsFirstCheck,
 		&fundInformationDetail.FundInformation.IsLastCheck,
-		&fundInformationDetail.FundInformation.RecievedAt,
+		&fundInformationDetail.FundInformation.ReceivedAt,
 		&fundInformationDetail.FundInformation.CreatedAt,
 		&fundInformationDetail.FundInformation.UpdatedAt,
 		&fundInformationDetail.User.ID,

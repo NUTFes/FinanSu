@@ -7,7 +7,7 @@ export const post = async (url: string, data: FundInformation) => {
   const remark = data.remark;
   const isFirstCheck = data.isFirstCheck;
   const isLastCheck = data.isLastCheck;
-  const recievedAt = data.recievedAt;
+  const receivedAt = data.receivedAt;
   const postUrl =
     url +
     '?user_id=' +
@@ -22,8 +22,8 @@ export const post = async (url: string, data: FundInformation) => {
     isFirstCheck +
     '&is_last_check=' +
     isLastCheck +
-    '&recieved_at' +
-    recievedAt;
+    '&received_at' +
+    receivedAt;
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -42,7 +42,7 @@ export const put = async (url: string, data: FundInformation) => {
   const remark = data.remark;
   const isFirstCheck = data.isFirstCheck;
   const isLastCheck = data.isLastCheck;
-  const recievedAt = data.recievedAt;
+  const receivedAt = data.receivedAt;
   const putUrl =
     url +
     '?user_id=' +
@@ -57,8 +57,8 @@ export const put = async (url: string, data: FundInformation) => {
     isFirstCheck +
     '&is_last_check=' +
     isLastCheck +
-    '&recieved_at' +
-    recievedAt;
+    '&received_at' +
+    receivedAt;
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
