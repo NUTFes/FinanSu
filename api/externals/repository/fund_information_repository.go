@@ -16,8 +16,8 @@ type fundInformationRepository struct {
 type FundInformationRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string, string, string) error
+	Create(context.Context, string, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
 	FindDetails(context.Context) (*sql.Rows, error)
 	FindDetailByID(context.Context, string) (*sql.Row, error)
@@ -49,6 +49,7 @@ func (fir *fundInformationRepository) Create(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
+	receivedAt string,
 ) error {
 	query := `
 		INSERT INTO
@@ -57,14 +58,16 @@ func (fir *fundInformationRepository) Create(
 				teacher_id,
 				price, remark,
 				is_first_check,
-				is_last_check
+				is_last_check,
+				received_at
 			) VALUES (
 				` + userID +
 				"," + teacherID +
 				"," + price +
 				",'" + remark +
 				"'," + isFirstCheck +
-				"," + isLastCheck + ")"
+				"," + isLastCheck + 
+				"," + receivedAt + ")"
 	return fir.crud.UpdateDB(c, query)
 }
 
@@ -78,6 +81,7 @@ func (fir *fundInformationRepository) Update(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
+	receivedAt string,
 ) error {
 	query := `
 		UPDATE
@@ -89,6 +93,7 @@ func (fir *fundInformationRepository) Update(
 		", remark ='" + remark +
 		"', is_first_check = " + isFirstCheck +
 		", is_last_check = " + isLastCheck +
+		", received_at = " + receivedAt + 
 		" WHERE id = " + id
 	return fir.crud.UpdateDB(c, query)
 }

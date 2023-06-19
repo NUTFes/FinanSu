@@ -14,8 +14,8 @@ type fundInformationUseCase struct {
 type FundInformationUseCase interface {
 	GetFundInformations(context.Context) ([]domain.FundInformation, error)
 	GetFundInformationByID(context.Context, string) (domain.FundInformation, error)
-	CreateFundInformation(context.Context, string, string, string, string, string, string) (domain.FundInformation, error)
-	UpdateFundInformation(context.Context, string, string, string, string, string, string, string) (domain.FundInformation, error)
+	CreateFundInformation(context.Context, string, string, string, string, string, string, string) (domain.FundInformation, error)
+	UpdateFundInformation(context.Context, string, string, string, string, string, string, string, string) (domain.FundInformation, error)
 	DestroyFundInformation(context.Context, string) error
 	GetFundInformationDetails(context.Context) ([]domain.FundInformationDetail, error)
 	GetFundInformationDetailByID(context.Context, string) (domain.FundInformationDetail, error)
@@ -43,6 +43,7 @@ func (f *fundInformationUseCase) GetFundInformations(c context.Context) ([]domai
 			&fundInformation.Remark,
 			&fundInformation.IsFirstCheck,
 			&fundInformation.IsLastCheck,
+			&fundInformation.ReceivedAt,
 			&fundInformation.CreatedAt,
 			&fundInformation.UpdatedAt,
 		)
@@ -67,6 +68,7 @@ func (f *fundInformationUseCase) GetFundInformationByID(c context.Context, id st
 		&fundInformation.Remark,
 		&fundInformation.IsFirstCheck,
 		&fundInformation.IsLastCheck,
+		&fundInformation.ReceivedAt,
 		&fundInformation.CreatedAt,
 		&fundInformation.UpdatedAt,
 	)
@@ -85,9 +87,10 @@ func (f *fundInformationUseCase) CreateFundInformation(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
+	receivedAt string,
 ) (domain.FundInformation, error) {
 	latastFundInformation := domain.FundInformation{}
-	err := f.rep.Create(c, userID, teacherID, price, remark, isFirstCheck, isLastCheck)
+	err := f.rep.Create(c, userID, teacherID, price, remark, isFirstCheck, isLastCheck, receivedAt)
 	row, err := f.rep.FindLatestRecord(c)
 	err = row.Scan(
 		&latastFundInformation.ID,
@@ -97,6 +100,7 @@ func (f *fundInformationUseCase) CreateFundInformation(
 		&latastFundInformation.Remark,
 		&latastFundInformation.IsFirstCheck,
 		&latastFundInformation.IsLastCheck,
+		&latastFundInformation.ReceivedAt,
 		&latastFundInformation.CreatedAt,
 		&latastFundInformation.UpdatedAt,
 	)
@@ -116,9 +120,10 @@ func (f *fundInformationUseCase) UpdateFundInformation(
 	remark string,
 	isFirstCheck string,
 	isLastCheck string,
+	receivedAt string,
 ) (domain.FundInformation, error) {
 	updatedFundInformation := domain.FundInformation{}
-	err := f.rep.Update(c, id, userID, teacherID, price, remark, isFirstCheck, isLastCheck)
+	err := f.rep.Update(c, id, userID, teacherID, price, remark, isFirstCheck, isLastCheck, receivedAt)
 	row, err := f.rep.Find(c, id)
 	err = row.Scan(
 		&updatedFundInformation.ID,
@@ -128,6 +133,7 @@ func (f *fundInformationUseCase) UpdateFundInformation(
 		&updatedFundInformation.Remark,
 		&updatedFundInformation.IsFirstCheck,
 		&updatedFundInformation.IsLastCheck,
+		&updatedFundInformation.ReceivedAt,
 		&updatedFundInformation.CreatedAt,
 		&updatedFundInformation.UpdatedAt,
 	)
@@ -161,6 +167,7 @@ func (f *fundInformationUseCase) GetFundInformationDetails(c context.Context) ([
 			&fundInformationDetail.FundInformation.Remark,
 			&fundInformationDetail.FundInformation.IsFirstCheck,
 			&fundInformationDetail.FundInformation.IsLastCheck,
+			&fundInformationDetail.FundInformation.ReceivedAt,
 			&fundInformationDetail.FundInformation.CreatedAt,
 			&fundInformationDetail.FundInformation.UpdatedAt,
 			&fundInformationDetail.User.ID,
@@ -205,6 +212,7 @@ func (f *fundInformationUseCase) GetFundInformationDetailByID(c context.Context,
 		&fundInformationDetail.FundInformation.Remark,
 		&fundInformationDetail.FundInformation.IsFirstCheck,
 		&fundInformationDetail.FundInformation.IsLastCheck,
+		&fundInformationDetail.FundInformation.ReceivedAt,
 		&fundInformationDetail.FundInformation.CreatedAt,
 		&fundInformationDetail.FundInformation.UpdatedAt,
 		&fundInformationDetail.User.ID,

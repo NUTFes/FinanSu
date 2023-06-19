@@ -8,10 +8,11 @@ CREATE TABLE fund_informations (
   remark varchar(255),
   is_first_check boolean,
   is_last_check boolean,
+  received_at varchar(255) not null,
   created_at datetime not null default current_timestamp,
   updated_at datetime not null default current_timestamp on update current_timestamp,
   PRIMARY KEY (id)
 );
 
-INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check) values (1, 1, 2000, "nothing", false, false);
-INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check) values (2, 2, 2000, "nothing", false, false);
+INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check, received_at) values (1, 1, 2000, "nothing", false, false, '2023-02-22');
+INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check, received_at) values (2, 2, 2000, "nothing", false, false, '2022-02-22');

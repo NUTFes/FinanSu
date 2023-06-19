@@ -157,6 +157,7 @@ export interface FundInformation {
   remark: string;
   isFirstCheck: boolean;
   isLastCheck: boolean;
+  receivedAt: string;
   createdAt?: string;
   updatedAt?: string;
 }

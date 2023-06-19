@@ -87,13 +87,13 @@ export default function PurchaseOrders(props: Props) {
   }, [filteredPurchaseOrderViews]);
 
   useEffect(() => {
-    if (purchaseOrderViews) {
-      const purchaseOrderChecks = purchaseOrderViews.map((purchaseOrderView) => {
+    if (filteredPurchaseOrderViews) {
+      const purchaseOrderChecks = filteredPurchaseOrderViews.map((purchaseOrderView) => {
         return purchaseOrderView.purchaseOrder.financeCheck;
       });
       setPurchaseOrderChecks(purchaseOrderChecks);
     }
-  }, [purchaseOrderViews]);
+  }, [filteredPurchaseOrderViews]);
 
   const updatePurchaseOrder = async (purchaseOrderID: number, purchaseOrder: PurchaseOrder) => {
     const url = process.env.CSR_API_URI + '/purchaseorders/' + purchaseOrderID;

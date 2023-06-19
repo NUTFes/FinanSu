@@ -728,6 +728,12 @@ const docTemplate = `{
                         "in": "query",
                         "description": "is_last_check",
                         "type": "boolean"
+                    },
+                    {
+                        "name": "received_at",
+                        "in": "query",
+                        "description": "received_at",
+                        "type": "string"
                     }
                 ],
             },
@@ -816,6 +822,12 @@ const docTemplate = `{
                         "in": "query",
                         "description": "is_last_check",
                         "type": "boolean"
+                    },
+                    {
+                        "name": "received_at",
+                        "in": "query",
+                        "description": "received_at",
+                        "type": "string"
                     }
                 ],
             },

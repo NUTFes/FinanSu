@@ -25,6 +25,7 @@ export default function EditModal(props: ModalProps) {
     remark: props.fundInformation.remark,
     isFirstCheck: false,
     isLastCheck: false,
+    receivedAt: props.fundInformation.receivedAt,
   });
 
   const [departmentID, setDepartmentID] = useState<number | string>(1);
@@ -56,8 +57,8 @@ export default function EditModal(props: ModalProps) {
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(
     props.users.find((user) => {
-      return (user.id === props.fundInformation.userID)
-    })?.bureauID || 1
+      return user.id === props.fundInformation.userID;
+    })?.bureauID || 1,
   );
   const filteredUsers = useMemo(() => {
     const res = props.users
@@ -67,6 +68,7 @@ export default function EditModal(props: ModalProps) {
       .filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
+    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
     return res;
   }, [bureauId]);
 
@@ -126,6 +128,15 @@ export default function EditModal(props: ModalProps) {
               </option>
             ))}
           </Select>
+        </div>
+        <p className='cols-span-1 text-black-600'>受け取り日時</p>
+        <div className='col-span-4 w-full'>
+          <Input
+            type='date'
+            value={formData.receivedAt}
+            onChange={handler('receivedAt')}
+            className='w-full'
+          />
         </div>
         <p className='col-span-1 text-black-600'>金額</p>
         <div className='col-span-4 w-full'>
