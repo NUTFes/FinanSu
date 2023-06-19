@@ -27,6 +27,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     remark: '',
     isFirstCheck: false,
     isLastCheck: false,
+    receivedAt: '',
   });
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         remark: '',
         isFirstCheck: false,
         isLastCheck: false,
+        receivedAt: '',
       };
       setFormData(initFormData);
     }
@@ -122,6 +124,15 @@ const OpenAddModal: FC<ModalProps> = (props) => {
               </option>
             ))}
           </Select>
+        </div>
+        <p className='col-span-1 text-black-600'>受け取り日時</p>
+        <div className='col-span-4 w-full'>
+          <Input
+            type='date'
+            value={formData.receivedAt}
+            onChange={handler('receivedAt')}
+            className='w-full'
+          />
         </div>
         <p className='col-span-1 text-black-600'>金額</p>
         <div className='col-span-4 w-full'>
