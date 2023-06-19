@@ -14,5 +14,5 @@ CREATE TABLE fund_informations (
   PRIMARY KEY (id)
 );
 
-INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check, recieved_at) values (1, 1, 2000, "nothing", false, false, '2023-2-22');
-INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check, recieved_at) values (2, 2, 2000, "nothing", false, false, '2022-2-22');
+INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check, recieved_at) values (1, 1, 2000, "nothing", false, false, '2023-02-22');
+INSERT into fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check, recieved_at) values (2, 2, 2000, "nothing", false, false, '2022-02-22');
