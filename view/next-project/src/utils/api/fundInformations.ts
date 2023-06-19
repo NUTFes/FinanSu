@@ -23,7 +23,8 @@ export const post = async (url: string, data: FundInformation) => {
     '&is_last_check=' +
     isLastCheck +
     '&received_at="' +
-    receivedAt + '"';
+    receivedAt +
+    '"';
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',
@@ -58,7 +59,8 @@ export const put = async (url: string, data: FundInformation) => {
     '&is_last_check=' +
     isLastCheck +
     '&received_at="' +
-    receivedAt + '"';
+    receivedAt +
+    '"';
   const res = await fetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
