@@ -83,7 +83,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>募金の登録</h1>
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
-        <p className='col-span-1 text-black-600'>所属</p>
+        <p className='col-span-1 text-black-600'>教員の所属</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={departmentID} onChange={handleDepartmentID}>
             {props.departments.map((department) => (
@@ -105,7 +105,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
               ))}
           </Select>
         </div>
-        <p className='text-black-600'>所属している局</p>
+        <p className='text-black-600'>担当者の局</p>
         <div className='col-span-4 w-full'>
           <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
             {BUREAUS.map((bureaus) => (
