@@ -99,7 +99,7 @@ export default function FundInformations(props: Props) {
   }, [currentUser?.roleID]);
 
   const isFinanceStaff = useMemo(() => {
-    if ((currentUser?.bureauID == 3)||(currentUser?.bureauID == 4)) {
+    if (currentUser?.bureauID == 3 || currentUser?.bureauID == 4) {
       return true;
     } else {
       return false;
