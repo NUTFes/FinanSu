@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction, useEffect, useState, useMemo } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
@@ -20,30 +20,22 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
   const [departmentID, setDepartmentID] = useState<number | string>(1);
+
+  const today = new Date();
+  const yyyy = String(today.getFullYear());
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const ymd = `${yyyy}-${mm}-${dd}`;
+
   const [formData, setFormData] = useState<FundInformation>({
     userID: user.id,
-    teacherID: 1,
+    teacherID: props.teachers[0].id || 1,
     price: 0,
     remark: '',
     isFirstCheck: false,
     isLastCheck: false,
-    receivedAt: '',
+    receivedAt: ymd,
   });
-
-  useEffect(() => {
-    if (router.isReady) {
-      const initFormData: FundInformation = {
-        userID: user.id,
-        teacherID: 1,
-        price: 0,
-        remark: '',
-        isFirstCheck: false,
-        isLastCheck: false,
-        receivedAt: '',
-      };
-      setFormData(initFormData);
-    }
-  }, [user, router.isReady]);
 
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
