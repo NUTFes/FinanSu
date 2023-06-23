@@ -22,24 +22,30 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   const [departmentID, setDepartmentID] = useState<number | string>(1);
   const [formData, setFormData] = useState<FundInformation>({
     userID: user.id,
-    teacherID: 1,
+    teacherID: 3,
     price: 0,
     remark: '',
     isFirstCheck: false,
     isLastCheck: false,
     receivedAt: '',
   });
+  
+  const today = new Date();
+  const yyyy = String(today.getFullYear());
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const ymd=`${yyyy}-${mm}-${dd}`;
 
   useEffect(() => {
     if (router.isReady) {
       const initFormData: FundInformation = {
         userID: user.id,
-        teacherID: 1,
+        teacherID: 3,
         price: 0,
         remark: '',
         isFirstCheck: false,
         isLastCheck: false,
-        receivedAt: '',
+        receivedAt: ymd,
       };
       setFormData(initFormData);
     }
