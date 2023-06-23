@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction, useEffect, useState, useMemo } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
@@ -23,8 +23,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const today = new Date();
   const yyyy = String(today.getFullYear());
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
   const ymd = `${yyyy}-${mm}-${dd}`;
   const teacherId = props.teachers[0].id;
   const firstTeacherId: number = teacherId!;
