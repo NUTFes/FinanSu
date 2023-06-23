@@ -14,6 +14,8 @@ interface ModalProps {
   isDelete: boolean;
 }
 
+const designer=["学生が作成","企業が作成","去年のもの"];
+
 const DetailModal: FC<ModalProps> = (props) => {
   const onClose = () => {
     props.setIsOpen(false);
@@ -26,16 +28,16 @@ const DetailModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='mt-64 md:mt-0 md:w-1/2'>
+    <Modal className='mt-64 md:mt-5 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto mr-5 w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
-      <p className='mx-auto mb-8 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
+      <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
         協賛活動の詳細
       </p>
-      <div className='my-10 flex flex-wrap justify-center gap-8'>
+      <div className='my-7 flex flex-wrap justify-center gap-8'>
         <div className='flex gap-3'>
           <p className='text-black-600'>作成日</p>
           <p className='border-b border-primary-1'>
@@ -53,7 +55,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           <p className='border-b border-primary-1'>{props.sponsorActivitiesViewItem.user.name}</p>
         </div>
       </div>
-      <div className='my-10 flex flex-wrap justify-center gap-8'>
+      <div className='my-7 flex flex-wrap justify-center gap-8'>
         <div className='flex gap-3'>
           <p className='text-black-600'>オプション</p>
           <p className='border-b border-primary-1'>
@@ -66,8 +68,38 @@ const DetailModal: FC<ModalProps> = (props) => {
             {props.sponsorActivitiesViewItem.sponsorActivity.expense}円
           </p>
         </div>
+        <div className='flex gap-3'>
+          <p className='text-black-600'>デザイン</p>
+          <p className='border-b border-primary-1'>
+            {designer[props.sponsorActivitiesViewItem.sponsorActivity.design]}
+          </p>
+        </div>
       </div>
-      <p className='mx-auto my-5 w-fit text-xl text-black-600'>備考</p>
+      <p className='mx-auto my-3 w-fit text-xl text-black-600'>広告データurl</p>
+      <table className='w-full table-fixed border-collapse'>
+        <thead>
+          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></tr>
+        </thead>
+        <tbody>
+          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <td className='py-3'>
+              <div>
+                <div
+                  className='border-primary-1 text-center text-black-600 '
+
+                >
+                  {props.sponsorActivitiesViewItem.sponsorActivity.url === '' && <p>なし</p>}
+                  {props.sponsorActivitiesViewItem.sponsorActivity.url !== '' &&
+                   <a href={props.sponsorActivitiesViewItem.sponsorActivity.url} className="hover:text-black-300 hover:underline">
+                    {props.sponsorActivitiesViewItem.sponsorActivity.url}
+                  </a>}
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></tr>
@@ -90,7 +122,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='mx-auto my-5 w-fit text-xl text-black-600'>協賛企業</p>
+      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -141,8 +173,8 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='mx-auto mb-5 mt-10 w-fit text-xl text-black-600'>協賛スタイル</p>
-      <table className='w-full table-fixed border-collapse'>
+      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛スタイル</p>
+      <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
             <th className='w-1/4 px-6 pb-2'>
