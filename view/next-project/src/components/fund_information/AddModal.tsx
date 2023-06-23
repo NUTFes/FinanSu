@@ -20,36 +20,24 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
   const [departmentID, setDepartmentID] = useState<number | string>(1);
-  const [formData, setFormData] = useState<FundInformation>({
-    userID: user.id,
-    teacherID: 3,
-    price: 0,
-    remark: '',
-    isFirstCheck: false,
-    isLastCheck: false,
-    receivedAt: '',
-  });
-  
+
   const today = new Date();
   const yyyy = String(today.getFullYear());
   const mm = String(today.getMonth() + 1).padStart(2, "0");
   const dd = String(today.getDate()).padStart(2, "0");
-  const ymd=`${yyyy}-${mm}-${dd}`;
+  const ymd = `${yyyy}-${mm}-${dd}`;
+  const teacherId = props.teachers[0].id;
+  const firstTeacherId: number = teacherId!;
 
-  useEffect(() => {
-    if (router.isReady) {
-      const initFormData: FundInformation = {
-        userID: user.id,
-        teacherID: 3,
-        price: 0,
-        remark: '',
-        isFirstCheck: false,
-        isLastCheck: false,
-        receivedAt: ymd,
-      };
-      setFormData(initFormData);
-    }
-  }, [user, router.isReady]);
+  const [formData, setFormData] = useState<FundInformation>({
+    userID: user.id,
+    teacherID: firstTeacherId,
+    price: 0,
+    remark: '',
+    isFirstCheck: false,
+    isLastCheck: false,
+    receivedAt: ymd,
+  });
 
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
