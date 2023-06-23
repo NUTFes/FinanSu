@@ -22,7 +22,11 @@ const TABLE_COLUMNS = [
   '協賛スタイル',
   '担当者名',
   '回収状況',
+];
+
+const TABLE_COLUMNS2 = [
   'オプション',
+  'デザイン作成',
   '移動距離(km)',
   '交通費',
 ];
@@ -36,12 +40,8 @@ interface Props {
 
 const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
 const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
-const REMARK_PAMPHLET_SPONSOR = `<パンフレット掲載内容> 企業が作成\n`;
-const REMARK_PAMPHLET_OTHER = `<パンフレット掲載内容> 去年のものを使用\n`;
 const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
-const REMARK_DESIGN_STUDENT = `<デザイン作成> 学生が作成\n`;
-const REMARK_DESIGN_SPONSOR = `<デザイン作成> 企業が作成\n`;
-const REMARK_DESIGN_OTHER = `<デザイン作成> 去年のものを使用\n`;
+const designer = ["学生が作成","企業が作成","去年のもの"];
 
 export default function SponsorActivitiesAddModal(props: Props) {
   const router = useRouter();
@@ -58,26 +58,56 @@ export default function SponsorActivitiesAddModal(props: Props) {
     userID: users[0].id || 0,
     isDone: false,
     feature: 'なし',
+    design:0,
+    url:"",
     expense: 0,
-    remark: '',
+    remark: REMARK_PAMPHLET,
   });
 
-  const [design, setDesign] = useState<string>('学生が作成');
-  useEffect(() => {
-    const newRemark =
-      design === '学生が作成'
-        ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
-        : design === '企業が作成'
-        ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
-        : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
-    const newRemarkFeature =
+
+  const setDesign =
+  (input: string) =>
+  (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const remarkOption = 
       formData.feature === 'ポスター'
+      ? REMARK_POSTER
+      : formData.feature === 'クーポン'
+      ? REMARK_COUPON
+      : '';
+    const newRemarkDesign =
+      e.target.value === '0'
+        ? REMARK_PAMPHLET
+        :"";
+    console.log(formData.remark);
+    console.log(e.target.value);
+    setFormData({ ...formData, design: Number(e.target.value), remark: remarkOption+newRemarkDesign});
+  };
+
+  const setFeature =
+  (input: string) =>
+  (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const newRemarkFeature =
+      e.target.value === 'ポスター'
         ? REMARK_POSTER
-        : formData.feature === 'クーポン'
+        : e.target.value === 'クーポン'
         ? REMARK_COUPON
         : '';
-    setFormData({ ...formData, remark: newRemark + newRemarkFeature });
-  }, [design]);
+    const remarkDesign =
+      formData.design === 0
+        ? REMARK_PAMPHLET
+        :"";
+    setFormData({ ...formData, [input]: e.target.value, remark: newRemarkFeature+remarkDesign});
+  };
 
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([sponsorStyles[0].id || 0]);
   const [isStyleError, setIsStyleError] = useState(false);
@@ -162,23 +192,17 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   useEffect(() => {
     if (isSelectSponsorBooth) {
-      const newRemark =
-        design === '学生が作成'
-          ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
-          : design === '企業が作成'
-          ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
-          : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
       setFormData({
         ...formData,
         feature: 'なし',
-        remark: newRemark,
+        remark: "",
       });
     }
   }, [isSelectSponsorBooth]);
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
-    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-5'>
+    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-3'>
       <p className='text-black-600'>協賛企業</p>
       <div className='col-span-4 w-full'>
         <Select value={data.sponsorID} onChange={formDataHandler('sponsorID')}>
@@ -238,9 +262,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <div className='col-span-4 w-full'>
         <Select
           value={data.feature}
-          onChange={(e) => {
-            setFormData({ ...formData, feature: e.target.value });
-          }}
+          onChange={setFeature('feature')}
         >
           <option value={'なし'} selected>
             なし
@@ -253,6 +275,10 @@ export default function SponsorActivitiesAddModal(props: Props) {
           </option>
         </Select>
       </div>
+      <p className='text-black-600 text-center'>広告データurl</p>
+      <div className={clsx('col-span-4 grid w-full')}>
+        <Input value={data.url} onChange={formDataHandler('url')} />
+      </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
         <div className='flex gap-3'>
@@ -260,9 +286,9 @@ export default function SponsorActivitiesAddModal(props: Props) {
             type='radio'
             id='student'
             name='design'
-            value='学生が作成'
-            checked={design === '学生が作成'}
-            onChange={(e) => setDesign(e.target.value)}
+            value='0'
+            checked={data.design === 0}
+            onChange={setDesign('design')}
           />
           <label htmlFor='student'>学生が作成</label>
         </div>
@@ -271,9 +297,9 @@ export default function SponsorActivitiesAddModal(props: Props) {
             type='radio'
             id='company'
             name='design'
-            value='企業が作成'
-            checked={design === '企業が作成'}
-            onChange={(e) => setDesign(e.target.value)}
+            value='1'
+            checked={data.design === 1}
+            onChange={setDesign('design')}
           />
           <label htmlFor='company'>企業が作成</label>
         </div>
@@ -282,9 +308,9 @@ export default function SponsorActivitiesAddModal(props: Props) {
             type='radio'
             id='lastYear'
             name='design'
-            value='去年のものを使用'
-            checked={design === '去年のものを使用'}
-            onChange={(e) => setDesign(e.target.value)}
+            value='2'
+            checked={data.design === 2}
+            onChange={setDesign('design')}
           />
           <label htmlFor='lastYear'>去年のものを使用</label>
         </div>
@@ -328,7 +354,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
     return (
       <div>
-        <table className='mb-10 w-full table-fixed border-collapse'>
+        <table className='mt-10 mb-7 w-full table-fixed border-collapse'>
           <thead>
             <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
               {TABLE_COLUMNS.map((tableColumn: string) => (
@@ -358,9 +384,29 @@ export default function SponsorActivitiesAddModal(props: Props) {
                   {sponsorActivities.isDone ? '回収済み' : '未回収'}
                 </div>
               </td>
+            </tr>
+          </tbody>
+        </table>
+        <table className='mb-7 w-full table-fixed border-collapse'>
+          <thead>
+            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+              {TABLE_COLUMNS2.map((tableColumn: string) => (
+                <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
+                  <div className='text-center text-sm text-black-600'>{tableColumn}</div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>
                   {sponsorActivities.feature}
+                </div>
+              </td>
+              <td className='py-3'>
+                <div className='text-center text-sm text-black-600'>
+                  {designer[sponsorActivities.design]}
                 </div>
               </td>
               <td className='py-3'>
@@ -370,7 +416,30 @@ export default function SponsorActivitiesAddModal(props: Props) {
               </td>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>
-                  {Math.round(sponsorActivities.expense * 11)}
+                  {Math.round(sponsorActivities.expense * 11)}円
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table className='mb-7 w-full table-fixed border-collapse'>
+          <thead>
+            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+              <th className='border-b-primary-1 px-6 pb-2'>
+                <div className='text-center text-sm text-black-600'>広告データurl</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tr>
+              <td>
+                <div className='py-3 text-sm text-black-600'>
+                  <p
+                    className='border-primary-1 text-center'
+                  >
+                    {sponsorActivities.url === '' && <div>なし</div>}
+                    {sponsorActivities.url}
+                  </p>
                 </div>
               </td>
             </tr>
