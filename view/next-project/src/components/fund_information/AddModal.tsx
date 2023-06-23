@@ -26,12 +26,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const dd = String(today.getDate()).padStart(2, '0');
   const ymd = `${yyyy}-${mm}-${dd}`;
-  const teacherId = props.teachers[0].id;
-  const firstTeacherId: number = teacherId!;
 
   const [formData, setFormData] = useState<FundInformation>({
     userID: user.id,
-    teacherID: firstTeacherId,
+    teacherID: props.teachers[0].id || 1,
     price: 0,
     remark: '',
     isFirstCheck: false,
