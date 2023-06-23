@@ -45,6 +45,7 @@ export default function EditModal(props: ModalProps) {
     ...props.sponsorActivity,
     expense: Number((props.sponsorActivity.expense / 11).toFixed(1)),
   });
+
   const initStyleIds = sponsorStyleDetails
     ? sponsorStyleDetails.map((sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID)
     : [];
@@ -69,6 +70,50 @@ export default function EditModal(props: ModalProps) {
     return options;
   }, [sponsorStyles]);
 
+  const setDesign =
+  (input: string) =>
+  (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const remarkOption = 
+      formData.feature === 'ポスター'
+      ? REMARK_POSTER
+      : formData.feature === 'クーポン'
+      ? REMARK_COUPON
+      : '';
+    const newRemarkDesign =
+      e.target.value === '0'
+        ? REMARK_PAMPHLET
+        :"";
+    console.log(formData.remark);
+    console.log(e.target.value);
+    setFormData({ ...formData, design: Number(e.target.value), remark: remarkOption+newRemarkDesign});
+  };
+
+  const setFeature =
+  (input: string) =>
+  (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const newRemarkFeature =
+      e.target.value === 'ポスター'
+        ? REMARK_POSTER
+        : e.target.value === 'クーポン'
+        ? REMARK_COUPON
+        : '';
+    const remarkDesign =
+      formData.design === 0
+        ? REMARK_PAMPHLET
+        :"";
+    setFormData({ ...formData, [input]: e.target.value, remark: newRemarkFeature+remarkDesign});
+  };
+
   const isSelectSponsorBooth = useMemo(() => {
     if (!selectedStyleIds) return false;
     const isBoothOnly = selectedStyleIds.length === 1;
@@ -80,40 +125,13 @@ export default function EditModal(props: ModalProps) {
 
   useEffect(() => {
     if (isSelectSponsorBooth) {
-      const newRemark =
-        design === '学生が作成'
-          ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
-          : design === '企業が作成'
-          ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
-          : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
       setFormData({
         ...formData,
         feature: 'なし',
-        remark: newRemark,
+        remark: "",
       });
     }
   }, [isSelectSponsorBooth]);
-
-  const [design, setDesign] = useState<string>('学生が作成');
-  const changeDesign = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDesign(e.target.value);
-    const newRemark =
-      e.target.value === '学生が作成'
-        ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
-        : e.target.value === '企業が作成'
-        ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
-        : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
-    const newRemarkFeature =
-      formData.feature === 'ポスター'
-        ? REMARK_POSTER
-        : formData.feature === 'クーポン'
-        ? REMARK_COUPON
-        : '';
-    setFormData({
-      ...formData,
-      remark: newRemark + newRemarkFeature,
-    });
-  };
 
   const handler =
     (input: string) =>
@@ -188,7 +206,7 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
-    <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+    <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-3'>
       <p className='text-black-600'>企業名</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('sponsorID')}>
@@ -253,25 +271,7 @@ export default function EditModal(props: ModalProps) {
       <div className='col-span-4 w-full'>
         <Select
           value={data.feature}
-          onChange={(e) => {
-            const newRemark =
-              design === '学生が作成'
-                ? REMARK_DESIGN_STUDENT + REMARK_PAMPHLET
-                : design === '企業が作成'
-                ? REMARK_DESIGN_SPONSOR + REMARK_PAMPHLET_SPONSOR
-                : REMARK_DESIGN_OTHER + REMARK_PAMPHLET_OTHER;
-            const newRemarkFeature =
-              e.target.value === 'ポスター'
-                ? REMARK_POSTER
-                : e.target.value === 'クーポン'
-                ? REMARK_COUPON
-                : '';
-            setFormData({
-              ...formData,
-              remark: newRemark + newRemarkFeature,
-              feature: e.target.value,
-            });
-          }}
+          onChange={setFeature('feature')}
         >
           <option value={'なし'} selected>
             なし
@@ -284,6 +284,10 @@ export default function EditModal(props: ModalProps) {
           </option>
         </Select>
       </div>
+      <p className='text-black-600 text-center'>広告データurl</p>
+      <div className='col-span-4 grid w-full'>
+        <Input value={data.url} onChange={handler('url')} />
+      </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
         <div className='flex gap-3'>
@@ -291,9 +295,9 @@ export default function EditModal(props: ModalProps) {
             type='radio'
             id='student'
             name='design'
-            value='学生が作成'
-            checked={design === '学生が作成'}
-            onChange={changeDesign}
+            value='0'
+            checked={data.design === 0}
+            onChange={setDesign('design')}
           />
           <label htmlFor='student'>学生が作成</label>
         </div>
@@ -302,9 +306,9 @@ export default function EditModal(props: ModalProps) {
             type='radio'
             id='company'
             name='design'
-            value='企業が作成'
-            checked={design === '企業が作成'}
-            onChange={changeDesign}
+            value='1'
+            checked={data.design === 1}
+            onChange={setDesign('design')}
           />
           <label htmlFor='company'>企業が作成</label>
         </div>
@@ -313,9 +317,9 @@ export default function EditModal(props: ModalProps) {
             type='radio'
             id='lastYear'
             name='design'
-            value='去年のものを使用'
-            checked={design === '去年のものを使用'}
-            onChange={changeDesign}
+            value='2'
+            checked={data.design === 2}
+            onChange={setDesign('design')}
           />
           <label htmlFor='lastYear'>去年のものを使用</label>
         </div>
