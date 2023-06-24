@@ -346,7 +346,9 @@ export default function SponsorActivities(props: Props) {
                       }}
                     >
                       <div className='text-sm text-black-600 flex justify-center'>
-                        {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
+                        {sponsorActivitiesItem.sponsorActivity.design !==0&&(
+                          DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]
+                        )}
                         {sponsorActivitiesItem.sponsorActivity.url !=="" &&(
                           <a
                             className={clsx('mx-1')}

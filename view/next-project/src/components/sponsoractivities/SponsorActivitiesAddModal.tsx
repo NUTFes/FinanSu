@@ -61,7 +61,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
     design:0,
     url:"",
     expense: 0,
-    remark: REMARK_PAMPHLET,
+    remark: "",
   });
 
 
@@ -73,7 +73,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       ? REMARK_COUPON
       : '';
     const newRemarkDesign =
-      e.target.value === '0'
+      e.target.value === '1'
         ? REMARK_PAMPHLET
         :"";
     setFormData({
@@ -91,7 +91,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         ? REMARK_COUPON
         : '';
     const remarkDesign =
-      formData.design === 0
+      formData.design === 1
         ? REMARK_PAMPHLET
         :"";
     setFormData({

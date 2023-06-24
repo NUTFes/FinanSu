@@ -77,7 +77,7 @@ export default function EditModal(props: ModalProps) {
       ? REMARK_COUPON
       : '';
     const newRemarkDesign =
-      e.target.value === '0'
+      e.target.value === '1'
         ? REMARK_PAMPHLET
         :"";
     setFormData({ ...formData, design: Number(e.target.value), remark: remarkOption+newRemarkDesign});
@@ -94,7 +94,7 @@ export default function EditModal(props: ModalProps) {
         ? REMARK_COUPON
         : '';
     const remarkDesign =
-      formData.design === 0
+      formData.design === 1
         ? REMARK_PAMPHLET
         :"";
     setFormData({ ...formData, feature: e.target.value, remark: newRemarkFeature+remarkDesign});
