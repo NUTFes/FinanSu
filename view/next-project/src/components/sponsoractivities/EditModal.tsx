@@ -67,12 +67,8 @@ export default function EditModal(props: ModalProps) {
   }, [sponsorStyles]);
 
   const setDesign =
-  (input: string) =>
   (
-    e:
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const remarkOption = 
       formData.feature === 'ポスター'
@@ -90,12 +86,8 @@ export default function EditModal(props: ModalProps) {
   };
 
   const setFeature =
-  (input: string) =>
   (
-    e:
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newRemarkFeature =
       e.target.value === 'ポスター'
@@ -107,7 +99,7 @@ export default function EditModal(props: ModalProps) {
       formData.design === 0
         ? REMARK_PAMPHLET
         :"";
-    setFormData({ ...formData, [input]: e.target.value, remark: newRemarkFeature+remarkDesign});
+    setFormData({ ...formData, feature: e.target.value, remark: newRemarkFeature+remarkDesign});
   };
 
   const isSelectSponsorBooth = useMemo(() => {
@@ -267,7 +259,7 @@ export default function EditModal(props: ModalProps) {
       <div className='col-span-4 w-full'>
         <Select
           value={data.feature}
-          onChange={setFeature('feature')}
+          onChange={setFeature}
         >
           <option value={'なし'} selected>
             なし
@@ -294,7 +286,7 @@ export default function EditModal(props: ModalProps) {
               name='design'
               value={designer.value}
               checked={data.design === designer.value}
-              onChange={setDesign('design')}
+              onChange={setDesign}
             />
             <label htmlFor={designer.id}>{designer.label}</label>
           </div>

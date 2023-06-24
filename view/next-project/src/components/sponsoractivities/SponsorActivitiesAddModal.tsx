@@ -65,14 +65,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   });
 
 
-  const setDesign =
-  (input: string) =>
-  (
-    e:
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
+  const setDesign = ( e: React.ChangeEvent<HTMLInputElement> ) => {
     const remarkOption = 
       formData.feature === 'ポスター'
       ? REMARK_POSTER
@@ -83,18 +76,15 @@ export default function SponsorActivitiesAddModal(props: Props) {
       e.target.value === '0'
         ? REMARK_PAMPHLET
         :"";
-    setFormData({ ...formData, design: Number(e.target.value), remark: remarkOption+newRemarkDesign});
+    setFormData({
+      ...formData,
+      design: Number(e.target.value),
+      remark: remarkOption+newRemarkDesign
+    });
   };
 
-  const setFeature =
-  (input: string) =>
-  (
-    e:
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const newRemarkFeature =
+  const setFeature =( e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newRemarkOption =
       e.target.value === 'ポスター'
         ? REMARK_POSTER
         : e.target.value === 'クーポン'
@@ -104,7 +94,11 @@ export default function SponsorActivitiesAddModal(props: Props) {
       formData.design === 0
         ? REMARK_PAMPHLET
         :"";
-    setFormData({ ...formData, [input]: e.target.value, remark: newRemarkFeature+remarkDesign});
+    setFormData({
+       ...formData,
+      feature: e.target.value,
+      remark: newRemarkOption+remarkDesign
+    });
   };
 
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([sponsorStyles[0].id || 0]);
@@ -260,7 +254,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <div className='col-span-4 w-full'>
         <Select
           value={data.feature}
-          onChange={setFeature('feature')}
+          onChange={setFeature}
         >
           <option value={'なし'} selected>
             なし
@@ -287,7 +281,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
                 name='design'
                 value={designer.value}
                 checked={data.design === designer.value}
-                onChange={setDesign('design')}
+                onChange={setDesign}
               />
               <label htmlFor={designer.id}>{designer.label}</label>
             </div>
