@@ -18,6 +18,7 @@ import {
   User,
   ActivityStyle,
 } from '@type/common';
+import { DESIGNERS } from "@constants/designers";
 
 interface Props {
   sponsorActivities: SponsorActivity[];
@@ -54,8 +55,6 @@ export async function getServerSideProps() {
     },
   };
 }
-
-const designer=["学生が作成","企業が作成","去年のもの"];
 
 export default function SponsorActivities(props: Props) {
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
@@ -190,7 +189,7 @@ export default function SponsorActivities(props: Props) {
                         </p>
                         <p>デザイン</p>
                         <div className='w-fit border-b border-primary-1 flex justify-center'>
-                          {designer[sponsorActivitiesItem.sponsorActivity.design]}
+                          {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
                           {sponsorActivitiesItem.sponsorActivity.url !==""&&(
                             <a
                             className={clsx('mx-1')}
@@ -347,7 +346,7 @@ export default function SponsorActivities(props: Props) {
                       }}
                     >
                       <div className='text-sm text-black-600 flex justify-center'>
-                        {designer[sponsorActivitiesItem.sponsorActivity.design]}
+                        {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
                         {sponsorActivitiesItem.sponsorActivity.url !=="" &&(
                           <a
                             className={clsx('mx-1')}
