@@ -13,8 +13,7 @@ interface ModalProps {
   sponsorActivitiesViewItem: SponsorActivityView;
   isDelete: boolean;
 }
-
-const designer=["学生が作成","企業が作成","去年のもの"];
+import { DESIGNERS } from "@constants/designers";
 
 const DetailModal: FC<ModalProps> = (props) => {
   const onClose = () => {
@@ -37,7 +36,7 @@ const DetailModal: FC<ModalProps> = (props) => {
       <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
         協賛活動の詳細
       </p>
-      <div className='my-7 flex flex-wrap justify-center gap-8'>
+      <div className='my-7 flex flex-wrap justify-center gap-7'>
         <div className='flex gap-3'>
           <p className='text-black-600'>作成日</p>
           <p className='border-b border-primary-1'>
@@ -55,7 +54,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           <p className='border-b border-primary-1'>{props.sponsorActivitiesViewItem.user.name}</p>
         </div>
       </div>
-      <div className='my-7 flex flex-wrap justify-center gap-8'>
+      <div className='my-7 flex flex-wrap justify-center gap-7'>
         <div className='flex gap-3'>
           <p className='text-black-600'>オプション</p>
           <p className='border-b border-primary-1'>
@@ -71,7 +70,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <div className='flex gap-3'>
           <p className='text-black-600'>デザイン</p>
           <p className='border-b border-primary-1'>
-            {designer[props.sponsorActivitiesViewItem.sponsorActivity.design]}
+            {DESIGNERS[props.sponsorActivitiesViewItem.sponsorActivity.design]}
           </p>
         </div>
       </div>
