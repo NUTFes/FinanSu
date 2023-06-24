@@ -191,14 +191,16 @@ export default function SponsorActivities(props: Props) {
                         <p>デザイン</p>
                         <div className='w-fit border-b border-primary-1 flex justify-center'>
                           {designer[sponsorActivitiesItem.sponsorActivity.design]}
-                          <a
+                          {sponsorActivitiesItem.sponsorActivity.url !==""&&(
+                            <a
                             className={clsx('mx-1')}
                             href={sponsorActivitiesItem.sponsorActivity.url}
                             target='_blank'
                             rel='noopener noreferrer'
-                          >
-                            <RiExternalLinkLine size={'16px'} />
-                          </a>
+                            >
+                              <RiExternalLinkLine size={'16px'} />
+                            </a>
+                          )}
                         </div>
                         <p>交通費</p>
                         <p className='w-fit border-b border-primary-1'>
@@ -245,7 +247,7 @@ export default function SponsorActivities(props: Props) {
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>オプション</div>
                 </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
+                <th className='w-1/10 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>デザイン</div>
                 </th>
                 <th className='w-1/11 border-b-primary-1 pb-2'>
@@ -346,14 +348,16 @@ export default function SponsorActivities(props: Props) {
                     >
                       <div className='text-sm text-black-600 flex justify-center'>
                         {designer[sponsorActivitiesItem.sponsorActivity.design]}
-                        <a
-                          className={clsx('mx-1')}
-                          href={sponsorActivitiesItem.sponsorActivity.url}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                        <RiExternalLinkLine size={'16px'} />
-                        </a>
+                        {sponsorActivitiesItem.sponsorActivity.url !=="" &&(
+                          <a
+                            className={clsx('mx-1')}
+                            href={sponsorActivitiesItem.sponsorActivity.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <RiExternalLinkLine size={'16px'} />
+                          </a>
+                        )}
                       </div>
                     </td>
                     <td
