@@ -15,6 +15,7 @@ import {
 import { MultiSelect } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { SponsorActivity, Sponsor, SponsorStyle, User, ActivityStyle } from '@type/common';
+import { DESIGNERS, DESIGNER_VALUES } from "@constants/designers";
 
 interface ModalProps {
   sponsorActivityId: number | string;
@@ -29,12 +30,7 @@ interface ModalProps {
 
 const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
 const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
-const REMARK_PAMPHLET_SPONSOR = `<パンフレット掲載内容> 企業が作成\n`;
-const REMARK_PAMPHLET_OTHER = `<パンフレット掲載内容> 去年のものを使用\n`;
 const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
-const REMARK_DESIGN_STUDENT = `<デザイン作成> 学生が作成\n`;
-const REMARK_DESIGN_SPONSOR = `<デザイン作成> 企業が作成\n`;
-const REMARK_DESIGN_OTHER = `<デザイン作成> 去年のものを使用\n`;
 
 export default function EditModal(props: ModalProps) {
   const { users, sponsors, sponsorStyles, sponsorStyleDetails, activityStyles } = props;
@@ -290,39 +286,19 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
-        <div className='flex gap-3'>
-          <input
-            type='radio'
-            id='student'
-            name='design'
-            value='0'
-            checked={data.design === 0}
-            onChange={setDesign('design')}
-          />
-          <label htmlFor='student'>学生が作成</label>
-        </div>
-        <div className='flex gap-3'>
-          <input
-            type='radio'
-            id='company'
-            name='design'
-            value='1'
-            checked={data.design === 1}
-            onChange={setDesign('design')}
-          />
-          <label htmlFor='company'>企業が作成</label>
-        </div>
-        <div className='flex gap-3'>
-          <input
-            type='radio'
-            id='lastYear'
-            name='design'
-            value='2'
-            checked={data.design === 2}
-            onChange={setDesign('design')}
-          />
-          <label htmlFor='lastYear'>去年のものを使用</label>
-        </div>
+        {DESIGNER_VALUES.map((designer) => (
+          <div className='flex gap-3'>
+            <input
+              type='radio'
+              id={designer.id}
+              name='design'
+              value={designer.value}
+              checked={data.design === designer.value}
+              onChange={setDesign('design')}
+            />
+            <label htmlFor={designer.id}>{designer.label}</label>
+          </div>
+        ))}
       </div>
       <p className='text-black-600'>移動距離(km)</p>
       <div className='col-span-4 w-full'>

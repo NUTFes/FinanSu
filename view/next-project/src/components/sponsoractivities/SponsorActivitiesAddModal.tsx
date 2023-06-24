@@ -15,6 +15,7 @@ import {
   Textarea,
 } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
+import { DESIGNERS, DESIGNER_VALUES } from "@constants/designers";
 import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 
 const TABLE_COLUMNS = [
@@ -41,7 +42,6 @@ interface Props {
 const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
 const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
 const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
-const designer = ["学生が作成","企業が作成","去年のもの"];
 
 export default function SponsorActivitiesAddModal(props: Props) {
   const router = useRouter();
@@ -83,8 +83,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
       e.target.value === '0'
         ? REMARK_PAMPHLET
         :"";
-    console.log(formData.remark);
-    console.log(e.target.value);
     setFormData({ ...formData, design: Number(e.target.value), remark: remarkOption+newRemarkDesign});
   };
 
@@ -281,39 +279,19 @@ export default function SponsorActivitiesAddModal(props: Props) {
       </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
-        <div className='flex gap-3'>
-          <input
-            type='radio'
-            id='student'
-            name='design'
-            value='0'
-            checked={data.design === 0}
-            onChange={setDesign('design')}
-          />
-          <label htmlFor='student'>学生が作成</label>
-        </div>
-        <div className='flex gap-3'>
-          <input
-            type='radio'
-            id='company'
-            name='design'
-            value='1'
-            checked={data.design === 1}
-            onChange={setDesign('design')}
-          />
-          <label htmlFor='company'>企業が作成</label>
-        </div>
-        <div className='flex gap-3'>
-          <input
-            type='radio'
-            id='lastYear'
-            name='design'
-            value='2'
-            checked={data.design === 2}
-            onChange={setDesign('design')}
-          />
-          <label htmlFor='lastYear'>去年のものを使用</label>
-        </div>
+        {DESIGNER_VALUES.map((designer) => (
+            <div className='flex gap-3'>
+              <input
+                type='radio'
+                id={designer.id}
+                name='design'
+                value={designer.value}
+                checked={data.design === designer.value}
+                onChange={setDesign('design')}
+              />
+              <label htmlFor={designer.id}>{designer.label}</label>
+            </div>
+          ))}
       </div>
       <p className='text-black-600'>移動距離(km)</p>
       <div className='col-span-4 w-full'>
@@ -406,7 +384,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
               </td>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>
-                  {designer[sponsorActivities.design]}
+                  {DESIGNERS[sponsorActivities.design]}
                 </div>
               </td>
               <td className='py-3'>
