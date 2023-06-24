@@ -2,7 +2,10 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useMemo } from 'react';
 
+import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
+import { createPresentationCsv } from '@/utils/createActivityCsv';
+import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -52,6 +55,13 @@ export async function getServerSideProps() {
       activityStyles: activityStylesRes,
     },
   };
+}
+
+const formatYYYYMMDD = (date: Date) => {
+  const yyyy = String(date.getFullYear());
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}${mm}${dd}`;
 }
 
 export default function SponsorActivities(props: Props) {
@@ -117,7 +127,7 @@ export default function SponsorActivities(props: Props) {
       </Head>
       <Card w='w-full'>
         <div className='mx-6 mt-10 md:mx-5'>
-          <div className='flex'>
+          <div className='flex gap-4'>
             <Title title={'協賛活動一覧'} />
             <select
               className={'w-100'}
@@ -128,6 +138,17 @@ export default function SponsorActivities(props: Props) {
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
             </select>
+            <PrimaryButton
+              onClick={async () => {
+                downloadFile({
+                  downloadContent: await createPresentationCsv(filteredSponsorActivitiesViews),
+                  fileName: `協賛活動一覧_${formatYYYYMMDD(new Date())}.csv`,
+                  isBomAdded: true,
+                });
+              }}
+            >
+              CSVダウンロード
+            </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex '>
             <OpenModalButton
