@@ -80,8 +80,6 @@ export default function EditModal(props: ModalProps) {
       e.target.value === '0'
         ? REMARK_PAMPHLET
         :"";
-    console.log(formData.remark);
-    console.log(e.target.value);
     setFormData({ ...formData, design: Number(e.target.value), remark: remarkOption+newRemarkDesign});
   };
 
