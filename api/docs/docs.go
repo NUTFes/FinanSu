@@ -2079,6 +2079,14 @@ const docTemplate = `{
                     "type": "string",
                     "example": "なし",
                 },
+                "design":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "url":{
+                    "type": "string",
+                    "example": "",
+                },
             },
             "required":{
                     "sponsorID",

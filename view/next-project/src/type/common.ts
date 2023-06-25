@@ -124,6 +124,8 @@ export interface SponsorActivity {
   feature: string;
   expense: number;
   remark: string;
+  design: number;
+  url: string;
   createdAt?: string;
   updatedAt?: string;
 }

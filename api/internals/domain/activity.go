@@ -12,6 +12,8 @@ type Activity struct {
 	Feature 		string		`json:"feature"`
 	Expense			uint		`json:"expense"`
 	Remark			string		`json:"remark"`
+	Design			int			`json:"design"`
+	Url				string		`json:"url"`
 	CreatedAt		time.Time	`json:"createdAt"`
 	UpdatedAt		time.Time	`json:"updatedAt"`
 }
