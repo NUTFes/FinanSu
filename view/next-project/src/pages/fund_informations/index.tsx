@@ -99,7 +99,7 @@ export default function FundInformations(props: Props) {
   }, [currentUser?.roleID]);
 
   const isFinanceStaff = useMemo(() => {
-    if (currentUser?.bureauID == 3) {
+    if (currentUser?.bureauID == 3 || currentUser?.bureauID == 4) {
       return true;
     } else {
       return false;
@@ -299,7 +299,7 @@ export default function FundInformations(props: Props) {
                       <div className='text-center text-sm text-black-600'>
                         <Checkbox
                           checked={isFirstChecks[index]}
-                          disabled={!(isFinanceStaff || isFinanceDirector)}
+                          disabled={!isFinanceStaff}
                           onChange={() => {
                             const fund_information = {
                               ...fundViewItem.fundInformation,

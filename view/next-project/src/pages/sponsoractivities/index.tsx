@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useMemo } from 'react';
 
+import { RiExternalLinkLine } from 'react-icons/ri';
 import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
@@ -9,6 +10,7 @@ import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
+import { DESIGNERS } from '@constants/designers';
 import {
   SponsorActivity,
   SponsorActivityView,
@@ -185,6 +187,20 @@ export default function SponsorActivities(props: Props) {
                         <p className='w-fit border-b border-primary-1'>
                           {sponsorActivitiesItem.sponsorActivity.feature}
                         </p>
+                        <p>デザイン</p>
+                        <div className='flex w-fit justify-center border-b border-primary-1'>
+                          {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
+                          {sponsorActivitiesItem.sponsorActivity.url !== '' && (
+                            <a
+                              className={clsx('mx-1')}
+                              href={sponsorActivitiesItem.sponsorActivity.url}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                            >
+                              <RiExternalLinkLine size={'16px'} />
+                            </a>
+                          )}
+                        </div>
                         <p>交通費</p>
                         <p className='w-fit border-b border-primary-1'>
                           {sponsorActivitiesItem.sponsorActivity.expense}円
@@ -229,6 +245,9 @@ export default function SponsorActivities(props: Props) {
                 </th>
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>オプション</div>
+                </th>
+                <th className='w-1/10 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>デザイン</div>
                 </th>
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>交通費</div>
@@ -326,6 +345,29 @@ export default function SponsorActivities(props: Props) {
                         );
                       }}
                     >
+                      <div className='flex justify-center text-sm text-black-600'>
+                        {sponsorActivitiesItem.sponsorActivity.design !== 0 &&
+                          DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
+                        {sponsorActivitiesItem.sponsorActivity.url !== '' && (
+                          <a
+                            className={clsx('mx-1')}
+                            href={sponsorActivitiesItem.sponsorActivity.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <RiExternalLinkLine size={'16px'} />
+                          </a>
+                        )}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          sponsorActivitiesItem.sponsorActivity.id || 0,
+                          sponsorActivitiesItem,
+                        );
+                      }}
+                    >
                       <div className='text-center text-sm text-black-600'>
                         {sponsorActivitiesItem.sponsorActivity.expense}
                       </div>
@@ -377,7 +419,7 @@ export default function SponsorActivities(props: Props) {
                       {TotalActivityStyleFee}
                     </div>
                   </td>
-                  <td className='px-1 py-3' colSpan={3}>
+                  <td className='px-1 py-3' colSpan={4}>
                     <div className='flex justify-end'>
                       <div className='text-sm text-black-600'>合計</div>
                     </div>

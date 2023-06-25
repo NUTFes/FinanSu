@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction, useEffect, useState, useMemo } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
@@ -20,30 +20,22 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
   const [departmentID, setDepartmentID] = useState<number | string>(1);
+
+  const today = new Date();
+  const yyyy = String(today.getFullYear());
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const ymd = `${yyyy}-${mm}-${dd}`;
+
   const [formData, setFormData] = useState<FundInformation>({
     userID: user.id,
-    teacherID: 1,
+    teacherID: props.teachers[0].id || 1,
     price: 0,
     remark: '',
     isFirstCheck: false,
     isLastCheck: false,
-    receivedAt: '',
+    receivedAt: ymd,
   });
-
-  useEffect(() => {
-    if (router.isReady) {
-      const initFormData: FundInformation = {
-        userID: user.id,
-        teacherID: 1,
-        price: 0,
-        remark: '',
-        isFirstCheck: false,
-        isLastCheck: false,
-        receivedAt: '',
-      };
-      setFormData(initFormData);
-    }
-  }, [user, router.isReady]);
 
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(1);
@@ -83,7 +75,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>募金の登録</h1>
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
-        <p className='col-span-1 text-black-600'>所属</p>
+        <p className='col-span-1 text-black-600'>教員の所属</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={departmentID} onChange={handleDepartmentID}>
             {props.departments.map((department) => (
@@ -105,7 +97,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
               ))}
           </Select>
         </div>
-        <p className='text-black-600'>所属している局</p>
+        <p className='text-black-600'>担当者の局</p>
         <div className='col-span-4 w-full'>
           <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
             {BUREAUS.map((bureaus) => (
