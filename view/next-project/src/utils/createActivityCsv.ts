@@ -46,6 +46,27 @@ export const createPresentationCsv = async (activityViews: SponsorActivityView[]
         label: '交通費',
       },
       {
+        getCustomValue: (row) => {
+          switch (row.sponsorActivity.design) {
+            case 0:
+              return 'なし';
+            case 1:
+              return '学生が作成';
+            case 2:
+              return '企業が作成';
+            case 3:
+              return '去年のものを使用';
+            default:
+              return '';
+          }
+        },
+        label: 'デザイン作成者',
+      },
+      {
+        getCustomValue: (row) => row.sponsorActivity.url || '',
+        label: 'デザインURL',
+      },
+      {
         getCustomValue: (row) => row.sponsorActivity.createdAt || '',
         label: '作成日時',
       },
