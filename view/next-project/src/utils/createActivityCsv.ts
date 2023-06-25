@@ -53,5 +53,9 @@ export const createPresentationCsv = async (activityViews: SponsorActivityView[]
         getCustomValue: (row) => row.sponsorActivity.updatedAt || '',
         label: '更新日時',
       },
+      {
+        getCustomValue: (row) => row.sponsorActivity.remark || '',
+        label: '備考',
+      },
     ]),
   );
