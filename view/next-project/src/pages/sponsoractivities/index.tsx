@@ -64,7 +64,7 @@ const formatYYYYMMDD = (date: Date) => {
   const mm = String(date.getMonth() + 1).padStart(2, '0');
   const dd = String(date.getDate()).padStart(2, '0');
   return `${yyyy}${mm}${dd}`;
-}
+};
 
 export default function SponsorActivities(props: Props) {
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
