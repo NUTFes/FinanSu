@@ -14,8 +14,8 @@ import {
 } from '@components/common';
 import { MultiSelect } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
+import { DESIGNER_VALUES } from '@constants/designers';
 import { SponsorActivity, Sponsor, SponsorStyle, User, ActivityStyle } from '@type/common';
-import { DESIGNERS, DESIGNER_VALUES } from "@constants/designers";
 
 interface ModalProps {
   sponsorActivityId: number | string;
@@ -66,38 +66,30 @@ export default function EditModal(props: ModalProps) {
     return options;
   }, [sponsorStyles]);
 
-  const setDesign =
-  (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const remarkOption = 
+  const setDesign = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const remarkOption =
       formData.feature === 'ポスター'
-      ? REMARK_POSTER
-      : formData.feature === 'クーポン'
-      ? REMARK_COUPON
-      : '';
-    const newRemarkDesign =
-      e.target.value === '1'
-        ? REMARK_PAMPHLET
-        :"";
-    setFormData({ ...formData, design: Number(e.target.value), remark: remarkOption+newRemarkDesign});
+        ? REMARK_POSTER
+        : formData.feature === 'クーポン'
+        ? REMARK_COUPON
+        : '';
+    const newRemarkDesign = e.target.value === '1' ? REMARK_PAMPHLET : '';
+    setFormData({
+      ...formData,
+      design: Number(e.target.value),
+      remark: remarkOption + newRemarkDesign,
+    });
   };
 
-  const setFeature =
-  (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const setFeature = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newRemarkFeature =
       e.target.value === 'ポスター'
         ? REMARK_POSTER
         : e.target.value === 'クーポン'
         ? REMARK_COUPON
         : '';
-    const remarkDesign =
-      formData.design === 1
-        ? REMARK_PAMPHLET
-        :"";
-    setFormData({ ...formData, feature: e.target.value, remark: newRemarkFeature+remarkDesign});
+    const remarkDesign = formData.design === 1 ? REMARK_PAMPHLET : '';
+    setFormData({ ...formData, feature: e.target.value, remark: newRemarkFeature + remarkDesign });
   };
 
   const isSelectSponsorBooth = useMemo(() => {
@@ -114,7 +106,7 @@ export default function EditModal(props: ModalProps) {
       setFormData({
         ...formData,
         feature: 'なし',
-        remark: "",
+        remark: '',
       });
     }
   }, [isSelectSponsorBooth]);
@@ -255,10 +247,7 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>オプション</p>
       <div className='col-span-4 w-full'>
-        <Select
-          value={data.feature}
-          onChange={setFeature}
-        >
+        <Select value={data.feature} onChange={setFeature}>
           <option value={'なし'} selected>
             なし
           </option>
@@ -270,14 +259,14 @@ export default function EditModal(props: ModalProps) {
           </option>
         </Select>
       </div>
-      <p className='text-black-600 text-center'>広告データurl</p>
+      <p className='text-center text-black-600'>広告データurl</p>
       <div className='col-span-4 grid w-full'>
         <Input value={data.url} onChange={handler('url')} />
       </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
         {DESIGNER_VALUES.map((designer) => (
-          <div className='flex gap-3'>
+          <div className='flex gap-3' key={designer.value}>
             <input
               type='radio'
               id={designer.id}

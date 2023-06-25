@@ -2,14 +2,15 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useMemo } from 'react';
 
+import { RiExternalLinkLine } from 'react-icons/ri';
 import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
-import { RiExternalLinkLine } from 'react-icons/ri';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
+import { DESIGNERS } from "@constants/designers";
 import {
   SponsorActivity,
   SponsorActivityView,
@@ -18,7 +19,6 @@ import {
   User,
   ActivityStyle,
 } from '@type/common';
-import { DESIGNERS } from "@constants/designers";
 
 interface Props {
   sponsorActivities: SponsorActivity[];

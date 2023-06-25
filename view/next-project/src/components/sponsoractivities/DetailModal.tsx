@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { Modal } from '@components/common';
+import { DESIGNERS } from "@constants/designers";
 import { SponsorActivityView } from '@type/common';
 
 interface ModalProps {
@@ -13,7 +14,6 @@ interface ModalProps {
   sponsorActivitiesViewItem: SponsorActivityView;
   isDelete: boolean;
 }
-import { DESIGNERS } from "@constants/designers";
 
 const DetailModal: FC<ModalProps> = (props) => {
   const onClose = () => {
