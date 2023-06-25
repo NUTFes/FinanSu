@@ -10,7 +10,7 @@ import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/sponsoractivities/DetailModal';
 import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
-import { DESIGNERS } from "@constants/designers";
+import { DESIGNERS } from '@constants/designers';
 import {
   SponsorActivity,
   SponsorActivityView,
@@ -188,14 +188,14 @@ export default function SponsorActivities(props: Props) {
                           {sponsorActivitiesItem.sponsorActivity.feature}
                         </p>
                         <p>デザイン</p>
-                        <div className='w-fit border-b border-primary-1 flex justify-center'>
+                        <div className='flex w-fit justify-center border-b border-primary-1'>
                           {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
-                          {sponsorActivitiesItem.sponsorActivity.url !==""&&(
+                          {sponsorActivitiesItem.sponsorActivity.url !== '' && (
                             <a
-                            className={clsx('mx-1')}
-                            href={sponsorActivitiesItem.sponsorActivity.url}
-                            target='_blank'
-                            rel='noopener noreferrer'
+                              className={clsx('mx-1')}
+                              href={sponsorActivitiesItem.sponsorActivity.url}
+                              target='_blank'
+                              rel='noopener noreferrer'
                             >
                               <RiExternalLinkLine size={'16px'} />
                             </a>
@@ -345,11 +345,10 @@ export default function SponsorActivities(props: Props) {
                         );
                       }}
                     >
-                      <div className='text-sm text-black-600 flex justify-center'>
-                        {sponsorActivitiesItem.sponsorActivity.design !==0&&(
-                          DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]
-                        )}
-                        {sponsorActivitiesItem.sponsorActivity.url !=="" &&(
+                      <div className='flex justify-center text-sm text-black-600'>
+                        {sponsorActivitiesItem.sponsorActivity.design !== 0 &&
+                          DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
+                        {sponsorActivitiesItem.sponsorActivity.url !== '' && (
                           <a
                             className={clsx('mx-1')}
                             href={sponsorActivitiesItem.sponsorActivity.url}

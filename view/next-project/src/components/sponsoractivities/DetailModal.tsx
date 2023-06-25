@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { Modal } from '@components/common';
-import { DESIGNERS } from "@constants/designers";
+import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
 
 interface ModalProps {
@@ -83,22 +83,23 @@ const DetailModal: FC<ModalProps> = (props) => {
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
             <td className='py-3'>
               <div>
-                <div
-                  className='border-primary-1 text-center text-black-600 '
-
-                >
+                <div className='border-primary-1 text-center text-black-600 '>
                   {props.sponsorActivitiesViewItem.sponsorActivity.url === '' && <p>なし</p>}
-                  {props.sponsorActivitiesViewItem.sponsorActivity.url !== '' &&
-                   <a href={props.sponsorActivitiesViewItem.sponsorActivity.url} className="hover:text-black-300 hover:underline">
-                    {props.sponsorActivitiesViewItem.sponsorActivity.url}
-                  </a>}
+                  {props.sponsorActivitiesViewItem.sponsorActivity.url !== '' && (
+                    <a
+                      href={props.sponsorActivitiesViewItem.sponsorActivity.url}
+                      className='hover:text-black-300 hover:underline'
+                    >
+                      {props.sponsorActivitiesViewItem.sponsorActivity.url}
+                    </a>
+                  )}
                 </div>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
-      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>備考</p>
+      <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></tr>
@@ -121,7 +122,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛企業</p>
+      <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -172,7 +173,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛スタイル</p>
+      <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>協賛スタイル</p>
       <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
           <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
