@@ -16,8 +16,8 @@ type activityRepository struct {
 type ActivityRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string,string, string) error
+	Create(context.Context, string, string, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string,string, string, string, string) error
 	Destroy(context.Context, string) error
 	FindDetail(context.Context) (*sql.Rows, error)
 	FindLatestRecord(c context.Context) (*sql.Row, error)
@@ -48,13 +48,16 @@ func (ar *activityRepository) Create(
 	sponsorID string,
 	feature string,
 	expense string,
-	remark string) error {
+	remark string,
+	design string,
+	url string,
+	) error {
 
 	query := `
 	INSERT INTO	activities
-		(user_id, is_done, sponsor_id, feature, expense, remark)
+		(user_id, is_done, sponsor_id, feature, expense, remark, design, url)
 	VALUES
-		(` +userID + "," + isDone + "," + sponsorID + ",'" + feature + "'," + expense +",'" + remark +"')"
+		(` +userID + `,` + isDone + `,` + sponsorID +`,"` + feature + `",` + expense +`,"` + remark +`",` +design +`,"` +url +`")`
 
 	return ar.crud.UpdateDB(c, query)
 }
@@ -68,18 +71,23 @@ func (ar *activityRepository) Update(
 	sponsorID string,
 	feature string,
 	expense string,
-	remark string) error {
+	remark string,
+	design string,
+	url string,
+	) error {
 
 	query := `
 	UPDATE activities
 	SET
 		user_id = ` + userID +
-		", is_done = " + isDone +
-		", sponsor_id = " + sponsorID +
-		", feature = '" + feature +
-		"', expense = " + expense +
-		", remark = '" + remark +
-		"' where id = " + id
+		`, is_done = ` + isDone +
+		`, sponsor_id = ` + sponsorID +
+		`, feature = "` + feature +
+		`", expense = ` + expense +
+		`, remark = "` + remark +
+		`", design =` + design +
+		`, url ="` + url +
+		`" where id = ` + id
 
 	return ar.crud.UpdateDB(c, query)
 }
