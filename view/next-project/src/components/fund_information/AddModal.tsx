@@ -62,7 +62,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     const departmentTeachers = props.teachers.filter(
       (teacher) => teacher.departmentID === Number(e.target.value),
     );
-    setFormData({ ...formData, teacherID: departmentTeachers[0].id || 0 });
+    setFormData({ ...formData, teacherID: departmentTeachers[0]?.id || 0 });
   };
 
   const addFundInformation = async (data: FundInformation) => {
