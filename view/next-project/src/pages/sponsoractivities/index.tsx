@@ -141,6 +141,7 @@ export default function SponsorActivities(props: Props) {
               <option value='2023'>2023</option>
             </select>
             <PrimaryButton
+              className='hidden md:block'
               onClick={async () => {
                 downloadFile({
                   downloadContent: await createPresentationCsv(filteredSponsorActivitiesViews),
