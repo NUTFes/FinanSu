@@ -59,6 +59,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const handleDepartmentID = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDepartmentID(Number(e.target.value));
+    const departmentTeachers = props.teachers.filter(
+      (teacher) => teacher.departmentID === Number(e.target.value),
+    );
+    setFormData({ ...formData, teacherID: departmentTeachers[0]?.id || 0 });
   };
 
   const addFundInformation = async (data: FundInformation) => {
