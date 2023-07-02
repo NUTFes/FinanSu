@@ -24,7 +24,7 @@ jobs:
       - name: Build Docker image
         run: | 
           docker build -f ./prod.api.Dockerfile -t finansu-prod-api  .
-          docker build -f ./prod.view.Dockerfile -t finansu-prod-view .
+          docker build --build-arg CSR_API_URL=${{secrets.CSR_API_URL}} -f ./prod.view.Dockerfile -t finansu-prod-view .
       
       - name: Tag Docker image
         run: |
