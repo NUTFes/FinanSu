@@ -17,7 +17,7 @@ export const createPurchaseOrdersCsv = async (
         label: '申請したい局',
       },
       {
-        getCustomValue: (row) => row.purchaseOrder.createdAt || '',
+        getCustomValue: (row) => String(row.purchaseOrder.createdAt).split('T')[0] || '',
         label: '申請日',
       },
       {
@@ -26,12 +26,23 @@ export const createPurchaseOrdersCsv = async (
       },
       {
         getCustomValue: (row) =>
-          row.purchaseItem.reduce((sum, item) => sum + item.price * item.quantity, 0) || '',
+          row.purchaseItem.reduce((sum, item) => sum + item.price * item.quantity, 0) || '0',
         label: '合計金額',
       },
       {
         getCustomValue: (row) => (row.purchaseOrder.financeCheck ? '○' : '' || ''),
         label: '財務局長チェック',
+      },
+      {
+        getCustomValue: (row) =>
+          row.purchaseItem
+            .map(
+              (item) =>
+                `${item.item}/${item.price}円/${item.quantity}個/` +
+                (item.financeCheck ? '○' : '×'),
+            )
+            .join(' , ') || '',
+        label: '購入物品 (品名/値段/数量/財務局長チェック)',
       },
     ]),
   );
