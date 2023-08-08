@@ -175,7 +175,7 @@ export default function PurchaseReports(props: Props) {
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
-          <div className='flex gap4'>
+          <div className='gap4 flex'>
             <Title title={'購入報告一覧'} />
             <select
               className='w-100 '
