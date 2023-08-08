@@ -26,7 +26,12 @@ export const createPurchaseReportCsv = async (
       },
       {
         getCustomValue: (row) =>
-          (row.purchaseItems.reduce((sum, item) => item.financeCheck ? (sum + item.price * item.quantity) : sum, 0) + row.purchaseReport.addition - row.purchaseReport.discount)|| '0',
+          row.purchaseItems.reduce(
+            (sum, item) => (item.financeCheck ? sum + item.price * item.quantity : sum),
+            0,
+          ) +
+            row.purchaseReport.addition -
+            row.purchaseReport.discount || '0',
         label: '合計金額',
       },
       {
