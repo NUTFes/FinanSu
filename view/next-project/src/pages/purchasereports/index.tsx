@@ -2,9 +2,12 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 
 import { authAtom } from '@/store/atoms';
 import { put } from '@/utils/api/purchaseReport';
+import { createPurchaseReportCsv } from '@/utils/createPurchaseReportCsv';
+import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
@@ -46,6 +49,13 @@ export async function getServerSideProps() {
     },
   };
 }
+
+const formatYYYYMMDD = (date: Date) => {
+  const yyyy = String(date.getFullYear());
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}${mm}${dd}`;
+};
 
 export default function PurchaseReports(props: Props) {
   const auth = useRecoilValue(authAtom);
@@ -165,7 +175,7 @@ export default function PurchaseReports(props: Props) {
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
-          <div className='flex'>
+          <div className='flex gap4'>
             <Title title={'購入報告一覧'} />
             <select
               className='w-100 '
@@ -176,6 +186,21 @@ export default function PurchaseReports(props: Props) {
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
             </select>
+            <PrimaryButton
+              className='hidden md:block'
+              onClick={async () => {
+                downloadFile({
+                  downloadContent: await createPurchaseReportCsv(
+                    filteredPurchaseReportViews,
+                    props.expenses,
+                  ),
+                  fileName: `購入申請一覧(${selectedYear})_${formatYYYYMMDD(new Date())}.csv`,
+                  isBomAdded: true,
+                });
+              }}
+            >
+              CSVダウンロード
+            </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex'>
             <OpenAddModalButton>報告登録</OpenAddModalButton>
