@@ -42,7 +42,7 @@ export const createPurchaseReportCsv = async (
                 (item.financeCheck ? '○' : '×'),
             )
             .join(' , ') || '',
-        label: '購入物品 (品名/値段/数量/財務局長チェック)',
+        label: '購入物品 (品名/値段/数量/購入の有無)',
       },
       {
         getCustomValue: (row) => row.purchaseReport.remark || '',
