@@ -36,13 +36,9 @@ export const createPurchaseOrdersCsv = async (
       {
         getCustomValue: (row) =>
           row.purchaseItem
-            .map(
-              (item) =>
-                `${item.item}/${item.price}円/${item.quantity}個/` +
-                (item.financeCheck ? '○' : '×'),
-            )
+            .map((item) => `${item.item}/${item.price}円/${item.quantity}個`)
             .join(' , ') || '',
-        label: '購入物品 (品名/値段/数量/財務局長チェック)',
+        label: '購入物品 (品名/値段/数量)',
       },
     ]),
   );
