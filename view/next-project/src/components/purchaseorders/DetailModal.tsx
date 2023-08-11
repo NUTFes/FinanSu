@@ -241,7 +241,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 props.purchaseOrderViewItem,
                 props.expenses,
               ),
-              fileName: `購入申請ID${props.id}.pdf`,
+              fileName: `見積書ID${props.id}.pdf`,
               isBomAdded: true,
             });
           }}
