@@ -3,10 +3,13 @@ import React, { FC, useMemo } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
+import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { userAtom } from '@/store/atoms';
+import { downloadFile } from '@/utils/downloadFile';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
 import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
+import { createPurchaseReportFormPdf } from '@utils/createPurchaseReportPdf';
 
 interface ModalProps {
   isOpen: boolean;
@@ -188,6 +191,22 @@ const DetailModal: FC<ModalProps> = (props) => {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className='my-5 hidden justify-center md:flex'>
+        <PrimaryButton
+          onClick={async () => {
+            downloadFile({
+              downloadContent: await createPurchaseReportFormPdf(
+                props.purchaseReportViewItem,
+                props.expenses,
+              ),
+              fileName: `報告書ID${props.id}.pdf`,
+              isBomAdded: true,
+            });
+          }}
+        >
+          報告書作成
+        </PrimaryButton>
       </div>
       <div className='mt-3 grid w-full justify-items-center'>
         {props.isDelete && (
