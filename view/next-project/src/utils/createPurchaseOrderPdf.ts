@@ -9,6 +9,10 @@ export const createPurchasOrderFormPdf = async (
 ) => {
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
+  // A4サイズのpdf作成
+  const page = pdfDoc.addPage([595.28, 841.89]);
+  const { width, height } = page.getSize();
+
   // フォント「ナス」
   const fontData = await pdfDoc.embedFont(
     await (await fetch('./fonts/Nasu-Regular.ttf')).arrayBuffer(),
@@ -34,12 +38,10 @@ export const createPurchasOrderFormPdf = async (
       return fontSizes[0];
     }
   };
-  // A4サイズのpdf作成
-  const page = pdfDoc.addPage([595.28, 841.89]);
-  const { width, height } = page.getSize();
-
   //フォントのサイズ
   const fontSizes = [12, 24];
+
+  // 内容の作成ここから
   page.drawText('資料番号', {
     x: 25,
     y: height - 35,
@@ -447,10 +449,9 @@ export const createPurchasOrderFormPdf = async (
       });
     }
   });
-
+  // 内容の作成ここまで
   // 生成されたPDFデータを取得
   const pdfBytes = await pdfDoc.save();
-
   // Blobを作成
   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
   return blob;
