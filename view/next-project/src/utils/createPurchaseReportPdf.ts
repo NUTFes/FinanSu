@@ -175,7 +175,7 @@ export const createPurchaseReportFormPdf = async (
     size: fontSizes[0],
     font: fontData,
   });
-    
+
   // 受け取り財務局員欄
   page.drawRectangle({
     x: (3 * width) / 4,
@@ -425,7 +425,11 @@ export const createPurchaseReportFormPdf = async (
         font: fontData,
       });
       page.drawText(String(purchaseReportViews.purchaseReport.addition), {
-        x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(purchaseReportViews.purchaseReport.addition).length * 7,
+        x:
+          18 +
+          rectangleWidth +
+          3 * rectangleWidth2 -
+          String(purchaseReportViews.purchaseReport.addition).length * 7,
         y: height - (tableTextHight + 20 * (2 + index)),
         size: fontSizes[0],
         font: fontData,
@@ -482,7 +486,11 @@ export const createPurchaseReportFormPdf = async (
         font: fontData,
       });
       page.drawText(String('-' + purchaseReportViews.purchaseReport.discount), {
-        x: 18 + rectangleWidth + 3 * rectangleWidth2 - String('-' + purchaseReportViews.purchaseReport.discount).length * 7,
+        x:
+          18 +
+          rectangleWidth +
+          3 * rectangleWidth2 -
+          String('-' + purchaseReportViews.purchaseReport.discount).length * 7,
         y: height - (tableTextHight + 20 * (3 + index)),
         size: fontSizes[0],
         font: fontData,
@@ -538,12 +546,28 @@ export const createPurchaseReportFormPdf = async (
         size: fontSizes[0],
         font: fontData,
       });
-      page.drawText(String(sum + purchaseReportViews.purchaseReport.addition - purchaseReportViews.purchaseReport.discount), {
-        x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(sum + purchaseReportViews.purchaseReport.addition - purchaseReportViews.purchaseReport.discount).length * 7,
-        y: height - (tableTextHight + 20 * (4 + index)),
-        size: fontSizes[0],
-        font: fontData,
-      });
+      page.drawText(
+        String(
+          sum +
+            purchaseReportViews.purchaseReport.addition -
+            purchaseReportViews.purchaseReport.discount,
+        ),
+        {
+          x:
+            18 +
+            rectangleWidth +
+            3 * rectangleWidth2 -
+            String(
+              sum +
+                purchaseReportViews.purchaseReport.addition -
+                purchaseReportViews.purchaseReport.discount,
+            ).length *
+              7,
+          y: height - (tableTextHight + 20 * (4 + index)),
+          size: fontSizes[0],
+          font: fontData,
+        },
+      );
       page.drawRectangle({
         x: 22 + 3 * rectangleWidth + 4 * rectangleWidth2,
         y: height - (tableHight + 20 * (4 + index)),
@@ -552,7 +576,7 @@ export const createPurchaseReportFormPdf = async (
         borderColor: rgb(0, 0, 0),
         borderWidth: 1,
       });
-        
+
       page.drawText('以上', {
         x: width - 65,
         y: height - (tableTextHight + 20 * (5 + index)),
