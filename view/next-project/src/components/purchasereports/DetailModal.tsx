@@ -200,7 +200,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                 props.purchaseReportViewItem,
                 props.expenses,
               ),
-              fileName: `報告書ID${props.id}.pdf`,
+              fileName: `報告書ID${props.purchaseReportViewItem.purchaseReport.id}.pdf`,
               isBomAdded: true,
             });
           }}
