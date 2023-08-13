@@ -48,6 +48,13 @@ const DetailModal: FC<ModalProps> = (props) => {
     return expense ? expense.name : '';
   }, [props.expenses, props.purchaseOrderViewItem]);
 
+  const formatYYYYMMDD = (date: Date) => {
+    const yyyy = String(date.getFullYear());
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}${mm}${dd}`;
+  };
+
   return (
     <Modal className='md:w-1/2'>
       <div className={clsx('w-full')}>
@@ -241,7 +248,9 @@ const DetailModal: FC<ModalProps> = (props) => {
                 props.purchaseOrderViewItem,
                 props.expenses,
               ),
-              fileName: `見積書ID${props.id}.pdf`,
+              fileName: `見積書_${formatYYYYMMDD(new Date())}_${
+                props.purchaseOrderViewItem.user.name
+              }.pdf`,
               isBomAdded: true,
             });
           }}
