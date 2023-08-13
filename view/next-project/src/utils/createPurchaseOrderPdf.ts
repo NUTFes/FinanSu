@@ -75,21 +75,21 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     size: fontSizes[0],
     font: fontData,
   });
-  const date = purchaseOrdersViews.purchaseOrder.deadline.split('-');
+  const deadlinDate = purchaseOrdersViews.purchaseOrder.deadline.split('-');
   page.drawText('購入期限', {
     x: 25,
     y: height - 65,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText(date[0] + '年', {
+  page.drawText(deadlinDate[0] + '年', {
     x: 100,
     y: height - 65,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText(date[1], {
-    x: 153 - date[1].length * 7,
+  page.drawText(deadlinDate[1], {
+    x: 153 - deadlinDate[1].length * 7,
     y: height - 65,
     size: fontSizes[0],
     font: fontData,
@@ -100,8 +100,8 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText(date[2], {
-    x: 178 - date[2].length * 7,
+  page.drawText(deadlinDate[2], {
+    x: 178 - deadlinDate[2].length * 7,
     y: height - 65,
     size: fontSizes[0],
     font: fontData,
@@ -170,7 +170,11 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     size: fontSizes[1],
     font: fontData,
   });
-  page.drawText('提出日: 令和　年　月　日', {
+  const date = new Date();
+  const yyyy = String(date.getFullYear());
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  page.drawText('提出日: 令和' + yyyy + '年' + mm + '月' + dd + '日', {
     x: 25,
     y: height - 190,
     size: fontSizes[0],
@@ -178,7 +182,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
   });
   page.drawLine({
     start: { x: 67, y: height - 192 },
-    end: { x: 170, y: height - 192 },
+    end: { x: 180, y: height - 192 },
     opacity: 0.75,
   });
   page.drawText('財務局長 殿', {
