@@ -244,10 +244,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <PrimaryButton
           onClick={async () => {
             downloadFile({
-              downloadContent: await createPurchasOrderFormPdf(
-                props.purchaseOrderViewItem,
-                props.expenses,
-              ),
+              downloadContent: await createPurchasOrderFormPdf(props.purchaseOrderViewItem),
               fileName: `見積書_${formatYYYYMMDD(new Date())}_${
                 props.purchaseOrderViewItem.user.name
               }.pdf`,

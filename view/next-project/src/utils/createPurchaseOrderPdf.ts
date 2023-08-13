@@ -1,12 +1,9 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
-import { PurchaseOrderView, Expense } from '../type/common';
+import { PurchaseOrderView } from '../type/common';
 import { BUREAUS } from '@/constants/bureaus';
 
-export const createPurchasOrderFormPdf = async (
-  purchaseOrdersViews: PurchaseOrderView,
-  expenses: Expense[],
-) => {
+export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrderView) => {
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
   // A4サイズのpdf作成
