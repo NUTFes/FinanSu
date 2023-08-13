@@ -215,7 +215,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
   });
 
   page.drawRectangle({
-    x: (3 * width) / 4,
+    x: (3 * width) / 4 + 30,
     y: height - 130,
     width: width / 6,
     height: 20,
@@ -223,7 +223,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     borderWidth: 1,
   });
   page.drawRectangle({
-    x: (3 * width) / 4,
+    x: (3 * width) / 4 + 30,
     y: height - 165,
     width: width / 6,
     height: 35,
@@ -231,7 +231,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     borderWidth: 1,
   });
   page.drawText('局長サイン欄', {
-    x: (3 * width) / 4 + 13,
+    x: (3 * width) / 4 + 43,
     y: height - 125,
     size: fontSizes[0],
     font: fontData,
