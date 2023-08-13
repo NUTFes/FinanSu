@@ -1,11 +1,11 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
-import { PurchaseReportView, Expense } from '../type/common';
+import { PurchaseReportView } from '../type/common';
 import { BUREAUS } from '@/constants/bureaus';
 
 export const createPurchaseReportFormPdf = async (
   purchaseReportViews: PurchaseReportView,
-  expenses: Expense[],
+  date: string,
 ) => {
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
@@ -136,7 +136,7 @@ export const createPurchaseReportFormPdf = async (
     size: fontSizes[1],
     font: fontData,
   });
-  page.drawText('提出日: 令和　年　月　日', {
+  page.drawText(String('提出日:  ' + date), {
     x: 25,
     y: height - 190,
     size: fontSizes[0],

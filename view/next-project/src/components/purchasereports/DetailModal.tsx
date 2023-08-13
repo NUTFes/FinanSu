@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
@@ -27,6 +27,20 @@ const DetailModal: FC<ModalProps> = (props) => {
   const onClose = () => {
     props.setIsOpen(false);
   };
+
+  const [date, setDate] = useState(String)
+  const [japaneseDate, setJapaneseDate] = useState(String)
+  useEffect(() => {
+    setInterval(() => {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = d.getMonth() + 1;
+      const day = d.getDate();
+
+      setDate(year + '-' + month + '-' + day);
+      setJapaneseDate(year + '年' + month + '月' + day + '日');
+    });
+  }, []);
 
   const expenseName = useMemo(() => {
     const expense = props.expenses.find(
@@ -198,9 +212,9 @@ const DetailModal: FC<ModalProps> = (props) => {
             downloadFile({
               downloadContent: await createPurchaseReportFormPdf(
                 props.purchaseReportViewItem,
-                props.expenses,
+                japaneseDate,
               ),
-              fileName: `報告書ID${props.purchaseReportViewItem.purchaseReport.id}.pdf`,
+              fileName: `報告書ID_${date}_${props.purchaseReportViewItem.reportUser.name}.pdf`,
               isBomAdded: true,
             });
           }}
