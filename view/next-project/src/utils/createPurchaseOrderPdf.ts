@@ -32,11 +32,11 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     if (isNonJapaneseFont(str)) {
       return 8;
     } else {
-      return fontSizes[0];
+      return fontSizes[2];
     }
   };
   //フォントのサイズ
-  const fontSizes = [12, 24];
+  const fontSizes = [12, 24, 8];
 
   // 内容の作成ここから
   page.drawText('資料番号', {
@@ -358,12 +358,12 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
       borderColor: rgb(0, 0, 0),
       borderWidth: 1,
     });
-    const itemName = truncateString(item.item, 9, 16);
+    const itemName = truncateString(item.item, 14, 24);
     const itemFontSize = fontSizeFunc(item.item);
     page.drawText(itemName, {
       x: (rectangleWidth - itemName.length * itemFontSize) / 2 + 22,
-      y: height - (tableTextHight + 20 * (1 + index)),
-      size: fontSizes[0],
+      y: height - (tableTextHight + 20 * (1 + index)) + 2,
+      size: fontSizes[2],
       font: fontData,
     });
     page.drawText(String(item.price), {
@@ -381,15 +381,15 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     sum += item.price * item.quantity;
     page.drawText(String(item.price * item.quantity), {
       x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(item.price * item.quantity).length * 7,
-      y: height - (tableTextHight + 20 * (1 + index)),
+      y: height - (tableTextHight + 20 * (1 + index)) + 2,
       size: fontSizes[0],
       font: fontData,
     });
-    const detail = truncateString(item.detail, 9, 16);
+    const detail = truncateString(item.detail, 14, 24);
     page.drawText(detail, {
       x: 24 + 2 * rectangleWidth + 3 * rectangleWidth2,
       y: height - (tableTextHight + 20 * (1 + index)),
-      size: fontSizes[0],
+      size: fontSizes[2],
       font: fontData,
     });
     //合計の処理
