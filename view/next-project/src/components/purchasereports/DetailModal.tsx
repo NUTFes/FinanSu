@@ -28,8 +28,8 @@ const DetailModal: FC<ModalProps> = (props) => {
     props.setIsOpen(false);
   };
 
-  const [date, setDate] = useState(String)
-  const [japaneseDate, setJapaneseDate] = useState(String)
+  const [date, setDate] = useState(String);
+  const [japaneseDate, setJapaneseDate] = useState(String);
   useEffect(() => {
     setInterval(() => {
       const d = new Date();
