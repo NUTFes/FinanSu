@@ -209,7 +209,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
 
   page.drawText('記', {
     x: width / 2 - 20,
-    y: height - 255,
+    y: height - 265,
     size: fontSizes[0],
     font: fontData,
   });
