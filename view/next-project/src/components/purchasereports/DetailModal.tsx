@@ -1,12 +1,15 @@
 import { useRouter } from 'next/router';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
+import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { userAtom } from '@/store/atoms';
+import { downloadFile } from '@/utils/downloadFile';
 import { del } from '@api/api_methods';
 import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
 import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
+import { createPurchaseReportFormPdf } from '@utils/createPurchaseReportPdf';
 
 interface ModalProps {
   isOpen: boolean;
@@ -24,6 +27,20 @@ const DetailModal: FC<ModalProps> = (props) => {
   const onClose = () => {
     props.setIsOpen(false);
   };
+
+  const [date, setDate] = useState(String);
+  const [japaneseDate, setJapaneseDate] = useState(String);
+  useEffect(() => {
+    setInterval(() => {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = d.getMonth() + 1;
+      const day = d.getDate();
+
+      setDate(year + '-' + month + '-' + day);
+      setJapaneseDate(year + '年' + month + '月' + day + '日');
+    });
+  }, []);
 
   const expenseName = useMemo(() => {
     const expense = props.expenses.find(
@@ -188,6 +205,22 @@ const DetailModal: FC<ModalProps> = (props) => {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className='my-5 hidden justify-center md:flex'>
+        <PrimaryButton
+          onClick={async () => {
+            downloadFile({
+              downloadContent: await createPurchaseReportFormPdf(
+                props.purchaseReportViewItem,
+                japaneseDate,
+              ),
+              fileName: `報告書_${date}_${props.purchaseReportViewItem.reportUser.name}.pdf`,
+              isBomAdded: true,
+            });
+          }}
+        >
+          報告書作成
+        </PrimaryButton>
       </div>
       <div className='mt-3 grid w-full justify-items-center'>
         {props.isDelete && (
