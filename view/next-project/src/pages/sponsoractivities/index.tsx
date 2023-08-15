@@ -85,6 +85,7 @@ export default function SponsorActivities(props: Props) {
 
   const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+  const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
 
   const filteredSponsorActivitiesViews = useMemo(() => {
     return props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
@@ -92,20 +93,40 @@ export default function SponsorActivities(props: Props) {
     });
   }, [props, selectedYear]);
 
+  const filteredIsDoneSponsorActivitiesViews = useMemo(() => {
+    let filteredActivities = filteredSponsorActivitiesViews;
+    switch (selectedIsDone) {
+      case 'false':
+        filteredActivities = filteredSponsorActivitiesViews.filter((sponsorActivitiesItem) => {
+          return !sponsorActivitiesItem.sponsorActivity.isDone;
+        });
+        break;
+      case 'true':
+        filteredActivities = filteredSponsorActivitiesViews.filter((sponsorActivitiesItem) => {
+          return sponsorActivitiesItem.sponsorActivity.isDone;
+        });
+        break;
+      default:
+        break;
+    }
+    console.log(filteredActivities);
+    return filteredActivities;
+  }, [filteredSponsorActivitiesViews, selectedIsDone]);
+
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
-    if (filteredSponsorActivitiesViews) {
-      filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (filteredIsDoneSponsorActivitiesViews) {
+      filteredIsDoneSponsorActivitiesViews?.map((sponsorActivityItem) => {
         totalFee += sponsorActivityItem.sponsorActivity.expense;
       });
     }
     return totalFee;
-  }, [filteredSponsorActivitiesViews]);
+  }, [filteredIsDoneSponsorActivitiesViews]);
 
   const TotalActivityStyleFee = useMemo(() => {
     let totalFee = 0;
-    if (filteredSponsorActivitiesViews) {
-      filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (filteredIsDoneSponsorActivitiesViews) {
+      filteredIsDoneSponsorActivitiesViews?.map((sponsorActivityItem) => {
         const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail
           ? sponsorActivityItem.styleDetail.map((styleDetail) => {
               return styleDetail.sponsorStyle.price;
@@ -119,7 +140,7 @@ export default function SponsorActivities(props: Props) {
       });
     }
     return totalFee;
-  }, [filteredSponsorActivitiesViews]);
+  }, [filteredIsDoneSponsorActivitiesViews]);
 
   return (
     <MainLayout>
@@ -140,11 +161,22 @@ export default function SponsorActivities(props: Props) {
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
             </select>
+            <select
+              className={'w-100'}
+              defaultValue={'all'}
+              onChange={(e) => setSelectedIsDone(e.target.value)}
+            >
+              <option value='all'>すべて</option>
+              <option value='false'>未回収</option>
+              <option value='true'>回収済</option>
+            </select>
             <PrimaryButton
               className='hidden md:block'
               onClick={async () => {
                 downloadFile({
-                  downloadContent: await createPresentationCsv(filteredSponsorActivitiesViews),
+                  downloadContent: await createPresentationCsv(
+                    filteredIsDoneSponsorActivitiesViews,
+                  ),
                   fileName: `協賛活動一覧_${formatYYYYMMDD(new Date())}.csv`,
                   isBomAdded: true,
                 });
@@ -164,8 +196,8 @@ export default function SponsorActivities(props: Props) {
           </div>
         </div>
         <div className='mb-7 md:hidden'>
-          {filteredSponsorActivitiesViews &&
-            filteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
+          {filteredIsDoneSponsorActivitiesViews &&
+            filteredIsDoneSponsorActivitiesViews.map((sponsorActivitiesItem) => (
               <Card key={sponsorActivitiesItem.sponsorActivity.id}>
                 <div className='flex flex-col gap-2 p-4'>
                   <div>
@@ -245,7 +277,7 @@ export default function SponsorActivities(props: Props) {
                 </div>
               </Card>
             ))}
-          {!filteredSponsorActivitiesViews.length && (
+          {!filteredIsDoneSponsorActivitiesViews.length && (
             <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
           )}
         </div>
@@ -283,8 +315,8 @@ export default function SponsorActivities(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredSponsorActivitiesViews &&
-                filteredSponsorActivitiesViews.map((sponsorActivitiesItem, index) => (
+              {filteredIsDoneSponsorActivitiesViews &&
+                filteredIsDoneSponsorActivitiesViews.map((sponsorActivitiesItem) => (
                   <tr className={clsx('border-b')} key={sponsorActivitiesItem.sponsorActivity.id}>
                     <td
                       onClick={() => {
@@ -429,7 +461,7 @@ export default function SponsorActivities(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {filteredSponsorActivitiesViews.length > 0 && (
+              {filteredIsDoneSponsorActivitiesViews.length > 0 && (
                 <tr className='border-b border-primary-1'>
                   <td className='px-1 py-3' colSpan={1}>
                     <div className='flex justify-end'>
@@ -453,7 +485,7 @@ export default function SponsorActivities(props: Props) {
                   </td>
                 </tr>
               )}
-              {!filteredSponsorActivitiesViews.length && (
+              {!filteredIsDoneSponsorActivitiesViews.length && (
                 <tr>
                   <td colSpan={6} className='py-3'>
                     <div className='text-center text-sm text-black-600'>データがありません</div>
