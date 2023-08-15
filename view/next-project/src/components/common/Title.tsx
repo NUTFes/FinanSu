@@ -9,7 +9,7 @@ interface Props {
 
 export default function Title(props: Props) {
   const className =
-    'text-xl leading-8 font-thin tracking-widest gap-5 flex items-center justify-center md:text-2xl' +
+    'text-2xl leading-8 font-thin tracking-widest gap-5 flex items-center justify-center' +
     (props.className ? ` ${props.className}` : '');
 
   return (
