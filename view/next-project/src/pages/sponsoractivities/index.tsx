@@ -95,22 +95,18 @@ export default function SponsorActivities(props: Props) {
   }, [props, selectedYear]);
 
   const filteredIsDoneSponsorActivitiesViews = useMemo(() => {
-    let filteredActivities = filteredSponsorActivitiesViews;
     switch (selectedIsDone) {
       case 'false':
-        filteredActivities = filteredSponsorActivitiesViews.filter((sponsorActivitiesItem) => {
+        return filteredSponsorActivitiesViews.filter((sponsorActivitiesItem) => {
           return !sponsorActivitiesItem.sponsorActivity.isDone;
         });
-        break;
       case 'true':
-        filteredActivities = filteredSponsorActivitiesViews.filter((sponsorActivitiesItem) => {
+        return filteredSponsorActivitiesViews.filter((sponsorActivitiesItem) => {
           return sponsorActivitiesItem.sponsorActivity.isDone;
         });
-        break;
       default:
-        break;
+        return filteredSponsorActivitiesViews;
     }
-    return filteredActivities;
   }, [filteredSponsorActivitiesViews, selectedIsDone]);
 
   const sortedSponsorActivitiesViews = useMemo(() => {
