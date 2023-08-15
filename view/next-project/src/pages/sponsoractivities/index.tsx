@@ -86,6 +86,7 @@ export default function SponsorActivities(props: Props) {
   const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
   const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
+  const [selectedSort, setSelectedSort] = useState<string>('default');
 
   const filteredSponsorActivitiesViews = useMemo(() => {
     return props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
@@ -109,9 +110,55 @@ export default function SponsorActivities(props: Props) {
       default:
         break;
     }
-    console.log(filteredActivities);
     return filteredActivities;
   }, [filteredSponsorActivitiesViews, selectedIsDone]);
+
+  const sortedSponsorActivitiesViews = useMemo(() => {
+    switch (selectedSort) {
+      case 'createDesSort':
+        return [...filteredIsDoneSponsorActivitiesViews].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            new Date(firstObject.sponsorActivity.createdAt || 0).getTime() >
+            new Date(secondObject.sponsorActivity.createdAt || 0).getTime()
+              ? -1
+              : 1,
+        );
+      case 'updateSort':
+        return [...filteredIsDoneSponsorActivitiesViews].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
+            new Date(secondObject.sponsorActivity.updatedAt || 0).getTime()
+              ? 1
+              : -1,
+        );
+      case 'updateDesSort':
+        return [...filteredIsDoneSponsorActivitiesViews].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
+            new Date(secondObject.sponsorActivity.updatedAt || 0).getTime()
+              ? -1
+              : 1,
+        );
+      case 'priceSort':
+        return [...filteredIsDoneSponsorActivitiesViews].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
+            secondObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0)
+              ? 1
+              : -1,
+        );
+      case 'priceDesSort':
+        return [...filteredIsDoneSponsorActivitiesViews].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
+            secondObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0)
+              ? -1
+              : 1,
+        );
+      default:
+        return filteredIsDoneSponsorActivitiesViews;
+    }
+  }, [filteredIsDoneSponsorActivitiesViews, selectedSort]);
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
@@ -150,40 +197,54 @@ export default function SponsorActivities(props: Props) {
       </Head>
       <Card w='w-full'>
         <div className='mx-6 mt-10 md:mx-5'>
-          <div className='flex gap-4'>
-            <Title title={'協賛活動一覧'} />
-            <select
-              className={'w-100'}
-              defaultValue={currentYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
-              <option value='2021'>2021</option>
-              <option value='2022'>2022</option>
-              <option value='2023'>2023</option>
-            </select>
-            <select
-              className={'w-100'}
-              defaultValue={'all'}
-              onChange={(e) => setSelectedIsDone(e.target.value)}
-            >
-              <option value='all'>すべて</option>
-              <option value='false'>未回収</option>
-              <option value='true'>回収済</option>
-            </select>
-            <PrimaryButton
-              className='hidden md:block'
-              onClick={async () => {
-                downloadFile({
-                  downloadContent: await createPresentationCsv(
-                    filteredIsDoneSponsorActivitiesViews,
-                  ),
-                  fileName: `協賛活動一覧_${formatYYYYMMDD(new Date())}.csv`,
-                  isBomAdded: true,
-                });
-              }}
-            >
-              CSVダウンロード
-            </PrimaryButton>
+          <div className='gap-4 md:flex'>
+            <div className='flex'>
+              <Title title={'協賛活動一覧'} />
+            </div>
+            <div className='my-2 flex gap-4 md:my-0'>
+              <select
+                className={'w-100'}
+                defaultValue={currentYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <option value='2021'>2021</option>
+                <option value='2022'>2022</option>
+                <option value='2023'>2023</option>
+              </select>
+              <select
+                className={'w-100'}
+                defaultValue={'all'}
+                onChange={(e) => setSelectedIsDone(e.target.value)}
+              >
+                <option value='all'>すべて</option>
+                <option value='false'>未回収</option>
+                <option value='true'>回収済</option>
+              </select>
+              <select
+                className={'w-100'}
+                defaultValue={'default'}
+                onChange={(e) => setSelectedSort(e.target.value)}
+              >
+                <option value='default'>作成日時昇順</option>
+                <option value='createDesSort'>作成日時降順</option>
+                <option value='updateSort'>更新日時昇順</option>
+                <option value='updateDesSort'>更新日時降順</option>
+                <option value='priceSort'>協賛金昇順</option>
+                <option value='priceDesSort'>協賛金降順</option>
+              </select>
+              <PrimaryButton
+                className='hidden md:block'
+                onClick={async () => {
+                  downloadFile({
+                    downloadContent: await createPresentationCsv(sortedSponsorActivitiesViews),
+                    fileName: `協賛活動一覧_${formatYYYYMMDD(new Date())}.csv`,
+                    isBomAdded: true,
+                  });
+                }}
+              >
+                CSVダウンロード
+              </PrimaryButton>
+            </div>
           </div>
           <div className='hidden justify-end md:flex '>
             <OpenModalButton
@@ -196,8 +257,8 @@ export default function SponsorActivities(props: Props) {
           </div>
         </div>
         <div className='mb-7 md:hidden'>
-          {filteredIsDoneSponsorActivitiesViews &&
-            filteredIsDoneSponsorActivitiesViews.map((sponsorActivitiesItem) => (
+          {sortedSponsorActivitiesViews &&
+            sortedSponsorActivitiesViews.map((sponsorActivitiesItem) => (
               <Card key={sponsorActivitiesItem.sponsorActivity.id}>
                 <div className='flex flex-col gap-2 p-4'>
                   <div>
@@ -315,8 +376,8 @@ export default function SponsorActivities(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredIsDoneSponsorActivitiesViews &&
-                filteredIsDoneSponsorActivitiesViews.map((sponsorActivitiesItem) => (
+              {sortedSponsorActivitiesViews &&
+                sortedSponsorActivitiesViews.map((sponsorActivitiesItem) => (
                   <tr className={clsx('border-b')} key={sponsorActivitiesItem.sponsorActivity.id}>
                     <td
                       onClick={() => {
