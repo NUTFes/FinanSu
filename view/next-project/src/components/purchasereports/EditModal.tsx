@@ -59,6 +59,7 @@ export default function EditModal(props: ModalProps) {
     addition: 0,
     financeCheck: false,
     remark: '',
+    buyer: '',
     purchaseOrderID: 1,
     createdAt: '',
     updatedAt: '',
@@ -264,6 +265,14 @@ export default function EditModal(props: ModalProps) {
                         className='w-full'
                         value={formData.addition}
                         onChange={formDataHandler('addition')}
+                      />
+                    </div>
+                    <p className='text-lg text-black-600'>購入者(任意)</p>
+                    <div className='col-span-3 w-full'>
+                      <Input
+                        className='w-full'
+                        value={formData.buyer}
+                        onChange={formDataHandler('buyer')}
                       />
                     </div>
                     <p className='text-lg text-black-600'>備考</p>
