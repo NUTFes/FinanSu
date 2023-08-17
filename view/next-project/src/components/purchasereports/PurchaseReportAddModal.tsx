@@ -73,6 +73,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     addition: 0,
     financeCheck: false,
     remark: '',
+    buyer: '',
     purchaseOrderID: props.purchaseOrderId,
     createdAt: '',
     updatedAt: '',
@@ -274,6 +275,14 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                     className='w-full'
                     value={formData.addition}
                     onChange={formDataHandler('addition')}
+                  />
+                </div>
+                <p className='text-black-600'>購入者(任意)</p>
+                <div className='col-span-4 w-full'>
+                  <Input
+                    className='w-full'
+                    value={formData.buyer}
+                    onChange={formDataHandler('buyer')}
                   />
                 </div>
                 <p className='text-black-600'>備考</p>
