@@ -12,6 +12,7 @@ type PurchaseReport struct {
 	FinanceCheck    bool      `json:"financeCheck"`
 	PurchaseOrderID int       `json:"purchaseOrderID"`
 	Remark          string    `json:"remark"`
+	Buyer           string    `json:"buyer"`
 	CreatedAt       time.Time `json:"createdAt"`
 	UpdatedAt       time.Time `json:"updatedAt"`
 }
