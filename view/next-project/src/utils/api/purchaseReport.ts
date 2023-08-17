@@ -14,30 +14,7 @@ export const post = async (url: string, data: PurchaseReport) => {
 };
 
 export const put = async (url: string, data: PurchaseReport) => {
-  const userID = data.userID;
-  const discount = data.discount;
-  const addition = data.addition;
-  const financeCheck = data.financeCheck;
-  const remark = data.remark;
-  const buyer = data.buyer;
-  const purchaseOrderId = data.purchaseOrderID;
-  const putUrl =
-    url +
-    '?user_id=' +
-    userID +
-    '&discount=' +
-    discount +
-    '&addition=' +
-    addition +
-    '&finance_check=' +
-    financeCheck +
-    '&remark=' +
-    remark +
-    '&buyer=' +
-    buyer +
-    '&purchase_order_id=' +
-    purchaseOrderId;
-  const res = await fetch(putUrl, {
+  const res = await fetch(url, {
     method: 'PUT',
     mode: 'cors',
     headers: {

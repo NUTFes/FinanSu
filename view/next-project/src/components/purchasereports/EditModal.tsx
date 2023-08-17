@@ -157,7 +157,15 @@ export default function EditModal(props: ModalProps) {
   // 購入物品を更新
   const updatePurchaseReport = async (data: PurchaseReport, id: number) => {
     const updatePurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + id;
-    await putPurchaseReport(updatePurchaseReportUrl, data);
+    const { userID, discount, addition, purchaseOrderID, ...rest } = data;
+    const submitData: PurchaseReport = {
+      userID: Number(userID),
+      discount: Number(discount),
+      addition: Number(addition),
+      purchaseOrderID: Number(purchaseOrderID),
+      ...rest,
+    };
+    await putPurchaseReport(updatePurchaseReportUrl, submitData);
   };
 
   // 購入物品を更新
