@@ -86,6 +86,7 @@ export interface PurchaseReport {
   addition: number;
   financeCheck: boolean;
   remark: string;
+  buyer?: string;
   purchaseOrderID: number;
   createdAt?: string;
   updatedAt?: string;
