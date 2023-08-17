@@ -35,6 +35,10 @@ export const createPurchaseReportCsv = async (
         label: '合計金額',
       },
       {
+        getCustomValue: (row) => row.purchaseReport.buyer || '',
+        label: '購入者',
+      },
+      {
         getCustomValue: (row) => (row.purchaseReport.financeCheck ? '○' : '' || ''),
         label: '財務局長チェック',
       },
