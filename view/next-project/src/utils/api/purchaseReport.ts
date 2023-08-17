@@ -6,6 +6,7 @@ export const post = async (url: string, data: PurchaseReport) => {
   const addition = data.addition;
   const financeCheck = data.financeCheck;
   const remark = data.remark;
+  const buyer = data.buyer;
   const purchaseOrderId = data.purchaseOrderID;
   const postUrl =
     url +
@@ -19,6 +20,8 @@ export const post = async (url: string, data: PurchaseReport) => {
     financeCheck +
     '&remark=' +
     remark +
+    '&buyer=' +
+    buyer +
     '&purchase_order_id=' +
     purchaseOrderId;
   const res = await fetch(postUrl, {
@@ -38,6 +41,7 @@ export const put = async (url: string, data: PurchaseReport) => {
   const addition = data.addition;
   const financeCheck = data.financeCheck;
   const remark = data.remark;
+  const buyer = data.buyer;
   const purchaseOrderId = data.purchaseOrderID;
   const putUrl =
     url +
@@ -51,6 +55,8 @@ export const put = async (url: string, data: PurchaseReport) => {
     financeCheck +
     '&remark=' +
     remark +
+    '&buyer=' +
+    buyer +
     '&purchase_order_id=' +
     purchaseOrderId;
   const res = await fetch(putUrl, {
