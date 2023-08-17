@@ -75,8 +75,6 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     remark: '',
     buyer: '',
     purchaseOrderID: props.purchaseOrderId,
-    createdAt: '',
-    updatedAt: '',
   });
   // 購入物品のリスト
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
@@ -169,7 +167,16 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入報告の追加
   const addPurchaseReport = async () => {
     const purchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
-    const postRes = await post(purchaseReportUrl, formData);
+    const { id, userID, discount, addition, purchaseOrderID, ...rest } = formData;
+    const submitData: PurchaseReport = {
+      id: Number(id),
+      userID: Number(userID),
+      discount: Number(discount),
+      addition: Number(addition),
+      purchaseOrderID: Number(purchaseOrderID),
+      ...rest,
+    };
+    const postRes = await post(purchaseReportUrl, submitData);
     setPurchaseReportId(postRes.id);
   };
 

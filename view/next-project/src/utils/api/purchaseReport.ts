@@ -1,30 +1,8 @@
 import { PurchaseReport } from '@type/common';
 
 export const post = async (url: string, data: PurchaseReport) => {
-  const userID = data.userID;
-  const discount = data.discount;
-  const addition = data.addition;
-  const financeCheck = data.financeCheck;
-  const remark = data.remark;
-  const buyer = data.buyer;
-  const purchaseOrderId = data.purchaseOrderID;
-  const postUrl =
-    url +
-    '?user_id=' +
-    userID +
-    '&discount=' +
-    discount +
-    '&addition=' +
-    addition +
-    '&finance_check=' +
-    financeCheck +
-    '&remark=' +
-    remark +
-    '&buyer=' +
-    buyer +
-    '&purchase_order_id=' +
-    purchaseOrderId;
-  const res = await fetch(postUrl, {
+  console.log(data);
+  const res = await fetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
