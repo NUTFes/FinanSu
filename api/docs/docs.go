@@ -1274,6 +1274,12 @@ const docTemplate = `{
                         "in": "query",
                         "description": "remark",
                         "type": "string"
+                    },
+                    {
+                        "name": "buyer",
+                        "in": "query",
+                        "description": "buyer",
+                        "type": "string"
                     }
                 ],
             },
@@ -1358,6 +1364,12 @@ const docTemplate = `{
                         "name": "remark",
                         "in": "query",
                         "description": "remark",
+                        "type": "string"
+                    },
+                    {
+                        "name": "buyer",
+                        "in": "query",
+                        "description": "buyer",
                         "type": "string"
                     }
                 ],
