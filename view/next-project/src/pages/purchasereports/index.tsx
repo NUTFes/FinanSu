@@ -87,7 +87,7 @@ export default function PurchaseReports(props: Props) {
 
   const filteredPurchaseReportViews = useMemo(() => {
     return purchaseReportViews.filter((purchaseReportViewItem) => {
-      return purchaseReportViewItem.purchaseOrder.deadline.includes(selectedYear);
+      return purchaseReportViewItem.purchaseOrder.createdAt?.includes(selectedYear);
     });
   }, [purchaseReportViews, selectedYear]);
 
