@@ -4,9 +4,8 @@ import { RiArrowDropRightLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
-import { get, del } from '@api/api_methods';
+import { get, post, del } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
-import { post } from '@api/purchaseReport';
 import {
   CloseButton,
   Input,

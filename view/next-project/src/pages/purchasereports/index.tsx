@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 
 import { authAtom } from '@/store/atoms';
-import { put } from '@/utils/api/purchaseReport';
+import { put } from '@/utils/api/api_methods';
 import { createPurchaseReportCsv } from '@/utils/createPurchaseReportCsv';
 import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
