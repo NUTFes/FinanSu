@@ -20,7 +20,7 @@ ENV GOOS=linux
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 # Airをインストール
-RUN go get -u github.com/cosmtrek/air && go build -o /go/bin/air github.com/cosmtrek/air
+RUN go install github.com/cosmtrek/air@latest 
 CMD ["air", "-c", ".air.toml"]
 
 

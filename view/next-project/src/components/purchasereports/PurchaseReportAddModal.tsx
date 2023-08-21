@@ -4,9 +4,8 @@ import { RiArrowDropRightLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
-import { get, del } from '@api/api_methods';
+import { get, post, del } from '@api/api_methods';
 import { put } from '@api/purchaseItem';
-import { post } from '@api/purchaseReport';
 import {
   CloseButton,
   Input,
@@ -73,9 +72,8 @@ export default function PurchaseReportAddModal(props: ModalProps) {
     addition: 0,
     financeCheck: false,
     remark: '',
+    buyer: '',
     purchaseOrderID: props.purchaseOrderId,
-    createdAt: '',
-    updatedAt: '',
   });
   // 購入物品のリスト
   const [formDataList, setFormDataList] = useState<PurchaseItem[]>(() => {
@@ -168,7 +166,16 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入報告の追加
   const addPurchaseReport = async () => {
     const purchaseReportUrl = process.env.CSR_API_URI + '/purchasereports';
-    const postRes = await post(purchaseReportUrl, formData);
+    const { id, userID, discount, addition, purchaseOrderID, ...rest } = formData;
+    const submitData: PurchaseReport = {
+      id: Number(id),
+      userID: Number(userID),
+      discount: Number(discount),
+      addition: Number(addition),
+      purchaseOrderID: Number(purchaseOrderID),
+      ...rest,
+    };
+    const postRes = await post(purchaseReportUrl, submitData);
     setPurchaseReportId(postRes.id);
   };
 
@@ -274,6 +281,14 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                     className='w-full'
                     value={formData.addition}
                     onChange={formDataHandler('addition')}
+                  />
+                </div>
+                <p className='text-black-600'>購入者(任意)</p>
+                <div className='col-span-4 w-full'>
+                  <Input
+                    className='w-full'
+                    value={formData.buyer}
+                    onChange={formDataHandler('buyer')}
                   />
                 </div>
                 <p className='text-black-600'>備考</p>

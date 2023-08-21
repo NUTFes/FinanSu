@@ -2,9 +2,12 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 
 import { authAtom } from '@/store/atoms';
-import { put } from '@/utils/api/purchaseReport';
+import { put } from '@/utils/api/api_methods';
+import { createPurchaseReportCsv } from '@/utils/createPurchaseReportCsv';
+import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
@@ -47,6 +50,13 @@ export async function getServerSideProps() {
   };
 }
 
+const formatYYYYMMDD = (date: Date) => {
+  const yyyy = String(date.getFullYear());
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}${mm}${dd}`;
+};
+
 export default function PurchaseReports(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
@@ -77,7 +87,7 @@ export default function PurchaseReports(props: Props) {
 
   const filteredPurchaseReportViews = useMemo(() => {
     return purchaseReportViews.filter((purchaseReportViewItem) => {
-      return purchaseReportViewItem.purchaseOrder.deadline.includes(selectedYear);
+      return purchaseReportViewItem.purchaseOrder.createdAt?.includes(selectedYear);
     });
   }, [purchaseReportViews, selectedYear]);
 
@@ -163,9 +173,9 @@ export default function PurchaseReports(props: Props) {
         <title>購入報告一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-      <Card>
+      <Card w='w-full'>
         <div className='mx-5 mt-10'>
-          <div className='flex'>
+          <div className='flex gap-4'>
             <Title title={'購入報告一覧'} />
             <select
               className='w-100 '
@@ -176,6 +186,21 @@ export default function PurchaseReports(props: Props) {
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
             </select>
+            <PrimaryButton
+              className='hidden md:block'
+              onClick={async () => {
+                downloadFile({
+                  downloadContent: await createPurchaseReportCsv(
+                    filteredPurchaseReportViews,
+                    props.expenses,
+                  ),
+                  fileName: `購入申請一覧(${selectedYear})_${formatYYYYMMDD(new Date())}.csv`,
+                  isBomAdded: true,
+                });
+              }}
+            >
+              CSVダウンロード
+            </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex'>
             <OpenAddModalButton>報告登録</OpenAddModalButton>
@@ -185,13 +210,13 @@ export default function PurchaseReports(props: Props) {
           <table className='mb-5 w-max table-auto border-collapse md:w-full md:table-fixed'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-1/12 pb-2'>
+                <th className='w-fit pb-2'>
                   <div className='text-center text-sm text-black-600'>財務局長チェック</div>
                 </th>
                 <th className='w-1/12 pb-2'>
                   <div className='text-center text-sm text-black-600'>ID</div>
                 </th>
-                <th className='w-2/12 border-b-primary-1 pb-2'>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>購入した局</div>
                 </th>
                 <th className='w-1/12 border-b-primary-1 pb-2'>
@@ -200,14 +225,17 @@ export default function PurchaseReports(props: Props) {
                 <th className='w-1/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>期限日</div>
                 </th>
-                <th className='w-3/12 border-b-primary-1 pb-2'>
+                <th className='w-2/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>購入物品 (個数)</div>
                 </th>
                 <th className='w-1/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>合計金額</div>
                 </th>
-                <th className='w-2/12 border-b-primary-1 pb-2'>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>備考</div>
+                </th>
+                <th className='w-1/12 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>購入者</div>
                 </th>
                 <th className='w-1/12 border-b-primary-1 pb-2'></th>
               </tr>
@@ -339,6 +367,18 @@ export default function PurchaseReports(props: Props) {
                     >
                       <div className='text-center text-sm text-black-600'>
                         {purchaseReportViewItem.purchaseReport.remark || '無し'}
+                      </div>
+                    </td>
+                    <td
+                      onClick={() => {
+                        onOpen(
+                          purchaseReportViewItem.purchaseOrder.id || 0,
+                          purchaseReportViewItem,
+                        );
+                      }}
+                    >
+                      <div className='text-center text-sm text-black-600'>
+                        {purchaseReportViewItem.purchaseReport.buyer || ''}
                       </div>
                     </td>
                     <td>

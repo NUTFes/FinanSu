@@ -85,27 +85,89 @@ export default function SponsorActivities(props: Props) {
 
   const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+  const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
+  const [selectedSort, setSelectedSort] = useState<string>('default');
 
-  const filteredSponsorActivitiesViews = useMemo(() => {
-    return props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
+  const sortedAndFilteredSponsorActivitiesViews = useMemo(() => {
+    let filteredActivities = props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
       return sponsorActivitiesItem.sponsorActivity.createdAt?.includes(selectedYear);
     });
-  }, [props, selectedYear]);
+
+    switch (selectedIsDone) {
+      case 'false':
+        filteredActivities = filteredActivities.filter((sponsorActivitiesItem) => {
+          return !sponsorActivitiesItem.sponsorActivity.isDone;
+        });
+        break;
+      case 'true':
+        filteredActivities = filteredActivities.filter((sponsorActivitiesItem) => {
+          return sponsorActivitiesItem.sponsorActivity.isDone;
+        });
+        break;
+      default:
+        break;
+    }
+
+    switch (selectedSort) {
+      case 'createDesSort':
+        return [...filteredActivities].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            new Date(firstObject.sponsorActivity.createdAt || 0).getTime() >
+            new Date(secondObject.sponsorActivity.createdAt || 0).getTime()
+              ? -1
+              : 1,
+        );
+      case 'updateSort':
+        return [...filteredActivities].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
+            new Date(secondObject.sponsorActivity.updatedAt || 0).getTime()
+              ? 1
+              : -1,
+        );
+      case 'updateDesSort':
+        return [...filteredActivities].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
+            new Date(secondObject.sponsorActivity.updatedAt || 0).getTime()
+              ? -1
+              : 1,
+        );
+      case 'priceSort':
+        return [...filteredActivities].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
+            secondObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0)
+              ? 1
+              : -1,
+        );
+      case 'priceDesSort':
+        return [...filteredActivities].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
+            secondObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0)
+              ? -1
+              : 1,
+        );
+      default:
+        return filteredActivities;
+    }
+  }, [props, selectedYear, selectedIsDone, selectedSort]);
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
-    if (filteredSponsorActivitiesViews) {
-      filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (sortedAndFilteredSponsorActivitiesViews) {
+      sortedAndFilteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
         totalFee += sponsorActivityItem.sponsorActivity.expense;
       });
     }
     return totalFee;
-  }, [filteredSponsorActivitiesViews]);
+  }, [sortedAndFilteredSponsorActivitiesViews]);
 
   const TotalActivityStyleFee = useMemo(() => {
     let totalFee = 0;
-    if (filteredSponsorActivitiesViews) {
-      filteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (sortedAndFilteredSponsorActivitiesViews) {
+      sortedAndFilteredSponsorActivitiesViews?.map((sponsorActivityItem) => {
         const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail
           ? sponsorActivityItem.styleDetail.map((styleDetail) => {
               return styleDetail.sponsorStyle.price;
@@ -119,7 +181,7 @@ export default function SponsorActivities(props: Props) {
       });
     }
     return totalFee;
-  }, [filteredSponsorActivitiesViews]);
+  }, [sortedAndFilteredSponsorActivitiesViews]);
 
   return (
     <MainLayout>
@@ -129,29 +191,56 @@ export default function SponsorActivities(props: Props) {
       </Head>
       <Card w='w-full'>
         <div className='mx-6 mt-10 md:mx-5'>
-          <div className='flex gap-4'>
-            <Title title={'協賛活動一覧'} />
-            <select
-              className={'w-100'}
-              defaultValue={currentYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
-              <option value='2021'>2021</option>
-              <option value='2022'>2022</option>
-              <option value='2023'>2023</option>
-            </select>
-            <PrimaryButton
-              className='hidden md:block'
-              onClick={async () => {
-                downloadFile({
-                  downloadContent: await createPresentationCsv(filteredSponsorActivitiesViews),
-                  fileName: `協賛活動一覧_${formatYYYYMMDD(new Date())}.csv`,
-                  isBomAdded: true,
-                });
-              }}
-            >
-              CSVダウンロード
-            </PrimaryButton>
+          <div className='gap-4 md:flex'>
+            <div className='flex'>
+              <Title title={'協賛活動一覧'} />
+            </div>
+            <div className='my-2 flex gap-4 md:my-0'>
+              <select
+                className={'w-100'}
+                defaultValue={currentYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <option value='2021'>2021</option>
+                <option value='2022'>2022</option>
+                <option value='2023'>2023</option>
+              </select>
+              <select
+                className={'w-100'}
+                defaultValue={'all'}
+                onChange={(e) => setSelectedIsDone(e.target.value)}
+              >
+                <option value='all'>すべて</option>
+                <option value='false'>未回収</option>
+                <option value='true'>回収済</option>
+              </select>
+              <select
+                className={'w-100'}
+                defaultValue={'default'}
+                onChange={(e) => setSelectedSort(e.target.value)}
+              >
+                <option value='default'>作成日時昇順</option>
+                <option value='createDesSort'>作成日時降順</option>
+                <option value='updateSort'>更新日時昇順</option>
+                <option value='updateDesSort'>更新日時降順</option>
+                <option value='priceSort'>協賛金昇順</option>
+                <option value='priceDesSort'>協賛金降順</option>
+              </select>
+              <PrimaryButton
+                className='hidden md:block'
+                onClick={async () => {
+                  downloadFile({
+                    downloadContent: await createPresentationCsv(
+                      sortedAndFilteredSponsorActivitiesViews,
+                    ),
+                    fileName: `協賛活動一覧_${formatYYYYMMDD(new Date())}.csv`,
+                    isBomAdded: true,
+                  });
+                }}
+              >
+                CSVダウンロード
+              </PrimaryButton>
+            </div>
           </div>
           <div className='hidden justify-end md:flex '>
             <OpenModalButton
@@ -164,8 +253,8 @@ export default function SponsorActivities(props: Props) {
           </div>
         </div>
         <div className='mb-7 md:hidden'>
-          {filteredSponsorActivitiesViews &&
-            filteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
+          {sortedAndFilteredSponsorActivitiesViews &&
+            sortedAndFilteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
               <Card key={sponsorActivitiesItem.sponsorActivity.id}>
                 <div className='flex flex-col gap-2 p-4'>
                   <div>
@@ -245,7 +334,7 @@ export default function SponsorActivities(props: Props) {
                 </div>
               </Card>
             ))}
-          {!filteredSponsorActivitiesViews.length && (
+          {!sortedAndFilteredSponsorActivitiesViews.length && (
             <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
           )}
         </div>
@@ -283,8 +372,8 @@ export default function SponsorActivities(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredSponsorActivitiesViews &&
-                filteredSponsorActivitiesViews.map((sponsorActivitiesItem, index) => (
+              {sortedAndFilteredSponsorActivitiesViews &&
+                sortedAndFilteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
                   <tr className={clsx('border-b')} key={sponsorActivitiesItem.sponsorActivity.id}>
                     <td
                       onClick={() => {
@@ -429,7 +518,7 @@ export default function SponsorActivities(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {filteredSponsorActivitiesViews.length > 0 && (
+              {sortedAndFilteredSponsorActivitiesViews.length > 0 && (
                 <tr className='border-b border-primary-1'>
                   <td className='px-1 py-3' colSpan={1}>
                     <div className='flex justify-end'>
@@ -453,7 +542,7 @@ export default function SponsorActivities(props: Props) {
                   </td>
                 </tr>
               )}
-              {!filteredSponsorActivitiesViews.length && (
+              {!sortedAndFilteredSponsorActivitiesViews.length && (
                 <tr>
                   <td colSpan={6} className='py-3'>
                     <div className='text-center text-sm text-black-600'>データがありません</div>

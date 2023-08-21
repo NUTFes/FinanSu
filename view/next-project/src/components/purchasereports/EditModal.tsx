@@ -4,9 +4,8 @@ import { RiArrowDropRightLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
-import { get } from '@api/api_methods';
+import { get, put as putPurchaseReport } from '@api/api_methods';
 import { put as putPurchaseItem } from '@api/purchaseItem';
-import { put as putPurchaseReport } from '@api/purchaseReport';
 import {
   CloseButton,
   Input,
@@ -59,6 +58,7 @@ export default function EditModal(props: ModalProps) {
     addition: 0,
     financeCheck: false,
     remark: '',
+    buyer: '',
     purchaseOrderID: 1,
     createdAt: '',
     updatedAt: '',
@@ -156,7 +156,15 @@ export default function EditModal(props: ModalProps) {
   // 購入物品を更新
   const updatePurchaseReport = async (data: PurchaseReport, id: number) => {
     const updatePurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + id;
-    await putPurchaseReport(updatePurchaseReportUrl, data);
+    const { userID, discount, addition, purchaseOrderID, ...rest } = data;
+    const submitData: PurchaseReport = {
+      userID: Number(userID),
+      discount: Number(discount),
+      addition: Number(addition),
+      purchaseOrderID: Number(purchaseOrderID),
+      ...rest,
+    };
+    await putPurchaseReport(updatePurchaseReportUrl, submitData);
   };
 
   // 購入物品を更新
@@ -264,6 +272,14 @@ export default function EditModal(props: ModalProps) {
                         className='w-full'
                         value={formData.addition}
                         onChange={formDataHandler('addition')}
+                      />
+                    </div>
+                    <p className='text-lg text-black-600'>購入者(任意)</p>
+                    <div className='col-span-3 w-full'>
+                      <Input
+                        className='w-full'
+                        value={formData.buyer}
+                        onChange={formDataHandler('buyer')}
                       />
                     </div>
                     <p className='text-lg text-black-600'>備考</p>

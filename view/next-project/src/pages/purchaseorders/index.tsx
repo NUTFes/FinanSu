@@ -1,9 +1,11 @@
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-
+import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { authAtom } from '@/store/atoms';
 import { put } from '@/utils/api/purchaseOrder';
+import { createPurchaseOrdersCsv } from '@/utils/createPurchaseOrdersCsv';
+import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
 import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
@@ -33,6 +35,13 @@ export async function getServerSideProps() {
   };
 }
 
+const formatYYYYMMDD = (date: Date) => {
+  const yyyy = String(date.getFullYear());
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}${mm}${dd}`;
+};
+
 export default function PurchaseOrders(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
@@ -60,7 +69,7 @@ export default function PurchaseOrders(props: Props) {
 
   const filteredPurchaseOrderViews = useMemo(() => {
     return purchaseOrderViews.filter((purchaseOrderView: PurchaseOrderView) => {
-      return purchaseOrderView.purchaseOrder.deadline.includes(selectedYear);
+      return purchaseOrderView.purchaseOrder.createdAt?.includes(selectedYear);
     });
   }, [purchaseOrderViews, selectedYear]);
 
@@ -147,7 +156,7 @@ export default function PurchaseOrders(props: Props) {
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
-          <div className='flex'>
+          <div className='flex gap-4'>
             <Title title={'購入申請一覧'} />
             <select
               className='w-100 '
@@ -158,6 +167,21 @@ export default function PurchaseOrders(props: Props) {
               <option value='2022'>2022</option>
               <option value='2023'>2023</option>
             </select>
+            <PrimaryButton
+              className='hidden md:block'
+              onClick={async () => {
+                downloadFile({
+                  downloadContent: await createPurchaseOrdersCsv(
+                    filteredPurchaseOrderViews,
+                    props.expenses,
+                  ),
+                  fileName: `購入申請一覧(${selectedYear})_${formatYYYYMMDD(new Date())}.csv`,
+                  isBomAdded: true,
+                });
+              }}
+            >
+              CSVダウンロード
+            </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex'>
             <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
