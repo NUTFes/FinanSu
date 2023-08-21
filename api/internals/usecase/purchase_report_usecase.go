@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"strconv"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
-	"strconv"
 )
 
 type purchaseReportUseCase struct {
@@ -14,8 +15,8 @@ type purchaseReportUseCase struct {
 type PurchaseReportUseCase interface {
 	GetPurchaseReports(context.Context) ([]domain.PurchaseReport, error)
 	GetPurchaseReportByID(context.Context, string) (domain.PurchaseReport, error)
-	CreatePurchaseReport(context.Context, string, string, string, string, string,string) (domain.PurchaseReport, error)
-	UpdatePurchaseReport(context.Context, string, string, string, string, string, string,string) (domain.PurchaseReport, error)
+	CreatePurchaseReport(context.Context, string, string, string, string, string, string, string) (domain.PurchaseReport, error)
+	UpdatePurchaseReport(context.Context, string, string, string, string, string, string, string, string) (domain.PurchaseReport, error)
 	DestroyPurchaseReport(context.Context, string) error
 	GetPurchaseReportDetails(context.Context) ([]domain.PurchaseReportDetails, error)
 	GetPurchaseReportDetailByID(context.Context, string) (domain.PurchaseReportDetails, error)
@@ -42,6 +43,7 @@ func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.
 			&purchaseReport.FinanceCheck,
 			&purchaseReport.PurchaseOrderID,
 			&purchaseReport.Remark,
+			&purchaseReport.Buyer,
 			&purchaseReport.CreatedAt,
 			&purchaseReport.UpdatedAt,
 		)
@@ -65,6 +67,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 		&purchaseReport.FinanceCheck,
 		&purchaseReport.PurchaseOrderID,
 		&purchaseReport.Remark,
+		&purchaseReport.Buyer,
 		&purchaseReport.CreatedAt,
 		&purchaseReport.UpdatedAt,
 	)
@@ -83,8 +86,9 @@ func (p *purchaseReportUseCase) CreatePurchaseReport(
 	FinanceCheck string,
 	PurchaseOrderID string,
 	Remark string,
+	Buyer string,
 ) (domain.PurchaseReport, error) {
-	p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID, Remark)
+	p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID, Remark, Buyer)
 	latastPurchaseReport := domain.PurchaseReport{}
 	row, err := p.rep.FindNewRecord(c)
 	err = row.Scan(
@@ -95,6 +99,7 @@ func (p *purchaseReportUseCase) CreatePurchaseReport(
 		&latastPurchaseReport.FinanceCheck,
 		&latastPurchaseReport.PurchaseOrderID,
 		&latastPurchaseReport.Remark,
+		&latastPurchaseReport.Buyer,
 		&latastPurchaseReport.CreatedAt,
 		&latastPurchaseReport.UpdatedAt,
 	)
@@ -114,8 +119,9 @@ func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	FinanceCheck string,
 	PurchaseOrderID string,
 	Remark string,
+	Buyer string,
 ) (domain.PurchaseReport, error) {
-	p.rep.Update(c,id, UserID, Discount, Addition, FinanceCheck, PurchaseOrderID, Remark)
+	p.rep.Update(c,id, UserID, Discount, Addition, FinanceCheck, PurchaseOrderID, Remark, Buyer)
 	updatedPurchaseReport := domain.PurchaseReport{}
 	row, err := p.rep.Find(c, id)
 	err = row.Scan(
@@ -126,6 +132,7 @@ func (p *purchaseReportUseCase) UpdatePurchaseReport(
 		&updatedPurchaseReport.FinanceCheck,
 		&updatedPurchaseReport.PurchaseOrderID,
 		&updatedPurchaseReport.Remark,
+		&updatedPurchaseReport.Buyer,
 		&updatedPurchaseReport.CreatedAt,
 		&updatedPurchaseReport.UpdatedAt,
 	)
@@ -163,6 +170,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]d
 			&purchaseReportDetail.PurchaseReport.FinanceCheck,
 			&purchaseReportDetail.PurchaseReport.PurchaseOrderID,
 			&purchaseReportDetail.PurchaseReport.Remark,
+			&purchaseReportDetail.PurchaseReport.Buyer,
 			&purchaseReportDetail.PurchaseReport.CreatedAt,
 			&purchaseReportDetail.PurchaseReport.UpdatedAt,
 			&purchaseReportDetail.ReportUser.ID,
@@ -228,6 +236,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 		&purchaseReportDetail.PurchaseReport.FinanceCheck,
 		&purchaseReportDetail.PurchaseReport.PurchaseOrderID,
 		&purchaseReportDetail.PurchaseReport.Remark,
+		&purchaseReportDetail.PurchaseReport.Buyer,
 		&purchaseReportDetail.PurchaseReport.CreatedAt,
 		&purchaseReportDetail.PurchaseReport.UpdatedAt,
 		&purchaseReportDetail.ReportUser.ID,

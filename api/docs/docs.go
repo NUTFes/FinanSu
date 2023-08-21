@@ -1233,49 +1233,20 @@ const docTemplate = `{
             "post": {
                 tags: ["purchase_report"],
                 "description": "purchase_reportの作成",
-                responses: {
-                    "200": {
-                        "description": "createされたpurchase_reportが返ってくる",
-                    }
-                },
                 "parameters": [
                     {
-                        "name": "user_id",
-                        "in": "query",
-                        "description": "user_id",
-                        "type": "integer"
+                        "in": "body",
+                        "name": "purchaseReport",
+                        "schema":{
+                            "$ref": "#/definitions/purchaseReport"
+                        },
                     },
-                    {
-                        "name": "discount",
-                        "in": "query",
-                        "description": "discount",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "addition",
-                        "in": "query",
-                        "description": "addition",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "finance_check",
-                        "in": "query",
-                        "description": "finance_check",
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "purchase_order_id",
-                        "in": "query",
-                        "description": "購入申請id",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "remark",
-                        "in": "query",
-                        "description": "remark",
-                        "type": "string"
-                    }
                 ],
+                responses: {
+                    "200": {
+                        "description": "作成されたpurchaseReportが返ってくる",
+                    },
+                },
             },
         },
         "/purchasereports/details": {
@@ -1325,41 +1296,12 @@ const docTemplate = `{
                         "type": "integer"
                     },
                     {
-                        "name": "user_id",
-                        "in": "query",
-                        "description": "user_id",
-                        "type": "integer"
+                        "in": "body",
+                        "name": "purchaseReport",
+                        "schema":{
+                            "$ref": "#/definitions/purchaseReport"
+                        },
                     },
-                    {
-                        "name": "discount",
-                        "in": "query",
-                        "description": "discount",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "addition",
-                        "in": "query",
-                        "description": "addition",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "finance_check",
-                        "in": "query",
-                        "description": "finance_check",
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "purchase_order_id",
-                        "in": "query",
-                        "description": "購入申請id",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "remark",
-                        "in": "query",
-                        "description": "remark",
-                        "type": "string"
-                    }
                 ],
             },
             "delete": {
@@ -2166,6 +2108,46 @@ const docTemplate = `{
                     "email",
                     "address",
                     "representative"
+            },
+        },
+        "purchaseReport":{
+            "properties":{
+                "userID":{
+                    "type": "int",
+                    "example": 1,
+
+                },
+                "discount":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "addition":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "financeCheck":{
+                    "type": "boolean",
+                    "example": false,
+                },
+                "purchaseOrderID":{
+                    "type": "int",
+                    "example": 1,
+                },
+                "remark":{
+                    "type": "string",
+                    "example": "",
+                },
+                "buyer":{
+                    "type": "string",
+                    "example": "",
+                },
+            },
+            "required":{
+                    "userID",
+                    "discount",
+                    "addition",
+                    "financeCheck",
+                    "purchaseOrderID"
             },
         },
     },

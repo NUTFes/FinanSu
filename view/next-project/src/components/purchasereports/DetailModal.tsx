@@ -118,6 +118,11 @@ const DetailModal: FC<ModalProps> = (props) => {
           {(props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.remark) ||
             '無し'}
         </div>
+        <p className='text-black-600'>購入者(任意)</p>
+        <div className='w-full border-b border-b-primary-1 text-right'>
+          {(props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.buyer) ||
+            ''}
+        </div>
       </div>
 
       <div className='mx-auto mb-10 w-fit'>

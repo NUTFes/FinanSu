@@ -2,7 +2,9 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -46,13 +48,11 @@ func (p *purchaseReportController) ShowPurchaseReport(c echo.Context) error {
 
 // Create
 func (p *purchaseReportController) CreatePurchaseReport(c echo.Context) error {
-	userID := c.QueryParam("user_id")
-	discount := c.QueryParam("discount")
-	addition := c.QueryParam("addition")
-	financeCheck := c.QueryParam("finance_check")
-	purchaseOrderID := c.QueryParam("purchase_order_id")
-	remark := c.QueryParam("remark")
-	latastPurchaseReport, err := p.u.CreatePurchaseReport(c.Request().Context(), userID, discount, addition, financeCheck, purchaseOrderID, remark)
+	report := new(domain.PurchaseReport)
+	if err := c.Bind(report); err != nil {
+		return err
+	}
+	latastPurchaseReport, err := p.u.CreatePurchaseReport(c.Request().Context(), strconv.Itoa(report.UserID), strconv.Itoa(report.Discount), strconv.Itoa(report.Addition), strconv.FormatBool(report.FinanceCheck), strconv.Itoa(report.PurchaseOrderID), report.Remark, report.Buyer)
 	if err != nil {
 		return err
 	}
@@ -62,14 +62,11 @@ func (p *purchaseReportController) CreatePurchaseReport(c echo.Context) error {
 // Update
 func (p *purchaseReportController) UpdatePurchaseReport(c echo.Context) error {
 	id := c.Param("id")
-	userID := c.QueryParam("user_id")
-	discount := c.QueryParam("discount")
-	addition := c.QueryParam("addition")
-	financeCheck := c.QueryParam("finance_check")
-	purchaseOrderID := c.QueryParam("purchase_order_id")
-	remark := c.QueryParam("remark")
-
-	updatedPurchaseReport, err := p.u.UpdatePurchaseReport(c.Request().Context(), id, userID, discount, addition, financeCheck, purchaseOrderID, remark)
+	report := new(domain.PurchaseReport)
+	if err := c.Bind(report); err != nil {
+		return err
+	}
+	updatedPurchaseReport, err := p.u.UpdatePurchaseReport(c.Request().Context(), id, strconv.Itoa(report.UserID), strconv.Itoa(report.Discount), strconv.Itoa(report.Addition), strconv.FormatBool(report.FinanceCheck), strconv.Itoa(report.PurchaseOrderID), report.Remark, report.Buyer)
 	if err != nil {
 		return err
 	}
