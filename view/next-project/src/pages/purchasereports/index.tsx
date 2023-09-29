@@ -93,13 +93,15 @@ export default function PurchaseReports(props: Props) {
 
   const TotalFee = useCallback((purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
-    purchaseItems.map((purchaseItem: PurchaseItem) => {
-      if (purchaseItem.financeCheck) {
-        totalFee += purchaseItem.price * purchaseItem.quantity;
-      }
-    });
-    totalFee += purchaseReport.addition - purchaseReport.discount;
-    return totalFee;
+    if (purchaseItems) {
+      purchaseItems.map((purchaseItem: PurchaseItem) => {
+        if (purchaseItem.financeCheck) {
+          totalFee += purchaseItem.price * purchaseItem.quantity;
+        }
+      });
+      totalFee += purchaseReport.addition - purchaseReport.discount;
+      return totalFee;
+    }
   }, []);
 
   // すべてのpurchaseReportの合計金額
@@ -107,7 +109,8 @@ export default function PurchaseReports(props: Props) {
     if (filteredPurchaseReportViews) {
       let totalFee = 0;
       filteredPurchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
-        totalFee += TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems);
+        totalFee +=
+          TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems) || 0;
       });
       return totalFee;
     }
@@ -333,7 +336,7 @@ export default function PurchaseReports(props: Props) {
                         )}
                       >
                         {/* name (個数/finasucheck) */}
-                        {purchaseReportViewItem.purchaseItems.map((purchaseItem, index) => (
+                        {purchaseReportViewItem.purchaseItems?.map((purchaseItem, index) => (
                           <div key={index}>
                             {`${purchaseItem.financeCheck ? '○' : 'x'} ${purchaseItem.item} (${
                               purchaseItem.quantity
