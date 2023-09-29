@@ -66,10 +66,12 @@ const DetailModal: FC<ModalProps> = (props) => {
   // 購入報告の合計金額を計算
   const TotalFee = (purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
-    purchaseItems.map((purchaseItem: PurchaseItem) => {
-      totalFee += purchaseItem.price * purchaseItem.quantity;
-    });
-    totalFee += purchaseReport.addition - purchaseReport.discount;
+    if (purchaseItems) {
+      purchaseItems.map((purchaseItem: PurchaseItem) => {
+        totalFee += purchaseItem.price * purchaseItem.quantity;
+      });
+      totalFee += purchaseReport.addition - purchaseReport.discount;
+    }
     return totalFee;
   };
 
@@ -161,7 +163,7 @@ const DetailModal: FC<ModalProps> = (props) => {
             </thead>
             <tbody className='w-full border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {/* <div className='flex items-start'> */}
-              {props.purchaseReportViewItem?.purchaseItems.map((purchaseItem) => (
+              {props.purchaseReportViewItem?.purchaseItems?.map((purchaseItem) => (
                 <tr key={purchaseItem.id} className='w-full'>
                   <td className='border-b py-3'>
                     <div className='text-center text-sm text-black-300'>{purchaseItem.item}</div>
