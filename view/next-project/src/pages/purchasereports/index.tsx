@@ -90,8 +90,7 @@ export default function PurchaseReports(props: Props) {
       return purchaseReportViews.filter((purchaseReportViewItem: PurchaseReportView) => {
         return purchaseReportViewItem.purchaseOrder.createdAt?.includes(selectedYear);
       });
-    }
-    else {
+    } else {
       return [];
     }
   }, [purchaseReportViews, selectedYear]);
