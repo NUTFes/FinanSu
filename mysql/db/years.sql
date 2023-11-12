@@ -10,3 +10,4 @@ CREATE TABLE years (
 
 INSERT into years (year) values (2022);
 INSERT into years (year) values (2023);
+INSERT into years (year) values (2024);

@@ -17,3 +17,5 @@ INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) value
 INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-3-28', 1, 3, false);
 INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-4-6', 1, 4, true);
 INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-4-6', 1, 5, true);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check, created_at, updated_at) values ('2024-4-6', 1, 4, true, '2023-11-16 00:00:00', '2023-11-16 00:00:00');
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check, created_at, updated_at) values ('2024-4-6', 1, 5, true, '2023-11-16 00:00:00', '2023-11-16 00:00:00');
