@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type yearController struct {
@@ -16,6 +17,7 @@ type YearController interface {
 	CreateYear(echo.Context) error
 	UpdateYear(echo.Context) error
 	DestroyYear(echo.Context) error
+	IndexYearPeriods(echo.Context) error
 }
 
 func NewYearController(u usecase.YearUseCase) YearController {
@@ -71,3 +73,12 @@ func (y *yearController) DestroyYear(c echo.Context) error {
 	}
 	return c.String(http.StatusOK, "Destroy Year")
 }
+
+func (y *yearController) IndexYearPeriods(c echo.Context) error {
+	years, err := y.u.GetYearPeriods(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, years)
+}
+

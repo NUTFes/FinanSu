@@ -20,6 +20,7 @@ type YearRepository interface {
 	Update(context.Context, string, string) error
 	Destroy(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
+	AllYearPeriods(context.Context) (*sql.Rows, error)
 }
 
 func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
@@ -54,4 +55,22 @@ func (y *yearRepository) Destroy(c context.Context, id string) error {
 func (y *yearRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
 	query := `SELECT * FROM years ORDER BY id DESC LIMIT 1`
 	return y.crud.ReadByID(c, query)
+}
+
+func (y *yearRepository) AllYearPeriods(c context.Context) (*sql.Rows, error) {
+	query := `
+		SELECT
+	 		years.id,
+			years.year,
+			year_records.started_at,
+			year_records.ended_at,
+			year_records.created_at,
+			year_records.updated_at
+		FROM
+			years
+		INNER JOIN
+			year_records
+		ON
+			years.id = year_records.year_id` 
+	return y.crud.Read(c, query)
 }

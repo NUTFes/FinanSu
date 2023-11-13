@@ -212,4 +212,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/years/:id", r.yearController.UpdateYear)
 	e.DELETE("/years/:id", r.yearController.DestroyYear)
 
+	// year_periods
+	e.GET("/years/periods", r.yearController.IndexYearPeriods)
+
 }
