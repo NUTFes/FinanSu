@@ -52,7 +52,6 @@ export default function AddModal(props: ModalProps) {
     await del(deletePurchaseOrderUrl);
   };
 
-  const [itemName, setItemName] = useState('');
   const handler =
     (stepNumber: number, input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -61,9 +60,6 @@ export default function AddModal(props: ModalProps) {
           formData.id === stepNumber ? { ...formData, [input]: e.target.value } : formData,
         ),
       );
-      if (input === 'item') {
-        setItemName(e.target.value);
-      }
     };
 
   const addPurchaseItem = async (data: PurchaseItem[]) => {
@@ -308,7 +304,7 @@ export default function AddModal(props: ModalProps) {
                             activeStep === steps.length ? setIsDone(true) : nextStep();
                           }
                         }}
-                        disabled={itemName.trim() === ''}
+                        disabled={props.formDataList[activeStep - 1].item.trim() === ''}
                       >
                         <div className={clsx('flex')}>
                           {activeStep === steps.length ? '申請の確認' : '次へ'}
