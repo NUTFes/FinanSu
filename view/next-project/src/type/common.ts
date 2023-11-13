@@ -232,3 +232,13 @@ export interface PurchaseReportView {
   reportUser: User;
   purchaseItems: PurchaseItem[];
 }
+
+// // Year(年度)
+export interface YearRecords {
+  id?: number;
+  year: number;
+  startedAt?: string;
+  endedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
