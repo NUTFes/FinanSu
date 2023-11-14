@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -21,6 +22,8 @@ type YearRepository interface {
 	Destroy(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	AllYearPeriods(context.Context) (*sql.Rows, error)
+	CreateYearPeriod(context.Context, string, string, string) error
+	FindPeriodLatestRecord(context.Context) (*sql.Row, error)
 }
 
 func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
@@ -57,6 +60,27 @@ func (y *yearRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
 	return y.crud.ReadByID(c, query)
 }
 
+func (y *yearRepository) FindPeriodLatestRecord(c context.Context) (*sql.Row, error) {
+	query := `
+		SELECT
+			years.id,
+			years.year,
+			year_records.started_at,
+			year_records.ended_at,
+			year_records.created_at,
+			year_records.updated_at
+		FROM
+			years
+		INNER JOIN
+			year_records
+		ON
+			years.id = year_records.year_id
+		ORDER BY
+			year_records.id
+		DESC LIMIT 1`
+	return y.crud.ReadByID(c, query)
+}
+
 func (y *yearRepository) AllYearPeriods(c context.Context) (*sql.Rows, error) {
 	query := `
 		SELECT
@@ -74,3 +98,27 @@ func (y *yearRepository) AllYearPeriods(c context.Context) (*sql.Rows, error) {
 			years.id = year_records.year_id` 
 	return y.crud.Read(c, query)
 }
+
+func (y *yearRepository) CreateYearPeriod(c context.Context, year string, startedAt string, endedAt string) error {
+	query := `INSERT INTO years (year) VALUES (` + year + ");"
+	y.crud.UpdateDB(c, query)
+	query = `SELECT LAST_INSERT_ID() AS last_id;`
+	row, err := y.crud.ReadByID(c, query)
+	last_id := 0
+	err = row.Scan(
+		&last_id,
+	)
+	if err != nil {
+		return err
+	}
+	print(last_id)
+	query = `
+		INSERT INTO
+			year_records
+			(year_id, started_at, ended_at)
+		VALUES
+			(`+strconv.Itoa(last_id)+", '"+startedAt+"', '" +endedAt+"');"
+	print(query)
+	return y.crud.UpdateDB(c, query)
+}
+

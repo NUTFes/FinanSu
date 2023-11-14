@@ -19,6 +19,7 @@ type YearUseCase interface {
 	UpdateYear(context.Context, string, string) (domain.Year, error)
 	DestroyYear(context.Context, string) error
 	GetYearPeriods(context.Context) ([]domain.YearPeriod, error)
+	CreateYearPeriod(context.Context, string, string, string) (domain.YearPeriod, error)
 }
 
 func NewYearUseCase(rep rep.YearRepository) YearUseCase {
@@ -134,4 +135,22 @@ func (y *yearUseCase) GetYearPeriods(c context.Context) ([]domain.YearPeriod, er
 		yearPeriods = append(yearPeriods, yearPeriod)
 	}
 	return yearPeriods, nil
+}
+
+func (y *yearUseCase) CreateYearPeriod(c context.Context, year string, startAt string, endedAt string) (domain.YearPeriod, error) {
+	latestYearPeriod := domain.YearPeriod{}
+	err := y.rep.CreateYearPeriod(c, year, startAt, endedAt)
+	row, err := y.rep.FindPeriodLatestRecord(c)
+	err = row.Scan(
+		&latestYearPeriod.ID,
+		&latestYearPeriod.Year,
+		&latestYearPeriod.StartedAt,
+		&latestYearPeriod.EndedAt,			
+		&latestYearPeriod.CreatedAt,
+		&latestYearPeriod.UpdatedAt,
+	)
+	if err != nil {
+		return latestYearPeriod, err
+	}
+	return latestYearPeriod, nil
 }
