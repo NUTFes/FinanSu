@@ -1,10 +1,12 @@
+import { format } from 'date-fns';
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction, useState, useMemo } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
 import { YearRecords } from '@/type/common';
+import { post } from '@/utils/api/api_methods';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -16,12 +18,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   const router = useRouter();
 
   const [formData, setFormData] = useState<YearRecords>({
-    id: 0,
     year: 0,
     startedAt: '',
     endedAt: '',
-    createdAt: '',
-    updatedAt: '',
   });
 
   const handler =
@@ -30,10 +29,25 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  // const addFundInformation = async (data: FundInformation) => {
-  //   const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
-  //   await post(addFundInformationUrl, data);
-  // };
+  const submit = async (data: YearRecords) => {
+    const startedAt = data.startedAt && new Date(data.startedAt);
+    const endedAt = data.endedAt && new Date(data.endedAt);
+    const formattedStartedAt = startedAt && format(startedAt, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    const formattedEndedAt = endedAt && format(endedAt, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    const submitData = {
+      ...data,
+      year: Number(data.year),
+      startedAt: formattedStartedAt,
+      endedAt: formattedEndedAt,
+    };
+    await addYearPeriod(submitData);
+  };
+
+  const addYearPeriod = async (data: YearRecords) => {
+    const addPeriodUrl = process.env.CSR_API_URI + '/years/periods';
+    console.log(data);
+    await post(addPeriodUrl, data);
+  };
 
   return (
     <Modal className='md:w-1/2'>
@@ -46,7 +60,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
         <p className='col-span-2 text-black-600'>年度</p>
         <div className='col-span-3 w-full'>
-          <Input className='w-full' onChange={handler('year')} placeholder='20XX' />
+          <Input className='w-full' onChange={handler('year')} placeholder='20XX' type='number' />
         </div>
         <p className='col-span-2 text-black-600'>開始日</p>
         <div className='col-span-3  w-full'>
@@ -61,10 +75,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         <PrimaryButton
           className={'mx-2'}
           onClick={() => {
-            // addFundInformation(formData);
-            console.log(formData);
+            submit(formData);
             props.setShowModal(false);
-            // router.reload();
+            router.reload();
           }}
         >
           登録する
