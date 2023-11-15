@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -10,6 +13,8 @@ import (
 type yearController struct {
 	u usecase.YearUseCase
 }
+
+const Layout = "2006-01-02 15:04:05"
 
 type YearController interface {
 	IndexYear(echo.Context) error
@@ -84,12 +89,15 @@ func (y *yearController) IndexYearPeriods(c echo.Context) error {
 }
 
 func (y *yearController) CreateYearPeriod(c echo.Context) error {
-	year := c.QueryParam("year")
-	startedAt := c.QueryParam("startedAt")
-	endedAt := c.QueryParam("endedAt")
-	latestYear, err := y.u.CreateYearPeriod(c.Request().Context(), year, startedAt, endedAt)
+	yearPeriod := new(domain.YearPeriod)
+	if err := c.Bind(yearPeriod); err != nil {
+		fmt.Println("err")
+		return err
+	}
+	latestYearPeriod, err := y.u.CreateYearPeriod(c.Request().Context(), strconv.Itoa(yearPeriod.Year), yearPeriod.StartedAt.Format(Layout), yearPeriod.EndedAt.Format(Layout))
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusCreated, latestYear)
+	return c.JSON(http.StatusCreated, latestYearPeriod)
 }
+
