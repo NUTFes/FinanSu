@@ -304,6 +304,7 @@ export default function AddModal(props: ModalProps) {
                             activeStep === steps.length ? setIsDone(true) : nextStep();
                           }
                         }}
+                        disabled={props.formDataList[activeStep - 1].item.trim() === ''}
                       >
                         <div className={clsx('flex')}>
                           {activeStep === steps.length ? '申請の確認' : '次へ'}
