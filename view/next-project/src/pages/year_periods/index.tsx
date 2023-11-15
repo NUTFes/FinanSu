@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
+import OpenAddModalButton from '@/components/year_periods/OpenAddModalButton';
 import { authAtom } from '@/store/atoms';
 import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';
@@ -77,6 +78,9 @@ export default function Periods(props: Props) {
           <div className='flex'>
             <Title title={'年度一覧'} />
           </div>
+        </div>
+        <div className='hidden justify-end md:flex '>
+          <OpenAddModalButton>年度登録</OpenAddModalButton>
         </div>
         <div className='mb-2 p-5'>
           <table className='mb-5 w-full table-auto border-collapse'>
