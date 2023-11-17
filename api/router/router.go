@@ -215,5 +215,6 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// year_periods
 	e.GET("/years/periods", r.yearController.IndexYearPeriods)
 	e.POST("/years/periods", r.yearController.CreateYearPeriod)
+	e.PUT("/years/periods/:id", r.yearController.UpdateYearPeriod)
 
 }

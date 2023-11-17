@@ -24,6 +24,8 @@ type YearRepository interface {
 	AllYearPeriods(context.Context) (*sql.Rows, error)
 	CreateYearPeriod(context.Context, string, string, string) error
 	FindPeriodLatestRecord(context.Context) (*sql.Row, error)
+	FindYearPeriodByID(context.Context, string) (*sql.Row, error)
+	UpdateYearPeriod(context.Context, string, string, string, string) error
 }
 
 func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
@@ -84,7 +86,7 @@ func (y *yearRepository) FindPeriodLatestRecord(c context.Context) (*sql.Row, er
 func (y *yearRepository) AllYearPeriods(c context.Context) (*sql.Rows, error) {
 	query := `
 		SELECT
-	 		years.id,
+			year_records.id,
 			years.year,
 			year_records.started_at,
 			year_records.ended_at,
@@ -100,9 +102,9 @@ func (y *yearRepository) AllYearPeriods(c context.Context) (*sql.Rows, error) {
 }
 
 func (y *yearRepository) CreateYearPeriod(c context.Context, year string, startedAt string, endedAt string) error {
-	query := `INSERT INTO years (year) VALUES (` + year + ");"
+	query := `INSERT INTO years (year) SELECT ` +year +` WHERE NOT EXISTS ( SELECT *  FROM years WHERE year = `+year+` );`
 	y.crud.UpdateDB(c, query)
-	query = `SELECT LAST_INSERT_ID() AS last_id;`
+	query = `SELECT id FROM years WHERE year = `+ year +";"
 	row, err := y.crud.ReadByID(c, query)
 	last_id := 0
 	err = row.Scan(
@@ -111,14 +113,55 @@ func (y *yearRepository) CreateYearPeriod(c context.Context, year string, starte
 	if err != nil {
 		return err
 	}
-	print(last_id)
 	query = `
 		INSERT INTO
 			year_records
 			(year_id, started_at, ended_at)
 		VALUES
 			(`+strconv.Itoa(last_id)+", '"+startedAt+"', '" +endedAt+"');"
-	print(query)
 	return y.crud.UpdateDB(c, query)
 }
+
+func (y *yearRepository) UpdateYearPeriod(c context.Context,id string, year string, startedAt string, endedAt string) error {
+	query := `INSERT INTO years (year) SELECT ` +year +` WHERE NOT EXISTS ( SELECT *  FROM years WHERE year = `+year+` );`
+	y.crud.UpdateDB(c, query)
+	query = `SELECT id FROM years WHERE year = `+ year +";"
+	row, err := y.crud.ReadByID(c, query)
+	last_id := 0
+	err = row.Scan(
+		&last_id,
+	)
+	if err != nil {
+		return err
+	}
+	query = `
+		UPDATE
+			year_records
+		SET
+			year_id = ` + strconv.Itoa(last_id) +
+			", started_at = '" + startedAt +
+			"', ended_at = '"+ endedAt +
+			"' WHERE id = "+ id +";"
+	return y.crud.UpdateDB(c, query)
+}
+
+func (y *yearRepository) FindYearPeriodByID(c context.Context, id string) (*sql.Row, error) {
+	query := `
+		SELECT
+			year_records.id,
+			years.year,
+			year_records.started_at,
+			year_records.ended_at,
+			year_records.created_at,
+			year_records.updated_at
+		FROM
+			years
+		INNER JOIN
+			year_records
+		ON
+			years.id = year_records.year_id
+		WHERE year_records.id = `+id+";"
+	return y.crud.ReadByID(c, query)
+}
+
 
