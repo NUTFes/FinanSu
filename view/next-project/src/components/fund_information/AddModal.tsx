@@ -6,7 +6,7 @@ import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
 import { post } from '@api/fundInformations';
 import { BUREAUS } from '@constants/bureaus';
-import { DONATION_AMOUNT } from "@constants/donationAmount";
+import { DONATION_AMOUNT } from '@constants/donationAmount';
 import { Department, FundInformation, Teacher, User } from '@type/common';
 
 interface ModalProps {
@@ -54,9 +54,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const handler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   const handleDepartmentID = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDepartmentID(Number(e.target.value));

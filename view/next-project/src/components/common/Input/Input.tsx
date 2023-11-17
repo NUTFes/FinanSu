@@ -41,7 +41,6 @@ function Input(props: Props): JSX.Element {
         </datalist>
       )}
     </div>
-
   );
 }
 
