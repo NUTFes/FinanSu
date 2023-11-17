@@ -14,17 +14,28 @@ import DetailModal from '@components/purchaseorders/DetailModal';
 import OpenAddModalButton from '@components/purchaseorders/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchaseorders/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchaseorders/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, User, PurchaseOrderView, Expense } from '@type/common';
+import {
+  PurchaseItem,
+  PurchaseOrder,
+  User,
+  PurchaseOrderView,
+  Expense,
+  YearRecords,
+} from '@type/common';
 
 interface Props {
   user: User;
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
+  yearRecords: YearRecords[];
 }
 export async function getServerSideProps() {
-  const currentYear = '2024';
+  const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
+  const periodsRes = await get(getPeriodsUrl);
   const getPurchaseOrderViewUrl =
-    process.env.SSR_API_URI + '/purchaseorders/details/' + currentYear;
+    process.env.SSR_API_URI +
+    '/purchaseorders/details/' +
+    String(periodsRes[periodsRes.length - 1].year);
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
@@ -32,6 +43,7 @@ export async function getServerSideProps() {
     props: {
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
+      yearRecords: periodsRes,
     },
   };
 }
@@ -65,7 +77,10 @@ export default function PurchaseOrders(props: Props) {
     return datetime2;
   };
 
-  const [selectedYear, setSelectedYear] = useState<string>('2024');
+  const yearRecords = props.yearRecords;
+  const [selectedYear, setSelectedYear] = useState<string>(
+    yearRecords ? String(yearRecords[yearRecords.length - 1].year) : '2024',
+  );
 
   const getPurchaseOrders = async () => {
     const getPurchaseOrderViewUrlByYear =
@@ -165,14 +180,20 @@ export default function PurchaseOrders(props: Props) {
           <div className='flex gap-4'>
             <Title title={'購入申請一覧'} />
             <select
-              className='w-100 '
+              className='w-100'
               defaultValue={selectedYear}
               onChange={async (e) => {
                 setSelectedYear(e.target.value);
               }}
             >
-              <option value='2023'>2023年度</option>
-              <option value='2024'>2024年度</option>
+              {props.yearRecords &&
+                props.yearRecords.map((year) => {
+                  return (
+                    <option value={year.year} key={year.id}>
+                      {year.year}年度
+                    </option>
+                  );
+                })}
             </select>
             <PrimaryButton
               className='hidden md:block'
@@ -331,7 +352,7 @@ export default function PurchaseOrders(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {purchaseOrderViews.length > 0 && (
+              {purchaseOrderViews && purchaseOrderViews.length > 0 && (
                 <tr className='border-b border-primary-1'>
                   <td className='px-1 py-3' colSpan={5}>
                     <div className='flex justify-end'>
@@ -345,7 +366,7 @@ export default function PurchaseOrders(props: Props) {
                   </td>
                 </tr>
               )}
-              {!purchaseOrderViews.length && (
+              {!purchaseOrderViews && (
                 <tr className='border-b border-primary-1'>
                   <td className='px-1 py-3' colSpan={7}>
                     <div className='flex justify-center'>
