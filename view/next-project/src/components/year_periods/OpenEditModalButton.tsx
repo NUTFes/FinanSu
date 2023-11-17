@@ -2,17 +2,14 @@ import React, { useState } from 'react';
 
 import EditModal from './EditModal';
 import { EditButton } from '@components/common';
-import { Teacher, Department, User, FundInformation } from '@type/common';
+import { YearRecords } from '@type/common';
 
 interface Props {
-  teachers: Teacher[];
-  departments: Department[];
-  users: User[];
-  fundInformation: FundInformation;
-  isDisabled: boolean;
+  yearRecords: YearRecords;
+  isDisabled?: boolean;
 }
 
-export const OpenAddModalButton = (props: Props) => {
+export const OpenEditModalButton = (props: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -23,17 +20,9 @@ export const OpenAddModalButton = (props: Props) => {
         }}
         isDisabled={props.isDisabled}
       />
-      {isOpen && (
-        <EditModal
-          setShowModal={setIsOpen}
-          teachers={props.teachers}
-          departments={props.departments}
-          users={props.users}
-          fundInformation={props.fundInformation}
-        />
-      )}
+      {isOpen && <EditModal setShowModal={setIsOpen} yearRecords={props.yearRecords} />}
     </>
   );
 };
 
-export default OpenAddModalButton;
+export default OpenEditModalButton;

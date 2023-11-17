@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 
+import { YearRecords } from '@/type/common';
 import { del } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
@@ -8,6 +9,7 @@ interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   children?: React.ReactNode;
   id: number | string;
+  yearRecord: YearRecords;
 }
 
 const DeleteModal: FC<ModalProps> = (props) => {
@@ -18,9 +20,9 @@ const DeleteModal: FC<ModalProps> = (props) => {
     router.reload();
   };
 
-  const deleteFundInformations = async (id: number | string) => {
-    const deletePurchaseReportUrl = process.env.CSR_API_URI + '/fund_informations/' + id;
-    await del(deletePurchaseReportUrl);
+  const deleteYearPeriod = async (id: number | string) => {
+    const deleteYearPeriodUrl = process.env.CSR_API_URI + '/years/periods/' + id;
+    await del(deleteYearPeriodUrl);
   };
 
   return (
@@ -30,14 +32,15 @@ const DeleteModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>募金の削除</div>
+      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>年度の削除</div>
+      <div className='mx-auto my-5 w-fit text-xl text-black-600'>{props.yearRecord.year}年度</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
       <div className=''>
         <div className='flex flex-row justify-center gap-5'>
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton
             onClick={() => {
-              deleteFundInformations(props.id);
+              deleteYearPeriod(props.id);
               closeModal();
             }}
           >

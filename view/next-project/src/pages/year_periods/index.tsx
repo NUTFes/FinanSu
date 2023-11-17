@@ -5,6 +5,8 @@ import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import OpenAddModalButton from '@/components/year_periods/OpenAddModalButton';
+import OpenDeleteModalButton from '@/components/year_periods/OpenDeleteModalButton';
+import OpenEditModalButton from '@/components/year_periods/OpenEditModalButton';
 import { authAtom } from '@/store/atoms';
 import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';
@@ -145,7 +147,16 @@ export default function Periods(props: Props) {
                       index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
-                  ></td>
+                  >
+                    <div className='flex gap-2'>
+                      <OpenEditModalButton yearRecords={yearRecord} />
+                      <OpenDeleteModalButton
+                        id={yearRecord.id || 0}
+                        isDisabled={false}
+                        yearRecord={yearRecord}
+                      />
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
