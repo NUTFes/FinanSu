@@ -36,13 +36,15 @@ export default function Periods(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
-  const formatYearRecords = yearRecords.map((yearRecord) => {
-    return {
-      ...yearRecord,
-      startedAt: yearRecord.startedAt && new Date(yearRecord.startedAt).toLocaleDateString('ja'),
-      endedAt: yearRecord.endedAt && new Date(yearRecord.endedAt).toLocaleDateString('ja'),
-    };
-  });
+  const formatYearRecords =
+    yearRecords &&
+    yearRecords.map((yearRecord) => {
+      return {
+        ...yearRecord,
+        startedAt: yearRecord.startedAt && new Date(yearRecord.startedAt).toLocaleDateString('ja'),
+        endedAt: yearRecord.endedAt && new Date(yearRecord.endedAt).toLocaleDateString('ja'),
+      };
+    });
 
   useEffect(() => {
     const getUser = async () => {
@@ -53,8 +55,8 @@ export default function Periods(props: Props) {
   }, []);
 
   // ログイン中のユーザの権限
-  const isDeveloper = useMemo(() => {
-    if (currentUser?.roleID === 2) {
+  const isDeveloperOrAdimin = useMemo(() => {
+    if (currentUser?.roleID === 2 || currentUser?.roleID === 3) {
       return true;
     } else {
       return false;
@@ -63,10 +65,10 @@ export default function Periods(props: Props) {
 
   useEffect(() => {
     if (!currentUser?.roleID) return;
-    if (!isDeveloper) {
+    if (!isDeveloperOrAdimin) {
       router.push('/purchaseorders');
     }
-  }, [isDeveloper, currentUser?.roleID]);
+  }, [isDeveloperOrAdimin, currentUser?.roleID]);
 
   return (
     <MainLayout>
@@ -100,65 +102,76 @@ export default function Periods(props: Props) {
                 <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                   <p className='text-center text-sm text-black-600'>終了日</p>
                 </th>
+                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></th>
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {formatYearRecords.map((yearRecord: YearRecords, index) => (
-                <tr key={yearRecord.id}>
-                  <td
-                    className={clsx(
-                      'px-1 py-3',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <p className='text-center text-sm text-black-600'>{yearRecord.id}</p>
-                  </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <p className='text-center text-sm text-black-600'>{yearRecord.year}</p>
-                  </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <p className='text-center text-sm text-black-600'>{yearRecord.startedAt}</p>
-                  </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <p className='text-center text-sm text-black-600'>{yearRecord.endedAt}</p>
-                  </td>
-                  <td
-                    className={clsx(
-                      'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
-                    )}
-                  >
-                    <div className='flex gap-2'>
-                      <OpenEditModalButton yearRecords={yearRecord} />
-                      <OpenDeleteModalButton
-                        id={yearRecord.id || 0}
-                        isDisabled={false}
-                        yearRecord={yearRecord}
-                      />
+              {formatYearRecords &&
+                formatYearRecords.map((yearRecord: YearRecords, index) => (
+                  <tr key={yearRecord.id}>
+                    <td
+                      className={clsx(
+                        'px-1 py-3',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
+                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
+                      <p className='text-center text-sm text-black-600'>{yearRecord.id}</p>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
+                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
+                      <p className='text-center text-sm text-black-600'>{yearRecord.year}</p>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
+                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
+                      <p className='text-center text-sm text-black-600'>{yearRecord.startedAt}</p>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
+                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
+                      <p className='text-center text-sm text-black-600'>{yearRecord.endedAt}</p>
+                    </td>
+                    <td
+                      className={clsx(
+                        'px-1',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
+                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      )}
+                    >
+                      <div className='flex gap-2'>
+                        <OpenEditModalButton yearRecords={yearRecord} />
+                        <OpenDeleteModalButton
+                          id={yearRecord.id || 0}
+                          isDisabled={false}
+                          yearRecord={yearRecord}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              {!formatYearRecords && (
+                <tr className='border-b border-primary-1'>
+                  <td className='px-1 py-3' colSpan={4}>
+                    <div className='flex justify-center'>
+                      <div className='text-sm text-black-600'>データがありません</div>
                     </div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

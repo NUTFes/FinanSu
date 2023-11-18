@@ -107,9 +107,9 @@ func (y *yearRepository) CreateYearPeriod(c context.Context, year string, starte
 	y.crud.UpdateDB(c, query)
 	query = `SELECT id FROM years WHERE year = `+ year +";"
 	row, err := y.crud.ReadByID(c, query)
-	last_id := 0
+	id := 0
 	err = row.Scan(
-		&last_id,
+		&id,
 	)
 	if err != nil {
 		return err
@@ -119,7 +119,7 @@ func (y *yearRepository) CreateYearPeriod(c context.Context, year string, starte
 			year_records
 			(year_id, started_at, ended_at)
 		VALUES
-			(`+strconv.Itoa(last_id)+", '"+startedAt+"', '" +endedAt+"');"
+			(`+strconv.Itoa(id)+", '"+startedAt+"', '" +endedAt+"');"
 	return y.crud.UpdateDB(c, query)
 }
 

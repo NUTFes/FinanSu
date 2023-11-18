@@ -10,5 +10,5 @@ CREATE TABLE year_records (
   PRIMARY KEY (id)
 );
 
-INSERT INTO  year_records (year_id, started_at, ended_at) values (2, '2022-01-01 00:00:00', '2023-11-15 00:00:00');
-INSERT INTO  year_records (year_id, started_at, ended_at) values (3, '2023-11-15 00:00:00', '2024-11-15 00:00:00');
+INSERT INTO  year_records (year_id, started_at, ended_at) values (1, '2022-11-15 00:00:00', '2023-11-15 00:00:00');
+INSERT INTO  year_records (year_id, started_at, ended_at) values (2, '2023-11-15 00:00:00', '2024-11-15 00:00:00');
