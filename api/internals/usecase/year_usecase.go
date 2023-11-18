@@ -21,6 +21,7 @@ type YearUseCase interface {
 	GetYearPeriods(context.Context) ([]domain.YearPeriod, error)
 	CreateYearPeriod(context.Context, string, string, string) (domain.YearPeriod, error)
 	UpdateYearPeriod(context.Context, string, string, string, string) (domain.YearPeriod, error)
+	DestroyYearRecords(context.Context, string) error
 }
 
 func NewYearUseCase(rep rep.YearRepository) YearUseCase {
@@ -174,3 +175,7 @@ func (y *yearUseCase) UpdateYearPeriod(c context.Context, id string, year string
 	return updateYearPeriod, nil
 }
 
+func (y *yearUseCase) DestroyYearRecords(c context.Context, id string) error {
+	err := y.rep.DestroyYearRecords(c, id)
+	return err
+}

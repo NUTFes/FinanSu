@@ -25,6 +25,7 @@ type YearController interface {
 	IndexYearPeriods(echo.Context) error
 	CreateYearPeriod(echo.Context) error
 	UpdateYearPeriod(echo.Context) error
+	DestroyYearRecords(echo.Context) error
 }
 
 func NewYearController(u usecase.YearUseCase) YearController {
@@ -115,4 +116,13 @@ func (y *yearController) UpdateYearPeriod(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusCreated, updateYearPeriod)
+}
+
+func (y *yearController) DestroyYearRecords(c echo.Context) error {
+	id := c.Param("id")
+	err := y.u.DestroyYearRecords(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.String(http.StatusOK, "Destroy Year Records")
 }

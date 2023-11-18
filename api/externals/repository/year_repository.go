@@ -26,6 +26,7 @@ type YearRepository interface {
 	FindPeriodLatestRecord(context.Context) (*sql.Row, error)
 	FindYearPeriodByID(context.Context, string) (*sql.Row, error)
 	UpdateYearPeriod(context.Context, string, string, string, string) error
+	DestroyYearRecords(context.Context, string) error
 }
 
 func NewYearRepository(c db.Client, ac abstract.Crud) YearRepository {
@@ -164,4 +165,8 @@ func (y *yearRepository) FindYearPeriodByID(c context.Context, id string) (*sql.
 	return y.crud.ReadByID(c, query)
 }
 
+func (y *yearRepository) DestroyYearRecords(c context.Context, id string) error {
+	query := "DELETE FROM year_records WHERE id = " + id
+	return y.crud.UpdateDB(c, query)
+}
 
