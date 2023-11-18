@@ -4,21 +4,21 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { Modal, Input, CloseButton, PrimaryButton } from '../common';
 import { put } from '@api/api_methods';
-import { YearRecords } from '@type/common';
+import { YearPeriods } from '@type/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  yearRecords: YearRecords;
+  yearPeriod: YearPeriods;
 }
 
 export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<YearRecords>({
-    id: props.yearRecords.id,
-    year: props.yearRecords.year,
-    startedAt: props.yearRecords.startedAt,
-    endedAt: props.yearRecords.endedAt,
+  const [formData, setFormData] = useState<YearPeriods>({
+    id: props.yearPeriod.id,
+    year: props.yearPeriod.year,
+    startedAt: props.yearPeriod.startedAt,
+    endedAt: props.yearPeriod.endedAt,
   });
 
   const handler =
@@ -32,7 +32,7 @@ export default function EditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitYearRecords = async (data: YearRecords) => {
+  const submitYearRecords = async (data: YearPeriods) => {
     const submitYearRecordsURL = process.env.CSR_API_URI + '/years/periods/' + data.id;
     const startedAt = data.startedAt && new Date(data.startedAt);
     const endedAt = data.endedAt && new Date(data.endedAt);

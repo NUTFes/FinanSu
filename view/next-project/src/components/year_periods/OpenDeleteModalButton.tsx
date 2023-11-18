@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
 import DeleteModal from './DeleteModal';
-import { YearRecords } from '@/type/common';
+import { YearPeriods } from '@/type/common';
 import { DeleteButton } from '@components/common';
 
 interface Props {
   children?: React.ReactNode;
   id: number;
   isDisabled: boolean;
-  yearRecord: YearRecords;
+  yearPeriod: YearPeriods;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -20,7 +20,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
     <>
       <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
       {isOpen && (
-        <DeleteModal id={props.id} setShowModal={setIsOpen} yearRecord={props.yearRecord} />
+        <DeleteModal id={props.id} setShowModal={setIsOpen} yearPeriod={props.yearPeriod} />
       )}
     </>
   );

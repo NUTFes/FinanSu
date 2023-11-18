@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
-import { YearRecords } from '@/type/common';
+import { YearPeriods } from '@/type/common';
 import { post } from '@/utils/api/api_methods';
 
 interface ModalProps {
@@ -17,7 +17,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
 
-  const [formData, setFormData] = useState<YearRecords>({
+  const [formData, setFormData] = useState<YearPeriods>({
     year: 0,
     startedAt: '',
     endedAt: '',
@@ -29,7 +29,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submit = async (data: YearRecords) => {
+  const submit = async (data: YearPeriods) => {
     const startedAt = data.startedAt && new Date(data.startedAt);
     const endedAt = data.endedAt && new Date(data.endedAt);
     const formattedStartedAt = startedAt && format(startedAt, "yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -43,7 +43,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     await addYearPeriod(submitData);
   };
 
-  const addYearPeriod = async (data: YearRecords) => {
+  const addYearPeriod = async (data: YearPeriods) => {
     const addPeriodUrl = process.env.CSR_API_URI + '/years/periods';
     console.log(data);
     await post(addPeriodUrl, data);

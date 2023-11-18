@@ -20,14 +20,14 @@ import {
   User,
   PurchaseOrderView,
   Expense,
-  YearRecords,
+  YearPeriods,
 } from '@type/common';
 
 interface Props {
   user: User;
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
-  yearRecords: YearRecords[];
+  yearPeriods: YearPeriods[];
 }
 export async function getServerSideProps() {
   const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
@@ -43,7 +43,7 @@ export async function getServerSideProps() {
     props: {
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
-      yearRecords: periodsRes,
+      yearPeriods: periodsRes,
     },
   };
 }
@@ -77,9 +77,9 @@ export default function PurchaseOrders(props: Props) {
     return datetime2;
   };
 
-  const yearRecords = props.yearRecords;
+  const yearPeriods = props.yearPeriods;
   const [selectedYear, setSelectedYear] = useState<string>(
-    yearRecords ? String(yearRecords[yearRecords.length - 1].year) : '2024',
+    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : '2024',
   );
 
   const getPurchaseOrders = async () => {
@@ -186,8 +186,8 @@ export default function PurchaseOrders(props: Props) {
                 setSelectedYear(e.target.value);
               }}
             >
-              {props.yearRecords &&
-                props.yearRecords.map((year) => {
+              {props.yearPeriods &&
+                props.yearPeriods.map((year) => {
                   return (
                     <option value={year.year} key={year.id}>
                       {year.year}年度

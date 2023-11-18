@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 
-import { YearRecords } from '@/type/common';
+import { YearPeriods } from '@/type/common';
 import { del } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
@@ -9,7 +9,7 @@ interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   children?: React.ReactNode;
   id: number | string;
-  yearRecord: YearRecords;
+  yearPeriod: YearPeriods;
 }
 
 const DeleteModal: FC<ModalProps> = (props) => {
@@ -33,7 +33,7 @@ const DeleteModal: FC<ModalProps> = (props) => {
         </div>
       </div>
       <div className='mx-auto mb-5 w-fit text-xl text-black-600'>年度の削除</div>
-      <div className='mx-auto my-5 w-fit text-xl text-black-600'>{props.yearRecord.year}年度</div>
+      <div className='mx-auto my-5 w-fit text-xl text-black-600'>{props.yearPeriod.year}年度</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
       <div className=''>
         <div className='flex flex-row justify-center gap-5'>

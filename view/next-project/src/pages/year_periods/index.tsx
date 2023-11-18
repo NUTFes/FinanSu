@@ -12,10 +12,10 @@ import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
-import { YearRecords, User } from '@type/common';
+import { YearPeriods, User } from '@type/common';
 
 interface Props {
-  yearRecords: YearRecords[];
+  yearPeriods: YearPeriods[];
 }
 
 export const getServerSideProps = async () => {
@@ -24,25 +24,25 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      yearRecords: periodsRes,
+      yearPeriods: periodsRes,
     },
   };
 };
 
 export default function Periods(props: Props) {
-  const { yearRecords } = props;
+  const { yearPeriods } = props;
   const router = useRouter();
 
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
-  const formatYearRecords =
-    yearRecords &&
-    yearRecords.map((yearRecord) => {
+  const formatYearPeriods =
+    yearPeriods &&
+    yearPeriods.map((yearPeriod) => {
       return {
-        ...yearRecord,
-        startedAt: yearRecord.startedAt && new Date(yearRecord.startedAt).toLocaleDateString('ja'),
-        endedAt: yearRecord.endedAt && new Date(yearRecord.endedAt).toLocaleDateString('ja'),
+        ...yearPeriod,
+        startedAt: yearPeriod.startedAt && new Date(yearPeriod.startedAt).toLocaleDateString('ja'),
+        endedAt: yearPeriod.endedAt && new Date(yearPeriod.endedAt).toLocaleDateString('ja'),
       };
     });
 
@@ -106,64 +106,64 @@ export default function Periods(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {formatYearRecords &&
-                formatYearRecords.map((yearRecord: YearRecords, index) => (
-                  <tr key={yearRecord.id}>
+              {formatYearPeriods &&
+                formatYearPeriods.map((yearPeriod: YearPeriods, index) => (
+                  <tr key={yearPeriod.id}>
                     <td
                       className={clsx(
                         'px-1 py-3',
                         index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearRecord.id}</p>
+                      <p className='text-center text-sm text-black-600'>{yearPeriod.id}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearRecord.year}</p>
+                      <p className='text-center text-sm text-black-600'>{yearPeriod.year}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearRecord.startedAt}</p>
+                      <p className='text-center text-sm text-black-600'>{yearPeriod.startedAt}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearRecord.endedAt}</p>
+                      <p className='text-center text-sm text-black-600'>{yearPeriod.endedAt}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === yearRecords.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                       )}
                     >
                       <div className='flex gap-2'>
-                        <OpenEditModalButton yearRecords={yearRecord} />
+                        <OpenEditModalButton yearPeriod={yearPeriod} />
                         <OpenDeleteModalButton
-                          id={yearRecord.id || 0}
+                          id={yearPeriod.id || 0}
                           isDisabled={false}
-                          yearRecord={yearRecord}
+                          yearPeriod={yearPeriod}
                         />
                       </div>
                     </td>
                   </tr>
                 ))}
-              {!formatYearRecords && (
+              {!formatYearPeriods && (
                 <tr className='border-b border-primary-1'>
                   <td className='px-1 py-3' colSpan={4}>
                     <div className='flex justify-center'>

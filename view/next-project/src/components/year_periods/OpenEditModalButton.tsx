@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 import EditModal from './EditModal';
 import { EditButton } from '@components/common';
-import { YearRecords } from '@type/common';
+import { YearPeriods } from '@type/common';
 
 interface Props {
-  yearRecords: YearRecords;
+  yearPeriod: YearPeriods;
   isDisabled?: boolean;
 }
 
@@ -20,7 +20,7 @@ export const OpenEditModalButton = (props: Props) => {
         }}
         isDisabled={props.isDisabled}
       />
-      {isOpen && <EditModal setShowModal={setIsOpen} yearRecords={props.yearRecords} />}
+      {isOpen && <EditModal setShowModal={setIsOpen} yearPeriod={props.yearPeriod} />}
     </>
   );
 };
