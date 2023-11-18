@@ -185,15 +185,15 @@ func (p *purchaseOrderRepository) AllUserInfoByYear(c context.Context, year stri
 		ON
 			purchase_orders.user_id = users.id
 		INNER JOIN
-			year_records
+			year_periods
 		ON
-			purchase_orders.created_at > year_records.started_at
+			purchase_orders.created_at > year_periods.started_at
 		AND
-			purchase_orders.created_at < year_records.ended_at
+			purchase_orders.created_at < year_periods.ended_at
 		INNER JOIN
 			years
 		ON
-			year_records.year_id = years.id
+			year_periods.year_id = years.id
 		WHERE
 			years.year = ` + year +
 		" ORDER BY purchase_orders.id"

@@ -1,6 +1,6 @@
 use finansu_db;
 
-CREATE TABLE year_records (
+CREATE TABLE year_periods (
   id int(10) unsigned not null auto_increment,
   year_id int(10) not null,
   started_at datetime not null,
@@ -10,5 +10,5 @@ CREATE TABLE year_records (
   PRIMARY KEY (id)
 );
 
-INSERT INTO  year_records (year_id, started_at, ended_at) values (1, '2022-11-15 00:00:00', '2023-11-15 00:00:00');
-INSERT INTO  year_records (year_id, started_at, ended_at) values (2, '2023-11-15 00:00:00', '2024-11-15 00:00:00');
+INSERT INTO  year_periods (year_id, started_at, ended_at) values (1, '2022-11-15 00:00:00', '2023-11-15 00:00:00');
+INSERT INTO  year_periods (year_id, started_at, ended_at) values (2, '2023-11-15 00:00:00', '2024-11-15 00:00:00');
