@@ -11,9 +11,10 @@ interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: React.ReactNode;
   type?: string;
-  datalist?: { id: number; name: string }[];
-  listKey?: string;
-  enableDatalist?: boolean;
+  datalist?: {
+    key: string;
+    data: { id:number; name: string}[];
+  }
 }
 
 function Input(props: Props): JSX.Element {
@@ -29,16 +30,16 @@ function Input(props: Props): JSX.Element {
         value={props.value}
         onChange={props.onChange}
         type={props.type}
-        list={props.enableDatalist ? props.listKey : undefined}
+        list={props.datalist?.key}
       >
         {props.children}
       </input>
-      {props.enableDatalist && (
-        <datalist id={props.listKey}>
-          {props.datalist?.map((option) => (
-            <option key={option.id} value={option.name} />
-          ))}
-        </datalist>
+      {props.datalist?.key && props.datalist?.data && (
+        <datalist id={props.datalist.key}>
+         {props.datalist.data.map((option) => (
+           <option key={option.id} value={option.name} />
+         ))}
+       </datalist>
       )}
     </div>
   );
