@@ -145,9 +145,10 @@ export default function EditModal(props: ModalProps) {
             className='w-full'
             value={formData.price}
             onChange={handler('price')}
-            datalist={DONATION_AMOUNT}
-            listKey='amoutOptions'
-            enableDatalist={true}
+            datalist={{
+              key: "amoutOptions",
+              data: DONATION_AMOUNT,
+            }}
           />
         </div>
         <p className='col-span-1 text-black-600'>備考</p>
