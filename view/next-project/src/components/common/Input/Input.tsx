@@ -13,8 +13,8 @@ interface Props {
   type?: string;
   datalist?: {
     key: string;
-    data: { id:number; name: string}[];
-  }
+    data: { id: number; name: string }[];
+  };
 }
 
 function Input(props: Props): JSX.Element {
@@ -36,10 +36,10 @@ function Input(props: Props): JSX.Element {
       </input>
       {props.datalist?.key && props.datalist?.data && (
         <datalist id={props.datalist.key}>
-         {props.datalist.data.map((option) => (
-           <option key={option.id} value={option.name} />
-         ))}
-       </datalist>
+          {props.datalist.data.map((option) => (
+            <option key={option.id} value={option.name} />
+          ))}
+        </datalist>
       )}
     </div>
   );

@@ -146,7 +146,7 @@ export default function EditModal(props: ModalProps) {
             value={formData.price}
             onChange={handler('price')}
             datalist={{
-              key: "amoutOptions",
+              key: 'amoutOptions',
               data: DONATION_AMOUNT,
             }}
           />
