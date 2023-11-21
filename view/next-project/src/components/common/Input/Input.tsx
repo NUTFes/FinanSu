@@ -34,7 +34,7 @@ function Input(props: Props): JSX.Element {
       >
         {props.children}
       </input>
-      {props.datalist?.key && props.datalist?.data && (
+      {props.datalist && (
         <datalist id={props.datalist.key}>
           {props.datalist.data.map((option) => (
             <option key={option.id} value={option.name} />
