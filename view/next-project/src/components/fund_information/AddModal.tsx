@@ -6,6 +6,7 @@ import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
 import { post } from '@api/fundInformations';
 import { BUREAUS } from '@constants/bureaus';
+import { DONATION_AMOUNT } from '@constants/donationAmount';
 import { Department, FundInformation, Teacher, User } from '@type/common';
 
 interface ModalProps {
@@ -132,7 +133,15 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='col-span-1 text-black-600'>金額</p>
         <div className='col-span-4 w-full'>
-          <Input className='w-full' value={formData.price} onChange={handler('price')} />
+          <Input
+            className='w-full'
+            value={formData.price}
+            onChange={handler('price')}
+            datalist={{
+              key: 'amoutOptions',
+              data: DONATION_AMOUNT,
+            }}
+          />
         </div>
         <p className='col-span-1 text-black-600'>備考</p>
         <div className='col-span-4 w-full'>
