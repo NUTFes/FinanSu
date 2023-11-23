@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useEffect, useState, useMemo } from 'react';
 import { Modal, Input, Select, CloseButton, PrimaryButton } from '../common';
 import { put } from '@api/fundInformations';
 import { BUREAUS } from '@constants/bureaus';
+import { DONATION_AMOUNT } from '@constants/donationAmount';
 import { FundInformation, Teacher, User, Department } from '@type/common';
 
 interface ModalProps {
@@ -140,7 +141,15 @@ export default function EditModal(props: ModalProps) {
         </div>
         <p className='col-span-1 text-black-600'>金額</p>
         <div className='col-span-4 w-full'>
-          <Input className='w-full' value={formData.price} onChange={handler('price')} />
+          <Input
+            className='w-full'
+            value={formData.price}
+            onChange={handler('price')}
+            datalist={{
+              key: 'amoutOptions',
+              data: DONATION_AMOUNT,
+            }}
+          />
         </div>
         <p className='col-span-1 text-black-600'>備考</p>
         <div className='col-span-4 w-full'>
