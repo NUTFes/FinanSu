@@ -36,13 +36,15 @@ export default function Periods(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
-  const formatYearPeriods = yearPeriods.map((yearPeriod) => {
-    return {
-      ...yearPeriod,
-      startedAt: new Date(yearPeriod.startedAt).toLocaleDateString('ja'),
-      endedAt: new Date(yearPeriod.endedAt).toLocaleDateString('ja'),
-    };
-  });
+  const formatYearPeriods =
+    yearPeriods &&
+    yearPeriods.map((yearPeriod) => {
+      return {
+        ...yearPeriod,
+        startedAt: new Date(yearPeriod.startedAt).toLocaleDateString('ja'),
+        endedAt: new Date(yearPeriod.endedAt).toLocaleDateString('ja'),
+      };
+    });
 
   useEffect(() => {
     const getUser = async () => {
