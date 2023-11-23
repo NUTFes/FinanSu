@@ -234,11 +234,11 @@ export interface PurchaseReportView {
 }
 
 // // Year(年度)
-export interface YearPeriods {
-  id?: number;
+export interface YearPeriod {
+  id: number;
   year: number;
-  startedAt?: string;
-  endedAt?: string;
+  startedAt: string;
+  endedAt: string;
   createdAt?: string;
   updatedAt?: string;
 }
