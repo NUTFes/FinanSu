@@ -21,7 +21,13 @@ export const OpenEditModalButton = (props: Props) => {
         }}
         isDisabled={props.isDisabled}
       />
-      {isOpen && <EditModal setShowModal={setIsOpen} yearPeriod={props.yearPeriod} yearPeriods={props.yearPeriods}/>}
+      {isOpen && (
+        <EditModal
+          setShowModal={setIsOpen}
+          yearPeriod={props.yearPeriod}
+          yearPeriods={props.yearPeriods}
+        />
+      )}
     </>
   );
 };
