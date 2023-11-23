@@ -56,7 +56,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>募金の登録</h1>
+      <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>年度の登録</h1>
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
         <p className='col-span-2 text-black-600'>年度</p>
         <div className='col-span-3 w-full'>
