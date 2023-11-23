@@ -7,6 +7,7 @@ import { YearPeriod } from '@type/common';
 interface Props {
   yearPeriod: YearPeriod;
   isDisabled?: boolean;
+  yearPeriods: YearPeriod[];
 }
 
 export const OpenEditModalButton = (props: Props) => {
@@ -20,7 +21,7 @@ export const OpenEditModalButton = (props: Props) => {
         }}
         isDisabled={props.isDisabled}
       />
-      {isOpen && <EditModal setShowModal={setIsOpen} yearPeriod={props.yearPeriod} />}
+      {isOpen && <EditModal setShowModal={setIsOpen} yearPeriod={props.yearPeriod} yearPeriods={props.yearPeriods}/>}
     </>
   );
 };

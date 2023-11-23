@@ -153,7 +153,7 @@ export default function Periods(props: Props) {
                       )}
                     >
                       <div className='flex gap-2'>
-                        <OpenEditModalButton yearPeriod={yearPeriod} />
+                        <OpenEditModalButton yearPeriod={yearPeriod} yearPeriods={yearPeriods} />
                         <OpenDeleteModalButton
                           id={yearPeriod.id || 0}
                           isDisabled={false}
