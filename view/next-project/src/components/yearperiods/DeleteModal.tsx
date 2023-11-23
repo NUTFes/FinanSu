@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 
-import { YearPeriods } from '@/type/common';
+import { YearPeriod } from '@/type/common';
 import { del } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
@@ -9,7 +9,7 @@ interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   children?: React.ReactNode;
   id: number | string;
-  yearPeriod: YearPeriods;
+  yearPeriod: YearPeriod;
 }
 
 const DeleteModal: FC<ModalProps> = (props) => {

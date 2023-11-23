@@ -235,7 +235,7 @@ export interface PurchaseReportView {
 
 // // Year(年度)
 export interface YearPeriod {
-  id: number;
+  id?: number;
   year: number;
   startedAt: string;
   endedAt: string;

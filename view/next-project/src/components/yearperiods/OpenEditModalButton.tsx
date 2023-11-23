@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 import EditModal from './EditModal';
 import { EditButton } from '@components/common';
-import { YearPeriods } from '@type/common';
+import { YearPeriod } from '@type/common';
 
 interface Props {
-  yearPeriod: YearPeriods;
+  yearPeriod: YearPeriod;
   isDisabled?: boolean;
 }
 

@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import OpenAddModalButton from '@/components/year_periods/OpenAddModalButton';
-import OpenDeleteModalButton from '@/components/year_periods/OpenDeleteModalButton';
-import OpenEditModalButton from '@/components/year_periods/OpenEditModalButton';
+import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
+import OpenDeleteModalButton from '@/components/yearperiods/OpenDeleteModalButton';
+import OpenEditModalButton from '@/components/yearperiods/OpenEditModalButton';
 import { authAtom } from '@/store/atoms';
 import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';

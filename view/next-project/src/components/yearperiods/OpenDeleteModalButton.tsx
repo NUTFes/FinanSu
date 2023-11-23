@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
 import DeleteModal from './DeleteModal';
-import { YearPeriods } from '@/type/common';
+import { YearPeriod } from '@/type/common';
 import { DeleteButton } from '@components/common';
 
 interface Props {
   children?: React.ReactNode;
   id: number;
   isDisabled: boolean;
-  yearPeriod: YearPeriods;
+  yearPeriod: YearPeriod;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
