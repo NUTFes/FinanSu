@@ -12,10 +12,10 @@ import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
-import { YearPeriods, User } from '@type/common';
+import { YearPeriod, User } from '@type/common';
 
 interface Props {
-  yearPeriods: YearPeriods[];
+  yearPeriods: YearPeriod[];
 }
 
 export const getServerSideProps = async () => {
@@ -36,15 +36,13 @@ export default function Periods(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
-  const formatYearPeriods =
-    yearPeriods &&
-    yearPeriods.map((yearPeriod) => {
-      return {
-        ...yearPeriod,
-        startedAt: yearPeriod.startedAt && new Date(yearPeriod.startedAt).toLocaleDateString('ja'),
-        endedAt: yearPeriod.endedAt && new Date(yearPeriod.endedAt).toLocaleDateString('ja'),
-      };
-    });
+  const formatYearPeriods = yearPeriods.map((yearPeriod) => {
+    return {
+      ...yearPeriod,
+      startedAt: new Date(yearPeriod.startedAt).toLocaleDateString('ja'),
+      endedAt: new Date(yearPeriod.endedAt).toLocaleDateString('ja'),
+    };
+  });
 
   useEffect(() => {
     const getUser = async () => {
@@ -107,7 +105,7 @@ export default function Periods(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {formatYearPeriods &&
-                formatYearPeriods.map((yearPeriod: YearPeriods, index) => (
+                formatYearPeriods.map((yearPeriod: YearPeriod, index) => (
                   <tr key={yearPeriod.id}>
                     <td
                       className={clsx(
