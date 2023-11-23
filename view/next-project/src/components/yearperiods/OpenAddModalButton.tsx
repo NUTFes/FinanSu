@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
 import OpenAddModal from './AddModal';
+import { YearPeriod } from '@/type/common';
 import { AddButton } from '@components/common';
 
 interface Props {
   children?: React.ReactNode;
+  yearPeriods?: YearPeriod[];
 }
 
 export const OpenAddModalButton = (props: Props) => {
@@ -19,7 +21,7 @@ export const OpenAddModalButton = (props: Props) => {
       >
         {props.children}
       </AddButton>
-      {isOpen && <OpenAddModal setShowModal={setIsOpen} />}
+      {isOpen && <OpenAddModal setShowModal={setIsOpen} yearPeriods={props.yearPeriods} />}
     </>
   );
 };

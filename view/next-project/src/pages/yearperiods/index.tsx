@@ -84,7 +84,7 @@ export default function Periods(props: Props) {
           </div>
         </div>
         <div className='hidden justify-end md:flex '>
-          <OpenAddModalButton>年度登録</OpenAddModalButton>
+          <OpenAddModalButton yearPeriods={props.yearPeriods}>年度登録</OpenAddModalButton>
         </div>
         <div className='mb-2 p-5'>
           <table className='mb-5 w-full table-auto border-collapse'>

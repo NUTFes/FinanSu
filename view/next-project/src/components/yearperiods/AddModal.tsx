@@ -10,10 +10,12 @@ import { post } from '@/utils/api/api_methods';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  yearPeriods?: YearPeriod[];
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
   const [user] = useRecoilState(userAtom);
+  const [flashMessage, setFlashMessage] = useState<string>('');
 
   const router = useRouter();
 
@@ -40,13 +42,18 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       startedAt: formattedStartedAt,
       endedAt: formattedEndedAt,
     };
-    await addYearPeriod(submitData);
+    props.yearPeriods
+      ? props.yearPeriods.some((yearPeriod) => yearPeriod.year === Number(formData.year))
+        ? setFlashMessage('既に年度が登録されています')
+        : await addYearPeriod(submitData)
+      : await addYearPeriod(submitData);
   };
 
   const addYearPeriod = async (data: YearPeriod) => {
     const addPeriodUrl = process.env.CSR_API_URI + '/years/periods';
-    console.log(data);
     await post(addPeriodUrl, data);
+    props.setShowModal(false);
+    router.reload();
   };
 
   return (
@@ -59,8 +66,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>年度の登録</h1>
       <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
         <p className='col-span-2 text-black-600'>年度</p>
-        <div className='col-span-3 w-full'>
+        <div className='col-span-3 h-12 w-full'>
           <Input className='w-full' onChange={handler('year')} placeholder='20XX' type='number' />
+          <p className='text-xs text-red-500'>{flashMessage}</p>
         </div>
         <p className='col-span-2 text-black-600'>開始日</p>
         <div className='col-span-3  w-full'>
@@ -76,8 +84,6 @@ const OpenAddModal: FC<ModalProps> = (props) => {
           className={'mx-2'}
           onClick={() => {
             submit(formData);
-            props.setShowModal(false);
-            router.reload();
           }}
         >
           登録する
