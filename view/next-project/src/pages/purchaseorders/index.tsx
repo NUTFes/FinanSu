@@ -20,22 +20,25 @@ import {
   User,
   PurchaseOrderView,
   Expense,
-  YearPeriods,
+  YearPeriod,
 } from '@type/common';
 
 interface Props {
   user: User;
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
-  yearPeriods: YearPeriods[];
+  yearPeriods: YearPeriod[];
 }
+
+const date = new Date();
+
 export async function getServerSideProps() {
   const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
   const periodsRes = await get(getPeriodsUrl);
   const getPurchaseOrderViewUrl =
     process.env.SSR_API_URI +
     '/purchaseorders/details/' +
-    String(periodsRes[periodsRes.length - 1].year);
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
@@ -79,7 +82,7 @@ export default function PurchaseOrders(props: Props) {
 
   const yearPeriods = props.yearPeriods;
   const [selectedYear, setSelectedYear] = useState<string>(
-    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : '2024',
+    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
   );
 
   const getPurchaseOrders = async () => {
@@ -203,7 +206,7 @@ export default function PurchaseOrders(props: Props) {
                     purchaseOrderViews,
                     props.expenses,
                   ),
-                  fileName: `購入申請一覧(${selectedYear})_${formatYYYYMMDD(new Date())}.csv`,
+                  fileName: `購入申請一覧(${selectedYear})_${formatYYYYMMDD(date)}.csv`,
                   isBomAdded: true,
                 });
               }}
