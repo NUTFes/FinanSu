@@ -85,6 +85,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
           onClick={() => {
             submit(formData);
           }}
+          disabled={
+            String(formData.year) === '' || formData.startedAt === '' || formData.endedAt === ''
+          }
         >
           登録する
         </PrimaryButton>

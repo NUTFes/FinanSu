@@ -106,6 +106,9 @@ export default function EditModal(props: ModalProps) {
           onClick={() => {
             submitYearRecords(formData);
           }}
+          disabled={
+            String(formData.year) === '' || formData.startedAt === '' || formData.endedAt === ''
+          }
         >
           登録する
         </PrimaryButton>
