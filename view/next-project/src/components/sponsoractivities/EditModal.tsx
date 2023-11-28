@@ -42,6 +42,8 @@ export default function EditModal(props: ModalProps) {
     expense: Number((props.sponsorActivity.expense / 11).toFixed(1)),
   });
 
+  const default_user = users.find((user) => user.id === formData.userID);
+
   const initStyleIds = sponsorStyleDetails
     ? sponsorStyleDetails.map((sponsorStyleDetail) => sponsorStyleDetail.sponsorStyleID)
     : [];
@@ -178,7 +180,10 @@ export default function EditModal(props: ModalProps) {
       .filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
-    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
+    
+      if (res.length !== 0 && default_user?.bureauID !== bureauId) {
+        setFormData({ ...formData, userID: res[0].id });
+      }
     return res;
   }, [bureauId]);
 
