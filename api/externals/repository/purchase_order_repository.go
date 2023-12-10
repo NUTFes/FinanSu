@@ -25,6 +25,7 @@ type PurchaseOrderRepository interface {
 	FindNewRecord(context.Context) (*sql.Row, error)
 	DeleteItems(context.Context, string) error
 	DeleteReport(context.Context, string) error
+	AllUserInfoByYear(context.Context, string) (*sql.Rows, error)
 }
 
 func NewPurchaseOrderRepository(c db.Client, ac abstract.Crud) PurchaseOrderRepository {
@@ -160,3 +161,42 @@ func (por *purchaseOrderRepository) DeleteReport(
 	query := `DELETE FROM purchase_reports WHERE purchase_order_id =` + id
 	return por.crud.UpdateDB(c, query)
 }
+
+func (p *purchaseOrderRepository) AllUserInfoByYear(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			purchase_orders.id,
+			purchase_orders.deadline,
+			purchase_orders.user_id,
+			purchase_orders.expense_id,
+			purchase_orders.finance_check,
+			purchase_orders.created_at,
+			purchase_orders.updated_at,
+			users.id,
+			users.name,
+			users.bureau_id,
+			users.role_id,
+			users.created_at,
+			users.updated_at
+		FROM
+			purchase_orders
+		INNER JOIN
+			users
+		ON
+			purchase_orders.user_id = users.id
+		INNER JOIN
+			year_periods
+		ON
+			purchase_orders.created_at > year_periods.started_at
+		AND
+			purchase_orders.created_at < year_periods.ended_at
+		INNER JOIN
+			years
+		ON
+			year_periods.year_id = years.id
+		WHERE
+			years.year = ` + year +
+		" ORDER BY purchase_orders.id"
+	return p.crud.Read(c, query)
+}
+

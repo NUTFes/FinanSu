@@ -159,6 +159,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
 	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)
 	e.GET("/purchaseorders/:id/details", r.purchaseOrderController.ShowOrderDetail)
+	e.GET("/purchaseorders/details/:year", r.purchaseOrderController.IndexOrderDetailByYear)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
@@ -211,4 +212,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/years/:id", r.yearController.UpdateYear)
 	e.DELETE("/years/:id", r.yearController.DestroyYear)
 
+	// year_periods
+	e.GET("/years/periods", r.yearController.IndexYearPeriods)
+	e.POST("/years/periods", r.yearController.CreateYearPeriod)
+	e.PUT("/years/periods/:id", r.yearController.UpdateYearPeriod)
+	e.DELETE("/years/periods/:id", r.yearController.DestroyYearPeriod)
 }
