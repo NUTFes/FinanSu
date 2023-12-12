@@ -21,6 +21,7 @@ type PurchaseReportController interface {
 	DestroyPurchaseReport(echo.Context) error
 	IndexPurchaseReportDetails(echo.Context) error
 	ShowPurchaseReportDetail(echo.Context) error
+	IndexPurchaseReportDetailsByYear(echo.Context) error
 }
 
 func NewPurchaseReportController(u usecase.PurchaseReportUseCase) PurchaseReportController {
@@ -98,4 +99,13 @@ func (p *purchaseReportController) ShowPurchaseReportDetail(c echo.Context) erro
 		return err
 	}
 	return c.JSON(http.StatusOK, purchaseReportDetail)
+}
+
+func (p *purchaseReportController) IndexPurchaseReportDetailsByYear(c echo.Context) error {
+	year := c.Param("year")
+	purchaseReportDetails, err := p.u.GetPurchaseReportDetailsByYear(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, purchaseReportDetails)
 }

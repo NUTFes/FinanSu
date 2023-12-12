@@ -169,6 +169,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
 	e.GET("/purchasereports/details", r.purchaseReportController.IndexPurchaseReportDetails)
 	e.GET("/purchasereports/:id/details", r.purchaseReportController.ShowPurchaseReportDetail)
+	e.GET("/purchasereports/details/:year", r.purchaseReportController.IndexPurchaseReportDetailsByYear)
 
 	// sources
 	e.GET("/sources", r.sourceController.IndexSource)

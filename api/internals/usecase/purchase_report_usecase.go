@@ -20,6 +20,7 @@ type PurchaseReportUseCase interface {
 	DestroyPurchaseReport(context.Context, string) error
 	GetPurchaseReportDetails(context.Context) ([]domain.PurchaseReportDetails, error)
 	GetPurchaseReportDetailByID(context.Context, string) (domain.PurchaseReportDetails, error)
+	GetPurchaseReportDetailsByYear(context.Context, string) ([]domain.PurchaseReportDetails, error)
 }
 
 func NewPurchaseReportUseCase(rep rep.PurchaseReportRepository) PurchaseReportUseCase {
@@ -285,3 +286,73 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 	return purchaseReportDetail, nil
 }
 
+//Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
+func (p *purchaseReportUseCase) GetPurchaseReportDetailsByYear(c context.Context, year string) ([]domain.PurchaseReportDetails, error) {
+	purchaseReportDetail:= domain.PurchaseReportDetails{}
+	var purchaseReportDetails []domain.PurchaseReportDetails
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+	rows, err := p.rep.AllDetailsForPeriods(c, year)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		err := rows.Scan(
+			&purchaseReportDetail.PurchaseReport.ID,
+			&purchaseReportDetail.PurchaseReport.UserID,
+			&purchaseReportDetail.PurchaseReport.Discount,
+			&purchaseReportDetail.PurchaseReport.Addition,
+			&purchaseReportDetail.PurchaseReport.FinanceCheck,
+			&purchaseReportDetail.PurchaseReport.PurchaseOrderID,
+			&purchaseReportDetail.PurchaseReport.Remark,
+			&purchaseReportDetail.PurchaseReport.Buyer,
+			&purchaseReportDetail.PurchaseReport.CreatedAt,
+			&purchaseReportDetail.PurchaseReport.UpdatedAt,
+			&purchaseReportDetail.ReportUser.ID,
+			&purchaseReportDetail.ReportUser.Name,
+			&purchaseReportDetail.ReportUser.BureauID,
+			&purchaseReportDetail.ReportUser.RoleID,
+			&purchaseReportDetail.ReportUser.CreatedAt,
+			&purchaseReportDetail.ReportUser.UpdatedAt,
+			&purchaseReportDetail.PurchaseOrder.ID,
+			&purchaseReportDetail.PurchaseOrder.DeadLine,
+			&purchaseReportDetail.PurchaseOrder.UserID,
+			&purchaseReportDetail.PurchaseOrder.ExpenseID,
+			&purchaseReportDetail.PurchaseOrder.FinanceCheck,
+			&purchaseReportDetail.PurchaseOrder.CreatedAt,
+			&purchaseReportDetail.PurchaseOrder.UpdatedAt,
+			&purchaseReportDetail.OrderUser.ID,
+			&purchaseReportDetail.OrderUser.Name,
+			&purchaseReportDetail.OrderUser.BureauID,
+			&purchaseReportDetail.OrderUser.RoleID,
+			&purchaseReportDetail.OrderUser.CreatedAt,
+			&purchaseReportDetail.OrderUser.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
+		for rows.Next() {
+			err := rows.Scan(
+				&purchaseItem.ID,
+				&purchaseItem.Item,
+				&purchaseItem.Price,
+				&purchaseItem.Quantity,
+				&purchaseItem.Detail,
+				&purchaseItem.Url,
+				&purchaseItem.PurchaseOrderID,
+				&purchaseItem.FinanceCheck,
+				&purchaseItem.CreatedAt,
+				&purchaseItem.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			purchaseItems = append(purchaseItems, purchaseItem)
+		}
+		purchaseReportDetail.PurchaseItems = purchaseItems
+		purchaseReportDetails = append(purchaseReportDetails, purchaseReportDetail)
+		purchaseItems = nil
+	}
+	return purchaseReportDetails, nil
+}

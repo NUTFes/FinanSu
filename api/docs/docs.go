@@ -1363,6 +1363,26 @@ const docTemplate = `{
                 }
             },
         },
+        "/purchasereports/details/{year}": {
+            "get": {
+                tags: ["purchase_report"],
+                "description": "年度で指定されたpurchase_reportsに紐づくデータを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "年度で指定されたpurchase_reportsに紐づくデータを取得",
+                    }
+                }
+            },
+        },
         "/sources": {
             "get": {
                 tags: ["source"],
