@@ -336,6 +336,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                       }
                       isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
                     }}
+                    disabled={formDataList[activeStep - 1].item.trim() === ''}
                   >
                     <div className='flex'>
                       {activeStep === steps.length
