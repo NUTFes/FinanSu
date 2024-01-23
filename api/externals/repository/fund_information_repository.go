@@ -22,6 +22,7 @@ type FundInformationRepository interface {
 	FindDetails(context.Context) (*sql.Rows, error)
 	FindDetailByID(context.Context, string) (*sql.Row, error)
 	FindLatestRecord(context.Context) (*sql.Row, error)
+	AllDetailsForPeriods(context.Context, string) (*sql.Rows, error)
 }
 
 func NewFundInformationRepository(c db.Client, ac abstract.Crud) FundInformationRepository {
@@ -66,7 +67,7 @@ func (fir *fundInformationRepository) Create(
 				"," + price +
 				",'" + remark +
 				"'," + isFirstCheck +
-				"," + isLastCheck + 
+				"," + isLastCheck +
 				"," + receivedAt + ")"
 	return fir.crud.UpdateDB(c, query)
 }
@@ -93,7 +94,7 @@ func (fir *fundInformationRepository) Update(
 		", remark ='" + remark +
 		"', is_first_check = " + isFirstCheck +
 		", is_last_check = " + isLastCheck +
-		", received_at = " + receivedAt + 
+		", received_at = " + receivedAt +
 		" WHERE id = " + id
 	return fir.crud.UpdateDB(c, query)
 }
@@ -161,4 +162,42 @@ func (fir *fundInformationRepository) FindLatestRecord(c context.Context) (*sql.
 		DESC LIMIT 1
 	`
 	return fir.crud.ReadByID(c, query)
+}
+
+// 年度別のfund_informationに紐づくuserとteacherを取得する
+func (fir *fundInformationRepository) AllDetailsForPeriods(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			fund_informations.*,
+			users.*,
+			teachers.*,
+			departments.*
+		FROM
+			fund_informations
+		INNER JOIN
+			users
+		ON
+			fund_informations.user_id = users.id
+		INNER JOIN
+			teachers
+		ON
+			fund_informations.teacher_id = teachers.id
+		INNER JOIN
+			departments
+		ON
+			teachers.department_id = departments.id
+		INNER JOIN
+			year_periods
+		ON
+			fund_informations.created_at > year_periods.started_at
+		AND
+			fund_informations.created_at < year_periods.ended_at
+		INNER JOIN
+			years
+		ON
+			year_periods.year_id = years.id
+		WHERE
+			years.year = ` + year +
+			" ORDER BY fund_informations.id;"
+	return fir.crud.Read(c, query)
 }

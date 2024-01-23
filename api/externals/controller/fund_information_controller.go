@@ -19,6 +19,7 @@ type FundInformationController interface {
 	DestroyFundInformation(echo.Context) error
 	IndexFundInformationDetails(echo.Context) error
 	ShowFundInformationDetailByID(echo.Context) error
+	IndexFundInformationDetailsByYear(echo.Context) error
 }
 
 func NewFundInformationController(u usecase.FundInformationUseCase) FundInformationController {
@@ -105,4 +106,14 @@ func (f *fundInformationController) ShowFundInformationDetailByID(c echo.Context
 		return err
 	}
 	return c.JSON(http.StatusOK, fundinforuserandteacher)
+}
+
+// IndexFundInformationDetailsByYear
+func (f *fundInformationController) IndexFundInformationDetailsByYear(c echo.Context) error {
+	year := c.Param("year")
+	fundInformationDetailsByYear, err := f.u.GetFundInformationDetailsByYear(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, fundInformationDetailsByYear)
 }
