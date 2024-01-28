@@ -23,6 +23,7 @@ type PurchaseReportRepository interface {
 	FindDetail(context.Context, string) (*sql.Row, error)
 	AllItemInfo(context.Context, string) (*sql.Rows, error)
 	FindNewRecord(context.Context) (*sql.Row, error)
+	AllDetailsForPeriods(context.Context, string) (*sql.Rows, error)
 }
 
 func NewPurchaseReportRepository(c db.Client, ac abstract.Crud) PurchaseReportRepository {
@@ -158,4 +159,47 @@ func (ppr *purchaseReportRepository) AllItemInfo(c context.Context, purchaseOrde
 func (ppr *purchaseReportRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
 	query := "SELECT * FROM purchase_reports ORDER BY id DESC LIMIT 1"
 	return ppr.crud.ReadByID(c, query)
+}
+
+
+// Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得
+func (ppr *purchaseReportRepository) AllDetailsForPeriods(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			purchase_reports.*,
+			report_user.*,
+			purchase_orders.*,
+			order_user.*
+		FROM
+			purchase_reports
+		INNER JOIN
+			users
+		AS
+			report_user
+		ON
+			purchase_reports.user_id = report_user.id
+		INNER JOIN
+			purchase_orders
+		ON
+			purchase_reports.purchase_order_id = purchase_orders.id
+		INNER JOIN
+			users
+		AS
+			order_user
+		ON
+			purchase_orders.user_id = order_user.id
+		INNER JOIN
+			year_periods
+		ON
+			purchase_reports.created_at > year_periods.started_at
+		AND
+			purchase_reports.created_at < year_periods.ended_at
+		INNER JOIN
+			years
+		ON
+			year_periods.year_id = years.id
+		WHERE
+			years.year = ` + year +
+			" ORDER BY purchase_reports.id"
+	return ppr.crud.Read(c, query)
 }
