@@ -166,35 +166,10 @@ func (ppr *purchaseReportRepository) FindNewRecord(c context.Context) (*sql.Row,
 func (ppr *purchaseReportRepository) AllDetailsForPeriods(c context.Context, year string) (*sql.Rows, error) {
 	query := `
 		SELECT
-			purchase_reports.id,
-			purchase_reports.user_id,
-			purchase_reports.discount,
-			purchase_reports.addition,
-			purchase_reports.finance_check,
-			purchase_reports.purchase_order_id,
-			purchase_reports.remark,
-			purchase_reports.buyer,
-			purchase_reports.created_at,
-			purchase_reports.updated_at,
-			report_user.id,
-			report_user.name,
-			report_user.bureau_id,
-			report_user.role_id,
-			report_user.created_at,
-			report_user.updated_at,
-			purchase_orders.id,
-			purchase_orders.deadline,
-			purchase_orders.user_id,
-			purchase_orders.expense_id,
-			purchase_orders.finance_check,
-			purchase_orders.created_at,
-			purchase_orders.updated_at,
-			order_user.id,
-			order_user.name,
-			order_user.bureau_id,
-			order_user.role_id,
-			order_user.created_at,
-			order_user.updated_at
+			purchase_reports.*,
+			report_user.*,
+			purchase_orders.*,
+			order_user.*
 		FROM
 			purchase_reports
 		INNER JOIN
