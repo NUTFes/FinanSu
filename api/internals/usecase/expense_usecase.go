@@ -22,6 +22,7 @@ type ExpenseUseCase interface {
 	UpdateExpenseTP(context.Context) error
 	GetExpenseDetails(context.Context) ([]domain.ExpenseDetails, error)
 	GetExpenseDetailByID(context.Context, string) (domain.ExpenseDetails, error)
+	GetExpenseDetailsByPeriod(context.Context, string) ([]domain.ExpenseDetailsByperiod, error)
 }
 
 func NewExpenseUseCase(rep rep.ExpenseRepository) ExpenseUseCase {
@@ -266,4 +267,86 @@ func (e *expenseUseCase) GetExpenseDetailByID(c context.Context, id string) (dom
 	}
 	expenseDetail.PurchaseDetails = purchaseDetails
 	return expenseDetail, nil
+}
+
+func (e *expenseUseCase) GetExpenseDetailsByPeriod(c context.Context, year string) ([]domain.ExpenseDetailsByperiod, error) {
+	expenseDetail := domain.ExpenseDetailsByperiod{}
+	var expenseDetails []domain.ExpenseDetailsByperiod
+	purchaseDetail := domain.PurchaseDetail{}
+	var purchaseDetails []domain.PurchaseDetail
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+
+	rows, err := e.rep.AllByPeriod(c, year)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		err := rows.Scan(
+			&expenseDetail.Expense.ID,
+			&expenseDetail.Expense.Name,
+			&expenseDetail.Expense.TotalPrice,
+			&expenseDetail.Expense.YearID,
+			&expenseDetail.Expense.CreatedAt,
+			&expenseDetail.Expense.UpdatedAt,
+			&expenseDetail.Year.ID,
+			&expenseDetail.Year.Year,
+			&expenseDetail.Year.CreatedAt,
+			&expenseDetail.Year.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		rows, err := e.rep.AllOrderAndReportInfo(c, strconv.Itoa(int(expenseDetail.Expense.ID)))
+		for rows.Next() {
+			err := rows.Scan(
+				&purchaseDetail.PurchaseReport.ID,
+				&purchaseDetail.PurchaseReport.UserID,
+				&purchaseDetail.PurchaseReport.Discount,
+				&purchaseDetail.PurchaseReport.Addition,
+				&purchaseDetail.PurchaseReport.FinanceCheck,
+				&purchaseDetail.PurchaseReport.PurchaseOrderID,
+				&purchaseDetail.PurchaseReport.Remark,
+				&purchaseDetail.PurchaseReport.Buyer,
+				&purchaseDetail.PurchaseReport.CreatedAt,
+				&purchaseDetail.PurchaseReport.UpdatedAt,
+				&purchaseDetail.PurchaseOrder.ID,
+				&purchaseDetail.PurchaseOrder.DeadLine,
+				&purchaseDetail.PurchaseOrder.UserID,
+				&purchaseDetail.PurchaseOrder.ExpenseID,
+				&purchaseDetail.PurchaseOrder.FinanceCheck,
+				&purchaseDetail.PurchaseOrder.CreatedAt,
+				&purchaseDetail.PurchaseOrder.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			rows, err := e.rep.AllItemInfo(c, strconv.Itoa(int(purchaseDetail.PurchaseOrder.ID)))
+			for rows.Next() {
+				err := rows.Scan(
+					&purchaseItem.ID,
+					&purchaseItem.Item,
+					&purchaseItem.Price,
+					&purchaseItem.Quantity,
+					&purchaseItem.Detail,
+					&purchaseItem.Url,
+					&purchaseItem.PurchaseOrderID,
+					&purchaseItem.FinanceCheck,
+					&purchaseItem.CreatedAt,
+					&purchaseItem.UpdatedAt,
+				)
+				if err != nil {
+					return nil, err
+				}
+				purchaseItems = append(purchaseItems, purchaseItem)
+			}
+			purchaseDetail.PurchaseItems = purchaseItems
+			purchaseItems = nil
+			purchaseDetails = append(purchaseDetails, purchaseDetail)
+		}
+		expenseDetail.PurchaseDetails = purchaseDetails
+		purchaseDetails = nil
+		expenseDetails = append(expenseDetails, expenseDetail)
+	}
+	return expenseDetails, nil
 }

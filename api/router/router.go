@@ -121,6 +121,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/expenses", r.expenseController.IndexExpense)
 	e.GET("/expenses/updateTP", r.expenseController.UpdateExpenseTP)
 	e.GET("/expenses/details", r.expenseController.IndexExpenseDetails)
+	e.GET("/expenses/details/:year", r.expenseController.IndexExpenseDetailsByPeriod)
 	e.GET("/expenses/:id", r.expenseController.ShowExpense)
 	e.GET("/expenses/:id/details", r.expenseController.ShowExpenseDetail)
 	e.POST("/expenses", r.expenseController.CreateExpense)
