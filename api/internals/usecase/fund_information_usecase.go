@@ -19,7 +19,7 @@ type FundInformationUseCase interface {
 	DestroyFundInformation(context.Context, string) error
 	GetFundInformationDetails(context.Context) ([]domain.FundInformationDetail, error)
 	GetFundInformationDetailByID(context.Context, string) (domain.FundInformationDetail, error)
-	GetFundInformationDetailsByYear(context.Context, string) ([]domain.FundInformationDetail, error)
+	GetFundInformationDetailsByPeriod(context.Context, string) ([]domain.FundInformationDetail, error)
 }
 
 func NewFundInformationUseCase(rep rep.FundInformationRepository) FundInformationUseCase {
@@ -244,16 +244,16 @@ func (f *fundInformationUseCase) GetFundInformationDetailByID(c context.Context,
 }
 
 //fund_informations_byyear-api(GETS)
-func (f *fundInformationUseCase) GetFundInformationDetailsByYear(c context.Context, year string) ([]domain.FundInformationDetail, error) {
+func (f *fundInformationUseCase) GetFundInformationDetailsByPeriod(c context.Context, year string) ([]domain.FundInformationDetail, error) {
 	fundInformationDetail:= domain.FundInformationDetail{}
 	var fundInformationDetails []domain.FundInformationDetail
 
-	rows, err := f.rep.AllDetailsForPeriods(c, year)
+	rows, err := f.rep.AllDetailsByPeriod(c, year)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	
+
 	for rows.Next() {
 		err := rows.Scan(
 		&fundInformationDetail.FundInformation.ID,

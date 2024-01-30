@@ -22,7 +22,7 @@ type FundInformationRepository interface {
 	FindDetails(context.Context) (*sql.Rows, error)
 	FindDetailByID(context.Context, string) (*sql.Row, error)
 	FindLatestRecord(context.Context) (*sql.Row, error)
-	AllDetailsForPeriods(context.Context, string) (*sql.Rows, error)
+	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
 }
 
 func NewFundInformationRepository(c db.Client, ac abstract.Crud) FundInformationRepository {
@@ -165,7 +165,7 @@ func (fir *fundInformationRepository) FindLatestRecord(c context.Context) (*sql.
 }
 
 // 年度別のfund_informationに紐づくuserとteacherを取得する
-func (fir *fundInformationRepository) AllDetailsForPeriods(c context.Context, year string) (*sql.Rows, error) {
+func (fir *fundInformationRepository) AllDetailsByPeriod(c context.Context, year string) (*sql.Rows, error) {
 	query := `
 		SELECT
 			fund_informations.*,
