@@ -56,6 +56,26 @@ const docTemplate = `{
                 }
             },
         },
+				"/activities/details/{year}": {
+						"get": {
+								tags: ["activity"],
+								"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
+								"parameters": [
+										{
+												"name": "year",
+												"in": "path",
+												"description": "year",
+												"required": true,
+												"type": "integer"
+										}
+								],
+								"responses": {
+										"200": {
+												"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
+										}
+								}
+						},
+				},
         "/activities/{id}": {
             "get": {
                 tags: ["activity"],

@@ -83,6 +83,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 	e.GET("/activities/details", r.activityController.IndexActivityDetail)
+	e.GET("/activities/details/:year",r.activityController.IndexActivityDetailsByPeriod)
 
 	// activityStyleのRoute
 	e.GET("/activity_styles", r.activityStyleController.IndexActivityStyle)

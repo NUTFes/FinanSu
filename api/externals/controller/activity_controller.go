@@ -21,6 +21,7 @@ type ActivityController interface {
 	UpdateActivity(echo.Context) error
 	DestroyActivity(echo.Context) error
 	IndexActivityDetail(echo.Context) error
+	IndexActivityDetailsByPeriod(echo.Context) error
 }
 
 func NewActivityController(u usecase.ActivityUseCase) ActivityController {
@@ -88,6 +89,16 @@ func (a *activityController) DestroyActivity(c echo.Context) error {
 // For admin view
 func (a *activityController) IndexActivityDetail(c echo.Context) error {
 	activities, err := a.u.GetActivityDetail(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, activities)
+}
+
+// 年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得
+func (a *activityController) IndexActivityDetailsByPeriod(c echo.Context) error {
+	year := c.Param("year")
+	activities, err := a.u.GetActivityDetailsByPeriod(c.Request().Context(), year)
 	if err != nil {
 		return err
 	}
