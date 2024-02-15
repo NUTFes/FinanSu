@@ -20,6 +20,7 @@ type ExpenseController interface {
 	UpdateExpenseTP(echo.Context) error
 	IndexExpenseDetails(echo.Context) error
 	ShowExpenseDetail(echo.Context) error
+	IndexExpenseDetailsByPeriod(echo.Context) error
 }
 
 func NewExpenseController(u usecase.ExpenseUseCase) ExpenseController {
@@ -104,4 +105,17 @@ func (e *expenseController) ShowExpenseDetail(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, expenseDetail)
+}
+
+func (e *expenseController) IndexExpenseDetailsByPeriod(c echo.Context) error {
+	year := c.Param("year")
+	err := e.u.UpdateExpenseTP(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	expenseDetails, err := e.u.GetExpenseDetailsByPeriod(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, expenseDetails)
 }

@@ -691,6 +691,26 @@ const docTemplate = `{
                 }
             },
         },
+        "/expenses/details/{year}": {
+            "get": {
+                tags: ["expense"],
+                "description": "年度で指定されたexpenseに紐づく購入申請と購入報告を取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "yearで指定されたexpenseに紐づく購入申請と購入報告を取得",
+                    }
+                }
+            },
+        },
         "/fund_informations": {
             "get": {
                 tags: ["fund_information"],
