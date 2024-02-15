@@ -135,6 +135,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
 	e.GET("/fund_informations/details", r.fundInformationController.IndexFundInformationDetails)
 	e.GET("/fund_informations/:id/details", r.fundInformationController.ShowFundInformationDetailByID)
+	e.GET("/fund_informations/details/:year", r.fundInformationController.IndexFundInformationDetailsByPeriod)
 
 	// mail auth
 	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)

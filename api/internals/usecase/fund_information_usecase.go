@@ -19,6 +19,7 @@ type FundInformationUseCase interface {
 	DestroyFundInformation(context.Context, string) error
 	GetFundInformationDetails(context.Context) ([]domain.FundInformationDetail, error)
 	GetFundInformationDetailByID(context.Context, string) (domain.FundInformationDetail, error)
+	GetFundInformationDetailsByPeriod(context.Context, string) ([]domain.FundInformationDetail, error)
 }
 
 func NewFundInformationUseCase(rep rep.FundInformationRepository) FundInformationUseCase {
@@ -194,6 +195,7 @@ func (f *fundInformationUseCase) GetFundInformationDetails(c context.Context) ([
 			return nil, err
 		}
 		fundInformationDetails = append(fundInformationDetails, fundInformationDetail)
+
 	}
 	return fundInformationDetails, nil
 }
@@ -239,4 +241,55 @@ func (f *fundInformationUseCase) GetFundInformationDetailByID(c context.Context,
 		return fundInformationDetail, err
 	}
 	return fundInformationDetail, nil
+}
+
+//fund_informations_byyear-api(GETS)
+func (f *fundInformationUseCase) GetFundInformationDetailsByPeriod(c context.Context, year string) ([]domain.FundInformationDetail, error) {
+	fundInformationDetail:= domain.FundInformationDetail{}
+	var fundInformationDetails []domain.FundInformationDetail
+
+	rows, err := f.rep.AllDetailsByPeriod(c, year)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+		&fundInformationDetail.FundInformation.ID,
+		&fundInformationDetail.FundInformation.UserID,
+		&fundInformationDetail.FundInformation.TeacherID,
+		&fundInformationDetail.FundInformation.Price,
+		&fundInformationDetail.FundInformation.Remark,
+		&fundInformationDetail.FundInformation.IsFirstCheck,
+		&fundInformationDetail.FundInformation.IsLastCheck,
+		&fundInformationDetail.FundInformation.ReceivedAt,
+		&fundInformationDetail.FundInformation.CreatedAt,
+		&fundInformationDetail.FundInformation.UpdatedAt,
+		&fundInformationDetail.User.ID,
+		&fundInformationDetail.User.Name,
+		&fundInformationDetail.User.BureauID,
+		&fundInformationDetail.User.RoleID,
+		&fundInformationDetail.User.CreatedAt,
+		&fundInformationDetail.User.UpdatedAt,
+		&fundInformationDetail.Teacher.ID,
+		&fundInformationDetail.Teacher.Name,
+		&fundInformationDetail.Teacher.Position,
+		&fundInformationDetail.Teacher.DepartmentID,
+		&fundInformationDetail.Teacher.Room,
+		&fundInformationDetail.Teacher.IsBlack,
+		&fundInformationDetail.Teacher.Remark,
+		&fundInformationDetail.Teacher.CreatedAt,
+		&fundInformationDetail.Teacher.UpdatedAt,
+		&fundInformationDetail.Department.ID,
+		&fundInformationDetail.Department.Name,
+		&fundInformationDetail.Department.CreatedAt,
+		&fundInformationDetail.Department.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		fundInformationDetails = append(fundInformationDetails, fundInformationDetail)
+	}
+	return fundInformationDetails, nil
 }

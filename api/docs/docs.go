@@ -870,6 +870,26 @@ const docTemplate = `{
                 }
             },
         },
+				"/fund_informations/details/{year}": {
+						"get": {
+								tags: ["fund_information"],
+								"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+								"parameters": [
+										{
+												"name": "year",
+												"in": "path",
+												"description": "year",
+												"required": true,
+												"type": "integer"
+										}
+								],
+								"responses": {
+										"200": {
+												"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+										}
+								}
+						},
+			},
         "/purchaseitems": {
             "get": {
                 tags: ["purchase_item"],
