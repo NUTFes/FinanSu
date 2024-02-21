@@ -22,6 +22,7 @@ type BudgetRepository interface {
 	FindDetailByID(context.Context, string) (*sql.Row, error)
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	FindDetail(context.Context) (*sql.Rows, error)
+	FindDetailsByPeriod(context.Context, string) (*sql.Rows, error)
 }
 
 func NewBudgetRepository(c db.Client, ac abstract.Crud) BudgetRepository {
@@ -127,4 +128,26 @@ func (br *budgetRepository) FindLatestRecord(c context.Context) (*sql.Row, error
 		DESC LIMIT 1
 	`
 	return br.crud.ReadByID(c, query)
+}
+
+// yearで切り替えるBudgetに紐づくyearとsourceを全件取得する
+func (br *budgetRepository) FindDetailsByPeriod(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			*
+		FROM
+			budgets
+		INNER JOIN
+			years
+		ON
+			budgets.year_id = years.id
+		INNER JOIN
+			sources
+		ON
+			budgets.source_id = sources.id
+		WHERE
+			years.year = ` + year +
+		" ORDER BY budgets.id;"
+
+	return br.crud.Read(c, query)
 }
