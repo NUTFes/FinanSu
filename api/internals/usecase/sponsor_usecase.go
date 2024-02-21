@@ -17,6 +17,7 @@ type SponsorUseCase interface {
 	CreateSponsor(context.Context, string, string, string, string, string) (domain.Sponsor, error)
 	UpdateSponsor(context.Context, string, string, string, string, string, string) (domain.Sponsor, error)
 	DestroySponsor(context.Context, string) error
+	GetSponsorByPeriod(context.Context, string) ([]domain.Sponsor, error)
 }
 
 func NewSponsorUseCase(rep rep.SponsorRepository) SponsorUseCase {
@@ -131,4 +132,31 @@ func (s *sponsorUseCase) DestroySponsor(
 ) error {
 	err := s.rep.Delete(c, id)
 	return err
+}
+
+// 年度別のsponsorsの取得(GetByPeriod)
+func (s *sponsorUseCase) GetSponsorByPeriod(c context.Context, year string) ([]domain.Sponsor, error) {
+	sponsor := domain.Sponsor{}
+	var sponsors []domain.Sponsor
+	rows, err := s.rep.AllByPeriod(c, year)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		err := rows.Scan(
+			&sponsor.ID,
+			&sponsor.Name,
+			&sponsor.Tel,
+			&sponsor.Email,
+			&sponsor.Address,
+			&sponsor.Representative,
+			&sponsor.CreatedAt,
+			&sponsor.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		sponsors = append(sponsors, sponsor)
+	}
+	return sponsors, nil
 }
