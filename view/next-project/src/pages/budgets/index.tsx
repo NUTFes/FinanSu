@@ -94,11 +94,8 @@ export default function BudgetList(props: Props) {
 
   const getBudgets = async () => {
     const getBudgtesByYearsURL = process.env.CSR_API_URI + '/budgets/details/' + selectedYear;
-    const getExpensesByYearsURL = process.env.CSR_API_URI + '/expenses/details/' + selectedYear;
     const getBudgetsByYears = await get(getBudgtesByYearsURL);
-    const getExpensesByYears = await get(getExpensesByYearsURL);
     setBudgetViews(getBudgetsByYears);
-    setExpenseViews(getExpensesByYears);
   };
 
   const getExpenses = async () => {
@@ -117,13 +114,17 @@ export default function BudgetList(props: Props) {
   }, [selectedExpenseYear]);
 
   // 合計金額用の変数
-  const budgetsTotalFee = budgetViews.reduce((prev, current) => {
-    return prev + current.budget.price;
-  }, 0);
+  const budgetsTotalFee =
+    budgetViews &&
+    budgetViews.reduce((prev, current) => {
+      return prev + current.budget.price;
+    }, 0);
 
-  const expensesTotalFee = expenseViews.reduce((prev, current) => {
-    return prev + current.expense.totalPrice;
-  }, 0);
+  const expensesTotalFee =
+    expenseViews &&
+    expenseViews.reduce((prev, current) => {
+      return prev + current.expense.totalPrice;
+    }, 0);
 
   const formatDate = (date: string) => {
     const datetime = date.replace('T', ' ');
@@ -188,42 +189,43 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {budgetViews.map((budgetView, index) => (
-                        <tr
-                          key={budgetView.budget.id}
-                          className={clsx(
-                            index !== budgets.length - 1 && 'border-b',
-                            'py-3 text-black-600',
-                          )}
-                        >
-                          <td className='py-3 text-center'>{budgetView.source.name}</td>
-                          <td className='py-3 text-center'>{budgetView.year.year}</td>
-                          <td className='py-3 text-center'>{budgetView.budget.price}</td>
-                          <td className='py-3 text-center'>
-                            {formatDate(
-                              budgetView.budget.createdAt ? budgetView.budget.createdAt : '',
+                      {budgetViews &&
+                        budgetViews.map((budgetView, index) => (
+                          <tr
+                            key={budgetView.budget.id}
+                            className={clsx(
+                              index !== budgets.length - 1 && 'border-b',
+                              'py-3 text-black-600',
                             )}
-                          </td>
-                          <td className='py-3 text-center'>
-                            {formatDate(
-                              budgetView.budget.updatedAt ? budgetView.budget.updatedAt : '',
-                            )}
-                          </td>
-                          <td className='flex items-center justify-center gap-3 py-3'>
-                            <OpenEditModalButton
-                              id={budgetView.budget.id ? budgetView.budget.id : 0}
-                              sources={sources}
-                              years={years}
-                              isDisabled={isDisabled}
-                            />
-                            <OpenDeleteModalButton
-                              id={budgetView.budget.id ? budgetView.budget.id : 0}
-                              isDisabled={isDisabled}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                      {!budgetViews.length && (
+                          >
+                            <td className='py-3 text-center'>{budgetView.source.name}</td>
+                            <td className='py-3 text-center'>{budgetView.year.year}</td>
+                            <td className='py-3 text-center'>{budgetView.budget.price}</td>
+                            <td className='py-3 text-center'>
+                              {formatDate(
+                                budgetView.budget.createdAt ? budgetView.budget.createdAt : '',
+                              )}
+                            </td>
+                            <td className='py-3 text-center'>
+                              {formatDate(
+                                budgetView.budget.updatedAt ? budgetView.budget.updatedAt : '',
+                              )}
+                            </td>
+                            <td className='flex items-center justify-center gap-3 py-3'>
+                              <OpenEditModalButton
+                                id={budgetView.budget.id ? budgetView.budget.id : 0}
+                                sources={sources}
+                                years={years}
+                                isDisabled={isDisabled}
+                              />
+                              <OpenDeleteModalButton
+                                id={budgetView.budget.id ? budgetView.budget.id : 0}
+                                isDisabled={isDisabled}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      {!budgetViews && (
                         <tr>
                           <td colSpan={6} className='py-3 text-center text-sm text-black-600'>
                             データがありません
@@ -231,7 +233,7 @@ export default function BudgetList(props: Props) {
                         </tr>
                       )}
                     </tbody>
-                    {budgetViews.length > 0 && (
+                    {budgetViews && budgetViews.length > 0 && (
                       <tfoot
                         className={clsx(
                           'border border-x-white-0 border-b-white-0 border-t-primary-1',
@@ -298,56 +300,57 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {expenseViews.map((expenseView, index) => (
-                        <tr
-                          key={expenseView.expense.id}
-                          className={clsx(
-                            index !== expenses.length - 1 && 'border-b',
-                            'py-3 text-black-600',
-                          )}
-                        >
-                          <td
-                            className='py-3 text-center'
-                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
-                          >
-                            {expenseView.expense.name}
-                          </td>
-                          <td
-                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
-                            className='py-3 text-center'
-                          >
-                            {expenseView.expense.totalPrice}
-                          </td>
-                          <td
-                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
-                            className='py-3 text-center'
-                          >
-                            {formatDate(
-                              expenseView.expense.createdAt ? expenseView.expense.createdAt : '',
+                      {expenseViews &&
+                        expenseViews.map((expenseView, index) => (
+                          <tr
+                            key={expenseView.expense.id}
+                            className={clsx(
+                              index !== expenses.length - 1 && 'border-b',
+                              'py-3 text-black-600',
                             )}
-                          </td>
-                          <td
-                            onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
-                            className='py-3 text-center'
                           >
-                            {formatDate(
-                              expenseView.expense.updatedAt ? expenseView.expense.updatedAt : '',
-                            )}
-                          </td>
-                          <td className='flex justify-center gap-3 py-3'>
-                            <OpenExpenseEditModalButton
-                              disabled={isDisabled}
-                              id={expenseView.expense.id ? expenseView.expense.id : 0}
-                              expense={expenseView.expense}
-                            />
-                            <OpenExpenseDeleteModalButton
-                              disabled={isDisabled}
-                              id={expenseView.expense.id ? expenseView.expense.id : 0}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                      {!expenseViews.length && (
+                            <td
+                              className='py-3 text-center'
+                              onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                            >
+                              {expenseView.expense.name}
+                            </td>
+                            <td
+                              onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                              className='py-3 text-center'
+                            >
+                              {expenseView.expense.totalPrice}
+                            </td>
+                            <td
+                              onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                              className='py-3 text-center'
+                            >
+                              {formatDate(
+                                expenseView.expense.createdAt ? expenseView.expense.createdAt : '',
+                              )}
+                            </td>
+                            <td
+                              onClick={() => onOpen(expenseView.expense.id || 0, expenseView)}
+                              className='py-3 text-center'
+                            >
+                              {formatDate(
+                                expenseView.expense.updatedAt ? expenseView.expense.updatedAt : '',
+                              )}
+                            </td>
+                            <td className='flex justify-center gap-3 py-3'>
+                              <OpenExpenseEditModalButton
+                                disabled={isDisabled}
+                                id={expenseView.expense.id ? expenseView.expense.id : 0}
+                                expense={expenseView.expense}
+                              />
+                              <OpenExpenseDeleteModalButton
+                                disabled={isDisabled}
+                                id={expenseView.expense.id ? expenseView.expense.id : 0}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      {!expenseViews && (
                         <tr>
                           <td colSpan={6} className='py-3 text-center text-sm text-black-600'>
                             データがありません
@@ -355,7 +358,7 @@ export default function BudgetList(props: Props) {
                         </tr>
                       )}
                     </tbody>
-                    {expenseViews.length > 0 && (
+                    {expenseViews && expenseViews.length > 0 && (
                       <tfoot
                         className={clsx(
                           'border border-x-white-0 border-b-white-0 border-t-primary-1',
