@@ -14,7 +14,14 @@ import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, PurchaseReport, User, Expense, YearPeriod } from '@type/common';
+import {
+  PurchaseItem,
+  PurchaseOrder,
+  PurchaseReport,
+  User,
+  Expense,
+  YearPeriod,
+} from '@type/common';
 
 export interface PurchaseReportView {
   purchaseReport: PurchaseReport;
@@ -37,9 +44,11 @@ const date = new Date();
 
 export async function getServerSideProps() {
   const getPurchaseReportsUrl = process.env.SSR_API_URI + '/years/periods';
-  const periodsRes = await get(getPurchaseReportsUrl)
-  const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/purchasereports/details/' +
-  (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+  const periodsRes = await get(getPurchaseReportsUrl);
+  const getPurchaseReportViewUrl =
+    process.env.SSR_API_URI +
+    '/purchasereports/details/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseReportsRes = await get(getPurchaseReportsUrl);
   const purchaseReportViewRes = await get(getPurchaseReportViewUrl);
@@ -116,7 +125,8 @@ export default function PurchaseReports(props: Props) {
     if (purchaseReportViews) {
       let totalFee = 0;
       purchaseReportViews.forEach((purchaseReportView: PurchaseReportView) => {
-        const fee = TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems) || 0;
+        const fee =
+          TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems) || 0;
         console.log(`Report ID: ${purchaseReportView.purchaseReport.id}, Fee: ${fee}`);
         totalFee += fee;
       });
@@ -127,7 +137,7 @@ export default function PurchaseReports(props: Props) {
 
   useEffect(() => {
     getPurchaseReport();
-  }, [selectedYear, getPurchaseReport])
+  }, [selectedYear, getPurchaseReport]);
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
@@ -347,9 +357,7 @@ export default function PurchaseReports(props: Props) {
                         );
                       }}
                     >
-                      <div
-                        className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'
-                      >
+                      <div className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'>
                         {/* name (個数/finasucheck) */}
                         {purchaseReportViewItem.purchaseItems?.map((purchaseItem, index) => (
                           <div key={index}>
