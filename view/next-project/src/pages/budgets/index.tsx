@@ -26,11 +26,20 @@ interface Props {
   expenses: ExpenseView[];
 }
 
+const date = new Date();
+
 export async function getServerSideProps() {
-  const getBudgetUrl = process.env.SSR_API_URI + '/budgets/details';
-  const getSourceUrl = process.env.SSR_API_URI + '/sources';
   const getYearUrl = process.env.SSR_API_URI + '/years';
-  const getExpenseUrl = process.env.SSR_API_URI + '/expenses/details';
+  const periodsRes = await get(getYearUrl);
+  const getBudgetUrl =
+    process.env.SSR_API_URI +
+    '/budgets/details/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+  const getSourceUrl = process.env.SSR_API_URI + '/sources';
+  const getExpenseUrl =
+    process.env.SSR_API_URI +
+    '/expenses/details/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
 
   const budgetRes = await get(getBudgetUrl);
   const sourceRes = await get(getSourceUrl);
@@ -50,6 +59,8 @@ export default function BudgetList(props: Props) {
   const { budgets, sources, years, expenses } = props;
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
+  const [budgetViews, setBudgetViews] = useState<BudgetView[]>(props.budgets);
+  const [expenseViews, setExpenseViews] = useState<ExpenseView[]>(props.expenses);
 
   useEffect(() => {
     const getUser = async () => {
@@ -66,42 +77,51 @@ export default function BudgetList(props: Props) {
     return true;
   }, [currentUser]);
 
-  const [expenseView, setExpenseView] = useState<ExpenseView>(props.expenses[0]);
+  const [forcusExpense, setForcusExpense] = useState<ExpenseView>(props.expenses[0]);
   const [isOpen, setIsOpen] = useState(false);
   const onOpen = (expenseID: number, expenseView: ExpenseView) => {
-    setExpenseView(expenseView);
+    setForcusExpense(expenseView);
     setIsOpen(true);
   };
 
-  const currentYear: Year = { year: new Date().getFullYear() };
-  const [selectedYear, setSelectedYear] = useState<Year>(currentYear);
-  const [selectedExpenseYear, setSelectedExpenseYear] = useState<string>(
-    currentYear.year.toString(),
+  const [selectedYear, setSelectedYear] = useState<string>(
+    years ? String(years[years.length - 1].year) : String(date.getFullYear()),
   );
-  const handleSelectedYear = (selectedYear: number) => {
-    const year: Year = { year: selectedYear };
-    setSelectedYear(year);
+
+  const [selectedExpenseYear, setSelectedExpenseYear] = useState<string>(
+    years ? String(years[years.length - 1].year) : String(date.getFullYear()),
+  );
+
+  const getBudgets = async () => {
+    const getBudgtesByYearsURL = process.env.CSR_API_URI + '/budgets/details/' + selectedYear;
+    const getExpensesByYearsURL = process.env.CSR_API_URI + '/expenses/details/' + selectedYear;
+    const getBudgetsByYears = await get(getBudgtesByYearsURL);
+    const getExpensesByYears = await get(getExpensesByYearsURL);
+    setBudgetViews(getBudgetsByYears);
+    setExpenseViews(getExpensesByYears);
   };
 
-  const filteredBudgets = useMemo(() => {
-    if (!budgets || budgets.length === 0) return [];
-    return budgets.filter((budgetView) => {
-      return budgetView.year.year == selectedYear.year;
-    });
-  }, [budgets, selectedYear]);
+  const getExpenses = async () => {
+    const getExpensesByYearsURL =
+      process.env.CSR_API_URI + '/expenses/details/' + selectedExpenseYear;
+    const getExpensesByYears = await get(getExpensesByYearsURL);
+    setExpenseViews(getExpensesByYears);
+  };
 
-  const filteredExpenses = useMemo(() => {
-    return expenses.filter((expenseView) => {
-      return expenseView.expense.createdAt?.includes(selectedExpenseYear);
-    });
-  }, [expenses, selectedExpenseYear]);
+  useEffect(() => {
+    getBudgets();
+  }, [selectedYear]);
+
+  useEffect(() => {
+    getExpenses();
+  }, [selectedExpenseYear]);
 
   // 合計金額用の変数
-  const budgetsTotalFee = filteredBudgets.reduce((prev, current) => {
+  const budgetsTotalFee = budgetViews.reduce((prev, current) => {
     return prev + current.budget.price;
   }, 0);
 
-  const expensesTotalFee = filteredExpenses.reduce((prev, current) => {
+  const expensesTotalFee = expenseViews.reduce((prev, current) => {
     return prev + current.expense.totalPrice;
   }, 0);
 
@@ -130,8 +150,8 @@ export default function BudgetList(props: Props) {
                   <Title title={'収入一覧'} />
                   <select
                     className='w-100'
-                    defaultValue={currentYear.year}
-                    onChange={(e) => handleSelectedYear(Number(e.target.value))}
+                    defaultValue={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
                   >
                     {years.map((year) => (
                       <option key={year.year} value={year.year}>
@@ -168,7 +188,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredBudgets.map((budgetView, index) => (
+                      {budgetViews.map((budgetView, index) => (
                         <tr
                           key={budgetView.budget.id}
                           className={clsx(
@@ -203,7 +223,7 @@ export default function BudgetList(props: Props) {
                           </td>
                         </tr>
                       ))}
-                      {!filteredBudgets.length && (
+                      {!budgetViews.length && (
                         <tr>
                           <td colSpan={6} className='py-3 text-center text-sm text-black-600'>
                             データがありません
@@ -211,7 +231,7 @@ export default function BudgetList(props: Props) {
                         </tr>
                       )}
                     </tbody>
-                    {filteredBudgets.length > 0 && (
+                    {budgetViews.length > 0 && (
                       <tfoot
                         className={clsx(
                           'border border-x-white-0 border-b-white-0 border-t-primary-1',
@@ -244,12 +264,14 @@ export default function BudgetList(props: Props) {
                   <Title title={'支出一覧'} />
                   <select
                     className='w-100 '
-                    defaultValue={currentYear.year}
+                    defaultValue={selectedYear}
                     onChange={(e) => setSelectedExpenseYear(e.target.value)}
                   >
-                    <option value='2021'>2021</option>
-                    <option value='2022'>2022</option>
-                    <option value='2023'>2023</option>
+                    {years.map((year) => (
+                      <option key={year.year} value={year.year}>
+                        {year.year}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className='mb-2 mt-4 overflow-scroll md:p-5'>
@@ -276,7 +298,7 @@ export default function BudgetList(props: Props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredExpenses.map((expenseView, index) => (
+                      {expenseViews.map((expenseView, index) => (
                         <tr
                           key={expenseView.expense.id}
                           className={clsx(
@@ -325,7 +347,7 @@ export default function BudgetList(props: Props) {
                           </td>
                         </tr>
                       ))}
-                      {!filteredExpenses.length && (
+                      {!expenseViews.length && (
                         <tr>
                           <td colSpan={6} className='py-3 text-center text-sm text-black-600'>
                             データがありません
@@ -333,7 +355,7 @@ export default function BudgetList(props: Props) {
                         </tr>
                       )}
                     </tbody>
-                    {filteredExpenses.length > 0 && (
+                    {expenseViews.length > 0 && (
                       <tfoot
                         className={clsx(
                           'border border-x-white-0 border-b-white-0 border-t-primary-1',
@@ -358,7 +380,7 @@ export default function BudgetList(props: Props) {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      {isOpen && <DetailModal setIsOpen={setIsOpen} expenseView={expenseView} />}
+      {isOpen && <DetailModal setIsOpen={setIsOpen} expenseView={forcusExpense} />}
     </MainLayout>
   );
 }
