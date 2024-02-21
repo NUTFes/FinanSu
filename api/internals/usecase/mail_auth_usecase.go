@@ -21,6 +21,7 @@ type MailAuthUseCase interface {
 	SignIn(context.Context, string, string) (domain.Token, error)
 	SignOut(context.Context, string) error
 	IsSignIn(context.Context, string) (domain.IsSignIn, error)
+	ResetPassword(context.Context, string) error
 }
 
 func NewMailAuthUseCase(mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository) MailAuthUseCase {
@@ -122,4 +123,15 @@ func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domai
 		isSignIn = domain.IsSignIn{IsSignIn: false}
 	}
 	return isSignIn, nil
+}
+
+// reset password
+func (u *mailAuthUseCase) ResetPassword(c context.Context, email string) error {
+	receiverEmail := []string{email}
+	err := u.mailAuthRep.ResetPassword(c, receiverEmail)
+	if err != nil {
+		return err
+	}
+
+	return err
 }

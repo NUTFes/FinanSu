@@ -1991,6 +1991,26 @@ const docTemplate = `{
                 },
             },
         },
+        "/mail_auth/reset_password":{
+            "post": {
+                tags: ["email"],
+                "description": "パスワードリセットのメール送信",
+                responses: {
+                    "200": {
+                        "description": "パスワードリセットのメールが送信される",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+            },
+        },
     },
     "definitions":{
         "activity":{

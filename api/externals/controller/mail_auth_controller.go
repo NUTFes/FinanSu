@@ -15,6 +15,7 @@ type MailAuthController interface {
 	SignIn(echo.Context) error
 	SignOut(echo.Context) error
 	IsSignIn(echo.Context) error
+	ResetPassword(echo.Context) error
 }
 
 func NewMailAuthController(u usecase.MailAuthUseCase) MailAuthController {
@@ -67,5 +68,15 @@ func (auth *mailAuthController) IsSignIn(c echo.Context) error {
 		return nil
 	}
 	c.JSON(http.StatusOK, isSignIn)
+	return nil
+}
+
+// reset password
+func (auth *mailAuthController) ResetPassword(c echo.Context) error {
+	email := c.QueryParam("email")
+	err := auth.u.ResetPassword(c.Request().Context(), email)
+	if err != nil {
+		return err
+	}
 	return nil
 }
