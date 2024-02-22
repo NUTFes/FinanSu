@@ -137,7 +137,8 @@ export default function PurchaseReports(props: Props) {
 
   useEffect(() => {
     getPurchaseReport();
-  }, [selectedYear, getPurchaseReport]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedYear]);
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
