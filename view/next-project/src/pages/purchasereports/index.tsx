@@ -102,7 +102,6 @@ export default function PurchaseReports(props: Props) {
   const getPurchaseReport = async () => {
     const getPurchaseReportViewUrlByYear =
       process.env.CSR_API_URI + '/purchasereports/details/' + selectedYear;
-    console.log(getPurchaseReportViewUrlByYear);
     const getPurchaseOrderByYears = await get(getPurchaseReportViewUrlByYear);
     setPurchaseReportViews(getPurchaseOrderByYears);
   };
@@ -127,7 +126,6 @@ export default function PurchaseReports(props: Props) {
       purchaseReportViews.forEach((purchaseReportView: PurchaseReportView) => {
         const fee =
           TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems) || 0;
-        console.log(`Report ID: ${purchaseReportView.purchaseReport.id}, Fee: ${fee}`);
         totalFee += fee;
       });
       return totalFee;
