@@ -194,7 +194,7 @@ export default function BudgetList(props: Props) {
                           <tr
                             key={budgetView.budget.id}
                             className={clsx(
-                              index !== budgets.length - 1 && 'border-b',
+                              budgetViews && index !== budgetViews.length - 1 && 'border-b',
                               'py-3 text-black-600',
                             )}
                           >
@@ -305,7 +305,7 @@ export default function BudgetList(props: Props) {
                           <tr
                             key={expenseView.expense.id}
                             className={clsx(
-                              index !== expenses.length - 1 && 'border-b',
+                              expenseViews && index !== expenseViews.length - 1 && 'border-b',
                               'py-3 text-black-600',
                             )}
                           >
