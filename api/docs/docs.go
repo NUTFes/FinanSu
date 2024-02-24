@@ -283,6 +283,26 @@ const docTemplate = `{
                 }
             },
         },
+        "/budgets/details/{year}": {
+            "get": {
+                tags: ["budget"],
+                "description": "年度で指定されたbudgetsに紐づく年度とソースを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "年度で指定されたbudgetsに紐づく年度とソースを取得",
+                    }
+                }
+            },
+        },
         "/budgets/{id}": {
             "get": {
                 tags: ["budget"],

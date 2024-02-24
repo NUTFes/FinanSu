@@ -20,6 +20,7 @@ type BudgetUseCase interface {
 	DestroyBudget(context.Context, string) error
 	GetBudgetDetailByID(context.Context, string) (domain.BudgetDetail, error)
 	GetBudgetDetails(c context.Context) ([]domain.BudgetDetail, error)
+	GetBudgetDetailsByPeriod(context.Context, string) ([]domain.BudgetDetail, error)
 }
 
 func NewBudgetUseCase(rep rep.BudgetRepository) BudgetUseCase {
@@ -150,6 +151,42 @@ func (b *budgetUseCase) GetBudgetDetails(c context.Context) ([]domain.BudgetDeta
 		return nil, err
 	}
 	// defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&budgetDetail.Budget.ID,
+			&budgetDetail.Budget.Price,
+			&budgetDetail.Budget.YearID,
+			&budgetDetail.Budget.SourceID,
+			&budgetDetail.Budget.CreatedAt,
+			&budgetDetail.Budget.UpdatedAt,
+			&budgetDetail.Year.ID,
+			&budgetDetail.Year.Year,
+			&budgetDetail.Year.CreatedAt,
+			&budgetDetail.Year.UpdatedAt,
+			&budgetDetail.Source.ID,
+			&budgetDetail.Source.Name,
+			&budgetDetail.Source.CreatedAt,
+			&budgetDetail.Source.UpdatedAt,
+		)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+		budgetDetails = append(budgetDetails, budgetDetail)
+	}
+	return budgetDetails, nil
+}
+
+
+func (b *budgetUseCase) GetBudgetDetailsByPeriod(c context.Context, year string) ([]domain.BudgetDetail, error) {
+	budgetDetail := domain.BudgetDetail{}
+	var budgetDetails []domain.BudgetDetail
+
+	rows, err := b.rep.FindDetailsByPeriod(c, year)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
 	for rows.Next() {
 		err := rows.Scan(

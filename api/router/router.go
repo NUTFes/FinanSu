@@ -100,6 +100,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
 	e.GET("/budgets/:id/details", r.budgetController.ShowBudgetDetailById)
 	e.GET("/budgets/details", r.budgetController.ShowBudgetDetails)
+	e.GET("/budgets/details/:year", r.budgetController.ShowBudgetDetailsByPeriods)
 
 	//bureauのRoute
 	e.GET("/bureaus", r.bureauController.IndexBureau)
