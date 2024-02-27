@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { RiExternalLinkLine } from 'react-icons/ri';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
@@ -21,6 +21,7 @@ import {
   SponsorStyle,
   User,
   ActivityStyle,
+  YearPeriod,
 } from '@type/common';
 
 interface Props {
@@ -30,11 +31,18 @@ interface Props {
   sponsors: Sponsor[];
   users: User[];
   activityStyles: ActivityStyle[];
+  yearPeriods: YearPeriod[];
 }
 
 export async function getServerSideProps() {
-  const getSponsorActivitiesUrl = process.env.SSR_API_URI + '/activities';
-  const getSponsorActivitiesViewUrl = process.env.SSR_API_URI + '/activities/details';
+  const getSponsorActivitiesUrl = process.env.SSR_API_URI + '/years/periods';
+  const periodsRes = await get(getSponsorActivitiesUrl);
+  const getSponsorActivitiesViewUrl =
+    process.env.SSR_API_URI +
+    '/activities/details/' +
+    (periodsRes
+      ? String(periodsRes[periodsRes.length - 1].year)
+      : String(new Date().getFullYear()));
   const getSponsorStylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
   const getSponsorsUrl = process.env.SSR_API_URI + '/sponsors';
   const getUsersUrl = process.env.SSR_API_URI + '/users';
@@ -55,6 +63,7 @@ export async function getServerSideProps() {
       sponsors: sponsorsRes,
       users: usersRes,
       activityStyles: activityStylesRes,
+      yearPeriods: periodsRes,
     },
   };
 }
@@ -67,6 +76,9 @@ const formatYYYYMMDD = (date: Date) => {
 };
 
 export default function SponsorActivities(props: Props) {
+  const [sponsorActivities, setSponsorActivitiesViews] = useState<SponsorActivityView[]>(
+    props.sponsorActivitiesView,
+  );
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -83,23 +95,41 @@ export default function SponsorActivities(props: Props) {
     return datetime2;
   };
 
+  const yearPeriods = props.yearPeriods;
+  const [selectedYear, setSelectedYear] = useState<string>(
+    yearPeriods
+      ? String(yearPeriods[yearPeriods.length - 1].year)
+      : String(new Date().getFullYear()),
+  );
+
+  const getSponsorActivities = async () => {
+    const getSponsorActivitiesViewUrlByYear =
+      process.env.CSR_API_URI + '/activities/details/' + selectedYear;
+    const getSponsorActivitiesByYears = await get(getSponsorActivitiesViewUrlByYear);
+    setSponsorActivitiesViews(getSponsorActivitiesByYears);
+    console.log(getSponsorActivitiesViewUrlByYear);
+  };
+
   const currentYear = new Date().getFullYear().toString();
-  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
   const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
   const [selectedSort, setSelectedSort] = useState<string>('default');
 
   const sortedAndFilteredSponsorActivitiesViews = useMemo(() => {
-    let filteredActivities = props.sponsorActivitiesView.filter((sponsorActivitiesItem) => {
-      return sponsorActivitiesItem.sponsorActivity.createdAt?.includes(selectedYear);
-    });
+    let filteredActivities = sponsorActivities;
 
     switch (selectedIsDone) {
       case 'false':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         filteredActivities = filteredActivities.filter((sponsorActivitiesItem) => {
           return !sponsorActivitiesItem.sponsorActivity.isDone;
         });
         break;
       case 'true':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         filteredActivities = filteredActivities.filter((sponsorActivitiesItem) => {
           return sponsorActivitiesItem.sponsorActivity.isDone;
         });
@@ -110,6 +140,9 @@ export default function SponsorActivities(props: Props) {
 
     switch (selectedSort) {
       case 'createDesSort':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             new Date(firstObject.sponsorActivity.createdAt || 0).getTime() >
@@ -118,6 +151,9 @@ export default function SponsorActivities(props: Props) {
               : 1,
         );
       case 'updateSort':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
@@ -126,6 +162,9 @@ export default function SponsorActivities(props: Props) {
               : -1,
         );
       case 'updateDesSort':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
@@ -134,6 +173,9 @@ export default function SponsorActivities(props: Props) {
               : 1,
         );
       case 'priceSort':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
@@ -142,6 +184,9 @@ export default function SponsorActivities(props: Props) {
               : -1,
         );
       case 'priceDesSort':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
@@ -152,7 +197,7 @@ export default function SponsorActivities(props: Props) {
       default:
         return filteredActivities;
     }
-  }, [props, selectedYear, selectedIsDone, selectedSort]);
+  }, [props, selectedYear, selectedIsDone, selectedSort, getSponsorActivities]);
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
@@ -183,6 +228,10 @@ export default function SponsorActivities(props: Props) {
     return totalFee;
   }, [sortedAndFilteredSponsorActivitiesViews]);
 
+  useEffect(() => {
+    getSponsorActivities();
+  }, [selectedYear]);
+
   return (
     <MainLayout>
       <Head>
@@ -201,9 +250,14 @@ export default function SponsorActivities(props: Props) {
                 defaultValue={currentYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
               >
-                <option value='2021'>2021</option>
-                <option value='2022'>2022</option>
-                <option value='2023'>2023</option>
+                {props.yearPeriods &&
+                  props.yearPeriods.map((year) => {
+                    return (
+                      <option value={year.year} key={year.id}>
+                        {year.year}年度
+                      </option>
+                    );
+                  })}
               </select>
               <select
                 className={'w-100'}
@@ -334,9 +388,10 @@ export default function SponsorActivities(props: Props) {
                 </div>
               </Card>
             ))}
-          {!sortedAndFilteredSponsorActivitiesViews.length && (
-            <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
-          )}
+          {sortedAndFilteredSponsorActivitiesViews &&
+            sortedAndFilteredSponsorActivitiesViews.length === 0 && (
+              <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
+            )}
         </div>
         <div className='w-100 mb-2 hidden p-5 md:block'>
           <table className='mb-5 w-full table-fixed border-collapse'>
@@ -518,31 +573,33 @@ export default function SponsorActivities(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {sortedAndFilteredSponsorActivitiesViews.length > 0 && (
-                <tr className='border-b border-primary-1'>
-                  <td className='px-1 py-3' colSpan={1}>
-                    <div className='flex justify-end'>
-                      <div className='text-sm text-black-600'>合計</div>
-                    </div>
-                  </td>
-                  <td className='px-1 py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {TotalActivityStyleFee}
-                    </div>
-                  </td>
-                  <td className='px-1 py-3' colSpan={4}>
-                    <div className='flex justify-end'>
-                      <div className='text-sm text-black-600'>合計</div>
-                    </div>
-                  </td>
-                  <td className='px-1 py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {TotalTransportationFee}
-                    </div>
-                  </td>
-                </tr>
-              )}
-              {!sortedAndFilteredSponsorActivitiesViews.length && (
+              {sortedAndFilteredSponsorActivitiesViews &&
+                sortedAndFilteredSponsorActivitiesViews.length > 0 && (
+                  <tr className='border-b border-primary-1'>
+                    <td className='px-1 py-3' colSpan={1}>
+                      <div className='flex justify-end'>
+                        <div className='text-sm text-black-600'>合計</div>
+                      </div>
+                    </td>
+                    <td className='px-1 py-3'>
+                      <div className='text-center text-sm text-black-600'>
+                        {TotalActivityStyleFee}
+                      </div>
+                    </td>
+                    <td className='px-1 py-3' colSpan={4}>
+                      <div className='flex justify-end'>
+                        <div className='text-sm text-black-600'>合計</div>
+                      </div>
+                    </td>
+                    <td className='px-1 py-3'>
+                      <div className='text-center text-sm text-black-600'>
+                        {TotalTransportationFee}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              {(!sortedAndFilteredSponsorActivitiesViews ||
+                sortedAndFilteredSponsorActivitiesViews.length === 0) && (
                 <tr>
                   <td colSpan={6} className='py-3'>
                     <div className='text-center text-sm text-black-600'>データがありません</div>
