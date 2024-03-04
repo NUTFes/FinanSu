@@ -14,6 +14,7 @@ import (
 type mailAuthUseCase struct {
 	mailAuthRep rep.MailAuthRepository
 	sessionRep  rep.SessionRepository
+	sessionResetPasswordRep	rep.SessionResetPasswordRepository
 }
 
 type MailAuthUseCase interface {
@@ -21,11 +22,11 @@ type MailAuthUseCase interface {
 	SignIn(context.Context, string, string) (domain.Token, error)
 	SignOut(context.Context, string) error
 	IsSignIn(context.Context, string) (domain.IsSignIn, error)
-	ResetPassword(context.Context, string) error
+	SendResetPassword(context.Context, string) (domain.Token, error)
 }
 
-func NewMailAuthUseCase(mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository) MailAuthUseCase {
-	return &mailAuthUseCase{mailAuthRep: mailAuthRep, sessionRep: sessionRep}
+func NewMailAuthUseCase(mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository, sessionResetPasswordRep rep.SessionResetPasswordRepository) MailAuthUseCase {
+	return &mailAuthUseCase{mailAuthRep: mailAuthRep, sessionRep: sessionRep, sessionResetPasswordRep: sessionResetPasswordRep}
 }
 
 func (u *mailAuthUseCase) SignUp(c context.Context, email string, password string, userID string) (domain.Token, error) {
@@ -86,25 +87,6 @@ func (u *mailAuthUseCase) SignOut(c context.Context, accessToken string) error {
 	return nil
 }
 
-// アクセストークンを生成
-func _makeRandomStr(digit uint32) (string, error) {
-	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-	// 乱数を生成
-	b := make([]byte, digit)
-	if _, err := rand.Read(b); err != nil {
-		return "", errors.New("unexpected error...")
-	}
-
-	// letters からランダムに取り出して文字列を生成
-	var result string
-	for _, v := range b {
-		// index が letters の長さに収まるように調整
-		result += string(letters[int(v)%len(letters)])
-	}
-	return result, nil
-}
-
 func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domain.IsSignIn, error) {
 	var session = domain.Session{}
 	var isSignIn domain.IsSignIn
@@ -126,12 +108,55 @@ func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domai
 }
 
 // reset password
-func (u *mailAuthUseCase) ResetPassword(c context.Context, email string) error {
-	receiverEmail := []string{email}
-	err := u.mailAuthRep.ResetPassword(c, receiverEmail)
+func (u *mailAuthUseCase) SendResetPassword(c context.Context, email string) (domain.Token, error) {
+	var mailAuth = domain.MailAuth{}
+	var token domain.Token
+
+	// メールアドレスの存在確認
+	row := u.mailAuthRep.FindMailAuthByEmail(c, email)
+	err := row.Scan(
+		&mailAuth.ID,
+		&mailAuth.Email,
+		&mailAuth.Password,
+		&mailAuth.UserID,
+		&mailAuth.CreatedAt,
+		&mailAuth.UpdatedAt,
+	)
+	u.sessionResetPasswordRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID)))
+	// トークン発行
+	accessToken, err := _makeRandomStr(10)
+	//  リセットセッション開始
+	err = u.sessionResetPasswordRep.Create(c, strconv.FormatInt(int64(mailAuth.ID), 10), strconv.Itoa(int(mailAuth.UserID)), accessToken)
 	if err != nil {
-		return err
+		return token, err
+	}
+	token.AccessToken = accessToken
+
+	// メール送信
+	receiverEmail := []string{mailAuth.Email}
+	err = u.mailAuthRep.SendResetPassword(c, receiverEmail)
+	if err != nil {
+		return token, err
 	}
 
-	return err
+	return token, nil
+}
+
+// アクセストークンを生成
+func _makeRandomStr(digit uint32) (string, error) {
+	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+	// 乱数を生成
+	b := make([]byte, digit)
+	if _, err := rand.Read(b); err != nil {
+		return "", errors.New("unexpected error...")
+	}
+
+	// letters からランダムに取り出して文字列を生成
+	var result string
+	for _, v := range b {
+		// index が letters の長さに収まるように調整
+		result += string(letters[int(v)%len(letters)])
+	}
+	return result, nil
 }

@@ -18,7 +18,7 @@ type MailAuthRepository interface {
 	CreateMailAuth(context.Context, string, string, string) (int64, error)
 	FindMailAuthByEmail(context.Context, string) *sql.Row
 	FindMailAuthByID(context.Context, string) *sql.Row
-	ResetPassword(context.Context, []string) error
+	SendResetPassword(context.Context, []string) error
 }
 
 func NewMailAuthRepository(client db.Client) MailAuthRepository {
@@ -49,7 +49,7 @@ func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) *sql
 }
 
 // reset password
-func (r *mailAuthRepository) ResetPassword(c context.Context, email []string) error {
+func (r *mailAuthRepository) SendResetPassword(c context.Context, email []string) error {
 	err := godotenv.Load("env/dev.env")
 	if err != nil {
 		fmt.Println(err)
@@ -57,7 +57,15 @@ func (r *mailAuthRepository) ResetPassword(c context.Context, email []string) er
 
 	mailSender := os.Getenv("NUTMEG_MAIL_SENDER")
 	mailPassword := os.Getenv("NUTMEG_MAIL_PASSWORD")
-	message := []byte("test")
+	resetPageUrl := os.Getenv("RESET_PASSWORD_URL")
+
+	message := []byte("From: 情報局 <" + mailSender + ">\r\n" + 
+		"Subject: FinanSu パスワードリセットの確認メール\r\n\r\n" + 
+		"お世話になっております。\r\n情報局 FinanSu 担当です。\r\n\r\n" + 
+		"FinanSuに登録している本メールアドレスのパスワードをリセットするためには、下記のURLから手続きを行ってください。\r\n" +
+		"なお、パスワードのリセットの有効期限は本メールが送信されてから10分間とさせていただきます。\r\n" + 
+		"今後ともよろしくお願いいたします。\r\n\r\n" +
+		"FinanSu: " + resetPageUrl)
 
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
@@ -71,6 +79,6 @@ func (r *mailAuthRepository) ResetPassword(c context.Context, email []string) er
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println("Email Sent Successfully!")
+	fmt.Println("Sent password reset mail for " + email[0])
 	return nil
 }

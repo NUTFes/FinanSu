@@ -1991,7 +1991,7 @@ const docTemplate = `{
                 },
             },
         },
-        "/mail_auth/reset_password":{
+        "/mail_auth/send_reset_password":{
             "post": {
                 tags: ["email"],
                 "description": "パスワードリセットのメール送信",
