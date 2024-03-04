@@ -35,7 +35,7 @@ services:
     volumes:
       - ./api:/app
     environment:
-      RESET_PASSWORD_URL: 'https://localhost:3000/reset_password'
+      RESET_PASSWORD_URL: 'localhost:3000/reset_password'
     #シェルスクリプトを実行するコマンド
     command: "./start.sh"
     ports:
