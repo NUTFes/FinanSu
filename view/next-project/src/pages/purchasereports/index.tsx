@@ -1,9 +1,7 @@
-import clsx from 'clsx';
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-
 import { authAtom } from '@/store/atoms';
 import { put } from '@/utils/api/api_methods';
 import { createPurchaseReportCsv } from '@/utils/createPurchaseReportCsv';
@@ -16,7 +14,14 @@ import DetailModal from '@components/purchasereports/DetailModal';
 import OpenAddModalButton from '@components/purchasereports/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/purchasereports/OpenEditModalButton';
-import { PurchaseItem, PurchaseOrder, PurchaseReport, User, Expense } from '@type/common';
+import {
+  PurchaseItem,
+  PurchaseOrder,
+  PurchaseReport,
+  User,
+  Expense,
+  YearPeriod,
+} from '@type/common';
 
 export interface PurchaseReportView {
   purchaseReport: PurchaseReport;
@@ -32,11 +37,18 @@ interface Props {
   user: User;
   purchaseOrder: PurchaseOrder[];
   expenses: Expense[];
+  yearPeriods: YearPeriod[];
 }
 
+const date = new Date();
+
 export async function getServerSideProps() {
-  const getPurchaseReportsUrl = process.env.SSR_API_URI + '/purchasereports';
-  const getPurchaseReportViewUrl = process.env.SSR_API_URI + '/purchasereports/details';
+  const getPurchaseReportsUrl = process.env.SSR_API_URI + '/years/periods';
+  const periodsRes = await get(getPurchaseReportsUrl);
+  const getPurchaseReportViewUrl =
+    process.env.SSR_API_URI +
+    '/purchasereports/details/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseReportsRes = await get(getPurchaseReportsUrl);
   const purchaseReportViewRes = await get(getPurchaseReportViewUrl);
@@ -46,6 +58,7 @@ export async function getServerSideProps() {
       purchaseReports: purchaseReportsRes,
       purchaseReportViews: purchaseReportViewRes,
       expenses: expenseRes,
+      yearPeriods: periodsRes,
     },
   };
 }
@@ -60,16 +73,14 @@ const formatYYYYMMDD = (date: Date) => {
 export default function PurchaseReports(props: Props) {
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
-
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
   const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
   const [purchaseReportViews, setPurchaseReportViews] = useState<PurchaseReportView[]>(
     props.purchaseReportViews,
   );
-
   const [purchaseReportChecks, setPurchaseReportChecks] = useState<boolean[]>([]);
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const onOpen = (purchaseOrderID: number, purchaseReportViewItem: PurchaseReportView) => {
     setPurchaseReportID(purchaseOrderID);
     setPurchaseReportViewItem(purchaseReportViewItem);
@@ -82,14 +93,18 @@ export default function PurchaseReports(props: Props) {
     return datetime2;
   }, []);
 
-  const currentYear = new Date().getFullYear().toString();
-  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+  const yearPeriods = props.yearPeriods;
+  const [selectedYear, setSelectedYear] = useState<string>(
+    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
+  );
 
-  const filteredPurchaseReportViews = useMemo(() => {
-    return purchaseReportViews.filter((purchaseReportViewItem) => {
-      return purchaseReportViewItem.purchaseOrder.createdAt?.includes(selectedYear);
-    });
-  }, [purchaseReportViews, selectedYear]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getPurchaseReport = async () => {
+    const getPurchaseReportViewUrlByYear =
+      process.env.CSR_API_URI + '/purchasereports/details/' + selectedYear;
+    const getPurchaseOrderByYears = await get(getPurchaseReportViewUrlByYear);
+    setPurchaseReportViews(getPurchaseOrderByYears);
+  };
 
   const TotalFee = useCallback((purchaseReport: PurchaseReport, purchaseItems: PurchaseItem[]) => {
     let totalFee = 0;
@@ -104,18 +119,24 @@ export default function PurchaseReports(props: Props) {
     }
   }, []);
 
-  // すべてのpurchaseReportの合計金額
+  //すべてのpurchaseReportの合計金額
   const totalReportFee = useMemo(() => {
-    if (filteredPurchaseReportViews) {
+    if (purchaseReportViews) {
       let totalFee = 0;
-      filteredPurchaseReportViews.map((purchaseReportView: PurchaseReportView) => {
-        totalFee +=
+      purchaseReportViews.forEach((purchaseReportView: PurchaseReportView) => {
+        const fee =
           TotalFee(purchaseReportView.purchaseReport, purchaseReportView.purchaseItems) || 0;
+        totalFee += fee;
       });
       return totalFee;
     }
     return 0;
-  }, [filteredPurchaseReportViews]);
+  }, [TotalFee, purchaseReportViews]);
+
+  useEffect(() => {
+    getPurchaseReport();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedYear]);
 
   const isDisabled = useCallback(
     (purchaseReportView: PurchaseReportView) => {
@@ -130,7 +151,7 @@ export default function PurchaseReports(props: Props) {
         return true;
       }
     },
-    [currentUser?.roleID, currentUser?.id, purchaseReportViews],
+    [currentUser?.roleID, currentUser?.id],
   );
 
   const updatePurchaseReport = async (purchaseReportID: number, purchaseReport: PurchaseReport) => {
@@ -146,13 +167,13 @@ export default function PurchaseReports(props: Props) {
   };
 
   useEffect(() => {
-    if (filteredPurchaseReportViews) {
-      const purchaseReportChecks = filteredPurchaseReportViews.map((purchaseReportView) => {
+    if (purchaseReportViews) {
+      const purchaseReportChecks = purchaseReportViews.map((purchaseReportView) => {
         return purchaseReportView.purchaseReport.financeCheck;
       });
       setPurchaseReportChecks(purchaseReportChecks);
     }
-  }, [filteredPurchaseReportViews]);
+  }, [purchaseReportViews]);
 
   const isFinanceDirector = useMemo(() => {
     if (currentUser?.roleID === 3) {
@@ -168,7 +189,7 @@ export default function PurchaseReports(props: Props) {
       setCurrentUser(res);
     };
     getUser();
-  }, []);
+  });
 
   return (
     <MainLayout>
@@ -176,25 +197,32 @@ export default function PurchaseReports(props: Props) {
         <title>購入報告一覧</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-      <Card w='w-full'>
+      <Card>
         <div className='mx-5 mt-10'>
           <div className='flex gap-4'>
             <Title title={'購入報告一覧'} />
             <select
-              className='w-100 '
-              defaultValue={currentYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+              className='w-100'
+              defaultValue={selectedYear}
+              onChange={async (e) => {
+                setSelectedYear(e.target.value);
+              }}
             >
-              <option value='2021'>2021</option>
-              <option value='2022'>2022</option>
-              <option value='2023'>2023</option>
+              {props.yearPeriods &&
+                props.yearPeriods.map((year) => {
+                  return (
+                    <option value={year.year} key={year.id}>
+                      {year.year}年度
+                    </option>
+                  );
+                })}
             </select>
             <PrimaryButton
               className='hidden md:block'
               onClick={async () => {
                 downloadFile({
                   downloadContent: await createPurchaseReportCsv(
-                    filteredPurchaseReportViews,
+                    purchaseReportViews,
                     props.expenses,
                   ),
                   fileName: `購入申請一覧(${selectedYear})_${formatYYYYMMDD(new Date())}.csv`,
@@ -244,13 +272,11 @@ export default function PurchaseReports(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredPurchaseReportViews &&
-                filteredPurchaseReportViews.map((purchaseReportViewItem, index) => (
+              {purchaseReportViews &&
+                purchaseReportViews.map((purchaseReportViewItem, index) => (
                   <tr className='border-b' key={purchaseReportViewItem.purchaseReport.id}>
-                    <td
-                      className={clsx('px-1', index === 0 ? 'pb-3 pt-4' : 'py-3', 'border-b py-3')}
-                    >
-                      <div className={clsx('text-center text-sm text-black-600')}>
+                    <td className='py-3'>
+                      <div className='text-center text-sm text-black-600'>
                         <Checkbox
                           checked={purchaseReportChecks[index]}
                           disabled={!isFinanceDirector}
@@ -283,7 +309,7 @@ export default function PurchaseReports(props: Props) {
                         );
                       }}
                     >
-                      <div className={clsx('flex justify-center')}>
+                      <div className='flex justify-center'>
                         <BureauLabel
                           bureauName={
                             props.expenses.find(
@@ -330,11 +356,7 @@ export default function PurchaseReports(props: Props) {
                         );
                       }}
                     >
-                      <div
-                        className={clsx(
-                          'overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600',
-                        )}
-                      >
+                      <div className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'>
                         {/* name (個数/finasucheck) */}
                         {purchaseReportViewItem.purchaseItems?.map((purchaseItem, index) => (
                           <div key={index}>
@@ -410,9 +432,9 @@ export default function PurchaseReports(props: Props) {
                     </td>
                   </tr>
                 ))}
-              {filteredPurchaseReportViews.length > 0 && (
-                <tr>
-                  <td className='border-b border-primary-1 px-1 py-3' colSpan={6}>
+              {purchaseReportViews && purchaseReportViews.length > 0 && (
+                <tr className='border-b border-primary-1'>
+                  <td className='px-1 py-3' colSpan={6}>
                     <div className='text-right text-sm text-black-600'>合計</div>
                   </td>
                   <td className='border-b border-primary-1 px-1 py-3'>
@@ -423,7 +445,7 @@ export default function PurchaseReports(props: Props) {
                   </td>
                 </tr>
               )}
-              {!filteredPurchaseReportViews.length && (
+              {!purchaseReportViews && (
                 <tr>
                   <td className='border-b border-primary-1 px-1 py-3' colSpan={9}>
                     <div className='text-center text-sm text-black-600'>データがありません</div>

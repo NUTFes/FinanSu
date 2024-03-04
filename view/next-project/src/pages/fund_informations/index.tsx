@@ -14,7 +14,7 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { DEPARTMENTS } from '@constants/departments';
-import { Department, FundInformation, Teacher, User } from '@type/common';
+import { Department, FundInformation, Teacher, User, YearPeriod } from '@type/common';
 
 interface FundInformationView {
   fundInformation: FundInformation;
@@ -29,13 +29,21 @@ interface Props {
   fundInformation: FundInformation[];
   fundInformationView: FundInformationView[];
   users: User[];
+  yearPeriods: YearPeriod[];
 }
 
+const date = new Date();
+
 export const getServerSideProps = async () => {
+  const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
+  const periodsRes = await get(getPeriodsUrl);
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getDepartmentURL = process.env.SSR_API_URI + '/departments';
   const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
-  const getFundInformationViewURL = process.env.SSR_API_URI + '/fund_informations/details';
+  const getFundInformationViewURL =
+    process.env.SSR_API_URI +
+    '/fund_informations/details/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
   const getUserURL = process.env.SSR_API_URI + '/users';
   const teachersInformationRes = await get(getTeachersInformationURL);
   const fundInformationRes = await get(getFundInformationURL);
@@ -50,6 +58,7 @@ export const getServerSideProps = async () => {
       fundInformation: fundInformationRes,
       fundInformationView: fundInformationViewRes,
       users: userRes,
+      yearPeriods: periodsRes,
     },
   };
 };
@@ -59,7 +68,6 @@ export default function FundInformations(props: Props) {
   const teachers: Teacher[] = props.teachers;
   const users: User[] = props.users;
   const departments: Department[] = props.departments;
-
   const auth = useRecoilValue(authAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
@@ -69,18 +77,26 @@ export default function FundInformations(props: Props) {
   );
 
   //年の指定
-  const currentYear = new Date().getFullYear().toString();
-  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+  const yearPeriods = props.yearPeriods;
+  const [selectedYear, setSelectedYear] = useState<string>(
+    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
+  );
+
+  //年度を指定して募金を取得し、fundInformationViewsにset
+  const getFundInformations = async () => {
+    const getFundInformationsURL =
+      process.env.CSR_API_URI + '/fund_informations/details/' + selectedYear;
+    const getFundInformationsByYears = await get(getFundInformationsURL);
+    setFundInformationViews(getFundInformationsByYears);
+  };
+  // 選択年が変更された際に募金データを取得
+  useEffect(() => {
+    getFundInformations();
+  }, [selectedYear]);
 
   // checkしたかどうか
   const [isFirstChecks, setIsFirstChecks] = useState<boolean[]>([]);
   const [isLastChecks, setIsLastChecks] = useState<boolean[]>([]);
-
-  const filteredFundInformationViews = useMemo(() => {
-    return fundInformationViews.filter((fundInformationView) => {
-      return fundInformationView.fundInformation.receivedAt.includes(selectedYear);
-    });
-  }, [fundInformationViews, selectedYear]);
 
   const isDeveloper = useMemo(() => {
     if (currentUser?.roleID == 2) {
@@ -131,31 +147,34 @@ export default function FundInformations(props: Props) {
   }, []);
 
   useEffect(() => {
-    if (filteredFundInformationViews) {
-      const firstChecks = filteredFundInformationViews.map((fundInformationView) => {
+    if (fundInformationViews) {
+      const firstChecks = fundInformationViews.map((fundInformationView) => {
         return fundInformationView.fundInformation.isFirstCheck;
       });
-      const lastChecks = filteredFundInformationViews.map((fundInformationView) => {
+      const lastChecks = fundInformationViews.map((fundInformationView) => {
         return fundInformationView.fundInformation.isLastCheck;
       });
       setIsFirstChecks(firstChecks);
       setIsLastChecks(lastChecks);
     }
-  }, [filteredFundInformationViews]);
+  }, [fundInformationViews]);
 
   // チェック済みの合計金額用のステート
   const totalFee = useMemo(() => {
-    return filteredFundInformationViews.reduce((sum, fundInformationView) => {
-      if (
-        fundInformationView.fundInformation.isLastCheck &&
-        fundInformationView.fundInformation.isFirstCheck
-      ) {
-        return sum + fundInformationView.fundInformation.price;
-      } else {
-        return sum;
-      }
-    }, 0);
-  }, [filteredFundInformationViews]);
+    return (
+      fundInformationViews &&
+      fundInformationViews.reduce((sum, fundInformationView) => {
+        if (
+          fundInformationView.fundInformation.isLastCheck &&
+          fundInformationView.fundInformation.isFirstCheck
+        ) {
+          return sum + fundInformationView.fundInformation.price;
+        } else {
+          return sum;
+        }
+      }, 0)
+    );
+  }, [fundInformationViews]);
 
   // checkboxの値が変わったときに更新
   const submit = async (id: number, fundItem: FundInformation) => {
@@ -187,12 +206,17 @@ export default function FundInformations(props: Props) {
             <Title title={'学内募金一覧'} />
             <select
               className='w-50 md:w-100'
-              defaultValue={currentYear}
+              defaultValue={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              <option value='2021'>2021</option>
-              <option value='2022'>2022</option>
-              <option value='2023'>2023</option>
+              {props.yearPeriods &&
+                props.yearPeriods.map((year) => {
+                  return (
+                    <option value={year.year} key={year.id}>
+                      {year.year}年度
+                    </option>
+                  );
+                })}
             </select>
           </div>
           <div className='hidden justify-end md:flex '>
@@ -202,8 +226,8 @@ export default function FundInformations(props: Props) {
           </div>
         </div>
         <div className='mb-4 md:hidden'>
-          {filteredFundInformationViews &&
-            filteredFundInformationViews.map((fundViewItem: FundInformationView) => (
+          {fundInformationViews &&
+            fundInformationViews.map((fundViewItem: FundInformationView) => (
               <Card key={fundViewItem.fundInformation.id}>
                 <div className='flex flex-col gap-2 p-4'>
                   <div>
@@ -253,9 +277,6 @@ export default function FundInformations(props: Props) {
                 </div>
               </Card>
             ))}
-          {!filteredFundInformationViews.length && (
-            <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
-          )}
         </div>
         <div className='w-100 mb-2 hidden p-5 md:block'>
           <table className='w-full table-fixed border-collapse md:mb-5'>
@@ -289,8 +310,8 @@ export default function FundInformations(props: Props) {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredFundInformationViews &&
-                filteredFundInformationViews.map((fundViewItem: FundInformationView, index) => (
+              {fundInformationViews &&
+                fundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}
                     className={clsx(index !== fundInformationViews.length - 1 && 'border-b')}
@@ -372,16 +393,27 @@ export default function FundInformations(props: Props) {
                     </td>
                   </tr>
                 ))}
+              {!fundInformationViews && (
+                <tr className='border-b border-primary-1'>
+                  <td className='px-1 py-3' colSpan={8}>
+                    <div className='flex justify-center'>
+                      <div className='text-sm text-black-600'>データがありません</div>
+                    </div>
+                  </td>
+                </tr>
+              )}
             </tbody>
             <tfoot>
-              <tr>
-                <th />
-                <th />
-                <th />
-                <th />
-                <th className='text-center text-sm text-black-600'>合計金額</th>
-                <th className='text-center text-sm text-black-600'>{totalFee}</th>
-              </tr>
+              {fundInformationViews && (
+                <tr>
+                  <th />
+                  <th />
+                  <th />
+                  <th />
+                  <th className='text-center text-sm text-black-600'>合計金額</th>
+                  <th className='text-center text-sm text-black-600'>{totalFee}</th>
+                </tr>
+              )}
             </tfoot>
           </table>
         </div>

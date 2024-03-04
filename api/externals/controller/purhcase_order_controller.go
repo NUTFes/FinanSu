@@ -19,6 +19,7 @@ type PurchaseOrderController interface {
 	DestroyPurchaseOrder(echo.Context) error
 	IndexOrderDetail(echo.Context) error
 	ShowOrderDetail(echo.Context) error
+	IndexOrderDetailByYear(echo.Context) error
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
@@ -98,4 +99,13 @@ func (p *purchaseOrderController) ShowOrderDetail(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, orderDetail)
+}
+
+func (p *purchaseOrderController) IndexOrderDetailByYear(c echo.Context) error {
+	year := c.Param("year")
+	orderDetails, err := p.u.GetPurchaseOrderDetailsByYear(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, orderDetails)
 }

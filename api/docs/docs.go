@@ -56,6 +56,26 @@ const docTemplate = `{
                 }
             },
         },
+				"/activities/details/{year}": {
+						"get": {
+								tags: ["activity"],
+								"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
+								"parameters": [
+										{
+												"name": "year",
+												"in": "path",
+												"description": "year",
+												"required": true,
+												"type": "integer"
+										}
+								],
+								"responses": {
+										"200": {
+												"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
+										}
+								}
+						},
+				},
         "/activities/{id}": {
             "get": {
                 tags: ["activity"],
@@ -259,6 +279,26 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "budgetに紐づくyearとsourceの一覧を取得",
+                    }
+                }
+            },
+        },
+        "/budgets/details/{year}": {
+            "get": {
+                tags: ["budget"],
+                "description": "年度で指定されたbudgetsに紐づく年度とソースを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "年度で指定されたbudgetsに紐づく年度とソースを取得",
                     }
                 }
             },
@@ -671,6 +711,26 @@ const docTemplate = `{
                 }
             },
         },
+        "/expenses/details/{year}": {
+            "get": {
+                tags: ["expense"],
+                "description": "年度で指定されたexpenseに紐づく購入申請と購入報告を取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "yearで指定されたexpenseに紐づく購入申請と購入報告を取得",
+                    }
+                }
+            },
+        },
         "/fund_informations": {
             "get": {
                 tags: ["fund_information"],
@@ -870,6 +930,26 @@ const docTemplate = `{
                 }
             },
         },
+				"/fund_informations/details/{year}": {
+						"get": {
+								tags: ["fund_information"],
+								"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+								"parameters": [
+										{
+												"name": "year",
+												"in": "path",
+												"description": "year",
+												"required": true,
+												"type": "integer"
+										}
+								],
+								"responses": {
+										"200": {
+												"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+										}
+								}
+						},
+			},
         "/purchaseitems": {
             "get": {
                 tags: ["purchase_item"],
@@ -1220,6 +1300,26 @@ const docTemplate = `{
                 }
             },
         },
+        "/purchaseorders/details/{year}": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "年度で指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたpurchase_orderに紐づくuserとpurchase_itemを取得",
+                    }
+                }
+            },
+        },
         "/purchasereports": {
             "get": {
                 tags: ["purchase_report"],
@@ -1339,6 +1439,26 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "IDで指定されたpurchase_reportに紐づくデータを取得",
+                    }
+                }
+            },
+        },
+        "/purchasereports/details/{year}": {
+            "get": {
+                tags: ["purchase_report"],
+                "description": "年度で指定されたpurchase_reportsに紐づくデータを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "年度で指定されたpurchase_reportsに紐づくデータを取得",
                     }
                 }
             },
@@ -1527,6 +1647,26 @@ const docTemplate = `{
                 },
             },
         },
+				"/sponsors/{year}": {
+					"get": {
+							tags: ["sponsor"],
+							"description": "年度で指定されたsponsorを取得",
+							"parameters": [
+									{
+											"name": "year",
+											"in": "path",
+											"description": "year",
+											"required": true,
+											"type": "integer"
+									}
+							],
+							"responses": {
+									"200": {
+											"description": "sponsorの取得完了",
+									}
+							}
+					},
+			},
         "/sponsorstyles": {
             "get": {
                 tags: ["sponsorstyle"],
@@ -1991,6 +2131,80 @@ const docTemplate = `{
                 },
             },
         },
+        "/years/periods": {
+            "get": {
+                tags: ["year_periods"],
+                "description": "年度一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "year_periodsの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["year_periods"],
+                "description": "year_periodsの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたyear_periodsが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "year_periods",
+                        "schema":{
+                            "$ref": "#/definitions/year_periods"
+                        },
+                    },
+                ],
+            },
+        },
+        "/years/periods/{id}": {
+            "put": {
+                tags: ["year_periods"],
+                "description": "year_periodsの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたyear_periodsが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "year_periods",
+                        "schema":{
+                            "$ref": "#/definitions/year_periods"
+                        },
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["year_periods"],
+                "description": "IDを指定してyear_periodsの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "year_periodsの削除完了",
+                    },
+                },
+            },
+        },
     },
     "definitions":{
         "activity":{
@@ -2148,6 +2362,28 @@ const docTemplate = `{
                     "addition",
                     "financeCheck",
                     "purchaseOrderID"
+            },
+        },
+        "year_periods":{
+            "properties":{
+                "year":{
+                    "type": "int",
+                    "example": 2024,
+
+                },
+                "startedAt":{
+                    "type": "string",
+                    "example": "0000-00-00T00:00:00Z",
+                },
+                "endedAt":{
+                    "type": "string",
+                    "example": "0000-00-00T00:00:00Z",
+                },
+            },
+            "required":{
+                    "year",
+                    "startedAt",
+                    "endedAt"
             },
         },
     },

@@ -22,6 +22,7 @@ type ActivityRepository interface {
 	FindDetail(context.Context) (*sql.Rows, error)
 	FindLatestRecord(c context.Context) (*sql.Row, error)
 	FindSponsorStyle(context.Context, string) (*sql.Rows, error)
+	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -98,6 +99,7 @@ func (ar *activityRepository) Destroy(c context.Context, id string) error {
 	return ar.crud.UpdateDB(c, query)
 }
 
+// activityに紐づくsponserとusersを取得する
 func (ar *activityRepository) FindDetail(c context.Context) (*sql.Rows, error) {
 	query := `
 	SELECT * FROM
@@ -114,6 +116,7 @@ func (ar *activityRepository) FindDetail(c context.Context) (*sql.Rows, error) {
 	return ar.crud.Read(c, query)
 }
 
+// 最新のレコードを取得
 func (ar *activityRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
 	query := `
 		SELECT
@@ -139,5 +142,39 @@ func (ar *activityRepository) FindSponsorStyle(c context.Context, sponsorStyleID
 		ON
 			activity_styles.sponsor_style_id = ss.id
 		WHERE activity_styles.activity_id = ` + sponsorStyleID
+	return ar.crud.Read(c, query)
+}
+
+// 年度別のactivityに紐づくsponserとusersを取得する
+func (ar *activityRepository) AllDetailsByPeriod(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+	SELECT
+		activities.*,
+		sponsors.*,
+		users.*
+	FROM
+		activities
+	INNER JOIN
+		sponsors
+	ON
+		activities.sponsor_id = sponsors.id
+	INNER JOIN
+		users
+	ON
+		activities.user_id = users.id
+	INNER JOIN
+		year_periods
+	ON
+		activities.created_at > year_periods.started_at
+	AND
+		activities.created_at < year_periods.ended_at
+	INNER JOIN
+		years
+	ON
+		year_periods.year_id = years.id
+	WHERE
+		years.year = ` + year +
+		" ORDER BY activities.id;"
+
 	return ar.crud.Read(c, query)
 }

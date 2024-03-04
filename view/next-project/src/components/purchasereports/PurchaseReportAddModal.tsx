@@ -283,7 +283,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                     onChange={formDataHandler('addition')}
                   />
                 </div>
-                <p className='text-black-600'>購入者(任意)</p>
+                <p className='text-black-600'>購入者</p>
                 <div className='col-span-4 w-full'>
                   <Input
                     className='w-full'
@@ -336,6 +336,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
                       }
                       isFinanceCheckHandler(formDataList[activeStep - 1].id, true);
                     }}
+                    disabled={formDataList[activeStep - 1].item.trim() === ''}
                   >
                     <div className='flex'>
                       {activeStep === steps.length

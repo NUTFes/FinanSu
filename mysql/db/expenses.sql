@@ -1,6 +1,6 @@
 use finansu_db;
 
-CREATE TABLE expense (
+CREATE TABLE expenses (
   id int(10) unsigned not null auto_increment,
   expense_name varchar(255) not null,
   totalPrice int(10) default 0,
@@ -10,16 +10,16 @@ CREATE TABLE expense (
   PRIMARY KEY (id)
 );
 
-INSERT into expense (expense_name,yearID) values ("企画局",2);
-INSERT into expense (expense_name,yearID) values ("総務局",2);
-INSERT into expense (expense_name,yearID) values ("情報局",2);
-INSERT into expense (expense_name,yearID) values ("制作局",2);
-INSERT into expense (expense_name,yearID) values ("渉外局",2);
-INSERT into expense (expense_name,yearID) values ("財務局",2);
-INSERT into expense (expense_name,yearID) values ("本部運営費",2);
-INSERT into expense (expense_name,yearID) values ("備品整備費",2);
-INSERT into expense (expense_name,yearID) values ("備品整備準備費",2);
-INSERT into expense (expense_name,yearID) values ("翌年度繰越金",2);
+INSERT into expenses (expense_name,yearID) values ("企画局",2);
+INSERT into expenses (expense_name,yearID) values ("総務局",2);
+INSERT into expenses (expense_name,yearID) values ("情報局",2);
+INSERT into expenses (expense_name,yearID) values ("制作局",2);
+INSERT into expenses (expense_name,yearID) values ("渉外局",2);
+INSERT into expenses (expense_name,yearID) values ("財務局",2);
+INSERT into expenses (expense_name,yearID) values ("本部運営費",2);
+INSERT into expenses (expense_name,yearID) values ("備品整備費",2);
+INSERT into expenses (expense_name,yearID) values ("備品整備準備費",2);
+INSERT into expenses (expense_name,yearID) values ("翌年度繰越金",2);
 
 
 -- 終端文字の変更
@@ -102,23 +102,23 @@ GROUP BY
 
 -- tmp2のデータをexpeneseに入れる
 UPDATE
-	expense
+	expenses
 INNER JOIN
 	tmp2
 ON
-	expense.id = tmp2.id
+	expenses.id = tmp2.id
 SET
-	expense.totalPrice = tmp2.totalPrice;
+	expenses.totalPrice = tmp2.totalPrice;
 
--- tmp2のidがNULLのexpenseのtotalPriceを0にする
+-- tmp2のidがNULLのexpensesのtotalPriceを0にする
 UPDATE
-	expense
+	expenses
 LEFT JOIN 
 	tmp2
 ON
-	expense.id = tmp2.id
+	expenses.id = tmp2.id
 SET
-	expense.totalPrice = 0
+	expenses.totalPrice = 0
 WHERE
 	tmp2.id IS NULL;
 

@@ -83,6 +83,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/activities/:id", r.activityController.UpdateActivity)
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 	e.GET("/activities/details", r.activityController.IndexActivityDetail)
+	e.GET("/activities/details/:year",r.activityController.IndexActivityDetailsByPeriod)
 
 	// activityStyleのRoute
 	e.GET("/activity_styles", r.activityStyleController.IndexActivityStyle)
@@ -99,6 +100,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/budgets/:id", r.budgetController.DestroyBudget)
 	e.GET("/budgets/:id/details", r.budgetController.ShowBudgetDetailById)
 	e.GET("/budgets/details", r.budgetController.ShowBudgetDetails)
+	e.GET("/budgets/details/:year", r.budgetController.ShowBudgetDetailsByPeriods)
 
 	//bureauのRoute
 	e.GET("/bureaus", r.bureauController.IndexBureau)
@@ -121,6 +123,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/expenses", r.expenseController.IndexExpense)
 	e.GET("/expenses/updateTP", r.expenseController.UpdateExpenseTP)
 	e.GET("/expenses/details", r.expenseController.IndexExpenseDetails)
+	e.GET("/expenses/details/:year", r.expenseController.IndexExpenseDetailsByPeriod)
 	e.GET("/expenses/:id", r.expenseController.ShowExpense)
 	e.GET("/expenses/:id/details", r.expenseController.ShowExpenseDetail)
 	e.POST("/expenses", r.expenseController.CreateExpense)
@@ -135,6 +138,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
 	e.GET("/fund_informations/details", r.fundInformationController.IndexFundInformationDetails)
 	e.GET("/fund_informations/:id/details", r.fundInformationController.ShowFundInformationDetailByID)
+	e.GET("/fund_informations/details/:year", r.fundInformationController.IndexFundInformationDetailsByPeriod)
 
 	// mail auth
 	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)
@@ -159,6 +163,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
 	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)
 	e.GET("/purchaseorders/:id/details", r.purchaseOrderController.ShowOrderDetail)
+	e.GET("/purchaseorders/details/:year", r.purchaseOrderController.IndexOrderDetailByYear)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
@@ -168,6 +173,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/purchasereports/:id", r.purchaseReportController.DestroyPurchaseReport)
 	e.GET("/purchasereports/details", r.purchaseReportController.IndexPurchaseReportDetails)
 	e.GET("/purchasereports/:id/details", r.purchaseReportController.ShowPurchaseReportDetail)
+	e.GET("/purchasereports/details/:year", r.purchaseReportController.IndexPurchaseReportDetailsByYear)
 
 	// sources
 	e.GET("/sources", r.sourceController.IndexSource)
@@ -182,6 +188,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/sponsors", r.sponsorController.CreateSponsor)
 	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
 	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
+	e.GET("/sponsors/:year", r.sponsorController.IndexSponsorByPeriod)
 
 	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
@@ -211,4 +218,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/years/:id", r.yearController.UpdateYear)
 	e.DELETE("/years/:id", r.yearController.DestroyYear)
 
+	// year_periods
+	e.GET("/years/periods", r.yearController.IndexYearPeriods)
+	e.POST("/years/periods", r.yearController.CreateYearPeriod)
+	e.PUT("/years/periods/:id", r.yearController.UpdateYearPeriod)
+	e.DELETE("/years/periods/:id", r.yearController.DestroyYearPeriod)
 }

@@ -20,6 +20,7 @@ type PurchaseOrderUseCase interface {
 	DestroyPurchaseOrder(context.Context, string) error
 	GetPurchaseOrderDetails(context.Context) ([]domain.OrderDetail, error)
 	GetPurchaseOrderDetailByID(context.Context, string) (domain.OrderDetail, error)
+	GetPurchaseOrderDetailsByYear(context.Context, string) ([]domain.OrderDetail, error)
 }
 
 func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
@@ -241,4 +242,58 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 	}
 	orderDetail.PurchaseItem = purchaseItems
 	return orderDetail, nil
+}
+
+func (p *purchaseOrderUseCase) GetPurchaseOrderDetailsByYear(c context.Context, year string) ([]domain.OrderDetail, error) {
+	orderDetail := domain.OrderDetail{}
+	var orderDetails []domain.OrderDetail
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+	rows, err := p.rep.AllUserInfoByYear(c, year)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		err := rows.Scan(
+			&orderDetail.PurchaseOrder.ID,
+			&orderDetail.PurchaseOrder.DeadLine,
+			&orderDetail.PurchaseOrder.UserID,
+			&orderDetail.PurchaseOrder.ExpenseID,
+			&orderDetail.PurchaseOrder.FinanceCheck,
+			&orderDetail.PurchaseOrder.CreatedAt,
+			&orderDetail.PurchaseOrder.UpdatedAt,
+			&orderDetail.User.ID,
+			&orderDetail.User.Name,
+			&orderDetail.User.BureauID,
+			&orderDetail.User.RoleID,
+			&orderDetail.User.CreatedAt,
+			&orderDetail.User.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
+		for rows.Next() {
+			err := rows.Scan(
+				&purchaseItem.ID,
+				&purchaseItem.Item,
+				&purchaseItem.Price,
+				&purchaseItem.Quantity,
+				&purchaseItem.Detail,
+				&purchaseItem.Url,
+				&purchaseItem.PurchaseOrderID,
+				&purchaseItem.FinanceCheck,
+				&purchaseItem.CreatedAt,
+				&purchaseItem.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			purchaseItems = append(purchaseItems, purchaseItem)
+		}
+		orderDetail.PurchaseItem = purchaseItems
+		orderDetails = append(orderDetails, orderDetail)
+		purchaseItems = nil
+	}
+	return orderDetails, nil
 }

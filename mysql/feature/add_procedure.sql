@@ -78,23 +78,23 @@ GROUP BY
 
 -- tmp2のデータをexpeneseに入れる
 UPDATE
-	expense
+	expenses
 INNER JOIN
 	tmp2
 ON
-	expense.id = tmp2.id
+	expenses.id = tmp2.id
 SET
-	expense.totalPrice = tmp2.totalPrice;
+	expenses.totalPrice = tmp2.totalPrice;
 
--- tmp2のidがNULLのexpenseのtotalPriceを0にする
+-- tmp2のidがNULLのexpensesのtotalPriceを0にする
 UPDATE
-	expense
+	expenses
 LEFT JOIN 
 	tmp2
 ON
-	expense.id = tmp2.id
+	expenses.id = tmp2.id
 SET
-	expense.totalPrice = 0
+	expenses.totalPrice = 0
 WHERE
 	tmp2.id IS NULL;
 
