@@ -11,9 +11,11 @@ CREATE TABLE purchase_orders (
   PRIMARY KEY (id)
 );
 
-INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-2-22', 1, 1, true);
-INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-3-28', 1, 1, true);
-INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-4-6', 1, 2, true);
-INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-3-28', 1, 3, false);
-INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-4-6', 1, 4, true);
-INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2022-4-6', 1, 5, true);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2024-2-22', 1, 1, true);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2024-3-28', 1, 1, true);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2024-4-6', 1, 2, true);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2024-3-28', 1, 3, false);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2024-4-6', 1, 4, true);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check) values ('2024-4-6', 1, 5, true);
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check, created_at, updated_at) values ('2023-4-6', 1, 4, true, '2022-11-16 00:00:00', '2022-11-16 00:00:00');
+INSERT into purchase_orders (deadline, user_id, expense_id, finance_check, created_at, updated_at) values ('2023-4-6', 1, 5, true, '2022-11-16 00:00:00', '2022-11-16 00:00:00');

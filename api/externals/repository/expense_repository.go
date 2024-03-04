@@ -23,6 +23,7 @@ type ExpenseRepository interface {
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	AllItemInfo(context.Context, string) (*sql.Rows, error)
 	AllOrderAndReportInfo(context.Context, string) (*sql.Rows, error)
+	AllByPeriod(context.Context, string) (*sql.Rows, error)
 }
 
 func NewExpenseRepository(c db.Client, ac abstract.Crud) ExpenseRepository {
@@ -105,5 +106,21 @@ func (er *expenseRepository) AllOrderAndReportInfo(c context.Context, expenseID 
 		AND
 			po.finance_check IS true
 		`
+	return er.crud.Read(c, query)
+}
+
+func (er *expenseRepository) AllByPeriod(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+			SELECT
+				*
+			FROM
+				expense
+			INNER JOIN
+				years
+			ON
+				expense.yearID = years.id
+			WHERE
+				years.year = ` + year +
+			" ORDER BY expense.id;"
 	return er.crud.Read(c, query)
 }

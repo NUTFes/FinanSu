@@ -11,6 +11,10 @@ interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: React.ReactNode;
   type?: string;
+  datalist?: {
+    key: string;
+    data: { id: number; name: string }[];
+  };
 }
 
 function Input(props: Props): JSX.Element {
@@ -18,16 +22,26 @@ function Input(props: Props): JSX.Element {
     'rounded-full border border-primary-1 py-2 px-4' +
     (props.className ? ` ${props.className}` : '');
   return (
-    <input
-      className={clsx(s.input, className)}
-      placeholder={props.placeholder}
-      id={props.id}
-      value={props.value}
-      onChange={props.onChange}
-      type={props.type}
-    >
-      {props.children}
-    </input>
+    <div>
+      <input
+        className={clsx(s.input, className)}
+        placeholder={props.placeholder}
+        id={props.id}
+        value={props.value}
+        onChange={props.onChange}
+        type={props.type}
+        list={props.datalist?.key}
+      >
+        {props.children}
+      </input>
+      {props.datalist && (
+        <datalist id={props.datalist.key}>
+          {props.datalist.data.map((option) => (
+            <option key={option.id} value={option.name} />
+          ))}
+        </datalist>
+      )}
+    </div>
   );
 }
 

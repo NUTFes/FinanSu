@@ -19,6 +19,7 @@ type SponsorController interface {
 	CreateSponsor(echo.Context) error
 	UpdateSponsor(echo.Context) error
 	DestroySponsor(echo.Context) error
+	IndexSponsorByPeriod(echo.Context) error
 }
 
 func NewSponsorController(u usecase.SponsorUseCase) SponsorController {
@@ -89,4 +90,14 @@ func (s *sponsorController) DestroySponsor(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy Sponsor")
+}
+
+//年度別に取得
+func (s *sponsorController) IndexSponsorByPeriod(c echo.Context) error {
+	year := c.Param("year")
+	sponsors, err := s.u.GetSponsorByPeriod(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, sponsors)
 }

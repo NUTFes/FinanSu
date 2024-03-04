@@ -20,6 +20,7 @@ type ActivityUseCase interface {
 	UpdateActivity(context.Context, string, string, string, string, string, string, string, string, string) (domain.Activity, error)
 	DestroyActivity(context.Context, string) error
 	GetActivityDetail(context.Context) ([]domain.ActivityDetail, error)
+	GetActivityDetailsByPeriod(context.Context, string) ([]domain.ActivityDetail, error)
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
@@ -144,7 +145,7 @@ func (a *activityUseCase) UpdateActivity(
 		&updatedActivity.Expense,
 		&updatedActivity.Remark,
 		&updatedActivity.Design,
-		&updatedActivity.Url,	
+		&updatedActivity.Url,
 		&updatedActivity.CreatedAt,
 		&updatedActivity.UpdatedAt,
 	)
@@ -167,6 +168,77 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 	var styleDetails []domain.StyleDetail
 	// クエリー実行
 	rows, err := a.rep.FindDetail(c)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&activity.Activity.ID,
+			&activity.Activity.UserID,
+			&activity.Activity.IsDone,
+			&activity.Activity.SponsorID,
+			&activity.Activity.Feature,
+			&activity.Activity.Expense,
+			&activity.Activity.Remark,
+			&activity.Activity.Design,
+			&activity.Activity.Url,
+			&activity.Activity.CreatedAt,
+			&activity.Activity.UpdatedAt,
+			&activity.Sponsor.ID,
+			&activity.Sponsor.Name,
+			&activity.Sponsor.Tel,
+			&activity.Sponsor.Email,
+			&activity.Sponsor.Address,
+			&activity.Sponsor.Representative,
+			&activity.Sponsor.CreatedAt,
+			&activity.Sponsor.UpdatedAt,
+			&activity.User.ID,
+			&activity.User.Name,
+			&activity.User.BureauID,
+			&activity.User.RoleID,
+			&activity.User.CreatedAt,
+			&activity.User.UpdatedAt,
+		)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+		rows, err := a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&styleDetail.ActivityStyle.ID,
+				&styleDetail.ActivityStyle.ActivityID,
+				&styleDetail.ActivityStyle.SponsoStyleID,
+				&styleDetail.ActivityStyle.CreatedAt,
+				&styleDetail.ActivityStyle.UpdatedAt,
+				&styleDetail.SponsorStyle.ID,
+				&styleDetail.SponsorStyle.Style,
+				&styleDetail.SponsorStyle.Feature,
+				&styleDetail.SponsorStyle.Price,
+				&styleDetail.SponsorStyle.CreatedAt,
+				&styleDetail.SponsorStyle.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			styleDetails = append(styleDetails, styleDetail)
+		}
+		activity.StyleDetail = styleDetails
+		activities = append(activities, activity)
+		styleDetails = nil
+	}
+	return activities, nil
+}
+
+func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year string) ([]domain.ActivityDetail, error) {
+
+	activity := domain.ActivityDetail{}
+	var activities []domain.ActivityDetail
+	styleDetail := domain.StyleDetail{}
+	var styleDetails []domain.StyleDetail
+	// クエリー実行
+	rows, err := a.rep.AllDetailsByPeriod(c, year)
 	if err != nil {
 		return nil, err
 	}

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
@@ -17,6 +18,10 @@ type YearUseCase interface {
 	CreateYear(context.Context, string) (domain.Year, error)
 	UpdateYear(context.Context, string, string) (domain.Year, error)
 	DestroyYear(context.Context, string) error
+	GetYearPeriods(context.Context) ([]domain.YearPeriod, error)
+	CreateYearPeriod(context.Context, string, string, string) (domain.YearPeriod, error)
+	UpdateYearPeriod(context.Context, string, string, string, string) (domain.YearPeriod, error)
+	DestroyYearPeriod(context.Context, string) error
 }
 
 func NewYearUseCase(rep rep.YearRepository) YearUseCase {
@@ -104,5 +109,73 @@ func (y *yearUseCase) UpdateYear(c context.Context, id string, year string) (dom
 
 func (y *yearUseCase) DestroyYear(c context.Context, id string) error {
 	err := y.rep.Destroy(c, id)
+	return err
+}
+
+
+func (y *yearUseCase) GetYearPeriods(c context.Context) ([]domain.YearPeriod, error) {
+	yearPeriod := domain.YearPeriod{}
+	var yearPeriods []domain.YearPeriod
+	rows, err := y.rep.AllYearPeriods(c)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(
+			&yearPeriod.ID,
+			&yearPeriod.Year,
+			&yearPeriod.StartedAt,
+			&yearPeriod.EndedAt,			
+			&yearPeriod.CreatedAt,
+			&yearPeriod.UpdatedAt,
+		)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+
+		yearPeriods = append(yearPeriods, yearPeriod)
+	}
+	return yearPeriods, nil
+}
+
+func (y *yearUseCase) CreateYearPeriod(c context.Context, year string, startAt string, endedAt string) (domain.YearPeriod, error) {
+	latestYearPeriod := domain.YearPeriod{}
+	err := y.rep.CreateYearPeriod(c, year, startAt, endedAt)
+	row, err := y.rep.FindPeriodLatestRecord(c)
+	err = row.Scan(
+		&latestYearPeriod.ID,
+		&latestYearPeriod.Year,
+		&latestYearPeriod.StartedAt,
+		&latestYearPeriod.EndedAt,			
+		&latestYearPeriod.CreatedAt,
+		&latestYearPeriod.UpdatedAt,
+	)
+	if err != nil {
+		return latestYearPeriod, err
+	}
+	return latestYearPeriod, nil
+}
+
+func (y *yearUseCase) UpdateYearPeriod(c context.Context, id string, year string, startAt string, endedAt string) (domain.YearPeriod, error) {
+	updateYearPeriod := domain.YearPeriod{}
+	err := y.rep.UpdateYearPeriod(c, id, year, startAt, endedAt)
+	row, err := y.rep.FindYearPeriodByID(c, id)
+	err = row.Scan(
+		&updateYearPeriod.ID,
+		&updateYearPeriod.Year,
+		&updateYearPeriod.StartedAt,
+		&updateYearPeriod.EndedAt,			
+		&updateYearPeriod.CreatedAt,
+		&updateYearPeriod.UpdatedAt,
+	)
+	if err != nil {
+		return updateYearPeriod, err
+	}
+	return updateYearPeriod, nil
+}
+
+func (y *yearUseCase) DestroyYearPeriod(c context.Context, id string) error {
+	err := y.rep.DestroyYearPeriod(c, id)
 	return err
 }

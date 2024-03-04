@@ -1,14 +1,20 @@
 package controller
 
 import (
+	"fmt"
+	"net/http"
+	"strconv"
+
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type yearController struct {
 	u usecase.YearUseCase
 }
+
+const Layout = "2006-01-02 15:04:05"
 
 type YearController interface {
 	IndexYear(echo.Context) error
@@ -16,6 +22,10 @@ type YearController interface {
 	CreateYear(echo.Context) error
 	UpdateYear(echo.Context) error
 	DestroyYear(echo.Context) error
+	IndexYearPeriods(echo.Context) error
+	CreateYearPeriod(echo.Context) error
+	UpdateYearPeriod(echo.Context) error
+	DestroyYearPeriod(echo.Context) error
 }
 
 func NewYearController(u usecase.YearUseCase) YearController {
@@ -70,4 +80,49 @@ func (y *yearController) DestroyYear(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy Year")
+}
+
+func (y *yearController) IndexYearPeriods(c echo.Context) error {
+	years, err := y.u.GetYearPeriods(c.Request().Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, years)
+}
+
+func (y *yearController) CreateYearPeriod(c echo.Context) error {
+	yearPeriod := new(domain.YearPeriod)
+	if err := c.Bind(yearPeriod); err != nil {
+		fmt.Println("err")
+		return err
+	}
+	latestYearPeriod, err := y.u.CreateYearPeriod(c.Request().Context(), strconv.Itoa(yearPeriod.Year), yearPeriod.StartedAt.Format(Layout), yearPeriod.EndedAt.Format(Layout))
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusCreated, latestYearPeriod)
+}
+
+func (y *yearController) UpdateYearPeriod(c echo.Context) error {
+	id := c.Param("id")
+	print(id)
+	yearPeriod := new(domain.YearPeriod)
+	if err := c.Bind(yearPeriod); err != nil {
+		fmt.Println("err")
+		return err
+	}
+	updateYearPeriod, err := y.u.UpdateYearPeriod(c.Request().Context(), id , strconv.Itoa(yearPeriod.Year), yearPeriod.StartedAt.Format(Layout), yearPeriod.EndedAt.Format(Layout))
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusCreated, updateYearPeriod)
+}
+
+func (y *yearController) DestroyYearPeriod(c echo.Context) error {
+	id := c.Param("id")
+	err := y.u.DestroyYearPeriod(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.String(http.StatusOK, "Destroy Year Records")
 }

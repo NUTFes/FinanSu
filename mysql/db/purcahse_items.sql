@@ -23,3 +23,5 @@ INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_i
 INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check )values ('酒', 10000, 10, 'test-detail', 'https://nutfes.net', 4, true);
 INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check )values ('封筒', 100, 100, 'test-detail2', 'https://nutfes.net', 5, false);
 INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check )values ('領収書', 100, 50, 'test-detail3', 'https://nutfes.net', 6, true);
+INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check )values ('封筒', 100, 100, 'test-detail2', 'https://nutfes.net', 8, false);
+INSERT into purchase_items (item, price, quantity, detail, url, purchase_order_id, finance_check )values ('領収書', 100, 50, 'test-detail3', 'https://nutfes.net', 7, true);
