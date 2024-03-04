@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState as UseState, useEffect as UseEffect } from 'react';
+import { useState , useEffect } from 'react';
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
 import { get } from '@/utils/api/api_methods';
@@ -33,23 +33,22 @@ export const getServerSideProps = async () => {
   };
 };
 
-const sponsorship: NextPage<Props> = (props: Props) => {
-  const [sponsors, setSponsors] = UseState<Sponsor[]>(props.sponsor);
+const Sponsorship: NextPage<Props> = (props: Props) => {
+  const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsor);
 
   const yearPeriods = props.yearPeriods;
-  const [selectedYear, setSelectedYear] = UseState<string>(
+  const [selectedYear, setSelectedYear] = useState<string>(
     yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
   );
 
   //年度別のsponsorsを取得
   const getSponsors = async () => {
     const getSponsorViewUrlByYear = process.env.CSR_API_URI + '/sponsors/' + selectedYear;
-    console.log(getSponsorViewUrlByYear);
     const getSponsorsByYears = await get(getSponsorViewUrlByYear);
     setSponsors(getSponsorsByYears);
   };
 
-  UseEffect(() => {
+  useEffect(() => {
     getSponsors();
   }, [selectedYear]);
 
@@ -154,4 +153,4 @@ const sponsorship: NextPage<Props> = (props: Props) => {
   );
 };
 
-export default sponsorship;
+export default Sponsorship;
