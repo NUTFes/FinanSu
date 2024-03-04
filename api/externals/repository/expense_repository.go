@@ -31,19 +31,19 @@ func NewExpenseRepository(c db.Client, ac abstract.Crud) ExpenseRepository {
 }
 
 func (er *expenseRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM expense"
+	query := "SELECT * FROM expenses"
 	return er.crud.Read(c, query)
 }
 
 func (er *expenseRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "SELECT * FROM expense WHERE id = " + id
+	query := "SELECT * FROM expenses WHERE id = " + id
 	return er.crud.ReadByID(c, query)
 }
 
 func (er *expenseRepository) Create(c context.Context, name string, yearID string) error {
 	query := `
 		INSERT INTO
-			expense (expense_name,yearID)
+			expenses (expense_name,yearID)
 		VALUES
 			('` + name + "'," + yearID + ")"
 	return er.crud.UpdateDB(c, query)
@@ -52,7 +52,7 @@ func (er *expenseRepository) Create(c context.Context, name string, yearID strin
 func (er *expenseRepository) Update(c context.Context, id string, name string, yearID string) error {
 	query := `
 		UPDATE
-			expense
+			expenses
 		SET expense_name = '` + name +
 		"', yearID = " + yearID +
 		" WHERE id = " + id
@@ -60,12 +60,12 @@ func (er *expenseRepository) Update(c context.Context, id string, name string, y
 }
 
 func (er *expenseRepository) Destroy(c context.Context, id string) error {
-	query := "DELETE FROM expense WHERE id = " + id
+	query := "DELETE FROM expenses WHERE id = " + id
 	return er.crud.UpdateDB(c, query)
 }
 
 func (er *expenseRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-	query := `SELECT * FROM expense ORDER BY id DESC LIMIT 1`
+	query := `SELECT * FROM expenses ORDER BY id DESC LIMIT 1`
 	return er.crud.ReadByID(c, query)
 }
 
@@ -114,13 +114,13 @@ func (er *expenseRepository) AllByPeriod(c context.Context, year string) (*sql.R
 			SELECT
 				*
 			FROM
-				expense
+				expenses
 			INNER JOIN
 				years
 			ON
-				expense.yearID = years.id
+				expenses.yearID = years.id
 			WHERE
 				years.year = ` + year +
-			" ORDER BY expense.id;"
+			" ORDER BY expenses.id;"
 	return er.crud.Read(c, query)
 }
