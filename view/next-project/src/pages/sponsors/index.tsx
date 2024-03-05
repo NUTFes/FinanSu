@@ -1,42 +1,56 @@
 import clsx from 'clsx';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState as UseState, useMemo as UseMemo } from 'react';
-
+import { useState, useEffect } from 'react';
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
 import { get } from '@/utils/api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
-import { Sponsor } from '@type/common';
+import { Sponsor, YearPeriod } from '@type/common';
 
 interface Props {
   sponsor: Sponsor[];
+  yearPeriods: YearPeriod[];
 }
 
+const date = new Date();
+
 export const getServerSideProps = async () => {
-  const getSponsorUrl = process.env.SSR_API_URI + '/sponsors';
-  const sponsorRes = await get(getSponsorUrl);
+  const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
+  const periodsRes = await get(getPeriodsUrl);
+  const getSponsorViewUrl =
+    process.env.SSR_API_URI +
+    '/sponsors/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
 
   return {
     props: {
-      sponsor: sponsorRes,
+      sponsorView: getSponsorViewUrl,
+      yearPeriods: periodsRes,
     },
   };
 };
 
-const sponsorship: NextPage<Props> = (props: Props) => {
-  const sponsorList: Sponsor[] = props.sponsor;
+const Sponsorship: NextPage<Props> = (props: Props) => {
+  const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsor);
 
-  const currentYear = new Date().getFullYear().toString();
-  const [selectedYear, setSelectedYear] = UseState<string>(currentYear);
+  const yearPeriods = props.yearPeriods;
+  const [selectedYear, setSelectedYear] = useState<string>(
+    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
+  );
 
-  const filteredSponsorListViews = UseMemo(() => {
-    return sponsorList.filter((sponsor) => {
-      return sponsor.createdAt?.includes(selectedYear);
-    });
-  }, [sponsorList, selectedYear]);
+  //年度別のsponsorsを取得
+  const getSponsors = async () => {
+    const getSponsorViewUrlByYear = process.env.CSR_API_URI + '/sponsors/' + selectedYear;
+    const getSponsorsByYears = await get(getSponsorViewUrlByYear);
+    setSponsors(getSponsorsByYears);
+  };
+
+  useEffect(() => {
+    getSponsors();
+  }, [selectedYear]);
 
   return (
     <MainLayout>
@@ -50,12 +64,17 @@ const sponsorship: NextPage<Props> = (props: Props) => {
             <Title title={'協賛企業一覧'} />
             <select
               className='w-100'
-              defaultValue={currentYear}
+              defaultValue={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              <option value='2021'>2021</option>
-              <option value='2022'>2022</option>
-              <option value='2023'>2023</option>
+              {props.yearPeriods &&
+                props.yearPeriods.map((year) => {
+                  return (
+                    <option value={year.year} key={year.id}>
+                      {year.year}年度
+                    </option>
+                  );
+                })}
             </select>
           </div>
           <div className='hidden justify-end md:flex'>
@@ -87,10 +106,10 @@ const sponsorship: NextPage<Props> = (props: Props) => {
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {filteredSponsorListViews &&
-                filteredSponsorListViews.map((sponsor, index) => (
+              {sponsors && sponsors.length > 0 ? (
+                sponsors.map((sponsor, index) => (
                   <tr
-                    className={clsx(index !== sponsorList.length - 1 && 'border-b')}
+                    className={clsx(index !== sponsors.length - 1 && 'border-b')}
                     key={sponsor.id}
                   >
                     <td className='py-3'>
@@ -115,8 +134,8 @@ const sponsorship: NextPage<Props> = (props: Props) => {
                       </div>
                     </td>
                   </tr>
-                ))}
-              {!filteredSponsorListViews.length && (
+                ))
+              ) : (
                 <tr>
                   <td colSpan={6} className='py-3'>
                     <div className='text-center text-black-300'>データがありません</div>
@@ -134,4 +153,4 @@ const sponsorship: NextPage<Props> = (props: Props) => {
   );
 };
 
-export default sponsorship;
+export default Sponsorship;
