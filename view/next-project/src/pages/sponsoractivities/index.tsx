@@ -601,7 +601,7 @@ export default function SponsorActivities(props: Props) {
               {(!sortedAndFilteredSponsorActivitiesViews ||
                 sortedAndFilteredSponsorActivitiesViews.length === 0) && (
                 <tr>
-                  <td colSpan={6} className='py-3'>
+                  <td colSpan={9} className='py-3'>
                     <div className='text-center text-sm text-black-600'>データがありません</div>
                   </td>
                 </tr>
