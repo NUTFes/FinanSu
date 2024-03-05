@@ -133,7 +133,7 @@ func (u *mailAuthUseCase) SendResetPassword(c context.Context, email string) (do
 	token.AccessToken = accessToken
 
 	// メール送信
-	receiverEmail := []string{mailAuth.Email}
+	receiverEmail := []string{email}
 	err = u.mailAuthRep.SendResetPassword(c, receiverEmail)
 	if err != nil {
 		return token, err
