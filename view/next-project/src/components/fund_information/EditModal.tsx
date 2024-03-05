@@ -34,9 +34,18 @@ export default function EditModal(props: ModalProps) {
   useEffect(() => {
     const teacher = props.teachers.find((teacher) => teacher.departmentID === departmentID);
     if (teacher && teacher.id) {
-      setFormData({ ...formData, teacherID: teacher.id });
+      setFormData({ ...formData, teacherID: props.fundInformation.teacherID });
     }
   }, [departmentID]);
+
+  useEffect(() => {
+    const selectedTeacher = props.teachers.find(
+      (teacher) => teacher.id === props.fundInformation.teacherID,
+    );
+    if (selectedTeacher) {
+      setDepartmentID(selectedTeacher.departmentID);
+    }
+  }, [props.teachers, props.fundInformation.teacherID]);
 
   const handler =
     (input: string) =>
@@ -69,7 +78,7 @@ export default function EditModal(props: ModalProps) {
       .filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
-    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
+    if (res.length !== 0) setFormData({ ...formData, userID: props.fundInformation.userID });
     return res;
   }, [bureauId]);
 
