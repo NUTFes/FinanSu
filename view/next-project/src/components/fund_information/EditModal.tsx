@@ -34,7 +34,7 @@ export default function EditModal(props: ModalProps) {
   useEffect(() => {
     const teacher = props.teachers.find((teacher) => teacher.departmentID === departmentID);
     if (teacher && teacher.id) {
-      setFormData({ ...formData, teacherID: props.fundInformation.teacherID });
+      setFormData({ ...formData, teacherID: teacher.id });
     }
   }, [departmentID]);
 
