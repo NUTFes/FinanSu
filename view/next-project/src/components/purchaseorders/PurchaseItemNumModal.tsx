@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
-import { post } from '@api/purchaseOrder';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import { PurchaseItem, PurchaseOrder, Expense } from '@type/common';
