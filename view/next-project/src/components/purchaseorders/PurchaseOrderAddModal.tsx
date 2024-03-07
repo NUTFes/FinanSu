@@ -81,44 +81,54 @@ export default function AddModal(props: ModalProps) {
     <>
       <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             物品名
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.item} onChange={handler(index, 'item')} />
+          <Input value={data.item} onChange={handler(index, 'item')} className='w-full' />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             単価
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input type='number' value={data.price} onChange={handler(index, 'price')} />
+          <Input
+            type='number'
+            value={data.price}
+            onChange={handler(index, 'price')}
+            className='w-full'
+          />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             個数
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input type='number' value={data.quantity} onChange={handler(index, 'quantity')} />
+          <Input
+            type='number'
+            value={data.quantity}
+            onChange={handler(index, 'quantity')}
+            className='w-full'
+          />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             詳細
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.detail} onChange={handler(index, 'detail')} />
+          <Input value={data.detail} onChange={handler(index, 'detail')} className='w-full' />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             URL
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.url} onChange={handler(index, 'url')} />
+          <Input value={data.url} onChange={handler(index, 'url')} className='w-full' />
         </div>
       </div>
     </>
