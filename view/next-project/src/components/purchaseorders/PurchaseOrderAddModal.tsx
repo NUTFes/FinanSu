@@ -48,12 +48,6 @@ export default function AddModal(props: ModalProps) {
   const [isDone, setIsDone] = useState<boolean>(false);
   const router = useRouter();
 
-  const deletePurchaseOrder = async () => {
-    const deletePurchaseOrderUrl =
-      process.env.CSR_API_URI + '/purchaseorders/' + props.formDataList[0].purchaseOrderID;
-    await del(deletePurchaseOrderUrl);
-  };
-
   const handler =
     (stepNumber: number, input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -257,7 +251,6 @@ export default function AddModal(props: ModalProps) {
           <div className={clsx('mr-5 grid w-full justify-items-end')}>
             <CloseButton
               onClick={() => {
-                deletePurchaseOrder();
                 props.onClose();
                 props.numModalOnClose();
               }}
