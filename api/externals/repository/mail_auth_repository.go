@@ -53,6 +53,7 @@ func (r *mailAuthRepository) SendResetPassword(c context.Context, email []string
 	err := godotenv.Load("env/dev.env")
 	if err != nil {
 		fmt.Println(err)
+		return err
 	}
 
 	mailSender := os.Getenv("NUTMEG_MAIL_SENDER")

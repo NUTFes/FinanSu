@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"strconv"
+	"fmt"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -122,6 +123,10 @@ func (u *mailAuthUseCase) SendResetPassword(c context.Context, email string) (do
 		&mailAuth.CreatedAt,
 		&mailAuth.UpdatedAt,
 	)
+	if err != nil {
+		fmt.Println(err)
+		return token, err
+	}
 	u.sessionResetPasswordRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID)))
 	// トークン発行
 	accessToken, err := _makeRandomStr(10)
@@ -136,6 +141,7 @@ func (u *mailAuthUseCase) SendResetPassword(c context.Context, email string) (do
 	receiverEmail := []string{email}
 	err = u.mailAuthRep.SendResetPassword(c, receiverEmail)
 	if err != nil {
+		fmt.Println(err)
 		return token, err
 	}
 
