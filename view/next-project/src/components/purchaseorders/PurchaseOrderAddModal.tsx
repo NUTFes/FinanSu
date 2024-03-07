@@ -5,6 +5,7 @@ import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
 import { del } from '@api/api_methods';
+import { post as postOrder } from '@api/purchaseOrder';
 import { post } from '@api/purchaseItem';
 import {
   PrimaryButton,
@@ -15,7 +16,7 @@ import {
   Stepper,
   Tooltip,
 } from '@components/common';
-import { PurchaseItem } from '@type/common';
+import { PurchaseItem, PurchaseOrder } from '@type/common';
 
 interface ModalProps {
   purchaseItemNum: PurchaseItemNum;
@@ -24,6 +25,7 @@ interface ModalProps {
   onClose: () => void;
   setFormDataList: (formDataList: PurchaseItem[]) => void;
   formDataList: PurchaseItem[];
+  purchaseOrder: PurchaseOrder;
 }
 
 interface PurchaseItemNum {
@@ -62,15 +64,24 @@ export default function AddModal(props: ModalProps) {
       );
     };
 
-  const addPurchaseItem = async (data: PurchaseItem[]) => {
+  const submitOrderAndItems = async (
+    purchaseOrder: PurchaseOrder,
+    purchaseItems: PurchaseItem[],
+  ) => {
+    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
+    const postRes: PurchaseOrder = await postOrder(addPurchaseOrderUrl, purchaseOrder);
+    const purchaseOrderId = postRes.id || 0;
+    const purchaseItemsAddOrderInfo = purchaseItems.map((item) => {
+      return { ...item, purchaseOrderID: purchaseOrderId };
+    });
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
-    data.map(async (item) => {
+    purchaseItemsAddOrderInfo.map(async (item) => {
       await post(addPurchaseItemUrl, item);
     });
   };
 
-  const submit = async (formDataList: PurchaseItem[]) => {
-    addPurchaseItem(formDataList);
+  const submit = async (purchaseOrder: PurchaseOrder, formDataList: PurchaseItem[]) => {
+    submitOrderAndItems(purchaseOrder, formDataList);
     props.onClose();
     props.numModalOnClose();
     router.reload();
@@ -286,7 +297,7 @@ export default function AddModal(props: ModalProps) {
                       <PrimaryButton
                         className={'mx-2'}
                         onClick={() => {
-                          submit(props.formDataList);
+                          submit(props.purchaseOrder, props.formDataList);
                         }}
                       >
                         登録

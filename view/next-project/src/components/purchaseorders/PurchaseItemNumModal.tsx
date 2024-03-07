@@ -73,9 +73,6 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
 
   // 購入申請の登録と登録した購入申請のIDを使って購入物品を更新
   const submit = async (data: PurchaseOrder) => {
-    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
-    const postRes: PurchaseOrder = await post(addPurchaseOrderUrl, data);
-    const purchaseOrderId = postRes.id;
     const initialPurchaseItemList = [];
     for (let i = 0; i < Number(purchaseItemNum.value); i++) {
       const initialPurchaseItem: PurchaseItem = {
@@ -85,7 +82,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
         quantity: 0,
         detail: '',
         url: '',
-        purchaseOrderID: purchaseOrderId ? purchaseOrderId : 0,
+        purchaseOrderID: 0,
         financeCheck: false,
         createdAt: '',
         updatedAt: '',
@@ -162,6 +159,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
           onClose={onClose}
           setFormDataList={setFormDataList}
           formDataList={formDataList}
+          purchaseOrder={formData}
         />
       )}
     </>
