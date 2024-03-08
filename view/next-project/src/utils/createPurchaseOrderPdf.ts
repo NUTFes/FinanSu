@@ -381,7 +381,8 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
       });
       sum += item.price * item.quantity;
       page.drawText(String(item.price * item.quantity), {
-        x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(item.price * item.quantity).length * 7,
+        x:
+          18 + rectangleWidth + 3 * rectangleWidth2 - String(item.price * item.quantity).length * 7,
         y: height - (tableTextHight + 20 * (1 + index)) + 2,
         size: fontSizes[0],
         font: fontData,
