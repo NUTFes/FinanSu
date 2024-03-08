@@ -143,10 +143,14 @@ export default function EditModal(props: ModalProps) {
           </div>
           <p className='mx-auto mb-10 w-fit text-xl text-black-600'>購入物品の修正</p>
           {/* 購入物品があればステッパで表示、なければないと表示  */}
-          {formDataList.length > 0 && (
+          {formDataList && formDataList.length > 0 ? (
             <Stepper stepNum={formDataList.length} activeStep={activeStep} isDone={isDone}>
               {!isDone && <>{content(formDataList[activeStep - 1])}</>}
             </Stepper>
+          ) : (
+            <p className='text-center text-sm text-black-600'>
+              購入物品が存在しません。項目を削除した上で、再登録してください。
+            </p>
           )}
           {isDone ? (
             <div>
@@ -200,7 +204,7 @@ export default function EditModal(props: ModalProps) {
             </div>
           ) : (
             <div className='mb-5 mt-10 flex justify-center gap-5'>
-              {formDataList.length > 0 && (
+              {formDataList && formDataList.length > 0 && (
                 <>
                   {activeStep > 1 && (
                     <OutlinePrimaryButton onClick={prevStep}>戻る</OutlinePrimaryButton>
