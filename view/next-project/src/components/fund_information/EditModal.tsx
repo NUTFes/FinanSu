@@ -30,22 +30,29 @@ export default function EditModal(props: ModalProps) {
   });
 
   const [departmentID, setDepartmentID] = useState<number | string>(1);
+  const [defaultValue, setDefaultValue] = useState<boolean>(false);
 
   useEffect(() => {
-    const teacher = props.teachers.find((teacher) => teacher.departmentID === departmentID);
-    if (teacher && teacher.id) {
-      setFormData({ ...formData, teacherID: teacher.id });
+    if (defaultValue == false) {
+      const selectedTeacher = props.teachers.find(
+        (teacher) => teacher.id === props.fundInformation.teacherID,
+      );
+      if (selectedTeacher?.id) {
+        setDepartmentID(selectedTeacher.departmentID);
+        setFormData({ ...formData, teacherID: selectedTeacher.id });
+      }
+      setTimeout(() => {
+        setDefaultValue(true);
+      });
+    } else {
+      const relatedTeachers = props.teachers.filter(
+        (teacher) => teacher.departmentID === departmentID,
+      );
+      if (relatedTeachers) {
+        setFormData({ ...formData, teacherID: relatedTeachers[0].id || 0 });
+      }
     }
-  }, [departmentID]);
-
-  useEffect(() => {
-    const selectedTeacher = props.teachers.find(
-      (teacher) => teacher.id === props.fundInformation.teacherID,
-    );
-    if (selectedTeacher) {
-      setDepartmentID(selectedTeacher.departmentID);
-    }
-  }, [props.teachers, props.fundInformation.teacherID]);
+  }, [departmentID, props.teachers]);
 
   const handler =
     (input: string) =>
