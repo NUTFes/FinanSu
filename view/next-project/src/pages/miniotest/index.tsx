@@ -2,7 +2,6 @@ import MainLayout from '@components/layout/MainLayout/MainLayout';
 import * as Minio from 'minio';
 import React, { useState, useEffect, useRef, InputHTMLAttributes, forwardRef } from 'react';
 import { InputImage, PrimaryButton } from '@/components/common';
-import { Document, Page } from 'react-pdf';
 
 type Args = {
   file: File | null;
@@ -51,10 +50,12 @@ export default function MinioTest(props: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadImageURL, setUploadImageURL] = useState<string>('');
+  const [preview, setPreview] = useState({ uploadImageURL: '', type: '' });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetFile = e.target.files?.[0]!;
     setImageFile(targetFile);
+    setPreview({ uploadImageURL: URL.createObjectURL(targetFile), type: targetFile.type });
     setUploadImageURL(URL.createObjectURL(targetFile));
   };
 
@@ -66,8 +67,6 @@ export default function MinioTest(props: Props) {
     formData.append('file', imageFile);
     const fileName = imageFile?.name || '';
     formData.append('fileName', fileName);
-
-    // console.log(...formData.entries());
 
     await fetch('/api/minio', {
       method: 'POST',
@@ -88,14 +87,33 @@ export default function MinioTest(props: Props) {
         </PrimaryButton>
         <div style={{ height: 20 }} />
         <button onClick={() => {}}>キャンセル</button>
+        {preview.type === 'application/pdf' ? (
+          <embed src={preview.uploadImageURL} type='application/pdf' width='200' height='200' />
+        ) : (
+          preview.type !== '' && <img src={uploadImageURL} width='200' height='200' />
+        )}
       </div>
-      {/* <Document file='http://127.0.0.1:9000/finansu/%E4%BB%A4%E5%92%8C6%E5%B9%B43%E6%9C%88%E5%AD%A6%E9%83%A8%E5%8D%92%E6%A5%AD%E8%80%85%E4%B8%80%E8%A6%A7.pdf'>
-        <Page pageNumber={1} />
-      </Document> */}
-      <img src='/images/docker-copose.png' alt='Picture of the author' />
-      <Document file='/images/令和6年3月学部卒業者一覧.pdf'>
-        <Page pageNumber={1} />
-      </Document>
+      <div className='h-full'>
+        画像表示テスト
+        <embed
+          src='http://127.0.0.1:9000/finansu/令和6年3月学部卒業者一覧.pdf'
+          type='application/pdf'
+          width='200'
+          height='200'
+        />
+        <embed
+          src='http://127.0.0.1:9000/finansu/go.png'
+          type='image/png'
+          width='200'
+          height='200'
+        />
+        <img
+          src='http://127.0.0.1:9000/finansu/go.png'
+          alt='Picture of the author'
+          width='200'
+          height='200'
+        />
+      </div>
     </>
   );
 }

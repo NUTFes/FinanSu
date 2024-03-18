@@ -10,7 +10,6 @@ export const config = {
 };
 
 const minioClient = new Minio.Client({
-  // endPoint: '100.81.148.25',
   endPoint: '192.168.176.1',
   port: 9000,
   useSSL: false,
