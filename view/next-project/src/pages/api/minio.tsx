@@ -40,21 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         'Content-Type': mimetype,
       };
 
-      // console.log(bucketName);
-      console.log(fileName);
-      console.log(files.file);
-      // console.log(files.file[0].filepath);
-      // console.log(mimetype);
-
-      // minioClient.bucketExists('finansu', function (err: any, exists: any) {
-      //   if (err) {
-      //     return console.log(err);
-      //   }
-      //   if (exists) {
-      //     return console.log('Bucket exists.');
-      //   }
-      // });
-
       try {
         const response = await minioClient.putObject(
           bucketName,
@@ -68,5 +53,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         throw new Error('Error uploading file (' + err + ')');
       }
     });
+  }
+  if (req.method === 'GET') {
+    try {
+      var size = 0;
+      const response = minioClient.fGetObject('finansu', 'go.png', '/tmp/go.png', function (err) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log('success');
+      });
+
+      console.log(response);
+      res.status(200).json({ response });
+    } catch (err) {
+      throw new Error('Error uploading file (' + err + ')');
+    }
   }
 }

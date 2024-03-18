@@ -2,6 +2,7 @@ import MainLayout from '@components/layout/MainLayout/MainLayout';
 import * as Minio from 'minio';
 import React, { useState, useEffect, useRef, InputHTMLAttributes, forwardRef } from 'react';
 import { InputImage, PrimaryButton } from '@/components/common';
+import { saveAs } from 'file-saver';
 
 type Args = {
   file: File | null;
@@ -78,6 +79,16 @@ export default function MinioTest(props: Props) {
       .catch((error) => console.error('Error:', error));
   };
 
+  const download = async () => {
+    const fileName = '令和6年3月学部卒業者一覧.pdf';
+    const path = `http://127.0.0.1:9000/finansu/令和6年3月学部卒業者一覧.pdf`;
+
+    const response = await fetch(path);
+    const blob = await response.blob();
+
+    saveAs(blob, fileName);
+  };
+
   return (
     <>
       <div className='flex h-full items-center justify-center'>
@@ -93,7 +104,12 @@ export default function MinioTest(props: Props) {
           preview.type !== '' && <img src={uploadImageURL} width='200' height='200' />
         )}
       </div>
-      <div className='h-full'>
+      <div className='flex h-full items-center justify-center'>
+        <PrimaryButton type='button' onClick={() => download()}>
+          ダウンロード
+        </PrimaryButton>
+      </div>
+      <div className='flex h-full items-center justify-center'>
         画像表示テスト
         <embed
           src='http://127.0.0.1:9000/finansu/令和6年3月学部卒業者一覧.pdf'
