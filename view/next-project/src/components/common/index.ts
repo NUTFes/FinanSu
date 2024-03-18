@@ -8,6 +8,7 @@ export { default as DeleteButton } from './DeleteButton';
 export { default as Dropdown } from './Dropdown';
 export { default as EditButton } from './EditButton';
 export { default as Input } from './Input';
+export { default as InputImage } from './InputImage';
 export { default as Modal } from './Modal';
 export { default as OutlinePrimaryButton } from './OutlinePrimaryButton';
 export { default as PrimaryButton } from './PrimaryButton';

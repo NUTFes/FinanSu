@@ -1,5 +1,5 @@
 # ベースイメージの作成
-FROM node:16.13.0
+FROM node:20
 # コンテナ内で作業するディレクトリを指定
 WORKDIR /app/next-project
 COPY ./ /app
