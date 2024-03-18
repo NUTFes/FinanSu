@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   db:
     image: mysql:8.0
@@ -11,7 +11,7 @@ services:
       MYSQL_USER: finansu
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: root
-      TZ: 'Asia/Tokyo'
+      TZ: "Asia/Tokyo"
     ports:
       - "3306:3306"
     restart: always
@@ -44,3 +44,14 @@ services:
       db:
         condition: service_started
 
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./tmp/minio/data:/data
+    command: "server /data --console-address :9001"
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password

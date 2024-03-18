@@ -7,3 +7,5 @@ api/tmp
 # cloudflare
 web/**/*.json
 web/**/cert.pem
+
+tmp/*
