@@ -5,11 +5,13 @@ import { userAtom } from '@/store/atoms';
 import { post } from '@api/purchaseOrder';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
-import { PurchaseItem, PurchaseOrder, Expense } from '@type/common';
+import { PurchaseItem, PurchaseOrder, Expense, YearPeriod } from '@type/common';
 
 export interface PurchaseItemNumModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   expenses: Expense[];
+  yearPeriods: YearPeriod[];
+  selectedYear: string;
 }
 
 export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
@@ -95,6 +97,16 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
     setFormDataList(initialPurchaseItemList);
   };
 
+  //yearPeriodsとselectedYearを紐づける
+  const selectedYear = props.yearPeriods.find((u) => {
+    return u.year === parseInt(props.selectedYear);
+  })?.id;
+
+  console.log(selectedYear);
+  console.log(props.expenses);
+  console.log(parseInt(props.selectedYear));
+  console.log(props.yearPeriods);
+
   return (
     <>
       <Modal>
@@ -121,11 +133,13 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               onChange={formDataHandler('expenseID')}
               className='w-full'
             >
-              {props.expenses.map((data) => (
-                <option key={data.id} value={data.id}>
-                  {data.name}
-                </option>
-              ))}
+              {props.expenses
+                .filter((expense) => selectedYear === expense.yearID)
+                .map((data) => (
+                  <option key={data.id} value={data.id}>
+                    {data.name}
+                  </option>
+                ))}
             </Select>
           </div>
           <p className='grid-cols-1 text-black-600'>購入物品数</p>
