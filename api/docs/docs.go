@@ -139,6 +139,98 @@ const docTemplate = `{
                 },
             },
         },
+        "/activity_informations": {
+            "get": {
+                tags: ["activity_information"],
+                "description": "activity_informationの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activity_informationの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["activity_information"],
+                "description": "activity_informationの作成",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "activity_information",
+                        "schema":{
+                            "$ref": "#/definitions/activity_information"
+                        },
+                    },
+                ],
+                responses: {
+                    "200": {
+                        "description": "create されたactivity_informationが返ってくる",
+                    }
+                },
+            },
+        },
+        "/activity_informations/{id}": {
+            "get": {
+                tags: ["activity_information"],
+                "description": "IDで指定されたactivity_informationsの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activity_informationの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["activity_information"],
+                "description": "activity_informationの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたactivity_informationが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "activity_information",
+                        "schema":{
+                            "$ref": "#/definitions/activity_information"
+                        },
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["activity_information"],
+                "description": "IDを指定してactivity_informationの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "activity_informationの削除完了",
+                    }
+                },
+            },
+        },
         "/activity_styles": {
             "get": {
                 tags: ["activity_style"],
@@ -2251,6 +2343,32 @@ const docTemplate = `{
                     "feature",
                     "expense",
                     "remark",
+            },
+        },
+        "activity_information":{
+            "properties":{
+                "activityID":{
+                    "type": "int",
+                    "example": 1,
+
+                },
+                "bucketName":{
+                    "type": "string",
+                    "example": "なし",
+                },
+                "fileName":{
+                    "type": "string",
+                    "example": "なし",
+                },
+                "fileType":{
+                    "type": "string",
+                    "example": "なし",
+
+                },
+                "designProgress":{
+                    "type": "int",
+                    "example": 1,
+                },
             },
         },
         "activity_style":{

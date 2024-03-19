@@ -10,16 +10,11 @@ export const config = {
 };
 
 const minioClient = new Minio.Client({
-  endPoint: '192.168.176.1',
-  port: 9000,
+  endPoint: process.env.NEXT_PUBLIC_ENDPOINT || '',
+  port: Number(process.env.NEXT_PUBLIC_PORT),
+  accessKey: process.env.NEXT_PUBLIC_ACCESS_KEY || '',
+  secretKey: process.env.NEXT_PUBLIC_SECRET_KEY || '',
   useSSL: false,
-  accessKey: 'bE5KYqihEcEXMrgkVhZn',
-  secretKey: 'oQvamjXnAvrsyneZdluX7S49TfRi0na6AO8WNPuL',
-  // endPoint: process.env.NEXT_PUBLIC_ENDPOINT,
-  // port: Number(process.env.NEXT_PUBLIC_PORT),
-  // accessKey: process.env.NEXT_PUBLIC_ACCESS_KEY,
-  // secretKey: process.env.NEXT_PUBLIC_SECRET_KEY,
-  // useSSL: false,
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
