@@ -1,11 +1,12 @@
 import { clsx } from 'clsx';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import { DESIGN_PROGRESSES } from '@constants/designProgresses';
-import { SponsorActivityView } from '@type/common';
+import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
 import { FaChevronCircleLeft } from 'react-icons/fa';
-import { PrimaryButton } from '../common';
+import { OutlinePrimaryButton, PrimaryButton, RedButton } from '../common';
 import { saveAs } from 'file-saver';
+import UplaodFileModal from './UploadFileModal';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;
@@ -18,6 +19,9 @@ const DetailPage2: FC<ModalProps> = (props) => {
   const toPage1 = () => {
     props.setPageNum(1);
   };
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [editActivityInformation, setEditActivityInformation] =
+    useState<SponsorActivityInformation | null>(null);
 
   const sponsorActivityInformations = props.sponsorActivitiesViewItem.sponsorActivityInformations;
 
@@ -38,8 +42,6 @@ const DetailPage2: FC<ModalProps> = (props) => {
       return `http://127.0.0.1:9000/${bucketName}/${fileName}`;
     });
 
-  console.log(designProgresses);
-  console.log(fileURLs);
   const download = async (url: string, fileName: string) => {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -123,22 +125,59 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     />
                   )}
               </div>
-              <PrimaryButton
-                className='mx-auto my-2'
-                onClick={() =>
-                  fileURLs && download(fileURLs[index], activityInformation.fileName || '')
-                }
-              >
-                ダウンロード
-              </PrimaryButton>
+              <div className='my-2 flex flex-wrap justify-center gap-2'>
+                <OutlinePrimaryButton
+                  className='p-1'
+                  onClick={() => {
+                    setEditActivityInformation(activityInformation);
+                    setIsOpen(true);
+                  }}
+                >
+                  変更
+                </OutlinePrimaryButton>
+                <PrimaryButton
+                  onClick={() =>
+                    fileURLs && download(fileURLs[index], activityInformation.fileName || '')
+                  }
+                >
+                  ダウンロード
+                </PrimaryButton>
+              </div>
             </>
           ))}
+        {!sponsorActivityInformations && (
+          <>
+            <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
+              <div className='flex gap-3'>
+                <p className='text-black-600'>広告の状況</p>
+                <p className='border-b border-primary-1'>未回収</p>
+              </div>
+            </div>
+            <div className='my-2 flex flex-wrap justify-center gap-2'>
+              <OutlinePrimaryButton
+                className='mx-auto my-2'
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+              >
+                広告登録
+              </OutlinePrimaryButton>
+            </div>
+          </>
+        )}
       </div>
       <div className='mt-2'>
         <button onClick={() => toPage1()}>
           <FaChevronCircleLeft size={30} />
         </button>
       </div>
+      {isOpen && (
+        <UplaodFileModal
+          setIsOpen={setIsOpen}
+          id={props.sponsorActivitiesViewItem.sponsorActivity.id}
+          sponsorActivityInformation={editActivityInformation}
+        />
+      )}
     </>
   );
 };
