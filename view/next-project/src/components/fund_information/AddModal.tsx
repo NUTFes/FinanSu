@@ -52,6 +52,9 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     return res;
   }, [bureauId]);
 
+  const loginUser = user.id;
+  const loginUserDepartment = BUREAUS.find((u) => user.bureauID === u.id)?.name;
+
   const handler =
     (input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +107,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='text-black-600'>担当者の局</p>
         <div className='col-span-4 w-full'>
-          <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
+          <Select defaultValue={loginUser} onChange={(e) => setBureauId(Number(e.target.value))}>
+            <option value={loginUser}>{loginUserDepartment}</option>
             {BUREAUS.map((bureaus) => (
               <option key={bureaus.id} value={bureaus.id}>
                 {bureaus.name}
@@ -114,7 +118,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='col-span-1 text-black-600'>担当者</p>
         <div className='col-span-4 w-full'>
-          <Select className='w-full' value={formData.userID} onChange={handler('userID')}>
+          <Select className='w-full' defaultValue={loginUser} onChange={handler('userID')}>
+            <option value={loginUser}>{user.name}</option>
             {filteredUsers.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name}
