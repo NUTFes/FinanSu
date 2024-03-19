@@ -215,7 +215,7 @@ export default function PurchaseOrders(props: Props) {
             </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex'>
-            <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
+            <OpenAddModalButton expenses={props.expenses} yearPeriods={yearPeriods} selectedyear={selectedYear}>申請登録</OpenAddModalButton>
           </div>
         </div>
         <div className='w-100 mb-2 overflow-scroll p-5'>
@@ -393,7 +393,7 @@ export default function PurchaseOrders(props: Props) {
         />
       )}
       <div className='fixed bottom-4 right-4 md:hidden'>
-        <OpenAddModalButton expenses={props.expenses} />
+        <OpenAddModalButton expenses={props.expenses} yearPeriods={props.yearPeriods} selectedyear={selectedYear}/>
       </div>
     </MainLayout>
   );
