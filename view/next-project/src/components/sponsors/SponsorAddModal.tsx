@@ -82,7 +82,7 @@ export default function SponsorAddModal() {
       <div className='mx-auto mb-5 w-fit'>
         <PrimaryButton
           className={'mx-2'}
-          disabled={!isChecked}
+          disabled={!isChecked || formData.name.trim() === ''}
           onClick={() => {
             submit(formData);
           }}
