@@ -242,7 +242,6 @@ export default function PurchaseReports(props: Props) {
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-1/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'></div>
                 </th>
                 <th className='w-1/12 pb-2'>
                   <div className='text-center text-sm text-black-600'>ID</div>
