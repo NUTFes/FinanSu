@@ -76,7 +76,7 @@ export default function PurchaseItemNumModal() {
   };
 
   return (
-    <Modal className='mt-32 overflow-scroll md:m-0'>
+    <Modal className='mt-32 md:m-0 overflow-scroll'>
       <div className={clsx('w-full ')}>
         <div className={clsx('mr-5 grid w-full justify-items-end')}>
           <CloseButton onClick={closeModal} />
