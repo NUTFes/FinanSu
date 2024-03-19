@@ -2304,7 +2304,6 @@ const docTemplate = `{
                 "sponsorID":{
                     "type": "int",
                     "example": 1,
-
                 },
                 "userID":{
                     "type": "int",

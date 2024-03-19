@@ -166,6 +166,8 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 	var activities []domain.ActivityDetail
 	styleDetail := domain.StyleDetail{}
 	var styleDetails []domain.StyleDetail
+	activityInformation := domain.ActivityInformation{}
+
 	// クエリー実行
 	rows, err := a.rep.FindDetail(c)
 	if err != nil {
@@ -204,7 +206,28 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
-		rows, err := a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
+
+		row, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
+		err = row.Scan(
+			&activityInformation.ID,
+			&activityInformation.ActivityId,
+			&activityInformation.BucketName,
+			&activityInformation.FileName,
+			&activityInformation.FileType,
+			&activityInformation.DesignProgress,
+			&activityInformation.CreatedAt,
+			&activityInformation.UpdatedAt,
+
+		)
+		if err != nil {
+			activity.ActivityInformation = domain.ActivityInformation{}
+
+		}else{
+			activity.ActivityInformation = activityInformation
+		}
+		
+
+		rows, err := a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
 		for rows.Next(){
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
@@ -237,6 +260,8 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 	var activities []domain.ActivityDetail
 	styleDetail := domain.StyleDetail{}
 	var styleDetails []domain.StyleDetail
+	activityInformation := domain.ActivityInformation{}
+
 	// クエリー実行
 	rows, err := a.rep.AllDetailsByPeriod(c, year)
 	if err != nil {
@@ -275,6 +300,26 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
+
+		row, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
+		err = row.Scan(
+			&activityInformation.ID,
+			&activityInformation.ActivityId,
+			&activityInformation.BucketName,
+			&activityInformation.FileName,
+			&activityInformation.FileType,
+			&activityInformation.DesignProgress,
+			&activityInformation.CreatedAt,
+			&activityInformation.UpdatedAt,
+
+		)
+		if err != nil {
+			activity.ActivityInformation = domain.ActivityInformation{}
+
+		}else{
+			activity.ActivityInformation = activityInformation
+		}
+
 		rows, err := a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
 		for rows.Next(){
 			err := rows.Scan(

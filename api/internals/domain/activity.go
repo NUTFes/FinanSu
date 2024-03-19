@@ -19,10 +19,11 @@ type Activity struct {
 }
 
 type ActivityDetail struct {
-	Activity		Activity		`json:"sponsorActivity"`
-	Sponsor			Sponsor			`json:"sponsor"`
-	User			User			`json:"user"`
-	StyleDetail		[]StyleDetail	`json:"styleDetail"`
+	Activity			Activity				`json:"sponsorActivity"`
+	Sponsor				Sponsor					`json:"sponsor"`
+	User				User					`json:"user"`
+	ActivityInformation ActivityInformation	`json:"sponsorActivityInformation"`
+	StyleDetail			[]StyleDetail			`json:"styleDetail"`
 }
 
 type StyleDetail struct {
