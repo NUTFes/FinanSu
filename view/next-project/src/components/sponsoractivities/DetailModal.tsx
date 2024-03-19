@@ -2,6 +2,7 @@ import { clsx } from 'clsx';
 import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
+import OpenPaymentDayModalButton from './OpenPaymentDayModalButton';
 import { Modal } from '@components/common';
 import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
@@ -27,7 +28,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='mt-64 md:mt-5 md:w-1/2'>
+    <Modal className='mt-64 md:mt-64 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto mr-5 w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
@@ -220,6 +221,12 @@ const DetailModal: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
+      <div className='my-5 hidden justify-center md:flex'>
+        <OpenPaymentDayModalButton
+          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          setIsOpen={props.setIsOpen}
+        />
+      </div>
     </Modal>
   );
 };
