@@ -131,10 +131,22 @@ export interface SponsorActivity {
   updatedAt?: string;
 }
 
+export interface SponsorActivityInformation {
+  id?: number;
+  activityID: number;
+  bucketName: string;
+  fileName: string;
+  fileType: string;
+  designProgress: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface SponsorActivityView {
   user: User;
   sponsor: Sponsor;
   sponsorActivity: SponsorActivity;
+  sponsorActivityInformation?: SponsorActivityInformation;
   styleDetail: SponsorStyleDetail[];
 }
 

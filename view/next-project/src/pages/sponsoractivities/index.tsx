@@ -114,6 +114,7 @@ export default function SponsorActivities(props: Props) {
   const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
   const [selectedSort, setSelectedSort] = useState<string>('default');
 
+  console.log(sponsorActivities);
   const sortedAndFilteredSponsorActivitiesViews = useMemo(() => {
     let filteredActivities = sponsorActivities;
 
