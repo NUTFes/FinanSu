@@ -139,7 +139,6 @@ export const createPurchaseReportFormPdf = async (
     font: fontData,
   });
 
-
   page.drawText('報告書', {
     x: width / 2 - 33,
     y: height - 160,
@@ -559,8 +558,8 @@ export const createPurchaseReportFormPdf = async (
       page.drawText(
         String(
           sum +
-          purchaseReportViews.purchaseReport.addition -
-          purchaseReportViews.purchaseReport.discount,
+            purchaseReportViews.purchaseReport.addition -
+            purchaseReportViews.purchaseReport.discount,
         ),
         {
           x:
@@ -569,10 +568,10 @@ export const createPurchaseReportFormPdf = async (
             3 * rectangleWidth2 -
             String(
               sum +
-              purchaseReportViews.purchaseReport.addition -
-              purchaseReportViews.purchaseReport.discount,
+                purchaseReportViews.purchaseReport.addition -
+                purchaseReportViews.purchaseReport.discount,
             ).length *
-            7,
+              7,
           y: height - (tableTextHight + 20 * (4 + index)),
           size: fontSizes[0],
           font: fontData,

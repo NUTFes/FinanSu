@@ -2,7 +2,11 @@ import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { SponsorActivityView, SponsorStyleDetail } from '../type/common';
 
-export const createSponsorActivityFormPdf = async (SponsorActivityViews: SponsorActivityView, IssueDay: string, PaymentDay: string) => {
+export const createSponsorActivityFormPdf = async (
+  SponsorActivityViews: SponsorActivityView,
+  IssueDay: string,
+  PaymentDay: string,
+) => {
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
   // A4サイズのpdf作成
@@ -37,7 +41,13 @@ export const createSponsorActivityFormPdf = async (SponsorActivityViews: Sponsor
   //フォントのサイズ
   const fontSizes = [12, 24, 8, 14, 16];
 
-  const totalFee = SponsorActivityViews.styleDetail.length > 0 ? SponsorActivityViews.styleDetail.reduce((total: number, detail: SponsorStyleDetail) => (total + detail.sponsorStyle.price), 0) : 0
+  const totalFee =
+    SponsorActivityViews.styleDetail.length > 0
+      ? SponsorActivityViews.styleDetail.reduce(
+          (total: number, detail: SponsorStyleDetail) => total + detail.sponsorStyle.price,
+          0,
+        )
+      : 0;
 
   // 内容の作成ここから
   page.drawText('領　収　書', {

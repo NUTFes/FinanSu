@@ -12,15 +12,15 @@ const initialState = {
 
 type Action =
   | {
-    type: 'OPEN_MODAL';
-  }
+      type: 'OPEN_MODAL';
+    }
   | {
-    type: 'CLOSE_MODAL';
-  }
+      type: 'CLOSE_MODAL';
+    }
   | {
-    type: 'SET_MODAL_VIEW';
-    view: MODAL_VIEWS;
-  };
+      type: 'SET_MODAL_VIEW';
+      view: MODAL_VIEWS;
+    };
 
 type MODAL_VIEWS =
   | 'SPONSOR_ADD_MODAL'
