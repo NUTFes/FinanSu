@@ -167,6 +167,7 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 	styleDetail := domain.StyleDetail{}
 	var styleDetails []domain.StyleDetail
 	activityInformation := domain.ActivityInformation{}
+	var activityInformations []domain.ActivityInformation
 
 	// クエリー実行
 	rows, err := a.rep.FindDetail(c)
@@ -207,27 +208,27 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
 
-		row, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		err = row.Scan(
-			&activityInformation.ID,
-			&activityInformation.ActivityId,
-			&activityInformation.BucketName,
-			&activityInformation.FileName,
-			&activityInformation.FileType,
-			&activityInformation.DesignProgress,
-			&activityInformation.CreatedAt,
-			&activityInformation.UpdatedAt,
-
-		)
-		if err != nil {
-			activity.ActivityInformation = domain.ActivityInformation{}
-
-		}else{
-			activity.ActivityInformation = activityInformation
+		rows, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&activityInformation.ID,
+				&activityInformation.ActivityId,
+				&activityInformation.BucketName,
+				&activityInformation.FileName,
+				&activityInformation.FileType,
+				&activityInformation.DesignProgress,
+				&activityInformation.CreatedAt,
+				&activityInformation.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			activityInformations = append(activityInformations, activityInformation)
 		}
-		
+		activity.ActivityInformation = activityInformations
+		activityInformations = nil
 
-		rows, err := a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
+		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
 		for rows.Next(){
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
@@ -261,6 +262,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 	styleDetail := domain.StyleDetail{}
 	var styleDetails []domain.StyleDetail
 	activityInformation := domain.ActivityInformation{}
+	var activityInformations []domain.ActivityInformation
 
 	// クエリー実行
 	rows, err := a.rep.AllDetailsByPeriod(c, year)
@@ -301,26 +303,27 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
 
-		row, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		err = row.Scan(
-			&activityInformation.ID,
-			&activityInformation.ActivityId,
-			&activityInformation.BucketName,
-			&activityInformation.FileName,
-			&activityInformation.FileType,
-			&activityInformation.DesignProgress,
-			&activityInformation.CreatedAt,
-			&activityInformation.UpdatedAt,
-
-		)
-		if err != nil {
-			activity.ActivityInformation = domain.ActivityInformation{}
-
-		}else{
-			activity.ActivityInformation = activityInformation
+		rows, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&activityInformation.ID,
+				&activityInformation.ActivityId,
+				&activityInformation.BucketName,
+				&activityInformation.FileName,
+				&activityInformation.FileType,
+				&activityInformation.DesignProgress,
+				&activityInformation.CreatedAt,
+				&activityInformation.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			activityInformations = append(activityInformations, activityInformation)
 		}
+		activity.ActivityInformation = activityInformations
+		activityInformations = nil
 
-		rows, err := a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
+		rows, err = a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
 		for rows.Next(){
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,

@@ -22,7 +22,7 @@ type ActivityDetail struct {
 	Activity			Activity				`json:"sponsorActivity"`
 	Sponsor				Sponsor					`json:"sponsor"`
 	User				User					`json:"user"`
-	ActivityInformation ActivityInformation	`json:"sponsorActivityInformation"`
+	ActivityInformation []ActivityInformation	`json:"sponsorActivityInformations"`
 	StyleDetail			[]StyleDetail			`json:"styleDetail"`
 }
 

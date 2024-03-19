@@ -19,20 +19,27 @@ const DetailPage2: FC<ModalProps> = (props) => {
     props.setPageNum(1);
   };
 
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 10);
-    return datetime2;
-  };
+  const sponsorActivityInformations = props.sponsorActivitiesViewItem.sponsorActivityInformations;
 
-  const designProgress = DESIGN_PROGRESSES.filter(
-    (design) =>
-      design.id === props.sponsorActivitiesViewItem.sponsorActivityInformation?.designProgress,
-  );
-  const bucketName = props.sponsorActivitiesViewItem.sponsorActivityInformation?.bucketName;
-  const fileName = props.sponsorActivitiesViewItem.sponsorActivityInformation?.fileName;
-  const fileURL = `http://127.0.0.1:9000/${bucketName}/${fileName}`;
+  const designProgresses =
+    sponsorActivityInformations &&
+    sponsorActivityInformations.map((activityInformation) => {
+      const designProgress = DESIGN_PROGRESSES.filter(
+        (design) => design.id === activityInformation.designProgress,
+      );
+      return designProgress[0];
+    });
 
+  const fileURLs =
+    sponsorActivityInformations &&
+    sponsorActivityInformations.map((activityInformation) => {
+      const bucketName = activityInformation.bucketName;
+      const fileName = activityInformation.fileName;
+      return `http://127.0.0.1:9000/${bucketName}/${fileName}`;
+    });
+
+  console.log(designProgresses);
+  console.log(fileURLs);
   const download = async (url: string, fileName: string) => {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -90,27 +97,43 @@ const DetailPage2: FC<ModalProps> = (props) => {
         </tbody>
       </table>
       <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>広告デザイン</p>
-      <div className='my-7 flex flex-wrap justify-center gap-7'>
-        <div className='flex gap-3'>
-          <p className='text-black-600'>広告の状況</p>
-          <p className='border-b border-primary-1'>{designProgress[0]?.state}</p>
-        </div>
+      <div className='max-h-60 overflow-auto'>
+        {sponsorActivityInformations &&
+          sponsorActivityInformations.map((activityInformation, index) => (
+            <>
+              <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
+                <div className='flex gap-3'>
+                  <p className='text-black-600'>広告の状況</p>
+                  <p className='border-b border-primary-1'>
+                    {designProgresses && designProgresses[index].state}
+                  </p>
+                </div>
+              </div>
+              <div className='flex flex-wrap justify-center'>
+                {activityInformation?.fileType === 'application/pdf' &&
+                  activityInformation?.fileName && (
+                    <embed src={fileURLs && fileURLs[index]} type='application/pdf' width='200' />
+                  )}
+                {activityInformation.fileType !== 'application/pdf' &&
+                  activityInformation.fileName && (
+                    <img
+                      src={fileURLs && fileURLs[index]}
+                      alt='Picture of the author'
+                      width='160'
+                    />
+                  )}
+              </div>
+              <PrimaryButton
+                className='mx-auto my-2'
+                onClick={() =>
+                  fileURLs && download(fileURLs[index], activityInformation.fileName || '')
+                }
+              >
+                ダウンロード
+              </PrimaryButton>
+            </>
+          ))}
       </div>
-      <div className='my-7 flex flex-wrap justify-center'>
-        {props.sponsorActivitiesViewItem.sponsorActivityInformation?.fileType ===
-          'application/pdf' &&
-          props.sponsorActivitiesViewItem.sponsorActivityInformation?.fileName && (
-            <embed src={fileURL} type='application/pdf' width='400' height='200' />
-          )}
-        {props.sponsorActivitiesViewItem.sponsorActivityInformation?.fileType !==
-          'application/pdf' &&
-          props.sponsorActivitiesViewItem.sponsorActivityInformation?.fileName && (
-            <img src={fileURL} alt='Picture of the author' width='200' height='200' />
-          )}
-      </div>
-      <PrimaryButton className='mx-auto' onClick={() => download(fileURL, fileName || '')}>
-        ダウンロード
-      </PrimaryButton>
       <div className='mt-2'>
         <button onClick={() => toPage1()}>
           <FaChevronCircleLeft size={30} />

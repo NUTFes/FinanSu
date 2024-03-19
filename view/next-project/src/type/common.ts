@@ -146,7 +146,7 @@ export interface SponsorActivityView {
   user: User;
   sponsor: Sponsor;
   sponsorActivity: SponsorActivity;
-  sponsorActivityInformation?: SponsorActivityInformation;
+  sponsorActivityInformations?: SponsorActivityInformation[];
   styleDetail: SponsorStyleDetail[];
 }
 

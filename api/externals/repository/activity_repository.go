@@ -23,7 +23,7 @@ type ActivityRepository interface {
 	FindLatestRecord(c context.Context) (*sql.Row, error)
 	FindSponsorStyle(context.Context, string) (*sql.Rows, error)
 	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
-	FindAcitivityInformation(context.Context, string) (*sql.Row, error)
+	FindAcitivityInformation(context.Context, string) (*sql.Rows, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -147,9 +147,9 @@ func (ar *activityRepository) FindSponsorStyle(c context.Context, sponsorStyleID
 }
 
 // 指定したactivity_idのactivityを取得する
-func (ar *activityRepository) FindAcitivityInformation(c context.Context, activityID string) (*sql.Row, error) {
-	query := "SELECT * FROM activity_informations WHERE id =" + activityID
-	return ar.crud.ReadByID(c, query)
+func (ar *activityRepository) FindAcitivityInformation(c context.Context, activityID string) (*sql.Rows, error) {
+	query := "SELECT * FROM activity_informations WHERE activity_id =" + activityID
+	return ar.crud.Read(c, query)
 }
 
 // 年度別のactivityに紐づくsponserとusersを取得する
