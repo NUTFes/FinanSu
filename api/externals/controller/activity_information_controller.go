@@ -8,7 +8,7 @@ import (
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 
-	"github.com/labstack/echo/v4" //nolint:golint,unused
+	"github.com/labstack/echo/v4"
 )
 
 type activityInformationController struct {
