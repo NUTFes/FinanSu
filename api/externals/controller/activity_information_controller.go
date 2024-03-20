@@ -7,6 +7,8 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
+
+	//lint:ignore
 	"github.com/labstack/echo/v4"
 )
 
