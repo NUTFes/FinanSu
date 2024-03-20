@@ -166,7 +166,7 @@ export const createSponsoractivitiesPDF = async (
                 </Text>
                 <View style={styles.sumField}>
                   <Text style={styles.text_S}>
-                    合計金額  <Text style={styles.text_L}>¥ {totalPrice}</Text>
+                    合計金額 <Text style={styles.text_L}>¥ {totalPrice}</Text>
                   </Text>
                 </View>
               </View>
@@ -253,7 +253,11 @@ export const createSponsoractivitiesPDF = async (
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = formatDate(sponsorActivitiesViewItem.sponsorActivity.createdAt || '') + '-' + sponsorActivitiesViewItem.sponsor.name + '-請求書.pdf';
+  link.download =
+    formatDate(sponsorActivitiesViewItem.sponsorActivity.createdAt || '') +
+    '-' +
+    sponsorActivitiesViewItem.sponsor.name +
+    '-請求書.pdf';
   link.click();
 };
 
