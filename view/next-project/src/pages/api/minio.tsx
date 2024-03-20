@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { formidable } from 'formidable';
-import * as Minio from 'minio';
+import { Client } from 'minio';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export const config = {
   api: {
@@ -9,7 +9,7 @@ export const config = {
   },
 };
 
-const minioClient = new Minio.Client({
+const minioClient = new Client({
   endPoint: process.env.NEXT_PUBLIC_ENDPOINT || '',
   port: Number(process.env.NEXT_PUBLIC_PORT),
   accessKey: process.env.NEXT_PUBLIC_ACCESS_KEY || '',
@@ -20,7 +20,6 @@ const minioClient = new Minio.Client({
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const form = formidable();
-    const fs = require('fs');
 
     form.parse(req, async (err, fields, files: any) => {
       if (err) {
@@ -52,13 +51,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     try {
-      var size = 0;
-      const response = minioClient.fGetObject('finansu', 'go.png', '/tmp/go.png', function (err) {
-        if (err) {
-          return console.log(err);
-        }
-        console.log('success');
-      });
+      const size = 0;
+      const response = minioClient.fGetObject(
+        'finansu',
+        'go.png',
+        '/tmp/go.png',
+        function (err: any) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log('success');
+        },
+      );
 
       res.status(200).json({ response: response });
     } catch (err) {

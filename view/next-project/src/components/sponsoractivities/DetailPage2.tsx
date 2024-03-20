@@ -1,14 +1,14 @@
 import { clsx } from 'clsx';
+import { saveAs } from 'file-saver';
 import React, { FC, useEffect, useState } from 'react';
-import { post, del } from '@/utils/api/api_methods';
 
-import { DESIGN_PROGRESSES } from '@constants/designProgresses';
-import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
 import { FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
-import { DeleteButton, OutlinePrimaryButton, PrimaryButton, RedButton } from '../common';
-import { saveAs } from 'file-saver';
+import { DeleteButton, OutlinePrimaryButton, PrimaryButton } from '../common';
 import UplaodFileModal from './UploadFileModal';
+import { post, del } from '@/utils/api/api_methods';
+import { DESIGN_PROGRESSES } from '@constants/designProgresses';
+import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;

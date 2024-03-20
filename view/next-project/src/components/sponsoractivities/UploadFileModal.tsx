@@ -1,12 +1,10 @@
-import { clsx } from 'clsx';
 import React, { FC, useRef, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { post, put } from '@/utils/api/api_methods';
-import { DESIGN_PROGRESSES } from '@constants/designProgresses';
+import { PrimaryButton } from '../common';
+import { put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
-import { SponsorActivityInformation, SponsorActivityView } from '@type/common';
-import { OutlinePrimaryButton, PrimaryButton, RedButton } from '../common';
+import { SponsorActivityInformation } from '@type/common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -38,7 +36,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
   const sponsorActivityInformations = props.sponsorActivityInformations || [];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const targetFile = e.target.files?.[0]!;
+    const targetFile = e.target.files![0]!;
     if (!targetFile) {
       setPreview({ uploadImageURL: '', type: '' });
       return;

@@ -1,11 +1,9 @@
 import { clsx } from 'clsx';
 import React, { FC } from 'react';
-import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { Modal } from '@components/common';
+import { FaChevronCircleRight } from 'react-icons/fa';
 import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
-import { FaChevronCircleRight } from 'react-icons/fa';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;
