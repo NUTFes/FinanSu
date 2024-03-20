@@ -56,6 +56,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
   };
 
   const onClose = () => {
+    handleFileDelete();
     props.setIsOpen(false);
   };
 
@@ -68,9 +69,13 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
         </div>
       </div>
       <div className='my-2 flex flex-wrap justify-center gap-2'>
-        <input type='file' ref={fileInputRef} onChange={handleFileChange} />
+        <input
+          type='file'
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className='file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm hover:file:bg-grey-300'
+        />
       </div>
-      <button onClick={handleFileDelete}>キャンセル</button>
       <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
         {preview.type === 'application/pdf' ? (
           <embed
