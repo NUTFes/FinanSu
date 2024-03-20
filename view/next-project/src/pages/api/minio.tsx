@@ -42,13 +42,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           fs.createReadStream(files.file[0].filepath),
           metaData,
         );
-
-        res.status(200).json({ response });
       } catch (err) {
+        res.status(400).json({ message: '失敗' });
         throw new Error('Error uploading file (' + err + ')');
       }
+      return res.status(200).json({ message: '成功' });
     });
   }
+
   if (req.method === 'GET') {
     try {
       var size = 0;
@@ -59,9 +60,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('success');
       });
 
-      console.log(response);
-      res.status(200).json({ response });
+      res.status(200).json({ response: response });
     } catch (err) {
+      res.status(400);
       throw new Error('Error uploading file (' + err + ')');
     }
   }

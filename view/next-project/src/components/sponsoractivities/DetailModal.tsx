@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import React, { FC, useState } from 'react';
+import { useRouter } from 'next/router';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { Modal } from '@components/common';
@@ -18,8 +19,15 @@ interface ModalProps {
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
+  const [isChange, setIsChange] = useState<boolean>(false);
+  const [sponsorActivitiesView, setSponsorActivitiesView] = useState<SponsorActivityView>(
+    props.sponsorActivitiesViewItem,
+  );
+
+  const router = useRouter();
   const onClose = () => {
     props.setIsOpen(false);
+    isChange && router.reload();
   };
   const [pageNum, setPageNum] = useState<number>(1);
 
@@ -39,15 +47,17 @@ const DetailModal: FC<ModalProps> = (props) => {
       {pageNum === 1 && (
         <DetailPage1
           setPageNum={setPageNum}
-          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          sponsorActivitiesViewItem={sponsorActivitiesView}
           id={props.id}
         />
       )}
       {pageNum === 2 && (
         <DetailPage2
           setPageNum={setPageNum}
-          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          sponsorActivitiesViewItem={sponsorActivitiesView}
+          setSponsorActivitiesView={setSponsorActivitiesView}
           id={props.id}
+          setIsChange={setIsChange}
         />
       )}
     </Modal>

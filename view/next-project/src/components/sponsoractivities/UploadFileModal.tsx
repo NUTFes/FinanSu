@@ -2,37 +2,65 @@ import { clsx } from 'clsx';
 import React, { FC, useRef, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
+import { post, put } from '@/utils/api/api_methods';
 import { DESIGN_PROGRESSES } from '@constants/designProgresses';
 import { Modal } from '@components/common';
 import { SponsorActivityInformation, SponsorActivityView } from '@type/common';
-import { FaChevronCircleLeft } from 'react-icons/fa';
 import { OutlinePrimaryButton, PrimaryButton, RedButton } from '../common';
-import { saveAs } from 'file-saver';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
-  id: React.ReactNode;
-  sponsorActivityInformation?: SponsorActivityInformation | null;
+  id: number;
+  ActivityInformationId: number;
+  sponsorActivityInformations?: SponsorActivityInformation[];
+  setSponsorActivityInformations: (
+    sponsorActivityInformations: SponsorActivityInformation[],
+  ) => void;
+  setIsChange: (isChange: boolean) => void;
 }
 
 const UplaodFileModal: FC<ModalProps> = (props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [uploadImageURL, setUploadImageURL] = useState<string>('');
   const [preview, setPreview] = useState({ uploadImageURL: '', type: '' });
+  const [activityInformation, setActivityInformation] = useState<SponsorActivityInformation>(
+    (props.sponsorActivityInformations &&
+      props.sponsorActivityInformations[props.ActivityInformationId]) || {
+      activityID: props.id,
+      bucketName: '',
+      fileName: '',
+      fileType: '',
+      designProgress: 1,
+    },
+  );
+
+  const sponsorActivityInformations = props.sponsorActivityInformations || [];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetFile = e.target.files?.[0]!;
+    if (!targetFile) {
+      setPreview({ uploadImageURL: '', type: '' });
+      return;
+    }
     setImageFile(targetFile);
     setPreview({ uploadImageURL: URL.createObjectURL(targetFile), type: targetFile.type });
-    setUploadImageURL(URL.createObjectURL(targetFile));
+
+    const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
+    const fileName = targetFile.name;
+    const fileType = targetFile.type;
+
+    setActivityInformation({
+      ...activityInformation,
+      bucketName: bucketName || '',
+      fileName: fileName,
+      fileType: fileType,
+    });
   };
 
   const handleFileDelete = () => {
     setImageFile(null);
     setPreview({ uploadImageURL: '', type: '' });
-    setUploadImageURL('');
     props.setIsOpen(false);
   };
 
@@ -45,22 +73,53 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     const fileName = imageFile?.name || '';
     formData.append('fileName', fileName);
 
-    await fetch('/api/minio', {
+    const response = await fetch('/api/minio', {
       method: 'POST',
-
       body: formData,
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error('Error:', error));
+      .then((response) => {
+        if (response.ok) {
+          return true;
+        } else {
+          alert('登録に失敗しました');
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+    if (!response) {
+      onClose();
+      return;
+    }
+
+    const sponsorActivitiesUrl =
+      process.env.CSR_API_URI + '/activity_informations/' + activityInformation.id;
+    const res = await put(sponsorActivitiesUrl, activityInformation);
+    const newSponsorActivityInformations = sponsorActivityInformations.map(
+      (sponsorActivityInformation) => {
+        if (sponsorActivityInformation.id === activityInformation.id) {
+          return activityInformation;
+        }
+        return sponsorActivityInformation;
+      },
+    );
+    props.setSponsorActivityInformations(newSponsorActivityInformations);
+
+    alert('保存しました');
+    props.setIsChange(true);
+
+    onClose();
   };
+
+  console.log(process.env.NEXT_PUBLIC_BUCKET_NAME);
 
   const onClose = () => {
     handleFileDelete();
     props.setIsOpen(false);
   };
 
-  console.log(props.sponsorActivityInformation);
   return (
     <Modal className='md:h-6/12 md:mt-5 md:w-4/12'>
       <div className='w-full'>
@@ -84,8 +143,15 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
             className='mx-auto object-scale-down '
           />
         ) : (
-          preview.type !== '' && <img src={uploadImageURL} className='mx-auto object-scale-down ' />
+          preview.type !== '' && (
+            <img src={preview.uploadImageURL} className='mx-auto object-scale-down ' />
+          )
         )}
+      </div>
+      <div className='my-2 flex w-full flex-wrap justify-center'>
+        <PrimaryButton type='button' onClick={() => submit()} disabled={!imageFile}>
+          登録
+        </PrimaryButton>
       </div>
     </Modal>
   );

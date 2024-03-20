@@ -93,5 +93,5 @@ func (a *activityInformationController) DestroyActivityInformation(c echo.Contex
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Destroy ActivityInformations")
+	return c.JSON(http.StatusOK, "Destroy ActivityInformations")
 }

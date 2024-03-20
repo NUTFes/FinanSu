@@ -168,7 +168,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
         </tbody>
       </table>
       <div className='mt-2 flex justify-end'>
-        <button onClick={() => toPage2()}>
+        <button onClick={() => toPage2()} className='rounded-full hover:bg-grey-300'>
           <FaChevronCircleRight size={30} />
         </button>
       </div>
