@@ -1,2 +1,6 @@
 issues:
   exclude-use-default: false
+runner:
+  gobuild:
+    ignore:
+      - "github.com/labstack/echo/v4"
