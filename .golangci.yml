@@ -1,6 +1,17 @@
 issues:
   exclude-use-default: false
-runner:
-  gobuild:
-    ignore:
-      - "github.com/labstack/echo/v4"
+
+linters:
+  golint:
+    # golint settings here
+    enabled: true
+    enable-all: true
+    report-filename: golint.report.txt
+
+filters:
+  # Exclude import not used errors
+  - name: exclude-import-not-used
+    diff:
+      ignoreRegexp: '^(---|\+\+\+|[^+- ])'
+      patterns:
+        - "imported but not used"
