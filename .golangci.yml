@@ -1,17 +1,2 @@
 issues:
   exclude-use-default: false
-
-linters:
-  golint:
-    # golint settings here
-    enabled: true
-    enable-all: true
-    report-filename: golint.report.txt
-
-filters:
-  # Exclude import not used errors
-  - name: exclude-import-not-used
-    diff:
-      ignoreRegexp: '^(---|\+\+\+|[^+- ])'
-      patterns:
-        - "imported but not used"
