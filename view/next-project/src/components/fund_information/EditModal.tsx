@@ -29,30 +29,25 @@ export default function EditModal(props: ModalProps) {
     receivedAt: props.fundInformation.receivedAt,
   });
 
-  const [departmentID, setDepartmentID] = useState<number | string>(1);
-  const [defaultValue, setDefaultValue] = useState<boolean>(false);
+  const defaultTeacher = props.teachers.find(
+    (teacher) => teacher.id === props.fundInformation.teacherID,
+  );
+  const [teacher, setTeacher] = useState<Teacher | undefined>(defaultTeacher);
+  const [departmentID, setDepartmentID] = useState<number>(defaultTeacher?.departmentID || 1);
 
   useEffect(() => {
-    if (defaultValue == false) {
-      const selectedTeacher = props.teachers.find(
-        (teacher) => teacher.id === props.fundInformation.teacherID,
-      );
-      if (selectedTeacher?.id) {
-        setDepartmentID(selectedTeacher.departmentID);
-        setFormData({ ...formData, teacherID: selectedTeacher.id });
-      }
-      setTimeout(() => {
-        setDefaultValue(true);
-      });
-    } else {
+    if (teacher?.departmentID !== departmentID) {
       const relatedTeachers = props.teachers.filter(
         (teacher) => teacher.departmentID === departmentID,
       );
-      if (relatedTeachers) {
-        setFormData({ ...formData, teacherID: relatedTeachers[0].id || 0 });
-      }
+      relatedTeachers &&
+        setFormData({
+          ...formData,
+          teacherID: relatedTeachers[0]?.id || 0,
+        });
+      setTeacher(relatedTeachers[0]);
     }
-  }, [departmentID, props.teachers]);
+  }, [departmentID]);
 
   const handler =
     (input: string) =>
