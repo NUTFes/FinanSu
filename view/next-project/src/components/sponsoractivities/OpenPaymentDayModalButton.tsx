@@ -19,9 +19,7 @@ const OpenPaymentDayModalButton: React.FC<Props> = (props) => {
 
   return (
     <>
-      <PrimaryButton onClick={onOpen}>
-        領収書作成
-      </PrimaryButton>
+      <PrimaryButton onClick={onOpen}>領収書作成</PrimaryButton>
       {isPaymentDayModalOpen && (
         <PaymentDayModal
           setIsOpen={setIsPaymentDayModalOpen}

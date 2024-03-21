@@ -26,14 +26,15 @@ export default function PaymentDayModal(props: ModalProps) {
   const [formData, setFormData] = useState<FormDateFormat>({ receivedAt: ymd });
 
   const formatDate = (date: string) => {
-    const arrayDate = date.split("-");
-    return String(arrayDate[0] + "年" + arrayDate[1] + "月" + arrayDate[2] + "日");
+    const arrayDate = date.split('-');
+    return String(arrayDate[0] + '年' + arrayDate[1] + '月' + arrayDate[2] + '日');
   };
 
-  const handler = (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [input]: e.target.value });
-    };
+  const handler =
+    (input: string) =>
+      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [input]: e.target.value });
+      };
 
   return (
     <Modal className='mt-64 md:mt-32 md:w-1/2'>
@@ -61,7 +62,7 @@ export default function PaymentDayModal(props: ModalProps) {
                 downloadContent: await createSponsorActivityFormPdf(
                   props.sponsorActivitiesViewItem,
                   issueDay,
-                  formatDate(formData.receivedAt)
+                  formatDate(formData.receivedAt),
                 ),
                 fileName: `領収書_${yyyy}${mm}${dd}_${props.sponsorActivitiesViewItem.sponsor.name}.pdf`,
                 isBomAdded: true,
@@ -72,6 +73,6 @@ export default function PaymentDayModal(props: ModalProps) {
           </PrimaryButton>
         </div>
       </div>
-    </Modal >
-  )
+    </Modal>
+  );
 }
