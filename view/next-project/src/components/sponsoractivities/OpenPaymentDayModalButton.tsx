@@ -9,14 +9,12 @@ interface Props {
   children?: React.ReactNode;
   sponsorActivitiesViewItem: SponsorActivityView;
   setIsOpen: (isOpen: boolean) => void;
-  isDisabled?: boolean;
 }
 
 const OpenPaymentDayModalButton: React.FC<Props> = (props) => {
   const [isPaymentDayModalOpen, setIsPaymentDayModalOpen] = useState(false);
   const onOpen = () => {
     setIsPaymentDayModalOpen(true);
-    // props.setIsOpen(false)
   };
 
   return (

@@ -45,7 +45,7 @@ export default function PaymentDayModal(props: ModalProps) {
             }}
           />
         </div>
-        <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>入金日の入力</p>
+        <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>入金日を入力</p>
         <div className='col-span-4 w-full'>
           <Input
             type='date'
