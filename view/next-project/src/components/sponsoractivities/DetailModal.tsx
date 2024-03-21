@@ -1,8 +1,7 @@
 import { clsx } from 'clsx';
 import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import { createSponsoractivitiesPDF } from './createSponsoractivitiesPDF';
-import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
+import OpenAddPdfDetailModalButton from './OpenAddPdfDetailModalButton';
 import { Modal } from '@components/common';
 import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
@@ -222,13 +221,10 @@ const DetailModal: FC<ModalProps> = (props) => {
         </tbody>
       </table>
       <div className='my-5 hidden justify-center md:flex'>
-        <PrimaryButton
-          onClick={async () => {
-            createSponsoractivitiesPDF(props.sponsorActivitiesViewItem);
-          }}
-        >
-          請求書作成
-        </PrimaryButton>
+        <OpenAddPdfDetailModalButton
+          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          setIsOpen={props.setIsOpen}
+        />
       </div>
     </Modal>
   );
