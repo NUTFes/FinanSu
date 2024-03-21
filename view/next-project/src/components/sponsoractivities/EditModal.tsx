@@ -192,9 +192,9 @@ export default function EditModal(props: ModalProps) {
     <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-3'>
       <p className='text-black-600'>企業名</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' onChange={handler('sponsorID')}>
+        <Select className='w-full' onChange={handler('sponsorID')} value={data.sponsorID}>
           {sponsors.map((sponsor) => (
-            <option key={sponsor.id} value={sponsor.id} selected={sponsor.id === data.sponsorID}>
+            <option key={sponsor.id} value={sponsor.id}>
               {sponsor.name}
             </option>
           ))}
@@ -226,9 +226,9 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>担当者名</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' onChange={handler('userID')}>
+        <Select className='w-full' onChange={handler('userID')} value={data.userID}>
           {filteredUsers.map((user) => (
-            <option key={user.id} value={user.id} selected={user.id === data.userID}>
+            <option key={user.id} value={user.id}>
               {user.name}
             </option>
           ))}
