@@ -132,6 +132,8 @@ const styles = StyleSheet.create({
 
 export const createSponsoractivitiesPDF = async (
   sponsorActivitiesViewItem: SponsorActivityView,
+  date: string,
+  remarks: string,
 ) => {
   const formatDate = (date: string) => {
     const datetime = date.replace('T', ' ');
@@ -179,7 +181,7 @@ export const createSponsoractivitiesPDF = async (
                 <View style={styles.marginButtom}>
                   <Text>技大祭実行委員</Text>
                   <Text>〒940-2137</Text>
-                  <Text>新潟県長岡市上富岡町603-1</Text>
+                  <Text>新潟県長岡市上富岡町1603-1</Text>
                   <Text>長岡技術科学大学 大学集会施設</Text>
                 </View>
                 <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
@@ -200,7 +202,7 @@ export const createSponsoractivitiesPDF = async (
             <View style={styles.tableRow} key={index}>
               <Text style={[styles.commonTableCol, styles.tableCol_S]}>{index + 1}</Text>
               <Text style={[styles.commonTableCol, styles.tableCol_L]}>
-                {styleDetail.sponsorStyle.style}
+                {styleDetail.sponsorStyle.style} ({styleDetail.sponsorStyle.feature})
               </Text>
               <Text style={[styles.commonTableCol, styles.tableCol_S]}>1</Text>
               <Text style={[styles.commonTableCol, styles.tableCol_M]}>
@@ -223,11 +225,11 @@ export const createSponsoractivitiesPDF = async (
         </View>
         <View style={[styles.detailField, styles.marginButtom]}>
           <Text style={styles.text_S}>
-            お手数でございますが、令和5年8月31日(木)までに下記口座へ振込くださいますようお願い申し上げます。
+            お手数でございますが、{date}までに下記口座へ振込くださいますようお願い申し上げます。
           </Text>
           <Text style={styles.text_S}>&lt;振込先&gt;</Text>
-          <Text style={styles.text_S}>銀行名 : 大光銀行（金融機関コード : 0532）</Text>
-          <Text style={styles.text_S}>支店名 : 希望ヶ丘支店（支店コード : 042）</Text>
+          <Text style={styles.text_S}>銀  行  名 : 大光銀行（金融機関コード : 0532）</Text>
+          <Text style={styles.text_S}>支  店  名 : 希望ヶ丘支店（支店コード : 042）</Text>
           <Text style={styles.text_S}>預金種別 : 普通預金</Text>
           <Text style={styles.text_S}>口座番号 : 2002151</Text>
         </View>
@@ -238,7 +240,7 @@ export const createSponsoractivitiesPDF = async (
                 <Text>備考</Text>
               </View>
               <View style={styles.textArea}>
-                <Text>{sponsorActivitiesViewItem.sponsorActivity.remark}</Text>
+                <Text>{remarks}</Text>
               </View>
             </View>
           </View>
@@ -260,14 +262,3 @@ export const createSponsoractivitiesPDF = async (
     '-請求書.pdf';
   link.click();
 };
-
-// export const savePdf = async () => {
-// };
-
-// const App = () => (
-//   <PDFViewer style={{ width: '100vw', height: '100vh' }}>
-//     <MyDocument />
-//   </PDFViewer>
-// );
-
-// export default App;
