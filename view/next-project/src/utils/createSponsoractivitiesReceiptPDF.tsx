@@ -228,8 +228,8 @@ export const createSponsoractivitiesPDF = async (
             お手数でございますが、{date}までに下記口座へ振込くださいますようお願い申し上げます。
           </Text>
           <Text style={styles.text_S}>&lt;振込先&gt;</Text>
-          <Text style={styles.text_S}>銀  行  名 : 大光銀行（金融機関コード : 0532）</Text>
-          <Text style={styles.text_S}>支  店  名 : 希望ヶ丘支店（支店コード : 042）</Text>
+          <Text style={styles.text_S}>銀 行 名 : 大光銀行（金融機関コード : 0532）</Text>
+          <Text style={styles.text_S}>支 店 名 : 希望ヶ丘支店（支店コード : 042）</Text>
           <Text style={styles.text_S}>預金種別 : 普通預金</Text>
           <Text style={styles.text_S}>口座番号 : 2002151</Text>
         </View>
