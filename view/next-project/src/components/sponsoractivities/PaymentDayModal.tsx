@@ -32,9 +32,9 @@ export default function PaymentDayModal(props: ModalProps) {
 
   const handler =
     (input: string) =>
-      (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   return (
     <Modal className='mt-64 md:mt-32 md:w-1/2'>
@@ -46,7 +46,9 @@ export default function PaymentDayModal(props: ModalProps) {
             }}
           />
         </div>
-        <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>入金日を入力</p>
+        <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
+          入金日を入力
+        </p>
         <div className='col-span-4 w-full'>
           <Input
             type='date'
