@@ -7,3 +7,7 @@ api/tmp
 # cloudflare
 web/**/*.json
 web/**/cert.pem
+
+tmp/*
+
+/view/next-project/.env

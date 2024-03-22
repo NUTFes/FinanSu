@@ -25,6 +25,7 @@ func InitializeServer() db.Client {
 
 	// Repository
 	activityRepository := repository.NewActivityRepository(client, crud)
+	activityInformationRepository := repository.NewActivityInformationsRepository(client, crud)
 	activityStyleRepository := repository.NewActivityStyleRepository(client, crud)
 	budgetRepository := repository.NewBudgetRepository(client, crud)
 	bureauRepository := repository.NewBureauRepository(client, crud)
@@ -46,6 +47,7 @@ func InitializeServer() db.Client {
 
 	// UseCase
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
+	activityInformationUseCase := usecase.NewActivityInformationUseCase(activityInformationRepository)
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
@@ -66,6 +68,7 @@ func InitializeServer() db.Client {
 
 	// Controller
 	activityController := controller.NewActivityController(activityUseCase)
+	activityInformationController := controller.NewActivityInformationController(activityInformationUseCase)
 	activityStyleController := controller.NewActivityStyleController(activityStyleUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	bureauController := controller.NewBureauController(bureauUseCase)
@@ -88,6 +91,7 @@ func InitializeServer() db.Client {
 	// router
 	router := router.NewRouter(
 		activityController,
+		activityInformationController,
 		activityStyleController,
 		budgetController,
 		bureauController,
