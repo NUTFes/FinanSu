@@ -161,7 +161,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                   </button>
                 </div>
                 <div className='w-11/12'>
-                  <div className='my-1 flex flex-wrap justify-center gap-7 '>
+                  <div className='my-1 ml-4 flex flex-wrap justify-center gap-7 '>
                     <div className='flex gap-3'>
                       <p className='text-black-600'>広告の状況</p>
                       <p className='border-b border-primary-1'>
@@ -169,58 +169,56 @@ const DetailPage2: FC<ModalProps> = (props) => {
                       </p>
                     </div>
                   </div>
-                  <div className='flex flex-wrap justify-center'>
-                    {activityInformation?.fileType === 'application/pdf' &&
-                      activityInformation?.fileName && (
-                        <embed
-                          src={fileURLs && fileURLs[index]}
-                          type='application/pdf'
-                          width='200'
-                        />
-                      )}
-                    {activityInformation.fileType !== 'application/pdf' &&
-                      activityInformation.fileName && (
-                        <img
-                          src={fileURLs && fileURLs[index]}
-                          alt='Picture of the author'
-                          width='160'
-                        />
-                      )}
-                  </div>
-                  {activityInformation.fileName !== '' && (
-                    <div className='my-2 flex flex-wrap justify-center gap-2'>
-                      <OutlinePrimaryButton
-                        className='p-1'
-                        onClick={() => {
-                          setEditActivityInformationId(index);
-                          setIsOpen(true);
-                        }}
-                      >
-                        変更
-                      </OutlinePrimaryButton>
-                      <PrimaryButton
-                        onClick={() =>
-                          fileURLs && download(fileURLs[index], activityInformation.fileName || '')
-                        }
-                      >
-                        ダウンロード
-                      </PrimaryButton>
-                    </div>
-                  )}
-                  {activityInformation.fileName === '' && (
-                    <div className='my-2 flex flex-wrap justify-center gap-2'>
-                      <OutlinePrimaryButton
-                        className='mx-auto my-2'
-                        onClick={() => {
-                          setEditActivityInformationId(index);
-                          setIsOpen(true);
-                        }}
-                      >
-                        広告登録
-                      </OutlinePrimaryButton>
-                    </div>
-                  )}
                 </div>
+              </div>
+              <div className='flex flex-wrap justify-center'>
+                {activityInformation?.fileType === 'application/pdf' &&
+                  activityInformation?.fileName && (
+                    <embed src={fileURLs && fileURLs[index]} type='application/pdf' width='200' />
+                  )}
+                {activityInformation.fileType !== 'application/pdf' &&
+                  activityInformation.fileName && (
+                    <img
+                      src={fileURLs && fileURLs[index]}
+                      alt='Picture of the author'
+                      width='160'
+                    />
+                  )}
+              </div>
+              <div className='my-1 flex flex-wrap justify-center gap-7 '>
+                {activityInformation.fileName !== '' && (
+                  <div className='my-2 flex flex-wrap justify-center gap-2'>
+                    <OutlinePrimaryButton
+                      className='p-1'
+                      onClick={() => {
+                        setEditActivityInformationId(index);
+                        setIsOpen(true);
+                      }}
+                    >
+                      変更
+                    </OutlinePrimaryButton>
+                    <PrimaryButton
+                      onClick={() =>
+                        fileURLs && download(fileURLs[index], activityInformation.fileName || '')
+                      }
+                    >
+                      ダウンロード
+                    </PrimaryButton>
+                  </div>
+                )}
+                {activityInformation.fileName === '' && (
+                  <div className='my-2 flex flex-wrap justify-center gap-2'>
+                    <OutlinePrimaryButton
+                      className='mx-auto my-2'
+                      onClick={() => {
+                        setEditActivityInformationId(index);
+                        setIsOpen(true);
+                      }}
+                    >
+                      広告登録
+                    </OutlinePrimaryButton>
+                  </div>
+                )}
               </div>
             </>
           ))}
