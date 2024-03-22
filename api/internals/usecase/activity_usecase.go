@@ -208,7 +208,7 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
 
-		rows, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
+		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
 		for rows.Next(){
 			err := rows.Scan(
 				&activityInformation.ID,
@@ -303,7 +303,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 			return nil, errors.Wrapf(err, "cannot connect SQL")
 		}
 
-		rows, err := a.rep.FindAcitivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
+		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
 		for rows.Next(){
 			err := rows.Scan(
 				&activityInformation.ID,
