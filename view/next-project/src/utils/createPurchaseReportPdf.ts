@@ -48,49 +48,49 @@ export const createPurchaseReportFormPdf = async (
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('No.', {
+  page.drawText('□', {
     x: 160,
     y: height - 35,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('発行日', {
+  page.drawText('領収書受け取り', {
     x: 25,
     y: height - 50,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('御中', {
+  page.drawText('□', {
     x: 160,
     y: height - 50,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('下記、正に領収いたしました。', {
+  page.drawText('レシート受け取り', {
     x: 25,
     y: height - 65,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('金額', {
+  page.drawText('□', {
     x: 160,
     y: height - 65,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('但', {
+  page.drawText('おつり', {
     x: 25,
     y: height - 80,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('技大祭への広告協賛として', {
+  page.drawText('¥', {
     x: 115,
     y: height - 80,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('入金日', {
+  page.drawText('提出者', {
     x: 25,
     y: height - 95,
     size: fontSizes[0],
@@ -102,42 +102,33 @@ export const createPurchaseReportFormPdf = async (
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('内', {
+  page.drawText('(担当:' + purchaseReportViews.reportUser.name + ')', {
     x: 150,
     y: height - 95,
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('長岡技術科学大学　技大祭実行員会', {
-    x: 150,
-    y: height - 95,
-    size: fontSizes[0],
-    font: fontData,
-  });
-  page.drawText('〒940-2188', {
-    x: 150,
-    y: height - 95,
-    size: fontSizes[0],
-    font: fontData,
-  });
-  page.drawText('新潟県長岡市上富岡町1603-1', {
-    x: 150,
-    y: height - 95,
-    size: fontSizes[0],
-    font: fontData,
-  });
-  page.drawText('大学集会施設1号館技大祭実行委員会', {
-    x: 150,
-    y: height - 95,
-    size: fontSizes[0],
-    font: fontData,
-  });
-  page.drawText('E-mail：nutfes_shogai_kyosan@googlegroups.com', {
-    x: 150,
-    y: height - 95,
-    size: fontSizes[0],
-    font: fontData,
-  });
+  for (let i = 3; i < 5; i++) {
+    page.drawText('：', {
+      x: 75,
+      y: height - (35 + i * 15),
+      size: fontSizes[0],
+      font: fontData,
+    });
+    if (i !== 4) {
+      page.drawLine({
+        start: { x: 90, y: height - (38 + i * 15) },
+        end: { x: 200, y: height - (38 + i * 15) },
+        opacity: 0.75,
+      });
+    } else {
+      page.drawLine({
+        start: { x: 90, y: height - (38 + i * 15) },
+        end: { x: 270, y: height - (38 + i * 15) },
+        opacity: 0.75,
+      });
+    }
+  }
 
   page.drawText('報告書', {
     x: width / 2 - 33,
@@ -558,8 +549,8 @@ export const createPurchaseReportFormPdf = async (
       page.drawText(
         String(
           sum +
-            purchaseReportViews.purchaseReport.addition -
-            purchaseReportViews.purchaseReport.discount,
+          purchaseReportViews.purchaseReport.addition -
+          purchaseReportViews.purchaseReport.discount,
         ),
         {
           x:
@@ -568,10 +559,10 @@ export const createPurchaseReportFormPdf = async (
             3 * rectangleWidth2 -
             String(
               sum +
-                purchaseReportViews.purchaseReport.addition -
-                purchaseReportViews.purchaseReport.discount,
+              purchaseReportViews.purchaseReport.addition -
+              purchaseReportViews.purchaseReport.discount,
             ).length *
-              7,
+            7,
           y: height - (tableTextHight + 20 * (4 + index)),
           size: fontSizes[0],
           font: fontData,
