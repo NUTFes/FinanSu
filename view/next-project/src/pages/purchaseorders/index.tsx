@@ -21,6 +21,7 @@ import {
   PurchaseOrderView,
   Expense,
   YearPeriod,
+  ExpenseByPeriods,
 } from '@type/common';
 
 interface Props {
@@ -28,6 +29,7 @@ interface Props {
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
   yearPeriods: YearPeriod[];
+  expenseByPeriods: ExpenseByPeriods[];
 }
 
 const date = new Date();
@@ -42,11 +44,18 @@ export async function getServerSideProps() {
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
+  const getExpenseByPeriodsUrl =
+    process.env.SSR_API_URI +
+    '/expenses/fiscalyear/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+  const expenseByPeriodsRes = await get(getExpenseByPeriodsUrl);
+
   return {
     props: {
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
       yearPeriods: periodsRes,
+      expenseByPeriods: expenseByPeriodsRes,
     },
   };
 }
@@ -172,6 +181,8 @@ export default function PurchaseOrders(props: Props) {
     getUser();
   }, []);
 
+  console.log(props.expenseByPeriods);
+
   return (
     <MainLayout>
       <Head>
@@ -215,11 +226,7 @@ export default function PurchaseOrders(props: Props) {
             </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex'>
-            <OpenAddModalButton
-              expenses={props.expenses}
-              yearPeriods={yearPeriods}
-              selectedyear={selectedYear}
-            >
+            <OpenAddModalButton expenses={props.expenses} expenseByPeriods={props.expenseByPeriods}>
               申請登録
             </OpenAddModalButton>
           </div>
@@ -399,11 +406,7 @@ export default function PurchaseOrders(props: Props) {
         />
       )}
       <div className='fixed bottom-4 right-4 md:hidden'>
-        <OpenAddModalButton
-          expenses={props.expenses}
-          yearPeriods={props.yearPeriods}
-          selectedyear={selectedYear}
-        />
+        <OpenAddModalButton expenses={props.expenses} expenseByPeriods={props.expenseByPeriods} />
       </div>
     </MainLayout>
   );
