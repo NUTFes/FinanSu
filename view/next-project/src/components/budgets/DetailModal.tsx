@@ -5,7 +5,7 @@ import { ExpenseView } from '@type/common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
-  expenseView: ExpenseView;
+  expenseView: ExpenseView | null;
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
@@ -13,21 +13,28 @@ const DetailModal: FC<ModalProps> = (props) => {
     props.setIsOpen(false);
   };
 
+  const expenseView = props.expenseView;
+
+  if (!expenseView) {
+    onClose();
+    return <></>;
+  }
+
   const discountTotal = useMemo(() => {
-    return props.expenseView.purchaseDetails
-      ? props.expenseView.purchaseDetails.reduce((acc, cur) => {
+    return expenseView && expenseView.purchaseDetails
+      ? expenseView.purchaseDetails.reduce((acc, cur) => {
           return acc + cur.purchaseReport.discount;
         }, 0)
       : 0;
-  }, [props.expenseView.purchaseDetails]);
+  }, [expenseView.purchaseDetails]);
 
   const additionTotal = useMemo(() => {
-    return props.expenseView.purchaseDetails
-      ? props.expenseView.purchaseDetails.reduce((acc, cur) => {
+    return expenseView.purchaseDetails
+      ? expenseView.purchaseDetails.reduce((acc, cur) => {
           return acc + cur.purchaseReport.addition;
         }, 0)
       : 0;
-  }, [props.expenseView.purchaseDetails]);
+  }, [expenseView.purchaseDetails]);
 
   return (
     <Modal className='w-fit'>
@@ -42,11 +49,11 @@ const DetailModal: FC<ModalProps> = (props) => {
       <div className='my-10 flex flex-wrap justify-center gap-8'>
         <div className='flex gap-3'>
           <p className='text-black-600'>支出元</p>
-          <p className='border-b border-primary-1'>{props.expenseView.expense.name}</p>
+          <p className='border-b border-primary-1'>{expenseView.expense.name}</p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>合計金額</p>
-          <p className='border-b border-primary-1'>{props.expenseView.expense.totalPrice}</p>
+          <p className='border-b border-primary-1'>{expenseView.expense.totalPrice}</p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>割引合計</p>
@@ -73,8 +80,8 @@ const DetailModal: FC<ModalProps> = (props) => {
           </tr>
         </thead>
         <tbody className='border border-x-white-0 border-b-primary-1'>
-          {props.expenseView.purchaseDetails ? (
-            props.expenseView.purchaseDetails.map((purchaseDetail) =>
+          {expenseView.purchaseDetails ? (
+            expenseView.purchaseDetails.map((purchaseDetail) =>
               purchaseDetail.purchaseItems.map((purchaseItem) => (
                 <tr key={purchaseItem.id}>
                   <td className='py-3'>

@@ -189,7 +189,7 @@ export default function PurchaseReports(props: Props) {
       setCurrentUser(res);
     };
     getUser();
-  });
+  }, []);
 
   return (
     <MainLayout>
