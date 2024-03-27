@@ -21,7 +21,13 @@ export default function OpenModalButton(props: Props) {
       >
         {props.children}
       </AddButton>
-      {isOpen && <PurchaseItemNumModal setIsOpen={setIsOpen} expenses={props.expenses} expenseByPeriods={props.expenseByPeriods}/>}
+      {isOpen && (
+        <PurchaseItemNumModal
+          setIsOpen={setIsOpen}
+          expenses={props.expenses}
+          expenseByPeriods={props.expenseByPeriods}
+        />
+      )}
     </>
   );
 }
