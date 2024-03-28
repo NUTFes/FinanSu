@@ -731,6 +731,26 @@ const docTemplate = `{
                 }
             },
         },
+				"/expenses/fiscalyear/{year}": {
+					"get": {
+							tags: ["expense"],
+							"description": "年度で指定されたexpensesを取得",
+							"parameters": [
+									{
+											"name": "year",
+											"in": "path",
+											"description": "year",
+											"required": true,
+											"type": "integer"
+									}
+							],
+							"responses": {
+									"200": {
+											"description": "yearで指定されたexpensesを取得",
+									}
+							}
+					},
+			},
         "/fund_informations": {
             "get": {
                 tags: ["fund_information"],

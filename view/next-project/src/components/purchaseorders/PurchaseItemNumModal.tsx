@@ -4,11 +4,12 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
-import { PurchaseItem, PurchaseOrder, Expense } from '@type/common';
+import { PurchaseItem, PurchaseOrder, Expense, ExpenseByPeriods } from '@type/common';
 
 export interface PurchaseItemNumModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   expenses: Expense[];
+  expenseByPeriods: ExpenseByPeriods[];
 }
 
 export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
@@ -117,9 +118,9 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               onChange={formDataHandler('expenseID')}
               className='w-full'
             >
-              {props.expenses.map((data) => (
-                <option key={data.id} value={data.id}>
-                  {data.name}
+              {props.expenseByPeriods.map((data) => (
+                <option key={data.expense.id} value={data.expense.id}>
+                  {data.expense.name}
                 </option>
               ))}
             </Select>
