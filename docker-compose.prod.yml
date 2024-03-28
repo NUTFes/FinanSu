@@ -25,3 +25,5 @@ services:
     command: "go run main.go"
     env_file: ["./finansu.env"]
     ports: ["1323:1323"]
+    environment:
+      RESET_PASSWORD_URL: 'https://finansu.nutfes.net/reset_password'

@@ -145,6 +145,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/mail_auth/signin", r.mailAuthController.SignIn)
 	e.DELETE("/mail_auth/signout", r.mailAuthController.SignOut)
 	e.GET("/mail_auth/is_signin", r.mailAuthController.IsSignIn)
+	e.POST("/mail_auth/send_reset_password", r.mailAuthController.SendResetPassword)
 
 	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)
