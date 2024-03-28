@@ -217,6 +217,7 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 				&activityInformation.FileName,
 				&activityInformation.FileType,
 				&activityInformation.DesignProgress,
+				&activityInformation.FileInformation,
 				&activityInformation.CreatedAt,
 				&activityInformation.UpdatedAt,
 			)
@@ -312,6 +313,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 				&activityInformation.FileName,
 				&activityInformation.FileType,
 				&activityInformation.DesignProgress,
+				&activityInformation.FileInformation,
 				&activityInformation.CreatedAt,
 				&activityInformation.UpdatedAt,
 			)
