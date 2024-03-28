@@ -221,7 +221,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
-      <div className='my-5 hidden justify-center md:flex gap-3'>
+      <div className='my-5 hidden justify-center gap-3 md:flex'>
         <OpenAddPdfDetailModalButton
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
           setIsOpen={props.setIsOpen}
