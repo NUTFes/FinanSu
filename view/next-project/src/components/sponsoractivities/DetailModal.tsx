@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-
+import OpenAddPdfDetailModalButton from './OpenAddPdfDetailModalButton';
 import OpenPaymentDayModalButton from './OpenPaymentDayModalButton';
 import { Modal } from '@components/common';
 import { DESIGNERS } from '@constants/designers';
@@ -221,7 +221,11 @@ const DetailModal: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
-      <div className='my-5 hidden justify-center md:flex'>
+      <div className='my-5 hidden justify-center gap-3 md:flex'>
+        <OpenAddPdfDetailModalButton
+          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          setIsOpen={props.setIsOpen}
+        />
         <OpenPaymentDayModalButton
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
           setIsOpen={props.setIsOpen}
