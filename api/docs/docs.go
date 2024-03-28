@@ -2368,6 +2368,10 @@ const docTemplate = `{
                     "type": "int",
                     "example": 1,
                 },
+                "fileInformation":{
+                    "type": "string",
+                    "example": "",
+                },
             },
         },
         "activity_style":{

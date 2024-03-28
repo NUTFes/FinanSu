@@ -16,8 +16,8 @@ type activityInformationRepository struct {
 type ActivityInformationRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string) error
-	Update(context.Context, string, string, string, string, string, string) error
+	Create(context.Context, string, string, string, string, string, string) error
+	Update(context.Context, string, string, string, string, string, string, string) error
 	Destroy(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 }
@@ -46,13 +46,14 @@ func (ar *activityInformationRepository) Create(
 	fileName string,
 	fileType string,
 	designProgress string,
+	fileInformation string,
 	) error {
 
 	query := `
 	INSERT INTO	activity_informations
-		(activity_id, bucket_name, file_name, file_type, design_progress)
+		(activity_id, bucket_name, file_name, file_type, design_progress, file_information)
 	VALUES
-		(` + activityId + `, "` + bucketName + `", "` + fileName +`", "` + fileType + `", "` + designProgress +`")`
+		(` + activityId + `, "` + bucketName + `", "` + fileName +`", "` + fileType + `", ` + designProgress +`, "` + fileInformation +`")`
 
 	return ar.crud.UpdateDB(c, query)
 }
@@ -66,6 +67,7 @@ func (ar *activityInformationRepository) Update(
 	fileName string,
 	fileType string,
 	designProgress string,
+	fileInformation string,
 	) error {
 
 	query := `
@@ -76,7 +78,8 @@ func (ar *activityInformationRepository) Update(
 		`", file_name = "` + fileName +
 		`", file_type = "` + fileType +
 		`", design_progress = ` + designProgress +
-		` where id = ` + id
+		`, file_information = "` + fileInformation +
+		`" where id = ` + id
 
 	return ar.crud.UpdateDB(c, query)
 }

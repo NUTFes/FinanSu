@@ -15,8 +15,8 @@ type activityInformationUseCase struct {
 type ActivityInformationUseCase interface {
 	GetActivityInformation(context.Context) ([]domain.ActivityInformation, error)
 	GetActivityInformationByID(context.Context, string) (domain.ActivityInformation, error)
-	CreateActivityInformation(context.Context, string, string, string, string, string) (domain.ActivityInformation, error)
-	UpdateActivityInformation(context.Context, string, string, string, string, string, string) (domain.ActivityInformation, error)
+	CreateActivityInformation(context.Context, string, string, string, string, string, string) (domain.ActivityInformation, error)
+	UpdateActivityInformation(context.Context, string, string, string, string, string, string, string) (domain.ActivityInformation, error)
 	DestroyActivityInformation(context.Context, string) error
 }
 
@@ -44,6 +44,7 @@ func (a *activityInformationUseCase) GetActivityInformation(c context.Context) (
 			&activityInformation.FileName,
 			&activityInformation.FileType,
 			&activityInformation.DesignProgress,
+			&activityInformation.FileInformation,
 			&activityInformation.CreatedAt,
 			&activityInformation.UpdatedAt,
 		)
@@ -68,6 +69,7 @@ func (a *activityInformationUseCase) GetActivityInformationByID(c context.Contex
 		&activityInformation.FileName,
 		&activityInformation.FileType,
 		&activityInformation.DesignProgress,
+		&activityInformation.FileInformation,
 		&activityInformation.CreatedAt,
 		&activityInformation.UpdatedAt,
 	)
@@ -85,10 +87,11 @@ func (a *activityInformationUseCase) CreateActivityInformation(
 	bucketName string,
 	fileName string,
 	fileType string,
-	designProgress string) (domain.ActivityInformation, error) {
+	designProgress string,
+	fileInformation string) (domain.ActivityInformation, error) {
 	latastActivityInformation := domain.ActivityInformation{}
 
-	err := a.rep.Create(c, activityId, bucketName, fileName, fileType, designProgress)
+	err := a.rep.Create(c, activityId, bucketName, fileName, fileType, designProgress, fileInformation)
 	row, err := a.rep.FindLatestRecord(c)
 	err = row.Scan(
 		&latastActivityInformation.ID,
@@ -97,6 +100,7 @@ func (a *activityInformationUseCase) CreateActivityInformation(
 		&latastActivityInformation.FileName,
 		&latastActivityInformation.FileType,
 		&latastActivityInformation.DesignProgress,
+		&latastActivityInformation.FileInformation,
 		&latastActivityInformation.CreatedAt,
 		&latastActivityInformation.UpdatedAt,
 	)
@@ -114,9 +118,10 @@ func (a *activityInformationUseCase) UpdateActivityInformation(
 	bucketName string,
 	fileName string,
 	fileType string,
-	designProgress string) (domain.ActivityInformation, error) {
+	designProgress string,
+	fileInformation string) (domain.ActivityInformation, error) {
 	updatedActivityInformation := domain.ActivityInformation{}
-	err := a.rep.Update(c, id, activityId, bucketName, fileName, fileType, designProgress)
+	err := a.rep.Update(c, id, activityId, bucketName, fileName, fileType, designProgress, fileInformation)
 	row, err := a.rep.Find(c, id)
 	err = row.Scan(
 		&updatedActivityInformation.ID,
@@ -125,6 +130,7 @@ func (a *activityInformationUseCase) UpdateActivityInformation(
 		&updatedActivityInformation.FileName,
 		&updatedActivityInformation.FileType,
 		&updatedActivityInformation.DesignProgress,
+		&updatedActivityInformation.FileInformation,
 		&updatedActivityInformation.CreatedAt,
 		&updatedActivityInformation.UpdatedAt,
 

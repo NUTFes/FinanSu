@@ -59,7 +59,9 @@ func (a *activityInformationController) CreateActivityInformation(c echo.Context
 											 activityInformation.BucketName,
 											 activityInformation.FileName,
 											 activityInformation.FileType,
-											 strconv.Itoa(int(activityInformation.DesignProgress)))
+											 strconv.Itoa(int(activityInformation.DesignProgress)),
+											 activityInformation.FileInformation,
+											)
 	if err != nil { 
 		return err
 	}
@@ -80,7 +82,9 @@ func (a *activityInformationController) UpdateActivityInformation(c echo.Context
 									activityInformation.BucketName,
 									activityInformation.FileName,
 									activityInformation.FileType,
-									strconv.Itoa(int(activityInformation.DesignProgress)))
+									strconv.Itoa(int(activityInformation.DesignProgress)),
+									activityInformation.FileInformation)
+									
 	if err != nil {
 		return err
 	}
