@@ -7,6 +7,7 @@ interface Props {
   className?: string;
   placeholder?: string;
   value?: string | number;
+  defaultValue?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   children?: React.ReactNode;
 }
@@ -21,6 +22,7 @@ function Select(props: Props): JSX.Element {
         placeholder={props.placeholder}
         className={clsx(s.select, className)}
         value={props.value}
+        defaultValue={props.defaultValue}
         onChange={props.onChange}
       >
         {props.children}

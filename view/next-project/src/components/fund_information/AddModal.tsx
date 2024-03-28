@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction, useState, useMemo } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
@@ -14,6 +14,7 @@ interface ModalProps {
   teachers: Teacher[];
   departments: Department[];
   users: User[];
+  currentUser?: User;
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
@@ -28,9 +29,12 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   const dd = String(today.getDate()).padStart(2, '0');
   const ymd = `${yyyy}-${mm}-${dd}`;
 
+  const [formUser, setFormUser] = useState<User | undefined>(props.currentUser);
+  const loginUserBureau = BUREAUS.find((bureau) => bureau.id === props.currentUser?.bureauID);
+
   const [formData, setFormData] = useState<FundInformation>({
-    userID: user.id,
-    teacherID: props.teachers[0].id || 1,
+    userID: formUser?.id || 0,
+    teacherID: loginUserBureau?.id || 1,
     price: 0,
     remark: '',
     isFirstCheck: false,
@@ -39,17 +43,28 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   });
 
   // 担当者を局でフィルタを適用
-  const [bureauId, setBureauId] = useState<number>(1);
-  const filteredUsers = useMemo(() => {
-    const res = props.users
-      .filter((user) => {
-        return user.bureauID === bureauId;
-      })
-      .filter((user, index, self) => {
-        return self.findIndex((u) => u.name === user.name) === index;
-      });
-    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
-    return res;
+  const [bureauId, setBureauId] = useState<number>(loginUserBureau?.id || 1);
+  const defaultfilteredUsers = props.users
+    .filter((user) => {
+      return user.bureauID === bureauId;
+    })
+    .filter((user, index, self) => {
+      return self.findIndex((u) => u.name === user.name) === index;
+    });
+  const [filteredUsers, setFilteredUsers] = useState<User[]>(defaultfilteredUsers);
+
+  useEffect(() => {
+    if (formUser?.bureauID !== bureauId) {
+      const filteredUsers = props.users
+        .filter((user) => {
+          return user.bureauID === bureauId;
+        })
+        .filter((user, index, self) => {
+          return self.findIndex((u) => u.name === user.name) === index;
+        });
+      setFilteredUsers(filteredUsers);
+      if (filteredUsers.length !== 0) setFormData({ ...formData, userID: filteredUsers[0].id });
+    }
   }, [bureauId]);
 
   const handler =
@@ -104,7 +119,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='text-black-600'>担当者の局</p>
         <div className='col-span-4 w-full'>
-          <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
+          <Select
+            defaultValue={loginUserBureau?.id}
+            onChange={(e) => setBureauId(Number(e.target.value))}
+          >
             {BUREAUS.map((bureaus) => (
               <option key={bureaus.id} value={bureaus.id}>
                 {bureaus.name}
@@ -114,7 +132,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='col-span-1 text-black-600'>担当者</p>
         <div className='col-span-4 w-full'>
-          <Select className='w-full' value={formData.userID} onChange={handler('userID')}>
+          <Select className='w-full' defaultValue={formUser?.id} onChange={handler('userID')}>
             {filteredUsers.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name}
