@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 import { put } from '@api/sponsor';
-import { PrimaryButton, CloseButton, Input, Modal } from '@components/common';
+import { PrimaryButton, CloseButton, Input, Modal, Checkbox } from '@components/common';
 import { Sponsor } from '@type/common';
 
 interface Props {
@@ -32,6 +32,8 @@ export default function SponsorEditModal(props: Props) {
     props.setIsOpen(false);
     router.reload();
   };
+
+  const [isChecked, setIsChecked] = useState<boolean>(true);
 
   return (
     <Modal className='md:w-1/2'>
@@ -67,12 +69,21 @@ export default function SponsorEditModal(props: Props) {
           />
         </div>
       </div>
+      <div className='my-6 flex w-full justify-center '>
+        <div>
+          <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+        </div>
+        <p className='ml-4 text-black-600 '>
+          企業名が正確である。※株式会社などがついている正しいものか
+        </p>
+      </div>
       <div className='mx-auto mb-5 w-fit'>
         <PrimaryButton
           className={'mx-2'}
           onClick={() => {
             submit(formData);
           }}
+          disabled={!isChecked}
         >
           編集する
         </PrimaryButton>

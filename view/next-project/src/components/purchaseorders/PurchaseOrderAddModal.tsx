@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
-import { del } from '@api/api_methods';
 import { post } from '@api/purchaseItem';
+import { post as postOrder } from '@api/purchaseOrder';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -15,7 +15,7 @@ import {
   Stepper,
   Tooltip,
 } from '@components/common';
-import { PurchaseItem } from '@type/common';
+import { PurchaseItem, PurchaseOrder } from '@type/common';
 
 interface ModalProps {
   purchaseItemNum: PurchaseItemNum;
@@ -24,6 +24,7 @@ interface ModalProps {
   onClose: () => void;
   setFormDataList: (formDataList: PurchaseItem[]) => void;
   formDataList: PurchaseItem[];
+  purchaseOrder: PurchaseOrder;
 }
 
 interface PurchaseItemNum {
@@ -46,12 +47,6 @@ export default function AddModal(props: ModalProps) {
   const [isDone, setIsDone] = useState<boolean>(false);
   const router = useRouter();
 
-  const deletePurchaseOrder = async () => {
-    const deletePurchaseOrderUrl =
-      process.env.CSR_API_URI + '/purchaseorders/' + props.formDataList[0].purchaseOrderID;
-    await del(deletePurchaseOrderUrl);
-  };
-
   const handler =
     (stepNumber: number, input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -62,15 +57,24 @@ export default function AddModal(props: ModalProps) {
       );
     };
 
-  const addPurchaseItem = async (data: PurchaseItem[]) => {
+  const submitOrderAndItems = async (
+    purchaseOrder: PurchaseOrder,
+    purchaseItems: PurchaseItem[],
+  ) => {
+    const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
+    const postRes: PurchaseOrder = await postOrder(addPurchaseOrderUrl, purchaseOrder);
+    const purchaseOrderId = postRes.id || 0;
+    const purchaseItemsAddOrderInfo = purchaseItems.map((item) => {
+      return { ...item, purchaseOrderID: purchaseOrderId };
+    });
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
-    data.map(async (item) => {
+    purchaseItemsAddOrderInfo.map(async (item) => {
       await post(addPurchaseItemUrl, item);
     });
   };
 
-  const submit = async (formDataList: PurchaseItem[]) => {
-    addPurchaseItem(formDataList);
+  const submit = async (purchaseOrder: PurchaseOrder, formDataList: PurchaseItem[]) => {
+    submitOrderAndItems(purchaseOrder, formDataList);
     props.onClose();
     props.numModalOnClose();
     router.reload();
@@ -81,44 +85,54 @@ export default function AddModal(props: ModalProps) {
     <>
       <div className={clsx('my-6 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             物品名
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.item} onChange={handler(index, 'item')} />
+          <Input value={data.item} onChange={handler(index, 'item')} className='w-full' />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             単価
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input type='number' value={data.price} onChange={handler(index, 'price')} />
+          <Input
+            type='number'
+            value={data.price}
+            onChange={handler(index, 'price')}
+            className='w-full'
+          />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             個数
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input type='number' value={data.quantity} onChange={handler(index, 'quantity')} />
+          <Input
+            type='number'
+            value={data.quantity}
+            onChange={handler(index, 'quantity')}
+            className='w-full'
+          />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             詳細
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.detail} onChange={handler(index, 'detail')} />
+          <Input value={data.detail} onChange={handler(index, 'detail')} className='w-full' />
         </div>
         <div className={clsx('col-span-2 mr-2 grid')}>
-          <div className={clsx('text-md flex grid items-center justify-items-end text-black-600')}>
+          <div className={clsx('text-md grid items-center justify-items-end text-black-600')}>
             URL
           </div>
         </div>
         <div className={clsx('col-span-10 grid w-full')}>
-          <Input value={data.url} onChange={handler(index, 'url')} />
+          <Input value={data.url} onChange={handler(index, 'url')} className='w-full' />
         </div>
       </div>
     </>
@@ -236,7 +250,6 @@ export default function AddModal(props: ModalProps) {
           <div className={clsx('mr-5 grid w-full justify-items-end')}>
             <CloseButton
               onClick={() => {
-                deletePurchaseOrder();
                 props.onClose();
                 props.numModalOnClose();
               }}
@@ -276,7 +289,7 @@ export default function AddModal(props: ModalProps) {
                       <PrimaryButton
                         className={'mx-2'}
                         onClick={() => {
-                          submit(props.formDataList);
+                          submit(props.purchaseOrder, props.formDataList);
                         }}
                       >
                         登録

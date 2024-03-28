@@ -321,82 +321,11 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     font: fontData,
   });
   let sum = 0;
-  purchaseOrdersViews.purchaseItem.map((item, index, arr) => {
-    page.drawRectangle({
-      x: 22,
-      y: height - (tableHight + 20 * (1 + index)),
-      width: rectangleWidth,
-      height: 20,
-      borderColor: rgb(0, 0, 0),
-      borderWidth: 1,
-    });
-    for (let i = 0; i < 3; i++) {
-      page.drawRectangle({
-        x: 22 + rectangleWidth + i * rectangleWidth2,
-        y: height - (tableHight + 20 * (1 + index)),
-        width: rectangleWidth2,
-        height: 20,
-        borderColor: rgb(0, 0, 0),
-        borderWidth: 1,
-      });
-    }
-    for (let i = 0; i < 2; i++) {
-      page.drawRectangle({
-        x: 22 + rectangleWidth + 3 * rectangleWidth2 + i * rectangleWidth,
-        y: height - (tableHight + 20 * (1 + index)),
-        width: rectangleWidth,
-        height: 20,
-        borderColor: rgb(0, 0, 0),
-        borderWidth: 1,
-      });
-    }
-    page.drawRectangle({
-      x: 22 + 3 * rectangleWidth + 3 * rectangleWidth2,
-      y: height - (tableHight + 20 * (1 + index)),
-      width: 20,
-      height: 20,
-      borderColor: rgb(0, 0, 0),
-      borderWidth: 1,
-    });
-    const itemName = truncateString(item.item, 14, 24);
-    const itemFontSize = fontSizeFunc(item.item);
-    page.drawText(itemName, {
-      x: (rectangleWidth - itemName.length * itemFontSize) / 2 + 22,
-      y: height - (tableTextHight + 20 * (1 + index)) + 2,
-      size: fontSizes[2],
-      font: fontData,
-    });
-    page.drawText(String(item.price), {
-      x: 18 + rectangleWidth + rectangleWidth2 - String(item.price).length * 7,
-      y: height - (tableTextHight + 20 * (1 + index)),
-      size: fontSizes[0],
-      font: fontData,
-    });
-    page.drawText(String(item.quantity), {
-      x: 22 + rectangleWidth + rectangleWidth2 + rectangleWidth2 / 2 - 5,
-      y: height - (tableTextHight + 20 * (1 + index)),
-      size: fontSizes[0],
-      font: fontData,
-    });
-    sum += item.price * item.quantity;
-    page.drawText(String(item.price * item.quantity), {
-      x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(item.price * item.quantity).length * 7,
-      y: height - (tableTextHight + 20 * (1 + index)) + 2,
-      size: fontSizes[0],
-      font: fontData,
-    });
-    const detail = truncateString(item.detail, 14, 24);
-    page.drawText(detail, {
-      x: 24 + 2 * rectangleWidth + 3 * rectangleWidth2,
-      y: height - (tableTextHight + 20 * (1 + index)),
-      size: fontSizes[2],
-      font: fontData,
-    });
-    //合計の処理
-    if (index === arr.length - 1) {
+  if (purchaseOrdersViews.purchaseItem) {
+    purchaseOrdersViews.purchaseItem.map((item, index, arr) => {
       page.drawRectangle({
         x: 22,
-        y: height - (tableHight + 20 * (2 + index)),
+        y: height - (tableHight + 20 * (1 + index)),
         width: rectangleWidth,
         height: 20,
         borderColor: rgb(0, 0, 0),
@@ -405,7 +334,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
       for (let i = 0; i < 3; i++) {
         page.drawRectangle({
           x: 22 + rectangleWidth + i * rectangleWidth2,
-          y: height - (tableHight + 20 * (2 + index)),
+          y: height - (tableHight + 20 * (1 + index)),
           width: rectangleWidth2,
           height: 20,
           borderColor: rgb(0, 0, 0),
@@ -415,7 +344,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
       for (let i = 0; i < 2; i++) {
         page.drawRectangle({
           x: 22 + rectangleWidth + 3 * rectangleWidth2 + i * rectangleWidth,
-          y: height - (tableHight + 20 * (2 + index)),
+          y: height - (tableHight + 20 * (1 + index)),
           width: rectangleWidth,
           height: 20,
           borderColor: rgb(0, 0, 0),
@@ -424,32 +353,166 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
       }
       page.drawRectangle({
         x: 22 + 3 * rectangleWidth + 3 * rectangleWidth2,
-        y: height - (tableHight + 20 * (2 + index)),
+        y: height - (tableHight + 20 * (1 + index)),
         width: 20,
         height: 20,
         borderColor: rgb(0, 0, 0),
         borderWidth: 1,
       });
-      page.drawText('合計', {
-        x: 22 + rectangleWidth + rectangleWidth2 + 17,
-        y: height - (tableTextHight + 20 * (2 + index)),
+      const itemName = truncateString(item.item, 14, 24);
+      const itemFontSize = fontSizeFunc(item.item);
+      page.drawText(itemName, {
+        x: (rectangleWidth - itemName.length * itemFontSize) / 2 + 22,
+        y: height - (tableTextHight + 20 * (1 + index)) + 2,
+        size: fontSizes[2],
+        font: fontData,
+      });
+      page.drawText(String(item.price), {
+        x: 18 + rectangleWidth + rectangleWidth2 - String(item.price).length * 7,
+        y: height - (tableTextHight + 20 * (1 + index)),
         size: fontSizes[0],
         font: fontData,
       });
-      page.drawText(String(sum), {
-        x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(sum).length * 7,
-        y: height - (tableTextHight + 20 * (2 + index)),
+      page.drawText(String(item.quantity), {
+        x: 22 + rectangleWidth + rectangleWidth2 + rectangleWidth2 / 2 - 5,
+        y: height - (tableTextHight + 20 * (1 + index)),
         size: fontSizes[0],
         font: fontData,
       });
-      page.drawText('以上', {
-        x: width - 65,
-        y: height - (tableTextHight + 20 * (3 + index)),
+      sum += item.price * item.quantity;
+      page.drawText(String(item.price * item.quantity), {
+        x:
+          18 + rectangleWidth + 3 * rectangleWidth2 - String(item.price * item.quantity).length * 7,
+        y: height - (tableTextHight + 20 * (1 + index)) + 2,
         size: fontSizes[0],
         font: fontData,
+      });
+      const detail = truncateString(item.detail, 14, 24);
+      page.drawText(detail, {
+        x: 24 + 2 * rectangleWidth + 3 * rectangleWidth2,
+        y: height - (tableTextHight + 20 * (1 + index)),
+        size: fontSizes[2],
+        font: fontData,
+      });
+      //合計の処理
+      if (index === arr.length - 1) {
+        page.drawRectangle({
+          x: 22,
+          y: height - (tableHight + 20 * (2 + index)),
+          width: rectangleWidth,
+          height: 20,
+          borderColor: rgb(0, 0, 0),
+          borderWidth: 1,
+        });
+        for (let i = 0; i < 3; i++) {
+          page.drawRectangle({
+            x: 22 + rectangleWidth + i * rectangleWidth2,
+            y: height - (tableHight + 20 * (2 + index)),
+            width: rectangleWidth2,
+            height: 20,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+        }
+        for (let i = 0; i < 2; i++) {
+          page.drawRectangle({
+            x: 22 + rectangleWidth + 3 * rectangleWidth2 + i * rectangleWidth,
+            y: height - (tableHight + 20 * (2 + index)),
+            width: rectangleWidth,
+            height: 20,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+        }
+        page.drawRectangle({
+          x: 22 + 3 * rectangleWidth + 3 * rectangleWidth2,
+          y: height - (tableHight + 20 * (2 + index)),
+          width: 20,
+          height: 20,
+          borderColor: rgb(0, 0, 0),
+          borderWidth: 1,
+        });
+        page.drawText('合計', {
+          x: 22 + rectangleWidth + rectangleWidth2 + 17,
+          y: height - (tableTextHight + 20 * (2 + index)),
+          size: fontSizes[0],
+          font: fontData,
+        });
+        page.drawText(String(sum), {
+          x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(sum).length * 7,
+          y: height - (tableTextHight + 20 * (2 + index)),
+          size: fontSizes[0],
+          font: fontData,
+        });
+        page.drawText('以上', {
+          x: width - 65,
+          y: height - (tableTextHight + 20 * (3 + index)),
+          size: fontSizes[0],
+          font: fontData,
+        });
+      }
+    });
+  } else {
+    const totalY = height - (tableHight + 20 * 1);
+    page.drawRectangle({
+      x: 22,
+      y: totalY,
+      width: rectangleWidth,
+      height: 20,
+      borderColor: rgb(0, 0, 0),
+      borderWidth: 1,
+    });
+    for (let i = 0; i < 3; i++) {
+      page.drawRectangle({
+        x: 22 + rectangleWidth + i * rectangleWidth2,
+        y: totalY,
+        width: rectangleWidth2,
+        height: 20,
+        borderColor: rgb(0, 0, 0),
+        borderWidth: 1,
       });
     }
-  });
+    for (let i = 0; i < 2; i++) {
+      page.drawRectangle({
+        x: 22 + rectangleWidth + 3 * rectangleWidth2 + i * rectangleWidth,
+        y: totalY,
+        width: rectangleWidth,
+        height: 20,
+        borderColor: rgb(0, 0, 0),
+        borderWidth: 1,
+      });
+    }
+    page.drawRectangle({
+      x: 22 + 3 * rectangleWidth + 3 * rectangleWidth2,
+      y: totalY,
+      width: 20,
+      height: 20,
+      borderColor: rgb(0, 0, 0),
+      borderWidth: 1,
+    });
+
+    page.drawText('合計', {
+      x: 22 + rectangleWidth + rectangleWidth2 + 17,
+      y: totalY + 2,
+      size: fontSizes[0],
+      font: fontData,
+    });
+
+    page.drawText('0', {
+      x: 18 + rectangleWidth + 3 * rectangleWidth2 - String(0).length * 7,
+      y: totalY + 2,
+      size: fontSizes[0],
+      font: fontData,
+    });
+
+    page.drawText('以上', {
+      x: width - 65,
+      y: totalY - 20,
+      size: fontSizes[0],
+      font: fontData,
+    });
+  }
+
   // 内容の作成ここまで
   // 生成されたPDFデータを取得
   const pdfBytes = await pdfDoc.save();
