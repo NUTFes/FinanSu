@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { Modal } from '@components/common';
 import { ExpenseView } from '@type/common';
@@ -20,21 +20,18 @@ const DetailModal: FC<ModalProps> = (props) => {
     return <></>;
   }
 
-  const discountTotal = useMemo(() => {
-    return expenseView && expenseView.purchaseDetails
+  const discountTotal =
+    expenseView && expenseView.purchaseDetails
       ? expenseView.purchaseDetails.reduce((acc, cur) => {
           return acc + cur.purchaseReport.discount;
         }, 0)
       : 0;
-  }, [expenseView.purchaseDetails]);
 
-  const additionTotal = useMemo(() => {
-    return expenseView.purchaseDetails
-      ? expenseView.purchaseDetails.reduce((acc, cur) => {
-          return acc + cur.purchaseReport.addition;
-        }, 0)
-      : 0;
-  }, [expenseView.purchaseDetails]);
+  const additionTotal = expenseView.purchaseDetails
+    ? expenseView.purchaseDetails.reduce((acc, cur) => {
+        return acc + cur.purchaseReport.addition;
+      }, 0)
+    : 0;
 
   return (
     <Modal className='w-fit'>
