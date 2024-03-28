@@ -235,7 +235,9 @@ const MyDocument = (props: MyDocumentProps) => (
               <Text>備考</Text>
             </View>
             <View style={styles.textArea}>
-              <Text>{props.remarks}</Text>
+              {(props.remarks.match(/.{1,40}/g) || []).map((chunk, index) => (
+                <Text key={index}>{chunk}</Text>
+              ))}
             </View>
           </View>
         </View>
