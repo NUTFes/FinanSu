@@ -293,7 +293,7 @@ export const PreviewPDF: React.FC<PreviewProps> = ({
   date,
   remarks,
 }) => (
-  <PDFViewer style={{ width: '100vw', height: '100vh' }}>
+  <PDFViewer style={{ width: '100vw', height: '100vh' }} showToolbar={false}>
     <MyDocument
       sponsorActivitiesViewItem={sponsorActivitiesViewItem}
       date={date}
