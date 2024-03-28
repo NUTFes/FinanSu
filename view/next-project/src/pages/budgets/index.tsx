@@ -77,7 +77,7 @@ export default function BudgetList(props: Props) {
     return true;
   }, [currentUser]);
 
-  const [forcusExpense, setForcusExpense] = useState<ExpenseView>(props.expenses[0]);
+  const [forcusExpense, setForcusExpense] = useState<ExpenseView | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const onOpen = (expenseID: number, expenseView: ExpenseView) => {
     setForcusExpense(expenseView);
