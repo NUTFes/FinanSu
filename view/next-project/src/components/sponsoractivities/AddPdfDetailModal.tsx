@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { createSponsoractivitiesPDF } from '@/utils/createSponsoractivitiesReceiptPDF';
+import { PreviewPDF } from '@/utils/createSponsoractivitiesReceiptPDF';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
@@ -52,7 +53,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
   };
 
   return (
-    <Modal className='mt-64 md:mt-32 md:w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
@@ -76,10 +77,10 @@ export default function AddPdfDetailModal(props: ModalProps) {
             type='text'
             value={remarks}
             onChange={handleRemarksChange}
-            className='w-full'
+            className='mb-3 w-full'
           />
         </div>
-        <div className='my-5 hidden justify-center md:flex'>
+        <div className='mb-3 flex w-full justify-center'>
           <PrimaryButton
             onClick={async () => {
               createSponsoractivitiesPDF(
@@ -87,11 +88,19 @@ export default function AddPdfDetailModal(props: ModalProps) {
                 formatDate(formData.receivedAt),
                 remarks,
               );
+              props.setIsOpen(false);
             }}
           >
-            請求書ダウンロード
+            ダウンロード
           </PrimaryButton>
         </div>
+      </div>
+      <div className='h-[30rem] justify-center overflow-x-auto md:flex'>
+        <PreviewPDF
+          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          date={formatDate(formData.receivedAt)}
+          remarks={remarks}
+        />
       </div>
     </Modal>
   );

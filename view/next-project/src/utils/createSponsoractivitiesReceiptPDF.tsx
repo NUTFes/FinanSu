@@ -1,4 +1,4 @@
-import { Document, Page, Text, Font, View, pdf, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, Font, View, pdf, StyleSheet, PDFViewer } from '@react-pdf/renderer';
 import React from 'react';
 import { SponsorActivityView } from '@type/common';
 
@@ -130,135 +130,174 @@ const styles = StyleSheet.create({
   },
 });
 
+interface MyDocumentProps {
+  sponsorActivitiesViewItem: SponsorActivityView;
+  totalPrice: number;
+  date: string;
+  remarks: string;
+  formatDate: (date: string) => string;
+}
+
+const MyDocument = (props: MyDocumentProps) => (
+  <Document>
+    <Page style={styles.page} size='A4'>
+      <View>
+        <Text style={styles.header}>御 請 求 書</Text>
+      </View>
+      <View style={styles.details}>
+        <View style={styles.detailItem}>
+          <View style={styles.textVertical}>
+            <Text style={[styles.text_M, styles.underLine]}>
+              {props.sponsorActivitiesViewItem.sponsor.name}
+              {'  '}
+              <Text style={styles.text_M}> 御中</Text>
+            </Text>
+            <Text style={[styles.text_S, styles.marginButtom]}>
+              ご担当 : {props.sponsorActivitiesViewItem.sponsor.representative} 様
+            </Text>
+            <Text style={[styles.text_S, styles.underLine]}>
+              件名 : <Text style={styles.text_M}>技大祭企業協賛</Text>
+            </Text>
+            <View>
+              <Text style={[styles.text_S, styles.paddingTop]}>
+                下記の通り、ご請求申し上げます。
+              </Text>
+              <View style={styles.sumField}>
+                <Text style={styles.text_S}>
+                  合計金額 <Text style={styles.text_L}>¥ {props.totalPrice}</Text>
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.marginButtom}>
+              請求日 :{' '}
+              {props.formatDate(props.sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}
+            </Text>
+            <View>
+              <View style={styles.marginButtom}>
+                <Text>技大祭実行委員</Text>
+                <Text>〒940-2137</Text>
+                <Text>新潟県長岡市上富岡町1603-1</Text>
+                <Text>長岡技術科学大学 大学集会施設</Text>
+              </View>
+              <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
+              <Text>担当 : {props.sponsorActivitiesViewItem.user.name}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View style={[styles.itemsTable, styles.marginButtom]}>
+        <View style={styles.tableRow}>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_S]}>No.</Text>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_L]}>概要</Text>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_S]}>数量</Text>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>単価</Text>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>金額</Text>
+        </View>
+        {props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
+          <View style={styles.tableRow} key={styleDetail.sponsorStyle.id}>
+            <Text style={[styles.commonTableCol, styles.tableCol_S]}>{index + 1}</Text>
+            <Text style={[styles.commonTableCol, styles.tableCol_L]}>
+              {styleDetail.sponsorStyle.style} ({styleDetail.sponsorStyle.feature})
+            </Text>
+            <Text style={[styles.commonTableCol, styles.tableCol_S]}>1</Text>
+            <Text style={[styles.commonTableCol, styles.tableCol_M]}>
+              ¥ {styleDetail.sponsorStyle.price}
+            </Text>
+            <Text style={[styles.commonTableCol, styles.tableCol_M]}>
+              ¥ {styleDetail.sponsorStyle.price}
+            </Text>
+          </View>
+        ))}
+        <View style={styles.tableRow}>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_S]} />
+          <Text style={[styles.commonTableCol, styles.tableColHeader_L]} />
+          <Text style={[styles.commonTableCol, styles.tableColHeader_S]}>合計</Text>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_M, styles.tableCol_Sum]} />
+          <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>¥ {props.totalPrice}</Text>
+        </View>
+      </View>
+      <View style={[styles.detailField, styles.marginButtom]}>
+        <Text style={styles.text_S}>
+          お手数でございますが、{props.date}までに下記口座へ振込くださいますようお願い申し上げます。
+        </Text>
+        <Text style={styles.text_S}>&lt;振込先&gt;</Text>
+        <Text style={styles.text_S}>銀 行 名 : 大光銀行（金融機関コード : 0532）</Text>
+        <Text style={styles.text_S}>支 店 名 : 希望ヶ丘支店（支店コード : 042）</Text>
+        <Text style={styles.text_S}>預金種別 : 普通預金</Text>
+        <Text style={styles.text_S}>口座番号 : 2002151</Text>
+      </View>
+      <View>
+        <View style={styles.itemsTable}>
+          <View style={[styles.tableRow]}>
+            <View style={styles.textAreaHeader}>
+              <Text>備考</Text>
+            </View>
+            <View style={styles.textArea}>
+              <Text>{props.remarks}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </Page>
+  </Document>
+);
+
+const CalculateTotalPrice = (sponsorActivitiesViewItem: SponsorActivityView): number => {
+  const totalPrice = sponsorActivitiesViewItem.styleDetail.reduce((totalPriceAccumulator, item) => {
+    return totalPriceAccumulator + item.sponsorStyle.price;
+  }, 0);
+  return totalPrice;
+};
+
+const formatDate = (datetime: string) => {
+  const datetime2 = datetime.substring(0, datetime.length - 10);
+  return datetime2;
+};
+
 export const createSponsoractivitiesPDF = async (
   sponsorActivitiesViewItem: SponsorActivityView,
   date: string,
   remarks: string,
 ) => {
-  const formatDate = (date: string) => {
-    const datetime = date.replace('T', ' ');
-    const datetime2 = datetime.substring(0, datetime.length - 10);
-    return datetime2;
-  };
-  const totalPrice = sponsorActivitiesViewItem.styleDetail.reduce((sum, item) => {
-    return sum + item.sponsorStyle.price;
-  }, 0);
-
-  const MyDocument = () => (
-    <Document>
-      <Page style={styles.page} size='A4'>
-        <View>
-          <Text style={styles.header}>御 請 求 書</Text>
-        </View>
-        <View style={styles.details}>
-          <View style={styles.detailItem}>
-            <View style={styles.textVertical}>
-              <Text style={[styles.text_M, styles.underLine]}>
-                {sponsorActivitiesViewItem.sponsor.name} <Text style={styles.text_S}>御中</Text>
-              </Text>
-              <Text style={[styles.text_S, styles.marginButtom]}>
-                ご担当 : {sponsorActivitiesViewItem.sponsor.representative} 様
-              </Text>
-              <Text style={[styles.text_S, styles.underLine]}>
-                件名 : <Text style={styles.text_M}>技大祭企業協賛</Text>
-              </Text>
-              <View>
-                <Text style={[styles.text_S, styles.paddingTop]}>
-                  下記の通り、ご請求申し上げます。
-                </Text>
-                <View style={styles.sumField}>
-                  <Text style={styles.text_S}>
-                    合計金額 <Text style={styles.text_L}>¥ {totalPrice}</Text>
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View>
-              <Text style={styles.marginButtom}>
-                請求日 : {formatDate(sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}
-              </Text>
-              <View>
-                <View style={styles.marginButtom}>
-                  <Text>技大祭実行委員</Text>
-                  <Text>〒940-2137</Text>
-                  <Text>新潟県長岡市上富岡町1603-1</Text>
-                  <Text>長岡技術科学大学 大学集会施設</Text>
-                </View>
-                <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
-                <Text>担当 : {sponsorActivitiesViewItem.user.name}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={[styles.itemsTable, styles.marginButtom]}>
-          <View style={styles.tableRow}>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_S]}>No.</Text>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_L]}>概要</Text>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_S]}>数量</Text>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>単価</Text>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>金額</Text>
-          </View>
-          {sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
-            <View style={styles.tableRow} key={index}>
-              <Text style={[styles.commonTableCol, styles.tableCol_S]}>{index + 1}</Text>
-              <Text style={[styles.commonTableCol, styles.tableCol_L]}>
-                {styleDetail.sponsorStyle.style} ({styleDetail.sponsorStyle.feature})
-              </Text>
-              <Text style={[styles.commonTableCol, styles.tableCol_S]}>1</Text>
-              <Text style={[styles.commonTableCol, styles.tableCol_M]}>
-                ¥ {styleDetail.sponsorStyle.price}
-              </Text>
-              <Text style={[styles.commonTableCol, styles.tableCol_M]}>
-                ¥ {styleDetail.sponsorStyle.price}
-              </Text>
-            </View>
-          ))}
-          <View style={styles.tableRow}>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_S]}></Text>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_L]}></Text>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_S]}>合計</Text>
-            <Text
-              style={[styles.commonTableCol, styles.tableColHeader_M, styles.tableCol_Sum]}
-            ></Text>
-            <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>¥ {totalPrice}</Text>
-          </View>
-        </View>
-        <View style={[styles.detailField, styles.marginButtom]}>
-          <Text style={styles.text_S}>
-            お手数でございますが、{date}までに下記口座へ振込くださいますようお願い申し上げます。
-          </Text>
-          <Text style={styles.text_S}>&lt;振込先&gt;</Text>
-          <Text style={styles.text_S}>銀 行 名 : 大光銀行（金融機関コード : 0532）</Text>
-          <Text style={styles.text_S}>支 店 名 : 希望ヶ丘支店（支店コード : 042）</Text>
-          <Text style={styles.text_S}>預金種別 : 普通預金</Text>
-          <Text style={styles.text_S}>口座番号 : 2002151</Text>
-        </View>
-        <View>
-          <View style={styles.itemsTable}>
-            <View style={[styles.tableRow]}>
-              <View style={styles.textAreaHeader}>
-                <Text>備考</Text>
-              </View>
-              <View style={styles.textArea}>
-                <Text>{remarks}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Page>
-    </Document>
+  const asPdf = pdf(
+    <MyDocument
+      sponsorActivitiesViewItem={sponsorActivitiesViewItem}
+      totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
+      date={date}
+      remarks={remarks}
+      formatDate={formatDate}
+    />,
   );
-  const asPdf = pdf(<MyDocument />);
-  await asPdf.toBlob();
-  asPdf.updateContainer(<MyDocument />);
   const blob = await asPdf.toBlob();
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download =
-    formatDate(sponsorActivitiesViewItem.sponsorActivity.createdAt || '') +
-    '-' +
-    sponsorActivitiesViewItem.sponsor.name +
-    '-請求書.pdf';
+  link.download = `${formatDate(sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}-${
+    sponsorActivitiesViewItem.sponsor.name
+  }-請求書.pdf`;
   link.click();
 };
+
+interface PreviewProps {
+  sponsorActivitiesViewItem: SponsorActivityView;
+  date: string;
+  remarks: string;
+}
+
+export const PreviewPDF: React.FC<PreviewProps> = ({
+  sponsorActivitiesViewItem,
+  date,
+  remarks,
+}) => (
+  <PDFViewer style={{ width: '100vw', height: '100vh' }}>
+    <MyDocument
+      sponsorActivitiesViewItem={sponsorActivitiesViewItem}
+      date={date}
+      remarks={remarks}
+      totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
+      formatDate={formatDate}
+    />
+  </PDFViewer>
+);
