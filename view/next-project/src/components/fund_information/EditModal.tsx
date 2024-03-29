@@ -29,12 +29,23 @@ export default function EditModal(props: ModalProps) {
     receivedAt: props.fundInformation.receivedAt,
   });
 
-  const [departmentID, setDepartmentID] = useState<number | string>(1);
+  const defaultTeacher = props.teachers.find(
+    (teacher) => teacher.id === props.fundInformation.teacherID,
+  );
+  const [teacher, setTeacher] = useState<Teacher | undefined>(defaultTeacher);
+  const [departmentID, setDepartmentID] = useState<number>(defaultTeacher?.departmentID || 1);
 
   useEffect(() => {
-    const teacher = props.teachers.find((teacher) => teacher.departmentID === departmentID);
-    if (teacher && teacher.id) {
-      setFormData({ ...formData, teacherID: teacher.id });
+    if (teacher?.departmentID !== departmentID) {
+      const relatedTeachers = props.teachers.filter(
+        (teacher) => teacher.departmentID === departmentID,
+      );
+      relatedTeachers &&
+        setFormData({
+          ...formData,
+          teacherID: relatedTeachers[0]?.id || 0,
+        });
+      setTeacher(relatedTeachers[0]);
     }
   }, [departmentID]);
 

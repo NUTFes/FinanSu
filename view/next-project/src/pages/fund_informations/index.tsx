@@ -220,7 +220,12 @@ export default function FundInformations(props: Props) {
             </select>
           </div>
           <div className='hidden justify-end md:flex '>
-            <OpenAddModalButton teachers={teachers} departments={departments} users={users}>
+            <OpenAddModalButton
+              teachers={teachers}
+              departments={departments}
+              users={users}
+              currentUser={currentUser}
+            >
               学内募金登録
             </OpenAddModalButton>
           </div>

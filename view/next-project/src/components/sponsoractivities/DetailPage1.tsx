@@ -4,12 +4,14 @@ import React, { FC } from 'react';
 import { FaChevronCircleRight } from 'react-icons/fa';
 import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
+import OpenPaymentDayModalButton from './OpenPaymentDayModalButton';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;
   children?: React.ReactNode;
   id: React.ReactNode;
   sponsorActivitiesViewItem: SponsorActivityView;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 const DetailPage1: FC<ModalProps> = (props) => {
@@ -165,6 +167,12 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
+      <div className='mt-5 hidden justify-center md:flex'>
+        <OpenPaymentDayModalButton
+          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          setIsOpen={props.setIsOpen}
+        />
+      </div>
       <div className='mt-2 flex justify-end'>
         <button onClick={() => toPage2()} className='rounded-full hover:bg-grey-300'>
           <FaChevronCircleRight size={30} />
