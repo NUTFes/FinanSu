@@ -2,11 +2,19 @@ import { clsx } from 'clsx';
 import { saveAs } from 'file-saver';
 import React, { FC, useEffect, useState } from 'react';
 
-import { FaChevronCircleLeft } from 'react-icons/fa';
+import { FaChevronCircleLeft, FaCheckCircle } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
-import { DeleteButton, OutlinePrimaryButton, PrimaryButton } from '../common';
+import { RiCloseCircleLine } from 'react-icons/ri';
+import {
+  DeleteButton,
+  EditButton,
+  Input,
+  OutlinePrimaryButton,
+  PrimaryButton,
+  Select,
+} from '../common';
 import UplaodFileModal from './UploadFileModal';
-import { post, del } from '@/utils/api/api_methods';
+import { post, del, put } from '@/utils/api/api_methods';
 import { DESIGN_PROGRESSES } from '@constants/designProgresses';
 import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
 
@@ -25,10 +33,16 @@ const DetailPage2: FC<ModalProps> = (props) => {
   };
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [editActivityInformationId, setEditActivityInformationId] = useState<number>(0);
+  const [activityInformationData, setActivityInformationData] = useState<string>('');
 
   const [sponsorActivityInformations, setSponsorActivityInformations] = useState<
     SponsorActivityInformation[]
   >(props.sponsorActivitiesViewItem.sponsorActivityInformations || []);
+  const [isEditInformations, setIsEditInformations] = useState<boolean[]>(
+    sponsorActivityInformations.map(() => {
+      return false;
+    }),
+  );
 
   useEffect(() => {
     const newSponsorActivitiesView = {
@@ -67,7 +81,6 @@ const DetailPage2: FC<ModalProps> = (props) => {
     const newSponsorActivityInformations = sponsorActivityInformations.filter(
       (sponsorActivityInformation) => sponsorActivityInformation.id !== id,
     );
-    console.log(newSponsorActivityInformations);
     if (activityInformation.fileName === '') {
       const res = await del(deleteSponsorActivityInformationUrl);
     } else {
@@ -91,11 +104,61 @@ const DetailPage2: FC<ModalProps> = (props) => {
       fileName: '',
       fileType: '',
       designProgress: 1,
+      fileInformation: '',
     };
     const res = await post(sponsorActivitiesUrl, nullData);
     const newSponsorActivityInformations = [...sponsorActivityInformations, res];
     setSponsorActivityInformations(newSponsorActivityInformations);
+    setIsEditInformations([...isEditInformations, false]);
     props.setIsChange(true);
+  };
+
+  const handleUpdateProgress = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    activityInformation: SponsorActivityInformation,
+  ) => {
+    const sponsorActivitiesUrl =
+      process.env.CSR_API_URI + '/activity_informations/' + activityInformation.id;
+    const updateActivityInformation = {
+      ...activityInformation,
+      designProgress: Number(e.target.value),
+    };
+    const res = await put(sponsorActivitiesUrl, updateActivityInformation);
+    const newSponsorActivityInformations = sponsorActivityInformations.map(
+      (sponsorActivityInformation) => {
+        if (sponsorActivityInformation.id === activityInformation.id) {
+          return updateActivityInformation;
+        }
+        return sponsorActivityInformation;
+      },
+    );
+    setSponsorActivityInformations(newSponsorActivityInformations);
+    props.setIsChange(true);
+  };
+
+  const handleUpdateInformation = async (activityInformation: SponsorActivityInformation) => {
+    const sponsorActivitiesUrl =
+      process.env.CSR_API_URI + '/activity_informations/' + activityInformation.id;
+    const updateActivityInformation = {
+      ...activityInformation,
+      fileInformation: activityInformationData,
+    };
+    const res = await put(sponsorActivitiesUrl, updateActivityInformation);
+    const newSponsorActivityInformations = sponsorActivityInformations.map(
+      (sponsorActivityInformation) => {
+        if (sponsorActivityInformation.id === activityInformation.id) {
+          return updateActivityInformation;
+        }
+        return sponsorActivityInformation;
+      },
+    );
+    setSponsorActivityInformations(newSponsorActivityInformations);
+    props.setIsChange(true);
+    setIsEditInformations(
+      isEditInformations.map(() => {
+        return false;
+      }),
+    );
   };
 
   return (
@@ -152,7 +215,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
         {sponsorActivityInformations &&
           sponsorActivityInformations.map((activityInformation, index) => (
             <>
-              <div className='flex flex-row-reverse  border-t border-primary-1 p-2'>
+              <div className='m-0 flex flex-row-reverse border-t border-primary-1 p-0'>
                 <div className='mt-2 w-1/12'>
                   <button className=''>
                     <DeleteButton
@@ -160,14 +223,77 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     />
                   </button>
                 </div>
-                <div className='w-11/12'>
-                  <div className='my-1 ml-4 flex flex-wrap justify-center gap-7 '>
-                    <div className='flex gap-3'>
-                      <p className='text-black-600'>広告の状況</p>
+                <div className='w-11/12' />
+              </div>
+              <div className='flex flex-col flex-wrap justify-center'>
+                <div className='my-1 flex justify-center'>
+                  <div className='flex w-fit items-center justify-center gap-3'>
+                    <p className='w-25 whitespace-nowrap text-black-600'>広告状況</p>
+                    <Select
+                      value={designProgresses[index].id}
+                      className='w-28 py-2'
+                      onChange={(e) => {
+                        handleUpdateProgress(e, activityInformation);
+                      }}
+                    >
+                      {DESIGN_PROGRESSES.map((designProgress) => {
+                        return <option value={designProgress.id}>{designProgress.state}</option>;
+                      })}
+                    </Select>
+                  </div>
+                </div>
+                <div className='my-1 ml-4 flex flex-wrap justify-center gap-7 '>
+                  <div className='flex items-center justify-center gap-3'>
+                    <p className='text-black-600'>情報</p>
+                    {isEditInformations[index] ? (
+                      <>
+                        <Input
+                          value={activityInformationData}
+                          className='w-40'
+                          onChange={(e) => {
+                            setActivityInformationData(e.target.value);
+                          }}
+                        />
+                        <RiCloseCircleLine
+                          size={'32px'}
+                          color={'gray'}
+                          className='cursor-pointer'
+                          onClick={() => {
+                            setIsEditInformations(
+                              isEditInformations.map(() => {
+                                return false;
+                              }),
+                            );
+                          }}
+                        />
+                        <FaCheckCircle
+                          size={'28px'}
+                          className='cursor-pointer'
+                          onClick={() => {
+                            handleUpdateInformation(activityInformation);
+                          }}
+                        />
+                      </>
+                    ) : activityInformation.fileInformation.trim() === '' ? (
+                      <p className='w-30 border-b border-primary-1'>　　　</p>
+                    ) : (
                       <p className='border-b border-primary-1'>
-                        {designProgresses && designProgresses[index].state}
+                        {activityInformation.fileInformation}
                       </p>
-                    </div>
+                    )}
+                    {!isEditInformations[index] && (
+                      <EditButton
+                        onClick={() => {
+                          const newIsEditInformations = isEditInformations.map(
+                            (isEditInformation, editIndex) => {
+                              return index === editIndex;
+                            },
+                          );
+                          setActivityInformationData(activityInformation.fileInformation || '');
+                          setIsEditInformations(newIsEditInformations);
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

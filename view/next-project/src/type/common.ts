@@ -138,6 +138,7 @@ export interface SponsorActivityInformation {
   fileName: string;
   fileType: string;
   designProgress: number;
+  fileInformation: string;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -30,6 +30,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
       fileName: '',
       fileType: '',
       designProgress: 1,
+      fileInformation: '',
     },
   );
 
