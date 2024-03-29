@@ -237,7 +237,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
                       }}
                     >
                       {DESIGN_PROGRESSES.map((designProgress) => {
-                        return <option value={designProgress.id}>{designProgress.state}</option>;
+                        return (
+                          <option value={designProgress.id} key={designProgress.id}>
+                            {designProgress.state}
+                          </option>
+                        );
                       })}
                     </Select>
                   </div>

@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
-import { RiCloseCircleLine } from 'react-icons/ri';
 import DetailPage1 from './DetailPage1';
 import DetailPage2 from './DetailPage2';
 import { Modal } from '@components/common';
