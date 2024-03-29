@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 
 import { FaChevronCircleRight } from 'react-icons/fa';
 import OpenPaymentDayModalButton from './OpenPaymentDayModalButton';
+import OpenAddPdfDetailModalButton from './OpenAddPdfDetailModalButton';
 import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
 
@@ -167,7 +168,11 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <div className='mt-5 hidden justify-center md:flex'>
+      <div className='mt-5 hidden justify-center gap-3 md:flex'>
+        <OpenAddPdfDetailModalButton
+          sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+          setIsOpen={props.setIsOpen}
+        />
         <OpenPaymentDayModalButton
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
           setIsOpen={props.setIsOpen}

@@ -279,7 +279,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                         />
                       </>
                     ) : activityInformation.fileInformation.trim() === '' ? (
-                      <p className='w-30 border-b border-primary-1'>____</p>
+                      <p className='w-30 border-b border-primary-1'>&emsp; &emsp;</p>
                     ) : (
                       <p className='border-b border-primary-1'>
                         {activityInformation.fileInformation}
