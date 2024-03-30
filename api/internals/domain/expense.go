@@ -29,3 +29,8 @@ type ExpenseDetailsByperiod struct {
 	Year			Year			 `json:"year"`
 	PurchaseDetails []PurchaseDetail `json:"purchaseDetails"`
 }
+
+type ExpenseByPeriod struct {
+	Expense Expense `json:"expense"`
+	Year Year `json:"year"`
+}
