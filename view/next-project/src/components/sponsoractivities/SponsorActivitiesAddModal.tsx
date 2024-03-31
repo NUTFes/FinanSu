@@ -20,7 +20,7 @@ import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
 
-const TABLE_COLUMNS2 = ['オプション', 'デザイン作成', '移動距離(km)', '交通費'];
+const TABLE_COLUMNS2 = ['オプション', 'デザイン作成', '交通費'];
 
 interface Props {
   users: User[];
@@ -31,7 +31,6 @@ interface Props {
 
 const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
 const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
-const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
 
 export default function SponsorActivitiesAddModal(props: Props) {
   const router = useRouter();
@@ -55,12 +54,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   });
 
   const setDesign = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const remarkOption =
-      formData.feature === 'ポスター'
-        ? REMARK_POSTER
-        : formData.feature === 'クーポン'
-        ? REMARK_COUPON
-        : '';
+    const remarkOption = formData.feature === 'クーポン' ? REMARK_COUPON : '';
     const newRemarkDesign = e.target.value === '1' ? REMARK_PAMPHLET : '';
     setFormData({
       ...formData,
@@ -70,12 +64,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   const setFeature = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newRemarkOption =
-      e.target.value === 'ポスター'
-        ? REMARK_POSTER
-        : e.target.value === 'クーポン'
-        ? REMARK_COUPON
-        : '';
+    const newRemarkOption = e.target.value === 'クーポン' ? REMARK_COUPON : '';
     const remarkDesign = formData.design === 1 ? REMARK_PAMPHLET : '';
     setFormData({
       ...formData,
@@ -123,7 +112,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   const submit = (data: SponsorActivity) => {
     const { expense, userID, sponsorID, ...rest } = data;
     const submitData: SponsorActivity = {
-      expense: Math.round(expense * 11),
+      expense: Number(expense),
       userID: Number(userID),
       sponsorID: Number(sponsorID),
       ...rest,
@@ -239,9 +228,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
           <option value={'なし'} selected>
             なし
           </option>
-          <option value={'ポスター'} disabled={isSelectSponsorBooth}>
-            ポスター
-          </option>
           <option value={'クーポン'} disabled={isSelectSponsorBooth}>
             クーポン
           </option>
@@ -267,7 +253,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
           </div>
         ))}
       </div>
-      <p className='text-black-600'>移動距離(km)</p>
+      <p className='text-black-600'>交通費</p>
       <div className='col-span-4 w-full'>
         <Input
           type='number'
@@ -276,10 +262,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
           value={data.expense}
           onChange={formDataHandler('expense')}
         />
-      </div>
-      <p className='text-black-600'>交通費</p>
-      <div className='col-span-4 w-full'>
-        <p className='w-full'>{Math.round(data.expense * 11)}円</p>
       </div>
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>
@@ -363,12 +345,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
               </td>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>
-                  {sponsorActivities.expense}
-                </div>
-              </td>
-              <td className='py-3'>
-                <div className='text-center text-sm text-black-600'>
-                  {Math.round(sponsorActivities.expense * 11)}円
+                  {sponsorActivities.expense}円
                 </div>
               </td>
             </tr>
