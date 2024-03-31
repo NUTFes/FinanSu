@@ -183,7 +183,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
-    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-3'>
+    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-2'>
       <p className='text-black-600'>年度</p>
       <div className='col-span-4 w-full'>
         <Select
@@ -266,10 +266,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
           </option>
         </Select>
       </div>
-      <p className='text-center text-black-600'>広告データurl</p>
-      <div className={clsx('col-span-4 grid w-full')}>
-        <Input value={data.url} onChange={formDataHandler('url')} />
-      </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
         {DESIGNER_VALUES.map((designer) => (
@@ -321,7 +317,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
     return (
       <div>
-        <table className='mb-7 mt-10 w-full table-fixed border-collapse'>
+        <table className='my-5 w-full table-fixed border-collapse'>
           <thead>
             <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
               {TABLE_COLUMNS.map((tableColumn: string) => (
@@ -384,27 +380,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
             </tr>
           </tbody>
         </table>
-        <table className='mb-7 w-full table-fixed border-collapse'>
-          <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-              <th className='border-b-primary-1 px-6 pb-2'>
-                <div className='text-center text-sm text-black-600'>広告データurl</div>
-              </th>
-            </tr>
-          </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <tr>
-              <td>
-                <div className='py-3 text-sm text-black-600'>
-                  <p className='border-primary-1 text-center'>
-                    {sponsorActivities.url === '' && <div>なし</div>}
-                    {sponsorActivities.url}
-                  </p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
         <table className='mb-10 w-full table-fixed border-collapse'>
           <thead>
             <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -435,7 +410,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   return (
-    <Modal className='mt-64 md:mt-32 md:w-1/2'>
+    <Modal className='mt-64 md:mt-10 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton

@@ -196,7 +196,7 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
-    <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-3'>
+    <div className='my-4 grid grid-cols-5 items-center justify-items-center gap-2'>
       <p className='text-black-600'>年度</p>
       <div className='col-span-4 w-full'>
         <Select
@@ -285,10 +285,6 @@ export default function EditModal(props: ModalProps) {
           </option>
         </Select>
       </div>
-      <p className='text-center text-black-600'>広告データurl</p>
-      <div className='col-span-4 grid w-full'>
-        <Input value={data.url} onChange={handler('url')} />
-      </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
         {DESIGNER_VALUES.map((designer) => (
@@ -328,7 +324,7 @@ export default function EditModal(props: ModalProps) {
   );
 
   return (
-    <Modal className='mt-64 md:mt-32 md:w-1/2'>
+    <Modal className='mt-64 md:mt-10 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
