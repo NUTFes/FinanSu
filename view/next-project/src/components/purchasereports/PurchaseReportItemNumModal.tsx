@@ -34,7 +34,7 @@ export default function PurchaseReportItemNumModal() {
 
   const [user] = useRecoilState(userAtom);
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [expenseID, setExpenseID] = useState(1);
+  const [expenseID, setExpenseID] = useState(0);
 
   useEffect(() => {
     const getExpenseByPeriodsUrl =
@@ -42,6 +42,7 @@ export default function PurchaseReportItemNumModal() {
     const getExpenses = async () => {
       const res = await get(getExpenseByPeriodsUrl);
       setExpenses(res);
+      setExpenseID(res[0].id);
     };
     getExpenses();
   }, [selectedYear]);
@@ -93,7 +94,7 @@ export default function PurchaseReportItemNumModal() {
       deadline: String(year) + '-' + monthStr + '-' + dayStr,
       userID: user.id,
       financeCheck: false,
-      expenseID: expenseID,
+      expenseID: expenseID || 0,
     };
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     const postRes = await post(addPurchaseOrderUrl, data);
