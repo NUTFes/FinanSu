@@ -188,7 +188,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/sponsors", r.sponsorController.CreateSponsor)
 	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
 	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
-	e.GET("/sponsors/:year", r.sponsorController.IndexSponsorByPeriod)
+	e.GET("/sponsors/periods/:year", r.sponsorController.IndexSponsorByPeriod)
 
 	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)

@@ -1647,26 +1647,26 @@ const docTemplate = `{
                 },
             },
         },
-				"/sponsors/{year}": {
-					"get": {
-							tags: ["sponsor"],
-							"description": "年度で指定されたsponsorを取得",
-							"parameters": [
-									{
-											"name": "year",
-											"in": "path",
-											"description": "year",
-											"required": true,
-											"type": "integer"
-									}
-							],
-							"responses": {
-									"200": {
-											"description": "sponsorの取得完了",
-									}
+		"/sponsors/periods/{year}": {
+			"get": {
+					tags: ["sponsor"],
+					"description": "年度で指定されたsponsorを取得",
+					"parameters": [
+							{
+									"name": "year",
+									"in": "path",
+									"description": "year",
+									"required": true,
+									"type": "integer"
 							}
-					},
+					],
+					"responses": {
+							"200": {
+									"description": "sponsorの取得完了",
+							}
+					}
 			},
+        },
         "/sponsorstyles": {
             "get": {
                 tags: ["sponsorstyle"],
