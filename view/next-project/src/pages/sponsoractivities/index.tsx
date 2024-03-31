@@ -552,6 +552,8 @@ export default function SponsorActivities(props: Props) {
                             users={props.users}
                             sponsorStyleDetails={sponsorActivitiesItem.styleDetail}
                             activityStyles={props.activityStyles}
+                            year={selectedYear}
+                            yearPeriods={yearPeriods}
                           />
                         </div>
                         <div className='mx-1'>

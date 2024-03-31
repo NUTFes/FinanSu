@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { put, post, del } from '@/utils/api/api_methods';
+import { get, put, post, del } from '@/utils/api/api_methods';
 
 import {
   PrimaryButton,
@@ -15,7 +15,14 @@ import {
 import { MultiSelect } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { DESIGNER_VALUES } from '@constants/designers';
-import { SponsorActivity, Sponsor, SponsorStyle, User, ActivityStyle } from '@type/common';
+import {
+  SponsorActivity,
+  Sponsor,
+  SponsorStyle,
+  User,
+  ActivityStyle,
+  YearPeriod,
+} from '@type/common';
 
 interface ModalProps {
   sponsorActivityId: number | string;
@@ -25,6 +32,8 @@ interface ModalProps {
   users: User[];
   sponsorStyleDetails: ActivityStyle[] | null;
   activityStyles: ActivityStyle[];
+  year: string;
+  yearPeriods: YearPeriod[];
   setIsOpen: (isOpen: boolean) => void;
 }
 
@@ -32,11 +41,13 @@ const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
 const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
 
 export default function EditModal(props: ModalProps) {
-  const { users, sponsors, sponsorStyles, sponsorStyleDetails, activityStyles } = props;
+  const { users, sponsorStyles, sponsorStyleDetails, activityStyles, yearPeriods } = props;
   const router = useRouter();
 
   // 協賛企業のリスト
   const [formData, setFormData] = useState<SponsorActivity>(props.sponsorActivity);
+  const [selectedYear, setSelectedYear] = useState<string>(props.year);
+  const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsors || []);
 
   const default_user = users.find((user) => user.id === formData.userID);
 
@@ -53,6 +64,16 @@ export default function EditModal(props: ModalProps) {
       setIsStyleError(false);
     }
   }, [selectedStyleIds]);
+
+  const getSponsors = async () => {
+    const getSponsorsUrlByYear = process.env.CSR_API_URI + '/sponsors/periods/' + selectedYear;
+    const getSponsorsByYears = await get(getSponsorsUrlByYear);
+    setSponsors(getSponsorsByYears);
+  };
+
+  useEffect(() => {
+    getSponsors();
+  }, [selectedYear]);
 
   const styleOotions = useMemo(() => {
     const options = sponsorStyles.map((style) => {
@@ -176,14 +197,31 @@ export default function EditModal(props: ModalProps) {
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
     <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-3'>
+      <p className='text-black-600'>年度</p>
+      <div className='col-span-4 w-full'>
+        <Select
+          value={selectedYear}
+          onChange={(e) => {
+            setSelectedYear(e.target.value);
+          }}
+        >
+          {yearPeriods &&
+            yearPeriods.map((year: YearPeriod) => (
+              <option key={year.id} value={year.year}>
+                {year.year}
+              </option>
+            ))}
+        </Select>
+      </div>
       <p className='text-black-600'>企業名</p>
       <div className='col-span-4 w-full'>
         <Select className='w-full' onChange={handler('sponsorID')} value={data.sponsorID}>
-          {sponsors.map((sponsor) => (
-            <option key={sponsor.id} value={sponsor.id}>
-              {sponsor.name}
-            </option>
-          ))}
+          {sponsors &&
+            sponsors.map((sponsor) => (
+              <option key={sponsor.id} value={sponsor.id}>
+                {sponsor.name}
+              </option>
+            ))}
         </Select>
       </div>
       <p className='text-black-600'>協賛スタイル</p>

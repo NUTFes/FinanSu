@@ -10,6 +10,7 @@ import {
   User,
   SponsorStyleDetail,
   ActivityStyle,
+  YearPeriod,
 } from '@/type/common';
 
 interface Props {
@@ -22,6 +23,8 @@ interface Props {
   isDisabled?: boolean;
   sponsorStyleDetails: SponsorStyleDetail[];
   activityStyles: ActivityStyle[];
+  year: string;
+  yearPeriods: YearPeriod[];
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -47,6 +50,8 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
           setIsOpen={setIsOpen}
           sponsorStyleDetails={sponsorStyleDetails}
           activityStyles={props.activityStyles}
+          year={props.year}
+          yearPeriods={props.yearPeriods}
         />
       )}
     </>
