@@ -23,7 +23,7 @@ type ExpenseUseCase interface {
 	GetExpenseDetails(context.Context) ([]domain.ExpenseDetails, error)
 	GetExpenseDetailByID(context.Context, string) (domain.ExpenseDetails, error)
 	GetExpenseDetailsByPeriod(context.Context, string) ([]domain.ExpenseDetailsByperiod, error)
-	GetExpensesByPeriod(context.Context, string) ([]domain.ExpenseByPeriod, error)
+	GetExpensesByPeriod(context.Context, string) ([]domain.Expense, error)
 }
 
 func NewExpenseUseCase(rep rep.ExpenseRepository) ExpenseUseCase {
@@ -352,25 +352,21 @@ func (e *expenseUseCase) GetExpenseDetailsByPeriod(c context.Context, year strin
 	return expenseDetails, nil
 }
 
-func (e *expenseUseCase) GetExpensesByPeriod(c context.Context, year string) ([]domain.ExpenseByPeriod, error) {
-	ExpenseByperiod := domain.ExpenseByPeriod{}
-	var expenseByperiods []domain.ExpenseByPeriod
-	rows, err := e.rep.AllByPeriod(c, year)
+func (e *expenseUseCase) GetExpensesByPeriod(c context.Context, year string) ([]domain.Expense, error) {
+	ExpenseByperiod := domain.Expense{}
+	var expenseByperiods []domain.Expense
+	rows, err := e.rep.OnlyExpensesByPeriod(c, year)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 			err := rows.Scan(
-					&ExpenseByperiod.Expense.ID,
-					&ExpenseByperiod.Expense.Name,
-					&ExpenseByperiod.Expense.TotalPrice,
-					&ExpenseByperiod.Expense.YearID,
-					&ExpenseByperiod.Expense.CreatedAt,
-					&ExpenseByperiod.Expense.UpdatedAt,
-					&ExpenseByperiod.Year.ID,
-					&ExpenseByperiod.Year.Year,
-					&ExpenseByperiod.Year.CreatedAt,
-					&ExpenseByperiod.Year.UpdatedAt,
+					&ExpenseByperiod.ID,
+					&ExpenseByperiod.Name,
+					&ExpenseByperiod.TotalPrice,
+					&ExpenseByperiod.YearID,
+					&ExpenseByperiod.CreatedAt,
+					&ExpenseByperiod.UpdatedAt,
 			)
 			if err != nil {
 					return nil, err
