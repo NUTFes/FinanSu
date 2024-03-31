@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect, useMemo } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { post } from '@/utils/api/api_methods';
+import { get, post } from '@/utils/api/api_methods';
 import { MultiSelect } from '@components/common';
 
 import {
@@ -16,7 +16,7 @@ import {
 } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { DESIGNERS, DESIGNER_VALUES } from '@constants/designers';
-import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
+import { SponsorActivity, Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
 
@@ -26,6 +26,7 @@ interface Props {
   users: User[];
   sponsors: Sponsor[];
   sponsorStyles: SponsorStyle[];
+  yearPeriods: YearPeriod[];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -39,11 +40,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   const [isDone, setIsDone] = useState(false);
-  const { users, sponsors, sponsorStyles } = props;
+  const { users, sponsorStyles, yearPeriods } = props;
+  const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsors);
 
   const [formData, setFormData] = useState<SponsorActivity>({
     id: 0,
-    sponsorID: sponsors[0].id || 0,
+    sponsorID: (sponsors && sponsors[0].id) || 0,
     userID: users[0].id || 0,
     isDone: false,
     feature: 'なし',
@@ -164,10 +166,41 @@ export default function SponsorActivitiesAddModal(props: Props) {
     }
   }, [isSelectSponsorBooth]);
 
+  const currentYear = yearPeriods
+    ? String(yearPeriods[yearPeriods.length - 1].year)
+    : String(new Date().getFullYear());
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const getSponsors = async () => {
+    const getSponsorsUrlByYear = process.env.CSR_API_URI + '/sponsors/periods/' + selectedYear;
+    const getSponsorsByYears = await get(getSponsorsUrlByYear);
+    setSponsors(getSponsorsByYears);
+  };
+
+  useEffect(() => {
+    getSponsors();
+  }, [selectedYear]);
+
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
     <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-3'>
-      <p className='text-black-600'>協賛企業</p>
+      <p className='text-black-600'>年度</p>
+      <div className='col-span-4 w-full'>
+        <Select
+          value={selectedYear}
+          onChange={(e) => {
+            setSelectedYear(e.target.value);
+          }}
+        >
+          {yearPeriods &&
+            yearPeriods.map((year: YearPeriod) => (
+              <option key={year.id} value={year.year}>
+                {year.year}
+              </option>
+            ))}
+        </Select>
+      </div>
+      <p className='text-black-600'>協賛企業</p>{' '}
       <div className='col-span-4 w-full'>
         <Select value={data.sponsorID} onChange={formDataHandler('sponsorID')}>
           {sponsors &&
