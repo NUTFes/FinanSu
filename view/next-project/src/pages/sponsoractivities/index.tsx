@@ -418,9 +418,6 @@ export default function SponsorActivities(props: Props) {
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>交通費</div>
                 </th>
-                <th className='w-2/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>作成日時</div>
-                </th>
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'></div>
                 </th>
@@ -536,19 +533,6 @@ export default function SponsorActivities(props: Props) {
                     >
                       <div className='text-center text-sm text-black-600'>
                         {sponsorActivitiesItem.sponsorActivity.expense}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='text-center text-sm text-black-600'>
-                        {sponsorActivitiesItem.sponsorActivity.createdAt &&
-                          formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
                       </div>
                     </td>
                     <td>
