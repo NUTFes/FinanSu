@@ -222,6 +222,7 @@ export default function EditModal(props: ModalProps) {
                 {sponsor.name}
               </option>
             ))}
+          {!sponsors && <option>企業が登録されていません</option>}
         </Select>
       </div>
       <p className='text-black-600'>協賛スタイル</p>
@@ -354,7 +355,7 @@ export default function EditModal(props: ModalProps) {
             onClick={() => {
               submit(formData);
             }}
-            disabled={isStyleError}
+            disabled={!sponsors || isStyleError}
           >
             編集完了
           </PrimaryButton>
