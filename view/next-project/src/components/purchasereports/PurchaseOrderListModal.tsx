@@ -4,9 +4,16 @@ import { useEffect, useState } from 'react';
 
 import PurchaseReportAddModal from './PurchaseReportAddModal';
 import { get } from '@api/api_methods';
-import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton, Radio } from '@components/common';
+import {
+  CloseButton,
+  Modal,
+  OutlinePrimaryButton,
+  PrimaryButton,
+  Radio,
+  Select,
+} from '@components/common';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, User, PurchaseItem, Expense } from '@type/common';
+import { PurchaseOrder, User, PurchaseItem, Expense, YearPeriod } from '@type/common';
 
 interface PurchaseOrderView {
   purchaseOrder: PurchaseOrder;
@@ -29,9 +36,24 @@ export default function PurchaseItemNumModal() {
   const [purchaseOrderId, setPurchaseOrderId] = useState<number>();
   const [purchaseItemNum, setPurchaseItemNum] = useState<number>(0);
 
+  const date = new Date();
+  const [selectedYear, setSelectedYear] = useState<number>(date.getFullYear());
+  const [yearPeriods, setYearPeriods] = useState<YearPeriod[]>([]);
+  useEffect(() => {
+    const getPurchaseReportsUrl = process.env.CSR_API_URI + '/years/periods';
+    const getPeriods = async () => {
+      const res = await get(getPurchaseReportsUrl);
+      const year = res ? res[res.length - 1].year : date.getFullYear();
+      setSelectedYear(year);
+      setYearPeriods(res);
+    };
+    getPeriods();
+  }, []);
+
   useEffect(() => {
     if (router.isReady) {
-      const getPurchaseOrderViewUrl = process.env.CSR_API_URI + '/purchaseorders/details';
+      const getPurchaseOrderViewUrl =
+        process.env.CSR_API_URI + '/purchaseorders/details/' + String(selectedYear);
       const getExpensesUrl = process.env.CSR_API_URI + '/expenses';
 
       const getPurchaseOrderView = async (url: string) => {
@@ -45,7 +67,7 @@ export default function PurchaseItemNumModal() {
       getPurchaseOrderView(getPurchaseOrderViewUrl);
       getExpenses(getExpensesUrl);
     }
-  }, [router]);
+  }, [router, selectedYear]);
 
   // 日付のフォーマットを変更
   const formatDate = (date: string | undefined) => {
@@ -84,6 +106,27 @@ export default function PurchaseItemNumModal() {
       </div>
       <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
         購入申請
+      </div>
+      <div className='mb-2 flex w-full justify-items-center'>
+        <div className='mx-auto flex w-1/2 justify-items-center'>
+          <div className='flex w-1/2 items-center justify-center'>
+            <p className=' text-black-600'>年度</p>
+          </div>
+          <div className='w-1/2'>
+            <Select
+              value={selectedYear}
+              onChange={(e) => {
+                setSelectedYear(Number(e.target.value));
+              }}
+            >
+              {yearPeriods.map((yearPeriod) => (
+                <option key={yearPeriod.id} value={yearPeriod.year}>
+                  {yearPeriod.year}年度
+                </option>
+              ))}
+            </Select>
+          </div>
+        </div>
       </div>
       <div className={clsx('mb-4 grid h-2/3 grid-cols-12 gap-4 overflow-scroll')}>
         <div className={clsx('col-span-1 grid')} />
