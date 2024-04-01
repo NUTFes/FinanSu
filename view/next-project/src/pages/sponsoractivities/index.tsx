@@ -107,7 +107,6 @@ export default function SponsorActivities(props: Props) {
       process.env.CSR_API_URI + '/activities/details/' + selectedYear;
     const getSponsorActivitiesByYears = await get(getSponsorActivitiesViewUrlByYear);
     setSponsorActivitiesViews(getSponsorActivitiesByYears);
-    console.log(getSponsorActivitiesViewUrlByYear);
   };
 
   const currentYear = new Date().getFullYear().toString();
@@ -418,9 +417,6 @@ export default function SponsorActivities(props: Props) {
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>交通費</div>
                 </th>
-                <th className='w-2/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>作成日時</div>
-                </th>
                 <th className='w-1/11 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'></div>
                 </th>
@@ -429,7 +425,10 @@ export default function SponsorActivities(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {sortedAndFilteredSponsorActivitiesViews &&
                 sortedAndFilteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
-                  <tr className={clsx('border-b')} key={sponsorActivitiesItem.sponsorActivity.id}>
+                  <tr
+                    className={clsx('border-b', 'hover:bg-grey-100')}
+                    key={sponsorActivitiesItem.sponsorActivity.id}
+                  >
                     <td
                       onClick={() => {
                         onOpen(
@@ -536,19 +535,6 @@ export default function SponsorActivities(props: Props) {
                     >
                       <div className='text-center text-sm text-black-600'>
                         {sponsorActivitiesItem.sponsorActivity.expense}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='text-center text-sm text-black-600'>
-                        {sponsorActivitiesItem.sponsorActivity.createdAt &&
-                          formatDate(sponsorActivitiesItem.sponsorActivity.createdAt)}
                       </div>
                     </td>
                     <td>
