@@ -25,32 +25,17 @@ export default function PurchaseItemNumModal(props: ModalProps) {
     props.setIsOpen(false);
   };
 
-  // 購入報告した物品
-  const [reportedPurchaseItems, setReportedPurchaseItems] = useState<PurchaseItem[]>([]);
-  // 購入報告しない物品
-  const [notReportedPurchaseItems, setNotReportedPurchaseItems] = useState<PurchaseItem[]>([]);
-
   const tableColumns = ['物品名', '単価', '個数', '備考', 'URL'];
 
-  // 購入報告する物品と報告しない物品を仕分け
-  const judgeItems = useCallback(() => {
-    props.formDataList.map((formData: PurchaseItem) => {
-      if (formData.financeCheck) {
-        setReportedPurchaseItems((reportedPurchaseItem) => [...reportedPurchaseItem, formData]);
-      } else {
-        setNotReportedPurchaseItems((notReportedPurchaseItem) => [
-          ...notReportedPurchaseItem,
-          formData,
-        ]);
-      }
-    });
-  }, [props.formDataList, setReportedPurchaseItems, setNotReportedPurchaseItems]);
+  // 購入報告した物品
+  const reportedPurchaseItems = props.formDataList.filter((formData) => {
+    return formData.financeCheck;
+  });
 
-  useEffect(() => {
-    if (router.isReady) {
-      judgeItems();
-    }
-  }, [router, judgeItems]);
+  // 購入報告しない物品
+  const notReportedPurchaseItems = props.formDataList.filter((formData) => {
+    return !formData.financeCheck;
+  });
 
   const PurchaseItemTable = (purchaseItems: PurchaseItem[]) => {
     return (
