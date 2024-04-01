@@ -14,22 +14,38 @@ import {
 } from '@components/common';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseItem, PurchaseOrder, Expense } from '@type/common';
+import { PurchaseItem, PurchaseOrder, Expense, YearPeriod } from '@type/common';
 import { get } from '@utils/api/api_methods';
 
 export default function PurchaseReportItemNumModal() {
+  const date = new Date();
+  const [selectedYear, setSelectedYear] = useState<number>(date.getFullYear());
+  const [yearPeriods, setYearPeriods] = useState<YearPeriod[]>([]);
+  useEffect(() => {
+    const getPurchaseReportsUrl = process.env.CSR_API_URI + '/years/periods';
+    const getPeriods = async () => {
+      const res = await get(getPurchaseReportsUrl);
+      const year = res ? res[res.length - 1].year : date.getFullYear();
+      setSelectedYear(year);
+      setYearPeriods(res);
+    };
+    getPeriods();
+  }, []);
+
   const [user] = useRecoilState(userAtom);
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [expenseID, setExpenseID] = useState(1);
+  const [expenseID, setExpenseID] = useState(0);
 
   useEffect(() => {
-    const getExpensesUrl = process.env.CSR_API_URI + '/expenses';
+    const getExpenseByPeriodsUrl =
+      process.env.CSR_API_URI + '/expenses/fiscalyear/' + String(selectedYear);
     const getExpenses = async () => {
-      const res = await get(getExpensesUrl);
+      const res = await get(getExpenseByPeriodsUrl);
       setExpenses(res);
+      setExpenseID(res ? res[0].id : null);
     };
     getExpenses();
-  }, []);
+  }, [selectedYear]);
 
   const { setModalView, openModal, closeModal } = useUI();
 
@@ -78,7 +94,7 @@ export default function PurchaseReportItemNumModal() {
       deadline: String(year) + '-' + monthStr + '-' + dayStr,
       userID: user.id,
       financeCheck: false,
-      expenseID: expenseID,
+      expenseID: expenseID || 0,
     };
     const addPurchaseOrderUrl = process.env.CSR_API_URI + '/purchaseorders';
     const postRes = await post(addPurchaseOrderUrl, data);
@@ -137,20 +153,41 @@ export default function PurchaseReportItemNumModal() {
               </PullDown>
             </div>
           </div>
-          <div className='my-10 flex items-center justify-center gap-5'>
-            <p>購入した局・団体</p>
-            <div className='w-1/3'>
+          <div className='my-10 grid grid-cols-5 gap-5'>
+            <div className='col-span-2 flex w-full items-center justify-center'>
+              <p className=' text-black-600'>年度</p>
+            </div>
+            <div className='col-span-3 w-3/4'>
+              <Select
+                value={selectedYear}
+                onChange={(e) => {
+                  setSelectedYear(Number(e.target.value));
+                }}
+              >
+                {yearPeriods.map((yearPeriod) => (
+                  <option key={yearPeriod.id} value={yearPeriod.year}>
+                    {yearPeriod.year}年度
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className='col-span-2 flex w-full items-center justify-center'>
+              <p className=' text-black-600'>購入した局・団体</p>
+            </div>
+            <div className='col-span-3 w-3/4'>
               <Select
                 value={expenseID}
                 onChange={(e) => {
                   setExpenseID(Number(e.target.value));
                 }}
               >
-                {expenses.map((data) => (
-                  <option key={data.id} value={data.id}>
-                    {data.name}
-                  </option>
-                ))}
+                {expenses &&
+                  expenses.map((data) => (
+                    <option key={data.id} value={data.id}>
+                      {data.name}
+                    </option>
+                  ))}
+                {!expenses && <option>局・団体が登録されていません</option>}
               </Select>
             </div>
           </div>
@@ -168,6 +205,7 @@ export default function PurchaseReportItemNumModal() {
             onClick={() => {
               addPurchaseOrder();
             }}
+            disabled={!expenses}
           >
             報告へ進む
           </PrimaryButton>

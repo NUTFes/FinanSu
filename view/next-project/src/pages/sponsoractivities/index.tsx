@@ -434,7 +434,10 @@ export default function SponsorActivities(props: Props) {
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {sortedAndFilteredSponsorActivitiesViews &&
                 sortedAndFilteredSponsorActivitiesViews.map((sponsorActivitiesItem) => (
-                  <tr className={clsx('border-b')} key={sponsorActivitiesItem.sponsorActivity.id}>
+                  <tr
+                    className={clsx('border-b', 'hover:bg-grey-100')}
+                    key={sponsorActivitiesItem.sponsorActivity.id}
+                  >
                     <td
                       onClick={() => {
                         onOpen(

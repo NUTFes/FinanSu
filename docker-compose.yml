@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   db:
     image: mysql:8.0
@@ -11,10 +11,13 @@ services:
       MYSQL_USER: finansu
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: root
-      TZ: 'Asia/Tokyo'
+      TZ: "Asia/Tokyo"
     ports:
       - "3306:3306"
     restart: always
+    networks:
+      app_net:
+        ipv4_address: 192.168.176.2
 
   view:
     build: ./view
@@ -26,6 +29,9 @@ services:
       - "3000:3000"
     stdin_open: true
     tty: true
+    networks:
+      app_net:
+        ipv4_address: 192.168.176.3
 
   api:
     build:
@@ -43,4 +49,29 @@ services:
     depends_on:
       db:
         condition: service_started
+    networks:
+      app_net:
+        ipv4_address: 192.168.176.4
 
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./tmp/minio/data:/data
+    command: "server /data --console-address :9001"
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+    networks:
+      app_net:
+        ipv4_address: 192.168.176.5
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.176.0/24

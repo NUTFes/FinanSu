@@ -8,5 +8,6 @@ api/tmp
 web/**/*.json
 web/**/cert.pem
 
-tmp
-.env
+tmp/*
+
+/view/next-project/.env
