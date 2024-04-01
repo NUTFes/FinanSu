@@ -21,7 +21,6 @@ import {
   PurchaseOrderView,
   Expense,
   YearPeriod,
-  ExpenseByPeriods,
 } from '@type/common';
 
 interface Props {
@@ -29,7 +28,7 @@ interface Props {
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
   yearPeriods: YearPeriod[];
-  expenseByPeriods: ExpenseByPeriods[];
+  expenseByPeriods: Expense[];
 }
 
 const date = new Date();
@@ -41,8 +40,8 @@ export async function getServerSideProps() {
     process.env.SSR_API_URI +
     '/purchaseorders/details/' +
     (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+    const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
-  const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
   const expenseRes = await get(getExpenseUrl);
   const getExpenseByPeriodsUrl =
     process.env.SSR_API_URI +
@@ -226,7 +225,7 @@ export default function PurchaseOrders(props: Props) {
             </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex'>
-            <OpenAddModalButton expenses={props.expenses} expenseByPeriods={props.expenseByPeriods}>
+            <OpenAddModalButton expenses={props.expenses} expenseByPeriods={props.expenseByPeriods} yearPeriods={yearPeriods}>
               申請登録
             </OpenAddModalButton>
           </div>
@@ -406,7 +405,7 @@ export default function PurchaseOrders(props: Props) {
         />
       )}
       <div className='fixed bottom-4 right-4 md:hidden'>
-        <OpenAddModalButton expenses={props.expenses} expenseByPeriods={props.expenseByPeriods} />
+        <OpenAddModalButton expenses={props.expenses} expenseByPeriods={props.expenseByPeriods} yearPeriods={yearPeriods}/>
       </div>
     </MainLayout>
   );
