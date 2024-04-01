@@ -67,6 +67,11 @@ export interface ExpenseView {
   ];
 }
 
+export interface ExpenseByPeriods {
+  expense: Expense;
+  year: Year;
+}
+
 // // PurchaseOrder(購入申請)
 export interface PurchaseOrder {
   id?: number;
