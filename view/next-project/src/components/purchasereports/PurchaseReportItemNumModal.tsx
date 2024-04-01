@@ -42,7 +42,7 @@ export default function PurchaseReportItemNumModal() {
     const getExpenses = async () => {
       const res = await get(getExpenseByPeriodsUrl);
       setExpenses(res);
-      setExpenseID(res[0].id);
+      setExpenseID(res ? res[0].id : null);
     };
     getExpenses();
   }, [selectedYear]);
@@ -157,7 +157,7 @@ export default function PurchaseReportItemNumModal() {
             <div className='col-span-2 flex w-full items-center justify-center'>
               <p className=' text-black-600'>年度</p>
             </div>
-            <div className='col-span-3 w-2/3'>
+            <div className='col-span-3 w-3/4'>
               <Select
                 value={selectedYear}
                 onChange={(e) => {
@@ -174,7 +174,7 @@ export default function PurchaseReportItemNumModal() {
             <div className='col-span-2 flex w-full items-center justify-center'>
               <p className=' text-black-600'>購入した局・団体</p>
             </div>
-            <div className='col-span-3 w-2/3'>
+            <div className='col-span-3 w-3/4'>
               <Select
                 value={expenseID}
                 onChange={(e) => {
@@ -187,6 +187,7 @@ export default function PurchaseReportItemNumModal() {
                       {data.name}
                     </option>
                   ))}
+                {!expenses && <option>局・団体が登録されていません</option>}
               </Select>
             </div>
           </div>
@@ -204,6 +205,7 @@ export default function PurchaseReportItemNumModal() {
             onClick={() => {
               addPurchaseOrder();
             }}
+            disabled={!expenses}
           >
             報告へ進む
           </PrimaryButton>
