@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
 import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
