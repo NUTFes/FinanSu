@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { postExpenses } from '@api/budget';
@@ -22,6 +22,10 @@ const ExpenseAddModal: FC<ModalProps> = (props) => {
     name: '',
     totalPrice: 0
   });
+
+  const isEnabled = useMemo(() => {
+    return formData.name !== '' ? false : true;
+  }, [formData])
 
   const router = useRouter();
 
@@ -68,6 +72,7 @@ const ExpenseAddModal: FC<ModalProps> = (props) => {
             registExpenses(formData);
             router.reload();
           }}
+          disabled={isEnabled}
         >
           登録する
         </PrimaryButton>
