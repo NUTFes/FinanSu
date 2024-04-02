@@ -73,7 +73,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
       const expenseByPeriodsRes: Expense[] = await get(url);
       setExpenseByPeriods(expenseByPeriodsRes);
       expenseByPeriodsRes &&
-      setFormData({ ...formData, expenseID: expenseByPeriodsRes[0].id || 1 });
+        setFormData({ ...formData, expenseID: expenseByPeriodsRes[0].id || 1 });
     };
     getExpenseByPeriods(getExpenseByPeriodsUrl);
   }, [selectedYear]);
