@@ -20,7 +20,7 @@ const ExpenseAddModal: FC<ModalProps> = (props) => {
   const [formData, setFormData] = useState<Expense>({
     yearID: props.years ? Number(props.years[props.years.length - 1].id) : 1,
     name: '',
-    totalPrice: 0
+    totalPrice: 0,
   });
 
   const isEnabled = useMemo(() => {
@@ -31,13 +31,9 @@ const ExpenseAddModal: FC<ModalProps> = (props) => {
 
   const handler =
     (input: string) =>
-      (
-        e:
-          | React.ChangeEvent<HTMLSelectElement>
-          | React.ChangeEvent<HTMLInputElement>,
-      ) => {
-        setFormData({ ...formData, [input]: e.target.value });
-      };
+    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [input]: e.target.value });
+    };
 
   const registExpenses = async (data: Expense) => {
     const registExpensesUrl = process.env.CSR_API_URI + '/expenses';
