@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import AddModal from '@components/purchaseorders/PurchaseOrderAddModal';
-import { PurchaseItem, PurchaseOrder, Expense, ExpenseByPeriods } from '@type/common';
+import { PurchaseItem, PurchaseOrder, Expense, YearPeriod } from '@type/common';
 
 export interface PurchaseItemNumModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   expenses: Expense[];
-  expenseByPeriods: ExpenseByPeriods[];
+  expenseByPeriods: Expense[];
+  yearPeriods: YearPeriod[];
 }
 
 export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
@@ -58,6 +60,23 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
     }
     return initFormDataList;
   });
+
+  const [expenseByPeriods, setExpenseByPeriods] = useState<Expense[]>(props.expenseByPeriods);
+
+  const date = new Date();
+  const [selectedYear, setSelectedYear] = useState<number>(date.getFullYear());
+  const yearPeriods: YearPeriod[] = props.yearPeriods;
+
+  useEffect(() => {
+    const getExpenseByPeriodsUrl = process.env.CSR_API_URI + '/expenses/fiscalyear/' + selectedYear;
+    const getExpenseByPeriods = async (url: string) => {
+      const expenseByPeriodsRes: Expense[] = await get(url);
+      setExpenseByPeriods(expenseByPeriodsRes);
+      expenseByPeriodsRes &&
+        setFormData({ ...formData, expenseID: expenseByPeriodsRes[0].id || 1 });
+    };
+    getExpenseByPeriods(getExpenseByPeriodsUrl);
+  }, [selectedYear]);
 
   // 購入申請用のhandler
   const formDataHandler =
@@ -111,6 +130,22 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               className='w-full'
             />
           </div>
+          <div className='col-span-1 text-black-600'>年度</div>
+          <div className='col-span-4 w-full'>
+            <Select
+              value={selectedYear}
+              onChange={(e) => {
+                setSelectedYear(Number(e.target.value));
+              }}
+            >
+              {yearPeriods.map((yearPeriod) => (
+                <option key={yearPeriod.id} value={yearPeriod.year}>
+                  {yearPeriod.year}年度
+                </option>
+              ))}
+              {}
+            </Select>
+          </div>
           <p className='grid-cols-1 text-black-600'>購入したい局・団体</p>
           <div className='col-span-4 w-full'>
             <Select
@@ -118,11 +153,13 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
               onChange={formDataHandler('expenseID')}
               className='w-full'
             >
-              {props.expenseByPeriods.map((data) => (
-                <option key={data.expense.id} value={data.expense.id}>
-                  {data.expense.name}
-                </option>
-              ))}
+              {expenseByPeriods &&
+                expenseByPeriods.map((data) => (
+                  <option key={data.id} value={data.id}>
+                    {data.name}
+                  </option>
+                ))}
+              {!expenseByPeriods && <option>局・団体が登録されていません</option>}
             </Select>
           </div>
           <p className='grid-cols-1 text-black-600'>購入物品数</p>
@@ -142,6 +179,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
         </div>
         <div className='mx-auto my-3 w-fit'>
           <PrimaryButton
+            disabled={!expenseByPeriods}
             onClick={() => {
               submit(formData);
               onOpen();
