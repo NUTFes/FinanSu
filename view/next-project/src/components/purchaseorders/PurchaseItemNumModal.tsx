@@ -62,7 +62,6 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
   });
 
   const [expenseByPeriods, setExpenseByPeriods] = useState<Expense[]>(props.expenseByPeriods);
-  console.log(expenseByPeriods);
 
   const date = new Date();
   const [selectedYear, setSelectedYear] = useState<number>(date.getFullYear());
@@ -73,6 +72,8 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
     const getExpenseByPeriods = async (url: string) => {
       const expenseByPeriodsRes: Expense[] = await get(url);
       setExpenseByPeriods(expenseByPeriodsRes);
+      expenseByPeriodsRes &&
+      setFormData({ ...formData, expenseID: expenseByPeriodsRes[0].id || 1 });
     };
     getExpenseByPeriods(getExpenseByPeriodsUrl);
   }, [selectedYear]);
@@ -178,6 +179,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
         </div>
         <div className='mx-auto my-3 w-fit'>
           <PrimaryButton
+            disabled={!expenseByPeriods}
             onClick={() => {
               submit(formData);
               onOpen();
