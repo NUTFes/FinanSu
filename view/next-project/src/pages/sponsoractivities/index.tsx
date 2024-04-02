@@ -44,7 +44,12 @@ export async function getServerSideProps() {
       ? String(periodsRes[periodsRes.length - 1].year)
       : String(new Date().getFullYear()));
   const getSponsorStylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
-  const getSponsorsUrl = process.env.SSR_API_URI + '/sponsors';
+  const getSponsorsUrl =
+    process.env.SSR_API_URI +
+    '/sponsors/periods/' +
+    (periodsRes
+      ? String(periodsRes[periodsRes.length - 1].year)
+      : String(new Date().getFullYear()));
   const getUsersUrl = process.env.SSR_API_URI + '/users';
   const getActivityStylesUrl = process.env.SSR_API_URI + '/activity_styles';
 
@@ -76,12 +81,13 @@ const formatYYYYMMDD = (date: Date) => {
 };
 
 export default function SponsorActivities(props: Props) {
-  const [sponsorActivities, setSponsorActivitiesViews] = useState<SponsorActivityView[]>(
+  const [sponsorActivities, setSponsorActivities] = useState<SponsorActivityView[]>(
     props.sponsorActivitiesView,
   );
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const sponsors = props.sponsors;
 
   const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SponsorActivityView) => {
     setSponsorActivitiesID(sponsorActivitiesID);
@@ -106,7 +112,7 @@ export default function SponsorActivities(props: Props) {
     const getSponsorActivitiesViewUrlByYear =
       process.env.CSR_API_URI + '/activities/details/' + selectedYear;
     const getSponsorActivitiesByYears = await get(getSponsorActivitiesViewUrlByYear);
-    setSponsorActivitiesViews(getSponsorActivitiesByYears);
+    setSponsorActivities(getSponsorActivitiesByYears);
   };
 
   const currentYear = new Date().getFullYear().toString();
@@ -196,7 +202,7 @@ export default function SponsorActivities(props: Props) {
       default:
         return filteredActivities;
     }
-  }, [props, selectedYear, selectedIsDone, selectedSort, getSponsorActivities]);
+  }, [props, selectedYear, selectedIsDone, selectedSort, sponsorActivities]);
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
@@ -298,8 +304,9 @@ export default function SponsorActivities(props: Props) {
           <div className='hidden justify-end md:flex '>
             <OpenModalButton
               users={props.users}
-              sponsors={props.sponsors}
+              sponsors={sponsors}
               sponsorStyles={props.sponsorStyles}
+              yearPeriods={yearPeriods}
             >
               協賛活動登録
             </OpenModalButton>
@@ -381,6 +388,8 @@ export default function SponsorActivities(props: Props) {
                       users={props.users}
                       sponsorStyleDetails={sponsorActivitiesItem.styleDetail}
                       activityStyles={props.activityStyles}
+                      year={selectedYear}
+                      yearPeriods={yearPeriods}
                     />
                     <OpenDeleteModalButton id={sponsorActivitiesItem.sponsorActivity.id || 0} />
                   </div>
@@ -548,6 +557,8 @@ export default function SponsorActivities(props: Props) {
                             users={props.users}
                             sponsorStyleDetails={sponsorActivitiesItem.styleDetail}
                             activityStyles={props.activityStyles}
+                            year={selectedYear}
+                            yearPeriods={yearPeriods}
                           />
                         </div>
                         <div className='mx-1'>
@@ -600,6 +611,7 @@ export default function SponsorActivities(props: Props) {
             users={props.users}
             sponsors={props.sponsors}
             sponsorStyles={props.sponsorStyles}
+            yearPeriods={yearPeriods}
           />
         </div>
       </Card>
