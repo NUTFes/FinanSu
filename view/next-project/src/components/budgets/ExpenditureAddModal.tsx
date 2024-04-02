@@ -25,7 +25,7 @@ const ExpenseAddModal: FC<ModalProps> = (props) => {
 
   const isEnabled = useMemo(() => {
     return formData.name !== '' ? false : true;
-  }, [formData])
+  }, [formData]);
 
   const router = useRouter();
 
