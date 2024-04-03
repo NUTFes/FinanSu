@@ -56,26 +56,26 @@ const docTemplate = `{
                 }
             },
         },
-				"/activities/details/{year}": {
-						"get": {
-								tags: ["activity"],
-								"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
-								"parameters": [
-										{
-												"name": "year",
-												"in": "path",
-												"description": "year",
-												"required": true,
-												"type": "integer"
-										}
-								],
-								"responses": {
-										"200": {
-												"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
-										}
+		"/activities/details/{year}": {
+				"get": {
+						tags: ["activity"],
+						"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
+						"parameters": [
+								{
+										"name": "year",
+										"in": "path",
+										"description": "year",
+										"required": true,
+										"type": "integer"
 								}
-						},
+						],
+						"responses": {
+								"200": {
+										"description": "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得",
+								}
+						}
 				},
+		},
         "/activities/{id}": {
             "get": {
                 tags: ["activity"],
@@ -135,6 +135,98 @@ const docTemplate = `{
                 responses: {
                     "200": {
                         "description": "activitiesの削除完了",
+                    }
+                },
+            },
+        },
+        "/activity_informations": {
+            "get": {
+                tags: ["activity_information"],
+                "description": "activity_informationの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "activity_informationの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["activity_information"],
+                "description": "activity_informationの作成",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "activity_information",
+                        "schema":{
+                            "$ref": "#/definitions/activity_information"
+                        },
+                    },
+                ],
+                responses: {
+                    "200": {
+                        "description": "create されたactivity_informationが返ってくる",
+                    }
+                },
+            },
+        },
+        "/activity_informations/{id}": {
+            "get": {
+                tags: ["activity_information"],
+                "description": "IDで指定されたactivity_informationsの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activity_informationの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["activity_information"],
+                "description": "activity_informationの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたactivity_informationが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "activity_information",
+                        "schema":{
+                            "$ref": "#/definitions/activity_information"
+                        },
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["activity_information"],
+                "description": "IDを指定してactivity_informationの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "activity_informationの削除完了",
                     }
                 },
             },
@@ -731,6 +823,26 @@ const docTemplate = `{
                 }
             },
         },
+				"/expenses/fiscalyear/{year}": {
+					"get": {
+							tags: ["expense"],
+							"description": "年度で指定されたexpensesを取得",
+							"parameters": [
+									{
+											"name": "year",
+											"in": "path",
+											"description": "year",
+											"required": true,
+											"type": "integer"
+									}
+							],
+							"responses": {
+									"200": {
+											"description": "yearで指定されたexpensesを取得",
+									}
+							}
+					},
+			},
         "/fund_informations": {
             "get": {
                 tags: ["fund_information"],
@@ -1647,26 +1759,26 @@ const docTemplate = `{
                 },
             },
         },
-				"/sponsors/{year}": {
-					"get": {
-							tags: ["sponsor"],
-							"description": "年度で指定されたsponsorを取得",
-							"parameters": [
-									{
-											"name": "year",
-											"in": "path",
-											"description": "year",
-											"required": true,
-											"type": "integer"
-									}
-							],
-							"responses": {
-									"200": {
-											"description": "sponsorの取得完了",
-									}
+		"/sponsors/periods/{year}": {
+			"get": {
+					tags: ["sponsor"],
+					"description": "年度で指定されたsponsorを取得",
+					"parameters": [
+							{
+									"name": "year",
+									"in": "path",
+									"description": "year",
+									"required": true,
+									"type": "integer"
 							}
-					},
+					],
+					"responses": {
+							"200": {
+									"description": "sponsorの取得完了",
+							}
+					}
 			},
+        },
         "/sponsorstyles": {
             "get": {
                 tags: ["sponsorstyle"],
@@ -2212,7 +2324,6 @@ const docTemplate = `{
                 "sponsorID":{
                     "type": "int",
                     "example": 1,
-
                 },
                 "userID":{
                     "type": "int",
@@ -2251,6 +2362,36 @@ const docTemplate = `{
                     "feature",
                     "expense",
                     "remark",
+            },
+        },
+        "activity_information":{
+            "properties":{
+                "activityID":{
+                    "type": "int",
+                    "example": 1,
+
+                },
+                "bucketName":{
+                    "type": "string",
+                    "example": "なし",
+                },
+                "fileName":{
+                    "type": "string",
+                    "example": "なし",
+                },
+                "fileType":{
+                    "type": "string",
+                    "example": "なし",
+
+                },
+                "designProgress":{
+                    "type": "int",
+                    "example": 1,
+                },
+                "fileInformation":{
+                    "type": "string",
+                    "example": "",
+                },
             },
         },
         "activity_style":{

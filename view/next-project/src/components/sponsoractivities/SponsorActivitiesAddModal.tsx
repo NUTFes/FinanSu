@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect, useMemo } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { post } from '@/utils/api/api_methods';
+import { get, post } from '@/utils/api/api_methods';
 import { MultiSelect } from '@components/common';
 
 import {
@@ -16,22 +16,22 @@ import {
 } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { DESIGNERS, DESIGNER_VALUES } from '@constants/designers';
-import { SponsorActivity, Sponsor, SponsorStyle, User } from '@type/common';
+import { SponsorActivity, Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
 
-const TABLE_COLUMNS2 = ['オプション', 'デザイン作成', '移動距離(km)', '交通費'];
+const TABLE_COLUMNS2 = ['オプション', 'デザイン作成', '交通費'];
 
 interface Props {
   users: User[];
   sponsors: Sponsor[];
   sponsorStyles: SponsorStyle[];
+  yearPeriods: YearPeriod[];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const REMARK_COUPON = `<クーポン> [詳細 :  ○○]\n`;
 const REMARK_PAMPHLET = `<パンフレット掲載内容> [企業名 : x],[住所 : x],[HP : x],[ロゴ : x],[営業時間 : x],[電話番号 : x],[キャッチコピー : x],[地図 : x],[その他 :  ]\n`;
-const REMARK_POSTER = `<ポスター掲載内容> パンフレット広告拡大\n`;
 
 export default function SponsorActivitiesAddModal(props: Props) {
   const router = useRouter();
@@ -40,11 +40,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   const [isDone, setIsDone] = useState(false);
-  const { users, sponsors, sponsorStyles } = props;
+  const { users, sponsorStyles, yearPeriods } = props;
+  const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsors);
 
   const [formData, setFormData] = useState<SponsorActivity>({
     id: 0,
-    sponsorID: sponsors[0].id || 0,
+    sponsorID: (sponsors && sponsors[0].id) || 0,
     userID: users[0].id || 0,
     isDone: false,
     feature: 'なし',
@@ -55,12 +56,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   });
 
   const setDesign = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const remarkOption =
-      formData.feature === 'ポスター'
-        ? REMARK_POSTER
-        : formData.feature === 'クーポン'
-        ? REMARK_COUPON
-        : '';
+    const remarkOption = formData.feature === 'クーポン' ? REMARK_COUPON : '';
     const newRemarkDesign = e.target.value === '1' ? REMARK_PAMPHLET : '';
     setFormData({
       ...formData,
@@ -70,12 +66,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   const setFeature = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newRemarkOption =
-      e.target.value === 'ポスター'
-        ? REMARK_POSTER
-        : e.target.value === 'クーポン'
-        ? REMARK_COUPON
-        : '';
+    const newRemarkOption = e.target.value === 'クーポン' ? REMARK_COUPON : '';
     const remarkDesign = formData.design === 1 ? REMARK_PAMPHLET : '';
     setFormData({
       ...formData,
@@ -123,7 +114,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   const submit = (data: SponsorActivity) => {
     const { expense, userID, sponsorID, ...rest } = data;
     const submitData: SponsorActivity = {
-      expense: Math.round(expense * 11),
+      expense: Number(expense),
       userID: Number(userID),
       sponsorID: Number(sponsorID),
       ...rest,
@@ -175,10 +166,41 @@ export default function SponsorActivitiesAddModal(props: Props) {
     }
   }, [isSelectSponsorBooth]);
 
+  const currentYear = yearPeriods
+    ? String(yearPeriods[yearPeriods.length - 1].year)
+    : String(new Date().getFullYear());
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+
+  const getSponsors = async () => {
+    const getSponsorsUrlByYear = process.env.CSR_API_URI + '/sponsors/periods/' + selectedYear;
+    const getSponsorsByYears = await get(getSponsorsUrlByYear);
+    setSponsors(getSponsorsByYears);
+  };
+
+  useEffect(() => {
+    getSponsors();
+  }, [selectedYear]);
+
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
-    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-3'>
-      <p className='text-black-600'>協賛企業</p>
+    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-2'>
+      <p className='text-black-600'>年度</p>
+      <div className='col-span-4 w-full'>
+        <Select
+          value={selectedYear}
+          onChange={(e) => {
+            setSelectedYear(e.target.value);
+          }}
+        >
+          {yearPeriods &&
+            yearPeriods.map((year: YearPeriod) => (
+              <option key={year.id} value={year.year}>
+                {year.year}
+              </option>
+            ))}
+        </Select>
+      </div>
+      <p className='text-black-600'>協賛企業</p>{' '}
       <div className='col-span-4 w-full'>
         <Select value={data.sponsorID} onChange={formDataHandler('sponsorID')}>
           {sponsors &&
@@ -239,17 +261,10 @@ export default function SponsorActivitiesAddModal(props: Props) {
           <option value={'なし'} selected>
             なし
           </option>
-          <option value={'ポスター'} disabled={isSelectSponsorBooth}>
-            ポスター
-          </option>
           <option value={'クーポン'} disabled={isSelectSponsorBooth}>
             クーポン
           </option>
         </Select>
-      </div>
-      <p className='text-center text-black-600'>広告データurl</p>
-      <div className={clsx('col-span-4 grid w-full')}>
-        <Input value={data.url} onChange={formDataHandler('url')} />
       </div>
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
@@ -267,7 +282,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
           </div>
         ))}
       </div>
-      <p className='text-black-600'>移動距離(km)</p>
+      <p className='text-black-600'>交通費</p>
       <div className='col-span-4 w-full'>
         <Input
           type='number'
@@ -276,10 +291,6 @@ export default function SponsorActivitiesAddModal(props: Props) {
           value={data.expense}
           onChange={formDataHandler('expense')}
         />
-      </div>
-      <p className='text-black-600'>交通費</p>
-      <div className='col-span-4 w-full'>
-        <p className='w-full'>{Math.round(data.expense * 11)}円</p>
       </div>
       <p className='text-black-600'>備考</p>
       <div className='col-span-4 w-full'>
@@ -306,7 +317,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
     return (
       <div>
-        <table className='mb-7 mt-10 w-full table-fixed border-collapse'>
+        <table className='my-5 w-full table-fixed border-collapse'>
           <thead>
             <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
               {TABLE_COLUMNS.map((tableColumn: string) => (
@@ -363,33 +374,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
               </td>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>
-                  {sponsorActivities.expense}
-                </div>
-              </td>
-              <td className='py-3'>
-                <div className='text-center text-sm text-black-600'>
-                  {Math.round(sponsorActivities.expense * 11)}円
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <table className='mb-7 w-full table-fixed border-collapse'>
-          <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-              <th className='border-b-primary-1 px-6 pb-2'>
-                <div className='text-center text-sm text-black-600'>広告データurl</div>
-              </th>
-            </tr>
-          </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <tr>
-              <td>
-                <div className='py-3 text-sm text-black-600'>
-                  <p className='border-primary-1 text-center'>
-                    {sponsorActivities.url === '' && <div>なし</div>}
-                    {sponsorActivities.url}
-                  </p>
+                  {sponsorActivities.expense}円
                 </div>
               </td>
             </tr>
@@ -425,7 +410,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   return (
-    <Modal className='mt-64 md:mt-32 md:w-1/2'>
+    <Modal className='mt-64 md:mt-10 md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton

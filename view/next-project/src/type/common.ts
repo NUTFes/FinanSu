@@ -67,6 +67,11 @@ export interface ExpenseView {
   ];
 }
 
+export interface ExpenseByPeriods {
+  expense: Expense;
+  year: Year;
+}
+
 // // PurchaseOrder(購入申請)
 export interface PurchaseOrder {
   id?: number;
@@ -131,10 +136,23 @@ export interface SponsorActivity {
   updatedAt?: string;
 }
 
+export interface SponsorActivityInformation {
+  id?: number;
+  activityID: number;
+  bucketName: string;
+  fileName: string;
+  fileType: string;
+  designProgress: number;
+  fileInformation: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface SponsorActivityView {
   user: User;
   sponsor: Sponsor;
   sponsorActivity: SponsorActivity;
+  sponsorActivityInformations?: SponsorActivityInformation[];
   styleDetail: SponsorStyleDetail[];
 }
 

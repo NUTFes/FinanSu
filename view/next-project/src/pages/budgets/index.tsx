@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
 
 import { useRecoilValue } from 'recoil';
+import OpenExpenditureAddModalButton from '@/components/budgets/OpenExpenditureAddModalButton';
 import OpenExpenseAddModalButton from '@/components/budgets/OpenExpenseAddModalButton';
 import OpenExpenseDeleteModalButton from '@/components/budgets/OpenExpenseDeleteModalButton';
 import OpenExpenseEditModalButton from '@/components/budgets/OpenExpenseEditModalButton';
@@ -77,7 +78,7 @@ export default function BudgetList(props: Props) {
     return true;
   }, [currentUser]);
 
-  const [forcusExpense, setForcusExpense] = useState<ExpenseView>(props.expenses[0]);
+  const [forcusExpense, setForcusExpense] = useState<ExpenseView | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const onOpen = (expenseID: number, expenseView: ExpenseView) => {
     setForcusExpense(expenseView);
@@ -275,6 +276,11 @@ export default function BudgetList(props: Props) {
                       </option>
                     ))}
                   </select>
+                </div>
+                <div className='hidden justify-end md:flex'>
+                  <OpenExpenditureAddModalButton years={years}>
+                    支出登録
+                  </OpenExpenditureAddModalButton>
                 </div>
                 <div className='mb-2 mt-4 overflow-scroll md:p-5'>
                   <table className='mb-5 w-max table-auto border-collapse md:w-full'>

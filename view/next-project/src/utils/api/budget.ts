@@ -16,6 +16,21 @@ export const post = async (url: string, data: Budget) => {
   return await res.json();
 };
 
+export const postExpenses = async (url: string, data: Expense) => {
+  const name = data.name;
+  const yearID = data.yearID;
+  const postUrl = url + '?name=' + name + '&year_id=' + yearID;
+  const res = await fetch(postUrl, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return await res.json();
+};
+
 export const put = async (url: string, data: Budget) => {
   const price = data.price;
   const yearID = data.yearID;

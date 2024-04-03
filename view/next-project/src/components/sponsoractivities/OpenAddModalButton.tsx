@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 
 import AddButton from '../common/AddButton';
 import SponsorActivitiesAddModal from './SponsorActivitiesAddModal';
-import { User, Sponsor, SponsorStyle } from '@type/common';
+import { User, Sponsor, SponsorStyle, YearPeriod } from '@type/common';
 
 interface Props {
   users: User[];
   sponsors: Sponsor[];
   sponsorStyles: SponsorStyle[];
+  yearPeriods: YearPeriod[];
   children?: React.ReactNode;
 }
 
@@ -29,6 +30,7 @@ export default function OpenModalButton(props: Props) {
           sponsors={props.sponsors}
           sponsorStyles={props.sponsorStyles}
           setIsOpen={setIsOpen}
+          yearPeriods={props.yearPeriods}
         />
       )}
     </>

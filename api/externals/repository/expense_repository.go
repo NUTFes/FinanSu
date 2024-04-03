@@ -24,6 +24,7 @@ type ExpenseRepository interface {
 	AllItemInfo(context.Context, string) (*sql.Rows, error)
 	AllOrderAndReportInfo(context.Context, string) (*sql.Rows, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
+	OnlyExpensesByPeriod(context.Context, string) (*sql.Rows, error)
 }
 
 func NewExpenseRepository(c db.Client, ac abstract.Crud) ExpenseRepository {
@@ -113,6 +114,22 @@ func (er *expenseRepository) AllByPeriod(c context.Context, year string) (*sql.R
 	query := `
 			SELECT
 				*
+			FROM
+				expenses
+			INNER JOIN
+				years
+			ON
+				expenses.yearID = years.id
+			WHERE
+				years.year = ` + year +
+			" ORDER BY expenses.id;"
+	return er.crud.Read(c, query)
+}
+
+func (er *expenseRepository) OnlyExpensesByPeriod(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+			SELECT
+				expenses.*
 			FROM
 				expenses
 			INNER JOIN
