@@ -66,7 +66,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
     sponsorActivityInformations.map((activityInformation) => {
       const bucketName = activityInformation.bucketName;
       const fileName = activityInformation.fileName;
-      return `http://127.0.0.1:9000/${bucketName}/${fileName}`;
+      return `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/${bucketName}/${fileName}`;
     });
 
   const download = async (url: string, fileName: string) => {
