@@ -15,9 +15,6 @@ services:
     ports:
       - "3306:3306"
     restart: always
-    networks:
-      app_net:
-        ipv4_address: 192.168.176.2
 
   view:
     build: ./view
@@ -28,10 +25,12 @@ services:
     ports:
       - "3000:3000"
     stdin_open: true
+    environment:
+      NEXT_PUBLIC_ENDPOINT: minio
+      NEXT_PUBLIC_PORT: 9000
+      NEXT_PUBLIC_BUCKET_NAME: finansu
+      NEXT_PUBLIC_MINIO_ENDPONT: http://localhost:9000
     tty: true
-    networks:
-      app_net:
-        ipv4_address: 192.168.176.3
 
   api:
     build:
@@ -49,9 +48,6 @@ services:
     depends_on:
       db:
         condition: service_started
-    networks:
-      app_net:
-        ipv4_address: 192.168.176.4
 
   minio:
     image: minio/minio:latest
@@ -64,14 +60,3 @@ services:
     environment:
       MINIO_ROOT_USER: user
       MINIO_ROOT_PASSWORD: password
-    networks:
-      app_net:
-        ipv4_address: 192.168.176.5
-
-networks:
-  app_net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.176.0/24
