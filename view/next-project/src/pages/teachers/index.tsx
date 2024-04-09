@@ -33,7 +33,6 @@ export default function TeachersList(props: Props) {
       id: 0,
       name: '全て',
     },
-    ,
     ...DEPARTMENTS,
   ];
   const [selectedDepartment, setSelectedDepartment] = useState<Department | undefined>(
