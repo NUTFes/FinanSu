@@ -176,7 +176,7 @@ const MyDocument = (props: MyDocumentProps) => (
             </Text>
             <View>
               <View style={styles.marginButtom}>
-                <Text>技大祭実行委員</Text>
+                <Text>技大祭実行委員会</Text>
                 <Text>〒940-2137</Text>
                 <Text>新潟県長岡市上富岡町1603-1</Text>
                 <Text>長岡技術科学大学 大学集会施設</Text>

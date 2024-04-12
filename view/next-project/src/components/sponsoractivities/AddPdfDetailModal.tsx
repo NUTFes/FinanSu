@@ -18,8 +18,8 @@ interface FormDateFormat {
 export default function AddPdfDetailModal(props: ModalProps) {
   const today = new Date();
   const yyyy = String(today.getFullYear());
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = '08';
+  const dd = '30';
   const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
   const toReiwaYear = (year: number) => {
     const reiwaStartYear = 2019;
