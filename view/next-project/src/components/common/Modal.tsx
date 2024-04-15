@@ -17,7 +17,7 @@ export default function Modal(props: Props) {
         <div className={clsx(className)} style={{ maxHeight: '90vh', overflowY: 'auto' }}>
           {props.children}
         </div>
-      </div>  
+      </div>
     </>
   );
 }
