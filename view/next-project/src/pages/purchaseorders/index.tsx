@@ -28,6 +28,7 @@ interface Props {
   purchaseOrderView: PurchaseOrderView[];
   expenses: Expense[];
   yearPeriods: YearPeriod[];
+  expenseByPeriods: Expense[];
 }
 
 const date = new Date();
@@ -39,14 +40,21 @@ export async function getServerSideProps() {
     process.env.SSR_API_URI +
     '/purchaseorders/details/' +
     (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
-  const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const purchaseOrderViewRes = await get(getPurchaseOrderViewUrl);
+  const getExpenseUrl = process.env.SSR_API_URI + '/expenses';
   const expenseRes = await get(getExpenseUrl);
+  const getExpenseByPeriodsUrl =
+    process.env.SSR_API_URI +
+    '/expenses/fiscalyear/' +
+    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+  const expenseByPeriodsRes = await get(getExpenseByPeriodsUrl);
+
   return {
     props: {
       purchaseOrderView: purchaseOrderViewRes,
       expenses: expenseRes,
       yearPeriods: periodsRes,
+      expenseByPeriods: expenseByPeriodsRes,
     },
   };
 }
@@ -172,6 +180,8 @@ export default function PurchaseOrders(props: Props) {
     getUser();
   }, []);
 
+  console.log(props.expenseByPeriods);
+
   return (
     <MainLayout>
       <Head>
@@ -215,15 +225,21 @@ export default function PurchaseOrders(props: Props) {
             </PrimaryButton>
           </div>
           <div className='hidden justify-end md:flex'>
-            <OpenAddModalButton expenses={props.expenses}>申請登録</OpenAddModalButton>
+            <OpenAddModalButton
+              expenses={props.expenses}
+              expenseByPeriods={props.expenseByPeriods}
+              yearPeriods={yearPeriods}
+            >
+              申請登録
+            </OpenAddModalButton>
           </div>
         </div>
         <div className='w-100 mb-2 overflow-scroll p-5'>
           <table className='mb-5 w-max table-auto border-collapse md:w-full md:table-fixed'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-2/12 pb-2'>
-                  <div className='text-center text-sm text-black-600'>財務局長チェック</div>
+                <th className='w-1/12 pb-2'>
+                  <div className='text-center text-sm text-black-600'></div>
                 </th>
                 <th className='w-2/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>購入したい局</div>
@@ -393,7 +409,11 @@ export default function PurchaseOrders(props: Props) {
         />
       )}
       <div className='fixed bottom-4 right-4 md:hidden'>
-        <OpenAddModalButton expenses={props.expenses} />
+        <OpenAddModalButton
+          expenses={props.expenses}
+          expenseByPeriods={props.expenseByPeriods}
+          yearPeriods={yearPeriods}
+        />
       </div>
     </MainLayout>
   );

@@ -9,6 +9,7 @@ interface Props {
   teachers: Teacher[];
   departments: Department[];
   users: User[];
+  currentUser?: User;
 }
 
 export const OpenAddModalButton = (props: Props) => {
@@ -29,6 +30,7 @@ export const OpenAddModalButton = (props: Props) => {
           teachers={props.teachers}
           departments={props.departments}
           users={props.users}
+          currentUser={props.currentUser}
         />
       )}
     </>

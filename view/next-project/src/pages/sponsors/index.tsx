@@ -22,7 +22,7 @@ export const getServerSideProps = async () => {
   const periodsRes = await get(getPeriodsUrl);
   const getSponsorViewUrl =
     process.env.SSR_API_URI +
-    '/sponsors/' +
+    '/sponsors/periods/' +
     (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
 
   return {
@@ -43,7 +43,7 @@ const Sponsorship: NextPage<Props> = (props: Props) => {
 
   //年度別のsponsorsを取得
   const getSponsors = async () => {
-    const getSponsorViewUrlByYear = process.env.CSR_API_URI + '/sponsors/' + selectedYear;
+    const getSponsorViewUrlByYear = process.env.CSR_API_URI + '/sponsors/periods/' + selectedYear;
     const getSponsorsByYears = await get(getSponsorViewUrlByYear);
     setSponsors(getSponsorsByYears);
   };
