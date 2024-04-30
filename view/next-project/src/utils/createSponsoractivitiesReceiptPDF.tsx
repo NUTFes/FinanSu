@@ -171,7 +171,7 @@ const MyDocument = (props: MyDocumentProps) => (
             </View>
           </View>
           <View>
-            <Text style={styles.marginButtom}>請求日 :{props.issuedDate}</Text>
+            <Text style={styles.marginButtom}>請求日 : {props.issuedDate}</Text>
             <View>
               <View style={styles.marginButtom}>
                 <Text>技大祭実行委員会</Text>
