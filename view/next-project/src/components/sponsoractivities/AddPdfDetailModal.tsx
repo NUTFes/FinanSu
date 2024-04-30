@@ -105,7 +105,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
               createSponsoractivitiesPDF(
                 props.sponsorActivitiesViewItem,
                 formatDate(formData.receivedAt),
-                formatDate(formData.billIssuedAt),
+                formatDate(formData.billIssuedAt, false),
                 remarks,
               );
               props.setIsOpen(false);
