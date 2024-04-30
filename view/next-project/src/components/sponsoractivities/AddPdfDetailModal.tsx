@@ -32,12 +32,12 @@ export default function AddPdfDetailModal(props: ModalProps) {
   };
   const ymd = `${yyyy}-${mm}-${dd}`;
 
-  const formatDate = (date: string) => {
+  const formatDate = (date: string, showWeekday = true) => {
     const [year, month, day] = date.split('-').map(Number);
     const dateObj = new Date(year, month - 1, day);
     const reiwaYear = toReiwaYear(year);
     const weekday = getWeekday(dateObj);
-    return `令和${reiwaYear}年${month}月${day}日(${weekday})`;
+    return `令和${reiwaYear}年${month}月${day}日${showWeekday ? `(${weekday})` : ''}`;
   };
 
   const todayFormatted = () => {
@@ -119,7 +119,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
         <PreviewPDF
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
           date={formatDate(formData.receivedAt)}
-          issuedDate={formatDate(formData.billIssuedAt)}
+          issuedDate={formatDate(formData.billIssuedAt, false)}
           remarks={remarks}
         />
       </div>
