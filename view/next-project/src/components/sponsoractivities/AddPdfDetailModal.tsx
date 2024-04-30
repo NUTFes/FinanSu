@@ -13,6 +13,7 @@ interface ModalProps {
 
 interface FormDateFormat {
   receivedAt: string;
+  billIssuedAt: string;
 }
 
 export default function AddPdfDetailModal(props: ModalProps) {
@@ -31,15 +32,25 @@ export default function AddPdfDetailModal(props: ModalProps) {
   };
   const ymd = `${yyyy}-${mm}-${dd}`;
 
-  const formatDate = (date: string) => {
+  const formatDate = (date: string, showWeekday = true) => {
     const [year, month, day] = date.split('-').map(Number);
     const dateObj = new Date(year, month - 1, day);
     const reiwaYear = toReiwaYear(year);
     const weekday = getWeekday(dateObj);
-    return `令和${reiwaYear}年${month}月${day}日(${weekday})`;
+    return `令和${reiwaYear}年${month}月${day}日${showWeekday ? `(${weekday})` : ''}`;
   };
 
-  const [formData, setFormData] = useState<FormDateFormat>({ receivedAt: ymd });
+  const todayFormatted = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(
+      today.getDate(),
+    ).padStart(2, '0')}`;
+  };
+
+  const [formData, setFormData] = useState<FormDateFormat>({
+    receivedAt: ymd,
+    billIssuedAt: todayFormatted(),
+  });
   const [remarks, setRemarks] = useState('');
 
   const handler =
@@ -66,14 +77,22 @@ export default function AddPdfDetailModal(props: ModalProps) {
           振込締め切り日・備考の入力
         </p>
         <div className='col-span-4 w-full'>
+          <p className='text-gray-600 mb-3 ml-1 text-sm'>請求書発行日</p>
+          <Input
+            type='date'
+            value={formData.billIssuedAt}
+            onChange={handler('billIssuedAt')}
+            className='mb-3 w-full'
+          />
+          <p className='text-gray-600 mb-3 ml-1 text-sm'>振込締め切り日</p>
           <Input
             type='date'
             value={formData.receivedAt}
             onChange={handler('receivedAt')}
             className='mb-3 w-full'
           />
+          <p className='text-gray-600 mb-3 ml-1 text-sm'>備考を入力</p>
           <Input
-            placeholder='備考を入力'
             type='text'
             value={remarks}
             onChange={handleRemarksChange}
@@ -86,6 +105,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
               createSponsoractivitiesPDF(
                 props.sponsorActivitiesViewItem,
                 formatDate(formData.receivedAt),
+                formatDate(formData.billIssuedAt, false),
                 remarks,
               );
               props.setIsOpen(false);
@@ -99,6 +119,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
         <PreviewPDF
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
           date={formatDate(formData.receivedAt)}
+          issuedDate={formatDate(formData.billIssuedAt, false)}
           remarks={remarks}
         />
       </div>
