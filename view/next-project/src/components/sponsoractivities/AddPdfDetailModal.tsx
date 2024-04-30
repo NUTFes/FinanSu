@@ -105,7 +105,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
               createSponsoractivitiesPDF(
                 props.sponsorActivitiesViewItem,
                 formatDate(formData.receivedAt),
-                formData.billIssuedAt,
+                formatDate(formData.billIssuedAt),
                 remarks,
               );
               props.setIsOpen(false);
@@ -119,7 +119,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
         <PreviewPDF
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
           date={formatDate(formData.receivedAt)}
-          issuedDate={formData.billIssuedAt}
+          issuedDate={formatDate(formData.billIssuedAt)}
           remarks={remarks}
         />
       </div>
