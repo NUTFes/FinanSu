@@ -134,6 +134,7 @@ interface MyDocumentProps {
   sponsorActivitiesViewItem: SponsorActivityView;
   totalPrice: number;
   date: string;
+  issuedDate: string;
   remarks: string;
   formatDate: (date: string) => string;
 }
@@ -170,10 +171,7 @@ const MyDocument = (props: MyDocumentProps) => (
             </View>
           </View>
           <View>
-            <Text style={styles.marginButtom}>
-              請求日 :{' '}
-              {props.formatDate(props.sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}
-            </Text>
+            <Text style={styles.marginButtom}>請求日 :{props.issuedDate}</Text>
             <View>
               <View style={styles.marginButtom}>
                 <Text>技大祭実行委員会</Text>
@@ -261,6 +259,7 @@ const formatDate = (datetime: string) => {
 export const createSponsoractivitiesPDF = async (
   sponsorActivitiesViewItem: SponsorActivityView,
   date: string,
+  issuedDate: string,
   remarks: string,
 ) => {
   const asPdf = pdf(
@@ -268,6 +267,7 @@ export const createSponsoractivitiesPDF = async (
       sponsorActivitiesViewItem={sponsorActivitiesViewItem}
       totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
       date={date}
+      issuedDate={issuedDate}
       remarks={remarks}
       formatDate={formatDate}
     />,
@@ -285,18 +285,21 @@ export const createSponsoractivitiesPDF = async (
 interface PreviewProps {
   sponsorActivitiesViewItem: SponsorActivityView;
   date: string;
+  issuedDate: string;
   remarks: string;
 }
 
 export const PreviewPDF: React.FC<PreviewProps> = ({
   sponsorActivitiesViewItem,
   date,
+  issuedDate,
   remarks,
 }) => (
   <PDFViewer style={{ width: '100vw', height: '100vh' }} showToolbar={false}>
     <MyDocument
       sponsorActivitiesViewItem={sponsorActivitiesViewItem}
       date={date}
+      issuedDate={issuedDate}
       remarks={remarks}
       totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
       formatDate={formatDate}
