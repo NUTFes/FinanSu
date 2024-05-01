@@ -141,7 +141,9 @@ const MyDocument = (props: MyDocumentProps) => (
   <Document>
     <Page style={styles.page} size={{ width: 519.13, height: 241.89 }}>
       <View style={styles.pageHeader}>
-        <Text style={styles.header}>領{'  '}収{'  '}書</Text>
+        <Text style={styles.header}>
+          領{'  '}収{'  '}書
+        </Text>
         <View style={styles.headerRight}>
           <Text>No.{}</Text>
           <Text>発行日:{props.date}</Text>
