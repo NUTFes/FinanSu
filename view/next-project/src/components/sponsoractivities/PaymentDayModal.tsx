@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-import { createSponsorActivityFormPdf } from '@/utils/createSponsorActivityPdf';
-import { downloadFile } from '@/utils/downloadFile';
+import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesReceiptsPDF';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
@@ -20,14 +19,26 @@ export default function PaymentDayModal(props: ModalProps) {
   const yyyy = String(today.getFullYear());
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const dd = String(today.getDate()).padStart(2, '0');
-  const issueDay = `${yyyy}年${mm}月${dd}日`;
+  const paymentDay = `${yyyy}-${mm}-${dd}`;
   const ymd = `${yyyy}-${mm}-${dd}`;
 
   const [formData, setFormData] = useState<FormDateFormat>({ receivedAt: ymd });
 
-  const formatDate = (date: string) => {
-    const arrayDate = date.split('-');
-    return String(arrayDate[0] + '年' + arrayDate[1] + '月' + arrayDate[2] + '日');
+  const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+  const toReiwaYear = (year: number) => {
+    const reiwaStartYear = 2019;
+    const reiwaYear = year - reiwaStartYear + 1;
+    return reiwaYear === 1 ? '元' : `${reiwaYear}`;
+  };
+  const getWeekday = (date: Date) => {
+    return weekdays[date.getDay()];
+  };
+  const formatDate = (date: string, showWeekday = true) => {
+    const [year, month, day] = date.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    const reiwaYear = toReiwaYear(year);
+    const weekday = getWeekday(dateObj);
+    return `令和${reiwaYear}年${month}月${day}日${showWeekday ? `(${weekday})` : ''}`;
   };
 
   const handler =
@@ -37,7 +48,7 @@ export default function PaymentDayModal(props: ModalProps) {
     };
 
   return (
-    <Modal className='mt-64 md:mt-32 md:w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
@@ -60,19 +71,22 @@ export default function PaymentDayModal(props: ModalProps) {
         <div className='my-5 hidden justify-center md:flex'>
           <PrimaryButton
             onClick={async () => {
-              downloadFile({
-                downloadContent: await createSponsorActivityFormPdf(
-                  props.sponsorActivitiesViewItem,
-                  issueDay,
-                  formatDate(formData.receivedAt),
-                ),
-                fileName: `領収書_${yyyy}${mm}${dd}_${props.sponsorActivitiesViewItem.sponsor.name}.pdf`,
-                isBomAdded: true,
-              });
+              createSponsorActivitiesPDF(
+                props.sponsorActivitiesViewItem,
+                formatDate(paymentDay, false),
+                formatDate(formData.receivedAt, false),
+              );
+              props.setIsOpen(false);
             }}
           >
             領収書ダウンロード
           </PrimaryButton>
+        </div>
+        <div className='h-[21rem] justify-center overflow-x-auto md:flex'>
+          <PreviewPDF
+            sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
+            date={formatDate(paymentDay, false)}
+            paymentDay={formatDate(formData.receivedAt, false)}          />
         </div>
       </div>
     </Modal>
