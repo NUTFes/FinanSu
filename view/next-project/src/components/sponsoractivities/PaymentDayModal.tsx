@@ -86,7 +86,8 @@ export default function PaymentDayModal(props: ModalProps) {
           <PreviewPDF
             sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
             date={formatDate(paymentDay, false)}
-            paymentDay={formatDate(formData.receivedAt, false)}          />
+            paymentDay={formatDate(formData.receivedAt, false)}
+          />
         </div>
       </div>
     </Modal>
