@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { createSponsoractivitiesPDF } from '@/utils/createSponsoractivitiesReceiptPDF';
-import { PreviewPDF } from '@/utils/createSponsoractivitiesReceiptPDF';
+import { createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
+import { PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
@@ -102,7 +102,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
         <div className='mb-3 flex w-full justify-center'>
           <PrimaryButton
             onClick={async () => {
-              createSponsoractivitiesPDF(
+              createSponsorActivitiesPDF(
                 props.sponsorActivitiesViewItem,
                 formatDate(formData.receivedAt),
                 formatDate(formData.billIssuedAt, false),
