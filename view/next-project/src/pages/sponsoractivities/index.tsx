@@ -300,16 +300,24 @@ export default function SponsorActivities(props: Props) {
                 CSVダウンロード
               </PrimaryButton>
             </div>
-          </div>
-          <div className='hidden justify-end md:flex '>
-            <OpenModalButton
-              users={props.users}
-              sponsors={sponsors}
-              sponsorStyles={props.sponsorStyles}
-              yearPeriods={yearPeriods}
-            >
-              協賛活動登録
-            </OpenModalButton>
+            <div className='hidden justify-end md:flex '>
+              <OpenModalButton
+                users={props.users}
+                sponsors={sponsors}
+                sponsorStyles={props.sponsorStyles}
+                yearPeriods={yearPeriods}
+              >
+                協賛活動登録
+              </OpenModalButton>
+            </div>
+            <div className='md:hidden'>
+              <OpenModalButton
+                users={props.users}
+                sponsors={props.sponsors}
+                sponsorStyles={props.sponsorStyles}
+                yearPeriods={yearPeriods}
+              />
+            </div>
           </div>
         </div>
         <div className='mb-7 md:hidden'>
@@ -605,14 +613,6 @@ export default function SponsorActivities(props: Props) {
               )}
             </tbody>
           </table>
-        </div>
-        <div className='fixed bottom-4 right-4 md:hidden '>
-          <OpenModalButton
-            users={props.users}
-            sponsors={props.sponsors}
-            sponsorStyles={props.sponsorStyles}
-            yearPeriods={yearPeriods}
-          />
         </div>
       </Card>
       {isOpen && sponsorActivitiesItem && (
