@@ -235,8 +235,7 @@ export default function FundInformations(props: Props) {
               departments={departments}
               users={users}
               currentUser={currentUser}
-            >
-            </OpenAddModalButton>
+            ></OpenAddModalButton>
           </div>
         </div>
         <div className='mb-4 md:hidden'>
