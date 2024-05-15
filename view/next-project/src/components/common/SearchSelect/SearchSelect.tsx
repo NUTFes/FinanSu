@@ -11,9 +11,16 @@ interface SearchSelectProps {
   value?: Option;
   onChange?: (value: Option) => void;
   setID?: Dispatch<SetStateAction<string>>;
+  noOptionMessage?: string;
 }
 
-const SearchSelect: React.FC<SearchSelectProps> = ({ options, value, onChange, setID }) => {
+const SearchSelect: React.FC<SearchSelectProps> = ({
+  options,
+  value,
+  onChange,
+  setID,
+  noOptionMessage,
+}) => {
   const [selected, setSelected] = useState<Option | null>(value || (options && options[0]) || null);
 
   useEffect(() => {
@@ -24,6 +31,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ options, value, onChange, s
     <Select
       options={options}
       value={selected}
+      noOptionsMessage={() => noOptionMessage}
       onChange={(option, actionMeta) => {
         switch (actionMeta.action) {
           case 'select-option':
