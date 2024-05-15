@@ -229,14 +229,13 @@ export default function FundInformations(props: Props) {
               学内募金登録
             </OpenAddModalButton>
           </div>
-          <div className='md:hidden '>
+          <div className='md:hidden'>
             <OpenAddModalButton
               teachers={teachers}
               departments={departments}
               users={users}
               currentUser={currentUser}
             >
-              学内募金登録
             </OpenAddModalButton>
           </div>
         </div>
@@ -432,7 +431,6 @@ export default function FundInformations(props: Props) {
             </tfoot>
           </table>
         </div>
-        <div className='fixed bottom-3 right-4 justify-end md:hidden '></div>
       </Card>
     </MainLayout>
   );
