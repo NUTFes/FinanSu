@@ -432,8 +432,7 @@ export default function FundInformations(props: Props) {
             </tfoot>
           </table>
         </div>
-        <div className='fixed bottom-3 right-4 justify-end md:hidden '>
-        </div>
+        <div className='fixed bottom-3 right-4 justify-end md:hidden '></div>
       </Card>
     </MainLayout>
   );
