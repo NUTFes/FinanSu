@@ -224,12 +224,14 @@ export default function SponsorActivitiesAddModal(props: Props) {
           options={sponsorOptions || undefined}
           setID={setFormDataSponsorID}
           noOptionMessage={NO_SPONSORS_MESSAGE}
+          placeholder={NO_SPONSORS_MESSAGE}
         />
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
         <MultiSelect
           options={styleOotions}
+          placeholder={'協賛スタイルが登録されていません'}
           onChange={(value) => {
             setSelectedStyleIds(value.map((v) => Number(v.value)));
           }}
