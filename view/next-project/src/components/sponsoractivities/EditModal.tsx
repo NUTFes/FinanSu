@@ -236,6 +236,7 @@ export default function EditModal(props: ModalProps) {
           options={sponsorOptions || undefined}
           setID={setFormDataSponsorID}
           noOptionMessage={NO_SPONSORS_MESSAGE}
+          placeholder={NO_SPONSORS_MESSAGE}
           value={
             (sponsorOptions &&
               sponsorOptions.filter((option) => {
@@ -249,6 +250,7 @@ export default function EditModal(props: ModalProps) {
       <div className='col-span-4 w-full'>
         <MultiSelect
           options={styleOotions}
+          placeholder={'協賛スタイルが登録されていません'}
           values={
             selectedStyleIds
               ? styleOotions.filter((option) => selectedStyleIds.includes(Number(option.value)))

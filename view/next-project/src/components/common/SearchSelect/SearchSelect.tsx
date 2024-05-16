@@ -12,6 +12,7 @@ interface SearchSelectProps {
   onChange?: (value: Option) => void;
   setID?: Dispatch<SetStateAction<string>>;
   noOptionMessage?: string;
+  placeholder?: string;
 }
 
 const SearchSelect: React.FC<SearchSelectProps> = ({
@@ -20,6 +21,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   onChange,
   setID,
   noOptionMessage,
+  placeholder,
 }) => {
   const [selected, setSelected] = useState<Option | null>(value || (options && options[0]) || null);
 
@@ -32,6 +34,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
       options={options}
       value={selected}
       noOptionsMessage={() => noOptionMessage}
+      placeholder={placeholder}
       onChange={(option, actionMeta) => {
         switch (actionMeta.action) {
           case 'select-option':
