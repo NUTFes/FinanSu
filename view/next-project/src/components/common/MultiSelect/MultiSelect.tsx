@@ -10,10 +10,15 @@ interface MultiSelectProps {
   options: Option[];
   values?: Option[];
   onChange: (value: Option[]) => void;
-  placeholder?: string
+  placeholder?: string;
 }
 
-const MultiSelect: React.FC<MultiSelectProps> = ({ options, onChange, values = [options[0]], placeholder }) => {
+const MultiSelect: React.FC<MultiSelectProps> = ({
+  options,
+  onChange,
+  values = [options[0]],
+  placeholder,
+}) => {
   const [selected, setSelected] = useState<{ value: string; label: string }[]>(values);
 
   return (
