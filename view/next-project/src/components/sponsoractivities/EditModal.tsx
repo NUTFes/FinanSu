@@ -12,7 +12,7 @@ import {
   Input,
   Textarea,
 } from '@components/common';
-import { MultiSelect } from '@components/common';
+import { MultiSelect, SearchSelect } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { DESIGNER_VALUES } from '@constants/designers';
 import {
@@ -46,6 +46,7 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛企業のリスト
   const [formData, setFormData] = useState<SponsorActivity>(props.sponsorActivity);
+  const [formDataSponsorID, setFormDataSponsorID] = useState<string>(String(formData.sponsorID));
   const [selectedYear, setSelectedYear] = useState<string>(props.year);
   const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsors || []);
 
@@ -194,6 +195,22 @@ export default function EditModal(props: ModalProps) {
     return res;
   }, [bureauId]);
 
+  const sponsorOptions = useMemo(() => {
+    const options = sponsors
+      ? sponsors.map((sponsor) => {
+          return { value: String(sponsor?.id) || '', label: sponsor.name };
+        })
+      : null;
+
+    return options;
+  }, [sponsors]);
+
+  useEffect(() => {
+    setFormData({ ...formData, sponsorID: Number(formDataSponsorID) });
+  }, [formDataSponsorID]);
+
+  const NO_SPONSORS_MESSAGE = '企業が登録されていません';
+
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
     <div className='my-4 grid grid-cols-5 items-center justify-items-center gap-2'>
@@ -215,20 +232,25 @@ export default function EditModal(props: ModalProps) {
       </div>
       <p className='text-black-600'>企業名</p>
       <div className='col-span-4 w-full'>
-        <Select className='w-full' onChange={handler('sponsorID')} value={data.sponsorID}>
-          {sponsors &&
-            sponsors.map((sponsor) => (
-              <option key={sponsor.id} value={sponsor.id}>
-                {sponsor.name}
-              </option>
-            ))}
-          {!sponsors && <option>企業が登録されていません</option>}
-        </Select>
+        <SearchSelect
+          options={sponsorOptions || undefined}
+          setID={setFormDataSponsorID}
+          noOptionMessage={NO_SPONSORS_MESSAGE}
+          placeholder={NO_SPONSORS_MESSAGE}
+          value={
+            (sponsorOptions &&
+              sponsorOptions.filter((option) => {
+                return option.value === formDataSponsorID;
+              })[0]) ||
+            undefined
+          }
+        />
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
         <MultiSelect
           options={styleOotions}
+          placeholder={'協賛スタイルが登録されていません'}
           values={
             selectedStyleIds
               ? styleOotions.filter((option) => selectedStyleIds.includes(Number(option.value)))
@@ -325,7 +347,7 @@ export default function EditModal(props: ModalProps) {
   );
 
   return (
-    <Modal className='mt-64 md:mt-10 md:w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton

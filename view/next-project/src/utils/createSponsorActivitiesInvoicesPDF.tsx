@@ -256,7 +256,7 @@ const formatDate = (datetime: string) => {
   return datetime2;
 };
 
-export const createSponsoractivitiesPDF = async (
+export const createSponsorActivitiesPDF = async (
   sponsorActivitiesViewItem: SponsorActivityView,
   date: string,
   issuedDate: string,

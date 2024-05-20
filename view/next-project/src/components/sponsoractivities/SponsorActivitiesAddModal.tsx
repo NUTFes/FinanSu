@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect, useMemo } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 import { get, post } from '@/utils/api/api_methods';
-import { MultiSelect } from '@components/common';
+import { MultiSelect, SearchSelect } from '@components/common';
 
 import {
   CloseButton,
@@ -54,6 +54,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
     expense: 0,
     remark: '',
   });
+  const [formDataSponsorID, setFormDataSponsorID] = useState<string>(String(formData.sponsorID));
 
   const setDesign = (e: React.ChangeEvent<HTMLInputElement>) => {
     const remarkOption = formData.feature === 'クーポン' ? REMARK_COUPON : '';
@@ -138,6 +139,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
     });
   };
 
+  //react-selectのmulti-select用のオプション作成
   const styleOotions = useMemo(() => {
     const options = sponsorStyles.map((style) => {
       return {
@@ -177,9 +179,25 @@ export default function SponsorActivitiesAddModal(props: Props) {
     setSponsors(getSponsorsByYears);
   };
 
+  const sponsorOptions = useMemo(() => {
+    const options = sponsors
+      ? sponsors.map((sponsor) => {
+          return { value: String(sponsor?.id) || '', label: sponsor.name };
+        })
+      : null;
+
+    return options;
+  }, [sponsors]);
+
   useEffect(() => {
     getSponsors();
   }, [selectedYear]);
+
+  useEffect(() => {
+    setFormData({ ...formData, sponsorID: Number(formDataSponsorID) });
+  }, [formDataSponsorID]);
+
+  const NO_SPONSORS_MESSAGE = '企業が登録されていません';
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
@@ -202,20 +220,18 @@ export default function SponsorActivitiesAddModal(props: Props) {
       </div>
       <p className='text-black-600'>協賛企業</p>{' '}
       <div className='col-span-4 w-full'>
-        <Select value={data.sponsorID} onChange={formDataHandler('sponsorID')}>
-          {sponsors &&
-            sponsors.map((sponsor: Sponsor) => (
-              <option key={sponsor.id} value={sponsor.id}>
-                {sponsor.name}
-              </option>
-            ))}
-          {!sponsors && <option>企業が登録されていません</option>}
-        </Select>
+        <SearchSelect
+          options={sponsorOptions || undefined}
+          setID={setFormDataSponsorID}
+          noOptionMessage={NO_SPONSORS_MESSAGE}
+          placeholder={NO_SPONSORS_MESSAGE}
+        />
       </div>
       <p className='text-black-600'>協賛スタイル</p>
       <div className='col-span-4 w-full'>
         <MultiSelect
           options={styleOotions}
+          placeholder={'協賛スタイルが登録されていません'}
           onChange={(value) => {
             setSelectedStyleIds(value.map((v) => Number(v.value)));
           }}
@@ -410,7 +426,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   return (
-    <Modal className='mt-64 md:mt-10 md:w-1/2'>
+    <Modal className='md:w-1/2'>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton

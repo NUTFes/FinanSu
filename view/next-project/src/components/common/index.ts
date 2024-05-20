@@ -25,3 +25,4 @@ export { default as BureauLabel } from './BureauLabel';
 export { default as Header } from './Header';
 export { default as SideNav } from './SideNav';
 export { default as MultiSelect } from './MultiSelect/MultiSelect';
+export { default as SearchSelect } from './SearchSelect';
