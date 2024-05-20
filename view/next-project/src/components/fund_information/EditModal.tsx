@@ -29,8 +29,6 @@ export default function EditModal(props: ModalProps) {
     receivedAt: props.fundInformation.receivedAt,
   });
 
-  console.log(formData.userID);
-
   const defaultTeacher = props.teachers.find(
     (teacher) => teacher.id === props.fundInformation.teacherID,
   );
