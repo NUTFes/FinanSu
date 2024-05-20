@@ -13,7 +13,6 @@ import OpenAddModalButton from '@components/fund_information/OpenAddModalButton'
 import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
-import { DEPARTMENTS } from '@constants/departments';
 import { Department, FundInformation, Teacher, User, YearPeriod } from '@type/common';
 
 interface FundInformationView {
@@ -279,7 +278,7 @@ export default function FundInformations(props: Props) {
                       fundInformation={fundViewItem.fundInformation}
                       teachers={teachers}
                       users={users}
-                      departments={DEPARTMENTS}
+                      departments={departments}
                       isDisabled={isDisabled(fundViewItem)}
                     />
                     <OpenDeleteModalButton
@@ -395,7 +394,7 @@ export default function FundInformations(props: Props) {
                           fundInformation={fundViewItem.fundInformation}
                           teachers={teachers}
                           users={users}
-                          departments={DEPARTMENTS}
+                          departments={departments}
                           isDisabled={isDisabled(fundViewItem)}
                         />
                         <OpenDeleteModalButton
