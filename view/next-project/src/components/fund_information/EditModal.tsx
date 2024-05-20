@@ -29,6 +29,8 @@ export default function EditModal(props: ModalProps) {
     receivedAt: props.fundInformation.receivedAt,
   });
 
+  console.log(formData.userID);
+
   const defaultTeacher = props.teachers.find(
     (teacher) => teacher.id === props.fundInformation.teacherID,
   );
@@ -72,6 +74,10 @@ export default function EditModal(props: ModalProps) {
       return user.id === props.fundInformation.userID;
     })?.bureauID || 1,
   );
+
+  // 募金に登録されているuser情報
+  const default_user = props.users.find((user) => user.id === formData.userID);
+
   const filteredUsers = useMemo(() => {
     const res = props.users
       .filter((user) => {
@@ -80,7 +86,8 @@ export default function EditModal(props: ModalProps) {
       .filter((user, index, self) => {
         return self.findIndex((u) => u.name === user.name) === index;
       });
-    if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
+    if (res.length !== 0 && default_user?.bureauID !== bureauId)
+      setFormData({ ...formData, userID: res[0].id });
     return res;
   }, [bureauId]);
 
