@@ -9,9 +9,8 @@ CREATE TABLE departments (
 );
 
 INSERT into departments (name) values ('電気電子情報');
-INSERT into departments (name) values ('生物機能');
+INSERT into departments (name) values ('物質生物');
 INSERT into departments (name) values ('機械創造');
-INSERT into departments (name) values ('物質材料');
 INSERT into departments (name) values ('環境社会基盤');
 INSERT into departments (name) values ('情報・経営システム');
 INSERT into departments (name) values ('基盤共通教育');
