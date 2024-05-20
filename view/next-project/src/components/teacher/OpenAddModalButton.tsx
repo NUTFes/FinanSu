@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { AddButton } from '../common';
-import AddModal from '@components/teacher/AddModal';
 import { Department } from '@/type/common';
+import AddModal from '@components/teacher/AddModal';
 
 interface Props {
   departments: Department[];
