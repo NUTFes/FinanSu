@@ -102,7 +102,7 @@ export default function TeachersList(props: Props) {
             </select>
           </div>
           <div className='hidden justify-end md:flex'>
-            <OpenAddModalButton>教員登録</OpenAddModalButton>
+            <OpenAddModalButton departments={props.departments}>教員登録</OpenAddModalButton>
           </div>
         </div>
         <div className='mb-2 overflow-scroll p-5'>
@@ -166,6 +166,7 @@ export default function TeachersList(props: Props) {
                           id={teacher.id || 0}
                           teacher={teacher}
                           isDisabled={isDisabled}
+                          departments={props.departments}
                         />
                         <OpenDeleteModalButton id={teacher.id || 0} isDisabled={isDisabled} />
                       </div>
@@ -177,7 +178,7 @@ export default function TeachersList(props: Props) {
         </div>
       </Card>
       <div className='fixed bottom-4 right-4 md:hidden'>
-        <OpenAddModalButton />
+        <OpenAddModalButton departments={props.departments} />
       </div>
     </MainLayout>
   );
