@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/rand"
 	"strconv"
-	"fmt"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -15,7 +14,6 @@ import (
 type mailAuthUseCase struct {
 	mailAuthRep rep.MailAuthRepository
 	sessionRep  rep.SessionRepository
-	sessionResetPasswordRep	rep.SessionResetPasswordRepository
 }
 
 type MailAuthUseCase interface {
@@ -23,11 +21,10 @@ type MailAuthUseCase interface {
 	SignIn(context.Context, string, string) (domain.Token, error)
 	SignOut(context.Context, string) error
 	IsSignIn(context.Context, string) (domain.IsSignIn, error)
-	SendResetPassword(context.Context, string) (domain.Token, error)
 }
 
-func NewMailAuthUseCase(mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository, sessionResetPasswordRep rep.SessionResetPasswordRepository) MailAuthUseCase {
-	return &mailAuthUseCase{mailAuthRep: mailAuthRep, sessionRep: sessionRep, sessionResetPasswordRep: sessionResetPasswordRep}
+func NewMailAuthUseCase(mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository) MailAuthUseCase {
+	return &mailAuthUseCase{mailAuthRep: mailAuthRep, sessionRep: sessionRep}
 }
 
 func (u *mailAuthUseCase) SignUp(c context.Context, email string, password string, userID string) (domain.Token, error) {
@@ -106,46 +103,6 @@ func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domai
 		isSignIn = domain.IsSignIn{IsSignIn: false}
 	}
 	return isSignIn, nil
-}
-
-// reset password
-func (u *mailAuthUseCase) SendResetPassword(c context.Context, email string) (domain.Token, error) {
-	var mailAuth = domain.MailAuth{}
-	var token domain.Token
-
-	// メールアドレスの存在確認
-	row := u.mailAuthRep.FindMailAuthByEmail(c, email)
-	err := row.Scan(
-		&mailAuth.ID,
-		&mailAuth.Email,
-		&mailAuth.Password,
-		&mailAuth.UserID,
-		&mailAuth.CreatedAt,
-		&mailAuth.UpdatedAt,
-	)
-	if err != nil {
-		fmt.Println(err)
-		return token, err
-	}
-	u.sessionResetPasswordRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID)))
-	// トークン発行
-	accessToken, err := _makeRandomStr(10)
-	//  リセットセッション開始
-	err = u.sessionResetPasswordRep.Create(c, strconv.FormatInt(int64(mailAuth.ID), 10), strconv.Itoa(int(mailAuth.UserID)), accessToken)
-	if err != nil {
-		return token, err
-	}
-	token.AccessToken = accessToken
-
-	// メール送信
-	receiverEmail := []string{email}
-	err = u.mailAuthRep.SendResetPassword(c, receiverEmail)
-	if err != nil {
-		fmt.Println(err)
-		return token, err
-	}
-
-	return token, nil
 }
 
 // アクセストークンを生成

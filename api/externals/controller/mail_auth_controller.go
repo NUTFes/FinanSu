@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type mailAuthController struct {
@@ -15,7 +16,6 @@ type MailAuthController interface {
 	SignIn(echo.Context) error
 	SignOut(echo.Context) error
 	IsSignIn(echo.Context) error
-	SendResetPassword(echo.Context) error
 }
 
 func NewMailAuthController(u usecase.MailAuthUseCase) MailAuthController {
@@ -68,16 +68,5 @@ func (auth *mailAuthController) IsSignIn(c echo.Context) error {
 		return nil
 	}
 	c.JSON(http.StatusOK, isSignIn)
-	return nil
-}
-
-// reset password
-func (auth *mailAuthController) SendResetPassword(c echo.Context) error {
-	email := c.QueryParam("email")
-	token, err := auth.u.SendResetPassword(c.Request().Context(), email)
-	if err != nil {
-		return err
-	}
-	c.JSON(http.StatusOK, token)
 	return nil
 }
