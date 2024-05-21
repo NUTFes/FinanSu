@@ -56,7 +56,7 @@ func InitializeServer() db.Client {
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
-	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(passwordResetTokenRepository)
+	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(passwordResetTokenRepository, userRepository)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)

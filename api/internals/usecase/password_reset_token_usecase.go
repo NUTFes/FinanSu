@@ -2,14 +2,18 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type passwordResetTokenUseCase struct {
 	rep rep.PasswordResetTokenRepository
+	rep2 rep.UserRepository
 }
 
 type PasswordResetTokenUseCase interface {
@@ -18,10 +22,11 @@ type PasswordResetTokenUseCase interface {
 	CreatePasswordResetToken(context.Context, string, string) (domain.PasswordResetToken, error)
 	UpdatePasswordResetToken(context.Context, string, string, string) (domain.PasswordResetToken, error)
 	DestroyPasswordResetToken(context.Context, string) error
+	PasswordResetTokenRequest(context.Context, string) error
 }
 
-func NewPasswordResetTokenUseCase(rep rep.PasswordResetTokenRepository) PasswordResetTokenUseCase {
-	return &passwordResetTokenUseCase{rep}
+func NewPasswordResetTokenUseCase(rep rep.PasswordResetTokenRepository, rep2 rep.UserRepository) PasswordResetTokenUseCase {
+	return &passwordResetTokenUseCase{rep, rep2}
 }
 
 func (p *passwordResetTokenUseCase) GetPasswordResetTokens(c context.Context) ([]domain.PasswordResetToken, error) {
@@ -106,5 +111,49 @@ func (p *passwordResetTokenUseCase) UpdatePasswordResetToken(c context.Context, 
 
 func (p *passwordResetTokenUseCase) DestroyPasswordResetToken(c context.Context, id string) error {
 	err := p.rep.Destroy(c, id)
+	return err
+}
+
+//パスワードリセットリクエスト処理
+func (p *passwordResetTokenUseCase) PasswordResetTokenRequest(c context.Context, email string) error {
+	user := domain.User{}
+	mailAuth := domain.MailAuth{}
+	
+	// userとemailを取得
+	row, err := p.rep2.FindByEmail(c, email)
+	row.Scan(
+		&user.ID,
+		&user.Name,
+		&user.BureauID,
+		&user.RoleID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+		&mailAuth.ID,
+		&mailAuth.Email,
+		&mailAuth.Password,
+		&mailAuth.UserID,
+		&mailAuth.CreatedAt,
+		&mailAuth.UpdatedAt,
+	)
+
+	if (mailAuth.Email == ""){
+		fmt.Println("emailは登録されていません")
+		return err
+	}
+
+	// トークン発行
+	passwordResetToken, err := _makeRandomStr(20)
+	fmt.Println(passwordResetToken)
+
+	// トークンをハッシュ化(dbに保存用)
+	hashedPasswordResetToken, err :=  bcrypt.GenerateFromPassword([]byte(passwordResetToken), 10)
+	fmt.Println(string(hashedPasswordResetToken))
+
+	// トークンを保存
+	err = p.rep.Create(c, strconv.Itoa(user.ID), string(hashedPasswordResetToken))
+
+	// リセットメールの送信
+	err = p.rep.SendResetEmail(c,user.Name , mailAuth.Email, passwordResetToken)
+
 	return err
 }

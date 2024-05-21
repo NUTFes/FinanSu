@@ -40,7 +40,9 @@ services:
     volumes:
       - ./api:/app
     environment:
-      RESET_PASSWORD_URL: 'localhost:3000/reset_password'
+      NUTMEG_MAIL_SENDER: "nutfes.finansu@gmail.com"
+      NUTMEG_MAIL_PASSWORD: "xmifwkbpiybisqto"
+      RESET_PASSWORD_URL: "http://localhost:3000/reset_password"
     #シェルスクリプトを実行するコマンド
     command: "./start.sh"
     ports:

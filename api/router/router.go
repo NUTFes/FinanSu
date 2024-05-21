@@ -166,6 +166,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/password_reset_tokens", r.passwordResetTokenController.CreatePasswordResetToken)
 	e.PUT("/password_reset_tokens/:id", r.passwordResetTokenController.UpdatePasswordResetToken)
 	e.DELETE("/password_reset_tokens/:id", r.passwordResetTokenController.DestroyPasswordResetToken)
+	e.POST("/password_reset_tokens/request", r.passwordResetTokenController.SendPasswordResetRequest)
 
 	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)

@@ -17,6 +17,7 @@ type PasswordResetTokenController interface {
 	CreatePasswordResetToken(echo.Context) error
 	UpdatePasswordResetToken(echo.Context) error
 	DestroyPasswordResetToken(echo.Context) error
+	SendPasswordResetRequest(echo.Context) error
 }
 
 func NewPasswordResetTokenController(u usecase.PasswordResetTokenUseCase) PasswordResetTokenController {
@@ -73,4 +74,14 @@ func (p *passwordResetTokenController) DestroyPasswordResetToken(c echo.Context)
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy PasswordResetToken")
+}
+
+// パスワード変更リクエスト
+func (p *passwordResetTokenController) SendPasswordResetRequest(c echo.Context) error {
+	email := c.QueryParam("email")
+	err := p.u.PasswordResetTokenRequest(c.Request().Context(), email)
+	if err != nil {
+		return err
+	}
+	return c.String(http.StatusOK, "PasswordResetTokenを送信しました")
 }

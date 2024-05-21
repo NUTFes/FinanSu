@@ -1164,6 +1164,25 @@ const docTemplate = `{
                 },
             },
         },
+        "/password_reset_tokens/request": {
+            "post": {
+                tags: ["password_reset_token"],
+                "description": "password_reset_token発行リクエスト",
+                responses: {
+                    "200": {
+                        "description": "password_reset_tokenをメールアドレスに送信する",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "type": "string"
+                    },
+                ],
+            },
+        },
         "/purchaseitems": {
             "get": {
                 tags: ["purchase_item"],
