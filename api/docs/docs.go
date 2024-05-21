@@ -1042,26 +1042,128 @@ const docTemplate = `{
                 }
             },
         },
-				"/fund_informations/details/{year}": {
-						"get": {
-								tags: ["fund_information"],
-								"description": "年度で指定されたfund_informationsに紐づくデータを取得",
-								"parameters": [
-										{
-												"name": "year",
-												"in": "path",
-												"description": "year",
-												"required": true,
-												"type": "integer"
-										}
-								],
-								"responses": {
-										"200": {
-												"description": "年度で指定されたfund_informationsに紐づくデータを取得",
-										}
+		"/fund_informations/details/{year}": {
+				"get": {
+						tags: ["fund_information"],
+						"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+						"parameters": [
+								{
+										"name": "year",
+										"in": "path",
+										"description": "year",
+										"required": true,
+										"type": "integer"
 								}
-						},
-			},
+						],
+						"responses": {
+								"200": {
+										"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+								}
+						}
+				},
+		},
+        "/password_reset_tokens": {
+            "get": {
+                tags: ["password_reset_token"],
+                "description": "password_reset_tokenの一覧の取得",
+                "responses": {
+                    "200": {
+                        "description": "password_reset_tokenの一覧を取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["password_reset_token"],
+                "description": "password_reset_tokenの作成",
+                responses: {
+                    "200": {
+                        "description": "作成されたpassword_reset_tokenが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "userID",
+                        "in": "query",
+                        "description": "userID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "token",
+                        "type": "string"
+                    },
+                ],
+            },
+        },
+        "/password_reset_tokens/{id}": {
+            "get": {
+                tags: ["password_reset_token"],
+                "description": "IDで指定されたpassword_reset_tokenの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "password_reset_tokenの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["password_reset_token"],
+                "description": "password_reset_tokenの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたpassword_reset_tokenが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "userID",
+                        "in": "query",
+                        "description": "1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "token",
+                        "type": "string"
+                    }
+                ],
+            },
+            "delete": {
+                tags: ["password_reset_token"],
+                "description": "IDを指定してpassword_reset_tokenの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "password_reset_tokenの削除完了",
+                    }
+                },
+            },
+        },
         "/purchaseitems": {
             "get": {
                 tags: ["purchase_item"],
@@ -2315,26 +2417,6 @@ const docTemplate = `{
                         "description": "year_periodsの削除完了",
                     },
                 },
-            },
-        },
-        "/mail_auth/send_reset_password":{
-            "post": {
-                tags: ["email"],
-                "description": "パスワードリセットのメール送信",
-                responses: {
-                    "200": {
-                        "description": "パスワードリセットのメールが送信される",
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "email",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
             },
         },
     },

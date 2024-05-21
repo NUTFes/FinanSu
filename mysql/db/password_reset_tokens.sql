@@ -6,5 +6,5 @@ CREATE TABLE password_reset_tokens (
   token varchar(255) not null,
   created_at datetime not null default current_timestamp,
   updated_at datetime not null default current_timestamp on update current_timestamp,
-  PRIMARY KEY (auth_id)
+  PRIMARY KEY (id)
 );
