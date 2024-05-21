@@ -1062,6 +1062,51 @@ const docTemplate = `{
 						}
 				},
 		},
+        "/password_reset/request": {
+            "post": {
+                tags: ["password_reset"],
+                "description": "password_reset_token発行リクエスト",
+                responses: {
+                    "200": {
+                        "description": "password_reset_tokenをメールアドレスに送信する",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "type": "string"
+                    },
+                ],
+            },
+        },
+        "/password_reset/{id}/valid": {
+            "post": {
+                tags: ["password_reset"],
+                "description": "トークンの称号",
+                responses: {
+                    "200": {
+                        "description": "password_reset_tokenが正しい確認する",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "token",
+                        "type": "string"
+                    },
+                ],
+            },
+        },
         "/password_reset_tokens": {
             "get": {
                 tags: ["password_reset_token"],
@@ -1162,25 +1207,6 @@ const docTemplate = `{
                         "description": "password_reset_tokenの削除完了",
                     }
                 },
-            },
-        },
-        "/password_reset_tokens/request": {
-            "post": {
-                tags: ["password_reset_token"],
-                "description": "password_reset_token発行リクエスト",
-                responses: {
-                    "200": {
-                        "description": "password_reset_tokenをメールアドレスに送信する",
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "email",
-                        "type": "string"
-                    },
-                ],
             },
         },
         "/purchaseitems": {

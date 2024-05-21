@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -23,6 +24,7 @@ type PasswordResetTokenUseCase interface {
 	UpdatePasswordResetToken(context.Context, string, string, string) (domain.PasswordResetToken, error)
 	DestroyPasswordResetToken(context.Context, string) error
 	PasswordResetTokenRequest(context.Context, string) error
+	ValidPasswordResetToken(context.Context, string, string) error
 }
 
 func NewPasswordResetTokenUseCase(rep rep.PasswordResetTokenRepository, rep2 rep.UserRepository) PasswordResetTokenUseCase {
@@ -118,6 +120,8 @@ func (p *passwordResetTokenUseCase) DestroyPasswordResetToken(c context.Context,
 func (p *passwordResetTokenUseCase) PasswordResetTokenRequest(c context.Context, email string) error {
 	user := domain.User{}
 	mailAuth := domain.MailAuth{}
+	latestPasswordResetToken := domain.PasswordResetToken{}
+
 	
 	// userとemailを取得
 	row, err := p.rep2.FindByEmail(c, email)
@@ -137,7 +141,7 @@ func (p *passwordResetTokenUseCase) PasswordResetTokenRequest(c context.Context,
 	)
 
 	if (mailAuth.Email == ""){
-		fmt.Println("emailは登録されていません")
+		err = errors.New("emailが正しくありません")
 		return err
 	}
 
@@ -150,10 +154,53 @@ func (p *passwordResetTokenUseCase) PasswordResetTokenRequest(c context.Context,
 	fmt.Println(string(hashedPasswordResetToken))
 
 	// トークンを保存
-	err = p.rep.Create(c, strconv.Itoa(user.ID), string(hashedPasswordResetToken))
+	err = p.rep.CreateWithTime(c, strconv.Itoa(user.ID), string(hashedPasswordResetToken))
+
+	//トークンの取得
+	row, err = p.rep.FindByToken(c, string(hashedPasswordResetToken))
+
+	row.Scan(
+		&latestPasswordResetToken.ID,
+		&latestPasswordResetToken.UserID,
+		&latestPasswordResetToken.Token,
+		&latestPasswordResetToken.CreatedAt,
+		&latestPasswordResetToken.UpdatedAt,
+	)
 
 	// リセットメールの送信
-	err = p.rep.SendResetEmail(c,user.Name , mailAuth.Email, passwordResetToken)
+	err = p.rep.SendResetEmail(c, strconv.Itoa(int(latestPasswordResetToken.ID)), user.Name , mailAuth.Email, passwordResetToken)
+
+	return err
+}
+
+// トークンの称号処理
+func (p *passwordResetTokenUseCase) ValidPasswordResetToken(c context.Context, id string, token string) error {
+	passwordResetToken := domain.PasswordResetToken{}
+
+	// トークンを取得
+	row, err := p.rep.Find(c, id)
+
+	row.Scan(
+		&passwordResetToken.ID,
+		&passwordResetToken.UserID,
+		&passwordResetToken.Token,
+		&passwordResetToken.CreatedAt,
+		&passwordResetToken.UpdatedAt,
+	)
+
+	// トークンが有効か
+	err = bcrypt.CompareHashAndPassword([]byte(passwordResetToken.Token), []byte(token))
+
+	if err != nil {
+		err = errors.New("トークンが正しくありません")
+		return err
+	}
+
+	// 有効期限が過ぎていないか
+	if time.Now().After(passwordResetToken.CreatedAt.Add(1 * time.Hour)) {
+		err = errors.New("トークンの有効期限が切れています")
+		return err
+	}
 
 	return err
 }

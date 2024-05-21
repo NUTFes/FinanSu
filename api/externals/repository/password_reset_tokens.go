@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/smtp"
 	"os"
+	"time"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -21,10 +22,11 @@ type PasswordResetTokenRepository interface {
 	Find(context.Context, string) (*sql.Row, error)
 	FindByToken(context.Context, string) (*sql.Row, error)
 	Create(context.Context, string, string) error
+	CreateWithTime(context.Context, string, string) error
 	Update(context.Context, string, string, string) error
 	Destroy(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
-	SendResetEmail(context.Context, string, string, string) error
+	SendResetEmail(context.Context, string, string, string, string) error
 }
 
 func NewPasswordResetTokenRepository(c db.Client, ac abstract.Crud) PasswordResetTokenRepository {
@@ -68,6 +70,19 @@ func (pr *passwordResetTokenRepository) Create(c context.Context, userID string,
 	return pr.crud.UpdateDB(c, query)
 }
 
+// 日時を含めて作成
+func (pr *passwordResetTokenRepository) CreateWithTime(c context.Context, userID string, token string) error {
+	now := time.Now()
+	formatTime := now.Format("2006-01-02 15:04:05")
+
+	query := `
+			INSERT INTO
+				password_reset_tokens (user_id, token, created_at, updated_at)
+			VALUES (` + userID + ", '"+ token + "', '" +formatTime+"', '"+formatTime+"')"
+	return pr.crud.UpdateDB(c, query)
+}
+
+
 // 編集
 func (pr *passwordResetTokenRepository) Update(c context.Context, id string, userID string, token string) error {
 	query := "UPDATE password_reset_tokens SET user_id = " + userID + ", token = '"+ token +"' WHERE id = " + id
@@ -81,10 +96,10 @@ func (pr *passwordResetTokenRepository) Destroy(c context.Context, id string) er
 }
 
 // リセットメール送信
-func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context, name string, email string, token string) error {
+func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context,id string, name string, email string, token string) error {
 	mailSender := os.Getenv("NUTMEG_MAIL_SENDER")
 	mailPassword := os.Getenv("NUTMEG_MAIL_PASSWORD")
-	resetPageUrl := os.Getenv("RESET_PASSWORD_URL") + "/?token=" +token
+	resetPageUrl := os.Getenv("RESET_PASSWORD_URL")+"/" + id + "/?token=" +token
 
 	message := []byte("From: FinanSu <" + mailSender + ">\r\n" + 
 		"Subject: 【FinanSu】パスワード再設定メール\r\n\r\n" + 
@@ -113,41 +128,3 @@ func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context, name s
 
 	return err
 }
-
-
-
-// reset password
-// func (r *mailAuthRepository) SendResetPassword(c context.Context, email []string) error {
-// 	err := godotenv.Load("env/dev.env")
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return err
-// 	}
-
-// 	mailSender := os.Getenv("NUTMEG_MAIL_SENDER")
-// 	mailPassword := os.Getenv("NUTMEG_MAIL_PASSWORD")
-// 	resetPageUrl := os.Getenv("RESET_PASSWORD_URL")
-
-// 	message := []byte("From: 情報局 <" + mailSender + ">\r\n" + 
-// 		"Subject: FinanSu パスワードリセットの確認メール\r\n\r\n" + 
-// 		"お世話になっております。\r\n情報局 FinanSu 担当です。\r\n\r\n" + 
-// 		"FinanSuに登録している本メールアドレスのパスワードをリセットするためには、下記のURLから手続きを行ってください。\r\n" +
-// 		"なお、パスワードのリセットの有効期限は本メールが送信されてから10分間とさせていただきます。\r\n" + 
-// 		"今後ともよろしくお願いいたします。\r\n\r\n" +
-// 		"FinanSu: " + resetPageUrl)
-
-// 	smtpHost := "smtp.gmail.com"
-// 	smtpPort := "587"
-
-// 	// Authenyication
-// 	auth := smtp.PlainAuth("", mailSender, mailPassword, smtpHost)
-
-// 	// send email
-// 	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, mailSender, email, message)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return err
-// 	}
-// 	fmt.Println("Sent password reset mail for " + email[0])
-// 	return nil
-// }
