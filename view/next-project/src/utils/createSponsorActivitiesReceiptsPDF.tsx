@@ -1,4 +1,4 @@
-import { Document, Page, Text, Font, View, pdf, StyleSheet, PDFViewer } from '@react-pdf/renderer';
+import { Document, Page, Text, Font, View, pdf, StyleSheet, PDFViewer, Image } from '@react-pdf/renderer';
 import React from 'react';
 import { SponsorActivityView } from '@type/common';
 
@@ -140,6 +140,11 @@ interface MyDocumentProps {
 const MyDocument = (props: MyDocumentProps) => (
   <Document>
     <Page style={styles.page} size={{ width: 519.13, height: 241.89 }}>
+      <Image
+        fixed
+        style={{ width: '120px', position: 'absolute', top: 45, right: 20 }}
+        src={'43rd_Stamp.png'}
+      />
       <View style={styles.pageHeader}>
         <Text style={styles.header}>
           領{'  '}収{'  '}書
