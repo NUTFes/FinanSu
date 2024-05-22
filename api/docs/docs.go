@@ -1062,6 +1062,33 @@ const docTemplate = `{
 						}
 				},
 		},
+        "/password_reset/{id}": {
+            "post": {
+                tags: ["password_reset"],
+                "description": "password_変更",
+                responses: {
+                    "200": {
+                        "description": "passwordを変更する",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "passwordResetData",
+                        "schema":{
+                            "$ref": "#/definitions/passwordResetData"
+                        },
+                    },
+                ],
+            },
+        },
         "/password_reset/request": {
             "post": {
                 tags: ["password_reset"],
@@ -2610,6 +2637,27 @@ const docTemplate = `{
                     "email",
                     "address",
                     "representative"
+            },
+        },
+        "passwordResetData":{
+            "properties":{
+                "token":{
+                    "type": "string",
+                    "example": "",
+                },
+                "password":{
+                    "type": "string",
+                    "example": "",
+                },
+                "confirmPassword":{
+                    "type": "string",
+                    "example": "",
+                },
+            },
+            "required":{
+                    "year",
+                    "startedAt",
+                    "endedAt"
             },
         },
         "purchaseReport":{

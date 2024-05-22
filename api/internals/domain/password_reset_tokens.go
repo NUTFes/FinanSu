@@ -12,3 +12,8 @@ type PasswordResetToken struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
+type PasswordResetData struct {
+	Token 			string	`json:"token"`
+	Password 		string	`json:"password"`
+	ConfirmPassword string	`json:"confirmPassword"`
+}

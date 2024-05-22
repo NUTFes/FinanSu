@@ -25,6 +25,7 @@ type PasswordResetTokenRepository interface {
 	CreateWithTime(context.Context, string, string) error
 	Update(context.Context, string, string, string) error
 	Destroy(context.Context, string) error
+	DestroyByUserID(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	SendResetEmail(context.Context, string, string, string, string) error
 }
@@ -95,6 +96,13 @@ func (pr *passwordResetTokenRepository) Destroy(c context.Context, id string) er
 	return pr.crud.UpdateDB(c, query)
 }
 
+// userIDによるトークンの削除
+func (pr *passwordResetTokenRepository) DestroyByUserID(c context.Context, userID string) error {
+	query := "DELETE FROM password_reset_tokens WHERE user_id = " + userID
+	return pr.crud.UpdateDB(c, query)
+}
+
+
 // リセットメール送信
 func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context,id string, name string, email string, token string) error {
 	mailSender := os.Getenv("NUTMEG_MAIL_SENDER")
@@ -105,9 +113,10 @@ func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context,id stri
 		"Subject: 【FinanSu】パスワード再設定メール\r\n\r\n" + 
 		name + " 様\n\n" +
 		"情報局 FinanSu 担当です。\r\n\r\n" + 
-		"パスワードの再設定のご依頼を受け付けました。下記の再設定ページにアクセスし、新しいパスワードを設定してください。\r\n\n" +
+		"パスワードの再設定のご依頼を受け付けました。下記の再設定ページにアクセスし、新しいパスワードを設定してください。\n" +
+		"※パスワードリセットの申請に心当たりがない場合は、以降の対応は不要となります。\n\n" +
 		resetPageUrl + "\r\n\n" +
-		"なお、パスワードのリセットの有効期限は本メールが送信されてから60分間とさせていただきます。\r\n\n" + 
+		"なお、URLの有効期限は本メールが送信されてから60分間とさせていただきます。\r\n\n" + 
 		"どうぞよろしくお願い申し上げます。\r\n\r\n" +
 		"情報局 FinanSu担当 \r\n\n"+
 		"※このメールは送信専用です\r\n")

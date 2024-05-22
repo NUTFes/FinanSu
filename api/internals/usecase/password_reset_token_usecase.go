@@ -13,8 +13,9 @@ import (
 )
 
 type passwordResetTokenUseCase struct {
-	rep rep.PasswordResetTokenRepository
-	rep2 rep.UserRepository
+	rep 	rep.PasswordResetTokenRepository
+	rep2 	rep.UserRepository
+	rep3	rep.MailAuthRepository
 }
 
 type PasswordResetTokenUseCase interface {
@@ -25,10 +26,11 @@ type PasswordResetTokenUseCase interface {
 	DestroyPasswordResetToken(context.Context, string) error
 	PasswordResetTokenRequest(context.Context, string) error
 	ValidPasswordResetToken(context.Context, string, string) error
+	ChangePassword(context.Context, string, string) error
 }
 
-func NewPasswordResetTokenUseCase(rep rep.PasswordResetTokenRepository, rep2 rep.UserRepository) PasswordResetTokenUseCase {
-	return &passwordResetTokenUseCase{rep, rep2}
+func NewPasswordResetTokenUseCase(rep rep.PasswordResetTokenRepository, rep2 rep.UserRepository, rep3 rep.MailAuthRepository) PasswordResetTokenUseCase {
+	return &passwordResetTokenUseCase{rep, rep2, rep3}
 }
 
 func (p *passwordResetTokenUseCase) GetPasswordResetTokens(c context.Context) ([]domain.PasswordResetToken, error) {
@@ -199,8 +201,44 @@ func (p *passwordResetTokenUseCase) ValidPasswordResetToken(c context.Context, i
 	// 有効期限が過ぎていないか
 	if time.Now().After(passwordResetToken.CreatedAt.Add(1 * time.Hour)) {
 		err = errors.New("トークンの有効期限が切れています")
+		//トークンのレコード削除
+		p.rep.DestroyByUserID(c, strconv.Itoa(passwordResetToken.UserID))
 		return err
 	}
+
+	return err
+}
+
+
+// パスワードの変更
+func (p *passwordResetTokenUseCase) ChangePassword(c context.Context, id string, password string) error {
+	// トークンの取得(userIDを取得するため)
+	passwordResetToken := domain.PasswordResetToken{}
+	row, err := p.rep.Find(c, id)
+	row.Scan(
+		&passwordResetToken.ID,
+		&passwordResetToken.UserID,
+		&passwordResetToken.Token,
+		&passwordResetToken.CreatedAt,
+		&passwordResetToken.UpdatedAt,
+	)
+	if err != nil {
+		err = errors.New("トークンの取得に失敗しました")
+		return err
+	}
+
+	// パスワードのハッシュ化
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+	
+	//パスワードの変更
+	err = p.rep3.ChangePasswordByUserID(c,strconv.Itoa(passwordResetToken.UserID), string(hashedPassword))
+	if err != nil {
+		err = errors.New("パスワードの変更に失敗しました")
+		return err
+	}
+
+	//トークンの削除
+	p.rep.DestroyByUserID(c, strconv.Itoa(passwordResetToken.UserID))
 
 	return err
 }

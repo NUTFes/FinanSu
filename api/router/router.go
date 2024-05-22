@@ -162,6 +162,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 
 	//password_reset
+	e.POST("/password_reset/:id", r.passwordResetTokenController.ChangePassword)
 	e.POST("/password_reset/request", r.passwordResetTokenController.SendPasswordResetRequest)
 	e.POST("/password_reset/:id/valid", r.passwordResetTokenController.ValidPasswordResetToken)
 
