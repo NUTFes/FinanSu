@@ -6,25 +6,26 @@ import (
 )
 
 type router struct {
-	activityController        controller.ActivityController
-	activityInformationController controller.ActivityInformationController
-	activityStyleController   controller.ActivityStyleController
-	budgetController          controller.BudgetController
-	bureauController          controller.BureauController
-	departmentController      controller.DepartmentController
-	expenseController         controller.ExpenseController
-	fundInformationController controller.FundInformationController
-	healthcheckController     controller.HealthcheckController
-	mailAuthController        controller.MailAuthController
-	purchaseItemController    controller.PurchaseItemController
-	purchaseOrderController   controller.PurchaseOrderController
-	purchaseReportController  controller.PurchaseReportController
-	sourceController          controller.SourceController
-	sponsorController         controller.SponsorController
-	sponsorStyleController    controller.SponsorStyleController
-	teacherController         controller.TeacherController
-	userController            controller.UserController
-	yearController            controller.YearController
+	activityController        		controller.ActivityController
+	activityInformationController 	controller.ActivityInformationController
+	activityStyleController   		controller.ActivityStyleController
+	budgetController          		controller.BudgetController
+	bureauController          		controller.BureauController
+	departmentController      		controller.DepartmentController
+	expenseController         		controller.ExpenseController
+	fundInformationController 		controller.FundInformationController
+	healthcheckController     		controller.HealthcheckController
+	mailAuthController        		controller.MailAuthController
+	passwordResetTokenController	controller.PasswordResetTokenController
+	purchaseItemController    		controller.PurchaseItemController
+	purchaseOrderController   		controller.PurchaseOrderController
+	purchaseReportController  		controller.PurchaseReportController
+	sourceController          		controller.SourceController
+	sponsorController         		controller.SponsorController
+	sponsorStyleController    		controller.SponsorStyleController
+	teacherController         		controller.TeacherController
+	userController            		controller.UserController
+	yearController            		controller.YearController
 }
 
 type Router interface {
@@ -42,6 +43,7 @@ func NewRouter(
 	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
 	mailAuthController controller.MailAuthController,
+	passwordResetTokenController controller.PasswordResetTokenController,
 	purchaseItemController controller.PurchaseItemController,
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
@@ -63,6 +65,7 @@ func NewRouter(
 		fundInformationController,
 		healthController,
 		mailAuthController,
+		passwordResetTokenController,
 		purchaseItemController,
 		purchaseOrderController,
 		purchaseReportController,
@@ -156,6 +159,12 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/mail_auth/signin", r.mailAuthController.SignIn)
 	e.DELETE("/mail_auth/signout", r.mailAuthController.SignOut)
 	e.GET("/mail_auth/is_signin", r.mailAuthController.IsSignIn)
+
+
+	//password_reset
+	e.POST("/password_reset/:id", r.passwordResetTokenController.ChangePassword)
+	e.POST("/password_reset/request", r.passwordResetTokenController.SendPasswordResetRequest)
+	e.POST("/password_reset/:id/valid", r.passwordResetTokenController.ValidPasswordResetToken)
 
 	// purchaseitemsのRoute
 	e.GET("/purchaseitems", r.purchaseItemController.IndexPurchaseItem)

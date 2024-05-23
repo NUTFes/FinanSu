@@ -3,22 +3,26 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"fmt"
+
+	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type mailAuthRepository struct {
 	client db.Client
+	crud   abstract.Crud
 }
 
 type MailAuthRepository interface {
 	CreateMailAuth(context.Context, string, string, string) (int64, error)
 	FindMailAuthByEmail(context.Context, string) *sql.Row
 	FindMailAuthByID(context.Context, string) *sql.Row
+	ChangePasswordByUserID(context.Context, string, string) error
 }
 
-func NewMailAuthRepository(client db.Client) MailAuthRepository {
-	return &mailAuthRepository{client}
+func NewMailAuthRepository(client db.Client, crud abstract.Crud) MailAuthRepository {
+	return &mailAuthRepository{client, crud}
 }
 
 // 作成
@@ -42,4 +46,10 @@ func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) *sql
 	row := r.client.DB().QueryRowContext(c, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return row
+}
+
+// パスワードの変更
+func (r *mailAuthRepository) ChangePasswordByUserID(c context.Context, userID string, password string) error {
+	query := "UPDATE mail_auth SET password = '"+ password +"' WHERE user_id = " + userID
+	return r.crud.UpdateDB(c, query)
 }

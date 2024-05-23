@@ -32,7 +32,8 @@ func InitializeServer() db.Client {
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
 	expenseRepository := repository.NewExpenseRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
-	mailAuthRepository := repository.NewMailAuthRepository(client)
+	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
+	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client, crud)
@@ -55,6 +56,7 @@ func InitializeServer() db.Client {
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
+	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(passwordResetTokenRepository, userRepository, mailAuthRepository)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
@@ -77,6 +79,7 @@ func InitializeServer() db.Client {
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
+	passwordResetTokenController := controller.NewPasswordResetTokenController(passwordResetTokenUseCase)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
 	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
@@ -100,6 +103,7 @@ func InitializeServer() db.Client {
 		fundInformationController,
 		healthcheckController,
 		mailAuthController,
+		passwordResetTokenController,
 		purchaseItemController,
 		purchaseOrderController,
 		purchaseReportController,

@@ -39,6 +39,10 @@ services:
     container_name: "nutfes-finansu-api"
     volumes:
       - ./api:/app
+    environment:
+      NUTMEG_MAIL_SENDER: "nutfes.finansu@gmail.com"
+      NUTMEG_MAIL_PASSWORD: "xmifwkbpiybisqto"
+      RESET_PASSWORD_URL: "http://localhost:3000/reset_password"
     #シェルスクリプトを実行するコマンド
     command: "./start.sh"
     ports:

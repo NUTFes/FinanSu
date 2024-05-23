@@ -1042,26 +1042,98 @@ const docTemplate = `{
                 }
             },
         },
-				"/fund_informations/details/{year}": {
-						"get": {
-								tags: ["fund_information"],
-								"description": "年度で指定されたfund_informationsに紐づくデータを取得",
-								"parameters": [
-										{
-												"name": "year",
-												"in": "path",
-												"description": "year",
-												"required": true,
-												"type": "integer"
-										}
-								],
-								"responses": {
-										"200": {
-												"description": "年度で指定されたfund_informationsに紐づくデータを取得",
-										}
+		"/fund_informations/details/{year}": {
+				"get": {
+						tags: ["fund_information"],
+						"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+						"parameters": [
+								{
+										"name": "year",
+										"in": "path",
+										"description": "year",
+										"required": true,
+										"type": "integer"
 								}
-						},
-			},
+						],
+						"responses": {
+								"200": {
+										"description": "年度で指定されたfund_informationsに紐づくデータを取得",
+								}
+						}
+				},
+		},
+        "/password_reset/{id}": {
+            "post": {
+                tags: ["password_reset"],
+                "description": "password_変更",
+                responses: {
+                    "200": {
+                        "description": "passwordを変更する",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "passwordResetData",
+                        "schema":{
+                            "$ref": "#/definitions/passwordResetData"
+                        },
+                    },
+                ],
+            },
+        },
+        "/password_reset/request": {
+            "post": {
+                tags: ["password_reset"],
+                "description": "password_reset_token発行リクエスト",
+                responses: {
+                    "200": {
+                        "description": "password_reset_tokenをメールアドレスに送信する",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "type": "string"
+                    },
+                ],
+            },
+        },
+        "/password_reset/{id}/valid": {
+            "post": {
+                tags: ["password_reset"],
+                "description": "トークンの称号",
+                responses: {
+                    "200": {
+                        "description": "password_reset_tokenが正しい確認する",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "token",
+                        "type": "string"
+                    },
+                ],
+            },
+        },
         "/purchaseitems": {
             "get": {
                 tags: ["purchase_item"],
@@ -2463,6 +2535,27 @@ const docTemplate = `{
                     "email",
                     "address",
                     "representative"
+            },
+        },
+        "passwordResetData":{
+            "properties":{
+                "token":{
+                    "type": "string",
+                    "example": "",
+                },
+                "password":{
+                    "type": "string",
+                    "example": "",
+                },
+                "confirmPassword":{
+                    "type": "string",
+                    "example": "",
+                },
+            },
+            "required":{
+                    "year",
+                    "startedAt",
+                    "endedAt"
             },
         },
         "purchaseReport":{
