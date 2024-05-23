@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"net/smtp"
 	"os"
 	"time"
@@ -131,7 +130,6 @@ func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context,id stri
 	// メール送信
 	err := smtp.SendMail(smtpHost + ":" + smtpPort, auth, mailSender, emails, message)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
