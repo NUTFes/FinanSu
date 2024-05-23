@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -13,9 +12,9 @@ import (
 )
 
 type passwordResetTokenUseCase struct {
-	rep 	rep.PasswordResetTokenRepository
-	rep2 	rep.UserRepository
-	rep3	rep.MailAuthRepository
+	tokenRep 	rep.PasswordResetTokenRepository
+	userRep 	rep.UserRepository
+	authRep	rep.MailAuthRepository
 }
 
 type PasswordResetTokenUseCase interface {
@@ -29,8 +28,8 @@ type PasswordResetTokenUseCase interface {
 	ChangePassword(context.Context, string, string) error
 }
 
-func NewPasswordResetTokenUseCase(rep rep.PasswordResetTokenRepository, rep2 rep.UserRepository, rep3 rep.MailAuthRepository) PasswordResetTokenUseCase {
-	return &passwordResetTokenUseCase{rep, rep2, rep3}
+func NewPasswordResetTokenUseCase(tokenRep rep.PasswordResetTokenRepository, userRep rep.UserRepository, authRep rep.MailAuthRepository) PasswordResetTokenUseCase {
+	return &passwordResetTokenUseCase{tokenRep, userRep, authRep}
 }
 
 func (p *passwordResetTokenUseCase) GetPasswordResetTokens(c context.Context) ([]domain.PasswordResetToken, error) {
@@ -39,7 +38,7 @@ func (p *passwordResetTokenUseCase) GetPasswordResetTokens(c context.Context) ([
 	var passwordResetTokens []domain.PasswordResetToken
 
 	// クエリー実行
-	rows, err := p.rep.All(c)
+	rows, err := p.tokenRep.All(c)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +64,7 @@ func (p *passwordResetTokenUseCase) GetPasswordResetTokens(c context.Context) ([
 
 func (p *passwordResetTokenUseCase) GetPasswordResetTokenByID(c context.Context, id string) (domain.PasswordResetToken, error) {
 	var passwordResetToken domain.PasswordResetToken
-	row, err := p.rep.Find(c, id)
+	row, err := p.tokenRep.Find(c, id)
 	err = row.Scan(
 		&passwordResetToken.ID,
 		&passwordResetToken.UserID,
@@ -81,8 +80,8 @@ func (p *passwordResetTokenUseCase) GetPasswordResetTokenByID(c context.Context,
 
 func (p *passwordResetTokenUseCase) CreatePasswordResetToken(c context.Context, userID string, token string) (domain.PasswordResetToken, error) {
 	latastPasswordResetToken := domain.PasswordResetToken{}
-	err := p.rep.Create(c, userID, token)
-	row, err := p.rep.FindLatestRecord(c)
+	err := p.tokenRep.Create(c, userID, token)
+	row, err := p.tokenRep.FindLatestRecord(c)
 	err = row.Scan(
 		&latastPasswordResetToken.ID,
 		&latastPasswordResetToken.UserID,
@@ -98,8 +97,8 @@ func (p *passwordResetTokenUseCase) CreatePasswordResetToken(c context.Context, 
 
 func (p *passwordResetTokenUseCase) UpdatePasswordResetToken(c context.Context, id string, userID string, token string) (domain.PasswordResetToken, error) {
 	updatedPasswordResetToken := domain.PasswordResetToken{}
-	err := p.rep.Update(c, id, userID, token)
-	row, err := p.rep.Find(c,id)
+	err := p.tokenRep.Update(c, id, userID, token)
+	row, err := p.tokenRep.Find(c,id)
 	err = row.Scan(
 		&updatedPasswordResetToken.ID,
 		&updatedPasswordResetToken.UserID,
@@ -114,7 +113,7 @@ func (p *passwordResetTokenUseCase) UpdatePasswordResetToken(c context.Context, 
 }
 
 func (p *passwordResetTokenUseCase) DestroyPasswordResetToken(c context.Context, id string) error {
-	err := p.rep.Destroy(c, id)
+	err := p.tokenRep.Destroy(c, id)
 	return err
 }
 
@@ -126,7 +125,7 @@ func (p *passwordResetTokenUseCase) PasswordResetTokenRequest(c context.Context,
 
 	
 	// userとemailを取得
-	row, err := p.rep2.FindByEmail(c, email)
+	row, err := p.userRep.FindByEmail(c, email)
 	row.Scan(
 		&user.ID,
 		&user.Name,
@@ -149,17 +148,15 @@ func (p *passwordResetTokenUseCase) PasswordResetTokenRequest(c context.Context,
 
 	// トークン発行
 	passwordResetToken, err := _makeRandomStr(20)
-	fmt.Println(passwordResetToken)
 
 	// トークンをハッシュ化(dbに保存用)
 	hashedPasswordResetToken, err :=  bcrypt.GenerateFromPassword([]byte(passwordResetToken), 10)
-	fmt.Println(string(hashedPasswordResetToken))
 
 	// トークンを保存
-	err = p.rep.CreateWithTime(c, strconv.Itoa(user.ID), string(hashedPasswordResetToken))
+	err = p.tokenRep.CreateWithTime(c, strconv.Itoa(user.ID), string(hashedPasswordResetToken))
 
 	//トークンの取得
-	row, err = p.rep.FindByToken(c, string(hashedPasswordResetToken))
+	row, err = p.tokenRep.FindByToken(c, string(hashedPasswordResetToken))
 
 	row.Scan(
 		&latestPasswordResetToken.ID,
@@ -170,7 +167,7 @@ func (p *passwordResetTokenUseCase) PasswordResetTokenRequest(c context.Context,
 	)
 
 	// リセットメールの送信
-	err = p.rep.SendResetEmail(c, strconv.Itoa(int(latestPasswordResetToken.ID)), user.Name , mailAuth.Email, passwordResetToken)
+	err = p.tokenRep.SendResetEmail(c, strconv.Itoa(int(latestPasswordResetToken.ID)), user.Name , mailAuth.Email, passwordResetToken)
 
 	return err
 }
@@ -180,7 +177,7 @@ func (p *passwordResetTokenUseCase) ValidPasswordResetToken(c context.Context, i
 	passwordResetToken := domain.PasswordResetToken{}
 
 	// トークンを取得
-	row, err := p.rep.Find(c, id)
+	row, err := p.tokenRep.Find(c, id)
 
 	row.Scan(
 		&passwordResetToken.ID,
@@ -202,7 +199,7 @@ func (p *passwordResetTokenUseCase) ValidPasswordResetToken(c context.Context, i
 	if time.Now().After(passwordResetToken.CreatedAt.Add(1 * time.Hour)) {
 		err = errors.New("トークンの有効期限が切れています")
 		//トークンのレコード削除
-		p.rep.DestroyByUserID(c, strconv.Itoa(passwordResetToken.UserID))
+		p.tokenRep.DestroyByUserID(c, strconv.Itoa(passwordResetToken.UserID))
 		return err
 	}
 
@@ -214,7 +211,7 @@ func (p *passwordResetTokenUseCase) ValidPasswordResetToken(c context.Context, i
 func (p *passwordResetTokenUseCase) ChangePassword(c context.Context, id string, password string) error {
 	// トークンの取得(userIDを取得するため)
 	passwordResetToken := domain.PasswordResetToken{}
-	row, err := p.rep.Find(c, id)
+	row, err := p.tokenRep.Find(c, id)
 	row.Scan(
 		&passwordResetToken.ID,
 		&passwordResetToken.UserID,
@@ -231,14 +228,14 @@ func (p *passwordResetTokenUseCase) ChangePassword(c context.Context, id string,
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
 	
 	//パスワードの変更
-	err = p.rep3.ChangePasswordByUserID(c,strconv.Itoa(passwordResetToken.UserID), string(hashedPassword))
+	err = p.authRep.ChangePasswordByUserID(c,strconv.Itoa(passwordResetToken.UserID), string(hashedPassword))
 	if err != nil {
 		err = errors.New("パスワードの変更に失敗しました")
 		return err
 	}
 
 	//トークンの削除
-	p.rep.DestroyByUserID(c, strconv.Itoa(passwordResetToken.UserID))
+	p.tokenRep.DestroyByUserID(c, strconv.Itoa(passwordResetToken.UserID))
 
 	return err
 }
