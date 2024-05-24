@@ -6,6 +6,7 @@ import { PrimaryButton } from '@/components/common';
 import SignInView from '@components/auth/SignInView';
 import SignUpView from '@components/auth/SignUpView';
 import LoginLayout from '@components/layout/LoginLayout';
+import Link from '@/components/common/Link';
 
 export default function Home() {
   const [isMember, setIsMember] = useState(true);
@@ -28,9 +29,7 @@ export default function Home() {
           <div className='my-12 flex flex-col items-center justify-center gap-5'>
             <p className='text-black-600'>登録がまだの方はこちら</p>
             <PrimaryButton onClick={() => setIsMember(!isMember)}>新規登録</PrimaryButton>
-            <a href='/reset_password/request' className='my-5 underline hover:text-grey-300'>
-              パスワードを忘れた
-            </a>
+            <Link href='/reset_password/request'>パスワードを忘れた</Link>
           </div>
         </>
       );

@@ -6,6 +6,7 @@ import { PrimaryButton } from '@components/common';
 import PrimaryLink from '@/components/common/PrimaryLink';
 import { reserPasswordRequest } from '@/utils/api/resetPassword';
 import Loading from '@/components/common/Loading';
+import Link from '@/components/common/Link';
 
 export default function Periods() {
   const [email, setEmail] = useState<string>('');
@@ -76,9 +77,7 @@ export default function Periods() {
               <PrimaryButton type='submit' disabled={isLoading || email.length < 1}>
                 再設定メールの送信
               </PrimaryButton>
-              <a href='/' className='mt-10 underline hover:text-grey-300'>
-                戻る
-              </a>
+              <Link href='/'>戻る</Link>
             </div>
           </form>
         )}

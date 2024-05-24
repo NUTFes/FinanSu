@@ -10,6 +10,7 @@ import { resetPassword, resetPasswordTokenValid } from '@/utils/api/resetPasswor
 import { PasswordResetData } from '@/type/common';
 import Loading from '@/components/common/Loading';
 import Router from 'next/router';
+import Link from '@/components/common/Link';
 
 interface Props {
   isTokenValid: boolean;
@@ -145,9 +146,7 @@ export default function ResetPassword(props: Props) {
                   <PrimaryButton type='submit' disabled={!isValid}>
                     パスワード変更
                   </PrimaryButton>
-                  <a href='/' className='mt-10 underline hover:text-grey-300'>
-                    戻る
-                  </a>
+                  <Link href='/'>ログイン画面へ</Link>
                 </div>
               </form>
             ) : (
@@ -169,9 +168,7 @@ export default function ResetPassword(props: Props) {
                 再度パスワードリセットメールを送信して下さい。
               </p>
             </div>
-            <a href='/' className='mt-10 underline hover:text-grey-300'>
-              ログイン画面へ
-            </a>
+            <Link href='/'>ログイン画面へ</Link>
           </div>
         )}
       </div>
