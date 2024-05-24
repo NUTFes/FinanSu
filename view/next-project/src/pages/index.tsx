@@ -28,6 +28,9 @@ export default function Home() {
           <div className='my-12 flex flex-col items-center justify-center gap-5'>
             <p className='text-black-600'>登録がまだの方はこちら</p>
             <PrimaryButton onClick={() => setIsMember(!isMember)}>新規登録</PrimaryButton>
+            <a href='/reset_password/request' className='my-5 underline'>
+              パスワードを忘れた
+            </a>
           </div>
         </>
       );
