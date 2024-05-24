@@ -260,3 +260,10 @@ export interface YearPeriod {
   createdAt?: string;
   updatedAt?: string;
 }
+
+//パスワードリセットデータ
+export interface PasswordResetData {
+  token: string;
+  password: string;
+  confirmPassword: string;
+}
