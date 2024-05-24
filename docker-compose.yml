@@ -31,6 +31,7 @@ services:
       NEXT_PUBLIC_PORT: 9000
       NEXT_PUBLIC_BUCKET_NAME: finansu
       NEXT_PUBLIC_MINIO_ENDPONT: http://localhost:9000
+      RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED: false
     tty: true
 
   api:
