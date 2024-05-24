@@ -1,5 +1,5 @@
+import { CircularProgress } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
-import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react';
 
 interface Props {
   text?: string;
