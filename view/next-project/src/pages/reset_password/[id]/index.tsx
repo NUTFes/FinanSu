@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import { Context } from 'vm';
 import Image from 'next/image';
+import Router from 'next/router';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import LoginLayout from '@/components/layout/LoginLayout';
-import { PrimaryButton } from '@components/common';
-import PrimaryLink from '@/components/common/PrimaryLink';
-import { Context } from 'vm';
-import { resetPassword, resetPasswordTokenValid } from '@/utils/api/resetPassword';
-import { PasswordResetData } from '@/type/common';
-import Loading from '@/components/common/Loading';
-import Router from 'next/router';
 import Link from '@/components/common/Link';
+import Loading from '@/components/common/Loading';
+import PrimaryLink from '@/components/common/PrimaryLink';
+import LoginLayout from '@/components/layout/LoginLayout';
+import { PasswordResetData } from '@/type/common';
+import { resetPassword, resetPasswordTokenValid } from '@/utils/api/resetPassword';
+import { PrimaryButton } from '@components/common';
 
 interface Props {
   isTokenValid: boolean;
