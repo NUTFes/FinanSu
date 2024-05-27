@@ -39,8 +39,14 @@ export default function Periods() {
         </div>
         {isSubmitted ? (
           <div className='my-20 flex w-full flex-col items-center'>
-            <p>再設定メールを送信しました</p>
-            <p>メールが届かない場合再度送信してください</p>
+            <p className='text-lg'>再設定メールを送信しました</p>
+            <ul className='mx-auto my-4 text-sm'>
+              <li>*メールが届くまでに数分かかることがあります。</li>
+              <li>
+                *メールが届かない場合は、送信先のメールアドレスの確認と迷惑メールの確認をしてください。
+              </li>
+              <li>*それでもメールが見つからない場合は、再度リクエストを行ってください。</li>
+            </ul>
             <PrimaryLink href={'/'} className='my-10'>
               ログイン画面へ戻る
             </PrimaryLink>
