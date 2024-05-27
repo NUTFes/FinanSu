@@ -138,7 +138,7 @@ export default function ResetPassword(props: Props) {
                       <p className='text-red-500'>{errors.password && errors.password.message}</p>
                       <p className='text-red-500'>
                         {errors.confirmPassword && errors.confirmPassword.type === 'correct' && (
-                          <p>sパスワードが一致しません</p>
+                          <p>パスワードが一致しません</p>
                         )}
                       </p>
                     </div>
