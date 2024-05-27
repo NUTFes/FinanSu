@@ -117,7 +117,7 @@ export default function ResetPassword(props: Props) {
                         })}
                       />
                       <p className='md:text-md whitespace-nowrap text-sm text-black-300'>
-                        パスワード(確認)
+                        パスワード確認
                       </p>
                       <input
                         type='password'
@@ -134,11 +134,11 @@ export default function ResetPassword(props: Props) {
                         })}
                       />
                     </div>
-                    <div className='mb-5'>
+                    <div className='mb-5 flex flex-col items-center justify-center'>
                       <p className='text-red-500'>{errors.password && errors.password.message}</p>
                       <p className='text-red-500'>
                         {errors.confirmPassword && errors.confirmPassword.type === 'correct' && (
-                          <p>パスワードが一致しません</p>
+                          <p>sパスワードが一致しません</p>
                         )}
                       </p>
                     </div>
