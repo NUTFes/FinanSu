@@ -27,7 +27,7 @@ func NewTeacherRepository(c db.Client, ac abstract.Crud) TeacherRepository {
 }
 
 func (t *teacherRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM teachers"
+	query := "SELECT * FROM teachers ORDER BY department_id ASC"
 	return t.crud.Read(c, query)
 }
 
