@@ -35,7 +35,7 @@ func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
 
 // 1件取得
 func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "SELECT * FROM users WHERE is_deleted IS FALSE AND id = " + id
+	query := "SELECT * FROM users WHERE id = " + id
 	return ur.crud.ReadByID(c, query)
 }
 

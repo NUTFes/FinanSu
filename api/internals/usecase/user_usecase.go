@@ -45,6 +45,7 @@ func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
 			&user.Name,
 			&user.BureauID,
 			&user.RoleID,
+			&user.IsDeleted,
 			&user.CreatedAt,
 			&user.UpdatedAt,
 		)
@@ -67,6 +68,7 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 		&user.Name,
 		&user.BureauID,
 		&user.RoleID,
+		&user.IsDeleted,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
@@ -87,6 +89,7 @@ func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string
 		&latastUser.Name,
 		&latastUser.BureauID,
 		&latastUser.RoleID,
+		&latastUser.IsDeleted,
 		&latastUser.CreatedAt,
 		&latastUser.UpdatedAt,
 	)
@@ -105,6 +108,7 @@ func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bure
 		&updatedUser.Name,
 		&updatedUser.BureauID,
 		&updatedUser.RoleID,
+		&updatedUser.IsDeleted,
 		&updatedUser.CreatedAt,
 		&updatedUser.UpdatedAt,
 	)
@@ -145,6 +149,7 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 		&user.Name,
 		&user.BureauID,
 		&user.RoleID,
+		&user.IsDeleted,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
