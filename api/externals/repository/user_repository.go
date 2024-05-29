@@ -29,13 +29,13 @@ func NewUserRepository(c db.Client, ac abstract.Crud) UserRepository {
 
 // 全件取得
 func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM users"
+	query := "SELECT * FROM users WHERE is_deleted IS FALSE"
 	return ur.crud.Read(c, query)
 }
 
 // 1件取得
 func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "SELECT * FROM users WHERE id = " + id
+	query := "SELECT * FROM users WHERE is_deleted IS FALSE AND id = " + id
 	return ur.crud.ReadByID(c, query)
 }
 
@@ -63,17 +63,17 @@ func (ur *userRepository) Update(c context.Context, id string, name string, bure
 
 // 削除
 func (ur *userRepository) Destroy(c context.Context, id string) error {
-	query := "DELETE FROM users WHERE id = " + id
+	query := "UPDATE users SET is_deleted = TRUE WHERE id =" + id
 	return ur.crud.UpdateDB(c, query)
 }
 
 func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
-	query := "SELECT * FROM users ORDER BY id DESC LIMIT 1"
+	query := "SELECT * FROM users WHERE is_deleted IS FALSE ORDER BY id DESC LIMIT 1"
 	return ur.crud.ReadByID(c, query)
 }
 
 // 1件取得
 func (ur *userRepository) FindByEmail(c context.Context, email string) (*sql.Row, error) {
-	query := "SELECT * FROM users INNER JOIN mail_auth ON users.id = mail_auth.user_id WHERE email = '" + email + "'"
+	query := "SELECT * FROM users INNER JOIN mail_auth ON users.id = mail_auth.user_id WHERE is_deleted IS FALSE AND email = '" + email + "'"
 	return ur.crud.ReadByID(c, query)
 }
