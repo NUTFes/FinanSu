@@ -2623,9 +2623,9 @@ const docTemplate = `{
                 "deleteIDs":{
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "number"
                     },
-                    example: ["",]
+                    example: []
                 },
             },
             "required":{

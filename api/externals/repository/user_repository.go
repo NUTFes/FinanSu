@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -19,7 +20,7 @@ type UserRepository interface {
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
-	MultiDestroy(context.Context, []string) error
+	MultiDestroy(context.Context, []int) error
 	FindNewRecord(context.Context) (*sql.Row, error)
 	FindByEmail(context.Context, string) (*sql.Row, error)
 }
@@ -75,12 +76,12 @@ func (ur *userRepository) Destroy(c context.Context, id string) error {
 }
 
 // 複数削除
-func (ur *userRepository) MultiDestroy(c context.Context, ids []string) error {
+func (ur *userRepository) MultiDestroy(c context.Context, ids []int) error {
 	query := "UPDATE users SET is_deleted = TRUE WHERE "
 	query2 := "UPDATE mail_auth SET email = NULL WHERE "
 	for index, id := range ids {
-		query += "id = " +id
-		query2 += "user_id = " +id
+		query += "id = " + strconv.Itoa(id)
+		query2 += "user_id = " + strconv.Itoa(id)
 
 		if(index != len(ids)-1){
 			query += " OR "

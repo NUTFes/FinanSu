@@ -20,5 +20,5 @@ type UserDetail struct{
 }
 
 type DestroyUserIDs struct {
-	DeleteIDs	[]string	`json:"deleteIDs"`
+	DeleteIDs	[]int	`json:"deleteIDs"`
 }
