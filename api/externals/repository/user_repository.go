@@ -19,6 +19,7 @@ type UserRepository interface {
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
+	MultiDestroy(context.Context, []string) error
 	FindNewRecord(context.Context) (*sql.Row, error)
 	FindByEmail(context.Context, string) (*sql.Row, error)
 }
@@ -66,6 +67,22 @@ func (ur *userRepository) Destroy(c context.Context, id string) error {
 	query := "UPDATE users SET is_deleted = TRUE WHERE id =" + id
 	return ur.crud.UpdateDB(c, query)
 }
+
+// 削除
+func (ur *userRepository) MultiDestroy(c context.Context, ids []string) error {
+	query := "UPDATE users SET is_deleted = TRUE WHERE "
+	for index, id := range ids {
+		query += "id = " +id
+		if(index != len(ids)-1){
+			query += " OR "
+		}
+
+	}
+	err:=ur.crud.UpdateDB(c, query)
+
+	return err
+}
+
 
 func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
 	query := "SELECT * FROM users WHERE is_deleted IS FALSE ORDER BY id DESC LIMIT 1"

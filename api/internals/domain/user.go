@@ -18,3 +18,7 @@ type UserDetail struct{
 	User		User
 	MailAuth	MailAuth
 }
+
+type DestroyUserIDs struct {
+	DeleteIDs	[]string	`json:"deleteIDs"`
+}
