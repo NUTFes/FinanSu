@@ -65,20 +65,36 @@ func (ur *userRepository) Update(c context.Context, id string, name string, bure
 // 削除
 func (ur *userRepository) Destroy(c context.Context, id string) error {
 	query := "UPDATE users SET is_deleted = TRUE WHERE id =" + id
-	return ur.crud.UpdateDB(c, query)
+
+	err := ur.crud.UpdateDB(c, query)
+
+	query = "UPDATE mail_auth SET email = NULL WHERE user_id =" + id
+	ur.crud.UpdateDB(c, query)
+
+	return err
 }
 
-// 削除
+// 複数削除
 func (ur *userRepository) MultiDestroy(c context.Context, ids []string) error {
 	query := "UPDATE users SET is_deleted = TRUE WHERE "
+	query2 := "UPDATE mail_auth SET email = NULL WHERE "
 	for index, id := range ids {
 		query += "id = " +id
+		query2 += "user_id = " +id
+
 		if(index != len(ids)-1){
 			query += " OR "
+			query2 += " OR "
 		}
 
 	}
-	err:=ur.crud.UpdateDB(c, query)
+	
+	err := ur.crud.UpdateDB(c, query)
+	if err != nil {
+		return err
+	}
+
+	err = ur.crud.UpdateDB(c, query2)
 
 	return err
 }

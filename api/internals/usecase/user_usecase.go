@@ -21,7 +21,7 @@ type UserUseCase interface {
 	CreateUser(context.Context, string, string, string) (domain.User, error)
 	UpdateUser(context.Context, string, string, string, string) (domain.User, error)
 	DestroyUser(context.Context, string) error
-	DestroyUsers(context.Context, []string) error
+	DestroyMultiUsers(context.Context, []string) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
 }
 
@@ -124,7 +124,7 @@ func (u *userUseCase) DestroyUser(c context.Context, id string) error {
 	return err
 }
 
-func (u *userUseCase) DestroyUsers(c context.Context, ids []string) error {
+func (u *userUseCase) DestroyMultiUsers(c context.Context, ids []string) error {
 	err := u.userRep.MultiDestroy(c, ids)
 	return err
 }

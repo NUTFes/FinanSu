@@ -86,9 +86,9 @@ func (u *userController) DestroyMultiUsers(c echo.Context) error {
 	if err := c.Bind(destroyUser); err != nil {
 		return err
 	}
-	err := u.u.DestroyUsers(c.Request().Context(), destroyUser.DeleteIDs)
+	err := u.u.DestroyMultiUsers(c.Request().Context(), destroyUser.DeleteIDs)
 	if err != nil {
-		return err
+		return c.String(http.StatusBadRequest,err.Error())
 	}
 	return c.String(http.StatusOK, "Destroy Users")
 }
