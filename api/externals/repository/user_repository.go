@@ -20,6 +20,7 @@ type UserRepository interface {
 	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
 	FindNewRecord(context.Context) (*sql.Row, error)
+	FindByEmail(context.Context, string) (*sql.Row, error)
 }
 
 func NewUserRepository(c db.Client, ac abstract.Crud) UserRepository {
@@ -68,5 +69,11 @@ func (ur *userRepository) Destroy(c context.Context, id string) error {
 
 func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
 	query := "SELECT * FROM users ORDER BY id DESC LIMIT 1"
+	return ur.crud.ReadByID(c, query)
+}
+
+// 1件取得
+func (ur *userRepository) FindByEmail(c context.Context, email string) (*sql.Row, error) {
+	query := "SELECT * FROM users INNER JOIN mail_auth ON users.id = mail_auth.user_id WHERE email = '" + email + "'"
 	return ur.crud.ReadByID(c, query)
 }

@@ -85,25 +85,6 @@ func (u *mailAuthUseCase) SignOut(c context.Context, accessToken string) error {
 	return nil
 }
 
-// アクセストークンを生成
-func _makeRandomStr(digit uint32) (string, error) {
-	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-	// 乱数を生成
-	b := make([]byte, digit)
-	if _, err := rand.Read(b); err != nil {
-		return "", errors.New("unexpected error...")
-	}
-
-	// letters からランダムに取り出して文字列を生成
-	var result string
-	for _, v := range b {
-		// index が letters の長さに収まるように調整
-		result += string(letters[int(v)%len(letters)])
-	}
-	return result, nil
-}
-
 func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domain.IsSignIn, error) {
 	var session = domain.Session{}
 	var isSignIn domain.IsSignIn
@@ -122,4 +103,23 @@ func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domai
 		isSignIn = domain.IsSignIn{IsSignIn: false}
 	}
 	return isSignIn, nil
+}
+
+// アクセストークンを生成
+func _makeRandomStr(digit uint32) (string, error) {
+	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+	// 乱数を生成
+	b := make([]byte, digit)
+	if _, err := rand.Read(b); err != nil {
+		return "", errors.New("unexpected error...")
+	}
+
+	// letters からランダムに取り出して文字列を生成
+	var result string
+	for _, v := range b {
+		// index が letters の長さに収まるように調整
+		result += string(letters[int(v)%len(letters)])
+	}
+	return result, nil
 }

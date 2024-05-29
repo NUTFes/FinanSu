@@ -12,3 +12,8 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
+
+type UserDetail struct{
+	User		User
+	MailAuth	MailAuth
+}

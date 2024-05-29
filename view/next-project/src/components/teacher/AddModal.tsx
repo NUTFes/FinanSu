@@ -4,11 +4,11 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/teachers';
 import { PrimaryButton, Modal, Select, Input } from '@components/common';
-import { DEPARTMENTS } from '@constants/departments';
-import { Teacher } from '@type/common';
+import { Department, Teacher } from '@type/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  departments: Department[];
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
@@ -68,7 +68,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
             value={formData.departmentID}
             onChange={handler('departmentID')}
           >
-            {DEPARTMENTS.map((data) => (
+            {props.departments.map((data) => (
               <option key={data.id} value={data.id}>
                 {data.name}
               </option>
