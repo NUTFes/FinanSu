@@ -2,9 +2,11 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { AddButton } from '../common';
+import { Department } from '@/type/common';
 import AddModal from '@components/teacher/AddModal';
 
 interface Props {
+  departments: Department[];
   children?: React.ReactNode;
 }
 
@@ -20,7 +22,7 @@ export default function OpenAddModalButton(props: Props) {
       >
         {props.children}
       </AddButton>
-      {showModal && <AddModal setShowModal={setShowModal} />}
+      {showModal && <AddModal setShowModal={setShowModal} departments={props.departments} />}
     </>
   );
 }

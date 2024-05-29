@@ -4,13 +4,13 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { put } from '@api/teachers';
 import { PrimaryButton, Modal, Input, Select } from '@components/common';
-import { DEPARTMENTS } from '@constants/departments';
-import { Teacher } from '@type/common';
+import { Department, Teacher } from '@type/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   id: number | string;
   teacher: Teacher;
+  departments: Department[];
 }
 
 export default function FundInformationEditModal(props: ModalProps) {
@@ -21,6 +21,8 @@ export default function FundInformationEditModal(props: ModalProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<Teacher>(props.teacher);
+
+  const departments = props.departments;
 
   const handler =
     (input: string) =>
@@ -60,9 +62,9 @@ export default function FundInformationEditModal(props: ModalProps) {
             value={formData.departmentID}
             onChange={handler('departmentID')}
           >
-            {DEPARTMENTS.map((data) => (
-              <option key={data.id} value={data.id}>
-                {data.name}
+            {departments.map((department) => (
+              <option key={department.id} value={department.id}>
+                {department.name}
               </option>
             ))}
           </Select>

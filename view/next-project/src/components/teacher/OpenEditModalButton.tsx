@@ -3,12 +3,13 @@ import { useState } from 'react';
 
 import { EditButton } from '../common';
 import EditModal from '@components/teacher/EditModal';
-import { Teacher } from '@type/common';
+import { Department, Teacher } from '@type/common';
 
 interface Props {
   id: number;
   teacher: Teacher;
   isDisabled: boolean;
+  departments: Department[];
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -17,7 +18,14 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <EditButton onClick={() => setShowModal(true)} isDisabled={props.isDisabled} />
-      {showModal && <EditModal id={props.id} setShowModal={setShowModal} teacher={props.teacher} />}
+      {showModal && (
+        <EditModal
+          id={props.id}
+          setShowModal={setShowModal}
+          teacher={props.teacher}
+          departments={props.departments}
+        />
+      )}
     </>
   );
 };
