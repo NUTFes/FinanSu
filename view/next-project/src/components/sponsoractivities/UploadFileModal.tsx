@@ -1,7 +1,7 @@
 import React, { FC, useRef, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { PrimaryButton } from '../common';
+import { PrimaryButton, Loading } from '../common';
 import { put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
 import { SponsorActivityInformation } from '@type/common';
@@ -35,6 +35,8 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
   );
 
   const sponsorActivityInformations = props.sponsorActivityInformations || [];
+  // loadingの呼び出し
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetFile = e.target.files![0]!;
@@ -67,6 +69,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     if (!imageFile) {
       return;
     }
+    setIsLoading(true);
     const formData = new FormData();
     formData.append('file', imageFile);
     const fileName = imageFile?.name || '';
@@ -87,6 +90,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
       .catch((error) => {
         console.error('Error:', error);
       });
+    setIsLoading(false);
 
     if (!response) {
       onClose();
@@ -112,7 +116,6 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     onClose();
   };
 
-  console.log(process.env.NEXT_PUBLIC_BUCKET_NAME);
 
   const onClose = () => {
     handleFileDelete();
@@ -148,10 +151,11 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
         )}
       </div>
       <div className='my-2 flex w-full flex-wrap justify-center'>
-        <PrimaryButton type='button' onClick={() => submit()} disabled={!imageFile}>
+        <PrimaryButton type='button' onClick={() => submit()} disabled={isLoading && !imageFile}>
           登録
         </PrimaryButton>
       </div>
+      {isLoading && <Loading />}
     </Modal>
   );
 };
