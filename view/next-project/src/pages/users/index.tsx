@@ -13,6 +13,7 @@ import OpenEditModalButton from '@components/users/OpenEditModalButton';
 import { BUREAUS } from '@constants/bureaus';
 import { ROLES } from '@constants/role';
 import { User } from '@type/common';
+import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
 
 interface Props {
   users: User[];
@@ -43,9 +44,14 @@ export default function Users(props: Props) {
     getUser();
   }, []);
 
+  const [deleteUsers, setDeleteUsers] = useState<{ users: User[]; ids: number[] }>({
+    users: [],
+    ids: [],
+  });
+
   // ログイン中のユーザの権限
-  const isDeveloper = useMemo(() => {
-    if (currentUser?.roleID === 2) {
+  const isAdmin = useMemo(() => {
+    if (currentUser?.roleID === 2 || currentUser?.roleID === 3) {
       return true;
     } else {
       return false;
@@ -54,10 +60,10 @@ export default function Users(props: Props) {
 
   useEffect(() => {
     if (!currentUser?.roleID) return;
-    if (!isDeveloper) {
+    if (!isAdmin) {
       router.push('/purchaseorders');
     }
-  }, [isDeveloper, currentUser?.roleID]);
+  }, [isAdmin, currentUser?.roleID]);
 
   return (
     <MainLayout>
@@ -86,6 +92,14 @@ export default function Users(props: Props) {
                   <p className='text-center text-sm text-black-600'>権限</p>
                 </th>
                 <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3' />
+                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                  <div className='flex justify-center'>
+                    <OpenDeleteModalButton
+                      isDisabled={deleteUsers.ids.length == 0}
+                      deleteUsers={deleteUsers}
+                    />
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
@@ -129,7 +143,36 @@ export default function Users(props: Props) {
                       index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
                     )}
                   >
-                    <OpenEditModalButton id={user.id} bureaus={BUREAUS} user={user} />
+                    <div className='flex justify-end'>
+                      <OpenEditModalButton id={user.id} bureaus={BUREAUS} user={user} />
+                    </div>
+                  </td>
+                  <td
+                    className={clsx(
+                      'px-1 text-center text-sm text-black-600',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
+                      index === users.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                    )}
+                  >
+                    <input
+                      checked={deleteUsers.ids.includes(user.id)}
+                      type='checkbox'
+                      onChange={(e) => {
+                        deleteUsers.ids.includes(user.id)
+                          ? setDeleteUsers({
+                              users: deleteUsers?.users.filter((selectedUser) => {
+                                return selectedUser.id !== user.id;
+                              }),
+                              ids: deleteUsers?.ids.filter((selectedID) => {
+                                return selectedID !== user.id;
+                              }),
+                            })
+                          : setDeleteUsers({
+                              users: [...deleteUsers?.users, user],
+                              ids: [...deleteUsers?.ids, user.id],
+                            });
+                      }}
+                    />
                   </td>
                 </tr>
               ))}
