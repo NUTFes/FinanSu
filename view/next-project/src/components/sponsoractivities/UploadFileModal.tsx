@@ -116,7 +116,6 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     onClose();
   };
 
-
   const onClose = () => {
     handleFileDelete();
     props.setIsOpen(false);
