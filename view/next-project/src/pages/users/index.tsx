@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-
+import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
 import { authAtom } from '@/store/atoms';
 import { getCurrentUser } from '@/utils/api/currentUser';
 import { get } from '@api/api_methods';
@@ -13,7 +13,6 @@ import OpenEditModalButton from '@components/users/OpenEditModalButton';
 import { BUREAUS } from '@constants/bureaus';
 import { ROLES } from '@constants/role';
 import { User } from '@type/common';
-import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
 
 interface Props {
   users: User[];
@@ -168,8 +167,8 @@ export default function Users(props: Props) {
                               }),
                             })
                           : setDeleteUsers({
-                              users: [...deleteUsers?.users, user],
-                              ids: [...deleteUsers?.ids, user.id],
+                              users: [...(deleteUsers?.users || []), user],
+                              ids: [...(deleteUsers?.ids || []), user.id],
                             });
                       }}
                     />

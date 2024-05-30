@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
-
-import DeleteModal from '../users/DeleteModal';
 import { RiDeleteBinLine } from 'react-icons/ri';
+import DeleteModal from '../users/DeleteModal';
 import { User } from '@type/common';
 
 interface Props {
