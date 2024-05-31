@@ -34,7 +34,6 @@ services:
       dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
     volumes: ["./api:/app"]
-    command: "go run main.go"
     env_file: ["./local-finansu.env"]
     ports: ["1323:1323"]
     environment:
