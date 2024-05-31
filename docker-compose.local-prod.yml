@@ -17,7 +17,9 @@ services:
     restart: always
 
   view:
-    build: "./view"
+    build:
+      context: ./view
+      dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-view"
     volumes: ["./view:/app"]
     command: "npm run start"
@@ -37,6 +39,7 @@ services:
     ports: ["1323:1323"]
     env_file: ["./api/env/dev.env"]
     environment:
+      ENV: "production"
       NUTMEG_MAIL_SENDER: "nutfes.finansu@gmail.com"
       NUTMEG_MAIL_PASSWORD: "xmifwkbpiybisqto"
       RESET_PASSWORD_URL: "http://localhost:3000/reset_password"

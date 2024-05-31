@@ -3,9 +3,10 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"os"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
-	"os"
 )
 
 type client struct {
@@ -18,9 +19,11 @@ type Client interface {
 }
 
 func ConnectMySQL() (client, error) {
-	err := godotenv.Load("env/dev.env")
-	if err != nil {
-		fmt.Println(err)
+	if os.Getenv("ENV") == "develop" {
+		err := godotenv.Load("env/dev.env")
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	dbUser := os.Getenv("NUTMEG_DB_USER")
 	dbPassword := os.Getenv("NUTMEG_DB_PASSWORD")

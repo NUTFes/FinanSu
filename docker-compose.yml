@@ -44,6 +44,7 @@ services:
     volumes:
       - ./api:/app
     environment:
+      ENV: "develop"
       NUTMEG_MAIL_SENDER: "nutfes.finansu@gmail.com"
       NUTMEG_MAIL_PASSWORD: "xmifwkbpiybisqto"
       RESET_PASSWORD_URL: "http://localhost:3000/reset_password"

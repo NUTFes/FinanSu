@@ -28,6 +28,7 @@ services:
     env_file: ["./finansu.env"]
     ports: ["1323:1323"]
     environment:
+      ENV: "production"
       NUTMEG_MAIL_SENDER: "nutfes.finansu@gmail.com"
       NUTMEG_MAIL_PASSWORD: "xmifwkbpiybisqto"
       RESET_PASSWORD_URL: "https://finansu.nutfes.net/reset_password"
