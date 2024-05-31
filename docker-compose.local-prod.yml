@@ -34,12 +34,12 @@ services:
       dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
     volumes: ["./api:/app"]
-    env_file: ["./local-finansu.env"]
     ports: ["1323:1323"]
+    env_file: ["./api/env/dev.env"]
     environment:
       NUTMEG_MAIL_SENDER: "nutfes.finansu@gmail.com"
       NUTMEG_MAIL_PASSWORD: "xmifwkbpiybisqto"
-      RESET_PASSWORD_URL: "https://finansu.nutfes.net/reset_password"
+      RESET_PASSWORD_URL: "http://localhost:3000/reset_password"
     depends_on:
       db:
         condition: service_started
