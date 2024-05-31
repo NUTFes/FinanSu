@@ -14,6 +14,8 @@ services:
     ports: ["3000:3000"]
     environment:
       NEXT_PUBLIC_APP_ENV: "production"
+      NEXT_PUBLIC_SSR_API_URI: "https://finansu-api.nutfes.net"
+      NEXT_PUBLIC_CSR_API_URI: "https://finansu-api.nutfes.net"
     depends_on: ["api"]
 
   api:

@@ -17,42 +17,30 @@ services:
     restart: always
 
   view:
-    build: ./view
+    build: "./view"
     container_name: "nutfes-finansu-view"
-    volumes:
-      - ./view:/app
-    command: sh -c "npm install && npm run dev"
-    ports:
-      - "3000:3000"
-      - "6006:6006"
-    stdin_open: true
+    volumes: ["./view:/app"]
+    command: "npm run start"
+    ports: ["3000:3000"]
     environment:
-      NEXT_PUBLIC_ENDPOINT: minio
-      NEXT_PUBLIC_PORT: 9000
-      NEXT_PUBLIC_BUCKET_NAME: finansu
-      NEXT_PUBLIC_MINIO_ENDPONT: http://localhost:9000
-      RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED: false
+      NEXT_PUBLIC_APP_ENV: "production"
       NEXT_PUBLIC_SSR_API_URI: "http://nutfes-finansu-api:1323"
       NEXT_PUBLIC_CSR_API_URI: "http://localhost:1323"
-    tty: true
+    depends_on: ["api"]
 
   api:
     build:
       context: ./api
-      dockerfile: dev.Dockerfile
+      dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
-    volumes:
-      - ./api:/app
+    volumes: ["./api:/app"]
+    command: "go run main.go"
+    env_file: ["./local-finansu.env"]
+    ports: ["1323:1323"]
     environment:
       NUTMEG_MAIL_SENDER: "nutfes.finansu@gmail.com"
       NUTMEG_MAIL_PASSWORD: "xmifwkbpiybisqto"
-      RESET_PASSWORD_URL: "http://localhost:3000/reset_password"
-    #シェルスクリプトを実行するコマンド
-    command: "./start.sh"
-    ports:
-      - "1323:1323"
-    stdin_open: true
-    tty: true
+      RESET_PASSWORD_URL: "https://finansu.nutfes.net/reset_password"
     depends_on:
       db:
         condition: service_started
