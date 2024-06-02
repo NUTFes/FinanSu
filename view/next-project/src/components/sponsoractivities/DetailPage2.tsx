@@ -35,7 +35,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [editActivityInformationId, setEditActivityInformationId] = useState<number>(0);
   const [activityInformationData, setActivityInformationData] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [sponsorActivityInformations, setSponsorActivityInformations] = useState<
     SponsorActivityInformation[]
