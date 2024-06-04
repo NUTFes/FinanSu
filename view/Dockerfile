@@ -4,4 +4,4 @@ FROM node:20.14
 WORKDIR /app/next-project
 COPY ./ /app
 
-ENV API_URL='http://localhost:1323'
+ENV NEXT_PUBLIC_APP_ENV "develop"

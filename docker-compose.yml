@@ -32,8 +32,6 @@ services:
       NEXT_PUBLIC_BUCKET_NAME: finansu
       NEXT_PUBLIC_MINIO_ENDPONT: http://localhost:9000
       RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED: false
-      NEXT_PUBLIC_SSR_API_URI: "http://nutfes-finansu-api:1323"
-      NEXT_PUBLIC_CSR_API_URI: "http://localhost:1323"
     tty: true
 
   api:
