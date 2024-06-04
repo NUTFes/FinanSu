@@ -9,11 +9,11 @@ export default function Custom404() {
           <Image src='/logo.svg' alt='FinanSu' width={150} height={40} className='h-fit w-fit' />
         </div>
       </header>
-      <main className='flex flex-grow items-center justify-center bg-gray-100 text-center'>
-        <div className='flex flex-col items-center m-4 w-fit rounded-lg bg-white p-5 shadow-md md:m-8 md:w-1/2 md:p-10'>
+      <main className='bg-gray-100 flex flex-grow items-center justify-center text-center'>
+        <div className='bg-white m-4 flex w-fit flex-col items-center rounded-lg p-5 shadow-md md:m-8 md:w-1/2 md:p-10'>
           <h1 className='text-8xl font-bold'>404</h1>
           <h2 className='text-3xl'>Not Found</h2>
-          <p className='mt-4 text-1xl text-gray-600'>お探しのページが見つかりませんでした。</p>
+          <p className='text-1xl text-gray-600 mt-4'>お探しのページが見つかりませんでした。</p>
           <PrimaryButton className='mt-4' onClick={() => window.history.back()}>
             前のページに戻る
           </PrimaryButton>
