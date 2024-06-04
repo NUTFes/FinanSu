@@ -13,7 +13,9 @@ export default function Custom500() {
         <div className='bg-white m-4 flex w-fit flex-col items-center rounded-lg p-5 shadow-md md:m-8 md:w-1/2 md:p-10'>
           <h1 className='text-8xl font-bold'>500</h1>
           <h2 className='text-3xl'>Internal Server Error</h2>
-          <p className='text-1xl text-gray-600 mt-4'>アクセスしようとしたページは表示できませんでした。</p>
+          <p className='text-1xl text-gray-600 mt-4'>
+            アクセスしようとしたページは表示できませんでした。
+          </p>
           <PrimaryButton className='mt-4' onClick={() => window.history.back()}>
             前のページに戻る
           </PrimaryButton>
