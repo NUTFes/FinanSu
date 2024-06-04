@@ -7,15 +7,12 @@ services:
     command: tunnel run
 
   view:
-    build: "./view"
+    build:
+      context: ./view
+      dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-view"
-    volumes: ["./view:/app"]
     command: "npm run start"
     ports: ["3000:3000"]
-    environment:
-      NEXT_PUBLIC_APP_ENV: "production"
-      NEXT_PUBLIC_SSR_API_URI: "https://finansu-api.nutfes.net"
-      NEXT_PUBLIC_CSR_API_URI: "https://finansu-api.nutfes.net"
     depends_on: ["api"]
 
   api:
@@ -24,7 +21,6 @@ services:
       dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
     volumes: ["./api:/app"]
-    command: "go run main.go"
     env_file: ["./finansu.env"]
     ports: ["1323:1323"]
     environment:

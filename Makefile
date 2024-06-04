@@ -15,6 +15,6 @@ seed:
 local-prod-run:
 	docker compose -f docker-compose.local-prod.yml build
 	docker compose -f docker-compose.local-prod.yml up
-prod-deploy:
+prod-run:
 	docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
