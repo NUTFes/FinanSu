@@ -223,6 +223,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/teachers", r.teacherController.CreateTeacher)
 	e.PUT("/teachers/:id", r.teacherController.UpdateTeacher)
 	e.DELETE("/teachers/:id", r.teacherController.DestroyTeacher)
+	e.DELETE("/teachers/delete", r.teacherController.DestroyMultiTeachers)
 
 	// users
 	e.GET("/users", r.userController.IndexUser)
