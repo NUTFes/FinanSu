@@ -178,6 +178,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]d
 			&purchaseReportDetail.ReportUser.Name,
 			&purchaseReportDetail.ReportUser.BureauID,
 			&purchaseReportDetail.ReportUser.RoleID,
+			&purchaseReportDetail.ReportUser.IsDeleted,
 			&purchaseReportDetail.ReportUser.CreatedAt,
 			&purchaseReportDetail.ReportUser.UpdatedAt,
 			&purchaseReportDetail.PurchaseOrder.ID,
@@ -191,6 +192,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]d
 			&purchaseReportDetail.OrderUser.Name,
 			&purchaseReportDetail.OrderUser.BureauID,
 			&purchaseReportDetail.OrderUser.RoleID,
+			&purchaseReportDetail.OrderUser.IsDeleted,
 			&purchaseReportDetail.OrderUser.CreatedAt,
 			&purchaseReportDetail.OrderUser.UpdatedAt,
 		)
@@ -244,6 +246,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 		&purchaseReportDetail.ReportUser.Name,
 		&purchaseReportDetail.ReportUser.BureauID,
 		&purchaseReportDetail.ReportUser.RoleID,
+		&purchaseReportDetail.ReportUser.IsDeleted,
 		&purchaseReportDetail.ReportUser.CreatedAt,
 		&purchaseReportDetail.ReportUser.UpdatedAt,
 		&purchaseReportDetail.PurchaseOrder.ID,
@@ -257,6 +260,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 		&purchaseReportDetail.OrderUser.Name,
 		&purchaseReportDetail.OrderUser.BureauID,
 		&purchaseReportDetail.OrderUser.RoleID,
+		&purchaseReportDetail.OrderUser.IsDeleted,
 		&purchaseReportDetail.OrderUser.CreatedAt,
 		&purchaseReportDetail.OrderUser.UpdatedAt,
 	)
@@ -312,6 +316,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailsByYear(c context.Context
 			&purchaseReportDetail.ReportUser.Name,
 			&purchaseReportDetail.ReportUser.BureauID,
 			&purchaseReportDetail.ReportUser.RoleID,
+			&purchaseReportDetail.ReportUser.IsDeleted,
 			&purchaseReportDetail.ReportUser.CreatedAt,
 			&purchaseReportDetail.ReportUser.UpdatedAt,
 			&purchaseReportDetail.PurchaseOrder.ID,
@@ -325,6 +330,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailsByYear(c context.Context
 			&purchaseReportDetail.OrderUser.Name,
 			&purchaseReportDetail.OrderUser.BureauID,
 			&purchaseReportDetail.OrderUser.RoleID,
+			&purchaseReportDetail.OrderUser.IsDeleted,
 			&purchaseReportDetail.OrderUser.CreatedAt,
 			&purchaseReportDetail.OrderUser.UpdatedAt,
 		)

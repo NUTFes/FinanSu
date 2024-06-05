@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -19,6 +20,7 @@ type UserRepository interface {
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
+	MultiDestroy(context.Context, []int) error
 	FindNewRecord(context.Context) (*sql.Row, error)
 	FindByEmail(context.Context, string) (*sql.Row, error)
 }
@@ -29,7 +31,7 @@ func NewUserRepository(c db.Client, ac abstract.Crud) UserRepository {
 
 // 全件取得
 func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM users"
+	query := "SELECT * FROM users WHERE is_deleted IS FALSE"
 	return ur.crud.Read(c, query)
 }
 
@@ -63,17 +65,49 @@ func (ur *userRepository) Update(c context.Context, id string, name string, bure
 
 // 削除
 func (ur *userRepository) Destroy(c context.Context, id string) error {
-	query := "DELETE FROM users WHERE id = " + id
-	return ur.crud.UpdateDB(c, query)
+	query := "UPDATE users SET is_deleted = TRUE WHERE id =" + id
+
+	err := ur.crud.UpdateDB(c, query)
+
+	query = "UPDATE mail_auth SET email = NULL WHERE user_id =" + id
+	ur.crud.UpdateDB(c, query)
+
+	return err
 }
 
+// 複数削除
+func (ur *userRepository) MultiDestroy(c context.Context, ids []int) error {
+	query := "UPDATE users SET is_deleted = TRUE WHERE "
+	query2 := "UPDATE mail_auth SET email = NULL WHERE "
+	for index, id := range ids {
+		query += "id = " + strconv.Itoa(id)
+		query2 += "user_id = " + strconv.Itoa(id)
+
+		if(index != len(ids)-1){
+			query += " OR "
+			query2 += " OR "
+		}
+
+	}
+	
+	err := ur.crud.UpdateDB(c, query)
+	if err != nil {
+		return err
+	}
+
+	err = ur.crud.UpdateDB(c, query2)
+
+	return err
+}
+
+
 func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
-	query := "SELECT * FROM users ORDER BY id DESC LIMIT 1"
+	query := "SELECT * FROM users WHERE is_deleted IS FALSE ORDER BY id DESC LIMIT 1"
 	return ur.crud.ReadByID(c, query)
 }
 
 // 1件取得
 func (ur *userRepository) FindByEmail(c context.Context, email string) (*sql.Row, error) {
-	query := "SELECT * FROM users INNER JOIN mail_auth ON users.id = mail_auth.user_id WHERE email = '" + email + "'"
+	query := "SELECT * FROM users INNER JOIN mail_auth ON users.id = mail_auth.user_id WHERE is_deleted IS FALSE AND email = '" + email + "'"
 	return ur.crud.ReadByID(c, query)
 }

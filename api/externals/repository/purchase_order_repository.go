@@ -165,19 +165,8 @@ func (por *purchaseOrderRepository) DeleteReport(
 func (p *purchaseOrderRepository) AllUserInfoByYear(c context.Context, year string) (*sql.Rows, error) {
 	query := `
 		SELECT
-			purchase_orders.id,
-			purchase_orders.deadline,
-			purchase_orders.user_id,
-			purchase_orders.expense_id,
-			purchase_orders.finance_check,
-			purchase_orders.created_at,
-			purchase_orders.updated_at,
-			users.id,
-			users.name,
-			users.bureau_id,
-			users.role_id,
-			users.created_at,
-			users.updated_at
+			purchase_orders.*,
+			users.*
 		FROM
 			purchase_orders
 		INNER JOIN

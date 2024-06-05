@@ -67,10 +67,10 @@ export default function EditModal(props: ModalProps) {
   };
 
   // 担当者を局でフィルタを適用
-  const [bureauId, setBureauId] = useState<number>(
+  const [bureauId, setBureauId] = useState<number | undefined>(
     props.users.find((user) => {
       return user.id === props.fundInformation.userID;
-    })?.bureauID || 1,
+    })?.bureauID || undefined,
   );
 
   // 募金に登録されているuser情報
@@ -129,6 +129,11 @@ export default function EditModal(props: ModalProps) {
         <p className='text-black-600'>担当者の局</p>
         <div className='col-span-4 w-full'>
           <Select value={bureauId} onChange={(e) => setBureauId(Number(e.target.value))}>
+            {!bureauId && (
+              <option disabled selected>
+                局が登録されていません
+              </option>
+            )}
             {BUREAUS.map((bureaus) => (
               <option key={bureaus.id} value={bureaus.id}>
                 {bureaus.name}

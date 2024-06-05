@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"net/http"
+
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type userController struct {
@@ -16,6 +18,7 @@ type UserController interface {
 	CreateUser(echo.Context) error
 	UpdateUser(echo.Context) error
 	DestroyUser(echo.Context) error
+	DestroyMultiUsers(echo.Context) error
 	GetCurrentUser(echo.Context) error
 }
 
@@ -76,6 +79,20 @@ func (u *userController) DestroyUser(c echo.Context) error {
 	}
 	return c.String(http.StatusOK, "Destroy User")
 }
+
+// Destroy
+func (u *userController) DestroyMultiUsers(c echo.Context) error {
+	 destroyUser := new(domain.DestroyUserIDs)
+	if err := c.Bind(destroyUser); err != nil {
+		return err
+	}
+	err := u.u.DestroyMultiUsers(c.Request().Context(), destroyUser.DeleteIDs)
+	if err != nil {
+		return c.String(http.StatusBadRequest,err.Error())
+	}
+	return c.String(http.StatusOK, "Destroy Users")
+}
+
 
 // ログインユーザーの取得
 func (auth *userController) GetCurrentUser(c echo.Context) error {
