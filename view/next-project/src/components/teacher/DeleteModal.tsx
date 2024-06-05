@@ -1,24 +1,34 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction } from 'react';
 
-import { del } from '@api/api_methods';
+import { Teacher } from '@/type/common';
+import { del } from '@api/teachers';
 import { Modal, PrimaryButton, CloseButton, OutlinePrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  id: number | string;
+  deleteTeachers?: {teachers: Teacher[]; ids: number[]};
 }
 
 export default function DeleteModal(props: ModalProps) {
   const router = useRouter();
+
   const closeModal = () => {
     props.setShowModal(false);
     router.reload();
   };
 
-  const deleteTeacher = async () => {
-    const deleteURL = process.env.CSR_API_URI + '/teachers/' + props.id;
-    await del(deleteURL);
+  const deleteTeachers = async () => {
+    const deleteURL = process.env.CSR_API_URI + '/teachers/delete';
+    const res = await del(deleteURL, props.deleteTeachers?.ids || []);
+    if (res === 200) {
+      window.alert('削除しました');
+      closeModal();
+      router.reload();
+    } else {
+      window.alert('削除に失敗しました');
+      closeModal();
+    }
   };
 
   return (
@@ -29,13 +39,18 @@ export default function DeleteModal(props: ModalProps) {
         </div>
       </div>
       <div className='mx-auto mb-5 w-fit text-xl text-black-600'>教員データの削除</div>
-      <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
+      <div className='mx-auto my-5 w-fit text-xl'>下記の教員データを削除しますか？</div>
+      <div className='m-4 flex max-h-60 flex-col overflow-y-auto'>
+        {props.deleteTeachers?.teachers.map((teacher) => {
+          return <p key={teacher.id}>{teacher.name}</p>;
+        })}
+      </div>
       <div className=''>
         <div className='flex flex-row justify-center gap-5'>
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton
             onClick={() => {
-              deleteTeacher();
+              deleteTeachers();
               closeModal();
             }}
           >
