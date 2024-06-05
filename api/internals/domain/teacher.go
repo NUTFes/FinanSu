@@ -12,6 +12,11 @@ type Teacher struct {
 	Room         string    `json:"room"`
 	IsBlack      bool      `json:"isBlack"`
 	Remark       string    `json:"remark"`
+	IsDeleted		 bool    `json:"isDeleted"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`
+}
+
+type DestroyTeacherIDs struct {
+	DeleteIDs	[]int	`json:"deleteIDs"`
 }
