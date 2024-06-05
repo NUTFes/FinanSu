@@ -7,7 +7,7 @@ import { Modal, PrimaryButton, CloseButton, OutlinePrimaryButton } from '@compon
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  deleteTeachers?: {teachers: Teacher[]; ids: number[]};
+  deleteTeachers?: { teachers: Teacher[]; ids: number[] };
 }
 
 export default function DeleteModal(props: ModalProps) {

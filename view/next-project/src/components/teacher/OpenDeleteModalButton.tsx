@@ -6,7 +6,7 @@ import DeleteModal from '@components/teacher/DeleteModal';
 import { Teacher } from '@type/common';
 
 interface Props {
-  deleteTeachers?: {teachers: Teacher[]; ids: number[] };
+  deleteTeachers?: { teachers: Teacher[]; ids: number[] };
   isDisabled: boolean;
 }
 
@@ -28,7 +28,9 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <DeleteButton onClick={ShowModal} isDisabled={props.isDisabled} />
-      {showModal && <DeleteModal deleteTeachers={props.deleteTeachers} setShowModal={setShowModal} />}
+      {showModal && (
+        <DeleteModal deleteTeachers={props.deleteTeachers} setShowModal={setShowModal} />
+      )}
     </>
   );
 };
