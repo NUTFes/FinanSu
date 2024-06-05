@@ -165,6 +165,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetails(c context.Context) ([]dom
 			&orderDetail.User.Name,
 			&orderDetail.User.BureauID,
 			&orderDetail.User.RoleID,
+			&orderDetail.User.IsDeleted,
 			&orderDetail.User.CreatedAt,
 			&orderDetail.User.UpdatedAt,
 		)
@@ -215,6 +216,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 		&orderDetail.User.Name,
 		&orderDetail.User.BureauID,
 		&orderDetail.User.RoleID,
+		&orderDetail.User.IsDeleted,
 		&orderDetail.User.CreatedAt,
 		&orderDetail.User.UpdatedAt,
 	)
@@ -266,6 +268,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailsByYear(c context.Context, 
 			&orderDetail.User.Name,
 			&orderDetail.User.BureauID,
 			&orderDetail.User.RoleID,
+			&orderDetail.User.IsDeleted,
 			&orderDetail.User.CreatedAt,
 			&orderDetail.User.UpdatedAt,
 		)

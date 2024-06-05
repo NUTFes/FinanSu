@@ -2166,6 +2166,26 @@ const docTemplate = `{
                 ],
             },
         },
+        "/users/delete": {
+            "delete": {
+                tags: ["user"],
+                "description": "userの複数作成",
+                responses: {
+                    "200": {
+                        "description": "複数のuserをidで削除できる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "destroyUserIDs",
+                        "schema":{
+                            "$ref": "#/definitions/destroyUserIDs"
+                        },
+                    },
+                ],
+            },
+        },
         "/users/{id}": {
             "get": {
                 tags: ["user"],
@@ -2631,7 +2651,21 @@ const docTemplate = `{
 					"required":{
 									"deleteIDs",
 					},
-			},
+				},
+				"destroyUserIDs":{
+					"properties":{
+							"deleteIDs":{
+									"type": "array",
+									"items": {
+											"type": "number"
+									},
+									example: []
+							},
+					},
+					"required":{
+									"deleteIDs",
+					},
+				},
         "year_periods":{
             "properties":{
                 "year":{

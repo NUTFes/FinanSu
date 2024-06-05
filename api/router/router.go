@@ -231,6 +231,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/users", r.userController.CreateUser)
 	e.PUT("/users/:id", r.userController.UpdateUser)
 	e.DELETE("/users/:id", r.userController.DestroyUser)
+	e.DELETE("/users/delete", r.userController.DestroyMultiUsers)
 
 	// years
 	e.GET("/years", r.yearController.IndexYear)
