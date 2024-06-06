@@ -180,8 +180,6 @@ export default function PurchaseOrders(props: Props) {
     getUser();
   }, []);
 
-  console.log(props.expenseByPeriods);
-
   return (
     <MainLayout>
       <Head>
@@ -320,17 +318,17 @@ export default function PurchaseOrders(props: Props) {
                         onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
                       }}
                     >
-                      <div className='overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm text-black-600'>
+                      <div className='flex justify-center overflow-hidden text-ellipsis  whitespace-nowrap text-sm text-black-600'>
                         {purchaseOrderViewItem.purchaseItem &&
                           purchaseOrderViewItem.purchaseItem.map(
                             (purchaseItem: PurchaseItem, index: number) => (
-                              <>
+                              <p key={purchaseItem.id}>
                                 {purchaseOrderViewItem.purchaseItem.length - 1 === index ? (
                                   <>{purchaseItem.item}</>
                                 ) : (
                                   <>{purchaseItem.item},</>
                                 )}
-                              </>
+                              </p>
                             ),
                           )}
                       </div>
