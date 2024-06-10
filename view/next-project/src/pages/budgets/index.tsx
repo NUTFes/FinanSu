@@ -1,7 +1,7 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
 
 import { useRecoilValue } from 'recoil';
@@ -9,8 +9,7 @@ import OpenExpenditureAddModalButton from '@/components/budgets/OpenExpenditureA
 import OpenExpenseAddModalButton from '@/components/budgets/OpenExpenseAddModalButton';
 import OpenExpenseDeleteModalButton from '@/components/budgets/OpenExpenseDeleteModalButton';
 import OpenExpenseEditModalButton from '@/components/budgets/OpenExpenseEditModalButton';
-import { authAtom } from '@/store/atoms';
-import { getCurrentUser } from '@/utils/api/currentUser';
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import DetailModal from '@components/budgets/DetailModal';
 import OpenAddModalButton from '@components/budgets/OpenAddModalButton';
@@ -58,25 +57,16 @@ export async function getServerSideProps() {
 
 export default function BudgetList(props: Props) {
   const { budgets, sources, years, expenses } = props;
-  const auth = useRecoilValue(authAtom);
+  const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
   const [budgetViews, setBudgetViews] = useState<BudgetView[]>(props.budgets);
   const [expenseViews, setExpenseViews] = useState<ExpenseView[]>(props.expenses);
 
   useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
-  }, [auth]);
+    setCurrentUser(user);
+  }, []);
 
-  const isDisabled = useMemo(() => {
-    if (currentUser) {
-      return !(currentUser.roleID === 2 || currentUser.roleID === 3);
-    }
-    return true;
-  }, [currentUser]);
+  const isDisabled = !(currentUser?.roleID === 2 || currentUser?.roleID === 3);
 
   const [forcusExpense, setForcusExpense] = useState<ExpenseView | null>(null);
   const [isOpen, setIsOpen] = useState(false);

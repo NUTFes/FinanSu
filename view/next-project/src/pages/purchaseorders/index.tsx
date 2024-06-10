@@ -2,12 +2,11 @@ import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import { authAtom } from '@/store/atoms';
+import { userAtom } from '@/store/atoms';
 import { put } from '@/utils/api/purchaseOrder';
 import { createPurchaseOrdersCsv } from '@/utils/createPurchaseOrdersCsv';
 import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
-import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchaseorders/DetailModal';
@@ -67,7 +66,7 @@ const formatYYYYMMDD = (date: Date) => {
 };
 
 export default function PurchaseOrders(props: Props) {
-  const auth = useRecoilValue(authAtom);
+  const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
   const [purchaseOrderChecks, setPurchaseOrderChecks] = useState<boolean[]>([]);
   const [purchaseOrderID, setPurchaseOrderID] = useState<number>(1);
@@ -81,6 +80,10 @@ export default function PurchaseOrders(props: Props) {
     setPurchaseOrderViewItem(purchaseOrderViewItem);
     setIsOpen(true);
   };
+
+  useEffect(() => {
+    setCurrentUser(user);
+  }, []);
 
   const formatDate = (date: string) => {
     const datetime = date.replace('T', ' ');
@@ -96,7 +99,6 @@ export default function PurchaseOrders(props: Props) {
   const getPurchaseOrders = async () => {
     const getPurchaseOrderViewUrlByYear =
       process.env.CSR_API_URI + '/purchaseorders/details/' + selectedYear;
-    console.log(getPurchaseOrderViewUrlByYear);
     const getPurchaseOrderByYears = await get(getPurchaseOrderViewUrlByYear);
     setPurchaseOrderViews(getPurchaseOrderByYears);
   };
@@ -148,36 +150,17 @@ export default function PurchaseOrders(props: Props) {
     setPurchaseOrderViews(newPurchaseOrderViews);
   };
 
-  const isFinanceDirector = useMemo(() => {
-    if (currentUser?.roleID === 3) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
+  const isFinanceDirector = currentUser?.roleID === 3;
 
-  const isDisabled = useCallback(
-    (purchaseOrderViewItem: PurchaseOrderView) => {
-      if (
-        !purchaseOrderViewItem.purchaseOrder.financeCheck &&
-        (currentUser?.roleID === 2 ||
-          currentUser?.roleID === 3 ||
-          currentUser?.id === purchaseOrderViewItem.purchaseOrder.userID)
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-    [currentUser?.id, currentUser?.roleID, purchaseOrderViews],
-  );
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
+  const isDisabled = useCallback((purchaseOrderViewItem: PurchaseOrderView) => {
+    return (
+      purchaseOrderViewItem.purchaseOrder.financeCheck &&
+      !(
+        currentUser?.roleID === 2 ||
+        currentUser?.roleID === 3 ||
+        currentUser?.id === purchaseOrderViewItem.purchaseOrder.userID
+      )
+    );
   }, []);
 
   return (

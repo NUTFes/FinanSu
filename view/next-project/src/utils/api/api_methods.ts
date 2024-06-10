@@ -46,7 +46,7 @@ export const put = async (url: string, data: unknown) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then((response) => response);
+  }).then((response) => response.json());
   return res;
 };
 
