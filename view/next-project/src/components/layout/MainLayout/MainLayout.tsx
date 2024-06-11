@@ -4,11 +4,11 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import s from './MainLayout.module.css';
-import { get_with_token_valid } from '@utils/api/api_methods';
 import { authAtom, userAtom } from '@/store/atoms';
 import 'tailwindcss/tailwind.css';
 import { Header, SideNav } from '@components/common';
 import { User } from '@type/common';
+import { get_with_token_valid } from '@utils/api/api_methods';
 
 interface LayoutProps {
   children?: React.ReactNode;

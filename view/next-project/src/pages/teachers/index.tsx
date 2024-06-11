@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useMemo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
