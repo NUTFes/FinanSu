@@ -21,6 +21,7 @@ type UserUseCase interface {
 	CreateUser(context.Context, string, string, string) (domain.User, error)
 	UpdateUser(context.Context, string, string, string, string) (domain.User, error)
 	DestroyUser(context.Context, string) error
+	DestroyMultiUsers(context.Context, []int) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
 }
 
@@ -45,6 +46,7 @@ func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
 			&user.Name,
 			&user.BureauID,
 			&user.RoleID,
+			&user.IsDeleted,
 			&user.CreatedAt,
 			&user.UpdatedAt,
 		)
@@ -67,6 +69,7 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 		&user.Name,
 		&user.BureauID,
 		&user.RoleID,
+		&user.IsDeleted,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
@@ -87,6 +90,7 @@ func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string
 		&latastUser.Name,
 		&latastUser.BureauID,
 		&latastUser.RoleID,
+		&latastUser.IsDeleted,
 		&latastUser.CreatedAt,
 		&latastUser.UpdatedAt,
 	)
@@ -105,6 +109,7 @@ func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bure
 		&updatedUser.Name,
 		&updatedUser.BureauID,
 		&updatedUser.RoleID,
+		&updatedUser.IsDeleted,
 		&updatedUser.CreatedAt,
 		&updatedUser.UpdatedAt,
 	)
@@ -116,6 +121,11 @@ func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bure
 
 func (u *userUseCase) DestroyUser(c context.Context, id string) error {
 	err := u.userRep.Destroy(c, id)
+	return err
+}
+
+func (u *userUseCase) DestroyMultiUsers(c context.Context, ids []int) error {
+	err := u.userRep.MultiDestroy(c, ids)
 	return err
 }
 
@@ -145,6 +155,7 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 		&user.Name,
 		&user.BureauID,
 		&user.RoleID,
+		&user.IsDeleted,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)

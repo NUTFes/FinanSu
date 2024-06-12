@@ -4,13 +4,10 @@ import Router from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import Link from '@/components/common/Link';
-import Loading from '@/components/common/Loading';
-import PrimaryLink from '@/components/common/PrimaryLink';
 import LoginLayout from '@/components/layout/LoginLayout';
 import { PasswordResetData } from '@/type/common';
 import { resetPassword, resetPasswordTokenValid } from '@/utils/api/resetPassword';
-import { PrimaryButton } from '@components/common';
+import { PrimaryButton, Link, Loading, PrimaryLink } from '@components/common';
 
 interface Props {
   isTokenValid: boolean;

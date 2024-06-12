@@ -201,6 +201,7 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 			&activity.User.Name,
 			&activity.User.BureauID,
 			&activity.User.RoleID,
+			&activity.User.IsDeleted,
 			&activity.User.CreatedAt,
 			&activity.User.UpdatedAt,
 		)
@@ -297,6 +298,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 			&activity.User.Name,
 			&activity.User.BureauID,
 			&activity.User.RoleID,
+			&activity.User.IsDeleted,
 			&activity.User.CreatedAt,
 			&activity.User.UpdatedAt,
 		)

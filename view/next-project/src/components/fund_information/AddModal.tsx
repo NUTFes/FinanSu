@@ -29,11 +29,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   const dd = String(today.getDate()).padStart(2, '0');
   const ymd = `${yyyy}-${mm}-${dd}`;
 
-  const [formUser, setFormUser] = useState<User | undefined>(props.currentUser);
   const loginUserBureau = BUREAUS.find((bureau) => bureau.id === props.currentUser?.bureauID);
 
   const [formData, setFormData] = useState<FundInformation>({
-    userID: formUser?.id || 0,
+    userID: props.currentUser?.id || 0,
     teacherID: loginUserBureau?.id || 1,
     price: 0,
     remark: '',
@@ -53,8 +52,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     });
   const [filteredUsers, setFilteredUsers] = useState<User[]>(defaultfilteredUsers);
 
+  const selectUser = props.users.find((user) => user.id === formData.userID);
+
   useEffect(() => {
-    if (formUser?.bureauID !== bureauId) {
+    if (selectUser?.bureauID !== bureauId) {
       const filteredUsers = props.users
         .filter((user) => {
           return user.bureauID === bureauId;
@@ -63,7 +64,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
           return self.findIndex((u) => u.name === user.name) === index;
         });
       setFilteredUsers(filteredUsers);
-      if (filteredUsers.length !== 0) setFormData({ ...formData, userID: filteredUsers[0].id });
+      setFormData({ ...formData, userID: filteredUsers[0]?.id });
     }
   }, [bureauId]);
 
@@ -85,6 +86,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     const addFundInformationUrl = process.env.CSR_API_URI + '/fund_informations';
     await post(addFundInformationUrl, data);
   };
+
+  const isValid = !formData.userID || formData.teacherID == 0;
 
   return (
     <Modal className='md:w-1/2'>
@@ -132,7 +135,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
         <p className='col-span-1 text-black-600'>担当者</p>
         <div className='col-span-4 w-full'>
-          <Select className='w-full' defaultValue={formUser?.id} onChange={handler('userID')}>
+          <Select className='w-full' defaultValue={selectUser?.id} onChange={handler('userID')}>
             {filteredUsers.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name}
@@ -174,6 +177,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
             props.setShowModal(false);
             router.reload();
           }}
+          disabled={isValid}
         >
           登録する
         </PrimaryButton>
