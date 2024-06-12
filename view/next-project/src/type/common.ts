@@ -203,6 +203,7 @@ export interface User {
   name: string;
   bureauID: number;
   roleID: number;
+  isDeleted: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

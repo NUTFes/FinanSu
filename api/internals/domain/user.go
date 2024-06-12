@@ -9,6 +9,7 @@ type User struct {
 	Name      string    `json:"name"`
 	BureauID  int       `json:"bureauID"`
 	RoleID    int       `json:"roleID"`
+	IsDeleted bool		`json:"isDeleted"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
@@ -16,4 +17,8 @@ type User struct {
 type UserDetail struct{
 	User		User
 	MailAuth	MailAuth
+}
+
+type DestroyUserIDs struct {
+	DeleteIDs	[]int	`json:"deleteIDs"`
 }

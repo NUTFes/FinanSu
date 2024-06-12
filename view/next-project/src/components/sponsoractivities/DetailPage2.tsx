@@ -12,6 +12,7 @@ import {
   OutlinePrimaryButton,
   PrimaryButton,
   Select,
+  Loading,
 } from '../common';
 import UplaodFileModal from './UploadFileModal';
 import { post, del, put } from '@/utils/api/api_methods';
@@ -34,6 +35,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [editActivityInformationId, setEditActivityInformationId] = useState<number>(0);
   const [activityInformationData, setActivityInformationData] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [sponsorActivityInformations, setSponsorActivityInformations] = useState<
     SponsorActivityInformation[]
@@ -70,9 +72,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
     });
 
   const download = async (url: string, fileName: string) => {
+    setIsLoading(true);
     const response = await fetch(url);
     const blob = await response.blob();
     saveAs(blob, fileName);
+    setIsLoading(false);
   };
 
   const handleDelete = async (id: number, activityInformation: SponsorActivityInformation) => {
@@ -331,6 +335,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                       onClick={() =>
                         fileURLs && download(fileURLs[index], activityInformation.fileName || '')
                       }
+                      disabled={isLoading}
                     >
                       ダウンロード
                     </PrimaryButton>
@@ -350,6 +355,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                   </div>
                 )}
               </div>
+              {isLoading && <Loading />}
             </>
           ))}
         <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
