@@ -1,4 +1,3 @@
-version: "3"
 services:
   cloudflare:
     image: "cloudflare/cloudflared:latest"
