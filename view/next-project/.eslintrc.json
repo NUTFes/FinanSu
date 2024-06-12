@@ -7,11 +7,7 @@
     "plugin:import/errors",
     "plugin:storybook/recommended"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "unused-imports",
-    "import"
-  ],
+  "plugins": ["@typescript-eslint", "unused-imports", "import"],
   "parser": "@typescript-eslint/parser",
   "env": {
     "node": true,
@@ -22,18 +18,13 @@
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "project": [
-      "./tsconfig.json"
-    ],
+    "project": ["./tsconfig.json"],
     "sourceType": "module"
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".ts", ".tsx"]
       },
       "typescript": {}
     }
