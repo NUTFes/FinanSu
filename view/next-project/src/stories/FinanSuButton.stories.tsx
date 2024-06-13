@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import FinanSuButton from './FinanSuButton';
+import FinanSuButton from '@components/common/FinanSuButton';
 
 const meta: Meta<typeof FinanSuButton> = {
   component: FinanSuButton,

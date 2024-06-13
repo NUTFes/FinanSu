@@ -13,11 +13,11 @@ interface Props {
 }
 
 function FinanSuButton(props: Props): JSX.Element {
-  let sizeClass: string;
-  let colorClass: string;
-  let shapeClass: string;
-  let textAlignClass: string;
-  let hoverClass: string;
+  let sizeClass: string = '';
+  let colorClass: string = '';
+  let shapeClass: string = '';
+  let textAlignClass: string = '';
+  let hoverClass: string = '';
 
   switch (props.size) {
     case 'small':
