@@ -4,11 +4,15 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:import/errors"
+    "plugin:import/errors",
+    "plugin:storybook/recommended"
   ],
   "plugins": ["@typescript-eslint", "unused-imports", "import"],
   "parser": "@typescript-eslint/parser",
-  "env": { "node": true, "es6": true },
+  "env": {
+    "node": true,
+    "es6": true
+  },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
