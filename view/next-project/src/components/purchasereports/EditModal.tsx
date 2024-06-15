@@ -310,7 +310,6 @@ export default function EditModal(props: ModalProps) {
                     <div className='col-span-10 grid justify-items-center'>
                       {formDataList.length > 0 ? (
                         <div className='flex'>
-                          {/* stepが1より大きい時のみ戻るボタンを表示 */}
                           <OutlinePrimaryButton
                             onClick={activeStep > 1 ? prevStep : props.onOpenInitial}
                             className={'mx-2'}
