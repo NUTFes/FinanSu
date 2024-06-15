@@ -22,6 +22,7 @@ interface ModalProps {
   purchaseReportId: number;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  onOpenInitial: () => void;
 }
 
 export default function EditModal(props: ModalProps) {
@@ -310,11 +311,12 @@ export default function EditModal(props: ModalProps) {
                       {formDataList.length > 0 ? (
                         <div className='flex'>
                           {/* stepが1より大きい時のみ戻るボタンを表示 */}
-                          {activeStep > 1 && (
-                            <OutlinePrimaryButton onClick={prevStep} className={'mx-2'}>
-                              戻る
-                            </OutlinePrimaryButton>
-                          )}
+                          <OutlinePrimaryButton
+                            onClick={activeStep > 1 ? prevStep : props.onOpenInitial}
+                            className={'mx-2'}
+                          >
+                            戻る
+                          </OutlinePrimaryButton>
                           <PrimaryButton
                             className={'mx-2 pl-4 pr-2'}
                             onClick={() => {
