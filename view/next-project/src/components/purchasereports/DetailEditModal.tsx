@@ -28,10 +28,14 @@ export const DetailEditModal: React.FC<{
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const purchaseReportRes: PurchaseReport = await get(`${process.env.CSR_API_URI}/purchasereports/${purchaseReportId}`);
+        const purchaseReportRes: PurchaseReport = await get(
+          `${process.env.CSR_API_URI}/purchasereports/${purchaseReportId}`,
+        );
         const purchaseOrderId = purchaseReportRes.purchaseOrderID;
         const expensesRes: Expense[] = await get(`${process.env.CSR_API_URI}/expenses`);
-        const purchaseOrderRes: PurchaseOrder = await get(`${process.env.CSR_API_URI}/purchaseorders/${purchaseOrderId}`);
+        const purchaseOrderRes: PurchaseOrder = await get(
+          `${process.env.CSR_API_URI}/purchaseorders/${purchaseOrderId}`,
+        );
         setPurchaseOrderId(purchaseOrderId);
         setExpenses(expensesRes);
         setDeadline(purchaseOrderRes.deadline);
