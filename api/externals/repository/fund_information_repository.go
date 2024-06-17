@@ -198,6 +198,6 @@ func (fir *fundInformationRepository) AllDetailsByPeriod(c context.Context, year
 			year_periods.year_id = years.id
 		WHERE
 			years.year = ` + year +
-			" ORDER BY fund_informations.id;"
+			" ORDER BY fund_informations.updated_at DESC;"
 	return fir.crud.Read(c, query)
 }
