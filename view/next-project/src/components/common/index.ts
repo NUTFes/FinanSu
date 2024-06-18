@@ -10,6 +10,7 @@ export { default as EditButton } from './EditButton';
 export { default as Input } from './Input';
 export { default as Modal } from './Modal';
 export { default as OutlinePrimaryButton } from './OutlinePrimaryButton';
+export { default as OpenModalButton } from './OpenModalButton';
 export { default as PrimaryButton } from './PrimaryButton';
 export { default as PullDown } from './PullDown';
 export { default as Radio } from './Radio';
