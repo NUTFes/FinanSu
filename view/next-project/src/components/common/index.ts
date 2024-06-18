@@ -15,6 +15,7 @@ export { default as PrimaryButton } from './PrimaryButton';
 export { default as PullDown } from './PullDown';
 export { default as Radio } from './Radio';
 export { default as RedButton } from './RedButton';
+export { default as RegistButton } from './RegistButton';
 export { default as Select } from './Select';
 export { default as Stepper } from './Stepper';
 export { default as Textarea } from './Textarea';
