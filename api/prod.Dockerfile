@@ -1,19 +1,16 @@
-FROM golang:latest
-
+# Build用 コンテナ
+FROM golang:latest AS builder
 WORKDIR /app
 COPY . /app
+ENV CGO_ENABLED=0 \
+    GOOS=linux
+RUN go mod tidy
+RUN go build -o ./main ./main.go
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y locales \
-  && locale-gen ja_JP.UTF-8 \
-  && echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc
-
-RUN export LANG=C.UTF-8
-RUN export LANGUAGE=en_US:
-
-ENV CGO_ENABLED=0
-ENV GOOS=linux
-#ENV GOARCH=amd64
-
-
+# 本番用 軽量 Debian
+FROM gcr.io/distroless/base-debian11:nonroot AS runner
+LABEL org.opencontainers.image.source="https://github.com/NUTFes/FinanSu"
+COPY --from=builder --chown=nonroot /app/main .
+USER nonroot
+EXPOSE 1323
+CMD ["./main"]
