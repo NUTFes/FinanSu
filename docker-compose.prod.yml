@@ -6,13 +6,18 @@ services:
     command: tunnel run
 
   view:
-    build: "./view"
+    build:
+      context: ./view
+      dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-view"
-    volumes: ["./view:/app"]
     command: "npm run start"
     ports: ["3000:3000"]
     environment:
       NEXT_PUBLIC_APP_ENV: "production"
+      NEXT_PUBLIC_ENDPOINT: minio
+      NEXT_PUBLIC_PORT: 9000
+      NEXT_PUBLIC_BUCKET_NAME: finansu
+      NEXT_PUBLIC_MINIO_ENDPONT: http://localhost:9000
     depends_on: ["api"]
 
   api:
@@ -20,9 +25,8 @@ services:
       context: ./api
       dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
-    volumes: ["./api:/app"]
-    command: "go run main.go"
     env_file: ["./finansu.env"]
     ports: ["1323:1323"]
     environment:
+      ENV: "production"
       RESET_PASSWORD_URL: "https://finansu.nutfes.net/reset_password"
