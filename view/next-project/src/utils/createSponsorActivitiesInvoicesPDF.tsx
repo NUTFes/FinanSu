@@ -225,6 +225,7 @@ const MyDocument = (props: MyDocumentProps) => (
         <Text style={styles.text_S}>支 店 名 : 希望ヶ丘支店（支店コード : 042）</Text>
         <Text style={styles.text_S}>預金種別 : 普通預金</Text>
         <Text style={styles.text_S}>口座番号 : 2002151</Text>
+        <Text style={styles.text_S}>口座名義 : 技大祭実行委員会(ギダイサイジツコウイインカイ)</Text>
       </View>
       <View>
         <View style={styles.itemsTable}>
@@ -233,6 +234,7 @@ const MyDocument = (props: MyDocumentProps) => (
               <Text>備考</Text>
             </View>
             <View style={styles.textArea}>
+              <Text>振込手数料は、御社負担にてお願いいたします。</Text>
               {(props.remarks.match(/.{1,40}/g) || []).map((chunk, index) => (
                 <Text key={index}>{chunk}</Text>
               ))}
