@@ -12,3 +12,10 @@ down:
 seed:
 	docker compose run --rm api go mod tidy
 	docker compose run --rm api go run /app/tools/seeds/teacher_seeds.go
+deploy:
+	docker compose -f docker-compose.prod.yml build
+	docker compose -f docker-compose.prod.yml up -d
+local-deploy:
+	docker compose -f docker-compose.local-prod.yml build
+	docker compose -f docker-compose.local-prod.yml up
+
