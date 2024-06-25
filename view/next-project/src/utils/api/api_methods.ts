@@ -49,3 +49,15 @@ export const put = async (url: string, data: unknown) => {
   }).then((response) => response.json());
   return res;
 };
+
+export const dels = async (url: string, data: number[]) => {
+  const res = await fetch(url, {
+    method: 'DELETE',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ deleteIDs: data }),
+  });
+  return await res.status;
+};
