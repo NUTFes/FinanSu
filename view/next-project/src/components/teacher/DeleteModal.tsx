@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { Teacher } from '@/type/common';
-import { del } from '@api/teachers';
+import { dels } from '@api/api_methods';
 import { Modal, PrimaryButton, CloseButton, OutlinePrimaryButton } from '@components/common';
 
 interface ModalProps {
@@ -18,9 +18,9 @@ export default function DeleteModal(props: ModalProps) {
     router.reload();
   };
 
-  const deleteTeachers = async () => {
+  const deleteHandler = async () => {
     const deleteURL = process.env.CSR_API_URI + '/teachers/delete';
-    const res = await del(deleteURL, props.deleteTeachers?.ids || []);
+    const res = await dels(deleteURL, props.deleteTeachers?.ids || []);
     if (res === 200) {
       window.alert('削除しました');
       closeModal();
@@ -49,10 +49,7 @@ export default function DeleteModal(props: ModalProps) {
         <div className='flex flex-row justify-center gap-5'>
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton
-            onClick={() => {
-              deleteTeachers();
-              closeModal();
-            }}
+            onClick={() => {deleteHandler}}
           >
             削除
           </PrimaryButton>
