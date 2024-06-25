@@ -49,7 +49,9 @@ export default function DeleteModal(props: ModalProps) {
         <div className='flex flex-row justify-center gap-5'>
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton
-            onClick={() => {deleteHandler}}
+            onClick={() => {
+              deleteHandler;
+            }}
           >
             削除
           </PrimaryButton>
