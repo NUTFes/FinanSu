@@ -192,7 +192,7 @@ export interface Teacher {
   room: string;
   isBlack: boolean;
   remark: string;
-  isDeleted: boolean;
+  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
