@@ -129,8 +129,9 @@ export default function TeachersList(props: Props) {
                 <th className='w-1/6'>
                   <p>備考</p>
                 </th>
+                <th className='w-1/6' />
                 <th className='w-1/6'>
-                  <div className='flex justify-center'>
+                  <div className='items-center justify-center'>
                     <OpenDeleteModalButton
                       deleteTeachers={deleteTeachers}
                       isDisabled={deleteTeachers.ids.length == 0}
@@ -149,37 +150,42 @@ export default function TeachersList(props: Props) {
                       'text-sm text-black-600',
                     )}
                   >
-                    <td className='py-3'>
-                      {teacher.isBlack && (
-                        <p className='text-center text-red-500'>{teacher.name}</p>
+                    <td className='py-3 text-center'>
+                      {teacher.isBlack ? (
+                        <p className='text-red-500'>{teacher.name}</p>
+                      ) : (
+                        <p>{teacher.name}</p>
                       )}
-                      {!teacher.isBlack && <p className='text-center'>{teacher.name}</p>}
                     </td>
-                    <td>
-                      <p className='text-center'>{teacher.position}</p>
+                    <td className='text-center'>
+                      <p>{teacher.position}</p>
                     </td>
-                    <td>
-                      <p className='text-center'>
+                    <td className='text-center'>
+                      <p>
                         {
                           departments.find((department) => department.id === teacher.departmentID)
                             ?.name
                         }
                       </p>
                     </td>
-                    <td>
-                      <p className='text-center'>{teacher.room}</p>
+                    <td className='text-center'>
+                      <p>{teacher.room}</p>
                     </td>
-                    <td>
-                      <p className='text-center'>{teacher.remark}</p>
+                    <td className='text-center'>
+                      <p>{teacher.remark}</p>
                     </td>
-                    <td>
-                      <div className='flex items-center justify-center gap-3'>
+                    <td className='text-center'>
+                      <div className='flex justify-center'>
                         <OpenEditModalButton
                           id={teacher.id || 0}
                           teacher={teacher}
                           isDisabled={isDisabled}
                           departments={props.departments}
                         />
+                      </div>
+                    </td>
+                    <td className='text-center'>
+                      <div className='flex justify-center'>
                         <input
                           checked={deleteTeachers.ids.includes(teacher.id || 0)}
                           type='checkbox'
