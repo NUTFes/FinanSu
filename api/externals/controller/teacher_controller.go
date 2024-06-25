@@ -87,12 +87,12 @@ func (t *teacherController) DestroyTeacher(c echo.Context) error {
 
 // DestroyMultiTeachers
 func (t *teacherController) DestroyMultiTeachers(c echo.Context) error {
-	DestroyTeacher := new(domain.DestroyTeacherIDs)
-	if err := c.Bind(&DestroyTeacher);err != nil {
+	DestroyTeacherIDs := new(domain.DestroyTeacherIDs)
+	if err := c.Bind(&DestroyTeacherIDs);err != nil {
 		return err
 	}
 
-	err := t.u.DestroyMultiTeachers(c.Request().Context(), DestroyTeacher.DeleteIDs)
+	err := t.u.DestroyMultiTeachers(c.Request().Context(), DestroyTeacherIDs.DeleteIDs)
 	if err != nil {
 		return  c.String(http.StatusBadRequest,err.Error())
 	}
