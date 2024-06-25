@@ -50,7 +50,7 @@ export default function DeleteModal(props: ModalProps) {
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton
             onClick={() => {
-              deleteHandler;
+              deleteHandler()
             }}
           >
             削除
