@@ -4,8 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
-import { authAtom } from '@/store/atoms';
-import { getCurrentUser } from '@/utils/api/currentUser';
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
@@ -33,14 +32,11 @@ export default function Users(props: Props) {
   const { users } = props;
   const router = useRouter();
 
-  const auth = useRecoilValue(authAtom);
+  const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
+
   useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
+    setCurrentUser(user);
   }, []);
 
   const [deleteUsers, setDeleteUsers] = useState<{ users: User[]; ids: number[] }>({

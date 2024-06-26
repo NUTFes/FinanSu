@@ -1,11 +1,9 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-
-import { authAtom } from '@/store/atoms';
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
-import { getCurrentUser } from '@api/currentUser';
 import { put } from '@api/fundInformations';
 import { Title, Card } from '@components/common';
 import { Checkbox } from '@components/common';
@@ -67,8 +65,12 @@ export default function FundInformations(props: Props) {
   const teachers: Teacher[] = props.teachers;
   const users: User[] = props.users;
   const departments: Department[] = props.departments;
-  const auth = useRecoilValue(authAtom);
+  const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
+
+  useEffect(() => {
+    setCurrentUser(user);
+  }, []);
 
   // 募金一覧
   const [fundInformationViews, setFundInformationViews] = useState<FundInformationView[]>(
@@ -97,53 +99,18 @@ export default function FundInformations(props: Props) {
   const [isFirstChecks, setIsFirstChecks] = useState<boolean[]>([]);
   const [isLastChecks, setIsLastChecks] = useState<boolean[]>([]);
 
-  const isDeveloper = useMemo(() => {
-    if (currentUser?.roleID == 2) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
+  const isDeveloper = currentUser?.roleID == 2;
+  const isFinanceDirector = currentUser?.roleID == 3;
+  const isFinanceStaff = currentUser?.bureauID == 3 || currentUser?.bureauID == 4;
 
-  const isFinanceDirector = useMemo(() => {
-    if (currentUser?.roleID == 3) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
-
-  const isFinanceStaff = useMemo(() => {
-    if (currentUser?.bureauID == 3 || currentUser?.bureauID == 4) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.bureauID]);
-
-  const isDisabled = useCallback(
-    (fundViewItem: FundInformationView) => {
-      if (
-        fundViewItem.fundInformation.userID == currentUser?.id ||
-        isDeveloper ||
-        isFinanceStaff ||
-        isFinanceDirector
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-    [currentUser?.id, isDeveloper, isFinanceStaff, isFinanceDirector],
-  );
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
-  }, []);
+  const isDisabled = (fundViewItem: FundInformationView) => {
+    return !(
+      fundViewItem.fundInformation.userID == currentUser?.id ||
+      isDeveloper ||
+      isFinanceStaff ||
+      isFinanceDirector
+    );
+  };
 
   useEffect(() => {
     if (fundInformationViews) {

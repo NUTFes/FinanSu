@@ -2,12 +2,11 @@ import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import { authAtom } from '@/store/atoms';
+import { userAtom } from '@/store/atoms';
 import { put } from '@/utils/api/api_methods';
 import { createPurchaseReportCsv } from '@/utils/createPurchaseReportCsv';
 import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
-import { getCurrentUser } from '@api/currentUser';
 import { Card, Checkbox, Title, BureauLabel } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import DetailModal from '@components/purchasereports/DetailModal';
@@ -71,7 +70,7 @@ const formatYYYYMMDD = (date: Date) => {
 };
 
 export default function PurchaseReports(props: Props) {
-  const auth = useRecoilValue(authAtom);
+  const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
   const [purchaseReportID, setPurchaseReportID] = useState<number>(1);
   const [purchaseReportViewItem, setPurchaseReportViewItem] = useState<PurchaseReportView>();
@@ -138,21 +137,20 @@ export default function PurchaseReports(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
-  const isDisabled = useCallback(
-    (purchaseReportView: PurchaseReportView) => {
-      if (
-        !purchaseReportView.purchaseReport.financeCheck &&
-        (currentUser?.roleID === 2 ||
-          currentUser?.roleID === 3 ||
-          currentUser?.id === purchaseReportView.purchaseReport.userID)
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-    [currentUser?.roleID, currentUser?.id],
-  );
+  useEffect(() => {
+    setCurrentUser(user);
+  }, []);
+
+  const isDisabled = useCallback((purchaseReportView: PurchaseReportView) => {
+    return (
+      purchaseReportView.purchaseReport.financeCheck &&
+      !(
+        currentUser?.roleID === 2 ||
+        currentUser?.roleID === 3 ||
+        currentUser?.id === purchaseReportView.purchaseReport.userID
+      )
+    );
+  }, []);
 
   const updatePurchaseReport = async (purchaseReportID: number, purchaseReport: PurchaseReport) => {
     const url = process.env.CSR_API_URI + '/purchasereports/' + purchaseReportID;
@@ -175,21 +173,7 @@ export default function PurchaseReports(props: Props) {
     }
   }, [purchaseReportViews]);
 
-  const isFinanceDirector = useMemo(() => {
-    if (currentUser?.roleID === 3) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
-  }, []);
+  const isFinanceDirector = currentUser?.roleID === 3;
 
   return (
     <MainLayout>

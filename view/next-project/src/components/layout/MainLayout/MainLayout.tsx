@@ -4,10 +4,11 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import s from './MainLayout.module.css';
-
-import { authAtom } from '@/store/atoms';
+import { authAtom, userAtom } from '@/store/atoms';
 import 'tailwindcss/tailwind.css';
 import { Header, SideNav } from '@components/common';
+import { User } from '@type/common';
+import { get_with_token_valid } from '@utils/api/api_methods';
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -15,19 +16,34 @@ interface LayoutProps {
 
 export default function MainLayout(props: LayoutProps) {
   const router = useRouter();
-  const [auth] = useRecoilState(authAtom);
+  const [auth, setAuth] = useRecoilState(authAtom);
+  const [_, setUser] = useRecoilState(userAtom);
   const [isSideNavOpen, setIsSideNavOpen] = useState(true);
 
   useEffect(() => {
-    if (router.isReady) {
-      if (!auth.isSignIn) {
-        router.push('/');
+    const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
+    get_with_token_valid(getCurrentUserUrl, auth.accessToken).then((result) => {
+      if (!result) {
         localStorage.clear();
-      } else if (auth.isSignIn === true && router.pathname == '/') {
-        router.push('/purchaseorders');
+        const authData = {
+          isSignIn: false,
+          accessToken: '',
+        };
+        setAuth(authData);
+        setUser({} as User);
+        router.push('/');
+      } else {
+        if (router.isReady) {
+          if (!auth.isSignIn) {
+            router.push('/');
+            localStorage.clear();
+          } else if (auth.isSignIn === true && router.pathname == '/') {
+            router.push('/purchaseorders');
+          }
+        }
       }
-    }
-  }, [router, auth]);
+    });
+  }, [router]);
 
   return (
     <>

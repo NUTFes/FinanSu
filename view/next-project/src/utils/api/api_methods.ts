@@ -49,3 +49,16 @@ export const put = async (url: string, data: unknown) => {
   }).then((response) => response.json());
   return res;
 };
+
+export const get_with_token_valid = async (url: string, accessToken?: string) => {
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'access-token': accessToken ? accessToken : localStorage.getItem('access-token') || 'none',
+      client: localStorage.getItem('client') || 'none',
+      uid: localStorage.getItem('uid') || 'none',
+    },
+  }).then((response) => response);
+  return res.status === 200;
+};
