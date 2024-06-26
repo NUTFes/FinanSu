@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
+import Router from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '@/store/atoms';
@@ -12,7 +13,6 @@ import OpenDeleteModalButton from '@components/fund_information/OpenDeleteModalB
 import OpenEditModalButton from '@components/fund_information/OpenEditModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { Department, FundInformation, Teacher, User, YearPeriod } from '@type/common';
-import Router from 'next/router';
 
 interface FundInformationView {
   fundInformation: FundInformation;
