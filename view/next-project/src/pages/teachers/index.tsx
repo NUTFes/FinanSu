@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useMemo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { authAtom } from '@/store/atoms';
-import { getCurrentUser } from '@/utils/api/currentUser';
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -42,17 +41,18 @@ export default function TeachersList(props: Props) {
     departments[0],
   );
 
-  const auth = useRecoilValue(authAtom);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const isDisabled = useMemo(() => {
-    if (currentUser?.roleID === 2 || currentUser?.roleID === 3 || currentUser?.id === 4) {
-      return false;
-    } else {
-      return true;
-    }
-  }, [currentUser?.roleID, currentUser?.id, currentUser]);
-
+  const user = useRecoilValue(userAtom);
+  const [currentUser, setCurrentUser] = useState<User>();
+  const isDisabled = !(
+    currentUser?.roleID === 2 ||
+    currentUser?.roleID === 3 ||
+    currentUser?.id === 4
+  );
   const [filterTeachers, setFilterTeachers] = useState<Teacher[]>(teachers);
+
+  useEffect(() => {
+    setCurrentUser(user);
+  }, []);
 
   useEffect(() => {
     const newFilterTeachers =
@@ -63,14 +63,6 @@ export default function TeachersList(props: Props) {
           });
     setFilterTeachers(newFilterTeachers);
   }, [selectedDepartment]);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
-  }, []);
 
   return (
     <MainLayout>

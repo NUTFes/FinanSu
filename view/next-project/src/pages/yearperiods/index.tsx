@@ -7,8 +7,7 @@ import { useRecoilValue } from 'recoil';
 import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
 import OpenDeleteModalButton from '@/components/yearperiods/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/yearperiods/OpenEditModalButton';
-import { authAtom } from '@/store/atoms';
-import { getCurrentUser } from '@/utils/api/currentUser';
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
@@ -33,7 +32,7 @@ export default function Periods(props: Props) {
   const { yearPeriods } = props;
   const router = useRouter();
 
-  const auth = useRecoilValue(authAtom);
+  const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
   const formatYearPeriods =
@@ -47,11 +46,7 @@ export default function Periods(props: Props) {
     });
 
   useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
+    setCurrentUser(user);
   }, []);
 
   // ログイン中のユーザの権限

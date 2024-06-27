@@ -181,7 +181,7 @@ func (ar *activityRepository) AllDetailsByPeriod(c context.Context, year string)
 		year_periods.year_id = years.id
 	WHERE
 		years.year = ` + year +
-		" ORDER BY activities.id"
+		" ORDER BY activities.updated_at DESC"
 
 	return ar.crud.Read(c, query)
 }
