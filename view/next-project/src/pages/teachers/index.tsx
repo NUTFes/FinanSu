@@ -114,24 +114,24 @@ export default function TeachersList(props: Props) {
           <table className='mb-5 w-max table-auto border-collapse md:w-full'>
             <thead className='text-sm text-black-600'>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-1/6'>
+                <th className='w-1/7'>
                   <p>氏名</p>
                 </th>
-                <th className='w-1/6'>
+                <th className='w-1/7'>
                   <p>職位</p>
                 </th>
-                <th className='w-1/6'>
+                <th className='w-1/7'>
                   <p>学科</p>
                 </th>
-                <th className='w-1/6'>
+                <th className='w-1/7'>
                   <p>居室</p>
                 </th>
-                <th className='w-1/6'>
+                <th className='w-1/7'>
                   <p>備考</p>
                 </th>
-                <th className='w-1/6' />
-                <th className='w-1/6'>
-                  <div className='items-center justify-center'>
+                <th className='w-1/7' />
+                <th className='w-1/7'>
+                  <div className='flex justify-center'>
                     <OpenDeleteModalButton
                       deleteTeachers={deleteTeachers}
                       isDisabled={deleteTeachers.ids.length == 0}
