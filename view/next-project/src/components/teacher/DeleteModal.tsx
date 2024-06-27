@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { Teacher } from '@/type/common';
-import { dels } from '@api/api_methods';
+import { multiDel } from '@api/api_methods';
 import { Modal, PrimaryButton, CloseButton, OutlinePrimaryButton } from '@components/common';
 
 interface ModalProps {
@@ -20,7 +20,7 @@ export default function DeleteModal(props: ModalProps) {
 
   const deleteHandler = async () => {
     const deleteURL = process.env.CSR_API_URI + '/teachers/delete';
-    const res = await dels(deleteURL, props.deleteTeachers?.ids || []);
+    const res = await multiDel(deleteURL, props.deleteTeachers?.ids || []);
     if (res === 200) {
       window.alert('削除しました');
       closeModal();

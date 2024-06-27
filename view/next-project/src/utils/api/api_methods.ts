@@ -50,7 +50,7 @@ export const put = async (url: string, data: unknown) => {
   return res;
 };
 
-export const dels = async (url: string, data: number[]) => {
+export const multiDel = async (url: string, data: number[]) => {
   const res = await fetch(url, {
     method: 'DELETE',
     mode: 'cors',
