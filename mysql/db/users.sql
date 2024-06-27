@@ -20,5 +20,5 @@ INSERT into users (name, bureau_id, role_id) values ('技大太郎2', 6, 2);
 -- 財務局長
 INSERT into users (name, bureau_id, role_id) values ('技大太郎3', 3, 3);
 
--- 一般ユーザー（財務局員）
-INSERT into users (name, bureau_id, role_id) values ('技大太郎4', 3, 1);
+-- 財務局員
+INSERT into users (name, bureau_id, role_id) values ('技大太郎4', 3, 4);

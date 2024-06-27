@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import Head from 'next/head';
+import Router from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '@/store/atoms';
@@ -36,24 +37,16 @@ export const getServerSideProps = async () => {
   const periodsRes = await get(getPeriodsUrl);
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getDepartmentURL = process.env.SSR_API_URI + '/departments';
-  const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
-  const getFundInformationViewURL =
-    process.env.SSR_API_URI +
-    '/fund_informations/details/' +
-    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+
   const getUserURL = process.env.SSR_API_URI + '/users';
   const teachersInformationRes = await get(getTeachersInformationURL);
-  const fundInformationRes = await get(getFundInformationURL);
   const departmentRes = await get(getDepartmentURL);
-  const fundInformationViewRes = await get(getFundInformationViewURL);
   const userRes = await get(getUserURL);
 
   return {
     props: {
       teachers: teachersInformationRes,
       departments: departmentRes,
-      fundInformation: fundInformationRes,
-      fundInformationView: fundInformationViewRes,
       users: userRes,
       yearPeriods: periodsRes,
     },
@@ -68,14 +61,15 @@ export default function FundInformations(props: Props) {
   const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
+  // 一般ユーザーの場合、購入申請へ飛ばす
+  user?.roleID === 1 && Router.push('/purchaseorders');
+
   useEffect(() => {
     setCurrentUser(user);
   }, []);
 
   // 募金一覧
-  const [fundInformationViews, setFundInformationViews] = useState<FundInformationView[]>(
-    props.fundInformationView,
-  );
+  const [fundInformationViews, setFundInformationViews] = useState<FundInformationView[]>();
 
   //年の指定
   const yearPeriods = props.yearPeriods;
@@ -147,7 +141,7 @@ export default function FundInformations(props: Props) {
     const putURL = process.env.CSR_API_URI + '/fund_informations/' + id;
     await put(putURL, fundItem);
 
-    const newFundInformationViews = fundInformationViews.map((fundInformationView) => {
+    const newFundInformationViews = fundInformationViews?.map((fundInformationView) => {
       if (fundInformationView.fundInformation.id == id) {
         return {
           ...fundInformationView,
@@ -290,6 +284,7 @@ export default function FundInformations(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationViews &&
+                user?.roleID !== 1 &&
                 fundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}
