@@ -18,12 +18,14 @@ export const DetailEditModal: React.FC<{
   setIsOpen: () => void;
   onOpenInitial: () => void;
 }> = ({ purchaseReportId, setIsOpen, onOpenInitial }) => {
-  const [purchaseOrderId, setPurchaseOrderId] = useState<number>();
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [deadline, setDeadline] = useState<string>('');
-  const [userId, setUserId] = useState<number>(0);
-  const [expenseID, setExpenseID] = useState<number>(0);
-  const [finansuCheck, setFinansuCheck] = useState<boolean>(false);
+  const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder>({
+    id: 0,
+    deadline: '',
+    userID: 0,
+    expenseID: 0,
+    financeCheck: false,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,12 +38,8 @@ export const DetailEditModal: React.FC<{
         const purchaseOrderRes: PurchaseOrder = await get(
           `${process.env.CSR_API_URI}/purchaseorders/${purchaseOrderId}`,
         );
-        setPurchaseOrderId(purchaseOrderId);
         setExpenses(expensesRes);
-        setDeadline(purchaseOrderRes.deadline);
-        setUserId(purchaseOrderRes.userID);
-        setExpenseID(purchaseOrderRes.expenseID);
-        setFinansuCheck(purchaseOrderRes.financeCheck);
+        setPurchaseOrder(purchaseOrderRes);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -58,20 +56,18 @@ export const DetailEditModal: React.FC<{
   };
 
   const submit = async () => {
-    const submitData = {
-      id: purchaseOrderId,
-      deadline: deadline,
-      userID: userId,
-      expenseID: expenseID,
-      financeCheck: finansuCheck,
-    };
     try {
-      const updatePurchaseOrderUrl = `${process.env.CSR_API_URI}/purchaseorders/${submitData.id}`;
-      await put(updatePurchaseOrderUrl, submitData);
+      const updatePurchaseOrderUrl = `${process.env.CSR_API_URI}/purchaseorders/${purchaseOrder.id}`;
+      await put(updatePurchaseOrderUrl, purchaseOrder);
     } finally {
       router.reload();
     }
   };
+
+  const handleInputChange = (key: keyof PurchaseOrder, value: string | number) => {
+    setPurchaseOrder((prev) => ({ ...prev, [key]: value }));
+  };
+
   return (
     <Modal className='md:w-1/2'>
       <div className='ml-auto w-fit'>
@@ -84,10 +80,8 @@ export const DetailEditModal: React.FC<{
         <p className='text-lg text-black-600'>購入した局</p>
         <div className='col-span-3 w-full'>
           <Select
-            value={expenseID}
-            onChange={(e) => {
-              setExpenseID(Number(e.target.value));
-            }}
+            value={purchaseOrder.expenseID}
+            onChange={(e) => handleInputChange('expenseID', Number(e.target.value))}
           >
             {expenses.map((data) => (
               <option key={data.id} value={data.id}>
@@ -101,8 +95,8 @@ export const DetailEditModal: React.FC<{
         <div className='col-span-3 w-full'>
           <Input
             type='date'
-            value={deadline ? formatDate(deadline) : ''}
-            onChange={(e) => setDeadline(e.target.value)}
+            value={purchaseOrder.deadline ? formatDate(purchaseOrder.deadline) : ''}
+            onChange={(e) => handleInputChange('deadline', e.target.value)}
             className='w-full'
           />
         </div>
