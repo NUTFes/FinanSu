@@ -284,6 +284,7 @@ export default function FundInformations(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationViews &&
+                user?.roleID !== 1 &&
                 fundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}
