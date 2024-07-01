@@ -144,17 +144,6 @@ export default function SponsorActivities(props: Props) {
     }
 
     switch (selectedSort) {
-      case 'createDesSort':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
-        return [...filteredActivities].sort(
-          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
-            new Date(firstObject.sponsorActivity.createdAt || 0).getTime() >
-            new Date(secondObject.sponsorActivity.createdAt || 0).getTime()
-              ? -1
-              : 1,
-        );
       case 'updateSort':
         if (!Array.isArray(filteredActivities)) {
           return [];
@@ -166,14 +155,25 @@ export default function SponsorActivities(props: Props) {
               ? 1
               : -1,
         );
-      case 'updateDesSort':
+      case 'createSort':
         if (!Array.isArray(filteredActivities)) {
           return [];
         }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
-            new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
-            new Date(secondObject.sponsorActivity.updatedAt || 0).getTime()
+            new Date(firstObject.sponsorActivity.createdAt || 0).getTime() <
+            new Date(secondObject.sponsorActivity.createdAt || 0).getTime()
+              ? -1
+              : 1,
+        );
+      case 'createDesSort':
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
+        return [...filteredActivities].sort(
+          (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
+            new Date(firstObject.sponsorActivity.createdAt || 0).getTime() >
+            new Date(secondObject.sponsorActivity.createdAt || 0).getTime()
               ? -1
               : 1,
         );
@@ -278,12 +278,12 @@ export default function SponsorActivities(props: Props) {
                 defaultValue={'default'}
                 onChange={(e) => setSelectedSort(e.target.value)}
               >
-                <option value='default'>作成日時昇順</option>
-                <option value='createDesSort'>作成日時降順</option>
+                <option value='default'>更新日時降順</option>
                 <option value='updateSort'>更新日時昇順</option>
-                <option value='updateDesSort'>更新日時降順</option>
-                <option value='priceSort'>協賛金昇順</option>
+                <option value='createDesSort'>作成日時降順</option>
+                <option value='createSort'>作成日時昇順</option>
                 <option value='priceDesSort'>協賛金降順</option>
+                <option value='priceSort'>協賛金昇順</option>
               </select>
               <PrimaryButton
                 className='hidden md:block'
