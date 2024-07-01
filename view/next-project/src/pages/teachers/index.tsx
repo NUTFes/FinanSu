@@ -129,8 +129,8 @@ export default function TeachersList(props: Props) {
                 <th className='w-1/7'>
                   <p>備考</p>
                 </th>
-                <th className='w-1/7' />
-                <th className='w-1/7'>
+                <th className='w-1/12' />
+                <th className='w-1/12'>
                   <div className='flex justify-center'>
                     <OpenDeleteModalButton
                       deleteTeachers={deleteTeachers}
@@ -175,7 +175,7 @@ export default function TeachersList(props: Props) {
                       <p>{teacher.remark}</p>
                     </td>
                     <td className='text-center'>
-                      <div className='flex justify-center'>
+                      <div className='flex justify-end'>
                         <OpenEditModalButton
                           id={teacher.id || 0}
                           teacher={teacher}
