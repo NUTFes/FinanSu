@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
@@ -5,7 +6,7 @@ import EditModal from '../components/fund_information/EditModal';
 
 // Sample props for testing
 const sampleProps = {
-  setShowModal: () => {},
+  setShowModal: action('setShowModal'),
   teachers: [
     { id: 1, name: 'Teacher 1', departmentID: 1 },
     { id: 2, name: 'Teacher 2', departmentID: 2 },
@@ -44,7 +45,7 @@ export const Primary = {
     ...sampleProps,
   },
   decorators: [
-    (Story) => (
+    (Story: React.ComponentType) => (
       <RecoilRoot>
         <Story />
       </RecoilRoot>

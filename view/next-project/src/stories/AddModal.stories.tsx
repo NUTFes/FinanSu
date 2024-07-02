@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
@@ -5,7 +6,7 @@ import AddModal from '../components/fund_information/AddModal';
 
 // Add your required props here for testing
 const sampleProps = {
-  setShowModal: () => {},
+  setShowModal: action('setShowModal'),
   teachers: [], // Add sample data as needed
   departments: [], // Add sample data as needed
   users: [], // Add sample data as needed
@@ -26,7 +27,7 @@ export const Primary = {
     ...sampleProps,
   },
   decorators: [
-    (Story) => (
+    (Story: React.ComponentType) => (
       <RecoilRoot>
         <Story />
       </RecoilRoot>
