@@ -22,6 +22,7 @@ type ActivityController interface {
 	DestroyActivity(echo.Context) error
 	IndexActivityDetail(echo.Context) error
 	IndexActivityDetailsByPeriod(echo.Context) error
+	IndexFilteredActivityDetail(echo.Context) error
 }
 
 func NewActivityController(u usecase.ActivityUseCase) ActivityController {
@@ -99,6 +100,17 @@ func (a *activityController) IndexActivityDetail(c echo.Context) error {
 func (a *activityController) IndexActivityDetailsByPeriod(c echo.Context) error {
 	year := c.Param("year")
 	activities, err := a.u.GetActivityDetailsByPeriod(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, activities)
+}
+
+func (a *activityController) IndexFilteredActivityDetail(c echo.Context) error {
+	isDone := c.QueryParam("is_done") 
+	sponsorStyle := c.QueryParam("sponsor_style")
+	keyword := c.QueryParam("keyword")
+	activities, err := a.u.GetFilteredActivityDetail(c.Request().Context(), isDone, sponsorStyle, keyword)
 	if err != nil {
 		return err
 	}

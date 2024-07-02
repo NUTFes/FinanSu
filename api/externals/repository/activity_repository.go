@@ -24,6 +24,7 @@ type ActivityRepository interface {
 	FindSponsorStyle(context.Context, string) (*sql.Rows, error)
 	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
 	FindActivityInformation(context.Context, string) (*sql.Rows, error)
+	FindFilteredDetail(context.Context, string, string, string) (*sql.Rows, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -182,6 +183,29 @@ func (ar *activityRepository) AllDetailsByPeriod(c context.Context, year string)
 	WHERE
 		years.year = ` + year +
 		" ORDER BY activities.updated_at DESC"
+
+	return ar.crud.Read(c, query)
+}
+
+// activityに紐づくsponserとusersをフィルタを考慮して取得する
+func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone string, sponsorStyle string, keyword string) (*sql.Rows, error) {
+	query := `
+	SELECT * FROM
+		activities
+	INNER JOIN
+		sponsors
+	ON
+		activities.sponsor_id = sponsors.id
+	INNER JOIN
+		users
+	ON
+		activities.user_id = users.id
+	WHERE
+		sponsors.name LIKE '%` + keyword + `%' 
+	AND
+		sponsors.id = ` + sponsorStyle + ` 
+	AND
+		activities.is_done = ` + isDone
 
 	return ar.crud.Read(c, query)
 }

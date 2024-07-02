@@ -76,6 +76,34 @@ const docTemplate = `{
 						}
 				},
 		},
+        "/activities/filtered_details": {
+            "get": {
+                tags: ["activity"],
+                "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "is_done",
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "sponsor_style",
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "type": "string"
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activitiesとsponsor,sponsorStyle,userの一覧の取得",
+                    }
+                }
+            },
+        },
         "/activities/{id}": {
             "get": {
                 tags: ["activity"],
