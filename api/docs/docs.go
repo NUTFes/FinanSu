@@ -2120,6 +2120,26 @@ const docTemplate = `{
                 },
             },
         },
+				"/teachers/fundRegistered/{year}": {
+            "get": {
+                tags: ["teacher"],
+                "description": "募金登録済みのteacherのidを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "募金登録済みのteacherのidを取得",
+                    }
+                }
+            },
+				},
         "/users": {
             "get": {
                 tags: ["user"],
@@ -2448,7 +2468,6 @@ const docTemplate = `{
                 "feature":{
                     "type": "string",
                     "example": "なし",
-
                 },
                 "expense":{
                     "type": "int",
