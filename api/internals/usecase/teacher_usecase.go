@@ -14,6 +14,7 @@ type teacherUseCase struct {
 
 type TeacherUseCase interface {
 	GetTeachers(context.Context) ([]domain.Teacher, error)
+	GetFundRegisteredByPeriods(context.Context, string) ([]int, error)
 	GetTeacherByID(context.Context, string) (domain.Teacher, error)
 	CreateTeacher(context.Context, string, string, string, string, string, string) (domain.Teacher, error)
 	UpdateTeacher(context.Context, string, string, string, string, string, string, string) (domain.Teacher, error)
@@ -58,6 +59,29 @@ func (t *teacherUseCase) GetTeachers(c context.Context) ([]domain.Teacher, error
 		teachers = append(teachers, teacher)
 	}
 	return teachers, nil
+}
+
+func (t *teacherUseCase) GetFundRegisteredByPeriods(c context.Context, year string) ([]int, error) {
+
+	rows, err := t.rep.AllFundRegistered(c, year)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var ids []int
+	for rows.Next() {
+			var id int
+			if err := rows.Scan(&id); err != nil {
+					return nil, err
+			}
+			ids = append(ids, id)
+	}
+
+	if err := rows.Err(); err != nil {
+			return nil, err
+	}
+
+	return ids, nil
 }
 
 func (t *teacherUseCase) GetTeacherByID(c context.Context, id string) (domain.Teacher, error) {

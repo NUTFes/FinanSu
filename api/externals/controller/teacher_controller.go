@@ -14,6 +14,7 @@ type teacherController struct {
 
 type TeacherController interface {
 	IndexTeacher(echo.Context) error
+	IndexFundRegisteredTeacher(echo.Context) error
 	ShowTeacher(echo.Context) error
 	CreateTeacher(echo.Context) error
 	UpdateTeacher(echo.Context) error
@@ -32,6 +33,16 @@ func (t *teacherController) IndexTeacher(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, teachers)
+}
+
+// IndexFundRegistered
+func (t *teacherController) IndexFundRegisteredTeacher(c echo.Context) error {
+	year := c.Param("year")
+	fundRegisteredTeachers, err := t.u.GetFundRegisteredByPeriods(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, fundRegisteredTeachers)
 }
 
 // Show

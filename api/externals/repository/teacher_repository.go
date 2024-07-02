@@ -16,6 +16,7 @@ type teacherRepository struct {
 
 type TeacherRepository interface {
 	All(context.Context) (*sql.Rows, error)
+	AllFundRegistered(context.Context, string) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
 	Create(context.Context, string, string, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string, string, string) error
@@ -30,6 +31,33 @@ func NewTeacherRepository(c db.Client, ac abstract.Crud) TeacherRepository {
 
 func (t *teacherRepository) All(c context.Context) (*sql.Rows, error) {
 	query := "SELECT * FROM teachers WHERE is_deleted IS FALSE ORDER BY department_id ASC "
+	return t.crud.Read(c, query)
+}
+
+func (t *teacherRepository) AllFundRegistered(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+	SELECT
+    teachers.id
+	FROM
+    teachers
+	INNER JOIN
+    fund_informations
+	ON
+    teachers.id = fund_informations.teacher_id
+	INNER JOIN
+    year_periods
+	ON
+    fund_informations.created_at > year_periods.started_at
+	AND
+    fund_informations.created_at < year_periods.ended_at
+	INNER JOIN
+    years
+	ON
+    year_periods.year_id = years.id
+	WHERE
+    years.year = ` + year + `
+	ORDER BY
+    fund_informations.created_at ASC;`
 	return t.crud.Read(c, query)
 }
 
