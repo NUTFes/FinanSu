@@ -54,3 +54,7 @@ deploy:
 local-deploy:
 	docker compose -f docker-compose.local-prod.yml build
 	docker compose -f docker-compose.local-prod.yml up
+
+# DB入るコマンド
+ent-db:
+	docker compose exec db mysql -u root -proot
