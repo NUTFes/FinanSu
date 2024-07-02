@@ -34,12 +34,7 @@ run-api:
 
 # StoryBookの起動
 run-sb:
-	docker compose exec view npm run storybook
-
-# コンテナのビルド→起動→StoryBookの起動
-run-sb-all:
-	docker compose up -d --build
-	docker compose exec view npm run storybook
+	docker compose run --rm view npm run storybook
 
 seed:
 	docker compose run --rm api go mod tidy
