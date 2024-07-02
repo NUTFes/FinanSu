@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { OpenAddModalButton } from '@components/budgets';
+import { DeleteModal } from '@components/budgets';
 
-const meta: Meta<typeof OpenAddModalButton> = {
-  title: 'FinanSu/budgets/OpenAddModalButton',
-  component: OpenAddModalButton,
+const meta: Meta<typeof DeleteModal> = {
+  title: 'FinanSu/budgets/DeleteModal',
+  component: DeleteModal,
   tags: ['autodocs'],
   argTypes: {},
 };

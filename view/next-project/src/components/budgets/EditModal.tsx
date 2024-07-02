@@ -7,7 +7,7 @@ import { put } from '@api/budget';
 import { PrimaryButton, Input, Modal, Select } from '@components/common';
 import { Budget, Source, Year } from '@type/common';
 
-interface BudgetProps {
+export interface BudgetProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   openModal: boolean;
   children?: React.ReactNode;
