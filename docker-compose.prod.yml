@@ -12,12 +12,6 @@ services:
     container_name: "nutfes-finansu-view"
     command: "npm run start"
     ports: ["3000:3000"]
-    environment:
-      NEXT_PUBLIC_APP_ENV: "production"
-      NEXT_PUBLIC_ENDPOINT: minio
-      NEXT_PUBLIC_PORT: 9000
-      NEXT_PUBLIC_BUCKET_NAME: finansu
-      NEXT_PUBLIC_MINIO_ENDPONT: http://localhost:9000
     depends_on: ["api"]
 
   api:
