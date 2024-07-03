@@ -57,28 +57,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ message: '成功' });
     });
   }
-
-  if (req.method === 'GET') {
-    try {
-      const size = 0;
-      const response = minioClient.fGetObject(
-        'finansu',
-        'go.png',
-        '/tmp/go.png',
-        function (err: any) {
-          if (err) {
-            return console.log(err);
-          }
-          console.log('success');
-        },
-      );
-
-      res.status(200).json({ response: response });
-    } catch (err) {
-      res.status(400);
-      throw new Error('Error uploading file (' + err + ')');
-    }
-  }
 }
 
 // バケットがない時に作成する関数(環境構築時のみ)
