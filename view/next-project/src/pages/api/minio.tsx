@@ -17,7 +17,16 @@ const minioClient = new Client({
   useSSL: false,
 });
 
+const BUCKET_NAME = 'finansu';
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // 開発環境でバケットがない場合作成
+  if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
+    const exists = await minioClient.bucketExists(BUCKET_NAME);
+    !exists && (await makeBucket());
+  }
+
+  // ここから画像送信処理
   if (req.method === 'POST') {
     const form = formidable();
 
@@ -70,4 +79,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error('Error uploading file (' + err + ')');
     }
   }
+}
+
+// バケットがない時に作成する関数(環境構築時のみ)
+async function makeBucket() {
+  await minioClient.makeBucket(BUCKET_NAME);
+  const policy = {
+    // awsが導入したポリシー言語のバージョン
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Principal: '*',
+        Action: ['s3:GetObject'],
+        Resource: `arn:aws:s3:::${BUCKET_NAME}/*`,
+      },
+    ],
+  };
+
+  minioClient.setBucketPolicy(BUCKET_NAME, JSON.stringify(policy));
 }

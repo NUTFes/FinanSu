@@ -26,10 +26,13 @@ services:
       - "6006:6006"
     stdin_open: true
     environment:
+      NEXT_PUBLIC_APP_ENV: development
       NEXT_PUBLIC_ENDPOINT: minio
       NEXT_PUBLIC_PORT: 9000
       NEXT_PUBLIC_BUCKET_NAME: finansu
       NEXT_PUBLIC_MINIO_ENDPONT: http://localhost:9000
+      NEXT_PUBLIC_ACCESS_KEY: user
+      NEXT_PUBLIC_SECRET_KEY: password
       RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED: false
     tty: true
 
