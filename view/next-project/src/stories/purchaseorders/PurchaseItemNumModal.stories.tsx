@@ -24,7 +24,6 @@ const Template: StoryFn<PurchaseItemNumModalProps> = (args) => <PurchaseItemNumM
 
 export const Primary = Template.bind({});
 Primary.args = {
-  setIsOpen: () => {}, // 適切な関数または操作を設定してください
   expenses: [], // 必要に応じて適切な配列を設定してください
   expenseByPeriods: [], // 同上
   yearPeriods: [], // 同上
