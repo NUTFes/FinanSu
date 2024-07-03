@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
-import PurchaseOrderAddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 import React from 'react';
+import PurchaseOrderAddModal from '@components/purchaseorders/PurchaseOrderAddModal';
 
 const meta: Meta = {
   title: 'FinanSu/purchaseorders/PurchaseOrderAddModal',
