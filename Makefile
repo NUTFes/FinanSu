@@ -1,15 +1,32 @@
+# アプリコンテナ=view,api、DBコンテナ=db,minio
+
+# アプリコンテナのイメージのビルド
 build:
 	docker compose build
 	docker compose run --rm view npm install
 
+# アプリコンテナの起動
 run:
 	docker compose up
 
+# アプリコンテナの停止
+down:
+	docker compose down
+
+# dbコンテナの起動(基本ずっと起動しておく)
+run-db:
+	docker compose -f docker-compose.db.yml up -d
+
+# dbコンテナの停止(ずっと起動したくない時はこっちで停止)
+stop-db:
+	docker compose -f docker-compose.db.yml down
+
 # ビルドと起動
 build-run:
+	docker compose -f docker-compose.db.yml up -d
 	docker compose up --build
 
-# ボリュームの削除
+# アプリコンテナボリュームの削除
 del-vol:
 	docker compose down -v
 
@@ -18,18 +35,16 @@ del-all:
 	docker-compose down --rmi all --volumes --remove-orphans
 
 # ボリューム削除→ビルド→起動
-del-vol-run:
+run-rebuild:
 	docker compose down -v
 	docker compose up --build
 
-# コンテナの停止
-down:
-	docker compose down
+# dbとminioの停止とボリューム削除(dbを初期化したい時)
+del-db:
+	docker-compose -f docker-compose.db.yml down --volumes
 
-# apiのみ起動
+# apiの起動(db起動後)
 run-api:
-	docker compose up -d db
-	sleep 4
 	docker compose up api
 
 # StoryBookの起動
