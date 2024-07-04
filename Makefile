@@ -60,8 +60,8 @@ deploy:
 	docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
 
-# ローカル環境で本番用の設定で起動
-local-deploy:
+# ローカルで本番設定で起動
+run-prod:
 	docker compose -f docker-compose.local-prod.yml build
 	docker compose -f docker-compose.local-prod.yml up
 
