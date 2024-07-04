@@ -1504,6 +1504,26 @@ const docTemplate = `{
                 }
             },
         },
+        "/purchaseorders/details/unregistered/{year}": {
+            "get": {
+                tags: ["purchase_order"],
+                "description": "年度で指定されたreportsに未登録のpurchase_orderに紐づくuserとpurchase_itemを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IDで指定されたreportsに未登録のpurchase_orderに紐づくuserとpurchase_itemを取得",
+                    }
+                }
+            },
+        },
         "/purchasereports": {
             "get": {
                 tags: ["purchase_report"],
