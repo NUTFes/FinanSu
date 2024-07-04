@@ -53,7 +53,7 @@ export default function PurchaseItemNumModal() {
   useEffect(() => {
     if (router.isReady) {
       const getPurchaseOrderViewUrl =
-        process.env.CSR_API_URI + '/purchaseorders/details/' + String(selectedYear);
+        process.env.CSR_API_URI + '/purchaseorders/details/unregistered/' + String(selectedYear);
       const getExpensesUrl = process.env.CSR_API_URI + '/expenses';
 
       const getPurchaseOrderView = async (url: string) => {
