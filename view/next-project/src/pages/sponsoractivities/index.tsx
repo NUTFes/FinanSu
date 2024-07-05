@@ -2,17 +2,21 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useEffect, useMemo } from 'react';
 
+import { GiHamburgerMenu } from 'react-icons/gi';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import OpenModalButton from '@/components/sponsoractivities/OpenAddModalButton';
+import {
+  OpenAddModalButton,
+  DetailModal,
+  OpenDeleteModalButton,
+  OpenEditModalButton,
+  FilterModal,
+} from '@/components/sponsoractivities';
 import { createPresentationCsv } from '@/utils/createActivityCsv';
 import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
-import DetailModal from '@components/sponsoractivities/DetailModal';
-import OpenDeleteModalButton from '@components/sponsoractivities/OpenDeleteModalButton';
-import OpenEditModalButton from '@components/sponsoractivities/OpenEditModalButton';
 import { DESIGNERS } from '@constants/designers';
 import {
   SponsorActivity,
@@ -88,6 +92,7 @@ export default function SponsorActivities(props: Props) {
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const sponsors = props.sponsors;
+  const [isFilerOpen, setIsFilerOpen] = useState<boolean>(false);
 
   const onOpen = (sponsorActivitiesID: number, sponsorActivitiesItem: SponsorActivityView) => {
     setSponsorActivitiesID(sponsorActivitiesID);
@@ -264,7 +269,7 @@ export default function SponsorActivities(props: Props) {
                     );
                   })}
               </select>
-              <select
+              {/* <select
                 className={'w-100'}
                 defaultValue={'all'}
                 onChange={(e) => setSelectedIsDone(e.target.value)}
@@ -284,7 +289,24 @@ export default function SponsorActivities(props: Props) {
                 <option value='createSort'>作成日時昇順</option>
                 <option value='priceDesSort'>協賛金降順</option>
                 <option value='priceSort'>協賛金昇順</option>
-              </select>
+              </select> */}
+              <div className='flex items-center justify-center'>
+                <button
+                  className='rounded-md bg-primary-5 px-1 py-1'
+                  onClick={() => {
+                    setIsFilerOpen(!isFilerOpen);
+                  }}
+                >
+                  <GiHamburgerMenu size='30' color='white' />
+                </button>
+              </div>
+              {isFilerOpen && (
+                <FilterModal
+                  setIsOpen={setIsFilerOpen}
+                  isOpen={isFilerOpen}
+                  sponsorStyles={props.sponsorStyles}
+                />
+              )}
               <PrimaryButton
                 className='hidden md:block'
                 onClick={async () => {
@@ -303,17 +325,17 @@ export default function SponsorActivities(props: Props) {
           </div>
         </div>
         <div className='hidden justify-end md:flex'>
-          <OpenModalButton
+          <OpenAddModalButton
             users={props.users}
             sponsors={sponsors}
             sponsorStyles={props.sponsorStyles}
             yearPeriods={yearPeriods}
           >
             協賛活動登録
-          </OpenModalButton>
+          </OpenAddModalButton>
         </div>
         <div className='md:hidden'>
-          <OpenModalButton
+          <OpenAddModalButton
             users={props.users}
             sponsors={props.sponsors}
             sponsorStyles={props.sponsorStyles}
