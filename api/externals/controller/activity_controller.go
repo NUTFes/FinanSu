@@ -108,10 +108,11 @@ func (a *activityController) IndexActivityDetailsByPeriod(c echo.Context) error 
 
 func (a *activityController) IndexFilteredActivityDetail(c echo.Context) error {
 	isDone := c.QueryParam("is_done") 
-	sponsorStyle := c.QueryParam("sponsor_style")
+	sponsorStyleIDs := c.QueryParams()["sponsor_style_id"]
 	keyword := c.QueryParam("keyword")
-	activities, err := a.u.GetFilteredActivityDetail(c.Request().Context(), isDone, sponsorStyle, keyword)
+	activities, err := a.u.GetFilteredActivityDetail(c.Request().Context(), isDone, sponsorStyleIDs, keyword)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return c.JSON(http.StatusOK, activities)

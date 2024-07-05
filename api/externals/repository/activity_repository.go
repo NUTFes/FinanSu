@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -24,7 +25,7 @@ type ActivityRepository interface {
 	FindSponsorStyle(context.Context, string) (*sql.Rows, error)
 	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
 	FindActivityInformation(context.Context, string) (*sql.Rows, error)
-	FindFilteredDetail(context.Context, string, string, string) (*sql.Rows, error)
+	FindFilteredDetail(context.Context, string, []string, string) (*sql.Rows, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -188,9 +189,13 @@ func (ar *activityRepository) AllDetailsByPeriod(c context.Context, year string)
 }
 
 // activityに紐づくsponserとusersをフィルタを考慮して取得する
-func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone string, sponsorStyle string, keyword string) (*sql.Rows, error) {
+func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone string, sponsorStyleIDs []string, keyword string) (*sql.Rows, error) {
 	query := `
-	SELECT * FROM
+	SELECT 
+		activities.*,
+		sponsors.*,
+		users.*
+	FROM
 		activities
 	INNER JOIN
 		sponsors
@@ -200,12 +205,38 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 		users
 	ON
 		activities.user_id = users.id
-	WHERE
-		sponsors.name LIKE '%` + keyword + `%' 
-	AND
-		sponsors.id = ` + sponsorStyle + ` 
-	AND
-		activities.is_done = ` + isDone
+	INNER JOIN
+		activity_styles
+	ON
+		activities.id = activity_styles.activity_id
+	INNER JOIN
+		sponsor_styles
+	ON
+		activity_styles.sponsor_style_id = sponsor_styles.id
+	WHERE 
+		1=1 `
+
+	// keywordフィルタを追加
+	if keyword != "" {
+		query += ` AND 
+		sponsors.name LIKE '%` + keyword + `%'`
+	}
+
+	// isDoneフィルタを追加
+	if isDone != "" {
+		if isDone != "all" {
+			query += ` AND 
+			activities.is_done = ` + isDone
+		}
+	}
+
+	// sponsorStyleIDsフィルタを追加
+	if len(sponsorStyleIDs) > 0 {
+		// プレースホルダーを生成
+		placeholders := strings.Join(sponsorStyleIDs, ",")
+		query += ` AND 
+		sponsor_styles.id IN (` + placeholders + `)`
+	}
 
 	return ar.crud.Read(c, query)
 }

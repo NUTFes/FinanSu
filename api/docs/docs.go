@@ -82,19 +82,37 @@ const docTemplate = `{
                 "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
                 "parameters": [
                     {
-                        "in": "query",
                         "name": "is_done",
-                        "type": "boolean"
+                        "in": "query",
+                        "description": "Filter by done status.[true, false, all]",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["true", "false", "all"] 
+                        }          
                     },
                     {
+                        "name": "sponsor_style_id",
                         "in": "query",
-                        "name": "sponsor_style",
-                        "type": "integer"
+                        "description": "Filter by sponsor style IDs. ex.) 1,3,6,...",
+                        "required": false,
+                        "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "style": "form",
+                        "explode": true
                     },
                     {
-                        "in": "query",
                         "name": "keyword",
-                        "type": "string"
+                        "in": "query",
+                        "description": "Filter by keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                 ],
                 "responses": {
