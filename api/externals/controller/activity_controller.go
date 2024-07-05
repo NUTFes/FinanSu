@@ -112,7 +112,6 @@ func (a *activityController) IndexFilteredActivityDetail(c echo.Context) error {
 	keyword := c.QueryParam("keyword")
 	activities, err := a.u.GetFilteredActivityDetail(c.Request().Context(), isDone, sponsorStyleIDs, keyword)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return c.JSON(http.StatusOK, activities)
