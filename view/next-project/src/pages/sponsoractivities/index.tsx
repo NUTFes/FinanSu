@@ -116,7 +116,7 @@ export default function SponsorActivities(props: Props) {
   };
 
   const sortedSponsorActivitiesViews = useMemo(() => {
-    let filteredActivities = sponsorActivities;
+    const filteredActivities = sponsorActivities;
     switch (filterData.selectedSort) {
       case 'updateSort':
         if (!Array.isArray(filteredActivities)) {
