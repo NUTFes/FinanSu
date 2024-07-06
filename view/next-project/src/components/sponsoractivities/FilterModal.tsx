@@ -13,9 +13,7 @@ interface ModalProps {
 const FilterModal: FC<ModalProps> = (props) => {
   const { sponsorStyles, filterData, setFilterData } = props;
 
-  const [isStyleSelectOpen, setIsStyleSelectOpen] = useState<boolean>(false);
-
-  const [isAllCheck, setIsAllCheck] = useState<boolean>(
+  const [isAllStyleCheck, setIsAllStyleCheck] = useState<boolean>(
     filterData.styleIds.length === sponsorStyles.length,
   );
   type SelectOption = 'all' | 'false' | 'true';
@@ -30,66 +28,59 @@ const FilterModal: FC<ModalProps> = (props) => {
   function filterHandler(event: any) {
     event.preventDefault();
     setFilterData(draftFilterData);
-    setIsAllCheck(isAllCheck);
+    setIsAllStyleCheck(isAllStyleCheck);
     props.setIsOpen(false);
   }
 
   function addAndRemoveStyleIds(id: number) {
     includeStyleIds(id)
-      ? setDraftFilterData({
+      ? (setDraftFilterData({
           ...draftFilterData,
           styleIds: draftFilterData.styleIds.filter((styleId) => styleId !== id),
-        })
-      : setDraftFilterData({
+        }),
+        setIsAllStyleCheck(false))
+      : (setDraftFilterData({
           ...filterData,
           styleIds: [...draftFilterData.styleIds, id],
-        });
+        }),
+        sponsorStyles.length === [...draftFilterData.styleIds, id].length &&
+          setIsAllStyleCheck(true));
   }
 
   const topCheckboxEvent = (event: any) => {
-    event.stopPropagation();
-    isAllCheck ? deleteAllStyleIds() : addAllStyleIds();
+    isAllStyleCheck ? deleteAllStyleIds() : addAllStyleIds();
   };
 
-  const preventStyleOpenEvent = (event: any) => {
+  const preventCloseModalEvent = (event: any) => {
     event.stopPropagation();
   };
 
   function addAllStyleIds() {
     const allStyleIDs = sponsorStyles.map((style) => style?.id || 0);
     setDraftFilterData({ ...draftFilterData, styleIds: allStyleIDs });
-    setIsAllCheck(true);
+    setIsAllStyleCheck(true);
   }
 
   function deleteAllStyleIds() {
     setDraftFilterData({ ...draftFilterData, styleIds: [] });
-    setIsAllCheck(false);
+    setIsAllStyleCheck(false);
   }
 
   const onClose = () => {
     props.setIsOpen(false);
-    // draftフィルターを上書き
+    // フィルターのdraftを上書き
     setDraftFilterData(filterData);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.nativeEvent.isComposing || e.key !== 'Enter') return;
-    filterHandler(e);
   };
 
   return (
     <Modal
-      className='md:w-1/3'
+      className='md:w-1/2'
       onClick={() => {
-        isStyleSelectOpen ? setIsStyleSelectOpen(false) : onClose();
+        onClose();
       }}
     >
       <form onSubmit={filterHandler}>
-        <div
-          onClick={(e) => {
-            !isStyleSelectOpen && preventStyleOpenEvent(e);
-          }}
-        >
+        <div onClick={preventCloseModalEvent}>
           <div className='w-full'>
             <div className='ml-auto w-fit'>
               <CloseButton onClick={onClose} />
@@ -100,42 +91,34 @@ const FilterModal: FC<ModalProps> = (props) => {
             <p className='col-span-2 text-black-600'>協賛スタイル</p>
             <div className='col-span-2 w-full'>
               <div className=''>
-                <div
-                  className='flex rounded-md p-2 hover:bg-white-100'
-                  onClick={() => {
-                    setIsStyleSelectOpen(!isStyleSelectOpen);
-                  }}
-                >
+                <div className='flex rounded-md p-2 hover:bg-white-100'>
                   <input
                     type='checkbox'
                     onChange={topCheckboxEvent}
-                    onClick={preventStyleOpenEvent}
-                    checked={isAllCheck}
+                    checked={isAllStyleCheck}
+                    id='all'
                   ></input>
-                  <div className='flex w-full items-center justify-center'>
-                    <p>全て</p>
-                  </div>
+                  <label htmlFor='all' className='mx-2 w-full text-black-300'>
+                    すべて
+                  </label>
                 </div>
-                {isStyleSelectOpen && (
-                  <div className='fixed z-50 max-h-96 overflow-y-auto rounded-md border bg-white-0'>
-                    {props.sponsorStyles.map((style) => (
-                      <div className='flex p-2' key={style.id} onClick={preventStyleOpenEvent}>
-                        <input
-                          type='checkbox'
-                          checked={includeStyleIds(style?.id || 0)}
-                          onChange={() => {
-                            addAndRemoveStyleIds(style?.id || 0);
-                          }}
-                          onKeyDown={handleKeyDown}
-                          id={String(style.id)}
-                        ></input>
-                        <label htmlFor={String(style.id)} className='mx-2 text-black-300'>
-                          {style.style}/{style.feature}/{style.price}円
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div className='max-h-28 overflow-y-auto rounded-md border-2 bg-white-0'>
+                  {props.sponsorStyles.map((style) => (
+                    <div className='flex p-2 hover:bg-white-100' key={style.id}>
+                      <input
+                        type='checkbox'
+                        checked={includeStyleIds(style?.id || 0)}
+                        onChange={() => {
+                          addAndRemoveStyleIds(style?.id || 0);
+                        }}
+                        id={String(style.id)}
+                      ></input>
+                      <label htmlFor={String(style.id)} className='mx-2 w-full text-black-300'>
+                        {style.style}/{style.feature}/{style.price}円
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <p className='col-span-2 text-black-600'>回収有無</p>
@@ -164,7 +147,13 @@ const FilterModal: FC<ModalProps> = (props) => {
             </div>
             <p className='col-span-2 text-black-600'>並び替え</p>
             <div className='col-span-2 w-full'>
-              <Select className={'w-100'} defaultValue={'default'} onChange={(e) => e.target.value}>
+              <Select
+                className={'w-100'}
+                defaultValue={draftFilterData.selectedSort}
+                onChange={(e) =>
+                  setDraftFilterData({ ...draftFilterData, selectedSort: e.target.value })
+                }
+              >
                 <option value='default'>更新日時降順</option>
                 <option value='updateSort'>更新日時昇順</option>
                 <option value='createDesSort'>作成日時降順</option>

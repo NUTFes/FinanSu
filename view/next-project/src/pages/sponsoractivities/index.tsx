@@ -130,13 +130,13 @@ export default function SponsorActivities(props: Props) {
 
   const currentYear = new Date().getFullYear().toString();
   const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
-  const [selectedSort, setSelectedSort] = useState<string>('default');
 
   // フィルタ用変数
   const [filterData, setFilterData] = useState<SponsorFilterType>({
     styleIds: props.sponsorStyles.map((style) => style?.id || 0),
     isDone: 'all',
     keyword: '',
+    selectedSort: 'default',
   });
 
   const sortedAndFilteredSponsorActivitiesViews = useMemo(() => {
@@ -163,7 +163,7 @@ export default function SponsorActivities(props: Props) {
         break;
     }
 
-    switch (selectedSort) {
+    switch (filterData.selectedSort) {
       case 'updateSort':
         if (!Array.isArray(filteredActivities)) {
           return [];
@@ -222,7 +222,7 @@ export default function SponsorActivities(props: Props) {
       default:
         return filteredActivities;
     }
-  }, [props, selectedYear, selectedIsDone, selectedSort, sponsorActivities]);
+  }, [props, selectedYear, selectedIsDone, filterData, sponsorActivities]);
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
