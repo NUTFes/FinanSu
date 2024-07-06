@@ -192,7 +192,7 @@ func (ar *activityRepository) AllDetailsByPeriod(c context.Context, year string)
 // activityに紐づくsponserとusersをフィルタを考慮して取得する
 func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone string, sponsorStyleIDs []string, keyword string) (*sql.Rows, error) {
 	query := `
-	SELECT
+	SELECT DISTINCT
 		activities.*,
 		sponsors.*,
 		users.*
@@ -261,7 +261,7 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 // activityに紐づくsponserとusersをフィルタを考慮して取得する
 func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDone string, sponsorStyleIDs []string, year string, keyword string) (*sql.Rows, error) {
 	query := `
-	SELECT
+	SELECT DISTINCT
 		activities.*,
 		sponsors.*,
 		users.*
