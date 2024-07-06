@@ -9,7 +9,6 @@ import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
 import OpenEditModalButton from '@components/users/OpenEditModalButton';
-import { BUREAUS } from '@constants/bureaus';
 import { ROLES } from '@constants/role';
 import { Bureau, User } from '@type/common';
 
@@ -140,7 +139,7 @@ export default function Users(props: Props) {
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>
-                      {BUREAUS.find((bureau) => bureau.id === user.bureauID)?.name}
+                      {bureaus.find((bureau) => bureau.id === user.bureauID)?.name}
                     </p>
                   </td>
                   <td
@@ -162,7 +161,7 @@ export default function Users(props: Props) {
                     )}
                   >
                     <div className='flex justify-end'>
-                      <OpenEditModalButton id={user.id} bureaus={BUREAUS} user={user} />
+                      <OpenEditModalButton id={user.id} bureaus={bureaus} user={user} />
                     </div>
                   </td>
                   <td
