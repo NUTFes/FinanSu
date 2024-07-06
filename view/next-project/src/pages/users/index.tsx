@@ -47,11 +47,9 @@ export default function Users(props: Props) {
 
   useEffect(() => {
     const newFilterUsers =
-      selectedBureau === 0
-        ? users
-        : users.filter((user) => user.bureauID === selectedBureau);
+      selectedBureau === 0 ? users : users.filter((user) => user.bureauID === selectedBureau);
     setFilterUsers(newFilterUsers);
-  }, [selectedBureau, users])
+  }, [selectedBureau, users]);
 
   const [deleteUsers, setDeleteUsers] = useState<{ users: User[]; ids: number[] }>({
     users: [],
