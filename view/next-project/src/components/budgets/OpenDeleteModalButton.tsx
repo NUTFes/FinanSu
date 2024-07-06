@@ -11,7 +11,7 @@ interface Props {
   isDisabled: boolean;
 }
 
-const OpenDeleteModalButton: React.FC<Props> = (props) => {
+export const OpenDeleteModalButton: React.FC<Props> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const onOpen = () => {
     setIsOpen(true);
