@@ -10,6 +10,9 @@ interface ModalProps {
   setFilterData: (filterData: SponsorFilterType) => void;
 }
 
+const SELECT = '選択中';
+const NOT_SELECT = '未選択';
+
 const FilterModal: FC<ModalProps> = (props) => {
   const { sponsorStyles, filterData, setFilterData } = props;
 
@@ -68,8 +71,6 @@ const FilterModal: FC<ModalProps> = (props) => {
 
   const onClose = () => {
     props.setIsOpen(false);
-    // フィルターのdraftを上書き
-    setDraftFilterData(filterData);
   };
 
   return (
@@ -99,7 +100,11 @@ const FilterModal: FC<ModalProps> = (props) => {
                     id='all'
                   ></input>
                   <label htmlFor='all' className='mx-2 w-full text-black-300'>
-                    すべて
+                    すべて （
+                    {draftFilterData.styleIds.length > 0
+                      ? SELECT + draftFilterData.styleIds.length
+                      : NOT_SELECT}
+                    ）
                   </label>
                 </div>
                 <div className='max-h-28 overflow-y-auto rounded-md border-2 bg-white-0'>
