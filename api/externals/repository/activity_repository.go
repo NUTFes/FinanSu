@@ -318,16 +318,6 @@ func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDo
 		}
 	}
 
-	// yearのフィルタ追加
-	if year != "" {
-		if optionQuery != "" {
-			optionQuery += ` AND
-			years.year = ` + year + " ORDER BY activities.updated_at DESC"
-		} else {
-			optionQuery += ` years.year = ` + year + " ORDER BY activities.updated_at DESC"
-		}
-	}
-
 	// sponsorStyleIDsフィルタを追加
 	if len(sponsorStyleIDs) > 0 {
 		// プレースホルダーを生成
@@ -337,6 +327,16 @@ func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDo
 			sponsor_styles.id IN (` + placeholders + `)`
 		} else {
 			optionQuery += ` sponsor_styles.id IN (` + placeholders + `)`
+		}
+	}
+
+	// yearのフィルタ追加
+	if year != "" {
+		if optionQuery != "" {
+			optionQuery += ` AND
+			years.year = ` + year + " ORDER BY activities.updated_at DESC"
+		} else {
+			optionQuery += ` years.year = ` + year + " ORDER BY activities.updated_at DESC"
 		}
 	}
 

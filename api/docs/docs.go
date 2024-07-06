@@ -128,6 +128,15 @@ const docTemplate = `{
                 "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
                 "parameters": [
                     {
+                        "name": "year",
+                        "in": "path",
+                        "description": "Filter by year.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }          
+                    },
+                    {
                         "name": "is_done",
                         "in": "query",
                         "description": "Filter by done status.[true, false, all]",
@@ -150,15 +159,6 @@ const docTemplate = `{
                         },
                         "style": "form",
                         "explode": true
-                    },
-                    {
-                        "name": "year",
-                        "in": "path",
-                        "description": "Filter by year.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }          
                     },
                     {
                         "name": "keyword",
