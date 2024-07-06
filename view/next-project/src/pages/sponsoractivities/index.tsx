@@ -139,7 +139,7 @@ export default function SponsorActivities(props: Props) {
   });
 
   const sortedAndFilteredSponsorActivitiesViews = useMemo(() => {
-    let filteredActivities = sponsorActivities;
+    const filteredActivities = sponsorActivities;
 
     switch (filterData.selectedSort) {
       case 'updateSort':
