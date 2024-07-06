@@ -88,8 +88,8 @@ const docTemplate = `{
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "enum": ["true", "false", "all"] 
-                        }          
+                            "enum": ["true", "false", "all"]
+                        }
                     },
                     {
                         "name": "sponsor_style_id",
@@ -134,7 +134,7 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }          
+                        }
                     },
                     {
                         "name": "is_done",
@@ -143,8 +143,8 @@ const docTemplate = `{
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "enum": ["true", "false", "all"] 
-                        }          
+                            "enum": ["true", "false", "all"]
+                        }
                     },
                     {
                         "name": "sponsor_style_id",

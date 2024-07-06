@@ -15,6 +15,7 @@ import {
 import { createPresentationCsv } from '@/utils/createActivityCsv';
 import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
+import { getByFiler } from '@api/sponsorActivities';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import { DESIGNERS } from '@constants/designers';
@@ -26,6 +27,7 @@ import {
   User,
   ActivityStyle,
   YearPeriod,
+  SponsorFilterType,
 } from '@type/common';
 
 interface Props {
@@ -115,14 +117,27 @@ export default function SponsorActivities(props: Props) {
 
   const getSponsorActivities = async () => {
     const getSponsorActivitiesViewUrlByYear =
-      process.env.CSR_API_URI + '/activities/details/' + selectedYear;
-    const getSponsorActivitiesByYears = await get(getSponsorActivitiesViewUrlByYear);
-    setSponsorActivities(getSponsorActivitiesByYears);
+      process.env.CSR_API_URI + '/activities/filtered_details/' + selectedYear;
+    const getFilterSponsorActivitiesByYears = await getByFiler(
+      getSponsorActivitiesViewUrlByYear,
+      filterData.isDone,
+      filterData.styleIds,
+      filterData.keyword,
+      props.sponsorStyles.length,
+    );
+    setSponsorActivities(getFilterSponsorActivitiesByYears);
   };
 
   const currentYear = new Date().getFullYear().toString();
   const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
   const [selectedSort, setSelectedSort] = useState<string>('default');
+
+  // フィルタ用変数
+  const [filterData, setFilterData] = useState<SponsorFilterType>({
+    styleIds: props.sponsorStyles.map((style) => style?.id || 0),
+    isDone: 'all',
+    keyword: '',
+  });
 
   const sortedAndFilteredSponsorActivitiesViews = useMemo(() => {
     let filteredActivities = sponsorActivities;
@@ -240,7 +255,7 @@ export default function SponsorActivities(props: Props) {
 
   useEffect(() => {
     getSponsorActivities();
-  }, [selectedYear]);
+  }, [filterData]);
 
   return (
     <MainLayout>
@@ -269,35 +284,14 @@ export default function SponsorActivities(props: Props) {
                     );
                   })}
               </select>
-              {/* <select
-                className={'w-100'}
-                defaultValue={'all'}
-                onChange={(e) => setSelectedIsDone(e.target.value)}
-              >
-                <option value='all'>すべて</option>
-                <option value='false'>未回収</option>
-                <option value='true'>回収済</option>
-              </select>
-              <select
-                className={'w-100'}
-                defaultValue={'default'}
-                onChange={(e) => setSelectedSort(e.target.value)}
-              >
-                <option value='default'>更新日時降順</option>
-                <option value='updateSort'>更新日時昇順</option>
-                <option value='createDesSort'>作成日時降順</option>
-                <option value='createSort'>作成日時昇順</option>
-                <option value='priceDesSort'>協賛金降順</option>
-                <option value='priceSort'>協賛金昇順</option>
-              </select> */}
               <div className='flex items-center justify-center'>
                 <button
-                  className='rounded-md bg-primary-5 px-1 py-1 hover:bg-white-100 hover:outline-base-1'
+                  className='rounded-md px-1 py-1 hover:bg-white-100 hover:outline-base-1'
                   onClick={() => {
                     setIsFilerOpen(!isFilerOpen);
                   }}
                 >
-                  <IoFilterSharp size='30' color='white' />
+                  <IoFilterSharp size='22' color='#666666' />
                 </button>
               </div>
               {isFilerOpen && (
@@ -305,6 +299,8 @@ export default function SponsorActivities(props: Props) {
                   setIsOpen={setIsFilerOpen}
                   isOpen={isFilerOpen}
                   sponsorStyles={props.sponsorStyles}
+                  filterData={filterData}
+                  setFilterData={setFilterData}
                 />
               )}
               <PrimaryButton
