@@ -112,3 +112,5 @@ export const DetailEditModal: React.FC<{
     </Modal>
   );
 };
+
+export default DetailEditModal;
