@@ -213,20 +213,20 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 	INNER JOIN
 		sponsor_styles
 	ON
-		activity_styles.sponsor_style_id = sponsor_styles.id
-	WHERE
-		1=1`
+		activity_styles.sponsor_style_id = sponsor_styles.id`
+
+	optionQuery := ""
 
 	// keywordフィルタを追加
 	if keyword != "" {
-		query += ` AND
+		optionQuery += ` AND
 		sponsors.name LIKE '%` + keyword + `%'`
 	}
 
 	// isDoneフィルタを追加
 	if isDone != "" {
 		if isDone != "all" {
-			query += ` AND
+			optionQuery += ` AND
 			activities.is_done = ` + isDone
 		}
 	}
@@ -235,8 +235,12 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 	if len(sponsorStyleIDs) > 0 {
 		// プレースホルダーを生成
 		placeholders := strings.Join(sponsorStyleIDs, ",")
-		query += ` AND
+		optionQuery += ` AND
 		sponsor_styles.id IN (` + placeholders + `)`
+	}
+
+	if optionQuery != "" {
+		query += ` WHERE ` + optionQuery
 	}
 
 	return ar.crud.Read(c, query)
@@ -276,27 +280,27 @@ func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDo
 	INNER JOIN
 		years
 	ON
-		year_periods.year_id = years.id
-	WHERE
-		1=1`
+		year_periods.year_id = years.id`
+
+	optionQuery := ""
 
 	// keywordフィルタを追加
 	if keyword != "" {
-		query += ` AND
+		optionQuery += ` AND
 		sponsors.name LIKE '%` + keyword + `%'`
 	}
 
 	// isDoneフィルタを追加
 	if isDone != "" {
 		if isDone != "all" {
-			query += ` AND
+			optionQuery += ` AND
 			activities.is_done = ` + isDone
 		}
 	}
 
 	// yearのフィルタ追加
 	if year != "" {
-		query += ` AND
+		optionQuery += ` AND
 		years.year = ` + year + " ORDER BY activities.updated_at DESC"
 	}
 
@@ -304,8 +308,12 @@ func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDo
 	if len(sponsorStyleIDs) > 0 {
 		// プレースホルダーを生成
 		placeholders := strings.Join(sponsorStyleIDs, ",")
-		query += ` AND
+		optionQuery += ` AND
 		sponsor_styles.id IN (` + placeholders + `)`
+	}
+
+	if optionQuery != "" {
+		query += ` WHERE ` + optionQuery
 	}
 
 	return ar.crud.Read(c, query)
