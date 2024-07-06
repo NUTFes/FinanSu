@@ -1,16 +1,19 @@
 # FinanSu
 
-## setting up
+## 環境構築 (set up)
 
 ```
-docker compose build
-docker compose up
+make run-db
+make build
+make run
 ```
 
 or
 
 ```
-make build
+docker compose -f docker-compose.db.yml up -d
+docker compose build
+docker compose up
 ```
 
 ## documents
