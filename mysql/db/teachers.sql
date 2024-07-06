@@ -8,6 +8,7 @@ CREATE TABLE teachers(
   room varchar(255),
   is_black boolean,
   remark varchar(255),
+  is_deleted boolean default false,
   created_at datetime not null default current_timestamp,
   updated_at datetime not null default current_timestamp on update current_timestamp,
   PRIMARY KEY (id)

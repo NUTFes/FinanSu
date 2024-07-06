@@ -22,5 +22,3 @@ RUN go install github.com/swaggo/swag/cmd/swag@latest
 # Airをインストール
 RUN go install github.com/air-verse/air@latest
 CMD ["air", "-c", ".air.toml"]
-
-

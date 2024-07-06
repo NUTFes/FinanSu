@@ -2107,6 +2107,26 @@ const docTemplate = `{
                 ],
             },
         },
+				"/teachers/delete": {
+					"delete": {
+							tags: ["teacher"],
+							"description": "teacherの複数削除",
+							responses: {
+									"200": {
+											"description": "複数のteacherをidで削除できる",
+									}
+							},
+							"parameters": [
+									{
+											"in": "body",
+											"name": "destroyTeacherIDs",
+											"schema":{
+													"$ref": "#/definitions/destroyTeacherIDs"
+											},
+									},
+							],
+					},
+			},
         "/teachers/{id}": {
             "get": {
                 tags: ["teacher"],
@@ -2719,20 +2739,34 @@ const docTemplate = `{
                     "purchaseOrderID"
             },
         },
-        "destroyUserIDs":{
-            "properties":{
-                "deleteIDs":{
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    },
-                    example: []
-                },
-            },
-            "required":{
-                    "deleteIDs",
-            },
-        },
+				"destroyTeacherIDs":{
+					"properties":{
+							"deleteIDs":{
+									"type": "array",
+									"items": {
+											"type": "number"
+									},
+									example: []
+							},
+					},
+					"required":{
+									"deleteIDs",
+					},
+				},
+				"destroyUserIDs":{
+					"properties":{
+							"deleteIDs":{
+									"type": "array",
+									"items": {
+											"type": "number"
+									},
+									example: []
+							},
+					},
+					"required":{
+									"deleteIDs",
+					},
+				},
         "year_periods":{
             "properties":{
                 "year":{

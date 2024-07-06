@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
-import { del } from '@/utils/api/user';
+import { multiDel } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 import { User } from '@type/common';
 
@@ -19,7 +19,7 @@ const UsersDeleteModal: FC<ModalProps> = (props) => {
 
   const deleteUsers = async () => {
     const deleteUsersUrl = process.env.CSR_API_URI + '/users/delete';
-    const res = await del(deleteUsersUrl, props.deleteUsers?.ids || []);
+    const res = await multiDel(deleteUsersUrl, props.deleteUsers?.ids || []);
     if (res === 200) {
       window.alert('削除しました');
       closeModal();

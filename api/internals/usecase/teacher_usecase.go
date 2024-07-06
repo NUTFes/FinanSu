@@ -18,6 +18,7 @@ type TeacherUseCase interface {
 	CreateTeacher(context.Context, string, string, string, string, string, string) (domain.Teacher, error)
 	UpdateTeacher(context.Context, string, string, string, string, string, string, string) (domain.Teacher, error)
 	DestroyTeacher(context.Context, string) error
+	DestroyMultiTeachers(context.Context, []int) error
 }
 
 func NewTeacherUseCase(rep rep.TeacherRepository) TeacherUseCase {
@@ -45,6 +46,7 @@ func (t *teacherUseCase) GetTeachers(c context.Context) ([]domain.Teacher, error
 			&teacher.Room,
 			&teacher.IsBlack,
 			&teacher.Remark,
+			&teacher.IsDeleted,
 			&teacher.CreatedAt,
 			&teacher.UpdatedAt,
 		)
@@ -70,6 +72,7 @@ func (t *teacherUseCase) GetTeacherByID(c context.Context, id string) (domain.Te
 		&teacher.Room,
 		&teacher.IsBlack,
 		&teacher.Remark,
+		&teacher.IsDeleted,
 		&teacher.CreatedAt,
 		&teacher.UpdatedAt,
 	)
@@ -101,6 +104,7 @@ func (t *teacherUseCase) CreateTeacher(
 		&latestTeacher.Room,
 		&latestTeacher.IsBlack,
 		&latestTeacher.Remark,
+		&latestTeacher.IsDeleted,
 		&latestTeacher.CreatedAt,
 		&latestTeacher.UpdatedAt,
 	)
@@ -133,6 +137,7 @@ func (t *teacherUseCase) UpdateTeacher(
 		&updateTeacher.Room,
 		&updateTeacher.IsBlack,
 		&updateTeacher.Remark,
+		&updateTeacher.IsDeleted,
 		&updateTeacher.CreatedAt,
 		&updateTeacher.UpdatedAt,
 	)
@@ -145,5 +150,10 @@ func (t *teacherUseCase) UpdateTeacher(
 
 func (t *teacherUseCase) DestroyTeacher(c context.Context, id string) error {
 	err := t.rep.Destroy(c, id)
+	return err
+}
+
+func (t *teacherUseCase) DestroyMultiTeachers(c context.Context, ids []int) error {
+	err := t.rep.MultiDestroy(c, ids)
 	return err
 }
