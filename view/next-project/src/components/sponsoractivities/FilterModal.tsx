@@ -40,7 +40,7 @@ const FilterModal: FC<ModalProps> = (props) => {
         }),
         setIsAllStyleCheck(false))
       : (setDraftFilterData({
-          ...filterData,
+          ...draftFilterData,
           styleIds: [...draftFilterData.styleIds, id],
         }),
         sponsorStyles.length === [...draftFilterData.styleIds, id].length &&
@@ -126,7 +126,10 @@ const FilterModal: FC<ModalProps> = (props) => {
               <Select
                 defaultValue={draftFilterData.isDone}
                 onChange={(e) => {
-                  setDraftFilterData({ ...filterData, isDone: e.target.value as SelectOption });
+                  setDraftFilterData({
+                    ...draftFilterData,
+                    isDone: e.target.value as SelectOption,
+                  });
                 }}
                 className=''
               >
