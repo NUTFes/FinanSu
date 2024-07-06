@@ -1,5 +1,5 @@
-import React, { FC, useState, useMemo } from 'react';
-import { Modal, Select, CloseButton, Input, MultiSelect } from '@components/common';
+import React, { FC, useState } from 'react';
+import { Modal, Select, CloseButton, Input } from '@components/common';
 import { SponsorStyle } from '@type/common';
 
 interface ModalProps {
@@ -19,7 +19,7 @@ const FilterModal: FC<ModalProps> = (props) => {
     styleIds: number[];
     isDone: 'all' | 'false' | 'true';
     keyword: string;
-  }>({ styleIds: sponsorStyles.map((style) => style?.id!), isDone: 'all', keyword: '' });
+  }>({ styleIds: sponsorStyles.map((style) => style?.id || 0), isDone: 'all', keyword: '' });
   const [isAllCheck, setIsAllCheck] = useState<boolean>(true);
   type SelectOption = 'all' | 'false' | 'true';
 
@@ -49,7 +49,7 @@ const FilterModal: FC<ModalProps> = (props) => {
   };
 
   function addAllStyleIds() {
-    const allStyleIDs = sponsorStyles.map((style) => style?.id!);
+    const allStyleIDs = sponsorStyles.map((style) => style?.id || 0);
     setFilterData({ ...filterData, styleIds: allStyleIDs });
     setIsAllCheck(true);
   }
@@ -104,9 +104,9 @@ const FilterModal: FC<ModalProps> = (props) => {
                     <div className='flex p-2' key={style.id} onClick={preventStyleOpenEvent}>
                       <input
                         type='checkbox'
-                        checked={includeStyleIds(style?.id!)}
+                        checked={includeStyleIds(style?.id || 0)}
                         onChange={() => {
-                          addAndRemoveStyleIds(style?.id!);
+                          addAndRemoveStyleIds(style?.id || 0);
                         }}
                         id={String(style.id)}
                       ></input>
