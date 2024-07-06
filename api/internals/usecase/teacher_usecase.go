@@ -68,7 +68,8 @@ func (t *teacherUseCase) GetFundRegisteredByPeriods(c context.Context, year stri
 		return nil, err
 	}
 	defer rows.Close()
-	var ids []int
+
+	ids := []int{}
 	for rows.Next() {
 			var id int
 			if err := rows.Scan(&id); err != nil {
