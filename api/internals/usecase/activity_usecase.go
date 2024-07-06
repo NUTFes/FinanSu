@@ -21,7 +21,8 @@ type ActivityUseCase interface {
 	DestroyActivity(context.Context, string) error
 	GetActivityDetail(context.Context) ([]domain.ActivityDetail, error)
 	GetActivityDetailsByPeriod(context.Context, string) ([]domain.ActivityDetail, error)
-	GetFilteredActivityDetail(context.Context, string, []string, string, string) ([]domain.ActivityDetail, error)
+	GetFilteredActivityDetail(context.Context, string, []string, string) ([]domain.ActivityDetail, error)
+	GetFilteredActivityDetailByPeriod(context.Context, string, []string, string, string) ([]domain.ActivityDetail, error)
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
@@ -355,7 +356,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 	return activities, nil
 }
 
-func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone string, sponsorStyleIDs []string, year string, keyword string) ([]domain.ActivityDetail, error) {
+func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone string, sponsorStyleIDs []string, keyword string) ([]domain.ActivityDetail, error) {
 
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
@@ -365,7 +366,104 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 	var activityInformations []domain.ActivityInformation
 
 	// クエリー実行
-	rows, err := a.rep.FindFilteredDetail(c, isDone, sponsorStyleIDs, year, keyword)
+	rows, err := a.rep.FindFilteredDetail(c, isDone, sponsorStyleIDs, keyword)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&activity.Activity.ID,
+			&activity.Activity.UserID,
+			&activity.Activity.IsDone,
+			&activity.Activity.SponsorID,
+			&activity.Activity.Feature,
+			&activity.Activity.Expense,
+			&activity.Activity.Remark,
+			&activity.Activity.Design,
+			&activity.Activity.Url,
+			&activity.Activity.CreatedAt,
+			&activity.Activity.UpdatedAt,
+			&activity.Sponsor.ID,
+			&activity.Sponsor.Name,
+			&activity.Sponsor.Tel,
+			&activity.Sponsor.Email,
+			&activity.Sponsor.Address,
+			&activity.Sponsor.Representative,
+			&activity.Sponsor.CreatedAt,
+			&activity.Sponsor.UpdatedAt,
+			&activity.User.ID,
+			&activity.User.Name,
+			&activity.User.BureauID,
+			&activity.User.RoleID,
+			&activity.User.IsDeleted,
+			&activity.User.CreatedAt,
+			&activity.User.UpdatedAt,
+		)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+
+		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&activityInformation.ID,
+				&activityInformation.ActivityId,
+				&activityInformation.BucketName,
+				&activityInformation.FileName,
+				&activityInformation.FileType,
+				&activityInformation.DesignProgress,
+				&activityInformation.FileInformation,
+				&activityInformation.CreatedAt,
+				&activityInformation.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			activityInformations = append(activityInformations, activityInformation)
+		}
+		activity.ActivityInformation = activityInformations
+		activityInformations = nil
+
+		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
+		for rows.Next(){
+			err := rows.Scan(
+				&styleDetail.ActivityStyle.ID,
+				&styleDetail.ActivityStyle.ActivityID,
+				&styleDetail.ActivityStyle.SponsoStyleID,
+				&styleDetail.ActivityStyle.CreatedAt,
+				&styleDetail.ActivityStyle.UpdatedAt,
+				&styleDetail.SponsorStyle.ID,
+				&styleDetail.SponsorStyle.Style,
+				&styleDetail.SponsorStyle.Feature,
+				&styleDetail.SponsorStyle.Price,
+				&styleDetail.SponsorStyle.CreatedAt,
+				&styleDetail.SponsorStyle.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			styleDetails = append(styleDetails, styleDetail)
+		}
+		activity.StyleDetail = styleDetails
+		activities = append(activities, activity)
+		styleDetails = nil
+	}
+	return activities, nil
+}
+
+func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, isDone string, sponsorStyleIDs []string, year string, keyword string) ([]domain.ActivityDetail, error) {
+
+	activity := domain.ActivityDetail{}
+	var activities []domain.ActivityDetail
+	styleDetail := domain.StyleDetail{}
+	var styleDetails []domain.StyleDetail
+	activityInformation := domain.ActivityInformation{}
+	var activityInformations []domain.ActivityInformation
+
+	// クエリー実行
+	rows, err := a.rep.FindFilteredDetailByPeriod(c, isDone, sponsorStyleIDs, year, keyword)
 	if err != nil {
 		return nil, err
 	}

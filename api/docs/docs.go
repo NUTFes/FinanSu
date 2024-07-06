@@ -106,8 +106,54 @@ const docTemplate = `{
                         "explode": true
                     },
                     {
-                        "name": "year",
+                        "name": "keyword",
                         "in": "query",
+                        "description": "Filter by keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activitiesとsponsor,sponsorStyle,userの一覧の取得",
+                    }
+                }
+            },
+        },
+        "/activities/filtered_details/{year}": {
+            "get": {
+                tags: ["activity"],
+                "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
+                "parameters": [
+                    {
+                        "name": "is_done",
+                        "in": "query",
+                        "description": "Filter by done status.[true, false, all]",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["true", "false", "all"] 
+                        }          
+                    },
+                    {
+                        "name": "sponsor_style_id",
+                        "in": "query",
+                        "description": "Filter by sponsor style IDs. ex.) 1,3,6,...",
+                        "required": false,
+                        "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "year",
+                        "in": "path",
                         "description": "Filter by year.",
                         "required": false,
                         "schema": {
