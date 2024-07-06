@@ -129,7 +129,6 @@ export default function SponsorActivities(props: Props) {
   };
 
   const currentYear = new Date().getFullYear().toString();
-  const [selectedIsDone, setSelectedIsDone] = useState<string>('all');
 
   // フィルタ用変数
   const [filterData, setFilterData] = useState<SponsorFilterType>({
@@ -141,27 +140,6 @@ export default function SponsorActivities(props: Props) {
 
   const sortedAndFilteredSponsorActivitiesViews = useMemo(() => {
     let filteredActivities = sponsorActivities;
-
-    switch (selectedIsDone) {
-      case 'false':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
-        filteredActivities = filteredActivities.filter((sponsorActivitiesItem) => {
-          return !sponsorActivitiesItem.sponsorActivity.isDone;
-        });
-        break;
-      case 'true':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
-        filteredActivities = filteredActivities.filter((sponsorActivitiesItem) => {
-          return sponsorActivitiesItem.sponsorActivity.isDone;
-        });
-        break;
-      default:
-        break;
-    }
 
     switch (filterData.selectedSort) {
       case 'updateSort':
@@ -222,7 +200,7 @@ export default function SponsorActivities(props: Props) {
       default:
         return filteredActivities;
     }
-  }, [props, selectedYear, selectedIsDone, filterData, sponsorActivities]);
+  }, [props, filterData, sponsorActivities]);
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
@@ -255,7 +233,7 @@ export default function SponsorActivities(props: Props) {
 
   useEffect(() => {
     getSponsorActivities();
-  }, [filterData]);
+  }, [filterData, selectedYear]);
 
   return (
     <MainLayout>
