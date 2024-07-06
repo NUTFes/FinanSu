@@ -98,7 +98,7 @@ export default function PurchaseItemNumModal() {
   };
 
   return (
-    <Modal className='mt-32 overflow-scroll md:m-0 md:h-5/6'>
+    <Modal className='mt-32 overflow-scroll md:h-5/6 md:w-3/4'>
       <div className={clsx('w-full ')}>
         <div className={clsx('mr-5 grid w-full justify-items-end')}>
           <CloseButton onClick={closeModal} />
@@ -128,7 +128,7 @@ export default function PurchaseItemNumModal() {
           </div>
         </div>
       </div>
-      <div className={clsx('mb-4 grid h-2/3 grid-cols-12 gap-4 overflow-scroll')}>
+      <div className={clsx('max-h-2/3 mb-4 grid grid-cols-12 gap-4 overflow-scroll')}>
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
           <div className={clsx('mb-2 w-full p-5')}>
