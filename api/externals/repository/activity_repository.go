@@ -219,15 +219,23 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 
 	// keywordフィルタを追加
 	if keyword != "" {
-		optionQuery += ` AND
-		sponsors.name LIKE '%` + keyword + `%'`
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsors.name LIKE '%` + keyword + `%'`
+		} else {
+			optionQuery += ` sponsors.name LIKE '%` + keyword + `%'` 
+		}
 	}
 
 	// isDoneフィルタを追加
 	if isDone != "" {
 		if isDone != "all" {
-			optionQuery += ` AND
-			activities.is_done = ` + isDone
+			if optionQuery != "" {
+				optionQuery += ` AND
+				activities.is_done = ` + isDone
+			} else {
+				optionQuery += ` activities.is_done = ` + isDone
+			}
 		}
 	}
 
@@ -235,12 +243,16 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 	if len(sponsorStyleIDs) > 0 {
 		// プレースホルダーを生成
 		placeholders := strings.Join(sponsorStyleIDs, ",")
-		optionQuery += ` AND
-		sponsor_styles.id IN (` + placeholders + `)`
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsor_styles.id IN (` + placeholders + `)`
+		} else {
+			optionQuery += ` sponsor_styles.id IN (` + placeholders + `)`
+		}
 	}
 
 	if optionQuery != "" {
-		query += ` WHERE ` + optionQuery
+		query += (" WHERE" + optionQuery)
 	}
 
 	return ar.crud.Read(c, query)
@@ -286,34 +298,50 @@ func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDo
 
 	// keywordフィルタを追加
 	if keyword != "" {
-		optionQuery += ` AND
-		sponsors.name LIKE '%` + keyword + `%'`
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsors.name LIKE '%` + keyword + `%'`
+		} else {
+			optionQuery += ` sponsors.name LIKE '%` + keyword + `%'` 
+		}
 	}
 
 	// isDoneフィルタを追加
 	if isDone != "" {
 		if isDone != "all" {
-			optionQuery += ` AND
-			activities.is_done = ` + isDone
+			if optionQuery != "" {
+				optionQuery += ` AND
+				activities.is_done = ` + isDone
+			} else {
+				optionQuery += ` activities.is_done = ` + isDone
+			}
 		}
 	}
 
 	// yearのフィルタ追加
 	if year != "" {
-		optionQuery += ` AND
-		years.year = ` + year + " ORDER BY activities.updated_at DESC"
+		if optionQuery != "" {
+			optionQuery += ` AND
+			years.year = ` + year + " ORDER BY activities.updated_at DESC"
+		} else {
+			optionQuery += ` years.year = ` + year + " ORDER BY activities.updated_at DESC"
+		}
 	}
 
 	// sponsorStyleIDsフィルタを追加
 	if len(sponsorStyleIDs) > 0 {
 		// プレースホルダーを生成
 		placeholders := strings.Join(sponsorStyleIDs, ",")
-		optionQuery += ` AND
-		sponsor_styles.id IN (` + placeholders + `)`
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsor_styles.id IN (` + placeholders + `)`
+		} else {
+			optionQuery += ` sponsor_styles.id IN (` + placeholders + `)`
+		}
 	}
 
 	if optionQuery != "" {
-		query += ` WHERE ` + optionQuery
+		query += (" WHERE" + optionQuery)
 	}
 
 	return ar.crud.Read(c, query)
