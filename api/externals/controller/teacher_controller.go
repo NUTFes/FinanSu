@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"net/http"
+
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type teacherController struct {
@@ -16,6 +18,7 @@ type TeacherController interface {
 	CreateTeacher(echo.Context) error
 	UpdateTeacher(echo.Context) error
 	DestroyTeacher(echo.Context) error
+	DestroyMultiTeachers(echo.Context) error
 }
 
 func NewTeacherController(u usecase.TeacherUseCase) TeacherController {
@@ -80,4 +83,18 @@ func (t *teacherController) DestroyTeacher(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy Teacher")
+}
+
+// DestroyMultiTeachers
+func (t *teacherController) DestroyMultiTeachers(c echo.Context) error {
+	destroyTeacherIDs := new(domain.DestroyTeacherIDs)
+	if err := c.Bind(&destroyTeacherIDs);err != nil {
+		return err
+	}
+
+	err := t.u.DestroyMultiTeachers(c.Request().Context(), destroyTeacherIDs.DeleteIDs)
+	if err != nil {
+		return  c.String(http.StatusBadRequest,err.Error())
+	}
+	return c.String(http.StatusOK, "Destroy Teachers")
 }

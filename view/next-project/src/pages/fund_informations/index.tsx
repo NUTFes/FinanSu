@@ -1,11 +1,10 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import Router from 'next/router';
+import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-
-import { authAtom } from '@/store/atoms';
+import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
-import { getCurrentUser } from '@api/currentUser';
 import { put } from '@api/fundInformations';
 import { Title, Card } from '@components/common';
 import { Checkbox } from '@components/common';
@@ -38,24 +37,16 @@ export const getServerSideProps = async () => {
   const periodsRes = await get(getPeriodsUrl);
   const getTeachersInformationURL = process.env.SSR_API_URI + '/teachers';
   const getDepartmentURL = process.env.SSR_API_URI + '/departments';
-  const getFundInformationURL = process.env.SSR_API_URI + '/fund_informations';
-  const getFundInformationViewURL =
-    process.env.SSR_API_URI +
-    '/fund_informations/details/' +
-    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+
   const getUserURL = process.env.SSR_API_URI + '/users';
   const teachersInformationRes = await get(getTeachersInformationURL);
-  const fundInformationRes = await get(getFundInformationURL);
   const departmentRes = await get(getDepartmentURL);
-  const fundInformationViewRes = await get(getFundInformationViewURL);
   const userRes = await get(getUserURL);
 
   return {
     props: {
       teachers: teachersInformationRes,
       departments: departmentRes,
-      fundInformation: fundInformationRes,
-      fundInformationView: fundInformationViewRes,
       users: userRes,
       yearPeriods: periodsRes,
     },
@@ -67,13 +58,18 @@ export default function FundInformations(props: Props) {
   const teachers: Teacher[] = props.teachers;
   const users: User[] = props.users;
   const departments: Department[] = props.departments;
-  const auth = useRecoilValue(authAtom);
+  const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
+  // 一般ユーザーの場合、購入申請へ飛ばす
+  user?.roleID === 1 && Router.push('/purchaseorders');
+
+  useEffect(() => {
+    setCurrentUser(user);
+  }, []);
+
   // 募金一覧
-  const [fundInformationViews, setFundInformationViews] = useState<FundInformationView[]>(
-    props.fundInformationView,
-  );
+  const [fundInformationViews, setFundInformationViews] = useState<FundInformationView[]>();
 
   //年の指定
   const yearPeriods = props.yearPeriods;
@@ -97,53 +93,18 @@ export default function FundInformations(props: Props) {
   const [isFirstChecks, setIsFirstChecks] = useState<boolean[]>([]);
   const [isLastChecks, setIsLastChecks] = useState<boolean[]>([]);
 
-  const isDeveloper = useMemo(() => {
-    if (currentUser?.roleID == 2) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
+  const isDeveloper = currentUser?.roleID == 2;
+  const isFinanceDirector = currentUser?.roleID == 3;
+  const isFinanceStaff = currentUser?.bureauID == 3 || currentUser?.bureauID == 4;
 
-  const isFinanceDirector = useMemo(() => {
-    if (currentUser?.roleID == 3) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
-
-  const isFinanceStaff = useMemo(() => {
-    if (currentUser?.bureauID == 3 || currentUser?.bureauID == 4) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.bureauID]);
-
-  const isDisabled = useCallback(
-    (fundViewItem: FundInformationView) => {
-      if (
-        fundViewItem.fundInformation.userID == currentUser?.id ||
-        isDeveloper ||
-        isFinanceStaff ||
-        isFinanceDirector
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-    [currentUser?.id, isDeveloper, isFinanceStaff, isFinanceDirector],
-  );
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getCurrentUser(auth);
-      setCurrentUser(res);
-    };
-    getUser();
-  }, []);
+  const isDisabled = (fundViewItem: FundInformationView) => {
+    return !(
+      fundViewItem.fundInformation.userID == currentUser?.id ||
+      isDeveloper ||
+      isFinanceStaff ||
+      isFinanceDirector
+    );
+  };
 
   useEffect(() => {
     if (fundInformationViews) {
@@ -180,7 +141,7 @@ export default function FundInformations(props: Props) {
     const putURL = process.env.CSR_API_URI + '/fund_informations/' + id;
     await put(putURL, fundItem);
 
-    const newFundInformationViews = fundInformationViews.map((fundInformationView) => {
+    const newFundInformationViews = fundInformationViews?.map((fundInformationView) => {
       if (fundInformationView.fundInformation.id == id) {
         return {
           ...fundInformationView,
@@ -323,6 +284,7 @@ export default function FundInformations(props: Props) {
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
               {fundInformationViews &&
+                user?.roleID !== 1 &&
                 fundInformationViews.map((fundViewItem: FundInformationView, index) => (
                   <tr
                     key={fundViewItem.fundInformation.id}
