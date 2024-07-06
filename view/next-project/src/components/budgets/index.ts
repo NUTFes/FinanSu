@@ -5,3 +5,6 @@ export { default as DeleteModal } from './DeleteModal';
 export { default as DetailModal } from './DetailModal';
 export { default as EditModal } from './EditModal';
 export { default as ExpenditureAddModal } from './ExpenditureAddModal';
+export { default as ExpenseAddModal } from './ExpenseAddModal';
+export { default as ExpenseDeleteModal } from './ExpenseDeleteModal';
+export { default as ExpenseEditModal } from './ExpenseEditModal';
