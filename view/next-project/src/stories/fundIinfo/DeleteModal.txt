@@ -1,8 +1,9 @@
+// todo: 後で移行します
 import { Meta } from '@storybook/react';
-import { DeleteModal } from '@components/budgets';
+import { DeleteModal } from '@components/fund_information';
 
 const meta: Meta<typeof DeleteModal> = {
-  title: 'FinanSu/budgets/DeleteModal',
+  title: 'FinanSu/fund_information/DeleteModal',
   component: DeleteModal,
   tags: ['autodocs'],
   argTypes: {},
