@@ -25,7 +25,7 @@ type ActivityRepository interface {
 	FindSponsorStyle(context.Context, string) (*sql.Rows, error)
 	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
 	FindActivityInformation(context.Context, string) (*sql.Rows, error)
-	FindFilteredDetail(context.Context, string, []string, string) (*sql.Rows, error)
+	FindFilteredDetail(context.Context, string, []string, string, string) (*sql.Rows, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -189,7 +189,7 @@ func (ar *activityRepository) AllDetailsByPeriod(c context.Context, year string)
 }
 
 // activityに紐づくsponserとusersをフィルタを考慮して取得する
-func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone string, sponsorStyleIDs []string, keyword string) (*sql.Rows, error) {
+func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone string, sponsorStyleIDs []string, year string, keyword string) (*sql.Rows, error) {
 	query := `
 	SELECT 
 		activities.*,
@@ -213,6 +213,16 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 		sponsor_styles
 	ON
 		activity_styles.sponsor_style_id = sponsor_styles.id
+	INNER JOIN
+		year_periods
+	ON
+		activities.created_at > year_periods.started_at
+	AND
+		activities.created_at < year_periods.ended_at
+	INNER JOIN
+		years
+	ON
+		year_periods.year_id = years.id
 	WHERE 
 		1=1 `
 
@@ -228,6 +238,12 @@ func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone strin
 			query += ` AND 
 			activities.is_done = ` + isDone
 		}
+	}
+
+	// yearのフィルタ追加
+	if year != "" {
+		query += ` AND
+		years.year = ` + year + " ORDER BY activities.updated_at DESC"
 	}
 
 	// sponsorStyleIDsフィルタを追加

@@ -21,7 +21,7 @@ type ActivityUseCase interface {
 	DestroyActivity(context.Context, string) error
 	GetActivityDetail(context.Context) ([]domain.ActivityDetail, error)
 	GetActivityDetailsByPeriod(context.Context, string) ([]domain.ActivityDetail, error)
-	GetFilteredActivityDetail(context.Context, string, []string, string) ([]domain.ActivityDetail, error)
+	GetFilteredActivityDetail(context.Context, string, []string, string, string) ([]domain.ActivityDetail, error)
 }
 
 func NewActivityUseCase(rep rep.ActivityRepository) ActivityUseCase {
@@ -355,7 +355,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 	return activities, nil
 }
 
-func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone string, sponsorStyleIDs []string, keyword string) ([]domain.ActivityDetail, error) {
+func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone string, sponsorStyleIDs []string, year string, keyword string) ([]domain.ActivityDetail, error) {
 
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
@@ -365,7 +365,7 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 	var activityInformations []domain.ActivityInformation
 
 	// クエリー実行
-	rows, err := a.rep.FindFilteredDetail(c, isDone, sponsorStyleIDs, keyword)
+	rows, err := a.rep.FindFilteredDetail(c, isDone, sponsorStyleIDs, year, keyword)
 	if err != nil {
 		return nil, err
 	}

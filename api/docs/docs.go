@@ -106,6 +106,15 @@ const docTemplate = `{
                         "explode": true
                     },
                     {
+                        "name": "year",
+                        "in": "query",
+                        "description": "Filter by year.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }          
+                    },
+                    {
                         "name": "keyword",
                         "in": "query",
                         "description": "Filter by keyword",
