@@ -90,6 +90,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 	e.GET("/activities/details", r.activityController.IndexActivityDetail)
 	e.GET("/activities/details/:year",r.activityController.IndexActivityDetailsByPeriod)
+	e.GET("/activities/filtered_details", r.activityController.IndexFilteredActivityDetail)
+	e.GET("/activities/filtered_details/:year", r.activityController.IndexFilteredActivityDetailByPeriod)
 
 	// activityInformationsのRoute
 	e.GET("/activity_informations", r.activityInformationController.IndexActivityInformation)
