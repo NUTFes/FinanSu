@@ -142,6 +142,17 @@ const FilterModal: FC<ModalProps> = (props) => {
               }}
             />
           </div>
+          <p className='col-span-2 text-black-600'>並び替え</p>
+          <div className='col-span-2 w-full'>
+            <Select className={'w-100'} defaultValue={'default'} onChange={(e) => e.target.value}>
+              <option value='default'>更新日時降順</option>
+              <option value='updateSort'>更新日時昇順</option>
+              <option value='createDesSort'>作成日時降順</option>
+              <option value='createSort'>作成日時昇順</option>
+              <option value='priceDesSort'>協賛金降順</option>
+              <option value='priceSort'>協賛金昇順</option>
+            </Select>
+          </div>
         </div>
         <div className='mx-auto my-8 w-fit text-xl text-black-600'>
           <button>設定</button>

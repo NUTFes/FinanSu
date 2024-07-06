@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useEffect, useMemo } from 'react';
 
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { IoFilterSharp } from 'react-icons/io5';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
@@ -292,12 +292,12 @@ export default function SponsorActivities(props: Props) {
               </select> */}
               <div className='flex items-center justify-center'>
                 <button
-                  className='rounded-md bg-primary-5 px-1 py-1'
+                  className='rounded-md bg-primary-5 px-1 py-1 hover:bg-white-100 hover:outline-base-1'
                   onClick={() => {
                     setIsFilerOpen(!isFilerOpen);
                   }}
                 >
-                  <GiHamburgerMenu size='30' color='white' />
+                  <IoFilterSharp size='30' color='white' />
                 </button>
               </div>
               {isFilerOpen && (
