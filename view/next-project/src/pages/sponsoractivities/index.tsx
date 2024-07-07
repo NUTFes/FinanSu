@@ -253,11 +253,7 @@ export default function SponsorActivities(props: Props) {
                     setIsFilerOpen(!isFilerOpen);
                   }}
                 >
-                  {isFiltered ? (
-                    <MdFilterList size='22' color='#666666' />
-                  ) : (
-                    <MdOutlineFilterListOff size='22' color='#666666' />
-                  )}
+                  <MdFilterList size='22' color='#666666' />
                 </button>
                 {isFiltered && (
                   <div className='fixed -mt-5 ml-6'>
