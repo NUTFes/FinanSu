@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { EditModal } from '@components/purchaseorders';
 import { PurchaseItem } from '@type/common'; // PurchaseItem 型のインポートを確認してください
 
@@ -16,15 +16,16 @@ const samplePurchaseItems: PurchaseItem[] = [
   {
     id: 1,
     item: 'ノートパソコン',
-    price: '100000',
+    price: 100000,
     quantity: 2,
     detail: 'ビジネス用',
     url: 'http://example.com',
-    finance_check: false,
+    financeCheck: false,
+    purchaseOrderID: 123,
   },
 ];
 
-export const Primary: Story<typeof EditModal> = (args) => <EditModal {...args} />;
+export const Primary: StoryFn<typeof EditModal> = (args) => <EditModal {...args} />;
 Primary.args = {
   purchaseOrderId: 123,
   purchaseItems: samplePurchaseItems,

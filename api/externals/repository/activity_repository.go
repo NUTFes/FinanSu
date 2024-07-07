@@ -334,9 +334,9 @@ func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDo
 	if year != "" {
 		if optionQuery != "" {
 			optionQuery += ` AND
-			years.year = ` + year + " ORDER BY activities.updated_at DESC"
+			years.year = ` + year + " ORDER BY activities.updated_at DESC, activities.id DESC"
 		} else {
-			optionQuery += ` years.year = ` + year + " ORDER BY activities.updated_at DESC"
+			optionQuery += ` years.year = ` + year + " ORDER BY activities.updated_at DESC, activities.id DESC"
 		}
 	}
 

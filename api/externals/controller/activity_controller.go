@@ -108,7 +108,7 @@ func (a *activityController) IndexActivityDetailsByPeriod(c echo.Context) error 
 }
 
 func (a *activityController) IndexFilteredActivityDetail(c echo.Context) error {
-	isDone := c.QueryParam("is_done") 
+	isDone := c.QueryParam("is_done")
 	sponsorStyleIDs := c.QueryParams()["sponsor_style_id"]
 	keyword := c.QueryParam("keyword")
 	activities, err := a.u.GetFilteredActivityDetail(c.Request().Context(), isDone, sponsorStyleIDs, keyword)
@@ -119,7 +119,7 @@ func (a *activityController) IndexFilteredActivityDetail(c echo.Context) error {
 }
 
 func (a *activityController) IndexFilteredActivityDetailByPeriod(c echo.Context) error {
-	isDone := c.QueryParam("is_done") 
+	isDone := c.QueryParam("is_done")
 	sponsorStyleIDs := c.QueryParams()["sponsor_style_id"]
 	year := c.Param("year")
 	keyword := c.QueryParam("keyword")

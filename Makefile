@@ -68,3 +68,7 @@ run-prod:
 # DB入るコマンド
 ent-db:
 	docker compose exec db mysql -u root -proot
+
+# eslintの実行
+run-eslint:
+	docker compose exec view npm run lint

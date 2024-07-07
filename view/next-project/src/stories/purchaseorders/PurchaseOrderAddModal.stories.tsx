@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
-import PurchaseOrderAddModal from '@components/purchaseorders/PurchaseOrderAddModal';
+import { PurchaseOrderAddModal } from '@components/purchaseorders';
 
 const meta: Meta = {
   title: 'FinanSu/purchaseorders/PurchaseOrderAddModal',
@@ -11,7 +11,9 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: StoryFn = (args) => <PurchaseOrderAddModal {...args} />;
+const Template: StoryFn<typeof PurchaseOrderAddModal> = (args) => (
+  <PurchaseOrderAddModal {...args} />
+);
 
 export const Primary = Template.bind({});
 Primary.args = {
