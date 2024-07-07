@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useEffect, useMemo } from 'react';
 
-import { IoFilterSharp } from 'react-icons/io5';
 import { RiExternalLinkLine } from 'react-icons/ri';
+import { MdFilterList, MdCircle, MdOutlineFilterListOff } from 'react-icons/md';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
   OpenAddModalButton,
@@ -211,6 +211,14 @@ export default function SponsorActivities(props: Props) {
     getSponsorActivities();
   }, [filterData, selectedYear]);
 
+  const isFiltered = useMemo(() => {
+    const isStyleFilter = sponsorStyles.length !== filterData.styleIds.length;
+    const isDonefilter = filterData.isDone !== 'all';
+    const isKeywordFilter = filterData.keyword.length !== 0;
+    const isSorted = filterData.selectedSort !== 'default';
+    return isStyleFilter || isDonefilter || isKeywordFilter || isSorted;
+  }, [filterData]);
+
   return (
     <MainLayout>
       <Head>
@@ -245,8 +253,17 @@ export default function SponsorActivities(props: Props) {
                     setIsFilerOpen(!isFilerOpen);
                   }}
                 >
-                  <IoFilterSharp size='22' color='#666666' />
+                  {isFiltered ? (
+                    <MdFilterList size='22' color='#666666' />
+                  ) : (
+                    <MdOutlineFilterListOff size='22' color='#666666' />
+                  )}
                 </button>
+                {isFiltered && (
+                  <div className='fixed -mt-5 ml-6'>
+                    <MdCircle color='rgb(4 102 140)' size={6} />
+                  </div>
+                )}
               </div>
               {isFilerOpen && (
                 <FilterModal
