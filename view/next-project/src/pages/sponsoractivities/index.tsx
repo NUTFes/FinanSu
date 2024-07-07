@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useEffect, useMemo } from 'react';
 
-import { MdFilterList, MdCircle, MdOutlineFilterListOff } from 'react-icons/md';
+import { MdFilterList, MdCircle } from 'react-icons/md';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
