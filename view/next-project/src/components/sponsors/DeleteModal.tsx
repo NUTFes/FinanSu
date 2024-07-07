@@ -24,7 +24,7 @@ const SponsorDeleteModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={() => props.setShowModal(false)}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton onClick={() => props.setShowModal(false)} />
