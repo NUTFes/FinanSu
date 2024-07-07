@@ -222,6 +222,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// teacherのRoute
 	e.GET("/teachers", r.teacherController.IndexTeacher)
 	e.GET("/teachers/:id", r.teacherController.ShowTeacher)
+	e.GET("/teachers/fundRegistered/:year", r.teacherController.IndexFundRegisteredTeacher)
 	e.POST("/teachers", r.teacherController.CreateTeacher)
 	e.PUT("/teachers/:id", r.teacherController.UpdateTeacher)
 	e.DELETE("/teachers/:id", r.teacherController.DestroyTeacher)
