@@ -13,7 +13,7 @@ services:
       context: ./api
       dockerfile: prod.Dockerfile
     container_name: "nutfes-finansu-api"
-    env_file: ["./finansu.env"]
+    env_file: ["./finansu.local.env"]
     ports: ["1323:1323"]
     environment:
       ENV: "develop"

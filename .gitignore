@@ -2,6 +2,7 @@
 /.idea/
 FinanSu.iml
 finansu.env
+finansu.local.env
 api/tmp
 
 # cloudflare
