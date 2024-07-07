@@ -72,7 +72,7 @@ export default function EditModal(props: ModalProps) {
       </div>
     </div>
   );
-  
+
   const closeModal = () => {
     props.setIsOpen(false);
   };

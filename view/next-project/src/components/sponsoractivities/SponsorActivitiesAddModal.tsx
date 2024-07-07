@@ -424,7 +424,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       </div>
     );
   };
-  
+
   const closeModal = () => {
     props.setIsOpen(false);
   };
