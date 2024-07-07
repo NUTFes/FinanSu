@@ -103,6 +103,25 @@ export default function SponsorActivities(props: Props) {
   };
 
   const getSponsorActivities = async () => {
+    if (isFiltered) {
+      const getSponsorActivitiesViewUrlByYear =
+        process.env.CSR_API_URI + '/activities/filtered_details/' + selectedYear;
+      const getFilterSponsorActivitiesByYears = await getByFiler(
+        getSponsorActivitiesViewUrlByYear,
+        filterData.isDone,
+        filterData.styleIds,
+        filterData.keyword,
+        sponsorStyles.length,
+      );
+      setSponsorActivities(getFilterSponsorActivitiesByYears);
+    } else {
+      console.log('notFiltered');
+      const getSponsorActivitiesViewUrlByYear =
+        process.env.CSR_API_URI + '/activities/details/' + selectedYear;
+      const getSponsorActivitiesByYears = await get(getSponsorActivitiesViewUrlByYear);
+      setSponsorActivities(getSponsorActivitiesByYears);
+    }
+
     const getSponsorActivitiesViewUrlByYear =
       process.env.CSR_API_URI + '/activities/filtered_details/' + selectedYear;
     const getFilterSponsorActivitiesByYears = await getByFiler(
@@ -207,10 +226,6 @@ export default function SponsorActivities(props: Props) {
     return totalFee;
   }, [sortedSponsorActivitiesViews]);
 
-  useEffect(() => {
-    getSponsorActivities();
-  }, [filterData, selectedYear]);
-
   const isFiltered = useMemo(() => {
     const isStyleFilter = sponsorStyles.length !== filterData.styleIds.length;
     const isDonefilter = filterData.isDone !== 'all';
@@ -218,6 +233,10 @@ export default function SponsorActivities(props: Props) {
     const isSorted = filterData.selectedSort !== 'default';
     return isStyleFilter || isDonefilter || isKeywordFilter || isSorted;
   }, [filterData]);
+
+  useEffect(() => {
+    getSponsorActivities();
+  }, [filterData, selectedYear]);
 
   return (
     <MainLayout>
@@ -256,7 +275,7 @@ export default function SponsorActivities(props: Props) {
                   <MdFilterList size='22' color='#666666' />
                 </button>
                 {isFiltered && (
-                  <div className='fixed -mt-5 ml-6'>
+                  <div className='absolute -mt-5 ml-6'>
                     <MdCircle color='rgb(4 102 140)' size={6} />
                   </div>
                 )}
