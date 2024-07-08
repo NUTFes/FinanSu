@@ -16,11 +16,12 @@ interface ModalProps {
   departments: Department[];
   users: User[];
   currentUser?: User;
+  currentYear: string;
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
   const [user] = useRecoilState(userAtom);
-  const { teachers } = props;
+  const { teachers, currentYear } = props;
 
   const router = useRouter();
   const [departmentID, setDepartmentID] = useState<number | string>(1);
@@ -101,7 +102,8 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   const isValid = !formData.userID || formData.teacherID == 0;
 
   async function getRegisteredTeachers() {
-    const registeredTeachersURL = process.env.CSR_API_URI + '/teachers/fundRegistered/2024';
+    const registeredTeachersURL =
+      process.env.CSR_API_URI + `/teachers/fundRegistered/${currentYear}`;
     const resData = await get(registeredTeachersURL);
     setRegisteredTeacherIds(resData);
     const firstNotRegisteredTeacher = teachers.find((teacher) => {

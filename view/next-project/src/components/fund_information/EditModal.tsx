@@ -14,12 +14,13 @@ interface ModalProps {
   users: User[];
   departments: Department[];
   fundInformation: FundInformation;
+  currentYear: string;
 }
 
 export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
-  const { teachers, fundInformation } = props;
+  const { teachers, fundInformation, currentYear } = props;
 
   const [formData, setFormData] = useState<FundInformation>({
     id: fundInformation.id,
@@ -101,7 +102,8 @@ export default function EditModal(props: ModalProps) {
   }, [bureauId]);
 
   async function getRegisteredTeachers() {
-    const registeredTeachersURL = process.env.CSR_API_URI + '/teachers/fundRegistered/2024';
+    const registeredTeachersURL =
+      process.env.CSR_API_URI + `/teachers/fundRegistered/${currentYear}`;
     const resData = await get(registeredTeachersURL);
     setRegisteredTeacherIds(resData);
   }
