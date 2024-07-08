@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 
 import { MdFilterList, MdCircle } from 'react-icons/md';
 import { RiExternalLinkLine } from 'react-icons/ri';
+import { Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
   OpenAddModalButton,
@@ -83,6 +84,7 @@ export default function SponsorActivities(props: Props) {
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFilerOpen, setIsFilerOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [filterData, setFilterData] = useState<SponsorFilterType>({
     styleIds: sponsorStyles.map((style) => style?.id || 0),
     isDone: 'all',
@@ -103,6 +105,7 @@ export default function SponsorActivities(props: Props) {
   };
 
   const getSponsorActivities = async () => {
+    setIsLoading(true);
     if (isFiltered) {
       const getSponsorActivitiesViewUrlByYear =
         process.env.CSR_API_URI + '/activities/filtered_details/' + selectedYear;
@@ -114,12 +117,13 @@ export default function SponsorActivities(props: Props) {
         sponsorStyles.length,
       );
       setSponsorActivities(getFilterSponsorActivitiesByYears);
+      setIsLoading(false);
     } else {
-      console.log('notFiltered');
       const getSponsorActivitiesViewUrlByYear =
         process.env.CSR_API_URI + '/activities/details/' + selectedYear;
       const getSponsorActivitiesByYears = await get(getSponsorActivitiesViewUrlByYear);
       setSponsorActivities(getSponsorActivitiesByYears);
+      setIsLoading(false);
     }
 
     const getSponsorActivitiesViewUrlByYear =
@@ -244,6 +248,7 @@ export default function SponsorActivities(props: Props) {
         <title>協賛活動一覧</title>
         <meta name='viewpoinst' content='initial-scale=1.0, width=device-width' />
       </Head>
+      {isLoading && <Loading />}
       <Card w='w-full'>
         <div className='mx-6 mt-10 md:mx-5'>
           <div className='gap-4 md:flex'>
