@@ -126,7 +126,7 @@ const FilterModal: FC<ModalProps> = (props) => {
                 </div>
               </div>
             </div>
-            <p className='col-span-2 text-black-600'>回収有無</p>
+            <p className='col-span-2 text-black-600'>協賛金回収状況</p>
             <div className='col-span-2 w-full'>
               <Select
                 defaultValue={draftFilterData.isDone}
