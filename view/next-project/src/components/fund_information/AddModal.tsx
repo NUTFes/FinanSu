@@ -87,7 +87,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     const departmentTeachers = teachers.filter(
       (teacher) => teacher.departmentID === Number(e.target.value),
     );
-    setFormData({ ...formData, teacherID: departmentTeachers[0]?.id || 0 });
+    const firstNotRegisteredTeacher = departmentTeachers.find((teacher) => {
+      return !registeredTeacherIds.includes(teacher?.id || 0);
+    });
+    setFormData({ ...formData, teacherID: firstNotRegisteredTeacher?.id || 0 });
   };
 
   const addFundInformation = async (data: FundInformation) => {
@@ -101,10 +104,10 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     const registeredTeachersURL = process.env.CSR_API_URI + '/teachers/fundRegistered/2024';
     const resData = await get(registeredTeachersURL);
     setRegisteredTeacherIds(resData);
-    const notRegisteredTeachers = teachers.find((teacher) => {
+    const firstNotRegisteredTeacher = teachers.find((teacher) => {
       return !resData.includes(teacher.id);
     });
-    setFormData({ ...formData, teacherID: notRegisteredTeachers?.id || 0 });
+    setFormData({ ...formData, teacherID: firstNotRegisteredTeacher?.id || 0 });
   }
 
   useEffect(() => {

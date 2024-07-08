@@ -45,12 +45,18 @@ export default function EditModal(props: ModalProps) {
   useEffect(() => {
     if (teacher?.departmentID !== departmentID) {
       const relatedTeachers = teachers.filter((teacher) => teacher.departmentID === departmentID);
+      const firstNotRegisteredTeacher = relatedTeachers.find((teacher) => {
+        return (
+          !registeredTeacherIds.includes(teacher?.id || 0) ||
+          fundInformation.teacherID === teacher.id
+        );
+      });
       relatedTeachers &&
         setFormData({
           ...formData,
-          teacherID: relatedTeachers[0]?.id || 0,
+          teacherID: firstNotRegisteredTeacher?.id || 0,
         });
-      setTeacher(relatedTeachers[0]);
+      setTeacher(firstNotRegisteredTeacher);
     }
   }, [departmentID]);
 
