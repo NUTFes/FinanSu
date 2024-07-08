@@ -31,7 +31,7 @@ services:
       RESET_PASSWORD_URL: "http://localhost:3000/reset_password"
     #シェルスクリプトを実行するコマンド
     command: "./start.sh"
-    env_file: ["./finansu.local.env"]
+    env_file: ["./finansu.env"]
     ports:
       - "1323:1323"
     stdin_open: true
