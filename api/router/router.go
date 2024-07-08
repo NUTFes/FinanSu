@@ -90,6 +90,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/activities/:id", r.activityController.DestroyActivity)
 	e.GET("/activities/details", r.activityController.IndexActivityDetail)
 	e.GET("/activities/details/:year",r.activityController.IndexActivityDetailsByPeriod)
+	e.GET("/activities/filtered_details", r.activityController.IndexFilteredActivityDetail)
+	e.GET("/activities/filtered_details/:year", r.activityController.IndexFilteredActivityDetailByPeriod)
 
 	// activityInformationsのRoute
 	e.GET("/activity_informations", r.activityInformationController.IndexActivityInformation)
@@ -220,9 +222,11 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// teacherのRoute
 	e.GET("/teachers", r.teacherController.IndexTeacher)
 	e.GET("/teachers/:id", r.teacherController.ShowTeacher)
+	e.GET("/teachers/fundRegistered/:year", r.teacherController.IndexFundRegisteredTeacher)
 	e.POST("/teachers", r.teacherController.CreateTeacher)
 	e.PUT("/teachers/:id", r.teacherController.UpdateTeacher)
 	e.DELETE("/teachers/:id", r.teacherController.DestroyTeacher)
+	e.DELETE("/teachers/delete", r.teacherController.DestroyMultiTeachers)
 
 	// users
 	e.GET("/users", r.userController.IndexUser)

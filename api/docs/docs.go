@@ -76,6 +76,107 @@ const docTemplate = `{
 						}
 				},
 		},
+        "/activities/filtered_details": {
+            "get": {
+                tags: ["activity"],
+                "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
+                "parameters": [
+                    {
+                        "name": "is_done",
+                        "in": "query",
+                        "description": "Filter by done status.[true, false, all]",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["true", "false", "all"]
+                        }
+                    },
+                    {
+                        "name": "sponsor_style_id",
+                        "in": "query",
+                        "description": "Filter by sponsor style IDs. ex.) 1,3,6,...",
+                        "required": false,
+                        "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Filter by keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activitiesとsponsor,sponsorStyle,userの一覧の取得",
+                    }
+                }
+            },
+        },
+        "/activities/filtered_details/{year}": {
+            "get": {
+                tags: ["activity"],
+                "description": "activitiesとsponsor,sponsorStyle,userの一覧を取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "Filter by year.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_done",
+                        "in": "query",
+                        "description": "Filter by done status.[true, false, all]",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["true", "false", "all"]
+                        }
+                    },
+                    {
+                        "name": "sponsor_style_id",
+                        "in": "query",
+                        "description": "Filter by sponsor style IDs. ex.) 1,3,6,...",
+                        "required": false,
+                        "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Filter by keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "activitiesとsponsor,sponsorStyle,userの一覧の取得",
+                    }
+                }
+            },
+        },
         "/activities/{id}": {
             "get": {
                 tags: ["activity"],
@@ -2006,6 +2107,26 @@ const docTemplate = `{
                 ],
             },
         },
+				"/teachers/delete": {
+					"delete": {
+							tags: ["teacher"],
+							"description": "teacherの複数削除",
+							responses: {
+									"200": {
+											"description": "複数のteacherをidで削除できる",
+									}
+							},
+							"parameters": [
+									{
+											"in": "body",
+											"name": "destroyTeacherIDs",
+											"schema":{
+													"$ref": "#/definitions/destroyTeacherIDs"
+											},
+									},
+							],
+					},
+			},
         "/teachers/{id}": {
             "get": {
                 tags: ["teacher"],
@@ -2100,6 +2221,26 @@ const docTemplate = `{
                 },
             },
         },
+				"/teachers/fundRegistered/{year}": {
+            "get": {
+                tags: ["teacher"],
+                "description": "募金登録済みのteacherのidを取得",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "year",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "募金登録済みのteacherのidを取得",
+                    }
+                }
+            },
+				},
         "/users": {
             "get": {
                 tags: ["user"],
@@ -2428,7 +2569,6 @@ const docTemplate = `{
                 "feature":{
                     "type": "string",
                     "example": "なし",
-
                 },
                 "expense":{
                     "type": "int",
@@ -2618,20 +2758,34 @@ const docTemplate = `{
                     "purchaseOrderID"
             },
         },
-        "destroyUserIDs":{
-            "properties":{
-                "deleteIDs":{
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    },
-                    example: []
-                },
-            },
-            "required":{
-                    "deleteIDs",
-            },
-        },
+				"destroyTeacherIDs":{
+					"properties":{
+							"deleteIDs":{
+									"type": "array",
+									"items": {
+											"type": "number"
+									},
+									example: []
+							},
+					},
+					"required":{
+									"deleteIDs",
+					},
+				},
+				"destroyUserIDs":{
+					"properties":{
+							"deleteIDs":{
+									"type": "array",
+									"items": {
+											"type": "number"
+									},
+									example: []
+							},
+					},
+					"required":{
+									"deleteIDs",
+					},
+				},
         "year_periods":{
             "properties":{
                 "year":{

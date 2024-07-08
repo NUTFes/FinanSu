@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -15,10 +16,12 @@ type teacherRepository struct {
 
 type TeacherRepository interface {
 	All(context.Context) (*sql.Rows, error)
+	AllFundRegistered(context.Context, string) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
 	Create(context.Context, string, string, string, string, string, string) error
 	Update(context.Context, string, string, string, string, string, string, string) error
 	Destroy(context.Context, string) error
+	MultiDestroy(context.Context, []int) error
 	FindLatestRecord(c context.Context) (*sql.Row, error)
 }
 
@@ -27,7 +30,34 @@ func NewTeacherRepository(c db.Client, ac abstract.Crud) TeacherRepository {
 }
 
 func (t *teacherRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM teachers ORDER BY department_id ASC"
+	query := "SELECT * FROM teachers WHERE is_deleted IS FALSE ORDER BY department_id ASC "
+	return t.crud.Read(c, query)
+}
+
+func (t *teacherRepository) AllFundRegistered(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+	SELECT
+    teachers.id
+	FROM
+    teachers
+	INNER JOIN
+    fund_informations
+	ON
+    teachers.id = fund_informations.teacher_id
+	INNER JOIN
+    year_periods
+	ON
+    fund_informations.created_at > year_periods.started_at
+	AND
+    fund_informations.created_at < year_periods.ended_at
+	INNER JOIN
+    years
+	ON
+    year_periods.year_id = years.id
+	WHERE
+    years.year = ` + year + `
+	ORDER BY
+    fund_informations.created_at ASC;`
 	return t.crud.Read(c, query)
 }
 
@@ -79,11 +109,32 @@ func (t *teacherRepository) Update(
 }
 
 func (t *teacherRepository) Destroy(c context.Context, id string) error {
-	query := "DELETE FROM teachers WHERE id = " + id
-	return t.crud.UpdateDB(c, query)
+	query := "UPDATE teachers SET is_deleted = TRUE WHERE id = " + id
+	err := t.crud.UpdateDB(c, query)
+	return err
 }
 
 func (t *teacherRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-	query := "SELECT * FROM teachers ORDER BY id DESC LIMIT 1"
+	query := "SELECT * FROM teachers WHERE is_deleted IS FALSE ORDER BY id DESC LIMIT 1"
 	return t.crud.ReadByID(c, query)
+}
+
+// 複数削除
+func (t *teacherRepository) MultiDestroy(c context.Context, ids []int) error {
+	query := "UPDATE teachers SET is_deleted = TRUE WHERE "
+	for index, id := range ids {
+		query += "id = " + strconv.Itoa(id)
+
+		if(index != len(ids)-1){
+			query += " OR "
+		}
+
+	}
+
+	err := t.crud.UpdateDB(c, query)
+	if err != nil {
+		return err
+	}
+
+	return err
 }

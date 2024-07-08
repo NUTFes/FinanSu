@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -24,6 +25,8 @@ type ActivityRepository interface {
 	FindSponsorStyle(context.Context, string) (*sql.Rows, error)
 	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
 	FindActivityInformation(context.Context, string) (*sql.Rows, error)
+	FindFilteredDetail(context.Context, string, []string, string) (*sql.Rows, error)
+	FindFilteredDetailByPeriod(context.Context, string, []string, string, string) (*sql.Rows, error)
 }
 
 func NewActivityRepository(c db.Client, ac abstract.Crud) ActivityRepository {
@@ -182,6 +185,164 @@ func (ar *activityRepository) AllDetailsByPeriod(c context.Context, year string)
 	WHERE
 		years.year = ` + year +
 		" ORDER BY activities.updated_at DESC"
+
+	return ar.crud.Read(c, query)
+}
+
+// activityに紐づくsponserとusersをフィルタを考慮して取得する
+func (ar *activityRepository) FindFilteredDetail(c context.Context, isDone string, sponsorStyleIDs []string, keyword string) (*sql.Rows, error) {
+	query := `
+	SELECT DISTINCT
+		activities.*,
+		sponsors.*,
+		users.*
+	FROM
+		activities
+	INNER JOIN
+		sponsors
+	ON
+		activities.sponsor_id = sponsors.id
+	INNER JOIN
+		users
+	ON
+		activities.user_id = users.id
+	INNER JOIN
+		activity_styles
+	ON
+		activities.id = activity_styles.activity_id
+	INNER JOIN
+		sponsor_styles
+	ON
+		activity_styles.sponsor_style_id = sponsor_styles.id`
+
+	optionQuery := ""
+
+	// keywordフィルタを追加
+	if keyword != "" {
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsors.name LIKE '%` + keyword + `%'`
+		} else {
+			optionQuery += ` sponsors.name LIKE '%` + keyword + `%'` 
+		}
+	}
+
+	// isDoneフィルタを追加
+	if isDone != "" {
+		if isDone != "all" {
+			if optionQuery != "" {
+				optionQuery += ` AND
+				activities.is_done = ` + isDone
+			} else {
+				optionQuery += ` activities.is_done = ` + isDone
+			}
+		}
+	}
+
+	// sponsorStyleIDsフィルタを追加
+	if len(sponsorStyleIDs) > 0 {
+		// プレースホルダーを生成
+		placeholders := strings.Join(sponsorStyleIDs, ",")
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsor_styles.id IN (` + placeholders + `)`
+		} else {
+			optionQuery += ` sponsor_styles.id IN (` + placeholders + `)`
+		}
+	}
+
+	if optionQuery != "" {
+		query += (" WHERE" + optionQuery)
+	}
+
+	return ar.crud.Read(c, query)
+}
+
+// activityに紐づくsponserとusersをフィルタを考慮して取得する
+func (ar *activityRepository) FindFilteredDetailByPeriod(c context.Context, isDone string, sponsorStyleIDs []string, year string, keyword string) (*sql.Rows, error) {
+	query := `
+	SELECT DISTINCT
+		activities.*,
+		sponsors.*,
+		users.*
+	FROM
+		activities
+	INNER JOIN
+		sponsors
+	ON
+		activities.sponsor_id = sponsors.id
+	INNER JOIN
+		users
+	ON
+		activities.user_id = users.id
+	INNER JOIN
+		activity_styles
+	ON
+		activities.id = activity_styles.activity_id
+	INNER JOIN
+		sponsor_styles
+	ON
+		activity_styles.sponsor_style_id = sponsor_styles.id
+	INNER JOIN
+		year_periods
+	ON
+		activities.created_at > year_periods.started_at
+	AND
+		activities.created_at < year_periods.ended_at
+	INNER JOIN
+		years
+	ON
+		year_periods.year_id = years.id`
+
+	optionQuery := ""
+
+	// keywordフィルタを追加
+	if keyword != "" {
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsors.name LIKE '%` + keyword + `%'`
+		} else {
+			optionQuery += ` sponsors.name LIKE '%` + keyword + `%'` 
+		}
+	}
+
+	// isDoneフィルタを追加
+	if isDone != "" {
+		if isDone != "all" {
+			if optionQuery != "" {
+				optionQuery += ` AND
+				activities.is_done = ` + isDone
+			} else {
+				optionQuery += ` activities.is_done = ` + isDone
+			}
+		}
+	}
+
+	// sponsorStyleIDsフィルタを追加
+	if len(sponsorStyleIDs) > 0 {
+		// プレースホルダーを生成
+		placeholders := strings.Join(sponsorStyleIDs, ",")
+		if optionQuery != "" {
+			optionQuery += ` AND
+			sponsor_styles.id IN (` + placeholders + `)`
+		} else {
+			optionQuery += ` sponsor_styles.id IN (` + placeholders + `)`
+		}
+	}
+
+	// yearのフィルタ追加
+	if year != "" {
+		if optionQuery != "" {
+			optionQuery += ` AND
+			years.year = ` + year + " ORDER BY activities.updated_at DESC, activities.id DESC"
+		} else {
+			optionQuery += ` years.year = ` + year + " ORDER BY activities.updated_at DESC, activities.id DESC"
+		}
+	}
+
+	if optionQuery != "" {
+		query += (" WHERE" + optionQuery)
+	}
 
 	return ar.crud.Read(c, query)
 }

@@ -22,6 +22,8 @@ type ActivityController interface {
 	DestroyActivity(echo.Context) error
 	IndexActivityDetail(echo.Context) error
 	IndexActivityDetailsByPeriod(echo.Context) error
+	IndexFilteredActivityDetail(echo.Context) error
+	IndexFilteredActivityDetailByPeriod(echo.Context) error
 }
 
 func NewActivityController(u usecase.ActivityUseCase) ActivityController {
@@ -99,6 +101,29 @@ func (a *activityController) IndexActivityDetail(c echo.Context) error {
 func (a *activityController) IndexActivityDetailsByPeriod(c echo.Context) error {
 	year := c.Param("year")
 	activities, err := a.u.GetActivityDetailsByPeriod(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, activities)
+}
+
+func (a *activityController) IndexFilteredActivityDetail(c echo.Context) error {
+	isDone := c.QueryParam("is_done")
+	sponsorStyleIDs := c.QueryParams()["sponsor_style_id"]
+	keyword := c.QueryParam("keyword")
+	activities, err := a.u.GetFilteredActivityDetail(c.Request().Context(), isDone, sponsorStyleIDs, keyword)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, activities)
+}
+
+func (a *activityController) IndexFilteredActivityDetailByPeriod(c echo.Context) error {
+	isDone := c.QueryParam("is_done")
+	sponsorStyleIDs := c.QueryParams()["sponsor_style_id"]
+	year := c.Param("year")
+	keyword := c.QueryParam("keyword")
+	activities, err := a.u.GetFilteredActivityDetailByPeriod(c.Request().Context(), isDone, sponsorStyleIDs, year, keyword)
 	if err != nil {
 		return err
 	}

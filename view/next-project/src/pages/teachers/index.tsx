@@ -50,6 +50,11 @@ export default function TeachersList(props: Props) {
   );
   const [filterTeachers, setFilterTeachers] = useState<Teacher[]>(teachers);
 
+  const [deleteTeachers, setDeleteTeachers] = useState<{ teachers: Teacher[]; ids: number[] }>({
+    teachers: [],
+    ids: [],
+  });
+
   useEffect(() => {
     setCurrentUser(user);
   }, []);
@@ -113,10 +118,18 @@ export default function TeachersList(props: Props) {
                 <th className='w-1/6'>
                   <p>居室</p>
                 </th>
-                <th className='w-1/6'>
+                <th className='w-1/7'>
                   <p>備考</p>
                 </th>
-                <th className='w-1/6'></th>
+                <th className='w-1/12' />
+                <th className='w-1/12'>
+                  <div className='flex justify-center'>
+                    <OpenDeleteModalButton
+                      deleteTeachers={deleteTeachers}
+                      isDisabled={deleteTeachers.ids.length == 0}
+                    />
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
@@ -129,38 +142,61 @@ export default function TeachersList(props: Props) {
                       'text-sm text-black-600',
                     )}
                   >
-                    <td className='py-3'>
-                      {teacher.isBlack && (
-                        <p className='text-center text-red-500'>{teacher.name}</p>
+                    <td className='py-3 text-center'>
+                      {teacher.isBlack ? (
+                        <p className='text-red-500'>{teacher.name}</p>
+                      ) : (
+                        <p>{teacher.name}</p>
                       )}
-                      {!teacher.isBlack && <p className='text-center'>{teacher.name}</p>}
                     </td>
-                    <td>
-                      <p className='text-center'>{teacher.position}</p>
+                    <td className='text-center'>
+                      <p>{teacher.position}</p>
                     </td>
-                    <td>
-                      <p className='text-center'>
+                    <td className='text-center'>
+                      <p>
                         {
                           departments.find((department) => department.id === teacher.departmentID)
                             ?.name
                         }
                       </p>
                     </td>
-                    <td>
-                      <p className='text-center'>{teacher.room}</p>
+                    <td className='text-center'>
+                      <p>{teacher.room}</p>
                     </td>
-                    <td>
-                      <p className='text-center'>{teacher.remark}</p>
+                    <td className='text-center'>
+                      <p>{teacher.remark}</p>
                     </td>
-                    <td>
-                      <div className='flex items-center justify-center gap-3'>
+                    <td className='text-center'>
+                      <div className='flex justify-end'>
                         <OpenEditModalButton
                           id={teacher.id || 0}
                           teacher={teacher}
                           isDisabled={isDisabled}
                           departments={props.departments}
                         />
-                        <OpenDeleteModalButton id={teacher.id || 0} isDisabled={isDisabled} />
+                      </div>
+                    </td>
+                    <td className='text-center'>
+                      <div className='flex justify-center'>
+                        <input
+                          checked={deleteTeachers.ids.includes(teacher.id || 0)}
+                          type='checkbox'
+                          onChange={(e) => {
+                            deleteTeachers.ids.includes(teacher.id || 0)
+                              ? setDeleteTeachers({
+                                  teachers: deleteTeachers.teachers.filter((selectedTeacher) => {
+                                    return selectedTeacher.id !== teacher.id;
+                                  }),
+                                  ids: deleteTeachers.ids.filter((selectedID) => {
+                                    return selectedID !== teacher.id;
+                                  }),
+                                })
+                              : setDeleteTeachers({
+                                  teachers: [...deleteTeachers.teachers, teacher],
+                                  ids: [...(deleteTeachers.ids || []), teacher.id || 0],
+                                });
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>
