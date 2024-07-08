@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useEffect, useState, useMemo } from 'react';
 
 import { Modal, Input, Select, CloseButton, PrimaryButton } from '../common';
+import { get } from '@api/api_methods';
 import { put } from '@api/fundInformations';
 import { BUREAUS } from '@constants/bureaus';
 import { DONATION_AMOUNT } from '@constants/donationAmount';
@@ -18,28 +19,32 @@ interface ModalProps {
 export default function EditModal(props: ModalProps) {
   const router = useRouter();
 
+  const { teachers, fundInformation } = props;
+
   const [formData, setFormData] = useState<FundInformation>({
-    id: props.fundInformation.id,
-    userID: props.fundInformation.userID,
-    teacherID: props.fundInformation.teacherID,
-    price: props.fundInformation.price,
-    remark: props.fundInformation.remark,
+    id: fundInformation.id,
+    userID: fundInformation.userID,
+    teacherID: fundInformation.teacherID,
+    price: fundInformation.price,
+    remark: fundInformation.remark,
     isFirstCheck: false,
     isLastCheck: false,
-    receivedAt: props.fundInformation.receivedAt,
+    receivedAt: fundInformation.receivedAt,
   });
 
-  const defaultTeacher = props.teachers.find(
-    (teacher) => teacher.id === props.fundInformation.teacherID,
-  );
+  const defaultTeacher = teachers.find((teacher) => teacher.id === props.fundInformation.teacherID);
   const [teacher, setTeacher] = useState<Teacher | undefined>(defaultTeacher);
   const [departmentID, setDepartmentID] = useState<number>(defaultTeacher?.departmentID || 1);
 
+  const [registeredTeacherIds, setRegisteredTeacherIds] = useState<number[]>([]);
+
+  const isRegisteredTeacherWithoutEditID = (id: number) => {
+    return registeredTeacherIds.includes(id) && fundInformation.teacherID !== id;
+  };
+
   useEffect(() => {
     if (teacher?.departmentID !== departmentID) {
-      const relatedTeachers = props.teachers.filter(
-        (teacher) => teacher.departmentID === departmentID,
-      );
+      const relatedTeachers = teachers.filter((teacher) => teacher.departmentID === departmentID);
       relatedTeachers &&
         setFormData({
           ...formData,
@@ -89,6 +94,16 @@ export default function EditModal(props: ModalProps) {
     return res;
   }, [bureauId]);
 
+  async function getRegisteredTeachers() {
+    const registeredTeachersURL = process.env.CSR_API_URI + '/teachers/fundRegistered/2024';
+    const resData = await get(registeredTeachersURL);
+    setRegisteredTeacherIds(resData);
+  }
+
+  useEffect(() => {
+    getRegisteredTeachers();
+  }, []);
+
   return (
     <Modal className='md:w-1/2'>
       <div className='w-full'>
@@ -117,11 +132,16 @@ export default function EditModal(props: ModalProps) {
         <p className='col-span-1 text-black-600'>教員名</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.teacherID} onChange={handler('teacherID')}>
-            {props.teachers
+            {teachers
               .filter((teacher) => teacher.departmentID === departmentID)
               .map((teacher) => (
-                <option key={teacher.id} value={teacher.id}>
+                <option
+                  key={teacher.id}
+                  value={teacher.id}
+                  disabled={isRegisteredTeacherWithoutEditID(teacher?.id || 0)}
+                >
                   {teacher.name}
+                  {isRegisteredTeacherWithoutEditID(teacher?.id || 0) && '(募金登録済)'}
                 </option>
               ))}
           </Select>
