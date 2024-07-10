@@ -96,15 +96,17 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 )}
               >
                 <div className='text-center text-sm text-black-300'>
-                  <div className='flex'>
-                    <a
-                      className='mx-1'
-                      href={purchaseItem.url}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      <RiExternalLinkLine size={'16px'} />
-                    </a>
+                  <div className='flex justify-center'>
+                    {purchaseItem.url && (
+                      <a
+                        className='mx-1'
+                        href={purchaseItem.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        <RiExternalLinkLine size={'16px'} />
+                      </a>
+                    )}
                     <Tooltip text={'copy URL'}>
                       <RiFileCopyLine
                         className='mx-1'
