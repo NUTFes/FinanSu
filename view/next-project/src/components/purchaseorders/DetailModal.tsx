@@ -207,14 +207,16 @@ const DetailModal: FC<ModalProps> = (props) => {
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>
                       <div className={clsx('flex justify-center')}>
-                        <a
-                          className={clsx('mx-1')}
-                          href={purchaseItem.url}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          <RiExternalLinkLine size={'16px'} />
-                        </a>
+                        {purchaseItem.url && (
+                          <a
+                            className={clsx('mx-1')}
+                            href={purchaseItem.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <RiExternalLinkLine size={'16px'} />
+                          </a>
+                        )}
                         <Tooltip text={'copy URL'}>
                           <RiFileCopyLine
                             className={clsx('mx-1')}
