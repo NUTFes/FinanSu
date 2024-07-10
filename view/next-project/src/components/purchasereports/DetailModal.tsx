@@ -182,14 +182,16 @@ const DetailModal: FC<ModalProps> = (props) => {
                   <td className='border-b py-3'>
                     <div className='text-center text-sm text-black-300'>
                       <div className='flex justify-center'>
-                        <a
-                          className='mx-1'
-                          href={purchaseItem.url}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          <RiExternalLinkLine size={'16px'} />
-                        </a>
+                        {purchaseItem.url && (
+                          <a
+                            className='mx-1'
+                            href={purchaseItem.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <RiExternalLinkLine size={'16px'} />
+                          </a>
+                        )}
                         <Tooltip text={'copy URL'}>
                           <RiFileCopyLine
                             className='mx-1'
