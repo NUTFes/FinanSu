@@ -10,6 +10,7 @@ interface Props {
   users: User[];
   fundInformation: FundInformation;
   isDisabled: boolean;
+  currentYear: string;
 }
 
 export const OpenAddModalButton = (props: Props) => {
@@ -30,6 +31,7 @@ export const OpenAddModalButton = (props: Props) => {
           departments={props.departments}
           users={props.users}
           fundInformation={props.fundInformation}
+          currentYear={props.currentYear}
         />
       )}
     </>
