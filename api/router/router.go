@@ -20,6 +20,7 @@ type router struct {
 	purchaseItemController    		controller.PurchaseItemController
 	purchaseOrderController   		controller.PurchaseOrderController
 	purchaseReportController  		controller.PurchaseReportController
+	receiptController				controller.ReceiptController
 	sourceController          		controller.SourceController
 	sponsorController         		controller.SponsorController
 	sponsorStyleController    		controller.SponsorStyleController
@@ -47,6 +48,7 @@ func NewRouter(
 	purchaseItemController controller.PurchaseItemController,
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
+	receiptController controller.ReceiptController,
 	sourceController controller.SourceController,
 	sponsorController controller.SponsorController,
 	sponsorStyleController controller.SponsorStyleController,
@@ -69,6 +71,7 @@ func NewRouter(
 		purchaseItemController,
 		purchaseOrderController,
 		purchaseReportController,
+		receiptController,
 		sourceController,
 		sponsorController,
 		sponsorStyleController,
@@ -196,6 +199,14 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/purchasereports/details", r.purchaseReportController.IndexPurchaseReportDetails)
 	e.GET("/purchasereports/:id/details", r.purchaseReportController.ShowPurchaseReportDetail)
 	e.GET("/purchasereports/details/:year", r.purchaseReportController.IndexPurchaseReportDetailsByYear)
+
+	// receiptsのRoute
+	e.GET("/receipts", r.receiptController.IndexReceipt)
+	e.GET("/receipts/:id", r.receiptController.ShowReceipt)
+	e.GET("/receipts/reports/:id", r.receiptController.FindReceiptsByReportID)
+	e.POST("/receipts", r.receiptController.CreateReceipt)
+	e.PUT("/receipts/:id", r.receiptController.UpdateReceipt)
+	e.DELETE("/receipts/:id", r.receiptController.DestroyReceipt)
 
 	// sources
 	e.GET("/sources", r.sourceController.IndexSource)

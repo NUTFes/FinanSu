@@ -37,6 +37,7 @@ func InitializeServer() db.Client {
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
 	purchaseReportRepository := repository.NewPurchaseReportRepository(client, crud)
+	receiptRepository := repository.NewReceiptRepository(client, crud)
 	sessionRepository := repository.NewSessionRepository(client)
 	sourceRepository := repository.NewSourceRepository(client, crud)
 	sponsorRepository := repository.NewSponsorRepository(client, crud)
@@ -60,6 +61,7 @@ func InitializeServer() db.Client {
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
 	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository)
 	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
+	receiptUseCase := usecase.NewReceiptUseCase(receiptRepository)
 	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
 	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
 	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
@@ -83,6 +85,7 @@ func InitializeServer() db.Client {
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
 	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
+	receiptController := controller.NewReceiptController(receiptUseCase)
 	sourceController := controller.NewSourceController(sourceUseCase)
 	sponsorController := controller.NewSponsorController(sponsorUseCase)
 	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
@@ -107,6 +110,7 @@ func InitializeServer() db.Client {
 		purchaseItemController,
 		purchaseOrderController,
 		purchaseReportController,
+		receiptController,
 		sourceController,
 		sponsorController,
 		sponsorStyleController,
