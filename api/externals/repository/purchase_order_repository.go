@@ -3,9 +3,13 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"os"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"github.com/slack-go/slack"
 )
 
 type purchaseOrderRepository struct {
@@ -26,6 +30,7 @@ type PurchaseOrderRepository interface {
 	DeleteItems(context.Context, string) error
 	DeleteReport(context.Context, string) error
 	AllUserInfoByYear(context.Context, string) (*sql.Rows, error)
+	NotifySlack(context.Context, domain.PurchaseOrder, []domain.PurchaseItem, domain.User, domain.Bureau, domain.Expense) error
 }
 
 func NewPurchaseOrderRepository(c db.Client, ac abstract.Crud) PurchaseOrderRepository {
@@ -187,5 +192,31 @@ func (p *purchaseOrderRepository) AllUserInfoByYear(c context.Context, year stri
 			years.year = ` + year +
 		" ORDER BY purchase_orders.id"
 	return p.crud.Read(c, query)
+}
+
+func (p *purchaseOrderRepository) NotifySlack(c context.Context, purchaseOrder domain.PurchaseOrder, purchaseItems []domain.PurchaseItem, user domain.User, bureau domain.Bureau, expense domain.Expense) error {
+		token := os.Getenv("BOT_USER_OAUTH_TOKEN")
+		channelName := os.Getenv("CHANNEL_NAME")
+
+		//メッセージ作成
+		sendMessage := "購入申請を受け付けました \n"
+		sendMessage += fmt.Sprintf("局・団体： %s", expense.Name) + " \n"
+		sendMessage += fmt.Sprintf("申請者： %s  %s", bureau.Name, user.Name) + " \n"
+		sendMessage += "購入物品 \n"
+		//合計金額
+		sum := 0
+		//購入物品
+		for _, item := range purchaseItems{
+			sum += item.Price*item.Quantity
+			sendMessage += fmt.Sprintf("・%s  %d円  %d個", item.Item, item.Price, item.Quantity) + " \n"
+		}
+		sendMessage += fmt.Sprintf("合計  %d円", sum)
+		client := slack.New(token)
+
+		_, _, err := client.PostMessage(channelName, slack.MsgOptionText(sendMessage, false))
+		if err != nil {
+			panic(err)
+		}
+		return err
 }
 

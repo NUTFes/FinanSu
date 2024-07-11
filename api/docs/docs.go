@@ -1605,6 +1605,21 @@ const docTemplate = `{
                 }
             },
         },
+        "/purchaseorders/send/{id}": {
+            "post": {
+                tags: ["purchase_order"],
+                "description": "IDで指定されたpurchase_orderのslackへメッセージ送信",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ]
+            }
+        },
         "/purchasereports": {
             "get": {
                 tags: ["purchase_report"],

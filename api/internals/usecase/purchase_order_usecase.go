@@ -10,6 +10,8 @@ import (
 
 type purchaseOrderUseCase struct {
 	rep rep.PurchaseOrderRepository
+	bureauRep rep.BureauRepository
+	expenseRep rep.ExpenseRepository
 }
 
 type PurchaseOrderUseCase interface {
@@ -21,10 +23,11 @@ type PurchaseOrderUseCase interface {
 	GetPurchaseOrderDetails(context.Context) ([]domain.OrderDetail, error)
 	GetPurchaseOrderDetailByID(context.Context, string) (domain.OrderDetail, error)
 	GetPurchaseOrderDetailsByYear(context.Context, string) ([]domain.OrderDetail, error)
+	NotifySlack(context.Context, string) error
 }
 
-func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
-	return &purchaseOrderUseCase{rep}
+func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository, bureauRep rep.BureauRepository, expenseRep rep.ExpenseRepository) PurchaseOrderUseCase {
+	return &purchaseOrderUseCase{rep, bureauRep, expenseRep}
 }
 
 // PurchaseOrdersの取得(Gets)
@@ -204,6 +207,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
 	row, err := p.rep.FindUserInfo(c, id)
+
 	err = row.Scan(
 		&orderDetail.PurchaseOrder.ID,
 		&orderDetail.PurchaseOrder.DeadLine,
@@ -223,6 +227,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 	if err != nil {
 		return orderDetail, nil
 	}
+
 	rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
 	for rows.Next() {
 		err := rows.Scan(
@@ -299,4 +304,79 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailsByYear(c context.Context, 
 		purchaseItems = nil
 	}
 	return orderDetails, nil
+}
+
+func (p *purchaseOrderUseCase) NotifySlack(c context.Context, id string) error {
+	purchaseOrder := domain.PurchaseOrder{}
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+	user := domain.User{}
+	bureau := domain.Bureau{}
+	expense := domain.Expense{}
+
+	//申請取得
+	row, err := p.rep.FindUserInfo(c, id)
+	err = row.Scan(
+		&purchaseOrder.ID,
+		&purchaseOrder.DeadLine,
+		&purchaseOrder.UserID,
+		&purchaseOrder.ExpenseID,
+		&purchaseOrder.FinanceCheck,
+		&purchaseOrder.CreatedAt,
+		&purchaseOrder.UpdatedAt,
+		&user.ID,
+		&user.Name,
+		&user.BureauID,
+		&user.RoleID,
+		&user.IsDeleted,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		return err
+	}
+
+	//物品取得
+	rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(purchaseOrder.ID)))
+	for rows.Next() {
+		err := rows.Scan(
+			&purchaseItem.ID,
+			&purchaseItem.Item,
+			&purchaseItem.Price,
+			&purchaseItem.Quantity,
+			&purchaseItem.Detail,
+			&purchaseItem.Url,
+			&purchaseItem.PurchaseOrderID,
+			&purchaseItem.FinanceCheck,
+			&purchaseItem.CreatedAt,
+			&purchaseItem.UpdatedAt,
+		)
+		if err != nil {
+			return err
+		}
+		purchaseItems = append(purchaseItems, purchaseItem)
+	}
+
+	//局取得
+	row, err = p.bureauRep.Find(c, strconv.Itoa(user.BureauID))
+	err = row.Scan(
+		&bureau.ID,
+		&bureau.Name,
+		&bureau.CreatedAt,
+		&bureau.UpdatedAt,
+	)
+
+	//支出取得
+	row, err = p.expenseRep.Find(c, strconv.Itoa(purchaseOrder.ExpenseID))
+	err = row.Scan(
+		&expense.ID,
+		&expense.Name,
+		&expense.TotalPrice,
+		&expense.YearID,
+		&expense.CreatedAt,
+		&expense.UpdatedAt,
+	)
+	err = p.rep.NotifySlack(c, purchaseOrder, purchaseItems, user, bureau, expense)
+
+	return err
 }

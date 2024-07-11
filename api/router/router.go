@@ -181,6 +181,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/purchaseorders", r.purchaseOrderController.IndexPurchaseOrder)
 	e.GET("/purchaseorders/:id", r.purchaseOrderController.ShowPurchaseOrder)
 	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
+	e.POST("/purchaseorders/send/:id", r.purchaseOrderController.NotifySlack)
 	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
 	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)

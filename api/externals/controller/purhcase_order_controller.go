@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
@@ -20,6 +21,7 @@ type PurchaseOrderController interface {
 	IndexOrderDetail(echo.Context) error
 	ShowOrderDetail(echo.Context) error
 	IndexOrderDetailByYear(echo.Context) error
+	NotifySlack(echo.Context) error
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
@@ -108,4 +110,16 @@ func (p *purchaseOrderController) IndexOrderDetailByYear(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, orderDetails)
+}
+
+//通知用API
+// TODO いずれは購入申請と物品を一括送信してSlack通知をするようにフロント・バックのリファクタリングを行う
+func (p *purchaseOrderController) NotifySlack(c echo.Context) error {
+	id := c.Param("id")
+	fmt.Println(id)
+	err := p.u.NotifySlack(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, err)
 }
