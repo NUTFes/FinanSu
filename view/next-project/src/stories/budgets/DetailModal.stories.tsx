@@ -1,7 +1,6 @@
 import { Meta } from '@storybook/react';
 import { DetailModal } from '@components/budgets/';
 
-
 const meta: Meta<typeof DetailModal> = {
   title: 'FinanSu/budgets/DetailModal',
   component: DetailModal,
@@ -36,9 +35,9 @@ export const Primary = {
               quantity: 2,
               price: 200,
             },
-          ],     
+          ],
         },
-      ],  
+      ],
     },
   },
 };
