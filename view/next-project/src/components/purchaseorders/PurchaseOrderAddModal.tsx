@@ -6,6 +6,7 @@ import { RiArrowDropRightLine } from 'react-icons/ri';
 
 import { post } from '@api/purchaseItem';
 import { post as postOrder } from '@api/purchaseOrder';
+import { post as defaultPost } from '@api/api_methods';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -71,6 +72,9 @@ export default function AddModal(props: ModalProps) {
     purchaseItemsAddOrderInfo.map(async (item) => {
       await post(addPurchaseItemUrl, item);
     });
+    // TODO POSTを申請・報告・slack通知で分けているため、一つのAPIにリファクタリングする
+    const notifySlackUrl = process.env.CSR_API_URI + `/purchaseorders/send/${purchaseOrderId}`;
+    await defaultPost(notifySlackUrl, purchaseOrder);
   };
 
   const submit = async (purchaseOrder: PurchaseOrder, formDataList: PurchaseItem[]) => {
