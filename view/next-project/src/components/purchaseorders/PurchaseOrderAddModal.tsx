@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
+import { post as defaultPost } from '@api/api_methods';
 import { post } from '@api/purchaseItem';
 import { post as postOrder } from '@api/purchaseOrder';
-import { post as defaultPost } from '@api/api_methods';
 import {
   PrimaryButton,
   OutlinePrimaryButton,
