@@ -1,4 +1,4 @@
-import { Meta, StoryFn, StoryObj } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import BudgetEditModal, { BudgetProps } from '@components/budgets/EditModal';
 
 const meta: Meta<typeof BudgetEditModal> = {
@@ -14,7 +14,9 @@ const Template: StoryFn<BudgetProps> = (args) => <BudgetEditModal {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  setShowModal: () => {},
+  setShowModal: () => {
+    // Add your implementation here
+  },
   openModal: true,
   id: 1,
   years: [

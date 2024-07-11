@@ -15,7 +15,9 @@ const Template: StoryFn<ModalProps> = (args) => <ExpenseAddModal {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  setIsOpen: () => {},
+  setIsOpen: () => {
+    // Add your implementation here
+  },
   years: [
     { id: 1, year: 2023 },
     { id: 2, year: 2024 },

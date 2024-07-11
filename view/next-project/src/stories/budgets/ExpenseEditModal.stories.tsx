@@ -15,7 +15,9 @@ const Template: StoryFn<ModalProps> = (args) => <ExpenseEditModal {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  setIsOpen: () => {},
+  setIsOpen: () => {
+    // Add your implementation here
+  },
   expense: {
     id: 0,
     name: 'JOJO',
@@ -25,5 +27,4 @@ Primary.args = {
     updatedAt: 'testupdate',
   },
   expenseId: 0,
-
 };

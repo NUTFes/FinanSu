@@ -15,5 +15,7 @@ const Template: StoryFn<ModalProps> = (args) => <ExpenseDeleteModal {...args} />
 
 export const Primary = Template.bind({});
 Primary.args = {
-  setShowModal: () => {},
+  setShowModal: () => {
+    // Add your implementation here
+  },
 };
