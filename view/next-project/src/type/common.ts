@@ -156,6 +156,12 @@ export interface SponsorActivityView {
   styleDetail: SponsorStyleDetail[];
 }
 
+export interface SponsorFilterType {
+  styleIds: number[];
+  isDone: 'all' | 'false' | 'true';
+  keyword: string;
+  selectedSort: string;
+}
 // // Sponsor(協賛企業)
 export interface Sponsor {
   id?: number;

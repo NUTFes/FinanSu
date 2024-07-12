@@ -12,7 +12,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-export default function OpenModalButton(props: Props) {
+export default function OpenAddModalButton(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

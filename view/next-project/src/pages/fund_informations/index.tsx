@@ -73,9 +73,10 @@ export default function FundInformations(props: Props) {
 
   //年の指定
   const yearPeriods = props.yearPeriods;
-  const [selectedYear, setSelectedYear] = useState<string>(
-    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
-  );
+  const currentYear = yearPeriods
+    ? String(yearPeriods[yearPeriods.length - 1].year)
+    : String(date.getFullYear());
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
 
   //年度を指定して募金を取得し、fundInformationViewsにset
   const getFundInformations = async () => {
@@ -185,6 +186,7 @@ export default function FundInformations(props: Props) {
               departments={departments}
               users={users}
               currentUser={currentUser}
+              currentYear={currentYear}
             >
               学内募金登録
             </OpenAddModalButton>
@@ -195,6 +197,7 @@ export default function FundInformations(props: Props) {
               departments={departments}
               users={users}
               currentUser={currentUser}
+              currentYear={currentYear}
             ></OpenAddModalButton>
           </div>
         </div>
@@ -241,6 +244,7 @@ export default function FundInformations(props: Props) {
                       users={users}
                       departments={departments}
                       isDisabled={isDisabled(fundViewItem)}
+                      currentYear={currentYear}
                     />
                     <OpenDeleteModalButton
                       id={fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0}
@@ -358,6 +362,7 @@ export default function FundInformations(props: Props) {
                           users={users}
                           departments={departments}
                           isDisabled={isDisabled(fundViewItem)}
+                          currentYear={currentYear}
                         />
                         <OpenDeleteModalButton
                           id={fundViewItem.fundInformation.id ? fundViewItem.fundInformation.id : 0}
