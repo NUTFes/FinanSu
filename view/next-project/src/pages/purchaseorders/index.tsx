@@ -334,7 +334,8 @@ export default function PurchaseOrders(props: Props) {
                                 ? purchaseOrderViewItem.purchaseOrder.id
                                 : 0
                             }
-                            purchaseItems={purchaseOrderViewItem.purchaseItem}
+                            purchaseOrderViewItem={purchaseOrderViewItem}
+                            expenses={props.expenses}
                             isDisabled={isDisabled(purchaseOrderViewItem)}
                           />
                         </div>

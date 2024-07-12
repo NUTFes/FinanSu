@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { DetailEditModal } from './DetailEditModal';
 import { CloseButton, EditButton, Modal, PrimaryButton } from '@components/common';
 import EditModal from '@components/purchaseorders/EditModal';
-import { PurchaseItem } from '@type/common';
+import { Expense, PurchaseOrderView } from '@type/common';
 
 interface Props {
   children?: React.ReactNode;
-  purchaseItems: PurchaseItem[];
+  purchaseOrderViewItem: PurchaseOrderView;
+  expenses: Expense[];
   id: number;
   isDisabled: boolean;
 }
@@ -47,7 +48,9 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
       {step === 'initial' && <InitialModal setStep={setStep} closeModal={closeModal} />}
       {step === 'editDetails' && (
         <DetailEditModal
-          purchaseReportId={props.id}
+          purchaseOrderId={props.id}
+          purchaseOrderViewItem={props.purchaseOrderViewItem}
+          expenses={props.expenses}
           isOpen={true}
           setIsOpen={closeModal}
           onOpenInitial={onOpenInitial}
@@ -58,7 +61,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
           purchaseOrderId={props.id}
           isOpen={true}
           setIsOpen={closeModal}
-          purchaseItems={props.purchaseItems}
+          purchaseItems={props.purchaseOrderViewItem.purchaseItem}
           onOpenInitial={onOpenInitial}
         />
       )}
