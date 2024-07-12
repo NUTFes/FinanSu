@@ -4,7 +4,7 @@ import ExpenseAddModal from './ExpenseAddModal';
 import { AddButton } from '@components/common';
 import { Year } from '@type/common';
 
-interface Props {
+export interface Props {
   children?: React.ReactNode;
   years: Year[];
   disabled: boolean;

@@ -5,7 +5,7 @@ import { EditButton } from '../common';
 import EditModal from '@components/budgets/EditModal';
 import { Source, Year } from '@type/common';
 
-interface Props {
+export interface Props {
   width?: string;
   height?: string;
   children?: React.ReactNode;

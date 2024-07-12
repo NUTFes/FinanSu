@@ -5,7 +5,7 @@ import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/co
 import { Year } from '@type/common';
 import { expensePost } from '@utils/api/budget';
 
-interface ModalProps {
+export interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   years: Year[];
 }

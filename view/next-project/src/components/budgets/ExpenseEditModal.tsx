@@ -5,7 +5,7 @@ import { expensePut } from '@/utils/api/budget';
 import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Modal } from '@components/common';
 import { Expense } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   expense: Expense;
   expenseId: number | string;
   setIsOpen: (isOpen: boolean) => void;

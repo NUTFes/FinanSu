@@ -7,7 +7,7 @@ import { postExpenses } from '@api/budget';
 import { PrimaryButton, Input, Modal, Select } from '@components/common';
 import { Expense, Year } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   years: Year[];
 }
