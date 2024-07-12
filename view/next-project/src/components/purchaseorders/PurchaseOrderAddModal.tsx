@@ -209,8 +209,8 @@ export default function AddModal(props: ModalProps) {
                 )}
               >
                 <div className={clsx('text-center text-sm text-black-300')}>
-                  <div className={clsx('flex justify-center')}>
-                    {purchaseItem.url && (
+                  {purchaseItem.url && (
+                    <div className={clsx('flex justify-center')}>
                       <a
                         className={clsx('mx-1')}
                         href={purchaseItem.url}
@@ -219,17 +219,17 @@ export default function AddModal(props: ModalProps) {
                       >
                         <RiExternalLinkLine size={'16px'} />
                       </a>
-                    )}
-                    <Tooltip text={'copy URL'}>
-                      <RiFileCopyLine
-                        className={clsx('mx-1')}
-                        size={'16px'}
-                        onClick={() => {
-                          navigator.clipboard.writeText(purchaseItem.url);
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
+                      <Tooltip text={'copy URL'}>
+                        <RiFileCopyLine
+                          className={clsx('mx-1')}
+                          size={'16px'}
+                          onClick={() => {
+                            navigator.clipboard.writeText(purchaseItem.url);
+                          }}
+                        />
+                      </Tooltip>
+                    </div>
+                  )}
                 </div>
               </td>
             </tr>

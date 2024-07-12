@@ -172,22 +172,23 @@ export default function EditModal(props: ModalProps) {
                       <td className='py-2'>{data.quantity}</td>
                       <td className='py-2'>{data.detail}</td>
                       <td className='py-2'>
-                        <div className={'flex justify-center'}>
-                          {data.url && (
+                        {data.url && (
+                          <div className={'flex justify-center'}>
                             <a href={data.url} target='_blank' rel='noopener noreferrer'>
                               <RiExternalLinkLine size={'16px'} />
                             </a>
-                          )}
-                          <Tooltip text={'copy URL'}>
-                            <RiFileCopyLine
-                              size={'16px'}
-                              className='cursor-pointer'
-                              onClick={() => {
-                                navigator.clipboard.writeText(data.url);
-                              }}
-                            />
-                          </Tooltip>
-                        </div>
+
+                            <Tooltip text={'copy URL'}>
+                              <RiFileCopyLine
+                                size={'16px'}
+                                className='cursor-pointer'
+                                onClick={() => {
+                                  navigator.clipboard.writeText(data.url);
+                                }}
+                              />
+                            </Tooltip>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
