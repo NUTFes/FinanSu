@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
+import React, { useState } from 'react';
 import EditModal from '@components/sponsorstyles/EditModal';
 import { SponsorStyle } from '@type/common'; // SponsorStyle 型のインポートを確認してください
 

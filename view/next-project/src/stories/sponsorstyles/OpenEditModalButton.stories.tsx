@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { Props } from '@components/sponsorstyles/OpenEditModalButton';
 import { OpenEditModalButton } from '@components/sponsorstyles';
+import { Props } from '@components/sponsorstyles/OpenEditModalButton';
 import { SponsorStyle } from '@type/common';
 
 // メタデータ定義
