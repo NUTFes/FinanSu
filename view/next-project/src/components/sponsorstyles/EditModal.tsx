@@ -5,7 +5,7 @@ import { put } from '@api/api_methods';
 import { PrimaryButton, OutlinePrimaryButton, CloseButton, Input, Modal } from '@components/common';
 import { SponsorStyle } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   sponsorStyleId: number;
   sponsorStyle: SponsorStyle;
   setIsOpen: (isOpen: boolean) => void;

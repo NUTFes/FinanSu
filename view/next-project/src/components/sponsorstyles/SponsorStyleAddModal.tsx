@@ -5,7 +5,7 @@ import { post } from '@api/api_methods';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import { SponsorStyle } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
