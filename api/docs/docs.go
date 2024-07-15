@@ -1748,6 +1748,118 @@ const docTemplate = `{
                 }
             },
         },
+        "/receipts": {
+            "get": {
+                tags: ["receipt"],
+                "description": "receiptの一覧を取得",
+                "responses": {
+                    "200": {
+                        "description": "receiptの一覧の取得",
+                    }
+                }
+            },
+            "post": {
+                tags: ["receipt"],
+                "description": "receiptの作成",
+                responses: {
+                    "200": {
+                        "description": "create されたreceiptが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "receipt",
+                        "schema":{
+                            "$ref": "#/definitions/receipt"
+                        },
+                    },
+                ],
+            },
+        },
+        "/receipts/{id}": {
+            "get": {
+                tags: ["receipt"],
+                "description": "IDで指定されたreceiptの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "receiptの取得",
+                    }
+                }
+            },
+            "put": {
+                tags: ["receipt"],
+                "description": "receiptの更新",
+                responses: {
+                    "200": {
+                        "description": "更新されたreceiptが返ってくる",
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "receipt",
+                        "schema":{
+                            "$ref": "#/definitions/receipt"
+                        },
+                    },
+                ],
+            },
+            "delete": {
+                tags: ["receipt"],
+                "description": "IDを指定してreceiptの削除",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                responses: {
+                    "200": {
+                        "description": "receiptの削除完了",
+                    }
+                },
+            },
+        },
+        "/receipts/reports/{id}": {
+            "get": {
+                tags: ["receipt"],
+                "description": "purchaseReportIDで指定されたreceiptの取得",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "reportsIDを指定してreceiptの取得",
+                    }
+                }
+            },
+        },
         "/sources": {
             "get": {
                 tags: ["source"],
@@ -2107,26 +2219,26 @@ const docTemplate = `{
                 ],
             },
         },
-				"/teachers/delete": {
-					"delete": {
-							tags: ["teacher"],
-							"description": "teacherの複数削除",
-							responses: {
-									"200": {
-											"description": "複数のteacherをidで削除できる",
-									}
-							},
-							"parameters": [
-									{
-											"in": "body",
-											"name": "destroyTeacherIDs",
-											"schema":{
-													"$ref": "#/definitions/destroyTeacherIDs"
-											},
-									},
-							],
+		"/teachers/delete": {
+			"delete": {
+					tags: ["teacher"],
+					"description": "teacherの複数削除",
+					responses: {
+							"200": {
+									"description": "複数のteacherをidで削除できる",
+							}
 					},
+					"parameters": [
+							{
+									"in": "body",
+									"name": "destroyTeacherIDs",
+									"schema":{
+											"$ref": "#/definitions/destroyTeacherIDs"
+									},
+							},
+					],
 			},
+		},
         "/teachers/{id}": {
             "get": {
                 tags: ["teacher"],
@@ -2758,34 +2870,61 @@ const docTemplate = `{
                     "purchaseOrderID"
             },
         },
-				"destroyTeacherIDs":{
-					"properties":{
-							"deleteIDs":{
-									"type": "array",
-									"items": {
-											"type": "number"
-									},
-									example: []
-							},
-					},
-					"required":{
-									"deleteIDs",
-					},
-				},
-				"destroyUserIDs":{
-					"properties":{
-							"deleteIDs":{
-									"type": "array",
-									"items": {
-											"type": "number"
-									},
-									example: []
-							},
-					},
-					"required":{
-									"deleteIDs",
-					},
-				},
+        "receipt":{
+            "properties":{
+                "purchaseReportID":{
+                    "type": "int",
+                    "example": 1,
+                },
+                "bucketName":{
+                    "type": "string",
+                    "example": "",
+                },
+                "fileName":{
+                    "type": "string",
+                    "example": "",
+                },
+                "fileType":{
+                    "type": "string",
+                    "example": "",
+                },
+                "remark":{
+                    "type": "string",
+                    "example": "",
+                },
+            },
+            "required":{
+                    "purchaseReportID",
+            },
+        },
+	    "destroyTeacherIDs":{
+	    	"properties":{
+	    			"deleteIDs":{
+	    					"type": "array",
+	    					"items": {
+	    							"type": "number"
+	    					},
+	    					example: []
+	    			},
+	    	},
+	    	"required":{
+	    					"deleteIDs",
+	    	},
+	    },
+	    "destroyUserIDs":{
+	    	"properties":{
+	    			"deleteIDs":{
+	    					"type": "array",
+	    					"items": {
+	    							"type": "number"
+	    					},
+	    					example: []
+	    			},
+	    	},
+	    	"required":{
+	    					"deleteIDs",
+	    	},
+	    },
         "year_periods":{
             "properties":{
                 "year":{
