@@ -1616,7 +1616,15 @@ const docTemplate = `{
                         "description": "id",
                         "required": true,
                         "type": "integer"
-                    }
+                    },
+                    {
+                        "in": "body",
+                        "name": "purchase_items",
+                        "type": "array",
+                        "items":{
+                            "$ref": "#/definitions/purchaseItem"
+                        },
+                    },
                 ]
             }
         },
@@ -2773,34 +2781,74 @@ const docTemplate = `{
                     "purchaseOrderID"
             },
         },
-				"destroyTeacherIDs":{
-					"properties":{
-							"deleteIDs":{
-									"type": "array",
-									"items": {
-											"type": "number"
-									},
-									example: []
+        "purchaseItem":{
+            "properties":{
+                "item":{
+                    "type": "string",
+                    "example": "name",
+
+                },
+                "price":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "quantity":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "detail":{
+                    "type": "string",
+                    "example": "",
+                },
+                "url":{
+                    "type": "string",
+                    "example": "",
+                },
+                "purchaseOrderID":{
+                    "type": "int",
+                    "example": 1,
+                },
+                "financeCheck":{
+                    "type": "boolean",
+                    "example": false,
+                },
+            },
+            "required":{
+                    "item",
+                    "price",
+                    "quantity",
+                    "financeCheck",
+                    "purchaseOrderID"
+            },
+        },
+		"destroyTeacherIDs":{
+			"properties":{
+					"deleteIDs":{
+							"type": "array",
+							"items": {
+									"type": "number"
 							},
+							example: []
 					},
-					"required":{
-									"deleteIDs",
-					},
-				},
-				"destroyUserIDs":{
-					"properties":{
-							"deleteIDs":{
-									"type": "array",
-									"items": {
-											"type": "number"
-									},
-									example: []
+			},
+			"required":{
+							"deleteIDs",
+			},
+		},
+		"destroyUserIDs":{
+			"properties":{
+					"deleteIDs":{
+							"type": "array",
+							"items": {
+									"type": "number"
 							},
+							example: []
 					},
-					"required":{
-									"deleteIDs",
-					},
-				},
+			},
+			"required":{
+							"deleteIDs",
+			},
+		},
         "year_periods":{
             "properties":{
                 "year":{

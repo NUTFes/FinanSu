@@ -23,7 +23,7 @@ type PurchaseOrderUseCase interface {
 	GetPurchaseOrderDetails(context.Context) ([]domain.OrderDetail, error)
 	GetPurchaseOrderDetailByID(context.Context, string) (domain.OrderDetail, error)
 	GetPurchaseOrderDetailsByYear(context.Context, string) ([]domain.OrderDetail, error)
-	NotifySlack(context.Context, string) error
+	NotifySlack(context.Context, string, []domain.PurchaseItem) error
 }
 
 func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository, bureauRep rep.BureauRepository, expenseRep rep.ExpenseRepository) PurchaseOrderUseCase {
@@ -306,10 +306,8 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailsByYear(c context.Context, 
 	return orderDetails, nil
 }
 
-func (p *purchaseOrderUseCase) NotifySlack(c context.Context, id string) error {
+func (p *purchaseOrderUseCase) NotifySlack(c context.Context, id string, purchaseItems []domain.PurchaseItem) error {
 	purchaseOrder := domain.PurchaseOrder{}
-	purchaseItem := domain.PurchaseItem{}
-	var purchaseItems []domain.PurchaseItem
 	user := domain.User{}
 	bureau := domain.Bureau{}
 	expense := domain.Expense{}
@@ -334,27 +332,6 @@ func (p *purchaseOrderUseCase) NotifySlack(c context.Context, id string) error {
 	)
 	if err != nil {
 		return err
-	}
-
-	//物品取得
-	rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(purchaseOrder.ID)))
-	for rows.Next() {
-		err := rows.Scan(
-			&purchaseItem.ID,
-			&purchaseItem.Item,
-			&purchaseItem.Price,
-			&purchaseItem.Quantity,
-			&purchaseItem.Detail,
-			&purchaseItem.Url,
-			&purchaseItem.PurchaseOrderID,
-			&purchaseItem.FinanceCheck,
-			&purchaseItem.CreatedAt,
-			&purchaseItem.UpdatedAt,
-		)
-		if err != nil {
-			return err
-		}
-		purchaseItems = append(purchaseItems, purchaseItem)
 	}
 
 	//局取得

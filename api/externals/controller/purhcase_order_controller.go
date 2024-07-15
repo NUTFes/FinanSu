@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -116,8 +117,12 @@ func (p *purchaseOrderController) IndexOrderDetailByYear(c echo.Context) error {
 // TODO いずれは購入申請と物品を一括送信してSlack通知をするようにフロント・バックのリファクタリングを行う
 func (p *purchaseOrderController) NotifySlack(c echo.Context) error {
 	id := c.Param("id")
-	fmt.Println(id)
-	err := p.u.NotifySlack(c.Request().Context(), id)
+	purchaseItems := new([]domain.PurchaseItem)
+	if err := c.Bind(purchaseItems); err != nil {
+		fmt.Println("err")
+		return err
+	}
+	err := p.u.NotifySlack(c.Request().Context(), id, *purchaseItems)
 	if err != nil {
 		return err
 	}

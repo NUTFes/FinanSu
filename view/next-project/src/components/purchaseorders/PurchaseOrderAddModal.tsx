@@ -66,19 +66,23 @@ export default function AddModal(props: ModalProps) {
     const postRes: PurchaseOrder = await postOrder(addPurchaseOrderUrl, purchaseOrder);
     const purchaseOrderId = postRes.id || 0;
     const purchaseItemsAddOrderInfo = purchaseItems.map((item) => {
-      return { ...item, purchaseOrderID: purchaseOrderId };
+      return {
+        ...item,
+        quantity: Number(item.quantity),
+        price: Number(item.price),
+        purchaseOrderID: purchaseOrderId,
+      };
     });
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
     purchaseItemsAddOrderInfo.map(async (item) => {
       await post(addPurchaseItemUrl, item);
     });
-    // TODO POSTを申請・報告・slack通知で分けているため、一つのAPIにリファクタリングする
     const notifySlackUrl = process.env.CSR_API_URI + `/purchaseorders/send/${purchaseOrderId}`;
-    await defaultPost(notifySlackUrl, purchaseOrder);
+    await defaultPost(notifySlackUrl, purchaseItemsAddOrderInfo);
   };
 
   const submit = async (purchaseOrder: PurchaseOrder, formDataList: PurchaseItem[]) => {
-    submitOrderAndItems(purchaseOrder, formDataList);
+    await submitOrderAndItems(purchaseOrder, formDataList);
     props.onClose();
     props.numModalOnClose();
     router.reload();
