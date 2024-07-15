@@ -206,25 +206,27 @@ const DetailModal: FC<ModalProps> = (props) => {
                   </td>
                   <td className={clsx('border-b py-3')}>
                     <div className={clsx('text-center text-sm text-black-300')}>
-                      <div className={clsx('flex justify-center')}>
-                        <a
-                          className={clsx('mx-1')}
-                          href={purchaseItem.url}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          <RiExternalLinkLine size={'16px'} />
-                        </a>
-                        <Tooltip text={'copy URL'}>
-                          <RiFileCopyLine
+                      {purchaseItem.url && (
+                        <div className={clsx('flex justify-center')}>
+                          <a
                             className={clsx('mx-1')}
-                            size={'16px'}
-                            onClick={() => {
-                              navigator.clipboard.writeText(purchaseItem.url);
-                            }}
-                          />
-                        </Tooltip>
-                      </div>
+                            href={purchaseItem.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <RiExternalLinkLine size={'16px'} />
+                          </a>
+                          <Tooltip text={'copy URL'}>
+                            <RiFileCopyLine
+                              className={clsx('mx-1')}
+                              size={'16px'}
+                              onClick={() => {
+                                navigator.clipboard.writeText(purchaseItem.url);
+                              }}
+                            />
+                          </Tooltip>
+                        </div>
+                      )}
                     </div>
                   </td>
                   {user.roleID === 3 ? (
