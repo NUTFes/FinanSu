@@ -8,7 +8,7 @@ import { PrimaryButton, Input, Modal, Select } from '@components/common';
 import { Budget } from '@type/common';
 import { Year, Source } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   years: Year[];
   sources: Source[];

@@ -31,6 +31,7 @@ type PurchaseOrderRepository interface {
 	DeleteReport(context.Context, string) error
 	AllUserInfoByYear(context.Context, string) (*sql.Rows, error)
 	NotifySlack(context.Context, domain.PurchaseOrder, []domain.PurchaseItem, domain.User, domain.Bureau, domain.Expense) error
+	AllUnregisteredUserInfoByYear(context.Context, string) (*sql.Rows, error)
 }
 
 func NewPurchaseOrderRepository(c db.Client, ac abstract.Crud) PurchaseOrderRepository {
@@ -220,3 +221,36 @@ func (p *purchaseOrderRepository) NotifySlack(c context.Context, purchaseOrder d
 		return err
 }
 
+func (p *purchaseOrderRepository) AllUnregisteredUserInfoByYear(c context.Context, year string) (*sql.Rows, error) {
+	query := `
+		SELECT
+			orders.*,
+			users.*
+		FROM
+			purchase_orders AS orders
+		INNER JOIN
+			users
+		ON
+			orders.user_id = users.id
+		INNER JOIN
+			year_periods AS yp
+		ON
+			orders.created_at > yp.started_at
+		AND
+			orders.created_at < yp.ended_at
+		INNER JOIN
+			years
+		ON
+			yp.year_id = years.id
+		LEFT OUTER JOIN
+			purchase_reports AS reports
+		ON
+			orders.id = reports.purchase_order_id
+		WHERE
+			years.year = `+ year +`
+		AND
+			reports.purchase_order_id IS NULL
+		ORDER BY
+			orders.id`
+	return p.crud.Read(c, query)
+}

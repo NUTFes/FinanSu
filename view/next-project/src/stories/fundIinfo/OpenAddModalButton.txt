@@ -1,3 +1,4 @@
+// todo: 後で移行します
 import { Meta } from '@storybook/react';
 import { OpenAddModalButton } from '@components/fund_information';
 

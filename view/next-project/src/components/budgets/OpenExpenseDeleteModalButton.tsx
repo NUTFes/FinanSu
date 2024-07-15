@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ExpenseDeleteModal from './ExpenseDeleteModal';
 import { DeleteButton } from '@components/common';
 
-interface Props {
+export interface Props {
   children?: React.ReactNode;
   id: number;
   disabled: boolean;

@@ -166,26 +166,29 @@ export default function EditModal(props: ModalProps) {
                 </thead>
                 <tbody>
                   {formDataList.map((data) => (
-                    <tr key={data.id} className='border-gray-300 border-b'>
+                    <tr key={data.id} className='border-gray-300 border-b text-center'>
                       <td className='py-2'>{data.item}</td>
                       <td className='py-2'>{data.price}</td>
                       <td className='py-2'>{data.quantity}</td>
                       <td className='py-2'>{data.detail}</td>
                       <td className='py-2'>
-                        <div className={'flex justify-center'}>
-                          <a href={data.url} target='_blank' rel='noopener noreferrer'>
-                            <RiExternalLinkLine size={'16px'} />
-                          </a>
-                          <Tooltip text={'copy URL'}>
-                            <RiFileCopyLine
-                              size={'16px'}
-                              className='cursor-pointer'
-                              onClick={() => {
-                                navigator.clipboard.writeText(data.url);
-                              }}
-                            />
-                          </Tooltip>
-                        </div>
+                        {data.url && (
+                          <div className={'flex justify-center'}>
+                            <a href={data.url} target='_blank' rel='noopener noreferrer'>
+                              <RiExternalLinkLine size={'16px'} />
+                            </a>
+
+                            <Tooltip text={'copy URL'}>
+                              <RiFileCopyLine
+                                size={'16px'}
+                                className='cursor-pointer'
+                                onClick={() => {
+                                  navigator.clipboard.writeText(data.url);
+                                }}
+                              />
+                            </Tooltip>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

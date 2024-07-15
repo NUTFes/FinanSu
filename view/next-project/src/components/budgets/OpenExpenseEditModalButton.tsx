@@ -5,7 +5,7 @@ import ExpenseEditModal from './ExpenseEditModal';
 import { EditButton } from '@components/common';
 import { Expense } from '@type/common';
 
-interface Props {
+export interface Props {
   id: number;
   expense: Expense;
   disabled: boolean;

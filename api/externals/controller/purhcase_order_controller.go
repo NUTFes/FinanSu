@@ -23,6 +23,7 @@ type PurchaseOrderController interface {
 	ShowOrderDetail(echo.Context) error
 	IndexOrderDetailByYear(echo.Context) error
 	NotifySlack(echo.Context) error
+	IndexUnregisteredOrderDetailByYear(echo.Context) error
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
@@ -127,4 +128,13 @@ func (p *purchaseOrderController) NotifySlack(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, err)
+}
+
+func (p *purchaseOrderController) IndexUnregisteredOrderDetailByYear(c echo.Context) error {
+	year := c.Param("year")
+	orderDetails, err := p.u.GetUnregisteredPurchaseOrderDetailsByYear(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, orderDetails)
 }
