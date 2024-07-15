@@ -189,6 +189,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)
 	e.GET("/purchaseorders/:id/details", r.purchaseOrderController.ShowOrderDetail)
 	e.GET("/purchaseorders/details/:year", r.purchaseOrderController.IndexOrderDetailByYear)
+	e.GET("/purchaseorders/details/unregistered/:year", r.purchaseOrderController.IndexUnregisteredOrderDetailByYear)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
