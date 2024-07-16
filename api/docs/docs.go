@@ -1605,6 +1605,29 @@ const docTemplate = `{
                 }
             },
         },
+        "/purchaseorders/send/{id}": {
+            "post": {
+                tags: ["purchase_order"],
+                "description": "IDで指定されたpurchase_orderのslackへメッセージ送信",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "purchase_items",
+                        "type": "array",
+                        "items":{
+                            "$ref": "#/definitions/purchaseItem"
+                        },
+                    },
+                ]
+            }
+        },
         "/purchaseorders/details/unregistered/{year}": {
             "get": {
                 tags: ["purchase_order"],
@@ -2890,6 +2913,73 @@ const docTemplate = `{
                     "purchaseOrderID"
             },
         },
+        "purchaseItem":{
+            "properties":{
+                "item":{
+                    "type": "string",
+                    "example": "name",
+                },
+                "price":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "quantity":{
+                    "type": "int",
+                    "example": 0,
+                },
+                "detail":{
+                    "type": "string",
+                    "example": "",
+                },
+                "url":{
+                    "type": "string",
+                    "example": "",
+                },
+                "purchaseOrderID":{
+                    "type": "int",
+                    "example": 1,
+                },
+                "financeCheck":{
+                    "type": "boolean",
+                    "example": false,
+                },
+            },
+            "required":{
+                    "item",
+                    "price",
+                    "quantity",
+                    "financeCheck",
+                    "purchaseOrderID"
+            },
+        },
+		"destroyTeacherIDs":{
+			"properties":{
+					"deleteIDs":{
+							"type": "array",
+							"items": {
+									"type": "number"
+							},
+							example: []
+					},
+			},
+			"required":{
+							"deleteIDs",
+			},
+		},
+		"destroyUserIDs":{
+			"properties":{
+					"deleteIDs":{
+							"type": "array",
+							"items": {
+									"type": "number"
+							},
+							example: []
+					},
+			},
+			"required":{
+							"deleteIDs",
+			},
+		},
         "receipt":{
             "properties":{
                 "purchaseReportID":{
@@ -2917,34 +3007,6 @@ const docTemplate = `{
                     "purchaseReportID",
             },
         },
-	    "destroyTeacherIDs":{
-	    	"properties":{
-	    			"deleteIDs":{
-	    					"type": "array",
-	    					"items": {
-	    							"type": "number"
-	    					},
-	    					example: []
-	    			},
-	    	},
-	    	"required":{
-	    					"deleteIDs",
-	    	},
-	    },
-	    "destroyUserIDs":{
-	    	"properties":{
-	    			"deleteIDs":{
-	    					"type": "array",
-	    					"items": {
-	    							"type": "number"
-	    					},
-	    					example: []
-	    			},
-	    	},
-	    	"required":{
-	    					"deleteIDs",
-	    	},
-	    },
         "year_periods":{
             "properties":{
                 "year":{

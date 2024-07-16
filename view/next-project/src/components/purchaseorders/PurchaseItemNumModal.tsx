@@ -103,8 +103,8 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
         url: '',
         purchaseOrderID: 0,
         financeCheck: false,
-        createdAt: '',
-        updatedAt: '',
+        createdAt: undefined,
+        updatedAt: undefined,
       };
       initialPurchaseItemList.push(initialPurchaseItem);
     }
