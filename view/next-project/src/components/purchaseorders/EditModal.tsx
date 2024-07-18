@@ -20,6 +20,7 @@ interface ModalProps {
   purchaseItems: PurchaseItem[];
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  onOpenInitial: () => void;
 }
 
 export default function EditModal(props: ModalProps) {
@@ -33,8 +34,12 @@ export default function EditModal(props: ModalProps) {
     setActiveStep(activeStep - 1);
   };
   const reset = () => {
-    setActiveStep(1);
-    setIsDone(false);
+    if (activeStep === 1) {
+      props.onOpenInitial();
+    } else {
+      setActiveStep(1);
+      setIsDone(false);
+    }
   };
 
   // 購入報告を登録するかどうかのフラグ
@@ -209,9 +214,9 @@ export default function EditModal(props: ModalProps) {
             <div className='mb-5 mt-10 flex justify-center gap-5'>
               {formDataList && formDataList.length > 0 && (
                 <>
-                  {activeStep > 1 && (
-                    <OutlinePrimaryButton onClick={prevStep}>戻る</OutlinePrimaryButton>
-                  )}
+                  <OutlinePrimaryButton onClick={activeStep === 1 ? reset : prevStep}>
+                    戻る
+                  </OutlinePrimaryButton>
                   <PrimaryButton
                     onClick={() => {
                       {
