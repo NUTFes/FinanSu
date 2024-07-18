@@ -3,7 +3,7 @@ import React, { Dispatch, FC, SetStateAction } from 'react';
 import { del } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
-export interface ModalProps {
+interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   children?: React.ReactNode;
   id: number | string;

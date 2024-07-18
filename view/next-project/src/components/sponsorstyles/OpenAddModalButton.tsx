@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import SponsorStyleAddModal from './SponsorStyleAddModal';
 import { AddButton } from '@components/common';
 
-export interface Props {
+interface Props {
   children?: React.ReactNode;
 }
 
