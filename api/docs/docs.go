@@ -2182,7 +2182,7 @@ const docTemplate = `{
             },
             "delete": {
                 tags: ["sponsorstyle"],
-                "description": "IDを指定してsponsorstyleの削除",
+                "description": "IDを指定してsponsorstyleの論理削除",
                 "parameters": [
                     {
                         "name": "id",
@@ -2194,7 +2194,7 @@ const docTemplate = `{
                 ],
                 responses: {
                     "200": {
-                        "description": "sponsorstyleの削除完了",
+                        "description": "sponsorstyleの論理削除完了",
                     }
                 },
             },
