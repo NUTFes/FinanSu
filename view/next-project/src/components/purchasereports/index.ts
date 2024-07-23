@@ -1,6 +1,5 @@
 export { default as AddModal } from './AddModal';
 export { default as DeleteModal } from './DeleteModal';
-/* export { ModalProps as DeleteModalProps } from './DeleteModal';*/
 export { default as DetailModal } from './DetailModal';
 export { default as DetailEditModal } from './DetailEditModal';
 /* export type { ModalProps as DetailModalProps } from './DetailModal'; */
