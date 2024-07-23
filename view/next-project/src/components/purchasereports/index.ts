@@ -2,7 +2,6 @@ export { default as AddModal } from './AddModal';
 export { default as DeleteModal } from './DeleteModal';
 export { default as DetailModal } from './DetailModal';
 export { default as DetailEditModal } from './DetailEditModal';
-/* export type { ModalProps as DetailModalProps } from './DetailModal'; */
 export { default as EditModal } from './EditModal';
 export { default as OpenAddModalButton } from './OpenAddModalButton';
 export { default as OpenDeleteModalButton } from './OpenDeleteModalButton';
