@@ -11,10 +11,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: StoryFn<typeof SponsorStyleAddModal> = (args) => (
-  <SponsorStyleAddModal {...args} />
-);
+const Template: StoryFn<typeof SponsorStyleAddModal> = (args) => <SponsorStyleAddModal {...args} />;
 
 export const Primary = Template.bind({});
-Primary.args = {
-};
+Primary.args = {};
