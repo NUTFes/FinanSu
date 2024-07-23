@@ -26,7 +26,7 @@ interface PurchaseOrderView {
   purchaseItem: PurchaseItem[];
 }
 
-export interface ModalProps {
+interface ModalProps {
   purchaseOrderId?: number;
   purchaseItemNum: number;
   isOpen: boolean;
