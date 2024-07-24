@@ -12,6 +12,8 @@ import {
   ActivityStyle,
   SponsorStyle,
   SponsorActivityView,
+  SponsorFilterType,
+  YearPeriod,
 } from '../type/common';
 
 export const USER = {
@@ -30,6 +32,17 @@ export const EXPENSES = [
     yearID: 123,
   },
 ] as Expense[];
+
+export const YEAEPERIOD = [
+  {
+    id: 0,
+    year: 2024,
+    startedAt: '2024-01-01T00:00:00.000Z',
+    endedAt: '2024-12-31T00:00:00.000Z',
+    createdAt: '2024-12-31T00:00:00.000Z',
+    updatedAt: '2024-12-31T00:00:00.000Z',
+  },
+] as YearPeriod[];
 
 export const PURCHASE_REPORT = {
   id: 0,
@@ -142,3 +155,9 @@ export const SPONSOR_ACTIVITY_VIEW = {
   sponsorActivityInformations: [SPONSOR_ACTIVITY_INFORMATION],
   styleDetail: [SPONSOR_STYLE_DETAIL],
 } as SponsorActivityView;
+
+export const SPONSOR_FILTERTYPE = {
+  styleIds: [1],
+  keyword: 'test-keyword',
+  selectedSort: 'test-sort',
+} as SponsorFilterType;
