@@ -17,4 +17,7 @@ export const Primary = Template.bind({});
 Primary.args = {
   id: 1,
   sponsorActivitiesViewItem: SPONSOR_ACTIVITY_VIEW,
+  setSponsorActivitiesView: () => {
+    SPONSOR_ACTIVITY_VIEW;
+  },
 };
