@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
 import { saveAs } from 'file-saver';
-import { FaChevronCircleLeft, FaCheckCircle } from 'react-icons/fa';
+import React, { FC, useEffect, useState } from 'react';
+import { FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 import { DeleteButton, OutlinePrimaryButton, PrimaryButton, Loading } from '../common';
+import UploadFileModal from './UploadFileModal';
 import { del, get, post } from '@api/api_methods';
 import { Receipt } from '@type/common';
-import UploadFileModal from './UploadFileModal';
 
 interface ModalProps {
   id: number;
@@ -58,7 +58,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
   };
 
   const handleDeleteReceipt = async (receipt: Receipt) => {
-    //　オブジェクト削除
+    // オブジェクト削除
     const formData = new FormData();
     formData.append('fileName', `${receipt?.fileName}`);
     formData.append('year', year);

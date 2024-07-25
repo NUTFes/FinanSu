@@ -3,8 +3,8 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { PrimaryButton, Loading } from '../common';
 import { put } from '@/utils/api/api_methods';
-import { Receipt } from '@type/common';
 import { Modal } from '@components/common';
+import { Receipt } from '@type/common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
