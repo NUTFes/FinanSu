@@ -58,6 +58,25 @@ const DetailPage2: FC<ModalProps> = (props) => {
   };
 
   const handleDeleteReceipt = async (receipt: Receipt) => {
+    //　オブジェクト削除
+    const formData = new FormData();
+    formData.append('fileName', `${receipt?.fileName}`);
+    formData.append('year', year);
+    const response = await fetch('/api/receipts', {
+      method: 'DELETE',
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          return true;
+        } else {
+          alert('削除に失敗');
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     const deleteReceiptUrl = `${process.env.CSR_API_URI}/receipts/${String(receipt.id)}`;
     const newReceiptsData = receiptsData.filter((receiptData) => receiptData.id !== receipt.id);
     if (receipt.fileName === '') {

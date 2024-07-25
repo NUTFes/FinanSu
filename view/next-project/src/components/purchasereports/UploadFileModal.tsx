@@ -47,7 +47,6 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
 
   const objectDeleteHandle = async () => {
     const formData = new FormData();
-    console.log(receipt?.fileName);
     formData.append('fileName', `${receipt?.fileName}`);
     formData.append('year', year);
     const response = await fetch('/api/receipts', {
