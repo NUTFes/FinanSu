@@ -6,7 +6,7 @@ import DetailPage2 from './DetailPage2';
 import { Modal } from '@components/common';
 import { PurchaseReportView, Expense } from '@type/common';
 
-export interface ModalProps {
+interface ModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
