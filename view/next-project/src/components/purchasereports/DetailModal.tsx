@@ -11,7 +11,7 @@ import { Checkbox, Modal, RedButton, Tooltip } from '@components/common';
 import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
 import { createPurchaseReportFormPdf } from '@utils/createPurchaseReportPdf';
 
-export interface ModalProps {
+interface ModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
