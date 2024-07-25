@@ -446,6 +446,7 @@ export default function PurchaseReports(props: Props) {
           expenses={props.expenses}
           purchaseReportViewItem={purchaseReportViewItem}
           isDelete={false}
+          year={selectedYear}
         />
       )}
       <div className='fixed bottom-4 right-4 md:hidden'>

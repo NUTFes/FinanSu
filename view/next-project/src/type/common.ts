@@ -275,3 +275,13 @@ export interface PasswordResetData {
   password: string;
   confirmPassword: string;
 }
+
+// レシート
+export interface Receipt {
+  id?: number;
+  purchaseReportID: number;
+  bucketName: string;
+  fileName: string;
+  fileType: string;
+  remark: string;
+}
