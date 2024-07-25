@@ -10,14 +10,14 @@ interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
   id: number;
-  receiptID: number;
+  receipt?: Receipt;
   year: string;
   receiptsData: Receipt[];
   setReceiptsData: (receiptsData: Receipt[]) => void;
 }
 
 const UplaodFileModal: FC<ModalProps> = (props) => {
-  const { id, receiptID, year, receiptsData, setReceiptsData } = props;
+  const { id, receipt, year, receiptsData, setReceiptsData } = props;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState({ uploadImageURL: '', type: '' });
@@ -45,10 +45,37 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     props.setIsOpen(false);
   };
 
+  const objectDeleteHandle = async () => {
+    const formData = new FormData();
+    console.log(receipt?.fileName);
+    formData.append('fileName', `${receipt?.fileName}`);
+    formData.append('year', year);
+    const response = await fetch('/api/receipts', {
+      method: 'DELETE',
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          return true;
+        } else {
+          alert('削除に失敗');
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
   const submit = async () => {
     if (!imageFile) {
       return;
     }
+    //更新の場合削除
+    if (receipt?.fileName !== '') {
+      objectDeleteHandle();
+    }
+
     setIsLoading(true);
     const formData = new FormData();
     formData.append('file', imageFile);
@@ -77,7 +104,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
       return;
     }
 
-    const receipt: Receipt = {
+    const sendReceipt: Receipt = {
       purchaseReportID: Number(id),
       bucketName: process.env.NEXT_PUBLIC_BUCKET_NAME || '',
       fileName: imageFile.name,
@@ -85,8 +112,8 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
       remark: '',
     };
 
-    const putReceiptURL = process.env.CSR_API_URI + `/receipts/${receiptID}`;
-    const res = await put(putReceiptURL, receipt);
+    const putReceiptURL = process.env.CSR_API_URI + `/receipts/${receipt?.id}`;
+    const res = await put(putReceiptURL, sendReceipt);
 
     alert('保存しました');
 

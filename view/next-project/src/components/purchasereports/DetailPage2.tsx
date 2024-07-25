@@ -20,7 +20,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
   };
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [editReceiptID, setEditReceiptID] = useState<number>(1);
+  const [editReceipt, setEditReceipt] = useState<Receipt>();
   const [receiptsData, setReceiptsData] = useState<Receipt[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -107,7 +107,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     <OutlinePrimaryButton
                       className='p-1'
                       onClick={() => {
-                        setEditReceiptID(Number(receipt.id));
+                        setEditReceipt(receipt);
                         setIsOpen(true);
                       }}
                     >
@@ -128,7 +128,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     <OutlinePrimaryButton
                       className='mx-auto my-2'
                       onClick={() => {
-                        setEditReceiptID(Number(receipt.id));
+                        setEditReceipt(receipt);
                         setIsOpen(true);
                       }}
                     >
@@ -155,7 +155,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
         <UploadFileModal
           id={Number(id)}
           setIsOpen={setIsOpen}
-          receiptID={editReceiptID}
+          receipt={editReceipt}
           year={year}
           receiptsData={receiptsData}
           setReceiptsData={setReceiptsData}
