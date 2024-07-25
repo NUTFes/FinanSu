@@ -124,7 +124,7 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
       <div className='mx-auto mb-10 w-fit'>
         <p className='text-2xl font-thin text-black-600'>購入物品</p>
       </div>
-      <div className='grid h-[20rem] w-full justify-items-center'>
+      <div className='grid max-h-60 w-full justify-items-center overflow-auto'>
         <div className='w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1'>
           <table className='w-full table-fixed border-collapse'>
             <thead>
