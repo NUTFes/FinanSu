@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import PulldownButton from '@/components/common/PulldownButton';
+import ChakraUIDropdown from '@/components/common/ChakraUIDropdown';
 
-const meta: Meta<typeof PulldownButton> = {
-  title: 'FinanSu/PulldownButton',
-  component: PulldownButton,
+const meta: Meta<typeof ChakraUIDropdown> = {
+  title: 'FinanSu/common/ChakraUIDropdown',
+  component: ChakraUIDropdown,
   tags: ['autodocs'],
   argTypes: {},
 };
