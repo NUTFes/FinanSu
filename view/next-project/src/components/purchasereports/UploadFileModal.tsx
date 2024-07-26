@@ -1,5 +1,7 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState, useCallback } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
+import { MdFileUpload } from 'react-icons/md';
+import { useDropzone } from 'react-dropzone';
 
 import { PrimaryButton, Loading } from '../common';
 import { put } from '@/utils/api/api_methods';
@@ -33,10 +35,6 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     }
     setImageFile(targetFile);
     setPreview({ uploadImageURL: URL.createObjectURL(targetFile), type: targetFile.type });
-
-    const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
-    const fileName = targetFile.name;
-    const fileType = targetFile.type;
   };
 
   const handleFileDelete = () => {
@@ -136,6 +134,18 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     props.setIsOpen(false);
   };
 
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const targetFile = acceptedFiles[0];
+    if (!targetFile) {
+      setPreview({ uploadImageURL: '', type: '' });
+      return;
+    }
+    setImageFile(targetFile);
+    setPreview({ uploadImageURL: URL.createObjectURL(targetFile), type: targetFile.type });
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   return (
     <Modal className='md:h-6/12 md:mt-5 md:w-4/12'>
       <div className='w-full'>
@@ -143,26 +153,32 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
-      <div className='my-2 flex flex-wrap justify-center gap-2'>
-        <input
-          type='file'
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className='file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm hover:file:bg-grey-300'
-        />
-      </div>
       <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
-        {preview.type === 'application/pdf' ? (
-          <embed
-            src={preview.uploadImageURL}
-            type='application/pdf'
-            className='mx-auto object-scale-down '
-          />
-        ) : (
-          preview.type !== '' && (
-            <img src={preview.uploadImageURL} className='mx-auto object-scale-down ' />
-          )
-        )}
+        <div {...getRootProps()} className='h-56 w-full'>
+          <input {...getInputProps()} />
+          {preview.type === 'application/pdf' ? (
+            <embed
+              src={preview.uploadImageURL}
+              type='application/pdf'
+              className='mx-auto object-scale-down '
+            />
+          ) : (
+            preview.type !== '' && (
+              <img src={preview.uploadImageURL} className='mx-auto object-scale-down ' />
+            )
+          )}
+          {preview.uploadImageURL === '' && (
+            <div className='rounded-md border'>
+              <div className='flex h-56 flex-col items-center justify-center'>
+                <p className='mx-28'>
+                  <MdFileUpload size={50} />
+                </p>
+                <p>ここにファイルをドロップしてください</p>
+                <p>またはここをクリック</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className='my-2 flex w-full flex-wrap justify-center'>
         <PrimaryButton type='button' onClick={() => submit()} disabled={isLoading && !imageFile}>

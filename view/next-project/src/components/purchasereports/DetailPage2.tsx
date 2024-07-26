@@ -98,26 +98,25 @@ const DetailPage2: FC<ModalProps> = (props) => {
   }, []);
 
   return (
-    <>
+    <div className='w-96 md:w-full'>
       <p className='mx-auto w-fit text-xl text-black-600'>登録済レシート</p>
       <div className='max-h-96 overflow-auto'>
         {receiptsData &&
-          receiptsData.map((receipt, index) => (
+          receiptsData.map((receipt) => (
             <>
               <div className='m-0 flex flex-row-reverse border-t border-primary-1 p-0'>
-                <div className='mt-2 w-1/12'>
+                <div className='mt-2 md:w-1/12'>
                   <button className=''>
                     <DeleteButton onClick={() => handleDeleteReceipt(receipt)} />
                   </button>
                 </div>
-                <div className='w-11/12' />
               </div>
               <div className='flex flex-wrap justify-center'>
                 {receipt?.fileType === 'application/pdf' && receipt?.fileName && (
                   <embed src={createURL(receipt)} type='application/pdf' width='200' />
                 )}
                 {receipt.fileType !== 'application/pdf' && receipt.fileName && (
-                  <img src={createURL(receipt)} alt='Picture of the author' width='160' />
+                  <img src={createURL(receipt)} alt='Picture of the author' width='200' />
                 )}
               </div>
               <div className='my-1 flex flex-wrap justify-center gap-7 '>
@@ -180,7 +179,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
           setReceiptsData={setReceiptsData}
         />
       )}
-    </>
+    </div>
   );
 };
 

@@ -119,7 +119,6 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
             ''}
         </div>
       </div>
-
       <div className='mx-auto mb-10 w-fit'>
         <p className='text-2xl font-thin text-black-600'>購入物品</p>
       </div>
