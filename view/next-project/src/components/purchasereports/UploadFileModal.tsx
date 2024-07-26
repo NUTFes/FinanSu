@@ -4,7 +4,7 @@ import { MdFileUpload } from 'react-icons/md';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { PrimaryButton, Loading } from '../common';
-import { put } from '@/utils/api/api_methods';
+import { post, put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
 import { Receipt } from '@type/common';
 
@@ -20,22 +20,12 @@ interface ModalProps {
 
 const UplaodFileModal: FC<ModalProps> = (props) => {
   const { id, receipt, year, receiptsData, setReceiptsData } = props;
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState({ uploadImageURL: '', type: '' });
+  const isNew = !receipt?.id;
 
   // loadingの呼び出し
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const targetFile = e.target.files![0]!;
-    if (!targetFile) {
-      setPreview({ uploadImageURL: '', type: '' });
-      return;
-    }
-    setImageFile(targetFile);
-    setPreview({ uploadImageURL: URL.createObjectURL(targetFile), type: targetFile.type });
-  };
 
   const handleFileDelete = () => {
     setImageFile(null);
@@ -109,20 +99,25 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
       remark: '',
     };
 
-    const putReceiptURL = process.env.CSR_API_URI + `/receipts/${receipt?.id}`;
-    const res = await put(putReceiptURL, sendReceipt);
+    if (isNew) {
+      const receiptsUrl = `${process.env.CSR_API_URI}/receipts`;
+      const res = await post(receiptsUrl, sendReceipt);
+      const newReceiptsData = [...(receiptsData || []), res];
+      setReceiptsData(newReceiptsData);
+    } else {
+      const putReceiptURL = process.env.CSR_API_URI + `/receipts/${receipt?.id}`;
+      const res = await put(putReceiptURL, sendReceipt);
+      const newReceiptsData = receiptsData.map((receiptData) => {
+        if (receiptData.id === res.id) {
+          return res;
+        } else {
+          return receiptData;
+        }
+      });
+      setReceiptsData(newReceiptsData);
+    }
 
     alert('保存しました');
-
-    const newReceiptsData = receiptsData.map((receiptData) => {
-      if (receiptData.id === res.id) {
-        return res;
-      } else {
-        return receiptData;
-      }
-    });
-
-    setReceiptsData(newReceiptsData);
 
     setIsLoading(false);
 

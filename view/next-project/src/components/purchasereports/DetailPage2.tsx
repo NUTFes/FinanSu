@@ -44,7 +44,6 @@ const DetailPage2: FC<ModalProps> = (props) => {
   };
 
   const handleCreateReceipt = async () => {
-    const receiptsUrl = `${process.env.CSR_API_URI}/receipts`;
     const nullData: Receipt = {
       purchaseReportID: Number(id),
       bucketName: '',
@@ -52,9 +51,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
       fileType: '',
       remark: '',
     };
-    const res = await post(receiptsUrl, nullData);
-    const newReceiptsData = [...(receiptsData || []), res];
-    setReceiptsData(newReceiptsData);
+    setEditReceipt(nullData);
+    setIsOpen(true);
   };
 
   const handleDeleteReceipt = async (receipt: Receipt) => {
@@ -62,21 +60,6 @@ const DetailPage2: FC<ModalProps> = (props) => {
     const formData = new FormData();
     formData.append('fileName', `${receipt?.fileName}`);
     formData.append('year', year);
-    const response = await fetch('/api/receipts', {
-      method: 'DELETE',
-      body: formData,
-    })
-      .then((response) => {
-        if (response.ok) {
-          return true;
-        } else {
-          alert('削除に失敗');
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
     const deleteReceiptUrl = `${process.env.CSR_API_URI}/receipts/${String(receipt.id)}`;
     const newReceiptsData = receiptsData.filter((receiptData) => receiptData.id !== receipt.id);
     if (receipt.fileName === '') {
@@ -84,6 +67,21 @@ const DetailPage2: FC<ModalProps> = (props) => {
     } else {
       const confirm = window.confirm('本当に削除してよろしいですか？');
       if (confirm) {
+        await fetch('/api/receipts', {
+          method: 'DELETE',
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              return true;
+            } else {
+              alert('削除に失敗');
+              return false;
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
         await del(deleteReceiptUrl);
       } else {
         window.alert('キャンセルしました');
@@ -139,19 +137,6 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     >
                       ダウンロード
                     </PrimaryButton>
-                  </div>
-                )}
-                {receipt.fileName === '' && (
-                  <div className='my-2 flex flex-wrap justify-center gap-2'>
-                    <OutlinePrimaryButton
-                      className='mx-auto my-2'
-                      onClick={() => {
-                        setEditReceipt(receipt);
-                        setIsOpen(true);
-                      }}
-                    >
-                      登録
-                    </OutlinePrimaryButton>
                   </div>
                 )}
               </div>
