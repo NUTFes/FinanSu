@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { SideNav } from '@components/common';
+import { Dropdown } from '@components/common';
 
-const meta: Meta<typeof SideNav> = {
-  title: 'FinanSu/SideNav',
-  component: SideNav,
+const meta: Meta<typeof Dropdown> = {
+  title: 'FinanSu/common/Dropdown',
+  component: Dropdown,
   tags: ['autodocs'],
   argTypes: {},
 };
