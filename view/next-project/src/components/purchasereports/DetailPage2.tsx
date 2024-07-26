@@ -4,7 +4,7 @@ import { FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 import { DeleteButton, OutlinePrimaryButton, PrimaryButton, Loading } from '../common';
 import UploadFileModal from './UploadFileModal';
-import { del, get, post } from '@api/api_methods';
+import { del, get } from '@api/api_methods';
 import { Receipt } from '@type/common';
 
 interface ModalProps {

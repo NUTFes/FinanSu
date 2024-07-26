@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState, useCallback } from 'react';
+import React, { FC, useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { MdFileUpload } from 'react-icons/md';
 import { RiCloseCircleLine } from 'react-icons/ri';
