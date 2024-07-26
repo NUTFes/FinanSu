@@ -22,7 +22,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [editReceipt, setEditReceipt] = useState<Receipt>();
   const [receiptsData, setReceiptsData] = useState<Receipt[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getReceipts = async () => {
     const getReceiptURL = `${process.env.CSR_API_URI}/receipts/reports/${id}`;
@@ -93,6 +93,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
 
   useEffect(() => {
     getReceipts();
+    setIsLoading(false);
   }, []);
 
   return (
@@ -140,7 +141,6 @@ const DetailPage2: FC<ModalProps> = (props) => {
                   </div>
                 )}
               </div>
-              {isLoading && <Loading />}
             </>
           ))}
         <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
@@ -164,6 +164,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
           setReceiptsData={setReceiptsData}
         />
       )}
+      {isLoading && <Loading />}
     </div>
   );
 };
