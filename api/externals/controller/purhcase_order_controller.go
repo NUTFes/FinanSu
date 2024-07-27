@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -20,6 +22,8 @@ type PurchaseOrderController interface {
 	IndexOrderDetail(echo.Context) error
 	ShowOrderDetail(echo.Context) error
 	IndexOrderDetailByYear(echo.Context) error
+	NotifySlack(echo.Context) error
+	IndexUnregisteredOrderDetailByYear(echo.Context) error
 }
 
 func NewPurchaseOrderController(u usecase.PurchaseOrderUseCase) PurchaseOrderController {
@@ -104,6 +108,31 @@ func (p *purchaseOrderController) ShowOrderDetail(c echo.Context) error {
 func (p *purchaseOrderController) IndexOrderDetailByYear(c echo.Context) error {
 	year := c.Param("year")
 	orderDetails, err := p.u.GetPurchaseOrderDetailsByYear(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, orderDetails)
+}
+
+//通知用API
+// TODO いずれは購入申請と物品を一括送信してSlack通知をするようにフロント・バックのリファクタリングを行う
+func (p *purchaseOrderController) NotifySlack(c echo.Context) error {
+	id := c.Param("id")
+	purchaseItems := new([]domain.PurchaseItem)
+	if err := c.Bind(purchaseItems); err != nil {
+		fmt.Println("err")
+		return err
+	}
+	err := p.u.NotifySlack(c.Request().Context(), id, *purchaseItems)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, err)
+}
+
+func (p *purchaseOrderController) IndexUnregisteredOrderDetailByYear(c echo.Context) error {
+	year := c.Param("year")
+	orderDetails, err := p.u.GetUnregisteredPurchaseOrderDetailsByYear(c.Request().Context(), year)
 	if err != nil {
 		return err
 	}

@@ -10,6 +10,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/pkg/errors v0.9.1
+	github.com/slack-go/slack v0.13.0
 	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/swaggo/echo-swagger v1.3.5
 	github.com/swaggo/swag v1.8.1

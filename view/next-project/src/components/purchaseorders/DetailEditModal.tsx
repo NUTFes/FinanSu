@@ -1,8 +1,7 @@
 import router from 'next/router';
-import { useEffect, useState } from 'react';
-import { Expense, PurchaseOrder, PurchaseReport } from '@/type/common';
+import { useState } from 'react';
+import { Expense, PurchaseOrder, PurchaseOrderView } from '@/type/common';
 import { put } from '@/utils/api/purchaseOrder';
-import { get } from '@api/api_methods';
 import {
   CloseButton,
   Input,
@@ -13,39 +12,14 @@ import {
 } from '@components/common';
 
 export const DetailEditModal: React.FC<{
-  purchaseReportId: number;
+  purchaseOrderId: number;
+  purchaseOrderViewItem: PurchaseOrderView;
+  expenses: Expense[];
   isOpen: boolean;
   setIsOpen: () => void;
   onOpenInitial: () => void;
-}> = ({ purchaseReportId, setIsOpen, onOpenInitial }) => {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder>({
-    id: 0,
-    deadline: '',
-    userID: 0,
-    expenseID: 0,
-    financeCheck: false,
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const purchaseReportRes: PurchaseReport = await get(
-          `${process.env.CSR_API_URI}/purchasereports/${purchaseReportId}`,
-        );
-        const purchaseOrderId = purchaseReportRes.purchaseOrderID;
-        const expensesRes: Expense[] = await get(`${process.env.CSR_API_URI}/expenses`);
-        const purchaseOrderRes: PurchaseOrder = await get(
-          `${process.env.CSR_API_URI}/purchaseorders/${purchaseOrderId}`,
-        );
-        setExpenses(expensesRes);
-        setPurchaseOrder(purchaseOrderRes);
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      }
-    };
-    fetchData();
-  }, [purchaseReportId]);
+}> = ({ purchaseOrderViewItem, expenses, setIsOpen, onOpenInitial }) => {
+  const [formData, setFormData] = useState<PurchaseOrder>(purchaseOrderViewItem.purchaseOrder);
 
   const formatDate = (date: string) => {
     const d = new Date(date);
@@ -57,15 +31,15 @@ export const DetailEditModal: React.FC<{
 
   const submit = async () => {
     try {
-      const updatePurchaseOrderUrl = `${process.env.CSR_API_URI}/purchaseorders/${purchaseOrder.id}`;
-      await put(updatePurchaseOrderUrl, purchaseOrder);
+      const updatePurchaseOrderUrl = `${process.env.CSR_API_URI}/purchaseorders/${formData.id}`;
+      await put(updatePurchaseOrderUrl, formData);
     } finally {
       router.reload();
     }
   };
 
   const handleInputChange = (key: keyof PurchaseOrder, value: string | number) => {
-    setPurchaseOrder((prev) => ({ ...prev, [key]: value }));
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
@@ -80,7 +54,7 @@ export const DetailEditModal: React.FC<{
         <p className='text-lg text-black-600'>購入した局</p>
         <div className='col-span-3 w-full'>
           <Select
-            value={purchaseOrder.expenseID}
+            value={formData.expenseID}
             onChange={(e) => handleInputChange('expenseID', Number(e.target.value))}
           >
             {expenses.map((data) => (
@@ -95,7 +69,7 @@ export const DetailEditModal: React.FC<{
         <div className='col-span-3 w-full'>
           <Input
             type='date'
-            value={purchaseOrder.deadline ? formatDate(purchaseOrder.deadline) : ''}
+            value={formData.deadline ? formatDate(formData.deadline) : ''}
             onChange={(e) => handleInputChange('deadline', e.target.value)}
             className='w-full'
           />
@@ -112,5 +86,3 @@ export const DetailEditModal: React.FC<{
     </Modal>
   );
 };
-
-export default DetailEditModal;

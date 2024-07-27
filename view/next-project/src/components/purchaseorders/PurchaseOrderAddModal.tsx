@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
+import { post as defaultPost } from '@api/api_methods';
 import { post } from '@api/purchaseItem';
 import { post as postOrder } from '@api/purchaseOrder';
 import {
@@ -65,16 +66,23 @@ export default function AddModal(props: ModalProps) {
     const postRes: PurchaseOrder = await postOrder(addPurchaseOrderUrl, purchaseOrder);
     const purchaseOrderId = postRes.id || 0;
     const purchaseItemsAddOrderInfo = purchaseItems.map((item) => {
-      return { ...item, purchaseOrderID: purchaseOrderId };
+      return {
+        ...item,
+        quantity: Number(item.quantity),
+        price: Number(item.price),
+        purchaseOrderID: purchaseOrderId,
+      };
     });
     const addPurchaseItemUrl = process.env.CSR_API_URI + '/purchaseitems';
     purchaseItemsAddOrderInfo.map(async (item) => {
       await post(addPurchaseItemUrl, item);
     });
+    const notifySlackUrl = process.env.CSR_API_URI + `/purchaseorders/send/${purchaseOrderId}`;
+    await defaultPost(notifySlackUrl, purchaseItemsAddOrderInfo);
   };
 
   const submit = async (purchaseOrder: PurchaseOrder, formDataList: PurchaseItem[]) => {
-    submitOrderAndItems(purchaseOrder, formDataList);
+    await submitOrderAndItems(purchaseOrder, formDataList);
     props.onClose();
     props.numModalOnClose();
     router.reload();
@@ -209,25 +217,27 @@ export default function AddModal(props: ModalProps) {
                 )}
               >
                 <div className={clsx('text-center text-sm text-black-300')}>
-                  <div className={clsx('flex')}>
-                    <a
-                      className={clsx('mx-1')}
-                      href={purchaseItem.url}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      <RiExternalLinkLine size={'16px'} />
-                    </a>
-                    <Tooltip text={'copy URL'}>
-                      <RiFileCopyLine
+                  {purchaseItem.url && (
+                    <div className={clsx('flex justify-center')}>
+                      <a
                         className={clsx('mx-1')}
-                        size={'16px'}
-                        onClick={() => {
-                          navigator.clipboard.writeText(purchaseItem.url);
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
+                        href={purchaseItem.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        <RiExternalLinkLine size={'16px'} />
+                      </a>
+                      <Tooltip text={'copy URL'}>
+                        <RiFileCopyLine
+                          className={clsx('mx-1')}
+                          size={'16px'}
+                          onClick={() => {
+                            navigator.clipboard.writeText(purchaseItem.url);
+                          }}
+                        />
+                      </Tooltip>
+                    </div>
+                  )}
                 </div>
               </td>
             </tr>
