@@ -87,5 +87,5 @@ func (r *receiptController) DestroyReceipt(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Destroy Receipt")
+	return c.JSON(http.StatusOK, "Destroy Receipt")
 }
