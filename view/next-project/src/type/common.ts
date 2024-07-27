@@ -104,6 +104,7 @@ export interface SponsorStyle {
   style: string;
   feature: string;
   price: number;
+  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
