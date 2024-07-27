@@ -5,6 +5,15 @@ import {
   PurchaseOrder,
   PurchaseItem,
   Expense,
+  Sponsor,
+  SponsorActivity,
+  SponsorActivityInformation,
+  SponsorStyleDetail,
+  ActivityStyle,
+  SponsorStyle,
+  SponsorActivityView,
+  SponsorFilterType,
+  YearPeriod,
 } from '../type/common';
 
 export const USER = {
@@ -23,6 +32,17 @@ export const EXPENSES = [
     yearID: 123,
   },
 ] as Expense[];
+
+export const YEAEPERIOD = [
+  {
+    id: 0,
+    year: 2024,
+    startedAt: '2024-01-01T00:00:00.000Z',
+    endedAt: '2024-12-31T00:00:00.000Z',
+    createdAt: '2024-12-31T00:00:00.000Z',
+    updatedAt: '2024-12-31T00:00:00.000Z',
+  },
+] as YearPeriod[];
 
 export const PURCHASE_REPORT = {
   id: 0,
@@ -67,3 +87,77 @@ export const PURCHASE_REPORT_VIEW = {
   reportUser: USER,
   purchaseItems: [PURCHASE_ITEM],
 } as PurchaseReportView;
+
+export const SPONSOR = {
+  // // Sponsor(協賛企業)
+  id: 1,
+  name: 'test-name',
+  tel: '080-1234-5678',
+  email: 'test@gmail.com',
+  address: '東京都千代田区',
+  representative: 'test-representative',
+  createdAt: '2021-09-01T00:00:00.000Z',
+  updatedAt: '2021-09-01T00:00:00.000Z',
+} as Sponsor;
+
+export const SPONSOR_ACTIVITY = {
+  id: 1,
+  sponsorID: 1,
+  userID: 1,
+  isDone: true,
+  feature: 'test-feature',
+  expense: 1000,
+  remark: 'test-remark',
+  design: 1,
+  url: 'https://test.com',
+  createdAt: '2021-09-01T00:00:00.000Z',
+  updatedAt: '2021-09-01T00:00:00.000Z',
+} as SponsorActivity;
+
+export const SPONSOR_ACTIVITY_INFORMATION = {
+  id: 1,
+  activityID: 1,
+  bucketName: 'test-bucket-name',
+  fileName: 'test-file-name',
+  fileType: 'test-file-type',
+  designProgress: 1,
+  fileInformation: 'test-file-information',
+  createdAt: '2021-09-01T00:00:00.000Z',
+  updatedAt: '2021-09-01T00:00:00.000Z',
+} as SponsorActivityInformation;
+
+export const ACTIVITY_STYLE = {
+  id: 1,
+  activityID: 1,
+  sponsorStyleID: 1,
+  createdAt: '2021-09-01T00:00:00.000Z',
+  updatedAt: '2021-09-01T00:00:00.000Z',
+} as ActivityStyle;
+
+export const SPONSOR_STYLE = {
+  id: 1,
+  style: 'test-style',
+  feature: 'test-feature',
+  price: 10000,
+  createdAt: '2021-09-01T00:00:00.000Z',
+  updatedAt: '2021-09-01T00:00:00.000Z',
+} as SponsorStyle;
+
+export const SPONSOR_STYLE_DETAIL = {
+  activityStyle: ACTIVITY_STYLE,
+  sponsorStyle: SPONSOR_STYLE,
+} as SponsorStyleDetail;
+
+export const SPONSOR_ACTIVITY_VIEW = {
+  user: USER,
+  sponsor: SPONSOR,
+  sponsorActivity: SPONSOR_ACTIVITY,
+  sponsorActivityInformations: [SPONSOR_ACTIVITY_INFORMATION],
+  styleDetail: [SPONSOR_STYLE_DETAIL],
+} as SponsorActivityView;
+
+export const SPONSOR_FILTERTYPE = {
+  styleIds: [1],
+  keyword: 'test-keyword',
+  selectedSort: 'test-sort',
+} as SponsorFilterType;
