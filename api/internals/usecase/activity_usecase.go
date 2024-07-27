@@ -244,6 +244,7 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 				&styleDetail.SponsorStyle.Style,
 				&styleDetail.SponsorStyle.Feature,
 				&styleDetail.SponsorStyle.Price,
+				&styleDetail.SponsorStyle.IsDeleted,
 				&styleDetail.SponsorStyle.CreatedAt,
 				&styleDetail.SponsorStyle.UpdatedAt,
 			)
@@ -341,6 +342,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 				&styleDetail.SponsorStyle.Style,
 				&styleDetail.SponsorStyle.Feature,
 				&styleDetail.SponsorStyle.Price,
+				&styleDetail.SponsorStyle.IsDeleted,
 				&styleDetail.SponsorStyle.CreatedAt,
 				&styleDetail.SponsorStyle.UpdatedAt,
 			)
@@ -438,6 +440,7 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 				&styleDetail.SponsorStyle.Style,
 				&styleDetail.SponsorStyle.Feature,
 				&styleDetail.SponsorStyle.Price,
+				&styleDetail.SponsorStyle.IsDeleted,
 				&styleDetail.SponsorStyle.CreatedAt,
 				&styleDetail.SponsorStyle.UpdatedAt,
 			)
@@ -535,6 +538,7 @@ func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, i
 				&styleDetail.SponsorStyle.Style,
 				&styleDetail.SponsorStyle.Feature,
 				&styleDetail.SponsorStyle.Price,
+				&styleDetail.SponsorStyle.IsDeleted,
 				&styleDetail.SponsorStyle.CreatedAt,
 				&styleDetail.SponsorStyle.UpdatedAt,
 			)

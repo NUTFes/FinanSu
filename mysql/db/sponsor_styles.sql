@@ -5,6 +5,7 @@ CREATE TABLE sponsor_styles (
   style varchar(255) not null,
   feature varchar(255) not null,
   price int(10),
+  is_deleted boolean default false,
   created_at datetime not null default current_timestamp,
   updated_at datetime not null default current_timestamp on update current_timestamp,
   PRIMARY KEY (id)

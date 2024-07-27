@@ -29,7 +29,7 @@ func NewSponsorStyleRepository(c db.Client, ac abstract.Crud) SponsorStyleReposi
 
 // 全件取得
 func (ssr *sponsorStyleRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM sponsor_styles"
+	query := "SELECT * FROM sponsor_styles WHERE is_deleted IS FALSE"
 	return ssr.crud.Read(c, query)
 }
 
@@ -77,8 +77,10 @@ func (ssr *sponsorStyleRepository) Delete(
 	c context.Context,
 	id string,
 ) error {
-	query := "DELETE FROM sponsor_styles WHERE id =" + id
-	return ssr.crud.UpdateDB(c, query)
+	query := "UPDATE sponsor_styles SET is_deleted = TRUE WHERE id =" + id
+	err := ssr.crud.UpdateDB(c, query)
+
+	return err
 }
 
 func (ssr *sponsorStyleRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
