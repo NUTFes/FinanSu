@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { Modal } from '@components/common';
+import { Link } from '@components/common';
 
-const meta: Meta<typeof Modal> = {
-  title: 'FinanSu/Modal',
-  component: Modal,
+const meta: Meta<typeof Link> = {
+  title: 'FinanSu/common/Link',
+  component: Link,
   tags: ['autodocs'],
   argTypes: {},
 };

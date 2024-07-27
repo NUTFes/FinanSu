@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { SideNav } from '@components/common';
+import { DeleteButton } from '@components/common';
 
-const meta: Meta<typeof SideNav> = {
-  title: 'FinanSu/SideNav',
-  component: SideNav,
+const meta: Meta<typeof DeleteButton> = {
+  title: 'FinanSu/common/DeleteButton',
+  component: DeleteButton,
   tags: ['autodocs'],
   argTypes: {},
 };

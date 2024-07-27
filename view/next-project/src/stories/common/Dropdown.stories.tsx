@@ -2,7 +2,7 @@ import { Meta } from '@storybook/react';
 import { Dropdown } from '@components/common';
 
 const meta: Meta<typeof Dropdown> = {
-  title: 'FinanSu/Dropdown',
+  title: 'FinanSu/common/Dropdown',
   component: Dropdown,
   tags: ['autodocs'],
   argTypes: {},

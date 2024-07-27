@@ -1,8 +1,9 @@
 import { Meta } from '@storybook/react';
-import { RegistButton } from '@components/common';
-const meta: Meta<typeof RegistButton> = {
-  title: 'FinanSu/RegistButton',
-  component: RegistButton,
+import { BureauLabel } from '@components/common';
+
+const meta: Meta<typeof BureauLabel> = {
+  title: 'FinanSu/common/BureauLabel',
+  component: BureauLabel,
   tags: ['autodocs'],
   argTypes: {},
 };

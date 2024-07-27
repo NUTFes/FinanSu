@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { CloseButton } from '@components/common';
+import { Stepper } from '@components/common';
 
-const meta: Meta<typeof CloseButton> = {
-  title: 'FinanSu/CloseButton',
-  component: CloseButton,
+const meta: Meta<typeof Stepper> = {
+  title: 'FinanSu/common/Stepper',
+  component: Stepper,
   tags: ['autodocs'],
   argTypes: {},
 };

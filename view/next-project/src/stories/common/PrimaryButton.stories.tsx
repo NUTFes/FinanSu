@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { Title } from '@components/common';
+import { PrimaryButton } from '@components/common';
 
-const meta: Meta<typeof Title> = {
-  title: 'FinanSu/Title',
-  component: Title,
+const meta: Meta<typeof PrimaryButton> = {
+  title: 'FinanSu/common/PrimaryButton',
+  component: PrimaryButton,
   tags: ['autodocs'],
   argTypes: {},
 };

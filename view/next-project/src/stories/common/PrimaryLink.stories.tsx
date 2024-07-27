@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import PulldownButton from '@/components/common/PulldownButton';
+import { PrimaryLink } from '@components/common';
 
-const meta: Meta<typeof PulldownButton> = {
-  title: 'FinanSu/PulldownButton',
-  component: PulldownButton,
+const meta: Meta<typeof PrimaryLink> = {
+  title: 'FinanSu/common/PrimaryLink',
+  component: PrimaryLink,
   tags: ['autodocs'],
   argTypes: {},
 };

@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { OpenModalButton } from '@components/common';
+import { UnderlinePrimaryButton } from '@components/common';
 
-const meta: Meta<typeof OpenModalButton> = {
-  title: 'FinanSu/common/OpenModalButton',
-  component: OpenModalButton,
+const meta: Meta<typeof UnderlinePrimaryButton> = {
+  title: 'FinanSu/common/UnderlinePrimaryButton',
+  component: UnderlinePrimaryButton,
   tags: ['autodocs'],
   argTypes: {},
 };
