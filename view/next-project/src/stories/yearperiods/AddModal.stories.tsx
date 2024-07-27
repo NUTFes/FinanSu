@@ -19,7 +19,14 @@ const meta: Meta<typeof AddModal> = {
 
 export default meta;
 
-const Template: StoryFn = (args) => <AddModal {...args} />;
+const Template: StoryFn = (args) => (
+  <AddModal
+    {...args}
+    setShowModal={() => {
+      console.log;
+    }}
+  />
+);
 
 export const Primary = Template.bind({});
 Primary.args = {
