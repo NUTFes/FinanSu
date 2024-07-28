@@ -16,6 +16,6 @@ const Template: StoryFn<typeof UploadFileModal> = (args) => <UploadFileModal {..
 export const Primary = Template.bind({});
 Primary.args = {
   id: 0,
-  ActivityInformationId: 0,
+  activityInformation: SPONSOR_ACTIVITY_INFORMATION,
   sponsorActivityInformations: [SPONSOR_ACTIVITY_INFORMATION],
 };
