@@ -58,6 +58,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ message: '成功' });
     });
   }
+
+  // 変更の場合の画像を削除する
+  if (req.method === 'DELETE') {
+    const form = formidable();
+
+    form.parse(req, async (err, fields, files: any) => {
+      if (err) {
+        throw new Error('Error parsing form');
+      }
+
+      const year = fields.year && fields.year[0];
+      const fileName = fields.fileName && fields.fileName;
+      const filePath = `${year}/advertisements/${fileName}`;
+
+      try {
+        await minioClient.removeObject(BUCKET_NAME, filePath);
+        console.log('Removed the object');
+      } catch (err) {
+        res.status(400).json({ message: '失敗' });
+        throw new Error('Error uploading file (' + err + ')');
+      }
+      return res.status(200).json({ message: '成功' });
+    });
+  }
 }
 
 // バケットがない時に作成する関数(環境構築時のみ)

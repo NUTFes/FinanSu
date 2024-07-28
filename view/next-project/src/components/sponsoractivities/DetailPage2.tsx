@@ -35,7 +35,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
     props.setPageNum(1);
   };
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [editActivityInformationId, setEditActivityInformationId] = useState<number>(0);
+  const [editActivityInformation, setEditActivityInformation] =
+    useState<SponsorActivityInformation>();
   const [activityInformationData, setActivityInformationData] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -82,6 +83,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
   };
 
   const handleDelete = async (id: number, activityInformation: SponsorActivityInformation) => {
+    //オブジェクト削除
+    const formData = new FormData();
+    formData.append('fileName', `${activityInformation.fileName}`);
+    formData.append('year', year);
+
     const deleteSponsorActivityInformationUrl =
       process.env.CSR_API_URI + '/activity_informations/' + String(id);
     const newSponsorActivityInformations = sponsorActivityInformations.filter(
@@ -92,6 +98,21 @@ const DetailPage2: FC<ModalProps> = (props) => {
     } else {
       const confirm = window.confirm('本当に削除してよろしいですか？');
       if (confirm) {
+        const response = await fetch('/api/advertisements', {
+          method: 'DELETE',
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              return true;
+            } else {
+              alert('削除に失敗');
+              return false;
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
         const res = await del(deleteSponsorActivityInformationUrl);
       } else {
         window.alert('キャンセルしました');
@@ -327,7 +348,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     <OutlinePrimaryButton
                       className='p-1'
                       onClick={() => {
-                        setEditActivityInformationId(index);
+                        setEditActivityInformation(activityInformation);
                         setIsOpen(true);
                       }}
                     >
@@ -348,7 +369,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     <OutlinePrimaryButton
                       className='mx-auto my-2'
                       onClick={() => {
-                        setEditActivityInformationId(index);
+                        setEditActivityInformation(activityInformation);
                         setIsOpen(true);
                       }}
                     >
@@ -375,7 +396,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
         <UplaodFileModal
           setIsOpen={setIsOpen}
           id={props.sponsorActivitiesViewItem.sponsorActivity.id || 0}
-          ActivityInformationId={editActivityInformationId}
+          activityInformation={editActivityInformation}
           sponsorActivityInformations={sponsorActivityInformations}
           setSponsorActivityInformations={setSponsorActivityInformations}
           setIsChange={props.setIsChange}
