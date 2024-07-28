@@ -36,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const bucketName = 'finansu';
-      const fileName = files.file[0].originalFilename;
+      const year = fields.year && fields.year[0];
+      const fileName = `${year}/advertisements/${files.file[0].originalFilename}`;
       const file = files.file[0];
       const mimetype = file.mimetype;
       const metaData = {
@@ -50,6 +51,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           fs.createReadStream(files.file[0].filepath),
           metaData,
         );
+      } catch (err) {
+        res.status(400).json({ message: '失敗' });
+        throw new Error('Error uploading file (' + err + ')');
+      }
+      return res.status(200).json({ message: '成功' });
+    });
+  }
+
+  // 変更の場合の画像を削除する
+  if (req.method === 'DELETE') {
+    const form = formidable();
+
+    form.parse(req, async (err, fields, files: any) => {
+      if (err) {
+        throw new Error('Error parsing form');
+      }
+
+      const year = fields.year && fields.year[0];
+      const fileName = fields.fileName && fields.fileName;
+      const filePath = `${year}/advertisements/${fileName}`;
+
+      try {
+        await minioClient.removeObject(BUCKET_NAME, filePath);
+        console.log('Removed the object');
       } catch (err) {
         res.status(400).json({ message: '失敗' });
         throw new Error('Error uploading file (' + err + ')');
