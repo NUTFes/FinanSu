@@ -36,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const bucketName = 'finansu';
-      const fileName = files.file[0].originalFilename;
+      const year = fields.year && fields.year[0];
+      const fileName = `${year}/advertisements/${files.file[0].originalFilename}`;
       const file = files.file[0];
       const mimetype = file.mimetype;
       const metaData = {

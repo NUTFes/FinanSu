@@ -13,9 +13,11 @@ interface ModalProps {
   id: React.ReactNode;
   sponsorActivitiesViewItem: SponsorActivityView;
   isDelete: boolean;
+  year: string;
 }
 
 const DetailModal: FC<ModalProps> = (props) => {
+  const { year } = props;
   const [isChange, setIsChange] = useState<boolean>(false);
   const [sponsorActivitiesView, setSponsorActivitiesView] = useState<SponsorActivityView>(
     props.sponsorActivitiesViewItem,
@@ -48,6 +50,7 @@ const DetailModal: FC<ModalProps> = (props) => {
           setSponsorActivitiesView={setSponsorActivitiesView}
           id={props.id}
           setIsChange={setIsChange}
+          year={year}
         />
       )}
     </Modal>

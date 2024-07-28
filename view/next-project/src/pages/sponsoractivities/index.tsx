@@ -628,6 +628,7 @@ export default function SponsorActivities(props: Props) {
           setIsOpen={setIsOpen}
           sponsorActivitiesViewItem={sponsorActivitiesItem}
           isDelete={false}
+          year={selectedYear}
         />
       )}
     </MainLayout>

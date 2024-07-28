@@ -11,6 +11,7 @@ interface ModalProps {
   children?: React.ReactNode;
   id: number;
   ActivityInformationId: number;
+  year: string;
   sponsorActivityInformations?: SponsorActivityInformation[];
   setSponsorActivityInformations: (
     sponsorActivityInformations: SponsorActivityInformation[],
@@ -19,6 +20,7 @@ interface ModalProps {
 }
 
 const UplaodFileModal: FC<ModalProps> = (props) => {
+  const { year } = props;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState({ uploadImageURL: '', type: '' });
@@ -74,8 +76,9 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     formData.append('file', imageFile);
     const fileName = imageFile?.name || '';
     formData.append('fileName', fileName);
+    formData.append('year', year);
 
-    const response = await fetch('/api/minio', {
+    const response = await fetch('/api/advertisements', {
       method: 'POST',
       body: formData,
     })

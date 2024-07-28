@@ -24,11 +24,13 @@ interface ModalProps {
   children?: React.ReactNode;
   id: React.ReactNode;
   sponsorActivitiesViewItem: SponsorActivityView;
+  year: string;
   setIsChange: (isChange: boolean) => void;
   setSponsorActivitiesView: (sponsorActivitiesView: SponsorActivityView) => void;
 }
 
 const DetailPage2: FC<ModalProps> = (props) => {
+  const { year } = props;
   const toPage1 = () => {
     props.setPageNum(1);
   };
@@ -68,7 +70,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
     sponsorActivityInformations.map((activityInformation) => {
       const bucketName = activityInformation.bucketName;
       const fileName = activityInformation.fileName;
-      return `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/${bucketName}/${fileName}`;
+      return `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/${bucketName}/${year}/advertisements/${fileName}`;
     });
 
   const download = async (url: string, fileName: string) => {
@@ -377,6 +379,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
           sponsorActivityInformations={sponsorActivityInformations}
           setSponsorActivityInformations={setSponsorActivityInformations}
           setIsChange={props.setIsChange}
+          year={year}
         />
       )}
     </>
