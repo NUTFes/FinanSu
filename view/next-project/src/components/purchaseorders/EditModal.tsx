@@ -20,6 +20,7 @@ interface ModalProps {
   purchaseItems: PurchaseItem[];
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  onOpenInitial: () => void;
 }
 
 export default function EditModal(props: ModalProps) {
@@ -33,8 +34,12 @@ export default function EditModal(props: ModalProps) {
     setActiveStep(activeStep - 1);
   };
   const reset = () => {
-    setActiveStep(1);
-    setIsDone(false);
+    if (activeStep === 1) {
+      props.onOpenInitial();
+    } else {
+      setActiveStep(1);
+      setIsDone(false);
+    }
   };
 
   // 購入報告を登録するかどうかのフラグ
@@ -166,26 +171,29 @@ export default function EditModal(props: ModalProps) {
                 </thead>
                 <tbody>
                   {formDataList.map((data) => (
-                    <tr key={data.id} className='border-gray-300 border-b'>
+                    <tr key={data.id} className='border-gray-300 border-b text-center'>
                       <td className='py-2'>{data.item}</td>
                       <td className='py-2'>{data.price}</td>
                       <td className='py-2'>{data.quantity}</td>
                       <td className='py-2'>{data.detail}</td>
                       <td className='py-2'>
-                        <div className={'flex justify-center'}>
-                          <a href={data.url} target='_blank' rel='noopener noreferrer'>
-                            <RiExternalLinkLine size={'16px'} />
-                          </a>
-                          <Tooltip text={'copy URL'}>
-                            <RiFileCopyLine
-                              size={'16px'}
-                              className='cursor-pointer'
-                              onClick={() => {
-                                navigator.clipboard.writeText(data.url);
-                              }}
-                            />
-                          </Tooltip>
-                        </div>
+                        {data.url && (
+                          <div className={'flex justify-center'}>
+                            <a href={data.url} target='_blank' rel='noopener noreferrer'>
+                              <RiExternalLinkLine size={'16px'} />
+                            </a>
+
+                            <Tooltip text={'copy URL'}>
+                              <RiFileCopyLine
+                                size={'16px'}
+                                className='cursor-pointer'
+                                onClick={() => {
+                                  navigator.clipboard.writeText(data.url);
+                                }}
+                              />
+                            </Tooltip>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -206,9 +214,9 @@ export default function EditModal(props: ModalProps) {
             <div className='mb-5 mt-10 flex justify-center gap-5'>
               {formDataList && formDataList.length > 0 && (
                 <>
-                  {activeStep > 1 && (
-                    <OutlinePrimaryButton onClick={prevStep}>戻る</OutlinePrimaryButton>
-                  )}
+                  <OutlinePrimaryButton onClick={activeStep === 1 ? reset : prevStep}>
+                    戻る
+                  </OutlinePrimaryButton>
                   <PrimaryButton
                     onClick={() => {
                       {

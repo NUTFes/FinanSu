@@ -10,7 +10,8 @@ interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
   id: number;
-  ActivityInformationId: number;
+  activityInformation?: SponsorActivityInformation;
+  year: string;
   sponsorActivityInformations?: SponsorActivityInformation[];
   setSponsorActivityInformations: (
     sponsorActivityInformations: SponsorActivityInformation[],
@@ -19,20 +20,21 @@ interface ModalProps {
 }
 
 const UplaodFileModal: FC<ModalProps> = (props) => {
+  const { year, activityInformation } = props;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState({ uploadImageURL: '', type: '' });
-  const [activityInformation, setActivityInformation] = useState<SponsorActivityInformation>(
-    (props.sponsorActivityInformations &&
-      props.sponsorActivityInformations[props.ActivityInformationId]) || {
-      activityID: props.id,
-      bucketName: '',
-      fileName: '',
-      fileType: '',
-      designProgress: 1,
-      fileInformation: '',
-    },
-  );
+  const [registerActivityInformation, setRegisterActivityInformation] =
+    useState<SponsorActivityInformation>(
+      activityInformation || {
+        activityID: props.id,
+        bucketName: '',
+        fileName: '',
+        fileType: '',
+        designProgress: 1,
+        fileInformation: '',
+      },
+    );
 
   const sponsorActivityInformations = props.sponsorActivityInformations || [];
   // loadingの呼び出し
@@ -51,8 +53,8 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     const fileName = targetFile.name;
     const fileType = targetFile.type;
 
-    setActivityInformation({
-      ...activityInformation,
+    setRegisterActivityInformation({
+      ...registerActivityInformation,
       bucketName: bucketName || '',
       fileName: fileName,
       fileType: fileType,
@@ -65,17 +67,45 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     props.setIsOpen(false);
   };
 
+  const objectDeleteHandle = async () => {
+    const formData = new FormData();
+    formData.append('fileName', `${activityInformation?.fileName}`);
+    formData.append('year', year);
+    const response = await fetch('/api/advertisements', {
+      method: 'DELETE',
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          return true;
+        } else {
+          alert('削除に失敗');
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
   const submit = async () => {
     if (!imageFile) {
       return;
     }
+
+    //更新の場合削除
+    if (activityInformation?.fileName !== '') {
+      objectDeleteHandle();
+    }
+
     setIsLoading(true);
     const formData = new FormData();
     formData.append('file', imageFile);
     const fileName = imageFile?.name || '';
     formData.append('fileName', fileName);
+    formData.append('year', year);
 
-    const response = await fetch('/api/minio', {
+    const response = await fetch('/api/advertisements', {
       method: 'POST',
       body: formData,
     })
@@ -98,12 +128,12 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     }
 
     const sponsorActivitiesUrl =
-      process.env.CSR_API_URI + '/activity_informations/' + activityInformation.id;
-    const res = await put(sponsorActivitiesUrl, activityInformation);
+      process.env.CSR_API_URI + '/activity_informations/' + activityInformation?.id;
+    const res = await put(sponsorActivitiesUrl, registerActivityInformation);
     const newSponsorActivityInformations = sponsorActivityInformations.map(
       (sponsorActivityInformation) => {
-        if (sponsorActivityInformation.id === activityInformation.id) {
-          return activityInformation;
+        if (sponsorActivityInformation.id === registerActivityInformation.id) {
+          return registerActivityInformation;
         }
         return sponsorActivityInformation;
       },

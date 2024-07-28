@@ -20,6 +20,7 @@ type router struct {
 	purchaseItemController    		controller.PurchaseItemController
 	purchaseOrderController   		controller.PurchaseOrderController
 	purchaseReportController  		controller.PurchaseReportController
+	receiptController				controller.ReceiptController
 	sourceController          		controller.SourceController
 	sponsorController         		controller.SponsorController
 	sponsorStyleController    		controller.SponsorStyleController
@@ -47,6 +48,7 @@ func NewRouter(
 	purchaseItemController controller.PurchaseItemController,
 	purchaseOrderController controller.PurchaseOrderController,
 	purchaseReportController controller.PurchaseReportController,
+	receiptController controller.ReceiptController,
 	sourceController controller.SourceController,
 	sponsorController controller.SponsorController,
 	sponsorStyleController controller.SponsorStyleController,
@@ -69,6 +71,7 @@ func NewRouter(
 		purchaseItemController,
 		purchaseOrderController,
 		purchaseReportController,
+		receiptController,
 		sourceController,
 		sponsorController,
 		sponsorStyleController,
@@ -181,11 +184,13 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/purchaseorders", r.purchaseOrderController.IndexPurchaseOrder)
 	e.GET("/purchaseorders/:id", r.purchaseOrderController.ShowPurchaseOrder)
 	e.POST("/purchaseorders", r.purchaseOrderController.CreatePurchaseOrder)
+	e.POST("/purchaseorders/send/:id", r.purchaseOrderController.NotifySlack)
 	e.PUT("/purchaseorders/:id", r.purchaseOrderController.UpdatePurchaseOrder)
 	e.DELETE("/purchaseorders/:id", r.purchaseOrderController.DestroyPurchaseOrder)
 	e.GET("/purchaseorders/details", r.purchaseOrderController.IndexOrderDetail)
 	e.GET("/purchaseorders/:id/details", r.purchaseOrderController.ShowOrderDetail)
 	e.GET("/purchaseorders/details/:year", r.purchaseOrderController.IndexOrderDetailByYear)
+	e.GET("/purchaseorders/details/unregistered/:year", r.purchaseOrderController.IndexUnregisteredOrderDetailByYear)
 
 	// purchasereportsのRoute
 	e.GET("/purchasereports", r.purchaseReportController.IndexPurchaseReport)
@@ -196,6 +201,14 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/purchasereports/details", r.purchaseReportController.IndexPurchaseReportDetails)
 	e.GET("/purchasereports/:id/details", r.purchaseReportController.ShowPurchaseReportDetail)
 	e.GET("/purchasereports/details/:year", r.purchaseReportController.IndexPurchaseReportDetailsByYear)
+
+	// receiptsのRoute
+	e.GET("/receipts", r.receiptController.IndexReceipt)
+	e.GET("/receipts/:id", r.receiptController.ShowReceipt)
+	e.GET("/receipts/reports/:id", r.receiptController.FindReceiptsByReportID)
+	e.POST("/receipts", r.receiptController.CreateReceipt)
+	e.PUT("/receipts/:id", r.receiptController.UpdateReceipt)
+	e.DELETE("/receipts/:id", r.receiptController.DestroyReceipt)
 
 	// sources
 	e.GET("/sources", r.sourceController.IndexSource)

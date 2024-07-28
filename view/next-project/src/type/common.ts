@@ -104,6 +104,7 @@ export interface SponsorStyle {
   style: string;
   feature: string;
   price: number;
+  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -274,4 +275,14 @@ export interface PasswordResetData {
   token: string;
   password: string;
   confirmPassword: string;
+}
+
+// レシート
+export interface Receipt {
+  id?: number;
+  purchaseReportID: number;
+  bucketName: string;
+  fileName: string;
+  fileType: string;
+  remark: string;
 }

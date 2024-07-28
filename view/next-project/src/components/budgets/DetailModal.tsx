@@ -3,7 +3,7 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { Modal } from '@components/common';
 import { ExpenseView } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   expenseView: ExpenseView | null;
 }

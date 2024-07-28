@@ -2,7 +2,7 @@ import { Meta } from '@storybook/react';
 import { OpenModalButton } from '@components/common';
 
 const meta: Meta<typeof OpenModalButton> = {
-  title: 'FinanSu/OpenModalButton',
+  title: 'FinanSu/common/OpenModalButton',
   component: OpenModalButton,
   tags: ['autodocs'],
   argTypes: {},

@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 
 import { Modal, CloseButton, Input, Select, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
+import { get } from '@api/api_methods';
 import { post } from '@api/fundInformations';
 import { BUREAUS } from '@constants/bureaus';
 import { DONATION_AMOUNT } from '@constants/donationAmount';
@@ -15,10 +16,12 @@ interface ModalProps {
   departments: Department[];
   users: User[];
   currentUser?: User;
+  currentYear: string;
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
   const [user] = useRecoilState(userAtom);
+  const { teachers, currentYear } = props;
 
   const router = useRouter();
   const [departmentID, setDepartmentID] = useState<number | string>(1);
@@ -40,6 +43,12 @@ const OpenAddModal: FC<ModalProps> = (props) => {
     isLastCheck: false,
     receivedAt: ymd,
   });
+
+  const [registeredTeacherIds, setRegisteredTeacherIds] = useState<number[]>([]);
+
+  const isRegisteredTeacher = (id: number) => {
+    return registeredTeacherIds.includes(id);
+  };
 
   // 担当者を局でフィルタを適用
   const [bureauId, setBureauId] = useState<number>(loginUserBureau?.id || 1);
@@ -76,10 +85,13 @@ const OpenAddModal: FC<ModalProps> = (props) => {
 
   const handleDepartmentID = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDepartmentID(Number(e.target.value));
-    const departmentTeachers = props.teachers.filter(
+    const departmentTeachers = teachers.filter(
       (teacher) => teacher.departmentID === Number(e.target.value),
     );
-    setFormData({ ...formData, teacherID: departmentTeachers[0]?.id || 0 });
+    const firstNotRegisteredTeacher = departmentTeachers.find((teacher) => {
+      return !registeredTeacherIds.includes(teacher?.id || 0);
+    });
+    setFormData({ ...formData, teacherID: firstNotRegisteredTeacher?.id || 0 });
   };
 
   const addFundInformation = async (data: FundInformation) => {
@@ -88,6 +100,21 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   };
 
   const isValid = !formData.userID || formData.teacherID == 0;
+
+  async function getRegisteredTeachers() {
+    const registeredTeachersURL =
+      process.env.CSR_API_URI + `/teachers/fundRegistered/${currentYear}`;
+    const resData = await get(registeredTeachersURL);
+    setRegisteredTeacherIds(resData);
+    const firstNotRegisteredTeacher = teachers.find((teacher) => {
+      return !resData.includes(teacher.id);
+    });
+    setFormData({ ...formData, teacherID: firstNotRegisteredTeacher?.id || 0 });
+  }
+
+  useEffect(() => {
+    getRegisteredTeachers();
+  }, []);
 
   return (
     <Modal className='md:w-1/2'>
@@ -111,11 +138,16 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         <p className='col-span-1 text-black-600'>教員名</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.teacherID} onChange={handler('teacherID')}>
-            {props.teachers
+            {teachers
               .filter((teacher) => teacher.departmentID === departmentID)
               .map((teacher) => (
-                <option key={teacher.id} value={teacher.id}>
+                <option
+                  key={teacher.id}
+                  value={teacher.id}
+                  disabled={isRegisteredTeacher(teacher?.id || 0)}
+                >
                   {teacher.name}
+                  {isRegisteredTeacher(teacher?.id || 0) && '(募金登録済)'}
                 </option>
               ))}
           </Select>

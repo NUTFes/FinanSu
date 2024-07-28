@@ -37,6 +37,7 @@ func (s *sponsorStyleUseCase) GetSponsorStyles(c context.Context) ([]domain.Spon
 			&sponsorStyle.Style,
 			&sponsorStyle.Feature,
 			&sponsorStyle.Price,
+			&sponsorStyle.IsDeleted,
 			&sponsorStyle.CreatedAt,
 			&sponsorStyle.UpdatedAt,
 		)
@@ -57,6 +58,7 @@ func (s *sponsorStyleUseCase) GetSponsorStylesByID(c context.Context, id string)
 		&sponsorStyle.Style,
 		&sponsorStyle.Feature,
 		&sponsorStyle.Price,
+		&sponsorStyle.IsDeleted,
 		&sponsorStyle.CreatedAt,
 		&sponsorStyle.UpdatedAt,
 	)
@@ -81,6 +83,7 @@ func (s *sponsorStyleUseCase) CreateSponsorStyle(
 		&latastSponsorStyle.Style,
 		&latastSponsorStyle.Feature,
 		&latastSponsorStyle.Price,
+		&latastSponsorStyle.IsDeleted,
 		&latastSponsorStyle.CreatedAt,
 		&latastSponsorStyle.UpdatedAt,
 	)
@@ -106,6 +109,7 @@ func (s *sponsorStyleUseCase) UpdateSponsorStyle(
 		&updatedSponsorStyle.Style,
 		&updatedSponsorStyle.Feature,
 		&updatedSponsorStyle.Price,
+		&updatedSponsorStyle.IsDeleted,
 		&updatedSponsorStyle.CreatedAt,
 		&updatedSponsorStyle.UpdatedAt,
 	)

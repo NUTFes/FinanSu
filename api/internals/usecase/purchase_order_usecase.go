@@ -10,6 +10,8 @@ import (
 
 type purchaseOrderUseCase struct {
 	rep rep.PurchaseOrderRepository
+	bureauRep rep.BureauRepository
+	expenseRep rep.ExpenseRepository
 }
 
 type PurchaseOrderUseCase interface {
@@ -21,10 +23,12 @@ type PurchaseOrderUseCase interface {
 	GetPurchaseOrderDetails(context.Context) ([]domain.OrderDetail, error)
 	GetPurchaseOrderDetailByID(context.Context, string) (domain.OrderDetail, error)
 	GetPurchaseOrderDetailsByYear(context.Context, string) ([]domain.OrderDetail, error)
+	NotifySlack(context.Context, string, []domain.PurchaseItem) error
+	GetUnregisteredPurchaseOrderDetailsByYear(context.Context, string) ([]domain.OrderDetail, error)
 }
 
-func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository) PurchaseOrderUseCase {
-	return &purchaseOrderUseCase{rep}
+func NewPurchaseOrderUseCase(rep rep.PurchaseOrderRepository, bureauRep rep.BureauRepository, expenseRep rep.ExpenseRepository) PurchaseOrderUseCase {
+	return &purchaseOrderUseCase{rep, bureauRep, expenseRep}
 }
 
 // PurchaseOrdersの取得(Gets)
@@ -204,6 +208,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
 	row, err := p.rep.FindUserInfo(c, id)
+
 	err = row.Scan(
 		&orderDetail.PurchaseOrder.ID,
 		&orderDetail.PurchaseOrder.DeadLine,
@@ -223,6 +228,7 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailByID(c context.Context, id 
 	if err != nil {
 		return orderDetail, nil
 	}
+
 	rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
 	for rows.Next() {
 		err := rows.Scan(
@@ -276,6 +282,118 @@ func (p *purchaseOrderUseCase) GetPurchaseOrderDetailsByYear(c context.Context, 
 			return nil, err
 		}
 		rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
+		for rows.Next() {
+			err := rows.Scan(
+				&purchaseItem.ID,
+				&purchaseItem.Item,
+				&purchaseItem.Price,
+				&purchaseItem.Quantity,
+				&purchaseItem.Detail,
+				&purchaseItem.Url,
+				&purchaseItem.PurchaseOrderID,
+				&purchaseItem.FinanceCheck,
+				&purchaseItem.CreatedAt,
+				&purchaseItem.UpdatedAt,
+			)
+			if err != nil {
+				return nil, err
+			}
+			purchaseItems = append(purchaseItems, purchaseItem)
+		}
+		orderDetail.PurchaseItem = purchaseItems
+		orderDetails = append(orderDetails, orderDetail)
+		purchaseItems = nil
+	}
+	return orderDetails, nil
+}
+
+func (p *purchaseOrderUseCase) NotifySlack(c context.Context, id string, purchaseItems []domain.PurchaseItem) error {
+	purchaseOrder := domain.PurchaseOrder{}
+	user := domain.User{}
+	bureau := domain.Bureau{}
+	expense := domain.Expense{}
+
+	//申請取得
+	row, err := p.rep.FindUserInfo(c, id)
+	err = row.Scan(
+		&purchaseOrder.ID,
+		&purchaseOrder.DeadLine,
+		&purchaseOrder.UserID,
+		&purchaseOrder.ExpenseID,
+		&purchaseOrder.FinanceCheck,
+		&purchaseOrder.CreatedAt,
+		&purchaseOrder.UpdatedAt,
+		&user.ID,
+		&user.Name,
+		&user.BureauID,
+		&user.RoleID,
+		&user.IsDeleted,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		return err
+	}
+
+	//局取得
+	row, err = p.bureauRep.Find(c, strconv.Itoa(user.BureauID))
+	err = row.Scan(
+		&bureau.ID,
+		&bureau.Name,
+		&bureau.CreatedAt,
+		&bureau.UpdatedAt,
+	)
+
+	//支出取得
+	row, err = p.expenseRep.Find(c, strconv.Itoa(purchaseOrder.ExpenseID))
+	err = row.Scan(
+		&expense.ID,
+		&expense.Name,
+		&expense.TotalPrice,
+		&expense.YearID,
+		&expense.CreatedAt,
+		&expense.UpdatedAt,
+	)
+	err = p.rep.NotifySlack(c, purchaseOrder, purchaseItems, user, bureau, expense)
+
+	return err
+}
+
+// reports未登録の購入申請取得
+func (p *purchaseOrderUseCase) GetUnregisteredPurchaseOrderDetailsByYear(c context.Context, year string) ([]domain.OrderDetail, error) {
+	orderDetail := domain.OrderDetail{}
+	var orderDetails []domain.OrderDetail
+	purchaseItem := domain.PurchaseItem{}
+	var purchaseItems []domain.PurchaseItem
+	rows, err := p.rep.AllUnregisteredUserInfoByYear(c, year)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&orderDetail.PurchaseOrder.ID,
+			&orderDetail.PurchaseOrder.DeadLine,
+			&orderDetail.PurchaseOrder.UserID,
+			&orderDetail.PurchaseOrder.ExpenseID,
+			&orderDetail.PurchaseOrder.FinanceCheck,
+			&orderDetail.PurchaseOrder.CreatedAt,
+			&orderDetail.PurchaseOrder.UpdatedAt,
+			&orderDetail.User.ID,
+			&orderDetail.User.Name,
+			&orderDetail.User.BureauID,
+			&orderDetail.User.RoleID,
+			&orderDetail.User.IsDeleted,
+			&orderDetail.User.CreatedAt,
+			&orderDetail.User.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		rows, err := p.rep.FindPurchaseItem(c, strconv.Itoa(int(orderDetail.PurchaseOrder.ID)))
+		defer rows.Close()
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,
