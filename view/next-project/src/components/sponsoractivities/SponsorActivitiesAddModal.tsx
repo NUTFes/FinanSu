@@ -425,8 +425,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
     );
   };
 
+  const closeModal = () => {
+    props.setIsOpen(false);
+  };
+
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={closeModal}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton

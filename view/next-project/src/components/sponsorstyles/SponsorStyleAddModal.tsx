@@ -39,8 +39,12 @@ export default function SponsorAddModal(props: ModalProps) {
     router.reload();
   };
 
+  const closeModal = () => {
+    props.setIsOpen(false);
+  };
+
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={closeModal}>
       <div className='w-full'>
         <div className='ml-auto mr-5 w-fit'>
           <CloseButton onClick={() => props.setIsOpen(false)} />
