@@ -3,8 +3,8 @@ credentials-file: /home/nonroot/.cloudflared/0aca8328-e2c8-4095-9d78-2c9c03394f7
 protocol: http2
 
 ingress:
- - hostname: finansu.nutfes.net
-   service: http://view:3000
- - hostname: finansu-api.nutfes.net
-   service: http://api:1323
- - service: http_status:404
+  - hostname: finansu.nutfes.net
+    service: http://view:3000
+  - hostname: finansu-api.nutfes.net
+    service: http://finansu-api-deployment-584986fc77-zlh49:1323
+  - service: http_status:404
