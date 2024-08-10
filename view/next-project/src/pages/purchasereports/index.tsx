@@ -397,6 +397,8 @@ export default function PurchaseReports(props: Props) {
                                 ? purchaseReportViewItem.purchaseReport.id
                                 : 0
                             }
+                            purchaseReportViewItem={purchaseReportViewItem}
+                            expenses={props.expenses}
                             isDisabled={isDisabled(purchaseReportViewItem)}
                           />
                         </div>
