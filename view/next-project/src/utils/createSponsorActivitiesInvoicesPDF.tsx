@@ -1,6 +1,6 @@
 import { Document, Page, Text, Font, View, pdf, StyleSheet, PDFViewer } from '@react-pdf/renderer';
 import React from 'react';
-import { SponsorActivityView } from '@type/common';
+import { Invoice } from '@type/common';
 
 Font.register({
   family: 'NotoSansJP',
@@ -131,15 +131,12 @@ const styles = StyleSheet.create({
 });
 
 interface MyDocumentProps {
-  sponsorActivitiesViewItem: SponsorActivityView;
-  totalPrice: number;
-  date: string;
+  invoiceItem: Invoice;
+  deadline: string;
   issuedDate: string;
-  remarks: string;
-  formatDate: (date: string) => string;
 }
 
-const MyDocument = (props: MyDocumentProps) => (
+const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => (
   <Document>
     <Page style={styles.page} size='A4'>
       <View>
@@ -149,12 +146,12 @@ const MyDocument = (props: MyDocumentProps) => (
         <View style={styles.detailItem}>
           <View style={styles.textVertical}>
             <Text style={[styles.text_M, styles.underLine]}>
-              {props.sponsorActivitiesViewItem.sponsor.name}
+              {invoiceItem.sponsorName}
               {'  '}
               <Text style={styles.text_M}> 御中</Text>
             </Text>
             <Text style={[styles.text_S, styles.marginButtom]}>
-              ご担当 : {props.sponsorActivitiesViewItem.sponsor.representative} 様
+              ご担当 : {invoiceItem.managerName} 様
             </Text>
             <Text style={[styles.text_S, styles.underLine]}>
               件名 : <Text style={styles.text_M}>技大祭企業協賛</Text>
@@ -165,13 +162,13 @@ const MyDocument = (props: MyDocumentProps) => (
               </Text>
               <View style={styles.sumField}>
                 <Text style={styles.text_S}>
-                  合計金額 <Text style={styles.text_L}>¥ {props.totalPrice}</Text>
+                  合計金額 <Text style={styles.text_L}>¥ {invoiceItem.totalPrice}</Text>
                 </Text>
               </View>
             </View>
           </View>
           <View>
-            <Text style={styles.marginButtom}>請求日 : {props.issuedDate}</Text>
+            <Text style={styles.marginButtom}>請求日 : {issuedDate}</Text>
             <View>
               <View style={styles.marginButtom}>
                 <Text>技大祭実行委員会</Text>
@@ -180,7 +177,7 @@ const MyDocument = (props: MyDocumentProps) => (
                 <Text>長岡技術科学大学 大学集会施設</Text>
               </View>
               <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
-              <Text>担当 : {props.sponsorActivitiesViewItem.user.name}</Text>
+              <Text>担当 : {invoiceItem.fesStuffName}</Text>
             </View>
           </View>
         </View>
@@ -193,19 +190,13 @@ const MyDocument = (props: MyDocumentProps) => (
           <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>単価</Text>
           <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>金額</Text>
         </View>
-        {props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
-          <View style={styles.tableRow} key={styleDetail.sponsorStyle.id}>
+        {invoiceItem.invoiceSponsorStyle.map((sponsorStyle, index) => (
+          <View style={styles.tableRow} key={index}>
             <Text style={[styles.commonTableCol, styles.tableCol_S]}>{index + 1}</Text>
-            <Text style={[styles.commonTableCol, styles.tableCol_L]}>
-              {styleDetail.sponsorStyle.style} ({styleDetail.sponsorStyle.feature})
-            </Text>
+            <Text style={[styles.commonTableCol, styles.tableCol_L]}>{sponsorStyle.styleName}</Text>
             <Text style={[styles.commonTableCol, styles.tableCol_S]}>1</Text>
-            <Text style={[styles.commonTableCol, styles.tableCol_M]}>
-              ¥ {styleDetail.sponsorStyle.price}
-            </Text>
-            <Text style={[styles.commonTableCol, styles.tableCol_M]}>
-              ¥ {styleDetail.sponsorStyle.price}
-            </Text>
+            <Text style={[styles.commonTableCol, styles.tableCol_M]}>¥ {sponsorStyle.price}</Text>
+            <Text style={[styles.commonTableCol, styles.tableCol_M]}>¥ {sponsorStyle.price}</Text>
           </View>
         ))}
         <View style={styles.tableRow}>
@@ -213,12 +204,14 @@ const MyDocument = (props: MyDocumentProps) => (
           <Text style={[styles.commonTableCol, styles.tableColHeader_L]} />
           <Text style={[styles.commonTableCol, styles.tableColHeader_S]}>合計</Text>
           <Text style={[styles.commonTableCol, styles.tableColHeader_M, styles.tableCol_Sum]} />
-          <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>¥ {props.totalPrice}</Text>
+          <Text style={[styles.commonTableCol, styles.tableColHeader_M]}>
+            ¥ {invoiceItem.totalPrice}
+          </Text>
         </View>
       </View>
       <View style={[styles.detailField, styles.marginButtom]}>
         <Text style={styles.text_S}>
-          お手数でございますが、{props.date}までに下記口座へ振込くださいますようお願い申し上げます。
+          お手数でございますが、{deadline}までに下記口座へ振込くださいますようお願い申し上げます。
         </Text>
         <Text style={styles.text_S}>&lt;振込先&gt;</Text>
         <Text style={styles.text_S}>銀 行 名 : 大光銀行（金融機関コード : 0532）</Text>
@@ -235,7 +228,7 @@ const MyDocument = (props: MyDocumentProps) => (
             </View>
             <View style={styles.textArea}>
               <Text>振込手数料は、御社負担にてお願いいたします。</Text>
-              {(props.remarks.match(/.{1,40}/g) || []).map((chunk, index) => (
+              {(invoiceItem.remark.match(/.{1,40}/g) || []).map((chunk, index) => (
                 <Text key={index}>{chunk}</Text>
               ))}
             </View>
@@ -246,65 +239,24 @@ const MyDocument = (props: MyDocumentProps) => (
   </Document>
 );
 
-const CalculateTotalPrice = (sponsorActivitiesViewItem: SponsorActivityView): number => {
-  const totalPrice = sponsorActivitiesViewItem.styleDetail.reduce((totalPriceAccumulator, item) => {
-    return totalPriceAccumulator + item.sponsorStyle.price;
-  }, 0);
-  return totalPrice;
-};
-
-const formatDate = (datetime: string) => {
-  const datetime2 = datetime.substring(0, datetime.length - 10);
-  return datetime2;
-};
-
 export const createSponsorActivitiesPDF = async (
-  sponsorActivitiesViewItem: SponsorActivityView,
-  date: string,
+  invoiceItem: Invoice,
+  deadline: string,
   issuedDate: string,
-  remarks: string,
 ) => {
   const asPdf = pdf(
-    <MyDocument
-      sponsorActivitiesViewItem={sponsorActivitiesViewItem}
-      totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
-      date={date}
-      issuedDate={issuedDate}
-      remarks={remarks}
-      formatDate={formatDate}
-    />,
+    <MyDocument invoiceItem={invoiceItem} deadline={deadline} issuedDate={issuedDate} />,
   );
   const blob = await asPdf.toBlob();
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${formatDate(sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}-${
-    sponsorActivitiesViewItem.sponsor.name
-  }-請求書.pdf`;
+  link.download = `${issuedDate || ''}-${invoiceItem.sponsorName}-請求書.pdf`;
   link.click();
 };
 
-interface PreviewProps {
-  sponsorActivitiesViewItem: SponsorActivityView;
-  date: string;
-  issuedDate: string;
-  remarks: string;
-}
-
-export const PreviewPDF: React.FC<PreviewProps> = ({
-  sponsorActivitiesViewItem,
-  date,
-  issuedDate,
-  remarks,
-}) => (
+export const PreviewPDF: React.FC<MyDocumentProps> = ({ invoiceItem, deadline, issuedDate }) => (
   <PDFViewer style={{ width: '100vw', height: '100vh' }} showToolbar={false}>
-    <MyDocument
-      sponsorActivitiesViewItem={sponsorActivitiesViewItem}
-      date={date}
-      issuedDate={issuedDate}
-      remarks={remarks}
-      totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
-      formatDate={formatDate}
-    />
+    <MyDocument invoiceItem={invoiceItem} deadline={deadline} issuedDate={issuedDate} />
   </PDFViewer>
 );
