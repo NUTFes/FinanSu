@@ -53,13 +53,14 @@ export default function AddPdfDetailModal(props: ModalProps) {
     ).padStart(2, '0')}`;
   };
 
-  const sponsorStyleFormatted = () => {
+  const sponsorStyleFormatted = (): InvoiceSponsorStyle[] => {
     return sponsorActivitiesViewItem.styleDetail.map((sponsorStyleDetail) => {
       const sponsorStyle = sponsorStyleDetail.sponsorStyle;
-      return {
+      const res: InvoiceSponsorStyle = {
         styleName: `${sponsorStyle.style}(${sponsorStyle.feature})`,
         price: sponsorStyle.price,
       };
+      return res;
     });
   };
 
@@ -81,11 +82,6 @@ export default function AddPdfDetailModal(props: ModalProps) {
     issuedDate: todayFormatted(),
     deadline: ymd,
     remark: '',
-  });
-
-  const [formData, setFormData] = useState<FormDateFormat>({
-    receivedAt: ymd,
-    billIssuedAt: todayFormatted(),
   });
 
   const handler =
