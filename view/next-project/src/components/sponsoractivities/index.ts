@@ -13,3 +13,5 @@ export { default as OpenPaymentDayModalButton } from './OpenPaymentDayModalButto
 export { default as PaymentDayModal } from './PaymentDayModal';
 export { default as SponsorActivitiesAddModal } from './SponsorActivitiesAddModal';
 export { default as UploadFileModal } from './UploadFileModal';
+export { default as EditInvoiceModal } from './EditInvoiceModal';
+export { default as OpenEditInvoiceModalButton } from './OpenEditInvoiceModalButton';

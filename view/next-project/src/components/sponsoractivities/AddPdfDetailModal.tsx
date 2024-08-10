@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { OpenEditInvoiceModalButton } from './index';
 import { createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
@@ -101,7 +102,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
           />
         </div>
         <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
-          振込締め切り日・備考の入力
+          請求書の発行
         </p>
         <div className='col-span-4 w-full'>
           <p className='text-gray-600 mb-3 ml-1 text-sm'>請求書発行日</p>
@@ -126,7 +127,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
             className='mb-3 w-full'
           />
         </div>
-        <div className='mb-3 flex w-full justify-center'>
+        <div className='mb-3 flex w-full justify-center gap-4'>
           <PrimaryButton
             onClick={async () => {
               createSponsorActivitiesPDF(
@@ -139,6 +140,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
           >
             ダウンロード
           </PrimaryButton>
+          <OpenEditInvoiceModalButton invoice={invoiceData} setInvoice={setInvoiceDate} />
         </div>
       </div>
       <div className='h-[30rem] justify-center overflow-x-auto md:flex'>
