@@ -77,7 +77,8 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
 
     // 日付取得
     const date = new Date();
-    const month = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth();
+    const thisMonth = date.getMonth() + 1;
+    const month = thisMonth < 10 ? '0' + thisMonth : thisMonth;
     const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
     const formattedDate = `${date.getFullYear()}${month}${day}`;
     const randomStr = generateRandomString();
