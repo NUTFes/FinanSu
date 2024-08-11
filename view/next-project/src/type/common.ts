@@ -286,3 +286,20 @@ export interface Receipt {
   fileType: string;
   remark: string;
 }
+
+//企業協賛用請求書用型
+export interface Invoice {
+  sponsorName: string;
+  managerName: string;
+  totalPrice: number;
+  fesStuffName: string;
+  invoiceSponsorStyle: InvoiceSponsorStyle[];
+  issuedDate: string;
+  deadline: string;
+  remark: string;
+}
+
+export interface InvoiceSponsorStyle {
+  styleName: string;
+  price: number;
+}
