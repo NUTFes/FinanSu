@@ -117,7 +117,12 @@ export default function EditInvoiceModal(props: ModalProps) {
                         value={invoiceSponsorStyle.price}
                         onChange={(e) => {
                           onChangeSponsorStyle(
-                            { ...invoiceSponsorStyle, price: Number(e.target.value) },
+                            {
+                              ...invoiceSponsorStyle,
+                              price: isNaN(Number(e.target.value))
+                                ? invoiceSponsorStyle.price
+                                : Number(e.target.value),
+                            },
                             index,
                           );
                         }}
