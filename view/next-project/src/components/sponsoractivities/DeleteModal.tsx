@@ -17,6 +17,10 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
     props.setShowModal(false);
     router.reload();
   };
+  
+  const onClose = () => {
+    props.setShowModal(false);
+  };
 
   const deleteSponsorActivity = async () => {
     const deleteSponsorActivityUrl = process.env.CSR_API_URI + '/activities/' + props.id;
@@ -24,17 +28,17 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
-          <CloseButton onClick={() => props.setShowModal(false)} />
+          <CloseButton onClick={onClose} />
         </div>
       </div>
       <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛企業の削除</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
       <div className=''>
         <div className='flex flex-row justify-center gap-5'>
-          <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
+          <OutlinePrimaryButton onClick={onClose}>戻る</OutlinePrimaryButton>
           <PrimaryButton
             onClick={() => {
               deleteSponsorActivity();

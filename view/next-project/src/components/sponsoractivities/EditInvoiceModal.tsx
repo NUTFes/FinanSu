@@ -51,15 +51,17 @@ export default function EditInvoiceModal(props: ModalProps) {
     setInvoice(editInvoice);
     setIsOpen(false);
   };
+  
+  const onClose = () => {
+    props.setIsOpen(false);
+  };
 
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
-            onClick={() => {
-              setIsOpen(false);
-            }}
+            onClick={onClose}
           />
         </div>
       </div>
@@ -135,9 +137,7 @@ export default function EditInvoiceModal(props: ModalProps) {
         </div>
         <div className='flex flex-row justify-center gap-5'>
           <OutlinePrimaryButton
-            onClick={() => {
-              setIsOpen(false);
-            }}
+            onClick={onClose}
           >
             戻る
           </OutlinePrimaryButton>

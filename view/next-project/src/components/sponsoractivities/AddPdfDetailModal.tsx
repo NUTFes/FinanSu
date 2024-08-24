@@ -90,15 +90,17 @@ export default function AddPdfDetailModal(props: ModalProps) {
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
       setInvoiceDate({ ...invoiceData, [input]: e.target.value });
     };
+  
+  const onClose = () => {
+    props.setIsOpen(false);
+  };
 
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton
-            onClick={() => {
-              props.setIsOpen(false);
-            }}
+            onClick={onClose}
           />
         </div>
         <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
@@ -135,7 +137,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
                 formatDate(invoiceData.deadline),
                 formatDate(invoiceData.issuedDate, false),
               );
-              props.setIsOpen(false);
+              onClose();
             }}
           >
             ダウンロード
