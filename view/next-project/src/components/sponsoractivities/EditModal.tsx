@@ -210,7 +210,7 @@ export default function EditModal(props: ModalProps) {
   }, [formDataSponsorID]);
 
   const NO_SPONSORS_MESSAGE = '企業が登録されていません';
-  
+
   const onClose = () => {
     props.setIsOpen(false);
   };
@@ -359,7 +359,7 @@ export default function EditModal(props: ModalProps) {
     <Modal className='md:w-1/2' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
-          <CloseButton onClick={onClose}/>
+          <CloseButton onClick={onClose} />
         </div>
       </div>
       <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛企業の修正</div>
@@ -371,9 +371,7 @@ export default function EditModal(props: ModalProps) {
           </div>
         )}
         <div className='flex flex-row justify-center gap-5'>
-          <OutlinePrimaryButton onClick={onClose}>
-            戻る
-          </OutlinePrimaryButton>
+          <OutlinePrimaryButton onClick={onClose}>戻る</OutlinePrimaryButton>
           <PrimaryButton
             onClick={() => {
               submit(formData);

@@ -55,9 +55,7 @@ export default function PaymentDayModal(props: ModalProps) {
     <Modal className='md:w-1/2' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
-          <CloseButton
-            onClick={onClose}
-          />
+          <CloseButton onClick={onClose} />
         </div>
         <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
           入金日を入力

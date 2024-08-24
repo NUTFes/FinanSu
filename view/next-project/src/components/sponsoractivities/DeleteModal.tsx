@@ -17,7 +17,7 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
     props.setShowModal(false);
     router.reload();
   };
-  
+
   const onClose = () => {
     props.setShowModal(false);
   };
