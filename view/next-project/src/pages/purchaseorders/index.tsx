@@ -222,8 +222,8 @@ export default function PurchaseOrders(props: Props) {
                 <th className='w-1/12 pb-2'>
                   <div className='text-center text-sm text-black-600'></div>
                 </th>
-                <th className='w-2/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>購入したい局</div>
+                <th className='w-1/5 border-b-primary-1 pb-2'>
+                  <div className='text-center text-sm text-black-600'>支出元</div>
                 </th>
                 <th className='w-2/12 border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>申請日</div>

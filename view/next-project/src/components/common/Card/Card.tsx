@@ -9,10 +9,10 @@ interface Props {
 
 function Card(props: Props): JSX.Element {
   return (
-    <div className={clsx('mx-auto', props.w ? props.w : 'md:w-4/5')} onClick={props.onClick}>
+    <div className={clsx('mx-auto', props.w ? props.w : 'md:w-11/12')} onClick={props.onClick}>
       <div
         className={clsx(
-          'm-2 rounded-lg border border-black-300 border-opacity-10 px-2 shadow-md md:m-10 md:px-10',
+          'm-2 rounded-lg border border-black-300 border-opacity-10 px-2 shadow-md md:m-7 md:px-10',
         )}
       >
         {props.children}

@@ -249,7 +249,7 @@ export default function SponsorActivities(props: Props) {
         <meta name='viewpoinst' content='initial-scale=1.0, width=device-width' />
       </Head>
       {isLoading && <Loading />}
-      <Card w='w-full'>
+      <Card>
         <div className='mx-6 mt-10 md:mx-5'>
           <div className='gap-4 md:flex'>
             <div className='flex'>
