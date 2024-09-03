@@ -47,15 +47,15 @@ export default function PaymentDayModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
+  const onClose = () => {
+    props.setIsOpen(false);
+  };
+
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
-          <CloseButton
-            onClick={() => {
-              props.setIsOpen(false);
-            }}
-          />
+          <CloseButton onClick={onClose} />
         </div>
         <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
           入金日を入力
@@ -76,7 +76,7 @@ export default function PaymentDayModal(props: ModalProps) {
                 formatDate(paymentDay, false),
                 formatDate(formData.receivedAt, false),
               );
-              props.setIsOpen(false);
+              onClose();
             }}
           >
             領収書ダウンロード

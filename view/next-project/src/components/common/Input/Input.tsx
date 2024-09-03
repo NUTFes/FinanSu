@@ -19,7 +19,7 @@ interface Props {
 
 function Input(props: Props): JSX.Element {
   const className =
-    'rounded-full border border-primary-1 py-2 px-4' +
+    'rounded-full border border-primary-1 py-2 px-4 w-full' +
     (props.className ? ` ${props.className}` : '');
   return (
     <div>

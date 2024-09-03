@@ -74,12 +74,7 @@ const FilterModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal
-      className='md:w-1/2'
-      onClick={() => {
-        onClose();
-      }}
-    >
+    <Modal className='md:w-1/2' onClick={onClose}>
       <form onSubmit={filterHandler}>
         <div onClick={preventCloseModalEvent}>
           <div className='w-full'>

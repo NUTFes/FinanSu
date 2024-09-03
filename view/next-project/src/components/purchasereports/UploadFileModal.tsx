@@ -54,6 +54,11 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
       });
   };
 
+  const generateRandomString = (charCount = 7): string => {
+    const str = Math.random().toString(36).substring(2).slice(-charCount);
+    return str.length < charCount ? str + 'a'.repeat(charCount - str.length) : str;
+  };
+
   const submit = async () => {
     if (!imageFile) {
       return;
@@ -65,9 +70,24 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
 
     setIsLoading(true);
     const formData = new FormData();
+
+    //拡張子取得
+    const uploadFileName = imageFile?.name || '';
+    const Extension = uploadFileName.split('.').pop();
+
+    // 日付取得
+    const date = new Date();
+    const thisMonth = date.getMonth() + 1;
+    const month = thisMonth < 10 ? '0' + thisMonth : thisMonth;
+    const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    const formattedDate = `${date.getFullYear()}${month}${day}`;
+    const randomStr = generateRandomString();
+
+    // ファイル名作成
+    const fileName = `receipt_${formattedDate}_${randomStr}.${Extension}`;
+
     formData.append('file', imageFile);
-    const fileName = imageFile?.name || '';
-    formData.append('fileName', `receipts/${fileName}`);
+    formData.append('fileName', fileName);
     formData.append('year', year);
 
     const response = await fetch('/api/receipts', {
@@ -94,7 +114,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     const sendReceipt: Receipt = {
       purchaseReportID: Number(id),
       bucketName: process.env.NEXT_PUBLIC_BUCKET_NAME || '',
-      fileName: imageFile.name,
+      fileName: fileName,
       fileType: imageFile.type,
       remark: '',
     };
@@ -176,7 +196,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
         </div>
       </div>
       <div className='my-2 flex w-full flex-wrap justify-center'>
-        <PrimaryButton type='button' onClick={() => submit()} disabled={isLoading && !imageFile}>
+        <PrimaryButton type='button' onClick={() => submit()} disabled={isLoading || !imageFile}>
           登録
         </PrimaryButton>
       </div>
