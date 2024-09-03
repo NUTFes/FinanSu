@@ -79,27 +79,27 @@ const DetailModal: FC<ModalProps> = (props) => {
             </div>
             <div
               className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
+                'col-span-4 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
               {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchaseOrder.id}
             </div>
-            <div className={clsx('col-span-3 grid')} />
+            <div className={clsx('col-span-2 grid')} />
           </div>
           <div className={clsx('col-span-1 grid ')} />
           <div className={clsx('my-2 grid w-full grid-cols-12')}>
             <div className={clsx('col-span-2 grid')} />
             <div className={clsx('col-span-4 mr-2 grid justify-items-end')}>
-              <div className={clsx('text-md flex items-center text-black-600')}>申請した局</div>
+              <div className={clsx('text-md flex items-center text-black-600')}>支出元</div>
             </div>
             <div
               className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
+                'col-span-4 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
               {expenseName}
             </div>
-            <div className={clsx('col-span-3 grid')} />
+            <div className={clsx('col-span-2 grid')} />
           </div>
           <div className={clsx('my-2 grid w-full grid-cols-12')}>
             <div className={clsx('col-span-2 grid')} />
@@ -108,7 +108,7 @@ const DetailModal: FC<ModalProps> = (props) => {
             </div>
             <div
               className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
+                'col-span-4 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
               {props.purchaseOrderViewItem &&
@@ -118,7 +118,7 @@ const DetailModal: FC<ModalProps> = (props) => {
                     : '',
                 )}
             </div>
-            <div className={clsx('col-span-3 grid')} />
+            <div className={clsx('col-span-2 grid')} />
           </div>
           <div className={clsx('my-2 grid w-full grid-cols-12')}>
             <div className={clsx('col-span-2 grid')} />
@@ -127,12 +127,12 @@ const DetailModal: FC<ModalProps> = (props) => {
             </div>
             <div
               className={clsx(
-                'col-span-3 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
+                'col-span-4 grid w-full border border-x-white-0 border-b-primary-1 border-t-white-0 pl-1',
               )}
             >
               {props.purchaseOrderViewItem && props.purchaseOrderViewItem.purchaseOrder.deadline}
             </div>
-            <div className={clsx('col-span-3 grid')} />
+            <div className={clsx('col-span-2 grid')} />
           </div>
           <div className={clsx('col-span-1 grid ')} />
         </div>

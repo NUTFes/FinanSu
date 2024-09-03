@@ -91,6 +91,12 @@ export default function PurchaseOrders(props: Props) {
     return datetime2;
   };
 
+  const formatDateForDeadline = (date: string) => {
+    const spilitDate = date.split('-');
+    const datetime = spilitDate[1] + '/' + spilitDate[2];
+    return datetime;
+  };
+
   const yearPeriods = props.yearPeriods;
   const [selectedYear, setSelectedYear] = useState<string>(
     yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
@@ -215,7 +221,7 @@ export default function PurchaseOrders(props: Props) {
             </OpenAddModalButton>
           </div>
         </div>
-        <div className='w-100 mb-2 overflow-scroll p-5'>
+        <div className='w-100 mb-2 overflow-scroll p-5 md:overflow-visible'>
           <table className='mb-5 w-max table-auto border-collapse md:w-full md:table-fixed'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
@@ -293,7 +299,11 @@ export default function PurchaseOrders(props: Props) {
                       }}
                     >
                       <div className='text-center text-sm text-black-600'>
-                        {purchaseOrderViewItem.purchaseOrder.deadline}
+                        {formatDateForDeadline(
+                          purchaseOrderViewItem.purchaseOrder.deadline
+                            ? purchaseOrderViewItem.purchaseOrder.deadline
+                            : '',
+                        )}
                       </div>
                     </td>
                     <td
