@@ -4,6 +4,7 @@ FinanSu.iml
 finansu.env
 finansu.local.env
 api/tmp
+.DS_Store
 
 # cloudflare
 web/**/*.json

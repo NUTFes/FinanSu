@@ -199,6 +199,10 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   const NO_SPONSORS_MESSAGE = '企業が登録されていません';
 
+  const onClose = () => {
+    props.setIsOpen(false);
+  };
+
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
     <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-2'>
@@ -426,14 +430,10 @@ export default function SponsorActivitiesAddModal(props: Props) {
   };
 
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
-          <CloseButton
-            onClick={() => {
-              props.setIsOpen(false);
-            }}
-          />
+          <CloseButton onClick={onClose} />
         </div>
       </div>
       <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛活動の登録</div>
