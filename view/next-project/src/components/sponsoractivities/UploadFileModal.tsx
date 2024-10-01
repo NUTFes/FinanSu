@@ -197,8 +197,8 @@ const UploadFileModal: FC<ModalProps> = (props) => {
           className='file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm hover:file:bg-grey-300'
         />
         {isLoading && (
-          <div className="w-full text-center mt-2">
-            <p className="text-sm text-gray-600">{uploadProgress}% アップロード中...</p>
+          <div className='mt-2 w-full text-center'>
+            <p className='text-gray-600 text-sm'>{uploadProgress}% アップロード中...</p>
           </div>
         )}
       </div>
