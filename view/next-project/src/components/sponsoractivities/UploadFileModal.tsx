@@ -152,7 +152,6 @@ const UploadFileModal: FC<ModalProps> = (props) => {
 
         // 進捗状況を更新
         setUploadProgress(((i + 1) / chunks.length) * 100);
-
       } catch (error) {
         console.error(`チャンク${i + 1}/${chunks.length}のアップロード失敗:`, error);
         alert('登録に失敗しました');
