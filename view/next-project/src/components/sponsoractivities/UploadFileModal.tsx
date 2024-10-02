@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { FC, useRef, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
@@ -19,7 +20,7 @@ interface ModalProps {
   setIsChange: (isChange: boolean) => void;
 }
 
-const UplaodFileModal: FC<ModalProps> = (props) => {
+const UploadFileModal: FC<ModalProps> = (props) => {
   const { year, activityInformation } = props;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -37,15 +38,17 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     );
 
   const sponsorActivityInformations = props.sponsorActivityInformations || [];
-  // loadingの呼び出し
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
 
+  // ファイル選択時の処理
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const targetFile = e.target.files![0]!;
-    if (!targetFile) {
+    const files = e.target.files;
+    if (!files || files.length === 0) {
       setPreview({ uploadImageURL: '', type: '' });
       return;
     }
+    const targetFile = files[0];
     setImageFile(targetFile);
     setPreview({ uploadImageURL: URL.createObjectURL(targetFile), type: targetFile.type });
 
@@ -61,75 +64,109 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     });
   };
 
+  // ファイル削除時の処理
   const handleFileDelete = () => {
     setImageFile(null);
     setPreview({ uploadImageURL: '', type: '' });
     props.setIsOpen(false);
   };
 
+  // オブジェクト削除処理
   const objectDeleteHandle = async () => {
     const formData = new FormData();
     formData.append('fileName', `${activityInformation?.fileName}`);
     formData.append('year', year);
-    const response = await fetch('/api/advertisements', {
-      method: 'DELETE',
-      body: formData,
-    })
-      .then((response) => {
-        if (response.ok) {
-          return true;
-        } else {
-          alert('削除に失敗');
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
+    try {
+      const response = await fetch('/api/advertisements', {
+        method: 'DELETE',
+        body: formData,
       });
+      if (!response.ok) {
+        alert('削除に失敗');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error:', error);
+      return false;
+    }
   };
 
+  // ファイルをチャンクに分割する関数
+  const splitFile = (file: File, chunkSize: number) => {
+    const chunks = [];
+    let offset = 0;
+    while (offset < file.size) {
+      const chunk = file.slice(offset, offset + chunkSize);
+      chunks.push(chunk);
+      offset += chunkSize;
+    }
+    console.log(`ファイルを${chunks.length}個のチャンクに分割しました。`);
+    return chunks;
+  };
+
+  // ファイルアップロード処理
   const submit = async () => {
     if (!imageFile) {
       return;
     }
 
-    //更新の場合削除
-    if (activityInformation?.fileName !== '') {
-      objectDeleteHandle();
+    // 更新の場合、既存ファイルを削除
+    if (activityInformation?.fileName) {
+      await objectDeleteHandle();
     }
 
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append('file', imageFile);
-    const fileName = imageFile?.name || '';
-    formData.append('fileName', fileName);
-    formData.append('year', year);
 
-    const response = await fetch('/api/advertisements', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => {
-        if (response.ok) {
-          return true;
-        } else {
+    // ファイルをチャンクに分割してアップロード
+    const chunkSize = 50 * 1024 * 1024;
+    const chunks = splitFile(imageFile, chunkSize);
+
+    for (let i = 0; i < chunks.length; i++) {
+      const formData = new FormData();
+      formData.append('file', chunks[i]);
+      formData.append('fileName', imageFile.name);
+      formData.append('year', year);
+      formData.append('chunkIndex', i.toString());
+      formData.append('totalChunks', chunks.length.toString());
+
+      console.log(`チャンク${i + 1}/${chunks.length}をアップロード中...`);
+
+      try {
+        const response = await fetch('/api/advertisements', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.message !== '成功' && data.message !== 'チャンク受信成功') {
+          console.error(`チャンク${i + 1}/${chunks.length}のアップロード失敗: ${data.message}`);
           alert('登録に失敗しました');
-          return false;
+          setIsLoading(false);
+          onClose();
+          return;
         }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    setIsLoading(false);
 
-    if (!response) {
-      onClose();
-      return;
+        console.log(`チャンク${i + 1}/${chunks.length}のアップロード成功`);
+
+        // 進捗状況を更新
+        setUploadProgress(((i + 1) / chunks.length) * 100);
+      } catch (error) {
+        console.error(`チャンク${i + 1}/${chunks.length}のアップロード失敗:`, error);
+        alert('登録に失敗しました');
+        setIsLoading(false);
+        onClose();
+        return;
+      }
     }
 
+    setIsLoading(false);
+
+    // アップロード完了後の処理
     const sponsorActivitiesUrl =
       process.env.CSR_API_URI + '/activity_informations/' + activityInformation?.id;
-    const res = await put(sponsorActivitiesUrl, registerActivityInformation);
+    await put(sponsorActivitiesUrl, registerActivityInformation);
     const newSponsorActivityInformations = sponsorActivityInformations.map(
       (sponsorActivityInformation) => {
         if (sponsorActivityInformation.id === registerActivityInformation.id) {
@@ -146,15 +183,16 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     onClose();
   };
 
+  // モーダルを閉じる処理
   const onClose = () => {
     handleFileDelete();
     props.setIsOpen(false);
   };
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-4/12' onClick={onClose}>
+    <Modal className='md:h-6/12 md:mt-5 md:w-5/12' onClick={onClose}>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
@@ -165,6 +203,11 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
           onChange={handleFileChange}
           className='file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm hover:file:bg-grey-300'
         />
+        {isLoading && (
+          <div className='mt-2 w-full text-center'>
+            <p className='text-gray-600 text-sm'>{uploadProgress}% アップロード中...</p>
+          </div>
+        )}
       </div>
       <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
         {preview.type === 'application/pdf' ? (
@@ -175,12 +218,18 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
           />
         ) : (
           preview.type !== '' && (
-            <img src={preview.uploadImageURL} className='mx-auto object-scale-down ' />
+            <Image
+              src={preview.uploadImageURL}
+              alt='Preview'
+              className='mx-auto object-scale-down'
+              width={200}
+              height={200}
+            />
           )
         )}
       </div>
       <div className='my-2 flex w-full flex-wrap justify-center'>
-        <PrimaryButton type='button' onClick={() => submit()} disabled={isLoading && !imageFile}>
+        <PrimaryButton type='button' onClick={submit} disabled={isLoading && !imageFile}>
           登録
         </PrimaryButton>
       </div>
@@ -189,4 +238,4 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
   );
 };
 
-export default UplaodFileModal;
+export default UploadFileModal;
