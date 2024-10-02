@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { formidable } from 'formidable';
+import { formidable, Files } from 'formidable';
 import { Client } from 'minio';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -32,9 +32,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     const form = formidable();
 
-    form.parse(req, async (err, fields, files: any) => {
+    form.parse(req, async (err, fields, files: Files) => {
       if (err) {
         res.status(500).json({ message: 'Error parsing form' });
+        return;
+      }
+
+      if (!files.file || !files.file[0]) {
+        res.status(400).json({ message: 'ファイルが見つかりません' });
         return;
       }
 
@@ -44,11 +49,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const year = fields.year ? fields.year[0] : '';
       const tempFilePath = path.join(TEMP_DIR, `${fileName}.part${chunkIndex}`);
 
-      if (!fs.existsSync(TEMP_DIR)) {
-        fs.mkdirSync(TEMP_DIR);
-      }
-
       try {
+        fs.mkdirSync(TEMP_DIR, { recursive: true });
         fs.copyFileSync(files.file[0].filepath, tempFilePath);
         fs.unlinkSync(files.file[0].filepath);
       } catch (error) {
@@ -73,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           if (fs.existsSync(finalFilePath)) {
             const bucketName = 'finansu';
             const filePath = `${year}/advertisements/${fileName}`;
-            const mimetype = files.file[0].mimetype;
+            const mimetype = files.file && files.file[0] ? files.file[0].mimetype : '';
             const metaData = {
               'Content-Type': mimetype,
             };
