@@ -3,9 +3,12 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
 
 type sponsorRepository struct {
@@ -21,6 +24,8 @@ type SponsorRepository interface {
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
+	CreateByCsv(context.Context, []domain.Sponsor) (string, error)
+	FindByRowsAffected(context.Context, string) (*sql.Rows, error)
 }
 
 func NewSponsorRepository(c db.Client, ac abstract.Crud) SponsorRepository {
@@ -114,5 +119,35 @@ func (sr *sponsorRepository) AllByPeriod(c context.Context, year string) (*sql.R
 	WHERE
 		years.year = ` + year +
 		" ORDER BY sponsors.id;"
+	return sr.crud.Read(c, query)
+}
+
+// csvで一括登録
+func (sr *sponsorRepository) CreateByCsv(c context.Context, csvRecords []domain.Sponsor) (string, error) {
+	query := `
+		INSERT  INTO
+			sponsors (name, tel, email, address, representative)
+			VALUES`
+	values := []string{}
+	for _, record := range csvRecords {
+		values = append(values, fmt.Sprintf("('%s', '%s', '%s', '%s', '%s')",
+			record.Name,
+			record.Tel,
+			record.Email,
+			record.Address,
+			record.Representative,
+		))
+	}
+	query += strings.Join(values, ", ")
+	rowAffected, err := sr.crud.UpdateAndReturnRows(c, query)
+	if err != nil {
+		return "", err
+	}
+	return rowAffected, err
+}
+
+// rowの件数分取得
+func (sr *sponsorRepository) FindByRowsAffected(c context.Context, row string) (*sql.Rows, error) {
+	query := fmt.Sprintf("SELECT * FROM sponsors ORDER BY id DESC LIMIT %s", row)
 	return sr.crud.Read(c, query)
 }

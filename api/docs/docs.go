@@ -2087,26 +2087,69 @@ const docTemplate = `{
                 },
             },
         },
-		"/sponsors/periods/{year}": {
-			"get": {
-					tags: ["sponsor"],
-					"description": "年度で指定されたsponsorを取得",
-					"parameters": [
-							{
-									"name": "year",
-									"in": "path",
-									"description": "year",
-									"required": true,
-									"type": "integer"
-							}
-					],
-					"responses": {
-							"200": {
-									"description": "sponsorの取得完了",
+				"/sponsors/periods/{year}": {
+					"get": {
+							tags: ["sponsor"],
+							"description": "年度で指定されたsponsorを取得",
+							"parameters": [
+									{
+											"name": "year",
+											"in": "path",
+											"description": "year",
+											"required": true,
+											"type": "integer"
+									}
+							],
+							"responses": {
+									"200": {
+											"description": "sponsorの取得完了",
+									}
 							}
 					}
-			},
-        },
+				},
+				"/sponsors/csv": {
+					"post": {
+						"tags": ["sponsor"],
+						"description": "CSVファイルを使ってsponsorを作成する",
+						"consumes": [
+							"multipart/form-data"
+						],
+						"parameters": [
+							{
+								"name": "file",
+								"in": "formData",
+								"description": "CSVファイル",
+								"required": true,
+								"type": "file"
+							}
+						],
+						"responses": {
+							"200": {
+								"description": "作成されたsponsorsの情報が返ってくる",
+							}
+						}
+					}
+				},
+				"/sponsors/rowAffected/{rowAffected}": {
+            "get": {
+                tags: ["sponsor"],
+                "description": "createdAt以降のsponsorの取得",
+                "parameters": [
+                    {
+                        "name": "rowAffected",
+                        "in": "path",
+                        "description": "rowAffected",
+                        "required": true,
+                        "type": "integer",
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "sponsorの取得",
+                    }
+                }
+            },
+				},
         "/sponsorstyles": {
             "get": {
                 tags: ["sponsorstyle"],
@@ -3012,7 +3055,6 @@ const docTemplate = `{
                 "year":{
                     "type": "int",
                     "example": 2024,
-
                 },
                 "startedAt":{
                     "type": "string",
@@ -3026,7 +3068,7 @@ const docTemplate = `{
             "required":{
                     "year",
                     "startedAt",
-                    "endedAt"
+                    "endedAt",
             },
         },
     },
