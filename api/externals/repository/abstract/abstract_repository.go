@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/pkg/errors"
@@ -17,6 +18,7 @@ type Crud interface {
 	Read(context.Context, string) (*sql.Rows, error)
 	ReadByID(context.Context, string) (*sql.Row, error)
 	UpdateDB(context.Context, string) error
+	UpdateAndReturnRows(context.Context, string) (string, error)
 }
 
 func NewCrud(client db.Client) Crud {
@@ -45,4 +47,17 @@ func (a abstractRepository) UpdateDB(ctx context.Context, query string) error {
 	}
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
+}
+
+func (a abstractRepository) UpdateAndReturnRows(ctx context.Context, query string) (string, error) {
+	rows, err := a.client.DB().ExecContext(ctx, query)
+	if err != nil {
+		return "", err
+	}
+	count, err := rows.RowsAffected()
+	if err != nil {
+		return "", err
+	}
+	countStr := strconv.FormatInt(count, 10)
+	return countStr, err
 }
