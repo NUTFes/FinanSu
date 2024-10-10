@@ -20,9 +20,16 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   placeholder,
 }) => {
   const [selected, setSelected] = useState<{ value: string; label: string }[]>(values);
-
+  const className = 'rounded-full border border-primary-1 py-2 px-4 w-full';
   return (
     <Select
+      unstyled
+      classNames={{
+        control: (state) => className,
+      }}
+      components={{
+        IndicatorSeparator: () => null,
+      }}
       isMulti
       options={options}
       value={selected}
