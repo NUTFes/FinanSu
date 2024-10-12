@@ -49,6 +49,16 @@ const UploadFileModal: FC<ModalProps> = (props) => {
       return;
     }
     const targetFile = files[0];
+
+    const MAX_FILE_SIZE = 1_073_741_824;
+    if (targetFile.size > MAX_FILE_SIZE) {
+      alert('ファイルサイズが1GBを超えています。別のファイルを選択してください。');
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+
     setImageFile(targetFile);
     setPreview({ uploadImageURL: URL.createObjectURL(targetFile), type: targetFile.type });
 
@@ -71,7 +81,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
     props.setIsOpen(false);
   };
 
-  // オブジェクト削除処理
+    // オブジェクト削除処理
   const objectDeleteHandle = async () => {
     const formData = new FormData();
     formData.append('fileName', `${activityInformation?.fileName}`);
@@ -92,7 +102,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
     }
   };
 
-  // ファイルをチャンクに分割する関数
+    // ファイルをチャンクに分割する関数
   const splitFile = (file: File, chunkSize: number) => {
     const chunks = [];
     let offset = 0;
@@ -101,7 +111,6 @@ const UploadFileModal: FC<ModalProps> = (props) => {
       chunks.push(chunk);
       offset += chunkSize;
     }
-    console.log(`ファイルを${chunks.length}個のチャンクに分割しました。`);
     return chunks;
   };
 
@@ -119,7 +128,8 @@ const UploadFileModal: FC<ModalProps> = (props) => {
     setIsLoading(true);
 
     // ファイルをチャンクに分割してアップロード
-    const chunkSize = 50 * 1024 * 1024;
+    const SPLIT_NUMBER = 10;
+    const chunkSize = imageFile.size / SPLIT_NUMBER;
     const chunks = splitFile(imageFile, chunkSize);
 
     for (let i = 0; i < chunks.length; i++) {
@@ -130,7 +140,8 @@ const UploadFileModal: FC<ModalProps> = (props) => {
       formData.append('chunkIndex', i.toString());
       formData.append('totalChunks', chunks.length.toString());
 
-      console.log(`チャンク${i + 1}/${chunks.length}をアップロード中...`);
+      const progress = Math.floor(((i + 1) / chunks.length) * 100);
+      setUploadProgress(progress);
 
       try {
         const response = await fetch('/api/advertisements', {
@@ -141,19 +152,12 @@ const UploadFileModal: FC<ModalProps> = (props) => {
         const data = await response.json();
 
         if (data.message !== '成功' && data.message !== 'チャンク受信成功') {
-          console.error(`チャンク${i + 1}/${chunks.length}のアップロード失敗: ${data.message}`);
           alert('登録に失敗しました');
           setIsLoading(false);
           onClose();
           return;
         }
-
-        console.log(`チャンク${i + 1}/${chunks.length}のアップロード成功`);
-
-        // 進捗状況を更新
-        setUploadProgress(((i + 1) / chunks.length) * 100);
       } catch (error) {
-        console.error(`チャンク${i + 1}/${chunks.length}のアップロード失敗:`, error);
         alert('登録に失敗しました');
         setIsLoading(false);
         onClose();
@@ -203,9 +207,12 @@ const UploadFileModal: FC<ModalProps> = (props) => {
           onChange={handleFileChange}
           className='file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm hover:file:bg-grey-300'
         />
+        <p className='mt-2 text-sm text-red-500'>※ファイルサイズは1GB以下にしてください。</p>
         {isLoading && (
           <div className='mt-2 w-full text-center'>
-            <p className='text-gray-600 text-sm'>{uploadProgress}% アップロード中...</p>
+            <p className='text-gray-600 text-sm'>
+              {uploadProgress === 100 ? '処理中...' : `${uploadProgress}% アップロード中...`}
+            </p>
           </div>
         )}
       </div>
@@ -233,7 +240,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
           登録
         </PrimaryButton>
       </div>
-      {isLoading && <Loading />}
+      {isLoading && <Loading value={uploadProgress} isProgress />}
     </Modal>
   );
 };
