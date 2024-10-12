@@ -81,7 +81,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
     props.setIsOpen(false);
   };
 
-    // オブジェクト削除処理
+  // オブジェクト削除処理
   const objectDeleteHandle = async () => {
     const formData = new FormData();
     formData.append('fileName', `${activityInformation?.fileName}`);
@@ -102,7 +102,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
     }
   };
 
-    // ファイルをチャンクに分割する関数
+  // ファイルをチャンクに分割する関数
   const splitFile = (file: File, chunkSize: number) => {
     const chunks = [];
     let offset = 0;
