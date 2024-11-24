@@ -115,7 +115,7 @@ export default function BudgetManagement({ departments, divisions, items }: Budg
               </select>
             </div>
           </div>
-          <div className='w-full md:w-fit flex flex-col gap-1 md:flex-row md:gap-3 mt-2'>
+          <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
             <AddButton className='w-full md:w-fit'>{title}登録</AddButton>
           </div>
