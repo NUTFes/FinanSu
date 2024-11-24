@@ -25,6 +25,11 @@ export const FinanceLinkItems: LinkItemProps[] = [
     href: '/budgets',
   },
   {
+    name: '予算管理',
+    icon: <HiCurrencyDollar className='mx-2 text-xl' />,
+    href: '/budget_managements',
+  },
+  {
     name: '学内募金',
     icon: <MdOutlineSavings className='mx-2 text-xl' />,
     href: '/fund_informations',
