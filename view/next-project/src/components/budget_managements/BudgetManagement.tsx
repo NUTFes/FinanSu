@@ -185,10 +185,10 @@ export default function BudgetManagement() {
                   }`}
                   onClick={() => handleRowClick(item)}
                 >
-                  <div className='flex justify-center gap-2 py-3'>
-                    <td className='text-center text-primary-1 underline'>{item.name}</td>
+                  <td className='flex justify-center gap-2 py-3'>
+                    <div className='text-center text-primary-1 underline'>{item.name}</div>
                     <EditButton />
-                  </div>
+                  </td>
 
                   {showBudgetColumns && (
                     <>
