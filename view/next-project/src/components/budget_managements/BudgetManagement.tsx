@@ -1,69 +1,93 @@
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import {
+  Department,
+  Division,
+  Item,
+  fetchDepartments,
+  fetchDivisions,
+  fetchItems,
+} from './mockApi';
 import { Card, EditButton, AddButton, Title } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 
-interface RegistrationItem {
-  id: string;
-  name: string;
-  budget?: number;
-  used?: number;
-  remaining?: number;
-}
+export default function BudgetManagement() {
+  const router = useRouter();
+  const { departmentId, divisionId } = router.query;
 
-interface Department {
-  id: string;
-  name: string;
-  budget: number;
-  used: number;
-  remaining: number;
-}
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [divisions, setDivisions] = useState<Division[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
 
-interface Division {
-  id: string;
-  name: string;
-  departmentId: string;
-  budget: number;
-  used: number;
-  remaining: number;
-}
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(departmentId || '');
+  const [selectedDivisionId, setSelectedDivisionId] = useState(divisionId || '');
 
-interface Item {
-  id: string;
-  name: string;
-  divisionId: string;
-  budget: number;
-  used: number;
-  remaining: number;
-}
+  useEffect(() => {
+    fetchDepartments().then(setDepartments);
+  }, []);
 
-interface BudgetManagementProps {
-  departments: Department[];
-  divisions: Division[];
-  items: Item[];
-}
+  useEffect(() => {
+    setSelectedDepartmentId(departmentId || '');
+  }, [departmentId]);
 
-export default function BudgetManagement({ departments, divisions, items }: BudgetManagementProps) {
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState('');
-  const [selectedDivisionId, setSelectedDivisionId] = useState('');
+  useEffect(() => {
+    setSelectedDivisionId(divisionId || '');
+  }, [divisionId]);
 
-  const handleDepartmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDepartmentId(e.target.value);
-    setSelectedDivisionId('');
-  };
+  useEffect(() => {
+    if (selectedDepartmentId) {
+      fetchDivisions(Number(selectedDepartmentId)).then(setDivisions);
+      setItems([]);
+    } else {
+      setDivisions([]);
+      setSelectedDivisionId('');
+      setItems([]);
+    }
 
-  const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDivisionId(e.target.value);
-  };
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          departmentId: selectedDepartmentId || undefined,
+          divisionId: undefined,
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
+  }, [selectedDepartmentId]);
 
-  let displayItems: RegistrationItem[] = [];
+  useEffect(() => {
+    if (selectedDivisionId) {
+      fetchItems(Number(selectedDivisionId)).then(setItems);
+    } else {
+      setItems([]);
+    }
+
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          departmentId: selectedDepartmentId || undefined,
+          divisionId: selectedDivisionId || undefined,
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
+  }, [selectedDivisionId]);
+
+  let displayItems: any[] = [];
   let title = '購入報告';
   const showBudgetColumns = true;
 
   if (selectedDivisionId) {
-    displayItems = items.filter((item) => item.divisionId === selectedDivisionId);
+    displayItems = items;
     title = '申請物品';
   } else if (selectedDepartmentId) {
-    displayItems = divisions.filter((div) => div.departmentId === selectedDepartmentId);
+    displayItems = divisions;
     title = '申請部門';
   } else {
     displayItems = departments;
@@ -73,6 +97,26 @@ export default function BudgetManagement({ departments, divisions, items }: Budg
   const totalBudget = displayItems.reduce((sum, item) => sum + (item.budget || 0), 0);
   const totalUsed = displayItems.reduce((sum, item) => sum + (item.used || 0), 0);
   const totalRemaining = displayItems.reduce((sum, item) => sum + (item.remaining || 0), 0);
+
+  const handleDepartmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const deptId = e.target.value;
+    setSelectedDepartmentId(deptId);
+    setSelectedDivisionId('');
+  };
+
+  const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const divId = e.target.value;
+    setSelectedDivisionId(divId);
+  };
+
+  const handleRowClick = (item: any) => {
+    if (!selectedDepartmentId) {
+      setSelectedDepartmentId(item.id);
+      setSelectedDivisionId('');
+    } else if (!selectedDivisionId) {
+      setSelectedDivisionId(item.id);
+    }
+  };
 
   return (
     <Card>
@@ -105,13 +149,11 @@ export default function BudgetManagement({ departments, divisions, items }: Budg
                 className='border-b border-black-300 focus:outline-none'
               >
                 <option value=''>ALL</option>
-                {divisions
-                  .filter((div) => div.departmentId === selectedDepartmentId)
-                  .map((div) => (
-                    <option key={div.id} value={div.id}>
-                      {div.name}
-                    </option>
-                  ))}
+                {divisions.map((div) => (
+                  <option key={div.id} value={div.id}>
+                    {div.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -136,56 +178,33 @@ export default function BudgetManagement({ departments, divisions, items }: Budg
             </thead>
             <tbody>
               {displayItems.map((item, index) => (
-                <tr key={item.id} className={index !== displayItems.length - 1 ? 'border-b' : ''}>
-                  <td className='py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      <div className='flex items-center justify-center gap-2'>
-                        <span className='text-nowrap text-primary-1 underline'>{item.name}</span>
-                        <EditButton onClick={() => console.log('Edit clicked:', item.id)} />
-                      </div>
-                    </div>
-                  </td>
+                <tr
+                  key={item.id}
+                  className={`cursor-pointer ${
+                    index !== displayItems.length - 1 ? 'border-b' : ''
+                  }`}
+                  onClick={() => handleRowClick(item)}
+                >
+                  <div className='flex justify-center gap-2 py-3'>
+                    <td className='text-center text-primary-1 underline'>{item.name}</td>
+                    <EditButton />
+                  </div>
+
                   {showBudgetColumns && (
                     <>
-                      <td className='py-3'>
-                        <div className='text-center text-sm text-black-600'>
-                          {item.budget?.toLocaleString() || '-'}
-                        </div>
-                      </td>
-                      <td className='py-3'>
-                        <div className='text-center text-sm text-black-600'>
-                          {item.used?.toLocaleString() || '-'}
-                        </div>
-                      </td>
-                      <td className='py-3'>
-                        <div className='text-center text-sm text-black-600'>
-                          {item.remaining?.toLocaleString() || '-'}
-                        </div>
-                      </td>
+                      <td className='py-3 text-center'>{item.budget}</td>
+                      <td className='py-3 text-center'>{item.used}</td>
+                      <td className='py-3 text-center'>{item.remaining}</td>
                     </>
                   )}
                 </tr>
               ))}
               {showBudgetColumns && displayItems.length > 0 && (
                 <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
-                  <td className='py-3'>
-                    <div className='text-center text-sm text-black-600'>合計</div>
-                  </td>
-                  <td className='py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {totalBudget.toLocaleString()}
-                    </div>
-                  </td>
-                  <td className='py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {totalUsed.toLocaleString()}
-                    </div>
-                  </td>
-                  <td className='py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {totalRemaining.toLocaleString()}
-                    </div>
-                  </td>
+                  <td className='py-3 text-center font-bold'>合計</td>
+                  <td className='py-3 text-center font-bold'>{totalBudget}</td>
+                  <td className='py-3 text-center font-bold'>{totalUsed}</td>
+                  <td className='py-3 text-center font-bold'>{totalRemaining}</td>
                 </tr>
               )}
               {displayItems.length === 0 && (
