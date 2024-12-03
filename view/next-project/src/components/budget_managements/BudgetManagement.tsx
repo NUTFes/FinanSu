@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useQueryStates, parseAsInteger } from 'nuqs';
 import { useState, useEffect } from 'react';
 import {
   Department,
@@ -12,81 +12,48 @@ import { Card, EditButton, AddButton, Title } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 
 export default function BudgetManagement() {
-  const router = useRouter();
-  const { departmentId, divisionId } = router.query;
-
   const [departments, setDepartments] = useState<Department[]>([]);
   const [divisions, setDivisions] = useState<Division[]>([]);
   const [items, setItems] = useState<Item[]>([]);
 
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState(departmentId || '');
-  const [selectedDivisionId, setSelectedDivisionId] = useState(divisionId || '');
+  const [{ departmentId, divisionId }, setQueryState] = useQueryStates({
+    departmentId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
+    divisionId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
+  });
 
   useEffect(() => {
     fetchDepartments().then(setDepartments);
   }, []);
 
+  // FIXME: APIが実装されたら、修正する。
   useEffect(() => {
-    setSelectedDepartmentId(departmentId || '');
-  }, [departmentId]);
-
-  useEffect(() => {
-    setSelectedDivisionId(divisionId || '');
-  }, [divisionId]);
-
-  useEffect(() => {
-    if (selectedDepartmentId) {
-      fetchDivisions(Number(selectedDepartmentId)).then(setDivisions);
+    if (departmentId !== null) {
+      fetchDivisions(departmentId).then(setDivisions);
       setItems([]);
     } else {
       setDivisions([]);
-      setSelectedDivisionId('');
+      setQueryState({ divisionId: null });
       setItems([]);
     }
-
-    router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          departmentId: selectedDepartmentId || undefined,
-          divisionId: undefined,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
-  }, [selectedDepartmentId]);
+  }, [departmentId]);
 
   useEffect(() => {
-    if (selectedDivisionId) {
-      fetchItems(Number(selectedDivisionId)).then(setItems);
+    if (divisionId !== null) {
+      fetchItems(divisionId).then(setItems);
     } else {
       setItems([]);
     }
+  }, [divisionId]);
 
-    router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          departmentId: selectedDepartmentId || undefined,
-          divisionId: selectedDivisionId || undefined,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
-  }, [selectedDivisionId]);
-
+  // FIXME: any型はAPIのレスポンスに合わせて変更する。
   let displayItems: any[] = [];
   let title = '購入報告';
   const showBudgetColumns = true;
 
-  if (selectedDivisionId) {
+  if (divisionId !== null) {
     displayItems = items;
     title = '申請物品';
-  } else if (selectedDepartmentId) {
+  } else if (departmentId !== null) {
     displayItems = divisions;
     title = '申請部門';
   } else {
@@ -99,22 +66,21 @@ export default function BudgetManagement() {
   const totalRemaining = displayItems.reduce((sum, item) => sum + (item.remaining || 0), 0);
 
   const handleDepartmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const deptId = e.target.value;
-    setSelectedDepartmentId(deptId);
-    setSelectedDivisionId('');
+    const deptId = e.target.value ? parseInt(e.target.value, 10) : null;
+    setQueryState({ departmentId: deptId, divisionId: null });
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const divId = e.target.value;
-    setSelectedDivisionId(divId);
+    const divId = e.target.value ? parseInt(e.target.value, 10) : null;
+    setQueryState({ divisionId: divId });
   };
 
+  // FIXME: any型はAPIのレスポンスに合わせて変更する。
   const handleRowClick = (item: any) => {
-    if (!selectedDepartmentId) {
-      setSelectedDepartmentId(item.id);
-      setSelectedDivisionId('');
-    } else if (!selectedDivisionId) {
-      setSelectedDivisionId(item.id);
+    if (departmentId === null) {
+      setQueryState({ departmentId: item.id, divisionId: null });
+    } else if (divisionId === null) {
+      setQueryState({ divisionId: item.id });
     }
   };
 
@@ -125,11 +91,11 @@ export default function BudgetManagement() {
           <Title>予算管理ページ</Title>
         </div>
         <div className='mb-4 flex flex-col items-center md:flex-row md:justify-between'>
-          <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-4 text-nowrap py-2'>
             <div className='flex gap-3'>
               <span className='text-base font-light'>申請する局</span>
               <select
-                value={selectedDepartmentId}
+                value={departmentId ?? ''}
                 onChange={handleDepartmentChange}
                 className='border-b border-black-300 focus:outline-none'
               >
@@ -141,10 +107,10 @@ export default function BudgetManagement() {
                 ))}
               </select>
             </div>
-            <div className={`flex gap-3 ${selectedDepartmentId ? 'visible' : 'invisible'}`}>
+            <div className={`flex gap-3 ${departmentId !== null ? 'visible' : 'invisible'}`}>
               <span className='text-base font-light'>申請する部門</span>
               <select
-                value={selectedDivisionId}
+                value={divisionId ?? ''}
                 onChange={handleDivisionChange}
                 className='border-b border-black-300 focus:outline-none'
               >
@@ -163,7 +129,7 @@ export default function BudgetManagement() {
           </div>
         </div>
         <div className='mt-5 overflow-x-auto'>
-          <table className='w-full table-auto border-collapse'>
+          <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
               <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
                 <th className='w-1/4 pb-2 text-center font-medium text-black-600'>{title}</th>
