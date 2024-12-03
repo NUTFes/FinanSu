@@ -72,3 +72,6 @@ ent-db:
 # eslintの実行
 run-eslint:
 	docker compose exec view npm run lint
+
+generate-openapi:
+	docker compose run --rm api oapi-codegen -config internals/generated/config.yaml internals/generated/openapi.yaml
