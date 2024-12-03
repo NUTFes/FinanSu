@@ -19,6 +19,8 @@ ENV GOOS=linux
 # swaggerをinstall
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 
+RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.2.0
+
 # Airをインストール
 RUN go install github.com/air-verse/air@latest
 CMD ["air", "-c", ".air.toml"]
