@@ -72,3 +72,7 @@ ent-db:
 # eslintの実行
 run-eslint:
 	docker compose exec view npm run lint
+
+# apiテストの実行
+run-test:
+	docker compose exec api go test ./test -v

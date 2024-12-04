@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
-	client := di.InitializeServer()
+	client, echo := di.InitializeServer()
+	echo.Start(":1323")
 	defer client.CloseDB()
 }

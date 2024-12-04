@@ -1,16 +1,17 @@
 package server
 
 import (
+	"net/http"
+	"os"
+
 	_ "github.com/NUTFes/FinanSu/api/docs"
 	"github.com/NUTFes/FinanSu/api/router"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
-	"net/http"
-	"os"
 )
 
-func RunServer(router router.Router) {
+func RunServer(router router.Router) *echo.Echo {
 	// echoのインスタンス
 	e := echo.New()
 
@@ -39,5 +40,5 @@ func RunServer(router router.Router) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// サーバー起動
-	e.Start(":1323")
+	return e
 }
