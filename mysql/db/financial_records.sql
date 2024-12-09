@@ -7,4 +7,5 @@ CREATE TABLE financial_records (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
+    FOREIGN KEY year_id_foreign_key (year_id) REFERENCES financial_records (id)
 );

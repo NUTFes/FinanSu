@@ -10,4 +10,5 @@ CREATE TABLE payment_receipts (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
+    FOREIGN KEY buy_report_id_foreign_key (buy_report_id) REFERENCES payment_receipts (id)
 );
