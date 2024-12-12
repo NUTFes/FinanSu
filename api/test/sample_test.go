@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	"github.com/NUTFes/FinanSu/api/internals/di"
-	"github.com/go-testfixtures/testfixtures/v3"
+	testfixtures "github.com/go-testfixtures/testfixtures/v3"
 	"github.com/stretchr/testify/assert"
 )
 
