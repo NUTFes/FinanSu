@@ -7,6 +7,6 @@ CREATE TABLE user_groups (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY user_id_foreign_key (user_id) REFERENCES user_groups (id)
-    FOREIGN KEY group_id_foreign_key (group_id) REFERENCES user_groups (id)
+    FOREIGN KEY user_id_foreign_key (user_id) REFERENCES users (id)
+    FOREIGN KEY group_id_foreign_key (group_id) REFERENCES divisions (id)
 );
