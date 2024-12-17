@@ -6,6 +6,6 @@ CREATE TABLE financial_records (
     year_id INT(10) UNSIGNED NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
     FOREIGN KEY year_id_foreign_key (year_id) REFERENCES years (id)
 );
