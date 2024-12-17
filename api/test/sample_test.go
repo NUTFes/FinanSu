@@ -50,9 +50,6 @@ func TestMain(m *testing.M) {
 	// テスト実行
 	code := m.Run()
 
-	// テスト後処理
-	// db.Exec("DELETE FROM users")
-
 	if err != nil {
 		fmt.Print(err.Error())
 	}
