@@ -7,7 +7,7 @@ build:
 
 # アプリコンテナの起動
 run:
-	docker compose up
+	docker compose up -d
 
 # アプリコンテナの停止
 down:
@@ -74,4 +74,12 @@ run-eslint:
 	docker compose exec view npm run lint
 
 generate-openapi:
-	docker compose run --rm api oapi-codegen -config internals/generated/config.yaml internals/generated/openapi.yaml
+	docker compose run --rm api oapi-codegen -config /openapi/generated/config.yaml /openapi/generated/openapi.yaml
+
+run-swagger:
+	docker compose -f compose.swagger.yml up -d
+
+run-all:
+	make run-db
+	make run
+	make run-swagger
