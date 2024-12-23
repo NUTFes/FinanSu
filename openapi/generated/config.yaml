@@ -1,0 +1,8 @@
+# yaml-language-server: ...
+# go:generate oapi-codegen --config=config.yaml ../../api.yaml
+
+package: generated
+generate:
+  - server
+  - types
+output: /openapi/generated/openapi_gen.go
