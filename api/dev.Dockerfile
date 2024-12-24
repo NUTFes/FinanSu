@@ -16,9 +16,6 @@ ENV CGO_ENABLED=0
 ENV GOOS=linux
 #ENV GOARCH=amd64
 
-# swaggerをinstall
-RUN go install github.com/swaggo/swag/cmd/swag@latest
-
 RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.2.0
 
 # Airをインストール
