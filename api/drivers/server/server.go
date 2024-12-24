@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/NUTFes/FinanSu/api/router"
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
