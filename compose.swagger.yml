@@ -5,6 +5,6 @@ services:
     ports:
       - "8000:8080"
     volumes:
-      - ./swagger-ui/swagger.yaml:/swagger.yaml
+      - ./openapi/openapi.yaml:/swagger.yaml
     environment:
       SWAGGER_JSON: /swagger.yaml
