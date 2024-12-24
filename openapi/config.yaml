@@ -5,4 +5,4 @@ package: generated
 generate:
   - server
   - types
-output: /openapi/generated/openapi_gen.go
+output: /app/generated/openapi_gen.go

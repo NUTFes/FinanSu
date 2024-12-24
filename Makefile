@@ -74,7 +74,7 @@ run-eslint:
 	docker compose exec view npm run lint
 
 generate-openapi:
-	docker compose run --rm api oapi-codegen -config /openapi/generated/config.yaml /openapi/openapi.yaml
+	docker compose run --rm api oapi-codegen -config /openapi/config.yaml /openapi/openapi.yaml
 
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
