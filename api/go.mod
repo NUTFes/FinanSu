@@ -3,6 +3,7 @@ module github.com/NUTFes/FinanSu/api
 go 1.16
 
 require (
+	github.com/doug-martin/goqu/v9 v9.19.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/go-test/deep v1.0.8 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
