@@ -1,0 +1,10 @@
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "nutfes-finansu-swagger-ui"
+    ports:
+      - "8000:8080"
+    volumes:
+      - ./openapi/openapi.yaml:/swagger.yaml
+    environment:
+      SWAGGER_JSON: /swagger.yaml

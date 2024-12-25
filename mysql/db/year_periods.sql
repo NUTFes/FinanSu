@@ -12,3 +12,4 @@ CREATE TABLE year_periods (
 
 INSERT INTO  year_periods (year_id, started_at, ended_at) values (1, '2022-11-15 00:00:00', '2023-11-15 00:00:00');
 INSERT INTO  year_periods (year_id, started_at, ended_at) values (2, '2023-11-15 00:00:00', '2024-11-15 00:00:00');
+INSERT INTO  year_periods (year_id, started_at, ended_at) values (3, '2024-11-15 00:00:00', '2025-11-15 00:00:00');

@@ -27,6 +27,7 @@ services:
     container_name: "nutfes-finansu-api"
     volumes:
       - ./api:/app
+      - ./openapi:/openapi
     environment:
       RESET_PASSWORD_URL: "http://localhost:3000/reset_password"
     #シェルスクリプトを実行するコマンド
