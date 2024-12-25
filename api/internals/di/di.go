@@ -127,27 +127,3 @@ func InitializeServer() (db.Client, *echo.Echo) {
 
 	return client, e
 }
-
-// テスト用のDI初期化
-func InitializeTestServer() *echo.Echo {
-	client, err := db.ConnectMySQL()
-	if err != nil {
-		log.Fatal("db error")
-	}
-
-	crud := abstract.NewCrud(client)
-
-	userRepository := repository.NewUserRepository(client, crud)
-	sessionRepository := repository.NewSessionRepository(client)
-	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
-	userController := controller.NewUserController(userUseCase)
-
-	healthcheckController := controller.NewHealthCheckController()
-
-	e := echo.New()
-
-	e.GET("/", healthcheckController.IndexHealthcheck)
-	e.GET("/users", userController.IndexUser)
-
-	return e
-}
