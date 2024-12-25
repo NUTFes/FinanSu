@@ -1191,7 +1191,7 @@ paths:
       description: sponsorの作成
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/sponsor"
         required: false
@@ -1229,7 +1229,7 @@ paths:
             type: integer
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/sponsor"
         required: false
@@ -1284,7 +1284,7 @@ paths:
       description: sponsorstyleの作成
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/sponsorStyle"
         required: false
@@ -1322,7 +1322,7 @@ paths:
             type: integer
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/sponsorStyle"
         required: false
@@ -1555,7 +1555,7 @@ paths:
       description: userの複数作成
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/destroyUserIDs"
         required: false
@@ -1719,7 +1719,7 @@ paths:
       description: year_periodsの作成
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/year_periods"
         required: false
@@ -1742,7 +1742,7 @@ paths:
             type: integer
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/year_periods"
         required: false
@@ -1887,66 +1887,6 @@ components:
         confirmPassword:
           type: string
           example: ""
-    purchaseReport:
-      required:
-        - addition
-        - discount
-        - financeCheck
-        - purchaseOrderID
-        - userID
-      type: object
-      properties:
-        userID:
-          type: integer
-          example: 1
-        discount:
-          type: integer
-          example: 0
-        addition:
-          type: integer
-          example: 0
-        financeCheck:
-          type: boolean
-          example: false
-        purchaseOrderID:
-          type: integer
-          example: 1
-        remark:
-          type: string
-          example: ""
-        buyer:
-          type: string
-          example: ""
-    purchaseItem:
-      required:
-        - financeCheck
-        - item
-        - price
-        - purchaseOrderID
-        - quantity
-      type: object
-      properties:
-        item:
-          type: string
-          example: name
-        price:
-          type: integer
-          example: 0
-        quantity:
-          type: integer
-          example: 0
-        detail:
-          type: string
-          example: ""
-        url:
-          type: string
-          example: ""
-        purchaseOrderID:
-          type: integer
-          example: 1
-        financeCheck:
-          type: boolean
-          example: false
     destroyTeacherIDs:
       required:
         - deleteIDs
