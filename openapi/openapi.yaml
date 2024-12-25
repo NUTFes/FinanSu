@@ -22,10 +22,10 @@ paths:
       description: activitiesの作成
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/activity"
-        required: false
+        required: true
       responses:
         "200":
           description: create されたactivityが返ってくる
@@ -61,13 +61,32 @@ paths:
       tags:
         - activity
       description: "activitiesとsponsor,sponsorStyle,userの一覧を取得"
-      requestBody:
-        description: Filter by keyword
-        content:
-          "*/*":
-            schema:
-              type: string
-        required: false
+      parameters:
+        - name: is_done
+          in: query
+          description: 完了状態を表すフラグ
+          required: false
+          schema:
+            type: string
+            enum:
+              - all
+              - true
+              - false
+        - name: sponsor_style_id
+          in: query
+          description: スポンサースタイルIDの配列
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 1
+        - name: keyword
+          in: query
+          description: キーワード検索用の文字列
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
@@ -85,13 +104,31 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        description: Filter by keyword
-        content:
-          "*/*":
-            schema:
-              type: string
-        required: false
+        - name: is_done
+          in: query
+          description: 完了状態を表すフラグ
+          required: false
+          schema:
+            type: string
+            enum:
+              - all
+              - true
+              - false
+        - name: sponsor_style_id
+          in: query
+          description: スポンサースタイルIDの配列
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 1
+        - name: keyword
+          in: query
+          description: キーワード検索用の文字列
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
@@ -126,7 +163,7 @@ paths:
             type: integer
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/activity"
         required: false
@@ -165,7 +202,7 @@ paths:
       description: activity_informationの作成
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/activity_information"
         required: false
@@ -203,7 +240,7 @@ paths:
             type: integer
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/activity_information"
         required: false
@@ -242,7 +279,7 @@ paths:
       description: activity_styleの作成
       requestBody:
         content:
-          "*/*":
+          application/json:
             schema:
               $ref: "#/components/schemas/activity_style"
         required: false
