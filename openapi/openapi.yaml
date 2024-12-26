@@ -833,6 +833,72 @@ paths:
         "200":
           description: yearで指定されたexpensesを取得
           content: {}
+  /festival_items:
+    get:
+      tags:
+        - festival_item
+      description: festival_itemの一覧の取得
+      responses:
+        "200":
+          description: festival_itemの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/festivalItemDetail"
+    post:
+      tags:
+        - festival_item
+      description: festival_itemの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/festivalItem"
+        required: false
+      responses:
+        "200":
+          description: 作成されたfestival_itemが返ってくる
+          content: {}
+  /festival_items/{id}:
+    put:
+      tags:
+        - festival_item
+      description: festival_itemの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/festivalItem"
+        required: false
+      responses:
+        "200":
+          description: 更新されたfestival_itemが返ってくる
+          content: {}
+      x-codegen-request-body-name: festivalItem
+    delete:
+      tags:
+        - festival_item
+      description: IDを指定してfestival_itemの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの削除完了
+          content: {}
   /financail_records:
     get:
       tags:
@@ -2000,6 +2066,49 @@ components:
         balance:
           type: integer
           example: 9000
+    festivalItem:
+      required:
+        - name
+        - divisionId
+        - amount
+      type: object
+      properties:
+        name:
+          type: string
+          example: 農ポリ
+        divisionId:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 10000
+        memo:
+          type: string
+          example: ""
+    festivalItemDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 農ポリ
+        division:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000
+        memo:
+          type: string
+          example: ""
     financialRecord:
       required:
         - name
