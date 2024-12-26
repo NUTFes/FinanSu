@@ -637,9 +637,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/divisionDetail"
+                $ref: "#/components/schemas/divisionDetails"
     post:
       tags:
         - division
@@ -844,9 +842,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/festivalItemDetail"
+                $ref: "#/components/schemas/festivalItemDetails"
     post:
       tags:
         - festival_item
@@ -910,9 +906,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/financialRecordDetail"
+                $ref: "#/components/schemas/financialRecordDetails"
     post:
       tags:
         - financial_record
@@ -2045,7 +2039,16 @@ components:
         financialRecordID:
           type: integer
           example: 1
-    divisionDetail:
+    divisionDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        divisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/divisionWithBalance"
+    divisionWithBalance:
       type: object
       properties:
         id:
@@ -2085,7 +2088,16 @@ components:
         memo:
           type: string
           example: ""
-    festivalItemDetail:
+    festivalItemDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        festivalItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/festivalItemWithBalance"
+    festivalItemWithBalance:
       type: object
       properties:
         id:
@@ -2121,7 +2133,16 @@ components:
         year_id:
           type: integer
           example: 1
-    financialRecordDetail:
+    financialRecordDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        financialRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/financialRecordWithBalance"
+    financialRecordWithBalance:
       type: object
       properties:
         id:
@@ -2234,6 +2255,18 @@ components:
         remark:
           type: string
           example: ""
+    total:
+      type: object
+      properties:
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
     year_periods:
       required:
         - endedAt
