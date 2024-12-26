@@ -626,6 +626,72 @@ paths:
         "200":
           description: departmentの削除完了
           content: {}
+  /divisions:
+    get:
+      tags:
+        - division
+      description: divisionの一覧の取得
+      responses:
+        "200":
+          description: divisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/divisionDetail"
+    post:
+      tags:
+        - division
+      description: divisionの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/division"
+        required: false
+      responses:
+        "200":
+          description: 作成されたdivisionが返ってくる
+          content: {}
+  /divisions/{id}:
+    put:
+      tags:
+        - division
+      description: divisionの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/division"
+        required: false
+      responses:
+        "200":
+          description: 更新されたdivisionが返ってくる
+          content: {}
+      x-codegen-request-body-name: division
+    delete:
+      tags:
+        - division
+      description: IDを指定してdivisionの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの削除完了
+          content: {}
   /expenses:
     get:
       tags:
@@ -780,16 +846,16 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/financial_record_detail"
+                  $ref: "#/components/schemas/financialRecordDetail"
     post:
       tags:
         - financial_record
       description: financial_recordの作成
-      reequestBody:
+      requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/financial_record"
+              $ref: "#/components/schemas/financialRecord"
         required: false
       responses:
         "200":
@@ -811,7 +877,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/financial_record"
+              $ref: "#/components/schemas/financialRecord"
         required: false
       responses:
         "200":
@@ -1901,7 +1967,40 @@ components:
         sponsorStyleID:
           type: integer
           example: 1
-    financial_record:
+    division:
+      required:
+        - name
+        - financialRecordID
+      type: object
+      properties:
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecordID:
+          type: integer
+          example: 1
+    divisionDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000
+    financialRecord:
       required:
         - name
         - year_id
@@ -1913,7 +2012,7 @@ components:
         year_id:
           type: integer
           example: 1
-    financial_record_detail:
+    financialRecordDetail:
       type: object
       properties:
         id:
