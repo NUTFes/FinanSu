@@ -34,6 +34,7 @@ export default function SponsorAddModal() {
   const submit = async (formData: Sponsor) => {
     addSponsor(formData);
     closeModal();
+    router.reload();
   };
 
   return (
