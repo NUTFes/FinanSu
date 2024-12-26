@@ -767,6 +767,72 @@ paths:
         "200":
           description: yearで指定されたexpensesを取得
           content: {}
+  /financail_records:
+    get:
+      tags:
+        - financial_record
+      description: financial_recordの一覧を取得
+      responses:
+        "200":
+          description: financial_recordの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/financial_record_detail"
+    post:
+      tags:
+        - financial_record
+      description: financial_recordの作成
+      reequestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/financial_record"
+        required: false
+      responses:
+        "200":
+          description: create されたfinancial_recordが返ってくる
+          content: {}
+  /financail_records/{id}:
+    put:
+      tags:
+        - financial_record
+      description: financial_recordの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/financial_record"
+        required: false
+      responses:
+        "200":
+          description: 更新されたfinancial_recordが返ってくる
+          content: {}
+      x-codegen-request-body-name: financial_record
+    delete:
+      tags:
+        - financial_record
+      description: IDを指定してfinancial_recordの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの削除完了
+          content: {}
   /fund_informations:
     get:
       tags:
@@ -1835,6 +1901,39 @@ components:
         sponsorStyleID:
           type: integer
           example: 1
+    financial_record:
+      required:
+        - name
+        - year_id
+      type: object
+      properties:
+        name:
+          type: string
+          example: 総務局
+        year_id:
+          type: integer
+          example: 1
+    financial_record_detail:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 総務局
+        year:
+          type: integer
+          example: 2024
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
     sponsorStyle:
       required:
         - feature
