@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
+import { useGetSponsorsPeriodsYear } from '@/generated/hooks';
 import { get } from '@/utils/api/api_methods';
-import { Card, Title } from '@components/common';
+import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
 import { Sponsor, YearPeriod } from '@type/common';
@@ -20,37 +21,26 @@ const date = new Date();
 export const getServerSideProps = async () => {
   const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
   const periodsRes = await get(getPeriodsUrl);
-  const getSponsorViewUrl =
-    process.env.SSR_API_URI +
-    '/sponsors/periods/' +
-    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
 
   return {
     props: {
-      sponsorView: getSponsorViewUrl,
       yearPeriods: periodsRes,
     },
   };
 };
 
 const Sponsorship: NextPage<Props> = (props: Props) => {
-  const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsor);
-
   const yearPeriods = props.yearPeriods;
   const [selectedYear, setSelectedYear] = useState<string>(
     yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
   );
 
-  //年度別のsponsorsを取得
-  const getSponsors = async () => {
-    const getSponsorViewUrlByYear = process.env.CSR_API_URI + '/sponsors/periods/' + selectedYear;
-    const getSponsorsByYears = await get(getSponsorViewUrlByYear);
-    setSponsors(getSponsorsByYears);
-  };
+  const { data, isLoading, error } = useGetSponsorsPeriodsYear(Number(selectedYear));
+  // TODO 型アサーションしているため、openapiの型定義を修正する
+  const sponsors = data?.data as Sponsor[];
 
-  useEffect(() => {
-    getSponsors();
-  }, [selectedYear]);
+  if (isLoading) return <Loading />;
+  if (error) return <div>error...</div>;
 
   return (
     <MainLayout>

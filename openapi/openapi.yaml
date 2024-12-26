@@ -1546,10 +1546,11 @@ paths:
       responses:
         "200":
           description: teacherの一覧を取得
-          content:
-            "*/*":
-              schema:
-                type: array
+          # NOTE 型が定義されておらず、generateできないためコメントアウト
+          # content:
+          #   "*/*":
+          #     schema:
+          #       type: array
     post:
       tags:
         - teacher
@@ -1709,10 +1710,10 @@ paths:
       responses:
         "200":
           description: userの一覧を取得
-          content:
-            "*/*":
-              schema:
-                type: array
+          # content:
+          #   "*/*":
+          #     schema:
+          #       type: array
     post:
       tags:
         - user
