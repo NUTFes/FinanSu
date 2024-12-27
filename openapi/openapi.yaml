@@ -781,7 +781,10 @@ paths:
       responses:
         "200":
           description: 作成されたdivisionが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
   /divisions/{id}:
     put:
       tags:
@@ -803,7 +806,10 @@ paths:
       responses:
         "200":
           description: 更新されたdivisionが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
       x-codegen-request-body-name: division
     delete:
       tags:
@@ -819,7 +825,10 @@ paths:
       responses:
         "200":
           description: divisionの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /expenses:
     get:
       tags:
@@ -1018,7 +1027,10 @@ paths:
       responses:
         "200":
           description: 作成されたfestival_itemが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
   /festival_items/{id}:
     put:
       tags:
@@ -1040,7 +1052,10 @@ paths:
       responses:
         "200":
           description: 更新されたfestival_itemが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
       x-codegen-request-body-name: festivalItem
     delete:
       tags:
@@ -1056,7 +1071,10 @@ paths:
       responses:
         "200":
           description: festival_itemの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /financail_records:
     get:
       tags:
@@ -1082,7 +1100,10 @@ paths:
       responses:
         "200":
           description: create されたfinancial_recordが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
   /financail_records/{id}:
     put:
       tags:
@@ -1104,7 +1125,10 @@ paths:
       responses:
         "200":
           description: 更新されたfinancial_recordが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
       x-codegen-request-body-name: financial_record
     delete:
       tags:
@@ -1120,7 +1144,10 @@ paths:
       responses:
         "200":
           description: financial_recordの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /fund_informations:
     get:
       tags:
@@ -2457,6 +2484,9 @@ components:
           type: string
           example: 農ポリ
         division:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
           type: string
           example: 総務局
         budget:
