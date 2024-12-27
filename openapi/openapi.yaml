@@ -777,7 +777,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/division"
-        required: false
+        required: true
       responses:
         "200":
           description: 作成されたdivisionが返ってくる
@@ -799,7 +799,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/division"
-        required: false
+        required: true
       responses:
         "200":
           description: 更新されたdivisionが返ってくる
@@ -1014,7 +1014,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/festivalItem"
-        required: false
+        required: true
       responses:
         "200":
           description: 作成されたfestival_itemが返ってくる
@@ -1036,7 +1036,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/festivalItem"
-        required: false
+        required: true
       responses:
         "200":
           description: 更新されたfestival_itemが返ってくる
@@ -1078,7 +1078,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/financialRecord"
-        required: false
+        required: true
       responses:
         "200":
           description: create されたfinancial_recordが返ってくる
@@ -1100,7 +1100,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/financialRecord"
-        required: false
+        required: true
       responses:
         "200":
           description: 更新されたfinancial_recordが返ってくる
