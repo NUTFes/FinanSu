@@ -55,7 +55,8 @@ func (sr *sponsorRepository) Create(
 	address string,
 	representative string,
 ) error {
-	ds := dialect.Insert("sponsors").Rows(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative})
+	ds := dialect.Insert("sponsors").
+		Rows(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
@@ -73,7 +74,9 @@ func (sr *sponsorRepository) Update(
 	address string,
 	representative string,
 ) error {
-	ds := dialect.Update("sponsors").Set(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative}).Where(goqu.Ex{"id": id})
+	ds := dialect.Update("sponsors").
+		Set(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative}).
+		Where(goqu.Ex{"id": id})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
@@ -106,7 +109,13 @@ func (sr *sponsorRepository) FindLatestRecord(c context.Context) (*sql.Row, erro
 
 // 年度別に取得
 func (sr *sponsorRepository) AllByPeriod(c context.Context, year string) (*sql.Rows, error) {
-	query, _, err := dialect.Select("sponsors.*").From("sponsors").InnerJoin(goqu.I("year_periods"), goqu.On(goqu.I("sponsors.created_at").Gt(goqu.I("year_periods.started_at")), goqu.I("sponsors.created_at").Lt(goqu.I("year_periods.ended_at")))).InnerJoin(goqu.I("years"), goqu.On(goqu.I("year_periods.year_id").Eq(goqu.I("years.id")))).Where(goqu.Ex{"years.year": year}).Order(goqu.I("sponsors.id").Desc()).ToSQL()
+	query, _, err := dialect.Select("sponsors.*").
+		From("sponsors").
+		InnerJoin(goqu.I("year_periods"), goqu.On(goqu.I("sponsors.created_at").Gt(goqu.I("year_periods.started_at")), goqu.I("sponsors.created_at").Lt(goqu.I("year_periods.ended_at")))).
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("year_periods.year_id").Eq(goqu.I("years.id")))).
+		Where(goqu.Ex{"years.year": year}).
+		Order(goqu.I("sponsors.id").Desc()).
+		ToSQL()
 	if err != nil {
 		return nil, err
 	}
