@@ -25,6 +25,7 @@ func NewCrud(client db.Client) Crud {
 
 func (a abstractRepository) Read(ctx context.Context, query string) (*sql.Rows, error) {
 	rows, err := a.client.DB().QueryContext(ctx, query)
+	fmt.Printf("\x1b[36m%s\n", err)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot connect SQL")
 	}
