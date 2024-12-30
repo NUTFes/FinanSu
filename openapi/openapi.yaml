@@ -756,7 +756,79 @@ paths:
             application/json:
               schema:
                 type: object
-
+  /divisions:
+    get:
+      tags:
+        - division
+      description: divisionの一覧の取得
+      responses:
+        "200":
+          description: divisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionDetails"
+    post:
+      tags:
+        - division
+      description: divisionの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/division"
+        required: true
+      responses:
+        "200":
+          description: 作成されたdivisionが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
+  /divisions/{id}:
+    put:
+      tags:
+        - division
+      description: divisionの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/division"
+        required: true
+      responses:
+        "200":
+          description: 更新されたdivisionが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
+      x-codegen-request-body-name: division
+    delete:
+      tags:
+        - division
+      description: IDを指定してdivisionの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
   /expenses:
     get:
       tags:
@@ -930,7 +1002,152 @@ paths:
             application/json:
               schema:
                 type: object
-
+  /festival_items:
+    get:
+      tags:
+        - festival_item
+      description: festival_itemの一覧の取得
+      responses:
+        "200":
+          description: festival_itemの一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemDetails"
+    post:
+      tags:
+        - festival_item
+      description: festival_itemの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/festivalItem"
+        required: true
+      responses:
+        "200":
+          description: 作成されたfestival_itemが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
+  /festival_items/{id}:
+    put:
+      tags:
+        - festival_item
+      description: festival_itemの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/festivalItem"
+        required: true
+      responses:
+        "200":
+          description: 更新されたfestival_itemが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
+      x-codegen-request-body-name: festivalItem
+    delete:
+      tags:
+        - festival_item
+      description: IDを指定してfestival_itemの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /financail_records:
+    get:
+      tags:
+        - financial_record
+      description: financial_recordの一覧を取得
+      responses:
+        "200":
+          description: financial_recordの一覧の取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordDetails"
+    post:
+      tags:
+        - financial_record
+      description: financial_recordの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/financialRecord"
+        required: true
+      responses:
+        "200":
+          description: create されたfinancial_recordが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
+  /financail_records/{id}:
+    put:
+      tags:
+        - financial_record
+      description: financial_recordの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/financialRecord"
+        required: true
+      responses:
+        "200":
+          description: 更新されたfinancial_recordが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
+      x-codegen-request-body-name: financial_record
+    delete:
+      tags:
+        - financial_record
+      description: IDを指定してfinancial_recordの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
   /fund_informations:
     get:
       tags:
@@ -2187,6 +2404,145 @@ components:
         sponsorStyleID:
           type: integer
           example: 1
+    division:
+      required:
+        - name
+        - financialRecordID
+      type: object
+      properties:
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecordID:
+          type: integer
+          example: 1
+    divisionDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        divisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/divisionWithBalance"
+    divisionWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000
+    festivalItem:
+      required:
+        - name
+        - divisionId
+        - amount
+      type: object
+      properties:
+        name:
+          type: string
+          example: 農ポリ
+        divisionId:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 10000
+        memo:
+          type: string
+          example: ""
+    festivalItemDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        festivalItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/festivalItemWithBalance"
+    festivalItemWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 農ポリ
+        division:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000
+        memo:
+          type: string
+          example: ""
+    financialRecord:
+      required:
+        - name
+        - year_id
+      type: object
+      properties:
+        name:
+          type: string
+          example: 総務局
+        year_id:
+          type: integer
+          example: 1
+    financialRecordDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        financialRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/financialRecordWithBalance"
+    financialRecordWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 総務局
+        year:
+          type: integer
+          example: 2024
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
     sponsorStyle:
       required:
         - feature
@@ -2279,6 +2635,18 @@ components:
         remark:
           type: string
           example: ""
+    total:
+      type: object
+      properties:
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
     year_periods:
       required:
         - endedAt
