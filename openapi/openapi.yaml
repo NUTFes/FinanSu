@@ -1376,7 +1376,11 @@ paths:
       responses:
         "200":
           description: sponsorsの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#/components/schemas/sponsor"
     post:
       tags:
         - sponsor
@@ -1407,7 +1411,11 @@ paths:
       responses:
         "200":
           description: sponsorの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#/components/schemas/sponsor"
     put:
       tags:
         - sponsor
@@ -1460,7 +1468,12 @@ paths:
       responses:
         "200":
           description: sponsorの取得完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/sponsor"
   /sponsorstyles:
     get:
       tags:
@@ -1829,7 +1842,12 @@ paths:
       responses:
         "200":
           description: yearの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/year_periods"
     post:
       tags:
         - year
@@ -1860,7 +1878,10 @@ paths:
       responses:
         "200":
           description: yearの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/year_periods"
     put:
       tags:
         - year
@@ -1905,7 +1926,12 @@ paths:
       responses:
         "200":
           description: year_periodsの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/year_periods"
     post:
       tags:
         - year_periods
@@ -2189,6 +2215,9 @@ components:
         - tel
       type: object
       properties:
+        id:
+          type: integer
+          example: 0
         name:
           type: string
           example: 企業1
