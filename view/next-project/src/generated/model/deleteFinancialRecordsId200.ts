@@ -6,9 +6,4 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type PutBureausIdParams = {
-/**
- * name
- */
-name?: string;
-};
+export type DeleteFinancialRecordsId200 = { [key: string]: unknown };
