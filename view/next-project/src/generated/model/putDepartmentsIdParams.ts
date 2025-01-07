@@ -7,8 +7,8 @@
  */
 
 export type PutDepartmentsIdParams = {
-/**
- * name
- */
-name?: string;
+  /**
+   * name
+   */
+  name?: string;
 };

@@ -7,32 +7,32 @@
  */
 
 export type PostFundInformationsParams = {
-/**
- * user_id
- */
-user_id: number;
-/**
- * teacher_id
- */
-teacher_id: number;
-/**
- * price
- */
-price: number;
-/**
- * remark
- */
-remark?: string;
-/**
- * is_first_check
- */
-is_first_check?: boolean;
-/**
- * is_last_check
- */
-is_last_check?: boolean;
-/**
- * received_at
- */
-received_at?: string;
+  /**
+   * user_id
+   */
+  user_id: number;
+  /**
+   * teacher_id
+   */
+  teacher_id: number;
+  /**
+   * price
+   */
+  price: number;
+  /**
+   * remark
+   */
+  remark?: string;
+  /**
+   * is_first_check
+   */
+  is_first_check?: boolean;
+  /**
+   * is_last_check
+   */
+  is_last_check?: boolean;
+  /**
+   * received_at
+   */
+  received_at?: string;
 };

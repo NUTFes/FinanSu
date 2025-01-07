@@ -7,8 +7,8 @@
  */
 
 export type PutSourcesIdParams = {
-/**
- * name
- */
-name: string;
+  /**
+   * name
+   */
+  name: string;
 };
