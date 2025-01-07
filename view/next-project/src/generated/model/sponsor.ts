@@ -9,6 +9,7 @@
 export interface Sponsor {
   address: string;
   email: string;
+  id?: number;
   name: string;
   representative: string;
   tel: string;

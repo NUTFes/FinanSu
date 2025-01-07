@@ -4,43 +4,34 @@ import Head from 'next/head';
 import { useState } from 'react';
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
-import { useGetSponsorsPeriodsYear } from '@/generated/hooks';
-import { get } from '@/utils/api/api_methods';
+import { useGetSponsorsPeriodsYear, useGetYearsPeriods } from '@/generated/hooks';
 import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
-import { Sponsor, YearPeriod } from '@type/common';
-
-interface Props {
-  sponsor: Sponsor[];
-  yearPeriods: YearPeriod[];
-}
 
 const date = new Date();
 
-export const getServerSideProps = async () => {
-  const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
-  const periodsRes = await get(getPeriodsUrl);
+const Sponsorship: NextPage = () => {
+  const {
+    data: yearPeriodsData,
+    isLoading: isYearPeriodsLoading,
+    error: yearPeriodsError,
+  } = useGetYearsPeriods();
+  const yearPeriods = yearPeriodsData?.data;
 
-  return {
-    props: {
-      yearPeriods: periodsRes,
-    },
-  };
-};
-
-const Sponsorship: NextPage<Props> = (props: Props) => {
-  const yearPeriods = props.yearPeriods;
   const [selectedYear, setSelectedYear] = useState<string>(
     yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
   );
 
-  const { data, isLoading, error } = useGetSponsorsPeriodsYear(Number(selectedYear));
-  // TODO 型アサーションしているため、openapiの型定義を修正する
-  const sponsors = data?.data as Sponsor[];
+  const {
+    data: sponsorsData,
+    isLoading: isSponsorsLoading,
+    error: sponsorsError,
+  } = useGetSponsorsPeriodsYear(Number(selectedYear));
+  const sponsors = sponsorsData?.data;
 
-  if (isLoading) return <Loading />;
-  if (error) return <div>error...</div>;
+  if (isYearPeriodsLoading || isSponsorsLoading) return <Loading />;
+  if (yearPeriodsError || sponsorsError) return <div>error...</div>;
 
   return (
     <MainLayout>
@@ -57,10 +48,10 @@ const Sponsorship: NextPage<Props> = (props: Props) => {
               defaultValue={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              {props.yearPeriods &&
-                props.yearPeriods.map((year) => {
+              {yearPeriods &&
+                yearPeriods.map((year, index) => {
                   return (
-                    <option value={year.year} key={year.id}>
+                    <option value={year.year} key={index}>
                       {year.year}年度
                     </option>
                   );
