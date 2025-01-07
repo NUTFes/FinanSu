@@ -4,8 +4,10 @@ info:
   description: FinanSu APIドキュメント
   contact: {}
   version: 2.0.0
+
 servers:
   - url: http://localhost:1323/
+
 paths:
   /activities:
     get:
@@ -15,7 +17,10 @@ paths:
       responses:
         "200":
           description: activitiesの一覧の取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - activity
@@ -29,8 +34,12 @@ paths:
       responses:
         "200":
           description: create されたactivityが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: activity
+
   /activities/details:
     get:
       tags:
@@ -39,7 +48,11 @@ paths:
       responses:
         "200":
           description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /activities/details/{year}:
     get:
       tags:
@@ -55,7 +68,11 @@ paths:
       responses:
         "200":
           description: "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得"
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /activities/filtered_details:
     get:
       tags:
@@ -90,8 +107,12 @@ paths:
       responses:
         "200":
           description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: keyword
+
   /activities/filtered_details/{year}:
     get:
       tags:
@@ -117,7 +138,6 @@ paths:
         - name: sponsor_style_id
           in: query
           description: スポンサースタイルIDの配列
-          required: false
           schema:
             type: array
             items:
@@ -132,8 +152,12 @@ paths:
       responses:
         "200":
           description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: keyword
+
   /activities/{id}:
     get:
       tags:
@@ -149,7 +173,10 @@ paths:
       responses:
         "200":
           description: activitiesの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - activity
@@ -170,7 +197,10 @@ paths:
       responses:
         "200":
           description: 更新されたactivitiesが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: activity
     delete:
       tags:
@@ -186,7 +216,11 @@ paths:
       responses:
         "200":
           description: activitiesの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /activity_informations:
     get:
       tags:
@@ -195,7 +229,10 @@ paths:
       responses:
         "200":
           description: activity_informationの一覧の取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - activity_information
@@ -209,8 +246,12 @@ paths:
       responses:
         "200":
           description: create されたactivity_informationが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: activity_information
+
   /activity_informations/{id}:
     get:
       tags:
@@ -226,7 +267,10 @@ paths:
       responses:
         "200":
           description: activity_informationの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - activity_information
@@ -247,7 +291,10 @@ paths:
       responses:
         "200":
           description: 更新されたactivity_informationが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: activity_information
     delete:
       tags:
@@ -263,7 +310,11 @@ paths:
       responses:
         "200":
           description: activity_informationの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /activity_styles:
     get:
       tags:
@@ -272,7 +323,10 @@ paths:
       responses:
         "200":
           description: activity_styleの一覧の取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - activity_style
@@ -286,8 +340,12 @@ paths:
       responses:
         "200":
           description: createされたactivity_styleが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: activity_style
+
   /activity_styles/{id}:
     get:
       tags:
@@ -303,7 +361,10 @@ paths:
       responses:
         "200":
           description: activity_styleの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - activity_style
@@ -324,7 +385,10 @@ paths:
       responses:
         "200":
           description: 更新されたactivity_styleが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: activity_style
     delete:
       tags:
@@ -340,7 +404,11 @@ paths:
       responses:
         "200":
           description: activity_styleの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /budgets:
     get:
       tags:
@@ -349,7 +417,10 @@ paths:
       responses:
         "200":
           description: budgetの一覧の取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - budget
@@ -374,7 +445,11 @@ paths:
       responses:
         "200":
           description: create されたbudgetが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /budgets/details:
     get:
       tags:
@@ -383,7 +458,11 @@ paths:
       responses:
         "200":
           description: budgetに紐づくyearとsourceの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /budgets/details/{year}:
     get:
       tags:
@@ -399,7 +478,11 @@ paths:
       responses:
         "200":
           description: 年度で指定されたbudgetsに紐づく年度とソースを取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /budgets/{id}:
     get:
       tags:
@@ -415,7 +498,10 @@ paths:
       responses:
         "200":
           description: budgetの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - budget
@@ -445,7 +531,10 @@ paths:
       responses:
         "200":
           description: 更新されたbudgetが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - budget
@@ -460,7 +549,11 @@ paths:
       responses:
         "200":
           description: budgetの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /budgets/{id}/details:
     get:
       tags:
@@ -476,7 +569,11 @@ paths:
       responses:
         "200":
           description: budgetに紐づくyearとsourceを取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /bureaus:
     get:
       tags:
@@ -485,7 +582,10 @@ paths:
       responses:
         "200":
           description: bureauの一覧の取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - bureau
@@ -500,7 +600,11 @@ paths:
       responses:
         "200":
           description: create されたbureauが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /bureaus/{id}:
     get:
       tags:
@@ -516,7 +620,10 @@ paths:
       responses:
         "200":
           description: bureauの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - bureau
@@ -536,7 +643,10 @@ paths:
       responses:
         "200":
           description: 更新されたbureauが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - bureau
@@ -551,7 +661,11 @@ paths:
       responses:
         "200":
           description: bureauの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /departments:
     get:
       tags:
@@ -560,7 +674,10 @@ paths:
       responses:
         "200":
           description: departmentの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - department
@@ -574,7 +691,11 @@ paths:
       responses:
         "200":
           description: 作成されたdepartmentが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /departments/{id}:
     get:
       tags:
@@ -590,7 +711,10 @@ paths:
       responses:
         "200":
           description: departmentの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - department
@@ -610,7 +734,10 @@ paths:
       responses:
         "200":
           description: 更新されたdepartmentが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - department
@@ -625,7 +752,10 @@ paths:
       responses:
         "200":
           description: departmentの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /divisions:
     get:
       tags:
@@ -647,11 +777,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/division"
-        required: false
+        required: true
       responses:
         "200":
           description: 作成されたdivisionが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
   /divisions/{id}:
     put:
       tags:
@@ -669,11 +802,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/division"
-        required: false
+        required: true
       responses:
         "200":
           description: 更新されたdivisionが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
       x-codegen-request-body-name: division
     delete:
       tags:
@@ -689,7 +825,10 @@ paths:
       responses:
         "200":
           description: divisionの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /expenses:
     get:
       tags:
@@ -698,7 +837,10 @@ paths:
       responses:
         "200":
           description: expenseの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - expense
@@ -717,7 +859,11 @@ paths:
       responses:
         "200":
           description: 作成されたexpenseが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /expenses/details:
     get:
       tags:
@@ -726,7 +872,11 @@ paths:
       responses:
         "200":
           description: expenseに紐づくpurchase_itemの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /expenses/{id}:
     get:
       tags:
@@ -742,7 +892,10 @@ paths:
       responses:
         "200":
           description: expenseの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - expense
@@ -767,7 +920,10 @@ paths:
       responses:
         "200":
           description: 更新されたexpenseが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - expense
@@ -782,7 +938,11 @@ paths:
       responses:
         "200":
           description: expenseの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /expenses/{id}/details:
     get:
       tags:
@@ -798,7 +958,11 @@ paths:
       responses:
         "200":
           description: IDで指定されたexpenseに紐づくpurchase_itemsを取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /expenses/details/{year}:
     get:
       tags:
@@ -814,7 +978,11 @@ paths:
       responses:
         "200":
           description: yearで指定されたexpenseに紐づく購入申請と購入報告を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /expenses/fiscalyear/{year}:
     get:
       tags:
@@ -830,7 +998,10 @@ paths:
       responses:
         "200":
           description: yearで指定されたexpensesを取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /festival_items:
     get:
       tags:
@@ -852,11 +1023,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/festivalItem"
-        required: false
+        required: true
       responses:
         "200":
           description: 作成されたfestival_itemが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
   /festival_items/{id}:
     put:
       tags:
@@ -874,11 +1048,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/festivalItem"
-        required: false
+        required: true
       responses:
         "200":
           description: 更新されたfestival_itemが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
       x-codegen-request-body-name: festivalItem
     delete:
       tags:
@@ -894,7 +1071,10 @@ paths:
       responses:
         "200":
           description: festival_itemの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /financail_records:
     get:
       tags:
@@ -916,11 +1096,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/financialRecord"
-        required: false
+        required: true
       responses:
         "200":
           description: create されたfinancial_recordが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
   /financail_records/{id}:
     put:
       tags:
@@ -938,11 +1121,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/financialRecord"
-        required: false
+        required: true
       responses:
         "200":
           description: 更新されたfinancial_recordが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
       x-codegen-request-body-name: financial_record
     delete:
       tags:
@@ -958,7 +1144,10 @@ paths:
       responses:
         "200":
           description: financial_recordの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /fund_informations:
     get:
       tags:
@@ -967,7 +1156,10 @@ paths:
       responses:
         "200":
           description: fund_informationの一覧の取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - fund_information
@@ -1014,7 +1206,11 @@ paths:
       responses:
         "200":
           description: create されたfund_informationが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /fund_informations/details:
     get:
       tags:
@@ -1023,7 +1219,11 @@ paths:
       responses:
         "200":
           description: fund_informationに紐づくteacherとuserの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /fund_informations/{id}:
     get:
       tags:
@@ -1039,7 +1239,10 @@ paths:
       responses:
         "200":
           description: fund_informationの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - fund_information
@@ -1092,7 +1295,10 @@ paths:
       responses:
         "200":
           description: 更新されたfund_informationが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - fund_information
@@ -1107,7 +1313,11 @@ paths:
       responses:
         "200":
           description: fund_informationの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /fund_informations/{id}/details:
     get:
       tags:
@@ -1123,7 +1333,11 @@ paths:
       responses:
         "200":
           description: fund_informatinに紐づくteacherとuserを取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /fund_informations/details/{year}:
     get:
       tags:
@@ -1139,7 +1353,11 @@ paths:
       responses:
         "200":
           description: 年度で指定されたfund_informationsに紐づくデータを取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /password_reset/{id}:
     post:
       tags:
@@ -1161,8 +1379,12 @@ paths:
       responses:
         "200":
           description: passwordを変更する
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: passwordResetData
+
   /password_reset/request:
     post:
       tags:
@@ -1177,7 +1399,11 @@ paths:
       responses:
         "200":
           description: password_reset_tokenをメールアドレスに送信する
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /password_reset/{id}/valid:
     post:
       tags:
@@ -1198,7 +1424,11 @@ paths:
       responses:
         "200":
           description: password_reset_tokenが正しい確認する
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /receipts:
     get:
       tags:
@@ -1207,7 +1437,10 @@ paths:
       responses:
         "200":
           description: receiptの一覧の取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - receipt
@@ -1221,8 +1454,12 @@ paths:
       responses:
         "200":
           description: create されたreceiptが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: receipt
+
   /receipts/{id}:
     get:
       tags:
@@ -1238,7 +1475,10 @@ paths:
       responses:
         "200":
           description: receiptの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - receipt
@@ -1259,7 +1499,10 @@ paths:
       responses:
         "200":
           description: 更新されたreceiptが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: receipt
     delete:
       tags:
@@ -1275,7 +1518,11 @@ paths:
       responses:
         "200":
           description: receiptの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /receipts/reports/{id}:
     get:
       tags:
@@ -1291,7 +1538,11 @@ paths:
       responses:
         "200":
           description: reportsIDを指定してreceiptの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /sources:
     get:
       tags:
@@ -1300,7 +1551,10 @@ paths:
       responses:
         "200":
           description: sourceの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - source
@@ -1315,7 +1569,11 @@ paths:
       responses:
         "200":
           description: 作成されたsourceが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /sources/{id}:
     get:
       tags:
@@ -1331,7 +1589,10 @@ paths:
       responses:
         "200":
           description: sourceの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - source
@@ -1352,7 +1613,10 @@ paths:
       responses:
         "200":
           description: 更新されたsourceが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - source
@@ -1367,7 +1631,11 @@ paths:
       responses:
         "200":
           description: sourceの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /sponsors:
     get:
       tags:
@@ -1394,8 +1662,12 @@ paths:
       responses:
         "200":
           description: 作成されたsponsorが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: sponsor
+
   /sponsors/{id}:
     get:
       tags:
@@ -1436,7 +1708,10 @@ paths:
       responses:
         "200":
           description: 更新されたsponsorが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: sponsor
     delete:
       tags:
@@ -1452,7 +1727,11 @@ paths:
       responses:
         "200":
           description: sponsorの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /sponsors/periods/{year}:
     get:
       tags:
@@ -1482,7 +1761,10 @@ paths:
       responses:
         "200":
           description: sponsorstyleの一覧を取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     post:
       tags:
         - sponsorstyle
@@ -1496,8 +1778,12 @@ paths:
       responses:
         "200":
           description: 作成されたsponsorstyleが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: sponsorStyle
+
   /sponsorstyles/{id}:
     get:
       tags:
@@ -1513,7 +1799,10 @@ paths:
       responses:
         "200":
           description: sponsorstyleの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - sponsorstyle
@@ -1534,7 +1823,10 @@ paths:
       responses:
         "200":
           description: 更新されたsponsorstyleが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: sponsorStyle
     delete:
       tags:
@@ -1550,7 +1842,11 @@ paths:
       responses:
         "200":
           description: sponsorstyleの論理削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /teachers:
     get:
       tags:
@@ -1604,7 +1900,11 @@ paths:
       responses:
         "200":
           description: createされたteacherが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /teachers/delete:
     delete:
       tags:
@@ -1619,8 +1919,12 @@ paths:
       responses:
         "200":
           description: 複数のteacherをidで削除できる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: destroyTeacherIDs
+
   /teachers/{id}:
     get:
       tags:
@@ -1636,7 +1940,10 @@ paths:
       responses:
         "200":
           description: teacherの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - teacher
@@ -1683,7 +1990,10 @@ paths:
       responses:
         "200":
           description: 更新されたteacherが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - teacher
@@ -1698,7 +2008,11 @@ paths:
       responses:
         "200":
           description: teacherの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /teachers/fundRegistered/{year}:
     get:
       tags:
@@ -1714,7 +2028,11 @@ paths:
       responses:
         "200":
           description: 募金登録済みのteacherのidを取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /users:
     get:
       tags:
@@ -1753,7 +2071,11 @@ paths:
       responses:
         "200":
           description: createされたuserが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /users/delete:
     delete:
       tags:
@@ -1768,8 +2090,12 @@ paths:
       responses:
         "200":
           description: 複数のuserをidで削除できる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: destroyUserIDs
+
   /users/{id}:
     get:
       tags:
@@ -1785,7 +2111,10 @@ paths:
       responses:
         "200":
           description: userの取得
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     put:
       tags:
         - user
@@ -1818,7 +2147,10 @@ paths:
       responses:
         "200":
           description: 更新されたuserが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - user
@@ -1833,7 +2165,11 @@ paths:
       responses:
         "200":
           description: userの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /years:
     get:
       tags:
@@ -1862,7 +2198,11 @@ paths:
       responses:
         "200":
           description: 作成されたyearが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /years/{id}:
     get:
       tags:
@@ -1902,7 +2242,10 @@ paths:
       responses:
         "200":
           description: 更新されたyearが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
     delete:
       tags:
         - year
@@ -1917,7 +2260,11 @@ paths:
       responses:
         "200":
           description: yearの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
   /years/periods:
     get:
       tags:
@@ -1945,8 +2292,12 @@ paths:
       responses:
         "200":
           description: 作成されたyear_periodsが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: year_periods
+
   /years/periods/{id}:
     put:
       tags:
@@ -1968,7 +2319,10 @@ paths:
       responses:
         "200":
           description: 更新されたyear_periodsが返ってくる
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
       x-codegen-request-body-name: year_periods
     delete:
       tags:
@@ -1984,7 +2338,11 @@ paths:
       responses:
         "200":
           description: year_periodsの削除完了
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+
 components:
   schemas:
     activity:
@@ -2134,6 +2492,9 @@ components:
           type: string
           example: 農ポリ
         division:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
           type: string
           example: 総務局
         budget:
@@ -2313,4 +2674,5 @@ components:
         endedAt:
           type: string
           example: 0000-00-00T00:00:00Z
+
 x-original-swagger-version: "2.0"
