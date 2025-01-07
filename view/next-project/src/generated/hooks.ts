@@ -19,37 +19,136 @@ import type {
   Activity,
   ActivityInformation,
   ActivityStyle,
+  DeleteActivitiesId200,
+  DeleteActivityInformationsId200,
+  DeleteActivityStylesId200,
+  DeleteBudgetsId200,
+  DeleteBureausId200,
+  DeleteDepartmentsId200,
+  DeleteDivisionsId200,
+  DeleteExpensesId200,
+  DeleteFestivalItemsId200,
+  DeleteFinancailRecordsId200,
+  DeleteFundInformationsId200,
+  DeleteReceiptsId200,
+  DeleteSourcesId200,
+  DeleteSponsorsId200,
+  DeleteSponsorstylesId200,
+  DeleteTeachersDelete200,
+  DeleteTeachersId200,
+  DeleteUsersDelete200,
+  DeleteUsersId200,
+  DeleteYearsId200,
+  DeleteYearsPeriodsId200,
   DestroyTeacherIDs,
   DestroyUserIDs,
   Division,
   DivisionDetails,
+  DivisionWithBalance,
   FestivalItem,
   FestivalItemDetails,
+  FestivalItemWithBalance,
   FinancialRecord,
   FinancialRecordDetails,
+  FinancialRecordWithBalance,
+  GetActivities200,
+  GetActivitiesDetails200,
+  GetActivitiesDetailsYear200,
+  GetActivitiesFilteredDetails200,
   GetActivitiesFilteredDetailsParams,
+  GetActivitiesFilteredDetailsYear200,
   GetActivitiesFilteredDetailsYearParams,
+  GetActivitiesId200,
+  GetActivityInformations200,
+  GetActivityInformationsId200,
+  GetActivityStyles200,
+  GetActivityStylesId200,
+  GetBudgets200,
+  GetBudgetsDetails200,
+  GetBudgetsDetailsYear200,
+  GetBudgetsId200,
+  GetBudgetsIdDetails200,
+  GetBureaus200,
+  GetBureausId200,
+  GetDepartments200,
+  GetDepartmentsId200,
+  GetExpenses200,
+  GetExpensesDetails200,
+  GetExpensesDetailsYear200,
+  GetExpensesFiscalyearYear200,
+  GetExpensesId200,
+  GetExpensesIdDetails200,
+  GetFundInformations200,
+  GetFundInformationsDetails200,
+  GetFundInformationsDetailsYear200,
+  GetFundInformationsId200,
+  GetFundInformationsIdDetails200,
+  GetReceipts200,
+  GetReceiptsId200,
+  GetReceiptsReportsId200,
+  GetSources200,
+  GetSourcesId200,
+  GetSponsorstyles200,
+  GetSponsorstylesId200,
+  GetTeachersFundRegisteredYear200,
+  GetTeachersId200,
+  GetUsersId200,
   PasswordResetData,
+  PostActivities200,
+  PostActivityInformations200,
+  PostActivityStyles200,
+  PostBudgets200,
   PostBudgetsParams,
+  PostBureaus200,
   PostBureausParams,
+  PostDepartments200,
   PostDepartmentsParams,
+  PostExpenses200,
   PostExpensesParams,
+  PostFundInformations200,
   PostFundInformationsParams,
+  PostPasswordResetId200,
+  PostPasswordResetIdValid200,
   PostPasswordResetIdValidParams,
+  PostPasswordResetRequest200,
   PostPasswordResetRequestParams,
+  PostReceipts200,
+  PostSources200,
   PostSourcesParams,
+  PostSponsors200,
+  PostSponsorstyles200,
+  PostTeachers200,
   PostTeachersParams,
+  PostUsers200,
   PostUsersParams,
+  PostYears200,
   PostYearsParams,
+  PostYearsPeriods200,
+  PutActivitiesId200,
+  PutActivityInformationsId200,
+  PutActivityStylesId200,
+  PutBudgetsId200,
   PutBudgetsIdParams,
+  PutBureausId200,
   PutBureausIdParams,
+  PutDepartmentsId200,
   PutDepartmentsIdParams,
+  PutExpensesId200,
   PutExpensesIdParams,
+  PutFundInformationsId200,
   PutFundInformationsIdParams,
+  PutReceiptsId200,
+  PutSourcesId200,
   PutSourcesIdParams,
+  PutSponsorsId200,
+  PutSponsorstylesId200,
+  PutTeachersId200,
   PutTeachersIdParams,
+  PutUsersId200,
   PutUsersIdParams,
+  PutYearsId200,
   PutYearsIdParams,
+  PutYearsPeriodsId200,
   Receipt,
   Sponsor,
   SponsorStyle,
@@ -70,7 +169,7 @@ import { customFetch } from '../mutator/custom-instance';
  * activitiesの一覧を取得
  */
 export type getActivitiesResponse = {
-  data: unknown;
+  data: GetActivities200;
   status: number;
   headers: Headers;
 }
@@ -121,7 +220,7 @@ export const useGetActivities = <TError = unknown>(
  * activitiesの作成
  */
 export type postActivitiesResponse = {
-  data: unknown;
+  data: PostActivities200;
   status: number;
   headers: Headers;
 }
@@ -178,7 +277,7 @@ export const usePostActivities = <TError = unknown>(
  * activitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesDetailsResponse = {
-  data: unknown;
+  data: GetActivitiesDetails200;
   status: number;
   headers: Headers;
 }
@@ -229,7 +328,7 @@ export const useGetActivitiesDetails = <TError = unknown>(
  * 年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesDetailsYearResponse = {
-  data: unknown;
+  data: GetActivitiesDetailsYear200;
   status: number;
   headers: Headers;
 }
@@ -280,7 +379,7 @@ export const useGetActivitiesDetailsYear = <TError = unknown>(
  * activitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesFilteredDetailsResponse = {
-  data: unknown;
+  data: GetActivitiesFilteredDetails200;
   status: number;
   headers: Headers;
 }
@@ -338,7 +437,7 @@ export const useGetActivitiesFilteredDetails = <TError = unknown>(
  * activitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesFilteredDetailsYearResponse = {
-  data: unknown;
+  data: GetActivitiesFilteredDetailsYear200;
   status: number;
   headers: Headers;
 }
@@ -400,7 +499,7 @@ export const useGetActivitiesFilteredDetailsYear = <TError = unknown>(
  * IDで指定されたactivitiesの取得
  */
 export type getActivitiesIdResponse = {
-  data: unknown;
+  data: GetActivitiesId200;
   status: number;
   headers: Headers;
 }
@@ -451,7 +550,7 @@ export const useGetActivitiesId = <TError = unknown>(
  * activitiesの更新
  */
 export type putActivitiesIdResponse = {
-  data: unknown;
+  data: PutActivitiesId200;
   status: number;
   headers: Headers;
 }
@@ -509,7 +608,7 @@ export const usePutActivitiesId = <TError = unknown>(
  * IDを指定してactivitiesの削除
  */
 export type deleteActivitiesIdResponse = {
-  data: unknown;
+  data: DeleteActivitiesId200;
   status: number;
   headers: Headers;
 }
@@ -565,7 +664,7 @@ export const useDeleteActivitiesId = <TError = unknown>(
  * activity_informationの一覧を取得
  */
 export type getActivityInformationsResponse = {
-  data: unknown;
+  data: GetActivityInformations200;
   status: number;
   headers: Headers;
 }
@@ -616,7 +715,7 @@ export const useGetActivityInformations = <TError = unknown>(
  * activity_informationの作成
  */
 export type postActivityInformationsResponse = {
-  data: unknown;
+  data: PostActivityInformations200;
   status: number;
   headers: Headers;
 }
@@ -673,7 +772,7 @@ export const usePostActivityInformations = <TError = unknown>(
  * IDで指定されたactivity_informationsの取得
  */
 export type getActivityInformationsIdResponse = {
-  data: unknown;
+  data: GetActivityInformationsId200;
   status: number;
   headers: Headers;
 }
@@ -724,7 +823,7 @@ export const useGetActivityInformationsId = <TError = unknown>(
  * activity_informationの更新
  */
 export type putActivityInformationsIdResponse = {
-  data: unknown;
+  data: PutActivityInformationsId200;
   status: number;
   headers: Headers;
 }
@@ -782,7 +881,7 @@ export const usePutActivityInformationsId = <TError = unknown>(
  * IDを指定してactivity_informationの削除
  */
 export type deleteActivityInformationsIdResponse = {
-  data: unknown;
+  data: DeleteActivityInformationsId200;
   status: number;
   headers: Headers;
 }
@@ -838,7 +937,7 @@ export const useDeleteActivityInformationsId = <TError = unknown>(
  * activity_styleの一覧を取得
  */
 export type getActivityStylesResponse = {
-  data: unknown;
+  data: GetActivityStyles200;
   status: number;
   headers: Headers;
 }
@@ -889,7 +988,7 @@ export const useGetActivityStyles = <TError = unknown>(
  * activity_styleの作成
  */
 export type postActivityStylesResponse = {
-  data: unknown;
+  data: PostActivityStyles200;
   status: number;
   headers: Headers;
 }
@@ -946,7 +1045,7 @@ export const usePostActivityStyles = <TError = unknown>(
  * IDで指定されたactivity_styleの取得
  */
 export type getActivityStylesIdResponse = {
-  data: unknown;
+  data: GetActivityStylesId200;
   status: number;
   headers: Headers;
 }
@@ -997,7 +1096,7 @@ export const useGetActivityStylesId = <TError = unknown>(
  * activity_styleの更新
  */
 export type putActivityStylesIdResponse = {
-  data: unknown;
+  data: PutActivityStylesId200;
   status: number;
   headers: Headers;
 }
@@ -1055,7 +1154,7 @@ export const usePutActivityStylesId = <TError = unknown>(
  * IDを指定してactivity_styleの削除
  */
 export type deleteActivityStylesIdResponse = {
-  data: unknown;
+  data: DeleteActivityStylesId200;
   status: number;
   headers: Headers;
 }
@@ -1111,7 +1210,7 @@ export const useDeleteActivityStylesId = <TError = unknown>(
  * budgetの一覧を取得
  */
 export type getBudgetsResponse = {
-  data: unknown;
+  data: GetBudgets200;
   status: number;
   headers: Headers;
 }
@@ -1162,7 +1261,7 @@ export const useGetBudgets = <TError = unknown>(
  * budgetの作成
  */
 export type postBudgetsResponse = {
-  data: unknown;
+  data: PostBudgets200;
   status: number;
   headers: Headers;
 }
@@ -1225,7 +1324,7 @@ export const usePostBudgets = <TError = unknown>(
  * budgetに紐づくyearとsourceの一覧を取得
  */
 export type getBudgetsDetailsResponse = {
-  data: unknown;
+  data: GetBudgetsDetails200;
   status: number;
   headers: Headers;
 }
@@ -1276,7 +1375,7 @@ export const useGetBudgetsDetails = <TError = unknown>(
  * 年度で指定されたbudgetsに紐づく年度とソースを取得
  */
 export type getBudgetsDetailsYearResponse = {
-  data: unknown;
+  data: GetBudgetsDetailsYear200;
   status: number;
   headers: Headers;
 }
@@ -1327,7 +1426,7 @@ export const useGetBudgetsDetailsYear = <TError = unknown>(
  * IDで指定されたbudgetの取得
  */
 export type getBudgetsIdResponse = {
-  data: unknown;
+  data: GetBudgetsId200;
   status: number;
   headers: Headers;
 }
@@ -1378,7 +1477,7 @@ export const useGetBudgetsId = <TError = unknown>(
  * budgetの更新
  */
 export type putBudgetsIdResponse = {
-  data: unknown;
+  data: PutBudgetsId200;
   status: number;
   headers: Headers;
 }
@@ -1446,7 +1545,7 @@ export const usePutBudgetsId = <TError = unknown>(
  * IDを指定してbudgetの削除
  */
 export type deleteBudgetsIdResponse = {
-  data: unknown;
+  data: DeleteBudgetsId200;
   status: number;
   headers: Headers;
 }
@@ -1502,7 +1601,7 @@ export const useDeleteBudgetsId = <TError = unknown>(
  * IDで指定されたbudgetに紐づくyearとsourceを取得
  */
 export type getBudgetsIdDetailsResponse = {
-  data: unknown;
+  data: GetBudgetsIdDetails200;
   status: number;
   headers: Headers;
 }
@@ -1553,7 +1652,7 @@ export const useGetBudgetsIdDetails = <TError = unknown>(
  * bureauの一覧を取得
  */
 export type getBureausResponse = {
-  data: unknown;
+  data: GetBureaus200;
   status: number;
   headers: Headers;
 }
@@ -1604,7 +1703,7 @@ export const useGetBureaus = <TError = unknown>(
  * bureauの作成
  */
 export type postBureausResponse = {
-  data: unknown;
+  data: PostBureaus200;
   status: number;
   headers: Headers;
 }
@@ -1667,7 +1766,7 @@ export const usePostBureaus = <TError = unknown>(
  * IDで指定されたbureauの取得
  */
 export type getBureausIdResponse = {
-  data: unknown;
+  data: GetBureausId200;
   status: number;
   headers: Headers;
 }
@@ -1718,7 +1817,7 @@ export const useGetBureausId = <TError = unknown>(
  * bureauの更新
  */
 export type putBureausIdResponse = {
-  data: unknown;
+  data: PutBureausId200;
   status: number;
   headers: Headers;
 }
@@ -1786,7 +1885,7 @@ export const usePutBureausId = <TError = unknown>(
  * IDを指定してbureauの削除
  */
 export type deleteBureausIdResponse = {
-  data: unknown;
+  data: DeleteBureausId200;
   status: number;
   headers: Headers;
 }
@@ -1842,7 +1941,7 @@ export const useDeleteBureausId = <TError = unknown>(
  * departmentの一覧の取得
  */
 export type getDepartmentsResponse = {
-  data: unknown;
+  data: GetDepartments200;
   status: number;
   headers: Headers;
 }
@@ -1893,7 +1992,7 @@ export const useGetDepartments = <TError = unknown>(
  * departmentの作成
  */
 export type postDepartmentsResponse = {
-  data: unknown;
+  data: PostDepartments200;
   status: number;
   headers: Headers;
 }
@@ -1956,7 +2055,7 @@ export const usePostDepartments = <TError = unknown>(
  * IDで指定されたdepartmentの取得
  */
 export type getDepartmentsIdResponse = {
-  data: unknown;
+  data: GetDepartmentsId200;
   status: number;
   headers: Headers;
 }
@@ -2007,7 +2106,7 @@ export const useGetDepartmentsId = <TError = unknown>(
  * departmentの更新
  */
 export type putDepartmentsIdResponse = {
-  data: unknown;
+  data: PutDepartmentsId200;
   status: number;
   headers: Headers;
 }
@@ -2075,7 +2174,7 @@ export const usePutDepartmentsId = <TError = unknown>(
  * IDを指定してdepartmentの削除
  */
 export type deleteDepartmentsIdResponse = {
-  data: unknown;
+  data: DeleteDepartmentsId200;
   status: number;
   headers: Headers;
 }
@@ -2182,7 +2281,7 @@ export const useGetDivisions = <TError = unknown>(
  * divisionの作成
  */
 export type postDivisionsResponse = {
-  data: unknown;
+  data: DivisionWithBalance;
   status: number;
   headers: Headers;
 }
@@ -2193,7 +2292,7 @@ export const getPostDivisionsUrl = () => {
   return `/divisions`
 }
 
-export const postDivisions = async (division?: Division, options?: RequestInit): Promise<postDivisionsResponse> => {
+export const postDivisions = async (division: Division, options?: RequestInit): Promise<postDivisionsResponse> => {
   
   return customFetch<Promise<postDivisionsResponse>>(getPostDivisionsUrl(),
   {      
@@ -2239,7 +2338,7 @@ export const usePostDivisions = <TError = unknown>(
  * divisionの更新
  */
 export type putDivisionsIdResponse = {
-  data: unknown;
+  data: DivisionWithBalance;
   status: number;
   headers: Headers;
 }
@@ -2251,7 +2350,7 @@ export const getPutDivisionsIdUrl = (id: number,) => {
 }
 
 export const putDivisionsId = async (id: number,
-    division?: Division, options?: RequestInit): Promise<putDivisionsIdResponse> => {
+    division: Division, options?: RequestInit): Promise<putDivisionsIdResponse> => {
   
   return customFetch<Promise<putDivisionsIdResponse>>(getPutDivisionsIdUrl(id),
   {      
@@ -2297,7 +2396,7 @@ export const usePutDivisionsId = <TError = unknown>(
  * IDを指定してdivisionの削除
  */
 export type deleteDivisionsIdResponse = {
-  data: unknown;
+  data: DeleteDivisionsId200;
   status: number;
   headers: Headers;
 }
@@ -2353,7 +2452,7 @@ export const useDeleteDivisionsId = <TError = unknown>(
  * expenseの一覧の取得
  */
 export type getExpensesResponse = {
-  data: unknown;
+  data: GetExpenses200;
   status: number;
   headers: Headers;
 }
@@ -2404,7 +2503,7 @@ export const useGetExpenses = <TError = unknown>(
  * expenseの作成
  */
 export type postExpensesResponse = {
-  data: unknown;
+  data: PostExpenses200;
   status: number;
   headers: Headers;
 }
@@ -2467,7 +2566,7 @@ export const usePostExpenses = <TError = unknown>(
  * expenseに紐づくpurchase_itemの一覧を取得
  */
 export type getExpensesDetailsResponse = {
-  data: unknown;
+  data: GetExpensesDetails200;
   status: number;
   headers: Headers;
 }
@@ -2518,7 +2617,7 @@ export const useGetExpensesDetails = <TError = unknown>(
  * IDで指定されたexpenseの取得
  */
 export type getExpensesIdResponse = {
-  data: unknown;
+  data: GetExpensesId200;
   status: number;
   headers: Headers;
 }
@@ -2569,7 +2668,7 @@ export const useGetExpensesId = <TError = unknown>(
  * expenseの更新
  */
 export type putExpensesIdResponse = {
-  data: unknown;
+  data: PutExpensesId200;
   status: number;
   headers: Headers;
 }
@@ -2637,7 +2736,7 @@ export const usePutExpensesId = <TError = unknown>(
  * IDを指定してexpenseの削除
  */
 export type deleteExpensesIdResponse = {
-  data: unknown;
+  data: DeleteExpensesId200;
   status: number;
   headers: Headers;
 }
@@ -2693,7 +2792,7 @@ export const useDeleteExpensesId = <TError = unknown>(
  * IDで指定されたexpenseに紐づくpurchase_itemsを取得
  */
 export type getExpensesIdDetailsResponse = {
-  data: unknown;
+  data: GetExpensesIdDetails200;
   status: number;
   headers: Headers;
 }
@@ -2744,7 +2843,7 @@ export const useGetExpensesIdDetails = <TError = unknown>(
  * 年度で指定されたexpenseに紐づく購入申請と購入報告を取得
  */
 export type getExpensesDetailsYearResponse = {
-  data: unknown;
+  data: GetExpensesDetailsYear200;
   status: number;
   headers: Headers;
 }
@@ -2795,7 +2894,7 @@ export const useGetExpensesDetailsYear = <TError = unknown>(
  * 年度で指定されたexpensesを取得
  */
 export type getExpensesFiscalyearYearResponse = {
-  data: unknown;
+  data: GetExpensesFiscalyearYear200;
   status: number;
   headers: Headers;
 }
@@ -2897,7 +2996,7 @@ export const useGetFestivalItems = <TError = unknown>(
  * festival_itemの作成
  */
 export type postFestivalItemsResponse = {
-  data: unknown;
+  data: FestivalItemWithBalance;
   status: number;
   headers: Headers;
 }
@@ -2908,7 +3007,7 @@ export const getPostFestivalItemsUrl = () => {
   return `/festival_items`
 }
 
-export const postFestivalItems = async (festivalItem?: FestivalItem, options?: RequestInit): Promise<postFestivalItemsResponse> => {
+export const postFestivalItems = async (festivalItem: FestivalItem, options?: RequestInit): Promise<postFestivalItemsResponse> => {
   
   return customFetch<Promise<postFestivalItemsResponse>>(getPostFestivalItemsUrl(),
   {      
@@ -2954,7 +3053,7 @@ export const usePostFestivalItems = <TError = unknown>(
  * festival_itemの更新
  */
 export type putFestivalItemsIdResponse = {
-  data: unknown;
+  data: FestivalItemWithBalance;
   status: number;
   headers: Headers;
 }
@@ -2966,7 +3065,7 @@ export const getPutFestivalItemsIdUrl = (id: number,) => {
 }
 
 export const putFestivalItemsId = async (id: number,
-    festivalItem?: FestivalItem, options?: RequestInit): Promise<putFestivalItemsIdResponse> => {
+    festivalItem: FestivalItem, options?: RequestInit): Promise<putFestivalItemsIdResponse> => {
   
   return customFetch<Promise<putFestivalItemsIdResponse>>(getPutFestivalItemsIdUrl(id),
   {      
@@ -3012,7 +3111,7 @@ export const usePutFestivalItemsId = <TError = unknown>(
  * IDを指定してfestival_itemの削除
  */
 export type deleteFestivalItemsIdResponse = {
-  data: unknown;
+  data: DeleteFestivalItemsId200;
   status: number;
   headers: Headers;
 }
@@ -3119,7 +3218,7 @@ export const useGetFinancailRecords = <TError = unknown>(
  * financial_recordの作成
  */
 export type postFinancailRecordsResponse = {
-  data: unknown;
+  data: FinancialRecordWithBalance;
   status: number;
   headers: Headers;
 }
@@ -3130,7 +3229,7 @@ export const getPostFinancailRecordsUrl = () => {
   return `/financail_records`
 }
 
-export const postFinancailRecords = async (financialRecord?: FinancialRecord, options?: RequestInit): Promise<postFinancailRecordsResponse> => {
+export const postFinancailRecords = async (financialRecord: FinancialRecord, options?: RequestInit): Promise<postFinancailRecordsResponse> => {
   
   return customFetch<Promise<postFinancailRecordsResponse>>(getPostFinancailRecordsUrl(),
   {      
@@ -3176,7 +3275,7 @@ export const usePostFinancailRecords = <TError = unknown>(
  * financial_recordの更新
  */
 export type putFinancailRecordsIdResponse = {
-  data: unknown;
+  data: FinancialRecordWithBalance;
   status: number;
   headers: Headers;
 }
@@ -3188,7 +3287,7 @@ export const getPutFinancailRecordsIdUrl = (id: number,) => {
 }
 
 export const putFinancailRecordsId = async (id: number,
-    financialRecord?: FinancialRecord, options?: RequestInit): Promise<putFinancailRecordsIdResponse> => {
+    financialRecord: FinancialRecord, options?: RequestInit): Promise<putFinancailRecordsIdResponse> => {
   
   return customFetch<Promise<putFinancailRecordsIdResponse>>(getPutFinancailRecordsIdUrl(id),
   {      
@@ -3234,7 +3333,7 @@ export const usePutFinancailRecordsId = <TError = unknown>(
  * IDを指定してfinancial_recordの削除
  */
 export type deleteFinancailRecordsIdResponse = {
-  data: unknown;
+  data: DeleteFinancailRecordsId200;
   status: number;
   headers: Headers;
 }
@@ -3290,7 +3389,7 @@ export const useDeleteFinancailRecordsId = <TError = unknown>(
  * fund_informationの一覧を取得
  */
 export type getFundInformationsResponse = {
-  data: unknown;
+  data: GetFundInformations200;
   status: number;
   headers: Headers;
 }
@@ -3341,7 +3440,7 @@ export const useGetFundInformations = <TError = unknown>(
  * fund_informationの作成
  */
 export type postFundInformationsResponse = {
-  data: unknown;
+  data: PostFundInformations200;
   status: number;
   headers: Headers;
 }
@@ -3404,7 +3503,7 @@ export const usePostFundInformations = <TError = unknown>(
  * fund_informationに紐づくteacherとuserの一覧を取得
  */
 export type getFundInformationsDetailsResponse = {
-  data: unknown;
+  data: GetFundInformationsDetails200;
   status: number;
   headers: Headers;
 }
@@ -3455,7 +3554,7 @@ export const useGetFundInformationsDetails = <TError = unknown>(
  * IDで指定されたfund_informationの取得
  */
 export type getFundInformationsIdResponse = {
-  data: unknown;
+  data: GetFundInformationsId200;
   status: number;
   headers: Headers;
 }
@@ -3506,7 +3605,7 @@ export const useGetFundInformationsId = <TError = unknown>(
  * fund_informationの更新
  */
 export type putFundInformationsIdResponse = {
-  data: unknown;
+  data: PutFundInformationsId200;
   status: number;
   headers: Headers;
 }
@@ -3574,7 +3673,7 @@ export const usePutFundInformationsId = <TError = unknown>(
  * IDを指定してfund_informationの削除
  */
 export type deleteFundInformationsIdResponse = {
-  data: unknown;
+  data: DeleteFundInformationsId200;
   status: number;
   headers: Headers;
 }
@@ -3630,7 +3729,7 @@ export const useDeleteFundInformationsId = <TError = unknown>(
  * IDで指定されたfund_informatinに紐づくteacherとuserを取得
  */
 export type getFundInformationsIdDetailsResponse = {
-  data: unknown;
+  data: GetFundInformationsIdDetails200;
   status: number;
   headers: Headers;
 }
@@ -3681,7 +3780,7 @@ export const useGetFundInformationsIdDetails = <TError = unknown>(
  * 年度で指定されたfund_informationsに紐づくデータを取得
  */
 export type getFundInformationsDetailsYearResponse = {
-  data: unknown;
+  data: GetFundInformationsDetailsYear200;
   status: number;
   headers: Headers;
 }
@@ -3732,7 +3831,7 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
  * password_変更
  */
 export type postPasswordResetIdResponse = {
-  data: unknown;
+  data: PostPasswordResetId200;
   status: number;
   headers: Headers;
 }
@@ -3790,7 +3889,7 @@ export const usePostPasswordResetId = <TError = unknown>(
  * password_reset_token発行リクエスト
  */
 export type postPasswordResetRequestResponse = {
-  data: unknown;
+  data: PostPasswordResetRequest200;
   status: number;
   headers: Headers;
 }
@@ -3853,7 +3952,7 @@ export const usePostPasswordResetRequest = <TError = unknown>(
  * トークンの称号
  */
 export type postPasswordResetIdValidResponse = {
-  data: unknown;
+  data: PostPasswordResetIdValid200;
   status: number;
   headers: Headers;
 }
@@ -3921,7 +4020,7 @@ export const usePostPasswordResetIdValid = <TError = unknown>(
  * receiptの一覧を取得
  */
 export type getReceiptsResponse = {
-  data: unknown;
+  data: GetReceipts200;
   status: number;
   headers: Headers;
 }
@@ -3972,7 +4071,7 @@ export const useGetReceipts = <TError = unknown>(
  * receiptの作成
  */
 export type postReceiptsResponse = {
-  data: unknown;
+  data: PostReceipts200;
   status: number;
   headers: Headers;
 }
@@ -4029,7 +4128,7 @@ export const usePostReceipts = <TError = unknown>(
  * IDで指定されたreceiptの取得
  */
 export type getReceiptsIdResponse = {
-  data: unknown;
+  data: GetReceiptsId200;
   status: number;
   headers: Headers;
 }
@@ -4080,7 +4179,7 @@ export const useGetReceiptsId = <TError = unknown>(
  * receiptの更新
  */
 export type putReceiptsIdResponse = {
-  data: unknown;
+  data: PutReceiptsId200;
   status: number;
   headers: Headers;
 }
@@ -4138,7 +4237,7 @@ export const usePutReceiptsId = <TError = unknown>(
  * IDを指定してreceiptの削除
  */
 export type deleteReceiptsIdResponse = {
-  data: unknown;
+  data: DeleteReceiptsId200;
   status: number;
   headers: Headers;
 }
@@ -4194,7 +4293,7 @@ export const useDeleteReceiptsId = <TError = unknown>(
  * 購入報告に紐づいたreceiptの取得
  */
 export type getReceiptsReportsIdResponse = {
-  data: unknown;
+  data: GetReceiptsReportsId200;
   status: number;
   headers: Headers;
 }
@@ -4245,7 +4344,7 @@ export const useGetReceiptsReportsId = <TError = unknown>(
  * sourceの一覧の取得
  */
 export type getSourcesResponse = {
-  data: unknown;
+  data: GetSources200;
   status: number;
   headers: Headers;
 }
@@ -4296,7 +4395,7 @@ export const useGetSources = <TError = unknown>(
  * sourceの作成
  */
 export type postSourcesResponse = {
-  data: unknown;
+  data: PostSources200;
   status: number;
   headers: Headers;
 }
@@ -4359,7 +4458,7 @@ export const usePostSources = <TError = unknown>(
  * IDで指定されたsourceの取得
  */
 export type getSourcesIdResponse = {
-  data: unknown;
+  data: GetSourcesId200;
   status: number;
   headers: Headers;
 }
@@ -4410,7 +4509,7 @@ export const useGetSourcesId = <TError = unknown>(
  * sourceの更新
  */
 export type putSourcesIdResponse = {
-  data: unknown;
+  data: PutSourcesId200;
   status: number;
   headers: Headers;
 }
@@ -4478,7 +4577,7 @@ export const usePutSourcesId = <TError = unknown>(
  * IDを指定してsourceの削除
  */
 export type deleteSourcesIdResponse = {
-  data: unknown;
+  data: DeleteSourcesId200;
   status: number;
   headers: Headers;
 }
@@ -4585,7 +4684,7 @@ export const useGetSponsors = <TError = unknown>(
  * sponsorの作成
  */
 export type postSponsorsResponse = {
-  data: unknown;
+  data: PostSponsors200;
   status: number;
   headers: Headers;
 }
@@ -4693,7 +4792,7 @@ export const useGetSponsorsId = <TError = unknown>(
  * sponsorの更新
  */
 export type putSponsorsIdResponse = {
-  data: unknown;
+  data: PutSponsorsId200;
   status: number;
   headers: Headers;
 }
@@ -4751,7 +4850,7 @@ export const usePutSponsorsId = <TError = unknown>(
  * IDを指定してsponsorの削除
  */
 export type deleteSponsorsIdResponse = {
-  data: unknown;
+  data: DeleteSponsorsId200;
   status: number;
   headers: Headers;
 }
@@ -4858,7 +4957,7 @@ export const useGetSponsorsPeriodsYear = <TError = unknown>(
  * sponsorstyleの一覧の取得
  */
 export type getSponsorstylesResponse = {
-  data: unknown;
+  data: GetSponsorstyles200;
   status: number;
   headers: Headers;
 }
@@ -4909,7 +5008,7 @@ export const useGetSponsorstyles = <TError = unknown>(
  * sponsorstyleの作成
  */
 export type postSponsorstylesResponse = {
-  data: unknown;
+  data: PostSponsorstyles200;
   status: number;
   headers: Headers;
 }
@@ -4966,7 +5065,7 @@ export const usePostSponsorstyles = <TError = unknown>(
  * IDで指定されたsponsorstyleの取得
  */
 export type getSponsorstylesIdResponse = {
-  data: unknown;
+  data: GetSponsorstylesId200;
   status: number;
   headers: Headers;
 }
@@ -5017,7 +5116,7 @@ export const useGetSponsorstylesId = <TError = unknown>(
  * sponsorstyleの更新
  */
 export type putSponsorstylesIdResponse = {
-  data: unknown;
+  data: PutSponsorstylesId200;
   status: number;
   headers: Headers;
 }
@@ -5075,7 +5174,7 @@ export const usePutSponsorstylesId = <TError = unknown>(
  * IDを指定してsponsorstyleの論理削除
  */
 export type deleteSponsorstylesIdResponse = {
-  data: unknown;
+  data: DeleteSponsorstylesId200;
   status: number;
   headers: Headers;
 }
@@ -5182,7 +5281,7 @@ export const useGetTeachers = <TError = unknown>(
  * teacherの作成
  */
 export type postTeachersResponse = {
-  data: unknown;
+  data: PostTeachers200;
   status: number;
   headers: Headers;
 }
@@ -5245,7 +5344,7 @@ export const usePostTeachers = <TError = unknown>(
  * teacherの複数削除
  */
 export type deleteTeachersDeleteResponse = {
-  data: unknown;
+  data: DeleteTeachersDelete200;
   status: number;
   headers: Headers;
 }
@@ -5302,7 +5401,7 @@ export const useDeleteTeachersDelete = <TError = unknown>(
  * IDで指定されたteacherの取得
  */
 export type getTeachersIdResponse = {
-  data: unknown;
+  data: GetTeachersId200;
   status: number;
   headers: Headers;
 }
@@ -5353,7 +5452,7 @@ export const useGetTeachersId = <TError = unknown>(
  * teacherの更新
  */
 export type putTeachersIdResponse = {
-  data: unknown;
+  data: PutTeachersId200;
   status: number;
   headers: Headers;
 }
@@ -5421,7 +5520,7 @@ export const usePutTeachersId = <TError = unknown>(
  * IDを指定してteacherの削除
  */
 export type deleteTeachersIdResponse = {
-  data: unknown;
+  data: DeleteTeachersId200;
   status: number;
   headers: Headers;
 }
@@ -5477,7 +5576,7 @@ export const useDeleteTeachersId = <TError = unknown>(
  * 募金登録済みのteacherのidを取得
  */
 export type getTeachersFundRegisteredYearResponse = {
-  data: unknown;
+  data: GetTeachersFundRegisteredYear200;
   status: number;
   headers: Headers;
 }
@@ -5579,7 +5678,7 @@ export const useGetUsers = <TError = unknown>(
  * userの作成
  */
 export type postUsersResponse = {
-  data: unknown;
+  data: PostUsers200;
   status: number;
   headers: Headers;
 }
@@ -5642,7 +5741,7 @@ export const usePostUsers = <TError = unknown>(
  * userの複数作成
  */
 export type deleteUsersDeleteResponse = {
-  data: unknown;
+  data: DeleteUsersDelete200;
   status: number;
   headers: Headers;
 }
@@ -5699,7 +5798,7 @@ export const useDeleteUsersDelete = <TError = unknown>(
  * IDで指定されたuserの取得
  */
 export type getUsersIdResponse = {
-  data: unknown;
+  data: GetUsersId200;
   status: number;
   headers: Headers;
 }
@@ -5750,7 +5849,7 @@ export const useGetUsersId = <TError = unknown>(
  * userの更新
  */
 export type putUsersIdResponse = {
-  data: unknown;
+  data: PutUsersId200;
   status: number;
   headers: Headers;
 }
@@ -5818,7 +5917,7 @@ export const usePutUsersId = <TError = unknown>(
  * IDを指定してuserの削除
  */
 export type deleteUsersIdResponse = {
-  data: unknown;
+  data: DeleteUsersId200;
   status: number;
   headers: Headers;
 }
@@ -5925,7 +6024,7 @@ export const useGetYears = <TError = unknown>(
  * yearの作成
  */
 export type postYearsResponse = {
-  data: unknown;
+  data: PostYears200;
   status: number;
   headers: Headers;
 }
@@ -6039,7 +6138,7 @@ export const useGetYearsId = <TError = unknown>(
  * yearの更新
  */
 export type putYearsIdResponse = {
-  data: unknown;
+  data: PutYearsId200;
   status: number;
   headers: Headers;
 }
@@ -6107,7 +6206,7 @@ export const usePutYearsId = <TError = unknown>(
  * IDを指定してyearの削除
  */
 export type deleteYearsIdResponse = {
-  data: unknown;
+  data: DeleteYearsId200;
   status: number;
   headers: Headers;
 }
@@ -6214,7 +6313,7 @@ export const useGetYearsPeriods = <TError = unknown>(
  * year_periodsの作成
  */
 export type postYearsPeriodsResponse = {
-  data: unknown;
+  data: PostYearsPeriods200;
   status: number;
   headers: Headers;
 }
@@ -6271,7 +6370,7 @@ export const usePostYearsPeriods = <TError = unknown>(
  * year_periodsの更新
  */
 export type putYearsPeriodsIdResponse = {
-  data: unknown;
+  data: PutYearsPeriodsId200;
   status: number;
   headers: Headers;
 }
@@ -6329,7 +6428,7 @@ export const usePutYearsPeriodsId = <TError = unknown>(
  * IDを指定してyear_periodsの削除
  */
 export type deleteYearsPeriodsIdResponse = {
-  data: unknown;
+  data: DeleteYearsPeriodsId200;
   status: number;
   headers: Headers;
 }

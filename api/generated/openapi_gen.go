@@ -101,13 +101,14 @@ type FestivalItemDetails struct {
 
 // FestivalItemWithBalance defines model for festivalItemWithBalance.
 type FestivalItemWithBalance struct {
-	Balance  *int    `json:"balance,omitempty"`
-	Budget   *int    `json:"budget,omitempty"`
-	Division *string `json:"division,omitempty"`
-	Expense  *int    `json:"expense,omitempty"`
-	Id       *int    `json:"id,omitempty"`
-	Memo     *string `json:"memo,omitempty"`
-	Name     *string `json:"name,omitempty"`
+	Balance         *int    `json:"balance,omitempty"`
+	Budget          *int    `json:"budget,omitempty"`
+	Division        *string `json:"division,omitempty"`
+	Expense         *int    `json:"expense,omitempty"`
+	FinancialRecord *string `json:"financialRecord,omitempty"`
+	Id              *int    `json:"id,omitempty"`
+	Memo            *string `json:"memo,omitempty"`
+	Name            *string `json:"name,omitempty"`
 }
 
 // FinancialRecord defines model for financialRecord.

@@ -11,6 +11,7 @@ export interface FestivalItemWithBalance {
   budget?: number;
   division?: string;
   expense?: number;
+  financialRecord?: string;
   id?: number;
   memo?: string;
   name?: string;
