@@ -66,5 +66,5 @@ func (f *financialRecordController) DestroyFinancialRecord(c echo.Context) error
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Destroy Bureau")
+	return c.String(http.StatusOK, "Destroy FinancialRecord")
 }

@@ -109,7 +109,7 @@ func (frr *financialRecordRepository) Delete(
 	c context.Context,
 	id string,
 ) error {
-	ds := dialect.Delete("sponsors").Where(goqu.Ex{"id": id})
+	ds := dialect.Delete("financial_records").Where(goqu.Ex{"id": id})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
