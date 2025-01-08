@@ -280,6 +280,9 @@ type PutExpensesIdParams struct {
 type GetFestivalItemsParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// DivisionId division_id
+	DivisionId *int `form:"division_id,omitempty" json:"division_id,omitempty"`
 }
 
 // GetFinancialRecordsParams defines parameters for GetFinancialRecords.
@@ -1683,6 +1686,13 @@ func (w *ServerInterfaceWrapper) GetFestivalItems(ctx echo.Context) error {
 	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Optional query parameter "division_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "division_id", ctx.QueryParams(), &params.DivisionId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter division_id: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments

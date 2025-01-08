@@ -1013,6 +1013,11 @@ paths:
           description: year
           schema:
             type: integer
+        - name: division_id
+          in: query
+          description: division_id
+          schema:
+            type: integer
       responses:
         "200":
           description: festival_itemの一覧を取得

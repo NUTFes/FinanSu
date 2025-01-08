@@ -19,6 +19,7 @@ type festivalItemRepository struct {
 type FestivalItemRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
+	AllByPeriodAndDivision(context.Context, string, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
 	CreateFestivalItem(context.Context, *sql.Tx, generated.FestivalItem) error
 	CreateItemBudget(context.Context, *sql.Tx, generated.FestivalItem) error
@@ -88,6 +89,39 @@ func (fir *festivalItemRepository) AllByPeriod(
 		Order(goqu.I("festival_items.id").Desc()).
 		Where(goqu.Ex{"years.year": year}).
 		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return fir.crud.Read(c, query)
+}
+
+// 年度別と部門で取得
+func (fir *festivalItemRepository) AllByPeriodAndDivision(
+	c context.Context,
+	year string,
+	divisionId string,
+) (*sql.Rows, error) {
+	query, _, err := dialect.Select(
+		"festival_items.id",
+		"festival_items.name",
+		"festival_items.memo",
+		"financial_records.name",
+		"divisions.name",
+		goqu.L("COALESCE(`item_budgets`.`amount`, 0)").As("budget"),
+		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
+		goqu.COALESCE(goqu.L("item_budgets.amount - COALESCE(SUM(`buy_reports`.`amount`), 0)"), 0).As("balance")).
+		From("festival_items").
+		InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
+		InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+		LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		GroupBy("festival_items.id", "item_budgets.amount").
+		Order(goqu.I("festival_items.id").Desc()).
+		Where(goqu.Ex{"divisions.id": divisionId}).
+		Where(goqu.Ex{"years.year": year}).
+		ToSQL()
+
 	if err != nil {
 		return nil, err
 	}
