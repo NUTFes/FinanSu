@@ -78,6 +78,7 @@ import type {
   GetExpensesFiscalyearYear200,
   GetExpensesId200,
   GetExpensesIdDetails200,
+  GetFestivalItemsParams,
   GetFinancialRecordsParams,
   GetFundInformations200,
   GetFundInformationsDetails200,
@@ -2951,15 +2952,22 @@ export type getFestivalItemsResponse = {
   headers: Headers;
 }
 
-export const getGetFestivalItemsUrl = () => {
+export const getGetFestivalItemsUrl = (params?: GetFestivalItemsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
-  return `/festival_items`
+  return normalizedParams.size ? `/festival_items?${normalizedParams.toString()}` : `/festival_items`
 }
 
-export const getFestivalItems = async ( options?: RequestInit): Promise<getFestivalItemsResponse> => {
+export const getFestivalItems = async (params?: GetFestivalItemsParams, options?: RequestInit): Promise<getFestivalItemsResponse> => {
   
-  return customFetch<Promise<getFestivalItemsResponse>>(getGetFestivalItemsUrl(),
+  return customFetch<Promise<getFestivalItemsResponse>>(getGetFestivalItemsUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -2971,19 +2979,19 @@ export const getFestivalItems = async ( options?: RequestInit): Promise<getFesti
 
 
 
-export const getGetFestivalItemsKey = () => [`/festival_items`] as const;
+export const getGetFestivalItemsKey = (params?: GetFestivalItemsParams,) => [`/festival_items`, ...(params ? [params]: [])] as const;
 
 export type GetFestivalItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItems>>>
 export type GetFestivalItemsQueryError = unknown
 
 export const useGetFestivalItems = <TError = unknown>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+  params?: GetFestivalItemsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
   const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsKey() : null);
-  const swrFn = () => getFestivalItems(requestOptions)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsKey(params) : null);
+  const swrFn = () => getFestivalItems(params, requestOptions)
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
