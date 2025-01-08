@@ -50,25 +50,45 @@ func (fiu *festivalItemUseCase) CreateFestivalItem(
 	festivalItem generated.FestivalItem,
 ) (generated.FestivalItemWithBalance, error) {
 	latastFestivalItemWithBalance := generated.FestivalItemWithBalance{}
-	// err := fiu.rep.Create(c, financialRecord)
-	// if err != nil {
-	// 	return latastFinancialRecordWithBalance, err
-	// }
-	// row, err := fiu.rep.FindLatestRecord(c)
-	// if err != nil {
-	// 	return latastFinancialRecordWithBalance, err
-	// }
-	// err = row.Scan(
-	// 	&latastFinancialRecordWithBalance.Id,
-	// 	&latastFinancialRecordWithBalance.Name,
-	// 	&latastFinancialRecordWithBalance.Year,
-	// 	&latastFinancialRecordWithBalance.Budget,
-	// 	&latastFinancialRecordWithBalance.Expense,
-	// 	&latastFinancialRecordWithBalance.Balance,
-	// )
-	// if err != nil {
-	// 	return latastFinancialRecordWithBalance, err
-	// }
+
+	// トランザクションスタート
+	tx, _ := fiu.rep.StartTransaction(c)
+
+	if err := fiu.rep.CreateFestivalItem(c, tx, festivalItem); err != nil {
+		// エラーが発生時はロールバック
+		fiu.rep.RollBack(c, tx)
+		return latastFestivalItemWithBalance, err
+	}
+
+	if err := fiu.rep.CreateItemBudget(c, tx, festivalItem); err != nil {
+		// エラーが発生時はロールバック
+		fiu.rep.RollBack(c, tx)
+		return latastFestivalItemWithBalance, err
+	}
+
+	// コミットしてトランザクション終了
+	if err := fiu.rep.Commit(c, tx); err != nil {
+		return latastFestivalItemWithBalance, err
+	}
+
+	row, err := fiu.rep.FindLatestRecord(c)
+	if err != nil {
+		return latastFestivalItemWithBalance, err
+	}
+	err = row.Scan(
+		&latastFestivalItemWithBalance.Id,
+		&latastFestivalItemWithBalance.Name,
+		&latastFestivalItemWithBalance.Memo,
+		&latastFestivalItemWithBalance.FinancialRecord,
+		&latastFestivalItemWithBalance.Division,
+		&latastFestivalItemWithBalance.Budget,
+		&latastFestivalItemWithBalance.Expense,
+		&latastFestivalItemWithBalance.Balance,
+	)
+	if err != nil {
+		return latastFestivalItemWithBalance, err
+	}
+
 	return latastFestivalItemWithBalance, nil
 }
 
@@ -103,6 +123,6 @@ func (fiu *festivalItemUseCase) UpdateFestivalItem(
 }
 
 func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string) error {
-	err := fiu.rep.Delete(c, id)
+	err := fiu.rep.DeleteFestivalItem(c, id)
 	return err
 }

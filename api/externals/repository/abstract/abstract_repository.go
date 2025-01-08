@@ -17,6 +17,8 @@ type Crud interface {
 	Read(context.Context, string) (*sql.Rows, error)
 	ReadByID(context.Context, string) (*sql.Row, error)
 	UpdateDB(context.Context, string) error
+	StartTransaction(context.Context) (*sql.Tx, error)
+	Commit(context.Context, *sql.Tx) error
 }
 
 func NewCrud(client db.Client) Crud {
@@ -46,4 +48,12 @@ func (a abstractRepository) UpdateDB(ctx context.Context, query string) error {
 	}
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
+}
+
+func (a abstractRepository) StartTransaction(ctx context.Context) (*sql.Tx, error) {
+	return a.client.DB().BeginTx(ctx, nil)
+}
+
+func (a abstractRepository) Commit(ctx context.Context, tx *sql.Tx) error {
+	return tx.Commit()
 }
