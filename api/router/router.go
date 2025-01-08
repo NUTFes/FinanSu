@@ -160,7 +160,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// financial_records
 	e.GET("/financial_records", r.financialRecordController.IndexFinancialRecords)
-	e.POST("/financial_records/:id", r.financialRecordController.CreateFinancialRecord)
+	e.POST("/financial_records", r.financialRecordController.CreateFinancialRecord)
 	e.PUT("/financial_records/:id", r.financialRecordController.UpdateFinancialRecord)
 	e.DELETE("/financial_records/:id", r.financialRecordController.DestroyFinancialRecord)
 

@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -31,9 +32,11 @@ func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error 
 }
 
 func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error {
-	name := c.QueryParam("name")
-
-	latastBureau, err := f.u.CreateFinancialRecord(c.Request().Context(), name)
+	financialRecord := new(generated.FinancialRecord)
+	if err := c.Bind(financialRecord); err != nil {
+		return err
+	}
+	latastBureau, err := f.u.CreateFinancialRecord(c.Request().Context(), *financialRecord)
 	if err != nil {
 		return err
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 )
@@ -14,7 +15,10 @@ type financialRecordUseCase struct {
 
 type FinancialRecordUseCase interface {
 	GetFinancialRecords(context.Context) ([]domain.Bureau, error)
-	CreateFinancialRecord(context.Context, string) (domain.Bureau, error)
+	CreateFinancialRecord(
+		context.Context,
+		generated.FinancialRecord,
+	) (generated.FinancialRecordWithBalance, error)
 	UpdateFinancialRecord(context.Context, string, string) (domain.Bureau, error)
 	DestroyFinancialRecord(context.Context, string) error
 }
@@ -52,21 +56,26 @@ func (fru *financialRecordUseCase) GetFinancialRecords(c context.Context) ([]dom
 
 func (fru *financialRecordUseCase) CreateFinancialRecord(
 	c context.Context,
-	name string,
-) (domain.Bureau, error) {
-	latastBureau := domain.Bureau{}
-	err := fru.rep.Create(c, name, name, name, name, name)
+	financialRecord generated.FinancialRecord,
+) (generated.FinancialRecordWithBalance, error) {
+	latastFinancialRecordWithBalance := generated.FinancialRecordWithBalance{}
+	err := fru.rep.Create(c, financialRecord)
+	if err != nil {
+		return latastFinancialRecordWithBalance, err
+	}
 	row, err := fru.rep.FindLatestRecord(c)
+	if err != nil {
+		return latastFinancialRecordWithBalance, err
+	}
 	err = row.Scan(
-		&latastBureau.ID,
-		&latastBureau.Name,
-		&latastBureau.CreatedAt,
-		&latastBureau.UpdatedAt,
+		&latastFinancialRecordWithBalance.Id,
+		&latastFinancialRecordWithBalance.Name,
+		&latastFinancialRecordWithBalance.Year,
 	)
 	if err != nil {
-		return latastBureau, err
+		return latastFinancialRecordWithBalance, err
 	}
-	return latastBureau, nil
+	return latastFinancialRecordWithBalance, nil
 }
 
 func (fru *financialRecordUseCase) UpdateFinancialRecord(

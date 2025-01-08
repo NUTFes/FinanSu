@@ -6,6 +6,7 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	"github.com/NUTFes/FinanSu/api/generated"
 	goqu "github.com/doug-martin/goqu/v9"
 )
 
@@ -18,7 +19,7 @@ type FinancialRecordRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
-	Create(context.Context, string, string, string, string, string) error
+	Create(context.Context, generated.FinancialRecord) error
 	Update(context.Context, string, string, string, string, string, string) error
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
@@ -75,14 +76,10 @@ func (frr *financialRecordRepository) GetById(
 // 作成
 func (frr *financialRecordRepository) Create(
 	c context.Context,
-	name string,
-	tel string,
-	email string,
-	address string,
-	representative string,
+	financialRecord generated.FinancialRecord,
 ) error {
-	ds := dialect.Insert("sponsors").
-		Rows(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative})
+	ds := dialect.Insert("financial_records").
+		Rows(goqu.Record{"name": financialRecord.Name, "year_id": financialRecord.YearId})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
@@ -126,7 +123,12 @@ func (frr *financialRecordRepository) Delete(
 
 // 最新のsponcerを取得する
 func (frr *financialRecordRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-	query, _, err := dialect.From("sponsors").Order(goqu.I("id").Desc()).Limit(1).ToSQL()
+	query, _, err := dialect.Select("financial_records.id", "financial_records.name", "years.year").
+		From("financial_records").
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		Order(goqu.I("id").Desc()).
+		Limit(1).
+		ToSQL()
 	if err != nil {
 		return nil, err
 	}
