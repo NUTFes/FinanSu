@@ -16,15 +16,16 @@ type festivalItemRepository struct {
 	crud   abstract.Crud
 }
 
+type FestivalItem = generated.FestivalItem
 type FestivalItemRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
 	AllByPeriodAndDivision(context.Context, string, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
-	CreateFestivalItem(context.Context, *sql.Tx, generated.FestivalItem) error
-	CreateItemBudget(context.Context, *sql.Tx, generated.FestivalItem) error
-	UpdateFestivalItem(context.Context, *sql.Tx, string, generated.FestivalItem) error
-	UpdateItemBudget(context.Context, *sql.Tx, string, generated.FestivalItem) error
+	CreateFestivalItem(context.Context, *sql.Tx, FestivalItem) error
+	CreateItemBudget(context.Context, *sql.Tx, FestivalItem) error
+	UpdateFestivalItem(context.Context, *sql.Tx, string, FestivalItem) error
+	UpdateItemBudget(context.Context, *sql.Tx, string, FestivalItem) error
 	DeleteFestivalItem(context.Context, *sql.Tx, string) error
 	DeleteItemBudget(context.Context, *sql.Tx, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
@@ -162,7 +163,7 @@ func (fir *festivalItemRepository) GetById(
 func (fir *festivalItemRepository) CreateFestivalItem(
 	c context.Context,
 	tx *sql.Tx,
-	festivalItem generated.FestivalItem,
+	festivalItem FestivalItem,
 ) error {
 	ds := dialect.Insert("festival_items").
 		Rows(goqu.Record{"name": festivalItem.Name, "memo": festivalItem.Memo, "division_id": festivalItem.DivisionId})
@@ -178,7 +179,7 @@ func (fir *festivalItemRepository) CreateFestivalItem(
 func (fir *festivalItemRepository) CreateItemBudget(
 	c context.Context,
 	tx *sql.Tx,
-	festivalItem generated.FestivalItem,
+	festivalItem FestivalItem,
 ) error {
 	ds := dialect.Insert("item_budgets").
 		Rows(goqu.Record{"amount": festivalItem.Amount, "festival_item_id": goqu.L("LAST_INSERT_ID()")})
@@ -196,7 +197,7 @@ func (fir *festivalItemRepository) UpdateFestivalItem(
 	c context.Context,
 	tx *sql.Tx,
 	id string,
-	festivalItem generated.FestivalItem,
+	festivalItem FestivalItem,
 ) error {
 	ds := dialect.Update("festival_items").
 		Set(goqu.Record{"name": festivalItem.Name, "memo": festivalItem.Memo, "division_id": festivalItem.DivisionId}).
@@ -214,7 +215,7 @@ func (fir *festivalItemRepository) UpdateItemBudget(
 	c context.Context,
 	tx *sql.Tx,
 	id string,
-	festivalItem generated.FestivalItem,
+	festivalItem FestivalItem,
 ) error {
 	ds := dialect.Update("item_budgets").
 		Set(goqu.Record{"amount": festivalItem.Amount}).
