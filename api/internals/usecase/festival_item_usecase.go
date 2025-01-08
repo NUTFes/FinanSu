@@ -141,6 +141,26 @@ func (fiu *festivalItemUseCase) UpdateFestivalItem(
 }
 
 func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string) error {
-	err := fiu.rep.DeleteFestivalItem(c, id)
-	return err
+	// トランザクションスタート
+	tx, _ := fiu.rep.StartTransaction(c)
+
+	// 先に紐づく予算を削除
+	err := fiu.rep.DeleteItemBudget(c, tx, id)
+	if err != nil {
+		fiu.rep.RollBack(c, tx)
+	}
+
+	// 購入物品を削除
+	err = fiu.rep.DeleteFestivalItem(c, tx, id)
+	if err != nil {
+		fiu.rep.RollBack(c, tx)
+		return err
+	}
+
+	// コミットしてトランザクション終了
+	if err = fiu.rep.Commit(c, tx); err != nil {
+		return err
+	}
+
+	return nil
 }

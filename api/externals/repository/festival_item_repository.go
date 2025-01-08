@@ -24,7 +24,8 @@ type FestivalItemRepository interface {
 	CreateItemBudget(context.Context, *sql.Tx, generated.FestivalItem) error
 	UpdateFestivalItem(context.Context, *sql.Tx, string, generated.FestivalItem) error
 	UpdateItemBudget(context.Context, *sql.Tx, string, generated.FestivalItem) error
-	DeleteFestivalItem(context.Context, string) error
+	DeleteFestivalItem(context.Context, *sql.Tx, string) error
+	DeleteItemBudget(context.Context, *sql.Tx, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	StartTransaction(context.Context) (*sql.Tx, error)
 	RollBack(context.Context, *sql.Tx)
@@ -186,18 +187,35 @@ func (fir *festivalItemRepository) UpdateItemBudget(
 	return err
 }
 
-// 削除
+// 購入物品削除
 func (fir *festivalItemRepository) DeleteFestivalItem(
 	c context.Context,
+	tx *sql.Tx,
 	id string,
 ) error {
-	ds := dialect.Delete("financial_records").Where(goqu.Ex{"id": id})
+	ds := dialect.Delete("festival_items").Where(goqu.Ex{"id": id})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
 	}
-	return fir.crud.UpdateDB(c, query)
+	fmt.Println(query)
+	_, err = tx.Exec(query)
+	return err
+}
 
+// 予算削除
+func (fir *festivalItemRepository) DeleteItemBudget(
+	c context.Context,
+	tx *sql.Tx,
+	id string,
+) error {
+	ds := dialect.Delete("item_budgets").Where(goqu.Ex{"festival_item_id": id})
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(query)
+	return err
 }
 
 // 最新のfestivalItemを取得する
