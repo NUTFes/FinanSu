@@ -77,7 +77,6 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 	total.Expense = &expenseTotal
 	total.Balance = &balanceTotal
 
-	// financialRecordDetails.FinancialRecords = &financialRecordList
 	financialRecordDetails.Total = &total
 	financialRecordDetails.FinancialRecords = &financialRecordList
 
@@ -131,7 +130,6 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	total.Expense = &expenseTotal
 	total.Balance = &balanceTotal
 
-	// financialRecordDetails.FinancialRecords = &financialRecordList
 	financialRecordDetails.Total = &total
 	financialRecordDetails.FinancialRecords = &financialRecordList
 
@@ -198,13 +196,4 @@ func (fru *financialRecordUseCase) UpdateFinancialRecord(
 func (fru *financialRecordUseCase) DestroyFinancialRecord(c context.Context, id string) error {
 	err := fru.rep.Delete(c, id)
 	return err
-}
-
-type FinancialRecordDetailColumn struct {
-	Id      *string
-	Name    *string
-	Year    *string
-	Budget  *int
-	Expense *int
-	Balance *int
 }
