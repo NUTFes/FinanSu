@@ -1647,7 +1647,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                $ref: "#/components/schemas/sponsor"
     post:
       tags:
         - sponsor
@@ -1685,7 +1686,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                $ref: "#/components/schemas/sponsor"
     put:
       tags:
         - sponsor
@@ -1748,8 +1750,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-
+                type: array
+                items:
+                  $ref: "#/components/schemas/sponsor"
   /sponsorstyles:
     get:
       tags:
@@ -1852,10 +1855,11 @@ paths:
       responses:
         "200":
           description: teacherの一覧を取得
-          content:
-            "*/*":
-              schema:
-                type: array
+          # NOTE 型が定義されておらず、generateできないためコメントアウト
+          # content:
+          #   "*/*":
+          #     schema:
+          #       type: array
     post:
       tags:
         - teacher
@@ -2037,10 +2041,10 @@ paths:
       responses:
         "200":
           description: userの一覧を取得
-          content:
-            "*/*":
-              schema:
-                type: array
+          # content:
+          #   "*/*":
+          #     schema:
+          #       type: array
     post:
       tags:
         - user
@@ -2177,7 +2181,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  $ref: "#/components/schemas/year_periods"
     post:
       tags:
         - year
@@ -2215,7 +2221,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/year_periods"
     put:
       tags:
         - year
@@ -2270,7 +2276,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  $ref: "#/components/schemas/year_periods"
     post:
       tags:
         - year_periods
@@ -2568,6 +2576,9 @@ components:
         - tel
       type: object
       properties:
+        id:
+          type: integer
+          example: 0
         name:
           type: string
           example: 企業1
