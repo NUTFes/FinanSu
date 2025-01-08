@@ -155,6 +155,9 @@ func (fru *financialRecordUseCase) CreateFinancialRecord(
 		&latastFinancialRecordWithBalance.Id,
 		&latastFinancialRecordWithBalance.Name,
 		&latastFinancialRecordWithBalance.Year,
+		&latastFinancialRecordWithBalance.Budget,
+		&latastFinancialRecordWithBalance.Expense,
+		&latastFinancialRecordWithBalance.Balance,
 	)
 	if err != nil {
 		return latastFinancialRecordWithBalance, err
@@ -182,6 +185,9 @@ func (fru *financialRecordUseCase) UpdateFinancialRecord(
 		&updateFinancialRecord.Id,
 		&updateFinancialRecord.Name,
 		&updateFinancialRecord.Year,
+		&updateFinancialRecord.Budget,
+		&updateFinancialRecord.Expense,
+		&updateFinancialRecord.Balance,
 	); err != nil {
 		return updateFinancialRecord, err
 	}

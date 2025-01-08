@@ -85,9 +85,19 @@ func (frr *financialRecordRepository) GetById(
 	c context.Context,
 	id string,
 ) (*sql.Row, error) {
-	query, _, err := dialect.Select("financial_records.id", "financial_records.name", "years.year").
+	query, _, err := dialect.Select(
+		"financial_records.id",
+		"financial_records.name", "years.year",
+		goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
+		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
+		goqu.COALESCE(goqu.L("SUM(item_budgets.amount) - SUM(buy_reports.amount)"), 0).As("balance")).
 		From("financial_records").
 		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+		LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
+		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+		LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		GroupBy("financial_records.id").
 		Where(goqu.Ex{"financial_records.id": id}).
 		ToSQL()
 	if err != nil {
@@ -142,9 +152,19 @@ func (frr *financialRecordRepository) Delete(
 
 // 最新のsponcerを取得する
 func (frr *financialRecordRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-	query, _, err := dialect.Select("financial_records.id", "financial_records.name", "years.year").
+	query, _, err := dialect.Select(
+		"financial_records.id",
+		"financial_records.name", "years.year",
+		goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
+		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
+		goqu.COALESCE(goqu.L("SUM(item_budgets.amount) - SUM(buy_reports.amount)"), 0).As("balance")).
 		From("financial_records").
 		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+		LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
+		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+		LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		GroupBy("financial_records.id").
 		Order(goqu.I("id").Desc()).
 		Limit(1).
 		ToSQL()
