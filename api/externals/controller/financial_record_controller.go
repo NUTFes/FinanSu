@@ -34,25 +34,30 @@ func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error 
 func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error {
 	financialRecord := new(generated.FinancialRecord)
 	if err := c.Bind(financialRecord); err != nil {
-		return err
+		return c.String(http.StatusBadRequest, "Bad Request")
 	}
-	latastBureau, err := f.u.CreateFinancialRecord(c.Request().Context(), *financialRecord)
+	latastFinancialRecord, err := f.u.CreateFinancialRecord(c.Request().Context(), *financialRecord)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastBureau)
+	return c.JSON(http.StatusOK, latastFinancialRecord)
 }
 
 func (f *financialRecordController) UpdateFinancialRecord(c echo.Context) error {
 	id := c.Param("id")
-	name := c.QueryParam("name")
-
-	updatedBureau, err := f.u.UpdateFinancialRecord(c.Request().Context(), id, name)
-
+	financialRecord := new(generated.FinancialRecord)
+	if err := c.Bind(financialRecord); err != nil {
+		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+	updatedFinancialRecord, err := f.u.UpdateFinancialRecord(
+		c.Request().Context(),
+		id,
+		*financialRecord,
+	)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, updatedBureau)
+	return c.JSON(http.StatusOK, updatedFinancialRecord)
 }
 
 func (f *financialRecordController) DestroyFinancialRecord(c echo.Context) error {

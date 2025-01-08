@@ -20,7 +20,7 @@ type FinancialRecordRepository interface {
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
 	Create(context.Context, generated.FinancialRecord) error
-	Update(context.Context, string, string, string, string, string, string) error
+	Update(context.Context, string, generated.FinancialRecord) error
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 }
@@ -63,9 +63,10 @@ func (frr *financialRecordRepository) GetById(
 	c context.Context,
 	id string,
 ) (*sql.Row, error) {
-	query, _, err := dialect.Select("sponsors.*").
-		From("sponsors").
-		Where(goqu.Ex{"sponsors.id": id}).
+	query, _, err := dialect.Select("financial_records.id", "financial_records.name", "years.year").
+		From("financial_records").
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		Where(goqu.Ex{"financial_records.id": id}).
 		ToSQL()
 	if err != nil {
 		return nil, err
@@ -91,14 +92,10 @@ func (frr *financialRecordRepository) Create(
 func (frr *financialRecordRepository) Update(
 	c context.Context,
 	id string,
-	name string,
-	tel string,
-	email string,
-	address string,
-	representative string,
+	financialRecord generated.FinancialRecord,
 ) error {
-	ds := dialect.Update("sponsors").
-		Set(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative}).
+	ds := dialect.Update("financial_records").
+		Set(goqu.Record{"name": financialRecord.Name, "year_id": financialRecord.YearId}).
 		Where(goqu.Ex{"id": id})
 	query, _, err := ds.ToSQL()
 	if err != nil {

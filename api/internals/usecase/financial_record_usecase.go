@@ -19,7 +19,11 @@ type FinancialRecordUseCase interface {
 		context.Context,
 		generated.FinancialRecord,
 	) (generated.FinancialRecordWithBalance, error)
-	UpdateFinancialRecord(context.Context, string, string) (domain.Bureau, error)
+	UpdateFinancialRecord(
+		context.Context,
+		string,
+		generated.FinancialRecord,
+	) (generated.FinancialRecordWithBalance, error)
 	DestroyFinancialRecord(context.Context, string) error
 }
 
@@ -81,21 +85,28 @@ func (fru *financialRecordUseCase) CreateFinancialRecord(
 func (fru *financialRecordUseCase) UpdateFinancialRecord(
 	c context.Context,
 	id string,
-	name string,
-) (domain.Bureau, error) {
-	updatedBureau := domain.Bureau{}
-	err := fru.rep.Update(c, id, name, name, name, name, name)
-	row, err := fru.rep.GetById(c, id)
-	err = row.Scan(
-		&updatedBureau.ID,
-		&updatedBureau.Name,
-		&updatedBureau.CreatedAt,
-		&updatedBureau.UpdatedAt,
-	)
-	if err != nil {
-		return updatedBureau, err
+	financialRecord generated.FinancialRecord,
+) (generated.FinancialRecordWithBalance, error) {
+	updateFinancialRecord := generated.FinancialRecordWithBalance{}
+
+	if err := fru.rep.Update(c, id, financialRecord); err != nil {
+		return updateFinancialRecord, err
 	}
-	return updatedBureau, nil
+
+	row, err := fru.rep.GetById(c, id)
+	if err != nil {
+		return updateFinancialRecord, err
+	}
+
+	if err = row.Scan(
+		&updateFinancialRecord.Id,
+		&updateFinancialRecord.Name,
+		&updateFinancialRecord.Year,
+	); err != nil {
+		return updateFinancialRecord, err
+	}
+
+	return updateFinancialRecord, nil
 }
 
 func (fru *financialRecordUseCase) DestroyFinancialRecord(c context.Context, id string) error {
