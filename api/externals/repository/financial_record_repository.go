@@ -33,7 +33,21 @@ func NewFinancialRecordRepository(c db.Client, ac abstract.Crud) FinancialRecord
 func (frr *financialRecordRepository) All(
 	c context.Context,
 ) (*sql.Rows, error) {
-	query, _, err := dialect.Select("sponsors.*").From("sponsors").ToSQL()
+	query, _, err := dialect.Select(
+		"financial_records.id",
+		"financial_records.name", "years.year",
+		goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
+		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
+		goqu.COALESCE(goqu.L("SUM(item_budgets.amount) - SUM(buy_reports.amount)"), 0).As("balance")).
+		From("financial_records").
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+		LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
+		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+		LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		GroupBy("financial_records.id").
+		ToSQL()
+
 	if err != nil {
 		return nil, err
 	}
@@ -45,12 +59,20 @@ func (frr *financialRecordRepository) AllByPeriod(
 	c context.Context,
 	year string,
 ) (*sql.Rows, error) {
-	query, _, err := dialect.Select("sponsors.*").
-		From("sponsors").
-		InnerJoin(goqu.I("year_periods"), goqu.On(goqu.I("sponsors.created_at").Gt(goqu.I("year_periods.started_at")), goqu.I("sponsors.created_at").Lt(goqu.I("year_periods.ended_at")))).
-		InnerJoin(goqu.I("years"), goqu.On(goqu.I("year_periods.year_id").Eq(goqu.I("years.id")))).
+	query, _, err := dialect.Select(
+		"financial_records.id",
+		"financial_records.name", "years.year",
+		goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
+		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
+		goqu.COALESCE(goqu.L("SUM(item_budgets.amount) - SUM(buy_reports.amount)"), 0).As("balance")).
+		From("financial_records").
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+		LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
+		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+		LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		GroupBy("financial_records.id").
 		Where(goqu.Ex{"years.year": year}).
-		Order(goqu.I("sponsors.id").Desc()).
 		ToSQL()
 	if err != nil {
 		return nil, err

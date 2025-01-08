@@ -5,7 +5,6 @@ import (
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
-	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 )
 
@@ -14,7 +13,8 @@ type financialRecordUseCase struct {
 }
 
 type FinancialRecordUseCase interface {
-	GetFinancialRecords(context.Context) ([]domain.Bureau, error)
+	GetFinancialRecords(context.Context) (generated.FinancialRecordDetails, error)
+	GetFinancialRecordsByYears(context.Context, string) (generated.FinancialRecordDetails, error)
 	CreateFinancialRecord(
 		context.Context,
 		generated.FinancialRecord,
@@ -31,31 +31,111 @@ func NewFinancialRecordUseCase(rep rep.FinancialRecordRepository) FinancialRecor
 	return &financialRecordUseCase{rep}
 }
 
-func (fru *financialRecordUseCase) GetFinancialRecords(c context.Context) ([]domain.Bureau, error) {
-	bureau := domain.Bureau{}
-	var bureaus []domain.Bureau
+func (fru *financialRecordUseCase) GetFinancialRecords(
+	c context.Context,
+) (generated.FinancialRecordDetails, error) {
+	var financialRecordDetails generated.FinancialRecordDetails
+	var financialRecordList []generated.FinancialRecordWithBalance
+	var total generated.Total
 
-	year := "2021"
-	//クエリ実行
-	rows, err := fru.rep.AllByPeriod(c, year)
+	rows, err := fru.rep.All(c)
 	if err != nil {
-		return nil, err
+		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 	}
+
 	defer rows.Close()
+
 	for rows.Next() {
+		var financialRecord generated.FinancialRecordWithBalance
 		err := rows.Scan(
-			&bureau.ID,
-			&bureau.Name,
-			&bureau.CreatedAt,
-			&bureau.UpdatedAt,
+			&financialRecord.Id,
+			&financialRecord.Name,
+			&financialRecord.Year,
+			&financialRecord.Budget,
+			&financialRecord.Expense,
+			&financialRecord.Balance,
 		)
 
 		if err != nil {
-			return nil, errors.Wrapf(err, "can not connect SQL")
+			return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 		}
-		bureaus = append(bureaus, bureau)
+		financialRecordList = append(financialRecordList, financialRecord)
 	}
-	return bureaus, nil
+
+	// totalを求める
+	budgetTotal := 0
+	expenseTotal := 0
+	balanceTotal := 0
+
+	for _, financialRecord := range financialRecordList {
+		budgetTotal += *financialRecord.Budget
+		expenseTotal += *financialRecord.Expense
+		balanceTotal += *financialRecord.Balance
+	}
+
+	total.Budget = &budgetTotal
+	total.Expense = &expenseTotal
+	total.Balance = &balanceTotal
+
+	// financialRecordDetails.FinancialRecords = &financialRecordList
+	financialRecordDetails.Total = &total
+	financialRecordDetails.FinancialRecords = &financialRecordList
+
+	return financialRecordDetails, err
+}
+
+func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
+	c context.Context,
+	year string,
+) (generated.FinancialRecordDetails, error) {
+	var financialRecordDetails generated.FinancialRecordDetails
+	var financialRecordList []generated.FinancialRecordWithBalance
+	var total generated.Total
+
+	rows, err := fru.rep.AllByPeriod(c, year)
+	if err != nil {
+		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var financialRecord generated.FinancialRecordWithBalance
+		err := rows.Scan(
+			&financialRecord.Id,
+			&financialRecord.Name,
+			&financialRecord.Year,
+			&financialRecord.Budget,
+			&financialRecord.Expense,
+			&financialRecord.Balance,
+		)
+
+		if err != nil {
+			return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
+		}
+		financialRecordList = append(financialRecordList, financialRecord)
+	}
+
+	// totalを求める
+	budgetTotal := 0
+	expenseTotal := 0
+	balanceTotal := 0
+
+	for _, financialRecord := range financialRecordList {
+		budgetTotal += *financialRecord.Budget
+		expenseTotal += *financialRecord.Expense
+		balanceTotal += *financialRecord.Balance
+	}
+
+	total.Budget = &budgetTotal
+	total.Expense = &expenseTotal
+	total.Balance = &balanceTotal
+
+	// financialRecordDetails.FinancialRecords = &financialRecordList
+	financialRecordDetails.Total = &total
+	financialRecordDetails.FinancialRecords = &financialRecordList
+
+	return financialRecordDetails, err
 }
 
 func (fru *financialRecordUseCase) CreateFinancialRecord(
@@ -112,4 +192,13 @@ func (fru *financialRecordUseCase) UpdateFinancialRecord(
 func (fru *financialRecordUseCase) DestroyFinancialRecord(c context.Context, id string) error {
 	err := fru.rep.Delete(c, id)
 	return err
+}
+
+type FinancialRecordDetailColumn struct {
+	Id      *string
+	Name    *string
+	Year    *string
+	Budget  *int
+	Expense *int
+	Balance *int
 }

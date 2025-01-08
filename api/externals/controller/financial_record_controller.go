@@ -24,11 +24,23 @@ func NewFinancialRecordController(u usecase.FinancialRecordUseCase) FinancialRec
 }
 
 func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error {
-	bureaus, err := f.u.GetFinancialRecords(c.Request().Context())
+	year := c.QueryParam("year")
+	var financialRecordDetails generated.FinancialRecordDetails
+	var err error
+
+	if year != "" {
+		financialRecordDetails, err = f.u.GetFinancialRecordsByYears(c.Request().Context(), year)
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, financialRecordDetails)
+	}
+
+	financialRecordDetails, err = f.u.GetFinancialRecords(c.Request().Context())
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, bureaus)
+	return c.JSON(http.StatusOK, financialRecordDetails)
 }
 
 func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error {
