@@ -97,29 +97,47 @@ func (fiu *festivalItemUseCase) UpdateFestivalItem(
 	id string,
 	festivalItem generated.FestivalItem,
 ) (generated.FestivalItemWithBalance, error) {
-	updateFestivalItem := generated.FestivalItemWithBalance{}
+	updateFestivalItemWithBalance := generated.FestivalItemWithBalance{}
 
-	// if err := fiu.rep.Update(c, id, festivalItem); err != nil {
-	// 	return updateFestivalItem, err
-	// }
+	// トランザクションスタート
+	tx, _ := fiu.rep.StartTransaction(c)
 
-	// row, err := fiu.rep.GetById(c, id)
-	// if err != nil {
-	// 	return updateFestivalItem, err
-	// }
+	if err := fiu.rep.UpdateFestivalItem(c, tx, id, festivalItem); err != nil {
+		// エラーが発生時はロールバック
+		fiu.rep.RollBack(c, tx)
+		return updateFestivalItemWithBalance, err
+	}
 
-	// if err = row.Scan(
-	// 	&updateFinancialRecord.Id,
-	// 	&updateFinancialRecord.Name,
-	// 	&updateFinancialRecord.Year,
-	// 	&updateFinancialRecord.Budget,
-	// 	&updateFinancialRecord.Expense,
-	// 	&updateFinancialRecord.Balance,
-	// ); err != nil {
-	// 	return updateFinancialRecord, err
-	// }
+	if err := fiu.rep.UpdateItemBudget(c, tx, id, festivalItem); err != nil {
+		// エラーが発生時はロールバック
+		fiu.rep.RollBack(c, tx)
+		return updateFestivalItemWithBalance, err
+	}
 
-	return updateFestivalItem, nil
+	// コミットしてトランザクション終了
+	if err := fiu.rep.Commit(c, tx); err != nil {
+		return updateFestivalItemWithBalance, err
+	}
+
+	row, err := fiu.rep.GetById(c, id)
+	if err != nil {
+		return updateFestivalItemWithBalance, err
+	}
+	err = row.Scan(
+		&updateFestivalItemWithBalance.Id,
+		&updateFestivalItemWithBalance.Name,
+		&updateFestivalItemWithBalance.Memo,
+		&updateFestivalItemWithBalance.FinancialRecord,
+		&updateFestivalItemWithBalance.Division,
+		&updateFestivalItemWithBalance.Budget,
+		&updateFestivalItemWithBalance.Expense,
+		&updateFestivalItemWithBalance.Balance,
+	)
+	if err != nil {
+		return updateFestivalItemWithBalance, err
+	}
+
+	return updateFestivalItemWithBalance, nil
 }
 
 func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string) error {

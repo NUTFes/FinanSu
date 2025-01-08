@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -21,7 +22,8 @@ type FestivalItemRepository interface {
 	GetById(context.Context, string) (*sql.Row, error)
 	CreateFestivalItem(context.Context, *sql.Tx, generated.FestivalItem) error
 	CreateItemBudget(context.Context, *sql.Tx, generated.FestivalItem) error
-	UpdateFestivalItem(context.Context, string, generated.FestivalItem) error
+	UpdateFestivalItem(context.Context, *sql.Tx, string, generated.FestivalItem) error
+	UpdateItemBudget(context.Context, *sql.Tx, string, generated.FestivalItem) error
 	DeleteFestivalItem(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	StartTransaction(context.Context) (*sql.Tx, error)
@@ -90,20 +92,24 @@ func (fir *festivalItemRepository) GetById(
 	id string,
 ) (*sql.Row, error) {
 	query, _, err := dialect.Select(
-		"financial_records.id",
-		"financial_records.name", "years.year",
-		goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
+		"festival_items.id",
+		"festival_items.name",
+		"festival_items.memo",
+		"financial_records.name",
+		"divisions.name",
+		"item_budgets.amount",
 		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
-		goqu.COALESCE(goqu.L("SUM(item_budgets.amount) - SUM(buy_reports.amount)"), 0).As("balance")).
-		From("financial_records").
+		goqu.COALESCE(goqu.L("item_budgets.amount - COALESCE(SUM(`buy_reports`.`amount`), 0)"), 0).As("balance")).
+		From("festival_items").
+		InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
+		InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
 		InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
-		LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
-		LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
 		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
 		LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
-		GroupBy("financial_records.id").
-		Where(goqu.Ex{"financial_records.id": id}).
+		GroupBy("festival_items.id", "item_budgets.amount").
+		Where(goqu.Ex{"festival_items.id": id}).
 		ToSQL()
+
 	if err != nil {
 		return nil, err
 	}
@@ -143,20 +149,41 @@ func (fir *festivalItemRepository) CreateItemBudget(
 	return err
 }
 
-// 編集
+// festivalItem編集
 func (fir *festivalItemRepository) UpdateFestivalItem(
 	c context.Context,
+	tx *sql.Tx,
 	id string,
 	festivalItem generated.FestivalItem,
 ) error {
-	ds := dialect.Update("financial_records").
-		Set(goqu.Record{"name": festivalItem.Name, "year_id": festivalItem.Memo}).
+	ds := dialect.Update("festival_items").
+		Set(goqu.Record{"name": festivalItem.Name, "memo": festivalItem.Memo, "division_id": festivalItem.DivisionId}).
 		Where(goqu.Ex{"id": id})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
 	}
-	return fir.crud.UpdateDB(c, query)
+	_, err = tx.Exec(query)
+	return err
+}
+
+// itemBudget編集
+func (fir *festivalItemRepository) UpdateItemBudget(
+	c context.Context,
+	tx *sql.Tx,
+	id string,
+	festivalItem generated.FestivalItem,
+) error {
+	ds := dialect.Update("item_budgets").
+		Set(goqu.Record{"amount": festivalItem.Amount}).
+		Where(goqu.Ex{"festival_item_id": id})
+	query, _, err := ds.ToSQL()
+	fmt.Println(query)
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(query)
+	return err
 }
 
 // 削除
