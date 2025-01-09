@@ -13,17 +13,17 @@ type financialRecordUseCase struct {
 }
 
 type FinancialRecordUseCase interface {
-	GetFinancialRecords(context.Context) (generated.FinancialRecordDetails, error)
-	GetFinancialRecordsByYears(context.Context, string) (generated.FinancialRecordDetails, error)
+	GetFinancialRecords(context.Context) (FinancialRecordDetails, error)
+	GetFinancialRecordsByYears(context.Context, string) (FinancialRecordDetails, error)
 	CreateFinancialRecord(
 		context.Context,
-		generated.FinancialRecord,
-	) (generated.FinancialRecordWithBalance, error)
+		FinancialRecord,
+	) (FinancialRecordWithBalance, error)
 	UpdateFinancialRecord(
 		context.Context,
 		string,
-		generated.FinancialRecord,
-	) (generated.FinancialRecordWithBalance, error)
+		FinancialRecord,
+	) (FinancialRecordWithBalance, error)
 	DestroyFinancialRecord(context.Context, string) error
 }
 
@@ -31,12 +31,17 @@ func NewFinancialRecordUseCase(rep rep.FinancialRecordRepository) FinancialRecor
 	return &financialRecordUseCase{rep}
 }
 
+type FinancialRecordDetails = generated.FinancialRecordDetails
+type FinancialRecord = generated.FinancialRecord
+type FinancialRecordWithBalance = generated.FinancialRecordWithBalance
+type Total = generated.Total
+
 func (fru *financialRecordUseCase) GetFinancialRecords(
 	c context.Context,
-) (generated.FinancialRecordDetails, error) {
-	var financialRecordDetails generated.FinancialRecordDetails
-	var financialRecordList []generated.FinancialRecordWithBalance
-	var total generated.Total
+) (FinancialRecordDetails, error) {
+	var financialRecordDetails FinancialRecordDetails
+	var financialRecordList []FinancialRecordWithBalance
+	var total Total
 
 	rows, err := fru.rep.All(c)
 	if err != nil {
@@ -46,7 +51,7 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 	defer rows.Close()
 
 	for rows.Next() {
-		var financialRecord generated.FinancialRecordWithBalance
+		var financialRecord FinancialRecordWithBalance
 		err := rows.Scan(
 			&financialRecord.Id,
 			&financialRecord.Name,
@@ -86,10 +91,10 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	c context.Context,
 	year string,
-) (generated.FinancialRecordDetails, error) {
-	var financialRecordDetails generated.FinancialRecordDetails
-	var financialRecordList []generated.FinancialRecordWithBalance
-	var total generated.Total
+) (FinancialRecordDetails, error) {
+	var financialRecordDetails FinancialRecordDetails
+	var financialRecordList []FinancialRecordWithBalance
+	var total Total
 
 	rows, err := fru.rep.AllByPeriod(c, year)
 	if err != nil {
@@ -99,7 +104,7 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	defer rows.Close()
 
 	for rows.Next() {
-		var financialRecord generated.FinancialRecordWithBalance
+		var financialRecord FinancialRecordWithBalance
 		err := rows.Scan(
 			&financialRecord.Id,
 			&financialRecord.Name,
@@ -138,9 +143,9 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 
 func (fru *financialRecordUseCase) CreateFinancialRecord(
 	c context.Context,
-	financialRecord generated.FinancialRecord,
-) (generated.FinancialRecordWithBalance, error) {
-	latastFinancialRecordWithBalance := generated.FinancialRecordWithBalance{}
+	financialRecord FinancialRecord,
+) (FinancialRecordWithBalance, error) {
+	latastFinancialRecordWithBalance := FinancialRecordWithBalance{}
 	err := fru.rep.Create(c, financialRecord)
 	if err != nil {
 		return latastFinancialRecordWithBalance, err
@@ -166,9 +171,9 @@ func (fru *financialRecordUseCase) CreateFinancialRecord(
 func (fru *financialRecordUseCase) UpdateFinancialRecord(
 	c context.Context,
 	id string,
-	financialRecord generated.FinancialRecord,
-) (generated.FinancialRecordWithBalance, error) {
-	updateFinancialRecord := generated.FinancialRecordWithBalance{}
+	financialRecord FinancialRecord,
+) (FinancialRecordWithBalance, error) {
+	updateFinancialRecord := FinancialRecordWithBalance{}
 
 	if err := fru.rep.Update(c, id, financialRecord); err != nil {
 		return updateFinancialRecord, err
