@@ -40,7 +40,7 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 	c context.Context,
 ) (FinancialRecordDetails, error) {
 	var financialRecordDetails FinancialRecordDetails
-	var financialRecordList []FinancialRecordWithBalance
+	var financialRecords []FinancialRecordWithBalance
 	var total Total
 
 	rows, err := fru.rep.All(c)
@@ -64,7 +64,7 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 		if err != nil {
 			return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 		}
-		financialRecordList = append(financialRecordList, financialRecord)
+		financialRecords = append(financialRecords, financialRecord)
 	}
 
 	// totalを求める
@@ -72,7 +72,7 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 	expenseTotal := 0
 	balanceTotal := 0
 
-	for _, financialRecord := range financialRecordList {
+	for _, financialRecord := range financialRecords {
 		budgetTotal += *financialRecord.Budget
 		expenseTotal += *financialRecord.Expense
 		balanceTotal += *financialRecord.Balance
@@ -83,7 +83,7 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 	total.Balance = &balanceTotal
 
 	financialRecordDetails.Total = &total
-	financialRecordDetails.FinancialRecords = &financialRecordList
+	financialRecordDetails.FinancialRecords = &financialRecords
 
 	return financialRecordDetails, err
 }
@@ -93,7 +93,7 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	year string,
 ) (FinancialRecordDetails, error) {
 	var financialRecordDetails FinancialRecordDetails
-	var financialRecordList []FinancialRecordWithBalance
+	var financialRecords []FinancialRecordWithBalance
 	var total Total
 
 	rows, err := fru.rep.AllByPeriod(c, year)
@@ -117,7 +117,7 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 		if err != nil {
 			return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 		}
-		financialRecordList = append(financialRecordList, financialRecord)
+		financialRecords = append(financialRecords, financialRecord)
 	}
 
 	// totalを求める
@@ -125,7 +125,7 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	expenseTotal := 0
 	balanceTotal := 0
 
-	for _, financialRecord := range financialRecordList {
+	for _, financialRecord := range financialRecords {
 		budgetTotal += *financialRecord.Budget
 		expenseTotal += *financialRecord.Expense
 		balanceTotal += *financialRecord.Balance
@@ -136,7 +136,7 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	total.Balance = &balanceTotal
 
 	financialRecordDetails.Total = &total
-	financialRecordDetails.FinancialRecords = &financialRecordList
+	financialRecordDetails.FinancialRecords = &financialRecords
 
 	return financialRecordDetails, err
 }
