@@ -6,9 +6,9 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type PutBureausIdParams = {
+export type GetFinancialRecordsParams = {
 /**
- * name
+ * year
  */
-name?: string;
+year?: number;
 };
