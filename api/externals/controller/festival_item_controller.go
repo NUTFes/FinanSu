@@ -24,13 +24,14 @@ func NewFestivalItemController(u usecase.FestivalItemUseCase) FestivalItemContro
 }
 
 func (f *festivalItemController) IndexFestivalItems(c echo.Context) error {
+	ctx := c.Request().Context()
 	year := c.QueryParam("year")
 	divisionId := c.QueryParam("division_id")
 	var festivalItemDetails FestivalItemDetails
 	var err error
 
 	if year != "" && divisionId != "" {
-		festivalItemDetails, err = f.u.GetFestivalItemsByYearAndDivision(c.Request().Context(), year, divisionId)
+		festivalItemDetails, err = f.u.GetFestivalItemsByYearAndDivision(ctx, year, divisionId)
 		if err != nil {
 			return err
 		}
@@ -38,14 +39,14 @@ func (f *festivalItemController) IndexFestivalItems(c echo.Context) error {
 	}
 
 	if year != "" {
-		festivalItemDetails, err = f.u.GetFestivalItemsByYear(c.Request().Context(), year)
+		festivalItemDetails, err = f.u.GetFestivalItemsByYear(ctx, year)
 		if err != nil {
 			return err
 		}
 		return c.JSON(http.StatusOK, festivalItemDetails)
 	}
 
-	festivalItemDetails, err = f.u.GetFestivalItems(c.Request().Context())
+	festivalItemDetails, err = f.u.GetFestivalItems(ctx)
 	if err != nil {
 		return err
 	}
