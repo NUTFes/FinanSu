@@ -12,11 +12,6 @@ type financialRecordUseCase struct {
 	rep rep.FinancialRecordRepository
 }
 
-type FinancialRecordDetails = generated.FinancialRecordDetails
-type FinancialRecord = generated.FinancialRecord
-type FinancialRecordWithBalance = generated.FinancialRecordWithBalance
-type Total = generated.Total
-
 type FinancialRecordUseCase interface {
 	GetFinancialRecords(context.Context) (FinancialRecordDetails, error)
 	GetFinancialRecordsByYears(context.Context, string) (FinancialRecordDetails, error)
@@ -202,3 +197,8 @@ func (fru *financialRecordUseCase) DestroyFinancialRecord(c context.Context, id 
 	err := fru.rep.Delete(c, id)
 	return err
 }
+
+type FinancialRecordDetails = generated.FinancialRecordDetails
+type FinancialRecord = generated.FinancialRecord
+type FinancialRecordWithBalance = generated.FinancialRecordWithBalance
+type Total = generated.Total

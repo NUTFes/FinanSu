@@ -7,10 +7,6 @@ import (
 	"github.com/NUTFes/FinanSu/api/generated"
 )
 
-type FestivalItemDetails = generated.FestivalItemDetails
-type FestivalItem = generated.FestivalItem
-type FestivalItemWithBalance = generated.FestivalItemWithBalance
-
 type festivalItemUseCase struct {
 	rep rep.FestivalItemRepository
 }
@@ -313,3 +309,7 @@ func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string
 
 	return nil
 }
+
+type FestivalItemDetails = generated.FestivalItemDetails
+type FestivalItem = generated.FestivalItem
+type FestivalItemWithBalance = generated.FestivalItemWithBalance

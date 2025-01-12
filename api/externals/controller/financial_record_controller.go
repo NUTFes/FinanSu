@@ -25,7 +25,7 @@ func NewFinancialRecordController(u usecase.FinancialRecordUseCase) FinancialRec
 
 func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error {
 	year := c.QueryParam("year")
-	var financialRecordDetails generated.FinancialRecordDetails
+	var financialRecordDetails FinancialRecordDetails
 	var err error
 
 	if year != "" {
@@ -44,7 +44,7 @@ func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error 
 }
 
 func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error {
-	financialRecord := new(generated.FinancialRecord)
+	financialRecord := new(FinancialRecord)
 	if err := c.Bind(financialRecord); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
@@ -57,7 +57,7 @@ func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error 
 
 func (f *financialRecordController) UpdateFinancialRecord(c echo.Context) error {
 	id := c.Param("id")
-	financialRecord := new(generated.FinancialRecord)
+	financialRecord := new(FinancialRecord)
 	if err := c.Bind(financialRecord); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
@@ -80,3 +80,6 @@ func (f *financialRecordController) DestroyFinancialRecord(c echo.Context) error
 	}
 	return c.String(http.StatusOK, "Destroy FinancialRecord")
 }
+
+type FinancialRecordDetails = generated.FinancialRecordDetails
+type FinancialRecord = generated.FinancialRecord
