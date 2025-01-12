@@ -7,23 +7,27 @@ import (
 	"github.com/NUTFes/FinanSu/api/generated"
 )
 
+type FestivalItemDetails = generated.FestivalItemDetails
+type FestivalItem = generated.FestivalItem
+type FestivalItemWithBalance = generated.FestivalItemWithBalance
+
 type festivalItemUseCase struct {
 	rep rep.FestivalItemRepository
 }
 
 type FestivalItemUseCase interface {
-	GetFestivalItems(context.Context) (generated.FestivalItemDetails, error)
-	GetFestivalItemsByYears(context.Context, string) (generated.FestivalItemDetails, error)
-	GetFestivalItemsByYearsAndDivision(context.Context, string, string) (generated.FestivalItemDetails, error)
+	GetFestivalItems(context.Context) (FestivalItemDetails, error)
+	GetFestivalItemsByYears(context.Context, string) (FestivalItemDetails, error)
+	GetFestivalItemsByYearsAndDivision(context.Context, string, string) (FestivalItemDetails, error)
 	CreateFestivalItem(
 		context.Context,
-		generated.FestivalItem,
-	) (generated.FestivalItemWithBalance, error)
+		FestivalItem,
+	) (FestivalItemWithBalance, error)
 	UpdateFestivalItem(
 		context.Context,
 		string,
-		generated.FestivalItem,
-	) (generated.FestivalItemWithBalance, error)
+		FestivalItem,
+	) (FestivalItemWithBalance, error)
 	DestroyFestivalItem(context.Context, string) error
 }
 
@@ -33,9 +37,9 @@ func NewFestivalItemUseCase(rep rep.FestivalItemRepository) FestivalItemUseCase 
 
 func (fiu *festivalItemUseCase) GetFestivalItems(
 	c context.Context,
-) (generated.FestivalItemDetails, error) {
-	var festivalItemDetails generated.FestivalItemDetails
-	var festivalItems []generated.FestivalItemWithBalance
+) (FestivalItemDetails, error) {
+	var festivalItemDetails FestivalItemDetails
+	var festivalItems []FestivalItemWithBalance
 
 	rows, err := fiu.rep.All(c)
 	if err != nil {
@@ -44,7 +48,7 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 
 	defer rows.Close()
 	for rows.Next() {
-		var festivalItem generated.FestivalItemWithBalance
+		var festivalItem FestivalItemWithBalance
 		err := rows.Scan(
 			&festivalItem.Id,
 			&festivalItem.Name,
@@ -62,7 +66,7 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 	}
 	festivalItemDetails.FestivalItems = &festivalItems
 
-	var total generated.Total
+	var total Total
 
 	// totalを求める
 	budgetTotal := 0
@@ -86,9 +90,9 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 func (fiu *festivalItemUseCase) GetFestivalItemsByYears(
 	c context.Context,
 	year string,
-) (generated.FestivalItemDetails, error) {
-	var festivalItemDetails generated.FestivalItemDetails
-	var festivalItems []generated.FestivalItemWithBalance
+) (FestivalItemDetails, error) {
+	var festivalItemDetails FestivalItemDetails
+	var festivalItems []FestivalItemWithBalance
 
 	rows, err := fiu.rep.AllByPeriod(c, year)
 	if err != nil {
@@ -97,7 +101,7 @@ func (fiu *festivalItemUseCase) GetFestivalItemsByYears(
 
 	defer rows.Close()
 	for rows.Next() {
-		var festivalItem generated.FestivalItemWithBalance
+		var festivalItem FestivalItemWithBalance
 		err := rows.Scan(
 			&festivalItem.Id,
 			&festivalItem.Name,
@@ -115,7 +119,7 @@ func (fiu *festivalItemUseCase) GetFestivalItemsByYears(
 	}
 	festivalItemDetails.FestivalItems = &festivalItems
 
-	var total generated.Total
+	var total Total
 
 	// totalを求める
 	budgetTotal := 0
@@ -140,9 +144,9 @@ func (fiu *festivalItemUseCase) GetFestivalItemsByYearsAndDivision(
 	c context.Context,
 	year string,
 	divisionId string,
-) (generated.FestivalItemDetails, error) {
-	var festivalItemDetails generated.FestivalItemDetails
-	var festivalItems []generated.FestivalItemWithBalance
+) (FestivalItemDetails, error) {
+	var festivalItemDetails FestivalItemDetails
+	var festivalItems []FestivalItemWithBalance
 
 	rows, err := fiu.rep.AllByPeriodAndDivision(c, year, divisionId)
 	if err != nil {
@@ -151,7 +155,7 @@ func (fiu *festivalItemUseCase) GetFestivalItemsByYearsAndDivision(
 
 	defer rows.Close()
 	for rows.Next() {
-		var festivalItem generated.FestivalItemWithBalance
+		var festivalItem FestivalItemWithBalance
 		err := rows.Scan(
 			&festivalItem.Id,
 			&festivalItem.Name,
@@ -169,7 +173,7 @@ func (fiu *festivalItemUseCase) GetFestivalItemsByYearsAndDivision(
 	}
 	festivalItemDetails.FestivalItems = &festivalItems
 
-	var total generated.Total
+	var total Total
 
 	// totalを求める
 	budgetTotal := 0
@@ -192,9 +196,9 @@ func (fiu *festivalItemUseCase) GetFestivalItemsByYearsAndDivision(
 
 func (fiu *festivalItemUseCase) CreateFestivalItem(
 	c context.Context,
-	festivalItem generated.FestivalItem,
-) (generated.FestivalItemWithBalance, error) {
-	latastFestivalItemWithBalance := generated.FestivalItemWithBalance{}
+	festivalItem FestivalItem,
+) (FestivalItemWithBalance, error) {
+	latastFestivalItemWithBalance := FestivalItemWithBalance{}
 
 	// トランザクションスタート
 	tx, _ := fiu.rep.StartTransaction(c)
@@ -240,9 +244,9 @@ func (fiu *festivalItemUseCase) CreateFestivalItem(
 func (fiu *festivalItemUseCase) UpdateFestivalItem(
 	c context.Context,
 	id string,
-	festivalItem generated.FestivalItem,
-) (generated.FestivalItemWithBalance, error) {
-	updateFestivalItemWithBalance := generated.FestivalItemWithBalance{}
+	festivalItem FestivalItem,
+) (FestivalItemWithBalance, error) {
+	updateFestivalItemWithBalance := FestivalItemWithBalance{}
 
 	// トランザクションスタート
 	tx, _ := fiu.rep.StartTransaction(c)
