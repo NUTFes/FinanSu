@@ -41,11 +41,11 @@ func (f *festivalItemController) CreateFestivalItem(c echo.Context) error {
 	if err := c.Bind(festivalItem); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
-	latastFestivalItem, err := f.u.CreateFestivalItem(c.Request().Context(), *festivalItem)
+	latestFestivalItem, err := f.u.CreateFestivalItem(c.Request().Context(), *festivalItem)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastFestivalItem)
+	return c.JSON(http.StatusOK, latestFestivalItem)
 }
 
 func (f *festivalItemController) UpdateFestivalItem(c echo.Context) error {
