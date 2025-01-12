@@ -28,25 +28,8 @@ func (f *festivalItemController) IndexFestivalItems(c echo.Context) error {
 	year := c.QueryParam("year")
 	divisionId := c.QueryParam("division_id")
 	var festivalItemDetails FestivalItemDetails
-	var err error
 
-	if year != "" && divisionId != "" {
-		festivalItemDetails, err = f.u.GetFestivalItemsByYearAndDivision(ctx, year, divisionId)
-		if err != nil {
-			return err
-		}
-		return c.JSON(http.StatusOK, festivalItemDetails)
-	}
-
-	if year != "" {
-		festivalItemDetails, err = f.u.GetFestivalItemsByYear(ctx, year)
-		if err != nil {
-			return err
-		}
-		return c.JSON(http.StatusOK, festivalItemDetails)
-	}
-
-	festivalItemDetails, err = f.u.GetFestivalItems(ctx)
+	festivalItemDetails, err := f.u.GetFestivalItems(ctx, year, divisionId)
 	if err != nil {
 		return err
 	}

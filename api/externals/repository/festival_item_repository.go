@@ -102,7 +102,7 @@ func (fir *festivalItemRepository) AllByPeriodAndDivision(
 	year string,
 	divisionId string,
 ) (*sql.Rows, error) {
-	query, _, err := dialect.Select(
+	ds := dialect.Select(
 		"festival_items.id",
 		"festival_items.name",
 		"festival_items.memo",
@@ -118,14 +118,22 @@ func (fir *festivalItemRepository) AllByPeriodAndDivision(
 		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
 		LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
 		GroupBy("festival_items.id", "item_budgets.amount").
-		Order(goqu.I("festival_items.id").Desc()).
-		Where(goqu.Ex{"divisions.id": divisionId}).
-		Where(goqu.Ex{"years.year": year}).
-		ToSQL()
+		Order(goqu.I("festival_items.id").Desc())
+
+	if divisionId != "" {
+		ds = ds.Where(goqu.Ex{"divisions.id": divisionId})
+	}
+
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
+
+	query, _, err := ds.ToSQL()
 
 	if err != nil {
 		return nil, err
 	}
+
 	return fir.crud.Read(c, query)
 }
 

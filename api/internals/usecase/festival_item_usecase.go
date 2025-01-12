@@ -12,9 +12,7 @@ type festivalItemUseCase struct {
 }
 
 type FestivalItemUseCase interface {
-	GetFestivalItems(context.Context) (FestivalItemDetails, error)
-	GetFestivalItemsByYear(context.Context, string) (FestivalItemDetails, error)
-	GetFestivalItemsByYearAndDivision(context.Context, string, string) (FestivalItemDetails, error)
+	GetFestivalItems(context.Context, string, string) (FestivalItemDetails, error)
 	CreateFestivalItem(
 		context.Context,
 		FestivalItem,
@@ -32,111 +30,6 @@ func NewFestivalItemUseCase(rep rep.FestivalItemRepository) FestivalItemUseCase 
 }
 
 func (fiu *festivalItemUseCase) GetFestivalItems(
-	c context.Context,
-) (FestivalItemDetails, error) {
-	var festivalItemDetails FestivalItemDetails
-	var festivalItems []FestivalItemWithBalance
-
-	rows, err := fiu.rep.All(c)
-	if err != nil {
-		return festivalItemDetails, err
-	}
-
-	defer rows.Close()
-	for rows.Next() {
-		var festivalItem FestivalItemWithBalance
-		err := rows.Scan(
-			&festivalItem.Id,
-			&festivalItem.Name,
-			&festivalItem.Memo,
-			&festivalItem.FinancialRecord,
-			&festivalItem.Division,
-			&festivalItem.Budget,
-			&festivalItem.Expense,
-			&festivalItem.Balance,
-		)
-		if err != nil {
-			return festivalItemDetails, err
-		}
-		festivalItems = append(festivalItems, festivalItem)
-	}
-	festivalItemDetails.FestivalItems = &festivalItems
-
-	var total Total
-
-	// totalを求める
-	budgetTotal := 0
-	expenseTotal := 0
-	balanceTotal := 0
-
-	for _, festivalItem := range festivalItems {
-		budgetTotal += *festivalItem.Budget
-		expenseTotal += *festivalItem.Expense
-		balanceTotal += *festivalItem.Balance
-	}
-
-	total.Budget = &budgetTotal
-	total.Expense = &expenseTotal
-	total.Balance = &balanceTotal
-
-	festivalItemDetails.Total = &total
-	return festivalItemDetails, nil
-}
-
-func (fiu *festivalItemUseCase) GetFestivalItemsByYear(
-	c context.Context,
-	year string,
-) (FestivalItemDetails, error) {
-	var festivalItemDetails FestivalItemDetails
-	var festivalItems []FestivalItemWithBalance
-
-	rows, err := fiu.rep.AllByPeriod(c, year)
-	if err != nil {
-		return festivalItemDetails, err
-	}
-
-	defer rows.Close()
-	for rows.Next() {
-		var festivalItem FestivalItemWithBalance
-		err := rows.Scan(
-			&festivalItem.Id,
-			&festivalItem.Name,
-			&festivalItem.Memo,
-			&festivalItem.FinancialRecord,
-			&festivalItem.Division,
-			&festivalItem.Budget,
-			&festivalItem.Expense,
-			&festivalItem.Balance,
-		)
-		if err != nil {
-			return festivalItemDetails, err
-		}
-		festivalItems = append(festivalItems, festivalItem)
-	}
-	festivalItemDetails.FestivalItems = &festivalItems
-
-	var total Total
-
-	// totalを求める
-	budgetTotal := 0
-	expenseTotal := 0
-	balanceTotal := 0
-
-	for _, festivalItem := range festivalItems {
-		budgetTotal += *festivalItem.Budget
-		expenseTotal += *festivalItem.Expense
-		balanceTotal += *festivalItem.Balance
-	}
-
-	total.Budget = &budgetTotal
-	total.Expense = &expenseTotal
-	total.Balance = &balanceTotal
-
-	festivalItemDetails.Total = &total
-	return festivalItemDetails, nil
-}
-
-func (fiu *festivalItemUseCase) GetFestivalItemsByYearAndDivision(
 	c context.Context,
 	year string,
 	divisionId string,
