@@ -276,6 +276,12 @@ type PutExpensesIdParams struct {
 	YearId *string `form:"year_id,omitempty" json:"year_id,omitempty"`
 }
 
+// GetFinancialRecordsParams defines parameters for GetFinancialRecords.
+type GetFinancialRecordsParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+}
+
 // PostFundInformationsParams defines parameters for PostFundInformations.
 type PostFundInformationsParams struct {
 	// UserId user_id
@@ -456,11 +462,11 @@ type PostFestivalItemsJSONRequestBody = FestivalItem
 // PutFestivalItemsIdJSONRequestBody defines body for PutFestivalItemsId for application/json ContentType.
 type PutFestivalItemsIdJSONRequestBody = FestivalItem
 
-// PostFinancailRecordsJSONRequestBody defines body for PostFinancailRecords for application/json ContentType.
-type PostFinancailRecordsJSONRequestBody = FinancialRecord
+// PostFinancialRecordsJSONRequestBody defines body for PostFinancialRecords for application/json ContentType.
+type PostFinancialRecordsJSONRequestBody = FinancialRecord
 
-// PutFinancailRecordsIdJSONRequestBody defines body for PutFinancailRecordsId for application/json ContentType.
-type PutFinancailRecordsIdJSONRequestBody = FinancialRecord
+// PutFinancialRecordsIdJSONRequestBody defines body for PutFinancialRecordsId for application/json ContentType.
+type PutFinancialRecordsIdJSONRequestBody = FinancialRecord
 
 // PostPasswordResetIdJSONRequestBody defines body for PostPasswordResetId for application/json ContentType.
 type PostPasswordResetIdJSONRequestBody = PasswordResetData
@@ -657,17 +663,17 @@ type ServerInterface interface {
 	// (PUT /festival_items/{id})
 	PutFestivalItemsId(ctx echo.Context, id int) error
 
-	// (GET /financail_records)
-	GetFinancailRecords(ctx echo.Context) error
+	// (GET /financial_records)
+	GetFinancialRecords(ctx echo.Context, params GetFinancialRecordsParams) error
 
-	// (POST /financail_records)
-	PostFinancailRecords(ctx echo.Context) error
+	// (POST /financial_records)
+	PostFinancialRecords(ctx echo.Context) error
 
-	// (DELETE /financail_records/{id})
-	DeleteFinancailRecordsId(ctx echo.Context, id int) error
+	// (DELETE /financial_records/{id})
+	DeleteFinancialRecordsId(ctx echo.Context, id int) error
 
-	// (PUT /financail_records/{id})
-	PutFinancailRecordsId(ctx echo.Context, id int) error
+	// (PUT /financial_records/{id})
+	PutFinancialRecordsId(ctx echo.Context, id int) error
 
 	// (GET /fund_informations)
 	GetFundInformations(ctx echo.Context) error
@@ -1710,26 +1716,35 @@ func (w *ServerInterfaceWrapper) PutFestivalItemsId(ctx echo.Context) error {
 	return err
 }
 
-// GetFinancailRecords converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFinancailRecords(ctx echo.Context) error {
+// GetFinancialRecords converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFinancialRecords(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetFinancialRecordsParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFinancailRecords(ctx)
+	err = w.Handler.GetFinancialRecords(ctx, params)
 	return err
 }
 
-// PostFinancailRecords converts echo context to params.
-func (w *ServerInterfaceWrapper) PostFinancailRecords(ctx echo.Context) error {
+// PostFinancialRecords converts echo context to params.
+func (w *ServerInterfaceWrapper) PostFinancialRecords(ctx echo.Context) error {
 	var err error
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostFinancailRecords(ctx)
+	err = w.Handler.PostFinancialRecords(ctx)
 	return err
 }
 
-// DeleteFinancailRecordsId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteFinancailRecordsId(ctx echo.Context) error {
+// DeleteFinancialRecordsId converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteFinancialRecordsId(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
 	var id int
@@ -1740,12 +1755,12 @@ func (w *ServerInterfaceWrapper) DeleteFinancailRecordsId(ctx echo.Context) erro
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteFinancailRecordsId(ctx, id)
+	err = w.Handler.DeleteFinancialRecordsId(ctx, id)
 	return err
 }
 
-// PutFinancailRecordsId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutFinancailRecordsId(ctx echo.Context) error {
+// PutFinancialRecordsId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutFinancialRecordsId(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
 	var id int
@@ -1756,7 +1771,7 @@ func (w *ServerInterfaceWrapper) PutFinancailRecordsId(ctx echo.Context) error {
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutFinancailRecordsId(ctx, id)
+	err = w.Handler.PutFinancialRecordsId(ctx, id)
 	return err
 }
 
@@ -2858,10 +2873,10 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/festival_items", wrapper.PostFestivalItems)
 	router.DELETE(baseURL+"/festival_items/:id", wrapper.DeleteFestivalItemsId)
 	router.PUT(baseURL+"/festival_items/:id", wrapper.PutFestivalItemsId)
-	router.GET(baseURL+"/financail_records", wrapper.GetFinancailRecords)
-	router.POST(baseURL+"/financail_records", wrapper.PostFinancailRecords)
-	router.DELETE(baseURL+"/financail_records/:id", wrapper.DeleteFinancailRecordsId)
-	router.PUT(baseURL+"/financail_records/:id", wrapper.PutFinancailRecordsId)
+	router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
+	router.POST(baseURL+"/financial_records", wrapper.PostFinancialRecords)
+	router.DELETE(baseURL+"/financial_records/:id", wrapper.DeleteFinancialRecordsId)
+	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
 	router.GET(baseURL+"/fund_informations", wrapper.GetFundInformations)
 	router.POST(baseURL+"/fund_informations", wrapper.PostFundInformations)
 	router.GET(baseURL+"/fund_informations/details", wrapper.GetFundInformationsDetails)

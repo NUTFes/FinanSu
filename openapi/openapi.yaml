@@ -1075,11 +1075,17 @@ paths:
             application/json:
               schema:
                 type: object
-  /financail_records:
+  /financial_records:
     get:
       tags:
         - financial_record
       description: financial_recordの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
       responses:
         "200":
           description: financial_recordの一覧の取得
@@ -1104,7 +1110,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/financialRecordWithBalance"
-  /financail_records/{id}:
+  /financial_records/{id}:
     put:
       tags:
         - financial_record
