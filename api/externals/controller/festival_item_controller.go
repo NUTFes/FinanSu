@@ -30,7 +30,7 @@ func (f *festivalItemController) IndexFestivalItems(c echo.Context) error {
 	var err error
 
 	if year != "" && divisionId != "" {
-		festivalItemDetails, err = f.u.GetFestivalItemsByYearsAndDivision(c.Request().Context(), year, divisionId)
+		festivalItemDetails, err = f.u.GetFestivalItemsByYearAndDivision(c.Request().Context(), year, divisionId)
 		if err != nil {
 			return err
 		}
@@ -38,7 +38,7 @@ func (f *festivalItemController) IndexFestivalItems(c echo.Context) error {
 	}
 
 	if year != "" {
-		festivalItemDetails, err = f.u.GetFestivalItemsByYears(c.Request().Context(), year)
+		festivalItemDetails, err = f.u.GetFestivalItemsByYear(c.Request().Context(), year)
 		if err != nil {
 			return err
 		}

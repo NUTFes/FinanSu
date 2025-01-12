@@ -13,8 +13,8 @@ type festivalItemUseCase struct {
 
 type FestivalItemUseCase interface {
 	GetFestivalItems(context.Context) (FestivalItemDetails, error)
-	GetFestivalItemsByYears(context.Context, string) (FestivalItemDetails, error)
-	GetFestivalItemsByYearsAndDivision(context.Context, string, string) (FestivalItemDetails, error)
+	GetFestivalItemsByYear(context.Context, string) (FestivalItemDetails, error)
+	GetFestivalItemsByYearAndDivision(context.Context, string, string) (FestivalItemDetails, error)
 	CreateFestivalItem(
 		context.Context,
 		FestivalItem,
@@ -83,7 +83,7 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 	return festivalItemDetails, nil
 }
 
-func (fiu *festivalItemUseCase) GetFestivalItemsByYears(
+func (fiu *festivalItemUseCase) GetFestivalItemsByYear(
 	c context.Context,
 	year string,
 ) (FestivalItemDetails, error) {
@@ -136,7 +136,7 @@ func (fiu *festivalItemUseCase) GetFestivalItemsByYears(
 	return festivalItemDetails, nil
 }
 
-func (fiu *festivalItemUseCase) GetFestivalItemsByYearsAndDivision(
+func (fiu *festivalItemUseCase) GetFestivalItemsByYearAndDivision(
 	c context.Context,
 	year string,
 	divisionId string,
