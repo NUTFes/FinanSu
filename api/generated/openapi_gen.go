@@ -258,6 +258,15 @@ type PutDepartmentsIdParams struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty"`
 }
 
+// GetDivisionsParams defines parameters for GetDivisions.
+type GetDivisionsParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordID financialRecordID
+	FinancialRecordID *int `form:"financialRecordID,omitempty" json:"financialRecordID,omitempty"`
+}
+
 // PostExpensesParams defines parameters for PostExpenses.
 type PostExpensesParams struct {
 	// Name name
@@ -613,7 +622,7 @@ type ServerInterface interface {
 	PutDepartmentsId(ctx echo.Context, id int, params PutDepartmentsIdParams) error
 
 	// (GET /divisions)
-	GetDivisions(ctx echo.Context) error
+	GetDivisions(ctx echo.Context, params GetDivisionsParams) error
 
 	// (POST /divisions)
 	PostDivisions(ctx echo.Context) error
@@ -1465,8 +1474,24 @@ func (w *ServerInterfaceWrapper) PutDepartmentsId(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetDivisions(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetDivisionsParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Optional query parameter "financialRecordID" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financialRecordID", ctx.QueryParams(), &params.FinancialRecordID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financialRecordID: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetDivisions(ctx)
+	err = w.Handler.GetDivisions(ctx, params)
 	return err
 }
 
