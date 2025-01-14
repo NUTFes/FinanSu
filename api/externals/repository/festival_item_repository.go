@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -30,7 +29,7 @@ type FestivalItemRepository interface {
 	DeleteItemBudget(context.Context, *sql.Tx, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	StartTransaction(context.Context) (*sql.Tx, error)
-	RollBack(context.Context, *sql.Tx)
+	RollBack(context.Context, *sql.Tx) error
 	Commit(context.Context, *sql.Tx) error
 }
 
@@ -179,8 +178,7 @@ func (fir *festivalItemRepository) CreateFestivalItem(
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(query)
-
+	err = fir.crud.TransactionExec(c, tx, query)
 	return err
 }
 
@@ -195,8 +193,7 @@ func (fir *festivalItemRepository) CreateItemBudget(
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(query)
-
+	err = fir.crud.TransactionExec(c, tx, query)
 	return err
 }
 
@@ -214,7 +211,7 @@ func (fir *festivalItemRepository) UpdateFestivalItem(
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(query)
+	err = fir.crud.TransactionExec(c, tx, query)
 	return err
 }
 
@@ -229,11 +226,10 @@ func (fir *festivalItemRepository) UpdateItemBudget(
 		Set(goqu.Record{"amount": festivalItem.Amount}).
 		Where(goqu.Ex{"festival_item_id": id})
 	query, _, err := ds.ToSQL()
-	fmt.Println(query)
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(query)
+	err = fir.crud.TransactionExec(c, tx, query)
 	return err
 }
 
@@ -248,8 +244,7 @@ func (fir *festivalItemRepository) DeleteFestivalItem(
 	if err != nil {
 		return err
 	}
-	fmt.Println(query)
-	_, err = tx.Exec(query)
+	err = fir.crud.TransactionExec(c, tx, query)
 	return err
 }
 
@@ -264,7 +259,7 @@ func (fir *festivalItemRepository) DeleteItemBudget(
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(query)
+	err = fir.crud.TransactionExec(c, tx, query)
 	return err
 }
 
@@ -300,10 +295,10 @@ func (fir *festivalItemRepository) StartTransaction(c context.Context) (*sql.Tx,
 	return fir.crud.StartTransaction(c)
 }
 
-func (fir *festivalItemRepository) RollBack(c context.Context, tx *sql.Tx) {
-	tx.Rollback()
+func (fir *festivalItemRepository) RollBack(c context.Context, tx *sql.Tx) error {
+	return fir.crud.RollBack(c, tx)
 }
 
 func (fir *festivalItemRepository) Commit(c context.Context, tx *sql.Tx) error {
-	return tx.Commit()
+	return fir.crud.Commit(c, tx)
 }
