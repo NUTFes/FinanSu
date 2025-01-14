@@ -760,7 +760,19 @@ paths:
     get:
       tags:
         - division
-      description: divisionの一覧の取得
+      description: division一覧の取得
+        クエリでyearを指定することで年度ごとのdivisionを取得可能
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: financialRecordID
+          in: query
+          description: financialRecordID
+          schema:
+            type: integer
       responses:
         "200":
           description: divisionの一覧を取得
