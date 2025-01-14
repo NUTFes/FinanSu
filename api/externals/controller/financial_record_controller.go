@@ -48,11 +48,11 @@ func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error 
 	if err := c.Bind(financialRecord); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
-	latastFinancialRecord, err := f.u.CreateFinancialRecord(c.Request().Context(), *financialRecord)
+	latestFinancialRecord, err := f.u.CreateFinancialRecord(c.Request().Context(), *financialRecord)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastFinancialRecord)
+	return c.JSON(http.StatusOK, latestFinancialRecord)
 }
 
 func (f *financialRecordController) UpdateFinancialRecord(c echo.Context) error {

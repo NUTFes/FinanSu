@@ -87,7 +87,7 @@ func (fiu *festivalItemUseCase) CreateFestivalItem(
 	c context.Context,
 	festivalItem FestivalItem,
 ) (FestivalItemWithBalance, error) {
-	latastFestivalItemWithBalance := FestivalItemWithBalance{}
+	latestFestivalItemWithBalance := FestivalItemWithBalance{}
 
 	// トランザクションスタート
 	tx, _ := fiu.rep.StartTransaction(c)
@@ -95,39 +95,39 @@ func (fiu *festivalItemUseCase) CreateFestivalItem(
 	if err := fiu.rep.CreateFestivalItem(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
 		fiu.rep.RollBack(c, tx)
-		return latastFestivalItemWithBalance, err
+		return latestFestivalItemWithBalance, err
 	}
 
 	if err := fiu.rep.CreateItemBudget(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
 		fiu.rep.RollBack(c, tx)
-		return latastFestivalItemWithBalance, err
+		return latestFestivalItemWithBalance, err
 	}
 
 	// コミットしてトランザクション終了
 	if err := fiu.rep.Commit(c, tx); err != nil {
-		return latastFestivalItemWithBalance, err
+		return latestFestivalItemWithBalance, err
 	}
 
 	row, err := fiu.rep.FindLatestRecord(c)
 	if err != nil {
-		return latastFestivalItemWithBalance, err
+		return latestFestivalItemWithBalance, err
 	}
 	err = row.Scan(
-		&latastFestivalItemWithBalance.Id,
-		&latastFestivalItemWithBalance.Name,
-		&latastFestivalItemWithBalance.Memo,
-		&latastFestivalItemWithBalance.FinancialRecord,
-		&latastFestivalItemWithBalance.Division,
-		&latastFestivalItemWithBalance.Budget,
-		&latastFestivalItemWithBalance.Expense,
-		&latastFestivalItemWithBalance.Balance,
+		&latestFestivalItemWithBalance.Id,
+		&latestFestivalItemWithBalance.Name,
+		&latestFestivalItemWithBalance.Memo,
+		&latestFestivalItemWithBalance.FinancialRecord,
+		&latestFestivalItemWithBalance.Division,
+		&latestFestivalItemWithBalance.Budget,
+		&latestFestivalItemWithBalance.Expense,
+		&latestFestivalItemWithBalance.Balance,
 	)
 	if err != nil {
-		return latastFestivalItemWithBalance, err
+		return latestFestivalItemWithBalance, err
 	}
 
-	return latastFestivalItemWithBalance, nil
+	return latestFestivalItemWithBalance, nil
 }
 
 func (fiu *festivalItemUseCase) UpdateFestivalItem(
