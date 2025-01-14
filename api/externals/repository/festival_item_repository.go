@@ -199,7 +199,7 @@ var selectFestivalItemQuery = dialect.Select(
 	"divisions.name",
 	goqu.L("COALESCE(`item_budgets`.`amount`, 0)").As("budget"),
 	goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
-	goqu.COALESCE(goqu.L("item_budgets.amount - COALESCE(SUM(`buy_reports`.`amount`), 0)"), 0).As("balance")).
+	goqu.L("COALESCE(SUM(item_budgets.amount), 0) - COALESCE(SUM(buy_reports.amount), 0)").As("balance")).
 	From("festival_items").
 	InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
 	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
