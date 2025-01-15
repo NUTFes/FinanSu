@@ -27,7 +27,7 @@ func (d *divisionController) IndexDivisions(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
 	financialRecordId := c.QueryParam("financial_record_id")
-	var divisionDetails divisionDetails
+	var divisionDetails DivisionDetails
 
 	divisionDetails, err := d.u.GetDivisions(ctx, year, financialRecordId)
 	if err != nil {
@@ -38,7 +38,7 @@ func (d *divisionController) IndexDivisions(c echo.Context) error {
 
 func (d *divisionController) CreateDivision(c echo.Context) error {
 	ctx := c.Request().Context()
-	division := new(division)
+	division := new(Division)
 
 	if err := c.Bind(division); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
@@ -53,7 +53,7 @@ func (d *divisionController) CreateDivision(c echo.Context) error {
 func (d *divisionController) UpdateDivision(c echo.Context) error {
 	ctx := c.Request().Context()
 	id := c.Param("id")
-	division := new(division)
+	division := new(Division)
 
 	if err := c.Bind(division); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
@@ -77,6 +77,6 @@ func (d *divisionController) DestroyDivision(c echo.Context) error {
 }
 
 type (
-	division        = generated.Division
-	divisionDetails = generated.DivisionDetails
+	Division        = generated.Division
+	DivisionDetails = generated.DivisionDetails
 )
