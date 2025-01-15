@@ -35,7 +35,7 @@ func (dr *divisionRepository) AllByPeriodAndFinancialRecord(
 	financialRecordId string,
 ) (*sql.Rows, error) {
 
-	ds := baseGetQuery
+	ds := selectDivisionQuery
 
 	if year != "" {
 		ds = ds.Where(goqu.C("years.year").Eq(year))
@@ -58,7 +58,7 @@ func (dr *divisionRepository) GetById(
 	c context.Context,
 	id string,
 ) (*sql.Row, error) {
-	ds, _, err := baseGetQuery.
+	ds, _, err := selectDivisionQuery.
 		Where(goqu.Ex{"divisions.id": id}).
 		ToSQL()
 	if err != nil {
@@ -112,7 +112,7 @@ func (dr *divisionRepository) Delete(
 
 // 最新の部門を取得する
 func (dr *divisionRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-	ds := baseGetQuery
+	ds := selectDivisionQuery
 	query, _, err := ds.Limit(1).ToSQL()
 
 	if err != nil {
@@ -125,14 +125,14 @@ func (dr *divisionRepository) FindLatestRecord(c context.Context) (*sql.Row, err
 type division = generated.Division
 
 // NOTE: getの共通部分抜き出し
-var baseGetQuery = dialect.From("divisions").
+var selectDivisionQuery = dialect.From("divisions").
 	Select(
 		"divisions.id",
 		"divisions.name",
 		"financial_records.name",
 		goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
 		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
-		goqu.COALESCE(goqu.L("SUM(item_budgets.amount) - SUM(buy_reports.amount)"), 0).As("balance")).
+		goqu.L("COALESCE(SUM(item_budgets.amount), 0) - COALESCE(SUM(buy_reports.amount), 0)").As("balance")).
 	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
 	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
 	LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
