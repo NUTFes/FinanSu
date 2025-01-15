@@ -1007,6 +1007,17 @@ paths:
       tags:
         - festival_item
       description: festival_itemの一覧の取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: division_id
+          in: query
+          description: division_id
+          schema:
+            type: integer
       responses:
         "200":
           description: festival_itemの一覧を取得

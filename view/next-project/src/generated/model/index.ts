@@ -71,6 +71,7 @@ export * from './getExpensesDetailsYear200';
 export * from './getExpensesFiscalyearYear200';
 export * from './getExpensesId200';
 export * from './getExpensesIdDetails200';
+export * from './getFestivalItemsParams';
 export * from './getFinancialRecordsParams';
 export * from './getFundInformations200';
 export * from './getFundInformationsDetails200';

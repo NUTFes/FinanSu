@@ -31,11 +31,6 @@ func NewFinancialRecordUseCase(rep rep.FinancialRecordRepository) FinancialRecor
 	return &financialRecordUseCase{rep}
 }
 
-type FinancialRecordDetails = generated.FinancialRecordDetails
-type FinancialRecord = generated.FinancialRecord
-type FinancialRecordWithBalance = generated.FinancialRecordWithBalance
-type Total = generated.Total
-
 func (fru *financialRecordUseCase) GetFinancialRecords(
 	c context.Context,
 ) (FinancialRecordDetails, error) {
@@ -202,3 +197,8 @@ func (fru *financialRecordUseCase) DestroyFinancialRecord(c context.Context, id 
 	err := fru.rep.Delete(c, id)
 	return err
 }
+
+type FinancialRecordDetails = generated.FinancialRecordDetails
+type FinancialRecord = generated.FinancialRecord
+type FinancialRecordWithBalance = generated.FinancialRecordWithBalance
+type Total = generated.Total
