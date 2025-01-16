@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -82,7 +81,6 @@ func (du *divisionUseCase) CreateDivision(
 
 	row, err := du.rep.FindLatestRecord(c)
 	if err != nil {
-		fmt.Println(err)
 		return latestDivisionWithBalance, err
 	}
 	err = row.Scan(
