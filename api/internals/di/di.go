@@ -1,9 +1,11 @@
 package di
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
@@ -21,7 +23,12 @@ func InitializeServer() db.Client {
 
 	crud := abstract.NewCrud(client)
 
-	// ↓
+	minioClient, err := mc.InitMinioClient()
+	if err != nil {
+		log.Fatal("mc error")
+	}
+
+	fmt.Println(minioClient)
 
 	// Repository
 	activityRepository := repository.NewActivityRepository(client, crud)
@@ -35,6 +42,7 @@ func InitializeServer() db.Client {
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
+	objectUploadRepository := repository.NewObjectUploadRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
@@ -48,6 +56,8 @@ func InitializeServer() db.Client {
 	userRepository := repository.NewUserRepository(client, crud)
 	yearRepository := repository.NewYearRepository(client, crud)
 	// ↓
+
+	fmt.Println(objectUploadRepository)
 
 	// UseCase
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
