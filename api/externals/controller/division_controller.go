@@ -27,7 +27,6 @@ func (d *divisionController) IndexDivisions(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
 	financialRecordId := c.QueryParam("financial_record_id")
-	var divisionDetails DivisionDetails
 
 	divisionDetails, err := d.u.GetDivisions(ctx, year, financialRecordId)
 	if err != nil {
