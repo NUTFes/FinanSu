@@ -18,8 +18,8 @@ type divisionRepository struct {
 type DivisionRepository interface {
 	AllByPeriodAndFinancialRecord(context.Context, string, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
-	Create(context.Context, division) error
-	Update(context.Context, string, division) error
+	Create(context.Context, Division) error
+	Update(context.Context, string, Division) error
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 }
@@ -38,15 +38,14 @@ func (dr *divisionRepository) AllByPeriodAndFinancialRecord(
 	ds := selectDivisionQuery
 
 	if year != "" {
-		ds = ds.Where(goqu.C("years.year").Eq(year))
+		ds = ds.Where(goqu.Ex{"years.year": year})
 	}
-
 	if financialRecordId != "" {
-		ds = ds.Where(goqu.C("financial_records.id").Eq(financialRecordId))
+		ds = ds.Where(goqu.Ex{"financial_records.idr": financialRecordId})
 	}
 
 	// クエリを構築し、SQLを生成
-	query, _, err := ds.GroupBy("divisions.id").ToSQL()
+	query, _, err := ds.ToSQL()
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +69,7 @@ func (dr *divisionRepository) GetById(
 // 部門作成
 func (dr *divisionRepository) Create(
 	c context.Context,
-	division division,
+	division Division,
 ) error {
 	ds := dialect.Insert("divisions").
 		Rows(goqu.Record{"name": division.Name, "financial_record_id": division.FinancialRecordID})
@@ -85,7 +84,7 @@ func (dr *divisionRepository) Create(
 func (dr *divisionRepository) Update(
 	c context.Context,
 	id string,
-	division division,
+	division Division,
 ) error {
 	ds := dialect.Update("divisions").
 		Set(goqu.Record{"name": division.Name, "financial_record_id": division.FinancialRecordID}).
@@ -121,8 +120,7 @@ func (dr *divisionRepository) FindLatestRecord(c context.Context) (*sql.Row, err
 	return dr.crud.ReadByID(c, query)
 }
 
-// Note: この中のみで呼ぶために小文字宣言
-type division = generated.Division
+type Division = generated.Division
 
 // NOTE: getの共通部分抜き出し
 var selectDivisionQuery = dialect.From("divisions").
