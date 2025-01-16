@@ -669,12 +669,21 @@ paths:
     post:
       tags:
         - buy_report
-      description: buy_reportの作成
+      description: 購入報告を行うAPI
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/buyReport"
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                buy_report:
+                  $ref: "#/components/schemas/buyReport"
+              required:
+                - file
+                - buy_report
         required: true
       responses:
         "200":
@@ -687,7 +696,7 @@ paths:
     put:
       tags:
         - buy_report
-      description: buy_reportの更新
+      description: 購入報告を修正するAPI、画像がある場合は画像も更新
       parameters:
         - name: id
           in: path
@@ -697,9 +706,18 @@ paths:
             type: integer
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/buyReport"
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 購入報告書のファイル、ない場合更新しないようにする
+                buy_report:
+                  $ref: "#/components/schemas/buyReport"
+              required:
+                - buy_report
         required: true
       responses:
         "200":
@@ -709,6 +727,78 @@ paths:
               schema:
                 $ref: "#/components/schemas/buyReport"
       x-codegen-request-body-name: buy_report
+    delete:
+      tags:
+        - buy_report
+      description: IDを指定してbuy_reportの削除、紐づいた画像も削除、マイページから削除できる
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /buy_reports/list:
+    get:
+      tags:
+        - buy_report
+      description: 購入報告で表示するbuyReport一覧の取得、主に財務向けのページ
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/buyReportDetail"
+  /buy_report/status/{buy_report_id}:
+    put:
+      tags:
+        - buy_report
+      description: buy_reportのステータス更新、財務が封詰め、精算済みにするAPI
+      parameters:
+        - name: buy_report_id
+          in: path
+          description: buy_report_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isPacked:
+                  type: boolean
+                  example: false
+                  description: 封筒に詰めたか
+                isSettled:
+                  type: boolean
+                  example: false
+                  description: 精算済みか
+      responses:
+        "200":
+          description: 更新されたbuy_reportが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReportDetail"
+
   /departments:
     get:
       tags:
@@ -1132,7 +1222,7 @@ paths:
   /festival_items/details/{division_id}:
     get:
       tags:
-        - division
+        - festival_item
       description: divisionの予算一覧の取得
       parameters:
         - name: division_id
@@ -2492,6 +2582,7 @@ components:
           type: integer
           example: 1
     buyReport:
+      description: 購入報告の際のパラメータ
       type: object
       properties:
         id:
@@ -2506,16 +2597,12 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
-        receiptIDs:
-          type: array
-          items:
-            type: integer
-          example: [1, 2]
       required:
         - festivalItemID
         - amount
         - paidBy
     buyReportInformation:
+      description: マイページで表示する購入報告の情報
       type: object
       properties:
         ID:
@@ -2536,6 +2623,37 @@ components:
             - 確認中
             - 封詰め
             - 生産完了
+    buyReportDetail:
+      description: 購入報告ページで表示する詳細情報
+      type: object
+      properties:
+        ID:
+          type: integer
+          example: 1
+        financialRecordName:
+          type: string
+          example: 企画局
+        divisionName:
+          type: string
+          example: ビンゴ部門
+        festivalItemName:
+          type: string
+          example: 段ボール
+        amount:
+          type: integer
+          example: 1000
+        reportDate:
+          type: string
+          example: 2024-01-01
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
+        isPacked:
+          type: boolean
+          example: false
+        isSettled:
+          type: boolean
+          example: false
     division:
       required:
         - name
@@ -2609,7 +2727,7 @@ components:
     festivalItemsForMyPage:
       type: object
       properties:
-        total:
+        divisionTotal:
           $ref: "#/components/schemas/total"
         financialRecordName:
           type: string
@@ -2624,7 +2742,7 @@ components:
     festivalItemWithReport:
       type: object
       properties:
-        total:
+        festivalItemTotal:
           $ref: "#/components/schemas/total"
         festivalItemName:
           type: string

@@ -19,11 +19,14 @@ import type {
   Activity,
   ActivityInformation,
   ActivityStyle,
+  BuyReport,
+  BuyReportDetail,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
   DeleteActivityStylesId200,
   DeleteBudgetsId200,
   DeleteBureausId200,
+  DeleteBuyReportsId200,
   DeleteDepartmentsId200,
   DeleteDivisionsId200,
   DeleteExpensesId200,
@@ -48,6 +51,7 @@ import type {
   FestivalItem,
   FestivalItemDetails,
   FestivalItemWithBalance,
+  FestivalItemsForMyPage,
   FinancialRecord,
   FinancialRecordDetails,
   FinancialRecordWithBalance,
@@ -70,6 +74,7 @@ import type {
   GetBudgetsIdDetails200,
   GetBureaus200,
   GetBureausId200,
+  GetBuyReportsListParams,
   GetDepartments200,
   GetDepartmentsId200,
   GetExpenses200,
@@ -103,6 +108,7 @@ import type {
   PostBudgetsParams,
   PostBureaus200,
   PostBureausParams,
+  PostBuyReportsBody,
   PostDepartments200,
   PostDepartmentsParams,
   PostExpenses200,
@@ -133,6 +139,8 @@ import type {
   PutBudgetsIdParams,
   PutBureausId200,
   PutBureausIdParams,
+  PutBuyReportStatusBuyReportIdBody,
+  PutBuyReportsIdBody,
   PutDepartmentsId200,
   PutDepartmentsIdParams,
   PutExpensesId200,
@@ -1940,6 +1948,301 @@ export const useDeleteBureausId = <TError = unknown>(
 }
 
 /**
+ * 購入報告を行うAPI
+ */
+export type postBuyReportsResponse = {
+  data: BuyReport;
+  status: number;
+  headers: Headers;
+}
+
+export const getPostBuyReportsUrl = () => {
+
+
+  return `/buy_reports`
+}
+
+export const postBuyReports = async (postBuyReportsBody: PostBuyReportsBody, options?: RequestInit): Promise<postBuyReportsResponse> => {
+    const formData = new FormData();
+formData.append('file', postBuyReportsBody.file)
+formData.append('buy_report', JSON.stringify(postBuyReportsBody.buy_report));
+
+  return customFetch<Promise<postBuyReportsResponse>>(getPostBuyReportsUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    ,
+    body: 
+      formData,
+  }
+);}
+
+
+
+
+export const getPostBuyReportsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, { arg }: { arg: PostBuyReportsBody }): Promise<postBuyReportsResponse> => {
+    return postBuyReports(arg, options);
+  }
+}
+export const getPostBuyReportsMutationKey = () => [`/buy_reports`] as const;
+
+export type PostBuyReportsMutationResult = NonNullable<Awaited<ReturnType<typeof postBuyReports>>>
+export type PostBuyReportsMutationError = unknown
+
+export const usePostBuyReports = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postBuyReports>>, TError, Key, PostBuyReportsBody, Awaited<ReturnType<typeof postBuyReports>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getPostBuyReportsMutationKey();
+  const swrFn = getPostBuyReportsMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * 購入報告を修正するAPI、画像がある場合は画像も更新
+ */
+export type putBuyReportsIdResponse = {
+  data: BuyReport;
+  status: number;
+  headers: Headers;
+}
+
+export const getPutBuyReportsIdUrl = (id: number,) => {
+
+
+  return `/buy_reports/${id}`
+}
+
+export const putBuyReportsId = async (id: number,
+    putBuyReportsIdBody: PutBuyReportsIdBody, options?: RequestInit): Promise<putBuyReportsIdResponse> => {
+    const formData = new FormData();
+if(putBuyReportsIdBody.file !== undefined) {
+ formData.append('file', putBuyReportsIdBody.file)
+ }
+formData.append('buy_report', JSON.stringify(putBuyReportsIdBody.buy_report));
+
+  return customFetch<Promise<putBuyReportsIdResponse>>(getPutBuyReportsIdUrl(id),
+  {      
+    ...options,
+    method: 'PUT'
+    ,
+    body: 
+      formData,
+  }
+);}
+
+
+
+
+export const getPutBuyReportsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, { arg }: { arg: PutBuyReportsIdBody }): Promise<putBuyReportsIdResponse> => {
+    return putBuyReportsId(id, arg, options);
+  }
+}
+export const getPutBuyReportsIdMutationKey = (id: number,) => [`/buy_reports/${id}`] as const;
+
+export type PutBuyReportsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBuyReportsId>>>
+export type PutBuyReportsIdMutationError = unknown
+
+export const usePutBuyReportsId = <TError = unknown>(
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putBuyReportsId>>, TError, Key, PutBuyReportsIdBody, Awaited<ReturnType<typeof putBuyReportsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getPutBuyReportsIdMutationKey(id);
+  const swrFn = getPutBuyReportsIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * IDを指定してbuy_reportの削除、紐づいた画像も削除、マイページから削除できる
+ */
+export type deleteBuyReportsIdResponse = {
+  data: DeleteBuyReportsId200;
+  status: number;
+  headers: Headers;
+}
+
+export const getDeleteBuyReportsIdUrl = (id: number,) => {
+
+
+  return `/buy_reports/${id}`
+}
+
+export const deleteBuyReportsId = async (id: number, options?: RequestInit): Promise<deleteBuyReportsIdResponse> => {
+  
+  return customFetch<Promise<deleteBuyReportsIdResponse>>(getDeleteBuyReportsIdUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+);}
+
+
+
+
+export const getDeleteBuyReportsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, __: { arg: Arguments }): Promise<deleteBuyReportsIdResponse> => {
+    return deleteBuyReportsId(id, options);
+  }
+}
+export const getDeleteBuyReportsIdMutationKey = (id: number,) => [`/buy_reports/${id}`] as const;
+
+export type DeleteBuyReportsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteBuyReportsId>>>
+export type DeleteBuyReportsIdMutationError = unknown
+
+export const useDeleteBuyReportsId = <TError = unknown>(
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteBuyReportsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteBuyReportsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getDeleteBuyReportsIdMutationKey(id);
+  const swrFn = getDeleteBuyReportsIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * 購入報告で表示するbuyReport一覧の取得、主に財務向けのページ
+ */
+export type getBuyReportsListResponse = {
+  data: BuyReportDetail[];
+  status: number;
+  headers: Headers;
+}
+
+export const getGetBuyReportsListUrl = (params?: GetBuyReportsListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  return normalizedParams.size ? `/buy_reports/list?${normalizedParams.toString()}` : `/buy_reports/list`
+}
+
+export const getBuyReportsList = async (params?: GetBuyReportsListParams, options?: RequestInit): Promise<getBuyReportsListResponse> => {
+  
+  return customFetch<Promise<getBuyReportsListResponse>>(getGetBuyReportsListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetBuyReportsListKey = (params?: GetBuyReportsListParams,) => [`/buy_reports/list`, ...(params ? [params]: [])] as const;
+
+export type GetBuyReportsListQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsList>>>
+export type GetBuyReportsListQueryError = unknown
+
+export const useGetBuyReportsList = <TError = unknown>(
+  params?: GetBuyReportsListParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsList>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsListKey(params) : null);
+  const swrFn = () => getBuyReportsList(params, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * buy_reportのステータス更新、財務が封詰め、精算済みにするAPI
+ */
+export type putBuyReportStatusBuyReportIdResponse = {
+  data: BuyReportDetail;
+  status: number;
+  headers: Headers;
+}
+
+export const getPutBuyReportStatusBuyReportIdUrl = (buyReportId: number,) => {
+
+
+  return `/buy_report/status/${buyReportId}`
+}
+
+export const putBuyReportStatusBuyReportId = async (buyReportId: number,
+    putBuyReportStatusBuyReportIdBody: PutBuyReportStatusBuyReportIdBody, options?: RequestInit): Promise<putBuyReportStatusBuyReportIdResponse> => {
+  
+  return customFetch<Promise<putBuyReportStatusBuyReportIdResponse>>(getPutBuyReportStatusBuyReportIdUrl(buyReportId),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      putBuyReportStatusBuyReportIdBody,)
+  }
+);}
+
+
+
+
+export const getPutBuyReportStatusBuyReportIdMutationFetcher = (buyReportId: number, options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, { arg }: { arg: PutBuyReportStatusBuyReportIdBody }): Promise<putBuyReportStatusBuyReportIdResponse> => {
+    return putBuyReportStatusBuyReportId(buyReportId, arg, options);
+  }
+}
+export const getPutBuyReportStatusBuyReportIdMutationKey = (buyReportId: number,) => [`/buy_report/status/${buyReportId}`] as const;
+
+export type PutBuyReportStatusBuyReportIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>>
+export type PutBuyReportStatusBuyReportIdMutationError = unknown
+
+export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
+  buyReportId: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>, TError, Key, PutBuyReportStatusBuyReportIdBody, Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getPutBuyReportStatusBuyReportIdMutationKey(buyReportId);
+  const swrFn = getPutBuyReportStatusBuyReportIdMutationFetcher(buyReportId, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
  * departmentの一覧の取得
  */
 export type getDepartmentsResponse = {
@@ -3165,6 +3468,57 @@ export const useDeleteFestivalItemsId = <TError = unknown>(
   const swrFn = getDeleteFestivalItemsIdMutationFetcher(id, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * divisionの予算一覧の取得
+ */
+export type getFestivalItemsDetailsDivisionIdResponse = {
+  data: FestivalItemsForMyPage;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetFestivalItemsDetailsDivisionIdUrl = (divisionId: number,) => {
+
+
+  return `/festival_items/details/${divisionId}`
+}
+
+export const getFestivalItemsDetailsDivisionId = async (divisionId: number, options?: RequestInit): Promise<getFestivalItemsDetailsDivisionIdResponse> => {
+  
+  return customFetch<Promise<getFestivalItemsDetailsDivisionIdResponse>>(getGetFestivalItemsDetailsDivisionIdUrl(divisionId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetFestivalItemsDetailsDivisionIdKey = (divisionId: number,) => [`/festival_items/details/${divisionId}`] as const;
+
+export type GetFestivalItemsDetailsDivisionIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItemsDetailsDivisionId>>>
+export type GetFestivalItemsDetailsDivisionIdQueryError = unknown
+
+export const useGetFestivalItemsDetailsDivisionId = <TError = unknown>(
+  divisionId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsDetailsDivisionId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false && !!(divisionId)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsDetailsDivisionIdKey(divisionId) : null);
+  const swrFn = () => getFestivalItemsDetailsDivisionId(divisionId, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
