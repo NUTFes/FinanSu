@@ -665,7 +665,50 @@ paths:
             application/json:
               schema:
                 type: object
-
+  /buy_reports:
+    post:
+      tags:
+        - buy_report
+      description: buy_reportの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/buyReport"
+        required: true
+      responses:
+        "200":
+          description: 作成されたbuyReportが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReport"
+  /buy_reports/{id}:
+    put:
+      tags:
+        - buy_report
+      description: buy_reportの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/buyReport"
+        required: true
+      responses:
+        "200":
+          description: 更新されたbuy_reportが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReport"
+      x-codegen-request-body-name: buy_report
   /departments:
     get:
       tags:
@@ -1086,6 +1129,25 @@ paths:
             application/json:
               schema:
                 type: object
+  /festival_items/details/{division_id}:
+    get:
+      tags:
+        - division
+      description: divisionの予算一覧の取得
+      parameters:
+        - name: division_id
+          in: path
+          description: division_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemsForMyPage"
   /financial_records:
     get:
       tags:
@@ -2429,6 +2491,51 @@ components:
         sponsorStyleID:
           type: integer
           example: 1
+    buyReport:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        festivalItemID:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 1000
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
+        receiptIDs:
+          type: array
+          items:
+            type: integer
+          example: [1, 2]
+      required:
+        - festivalItemID
+        - amount
+        - paidBy
+    buyReportInformation:
+      type: object
+      properties:
+        ID:
+          type: integer
+          example: 1
+        buyReportName:
+          type: string
+          example: 段ボール
+        amount:
+          type: integer
+          example: 1000
+        reportDate:
+          type: string
+          example: 2024-01-01
+        status:
+          type: string
+          enum:
+            - 確認中
+            - 封詰め
+            - 生産完了
     division:
       required:
         - name
@@ -2499,6 +2606,33 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/festivalItemWithBalance"
+    festivalItemsForMyPage:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        financialRecordName:
+          type: string
+          example: 企画局
+        divisionName:
+          type: string
+          example: ビンゴ部門
+        festivalItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/festivalItemWithReport"
+    festivalItemWithReport:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        festivalItemName:
+          type: string
+          example: ビンゴ景品
+        buyReports:
+          type: array
+          items:
+            $ref: "#/components/schemas/buyReportInformation"
     festivalItemWithBalance:
       type: object
       properties:
