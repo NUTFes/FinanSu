@@ -768,9 +768,9 @@ paths:
           description: year
           schema:
             type: integer
-        - name: financialRecordID
+        - name: financial_record_id
           in: query
-          description: financialRecordID
+          description: financial_record_id
           schema:
             type: integer
       responses:

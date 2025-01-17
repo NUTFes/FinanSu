@@ -263,8 +263,8 @@ type GetDivisionsParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
 
-	// FinancialRecordID financialRecordID
-	FinancialRecordID *int `form:"financialRecordID,omitempty" json:"financialRecordID,omitempty"`
+	// FinancialRecordId financial_record_id
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
 }
 
 // PostExpensesParams defines parameters for PostExpenses.
@@ -1483,11 +1483,11 @@ func (w *ServerInterfaceWrapper) GetDivisions(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
-	// ------------- Optional query parameter "financialRecordID" -------------
+	// ------------- Optional query parameter "financial_record_id" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "financialRecordID", ctx.QueryParams(), &params.FinancialRecordID)
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financialRecordID: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
