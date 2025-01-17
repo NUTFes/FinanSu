@@ -41,7 +41,7 @@ func (dr *divisionRepository) AllByPeriodAndFinancialRecord(
 		ds = ds.Where(goqu.Ex{"years.year": year})
 	}
 	if financialRecordId != "" {
-		ds = ds.Where(goqu.Ex{"financial_records.idr": financialRecordId})
+		ds = ds.Where(goqu.Ex{"financial_records.id": financialRecordId})
 	}
 
 	// クエリを構築し、SQLを生成
