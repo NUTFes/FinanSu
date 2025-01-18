@@ -73,6 +73,7 @@ func InitializeServer() db.Client {
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
+	objectUploadUseCase := usecase.NewObjectUploadUseCase(objectUploadRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
 		passwordResetTokenRepository,
 		userRepository,
@@ -109,6 +110,7 @@ func InitializeServer() db.Client {
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
+	objectUploadController := controller.NewObjectUploadController(objectUploadUseCase)
 	passwordResetTokenController := controller.NewPasswordResetTokenController(
 		passwordResetTokenUseCase,
 	)
@@ -138,6 +140,7 @@ func InitializeServer() db.Client {
 		fundInformationController,
 		healthcheckController,
 		mailAuthController,
+		objectUploadController,
 		passwordResetTokenController,
 		purchaseItemController,
 		purchaseOrderController,

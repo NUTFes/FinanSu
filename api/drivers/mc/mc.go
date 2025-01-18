@@ -3,6 +3,7 @@ package mc
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/minio/minio-go/v7"
@@ -18,11 +19,11 @@ func InitMinioClient() (Client, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	endpoint := "minio"
-	// port := "9000"
-	accessKeyID := "user"
-	secretAccessKey := "password"
-	useSSL := false
+
+	endpoint := os.Getenv("MINIO_ENDPOINT")
+	accessKeyID := os.Getenv("MINIO_ACCESS_KEY")
+	secretAccessKey := os.Getenv("MINIO_SECRET_KEY")
+	useSSL := os.Getenv("MINIO_USE_SSL") == "true"
 
 	// Initialize minio client object.
 	minioClient, err := minio.New(endpoint, &minio.Options{
@@ -34,6 +35,5 @@ func InitMinioClient() (Client, error) {
 		return Client{}, err
 	}
 
-	log.Printf("%#v\n", minioClient) // minioClient is now set up
 	return Client{minioClient}, nil
 }

@@ -2,9 +2,11 @@ package repository
 
 import (
 	"context"
-	"fmt"
+	"log"
+	"mime/multipart"
 
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
+	"github.com/minio/minio-go/v7"
 )
 
 type objectUploadRepository struct {
@@ -12,21 +14,30 @@ type objectUploadRepository struct {
 }
 
 type ObjectUploadRepository interface {
-	GetBucket(context.Context) error
+	UploadFile(context.Context, *multipart.FileHeader) error
 }
 
 func NewObjectUploadRepository(c mc.Client) ObjectUploadRepository {
 	return &objectUploadRepository{c}
 }
 
-// バケットが存在するか
-func (or *objectUploadRepository) GetBucket(c context.Context) error {
-	isExist, err := or.client.BucketExists(c, "test")
+// 画像をアップロード
+func (or *objectUploadRepository) UploadFile(c context.Context, file *multipart.FileHeader) error {
+	size := file.Size
+	fileName := "/2024/receipts/" + file.Filename
+	openFile, err := file.Open()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
+	defer openFile.Close()
 
-	fmt.Println(isExist)
+	info, err := or.client.PutObject(c, "finansu", fileName, openFile, size, minio.PutObjectOptions{})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	log.Println(info)
 
 	return nil
 }
