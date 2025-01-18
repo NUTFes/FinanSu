@@ -72,6 +72,7 @@ import type {
   GetBureausId200,
   GetDepartments200,
   GetDepartmentsId200,
+  GetDivisionsParams,
   GetExpenses200,
   GetExpensesDetails200,
   GetExpensesDetailsYear200,
@@ -2229,7 +2230,7 @@ export const useDeleteDepartmentsId = <TError = unknown>(
 }
 
 /**
- * divisionの一覧の取得
+ * division一覧の取得 クエリでyearを指定することで年度ごとのdivisionを取得可能
  */
 export type getDivisionsResponse = {
   data: DivisionDetails;
@@ -2237,15 +2238,22 @@ export type getDivisionsResponse = {
   headers: Headers;
 }
 
-export const getGetDivisionsUrl = () => {
+export const getGetDivisionsUrl = (params?: GetDivisionsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
-  return `/divisions`
+  return normalizedParams.size ? `/divisions?${normalizedParams.toString()}` : `/divisions`
 }
 
-export const getDivisions = async ( options?: RequestInit): Promise<getDivisionsResponse> => {
+export const getDivisions = async (params?: GetDivisionsParams, options?: RequestInit): Promise<getDivisionsResponse> => {
   
-  return customFetch<Promise<getDivisionsResponse>>(getGetDivisionsUrl(),
+  return customFetch<Promise<getDivisionsResponse>>(getGetDivisionsUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -2257,19 +2265,19 @@ export const getDivisions = async ( options?: RequestInit): Promise<getDivisions
 
 
 
-export const getGetDivisionsKey = () => [`/divisions`] as const;
+export const getGetDivisionsKey = (params?: GetDivisionsParams,) => [`/divisions`, ...(params ? [params]: [])] as const;
 
 export type GetDivisionsQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisions>>>
 export type GetDivisionsQueryError = unknown
 
 export const useGetDivisions = <TError = unknown>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisions>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+  params?: GetDivisionsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisions>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
   const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsKey() : null);
-  const swrFn = () => getDivisions(requestOptions)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsKey(params) : null);
+  const swrFn = () => getDivisions(params, requestOptions)
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 

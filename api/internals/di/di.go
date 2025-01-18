@@ -30,6 +30,7 @@ func InitializeServer() db.Client {
 	budgetRepository := repository.NewBudgetRepository(client, crud)
 	bureauRepository := repository.NewBureauRepository(client, crud)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
+	divisionRepository := repository.NewDivisionRepository(client, crud)
 	expenseRepository := repository.NewExpenseRepository(client, crud)
 	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
@@ -58,6 +59,7 @@ func InitializeServer() db.Client {
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
+	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
 	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
@@ -93,6 +95,7 @@ func InitializeServer() db.Client {
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	bureauController := controller.NewBureauController(bureauUseCase)
 	departmentController := controller.NewDepartmentController(departmentUseCase)
+	divisionController := controller.NewDivisionController(divisionUseCase)
 	expenseController := controller.NewExpenseController(expenseUseCase)
 	festivalItemController := controller.NewFestivalItemController(festivalUseCase)
 	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
@@ -122,6 +125,7 @@ func InitializeServer() db.Client {
 		budgetController,
 		bureauController,
 		departmentController,
+		divisionController,
 		expenseController,
 		festivalItemController,
 		financialRecordController,

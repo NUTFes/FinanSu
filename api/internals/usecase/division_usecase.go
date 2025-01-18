@@ -1,0 +1,143 @@
+package usecase
+
+import (
+	"context"
+
+	rep "github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/generated"
+)
+
+type divisionUseCase struct {
+	rep rep.DivisionRepository
+}
+
+type DivisionUseCase interface {
+	GetDivisions(context.Context, string, string) (DivisionDetails, error)
+	CreateDivision(context.Context, Division) (DivisionWithBalance, error)
+	UpdateDivision(context.Context, string, Division) (DivisionWithBalance, error)
+	DestroyDivision(context.Context, string) error
+}
+
+func NewDivisionUseCase(rep rep.DivisionRepository) DivisionUseCase {
+	return &divisionUseCase{rep}
+}
+
+func (du divisionUseCase) GetDivisions(c context.Context, year string, financialRecordId string) (DivisionDetails, error) {
+	var details DivisionDetails
+	var divisions []DivisionWithBalance
+
+	rows, err := du.rep.AllByPeriodAndFinancialRecord(c, year, financialRecordId)
+	if err != nil {
+		return DivisionDetails{}, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var division DivisionWithBalance
+		err := rows.Scan(
+			&division.Id,
+			&division.Name,
+			&division.FinancialRecord,
+			&division.Budget,
+			&division.Expense,
+			&division.Balance,
+		)
+		if err != nil {
+			return DivisionDetails{}, err
+		}
+		divisions = append(divisions, division)
+	}
+
+	details.Divisions = &divisions
+
+	var total Total
+	budgetTotal := 0
+	expenseTotal := 0
+	balanceTotal := 0
+
+	for _, division := range divisions {
+		budgetTotal += *division.Budget
+		expenseTotal += *division.Expense
+		balanceTotal += *division.Balance
+	}
+
+	total.Budget = &budgetTotal
+	total.Expense = &expenseTotal
+	total.Balance = &balanceTotal
+	details.Total = &total
+
+	return details, nil
+}
+
+func (du *divisionUseCase) CreateDivision(
+	c context.Context,
+	division Division,
+) (DivisionWithBalance, error) {
+	latestDivisionWithBalance := DivisionWithBalance{}
+
+	if err := du.rep.Create(c, division); err != nil {
+		return latestDivisionWithBalance, err
+	}
+
+	row, err := du.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestDivisionWithBalance, err
+	}
+	err = row.Scan(
+		&latestDivisionWithBalance.Id,
+		&latestDivisionWithBalance.Name,
+		&latestDivisionWithBalance.FinancialRecord,
+		&latestDivisionWithBalance.Budget,
+		&latestDivisionWithBalance.Expense,
+		&latestDivisionWithBalance.Balance,
+	)
+	if err != nil {
+		return latestDivisionWithBalance, err
+	}
+
+	return latestDivisionWithBalance, nil
+}
+
+func (du *divisionUseCase) UpdateDivision(
+	c context.Context,
+	id string,
+	division Division,
+) (DivisionWithBalance, error) {
+	updatedDivisionWithBalance := DivisionWithBalance{}
+
+	if err := du.rep.Update(c, id, division); err != nil {
+		return updatedDivisionWithBalance, err
+	}
+
+	row, err := du.rep.GetById(c, id)
+	if err != nil {
+		return updatedDivisionWithBalance, err
+	}
+	err = row.Scan(
+		&updatedDivisionWithBalance.Id,
+		&updatedDivisionWithBalance.Name,
+		&updatedDivisionWithBalance.FinancialRecord,
+		&updatedDivisionWithBalance.Budget,
+		&updatedDivisionWithBalance.Expense,
+		&updatedDivisionWithBalance.Balance,
+	)
+	if err != nil {
+		return updatedDivisionWithBalance, err
+	}
+
+	return updatedDivisionWithBalance, nil
+}
+
+func (du *divisionUseCase) DestroyDivision(c context.Context, id string) error {
+
+	if err := du.rep.Delete(c, id); err != nil {
+		return err
+	}
+	return nil
+}
+
+type (
+	Division            = generated.Division
+	DivisionDetails     = generated.DivisionDetails
+	DivisionWithBalance = generated.DivisionWithBalance
+)

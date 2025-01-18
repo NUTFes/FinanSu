@@ -15,6 +15,7 @@ type router struct {
 	expenseController             controller.ExpenseController
 	festivalItemController        controller.FestivalItemController
 	financialRecordController     controller.FinancialRecordController
+	divisionController            controller.DivisionController
 	fundInformationController     controller.FundInformationController
 	healthcheckController         controller.HealthcheckController
 	mailAuthController            controller.MailAuthController
@@ -42,6 +43,7 @@ func NewRouter(
 	budgetController controller.BudgetController,
 	bureauController controller.BureauController,
 	departmentController controller.DepartmentController,
+	divisionController controller.DivisionController,
 	expenseController controller.ExpenseController,
 	festivalItemController controller.FestivalItemController,
 	financialRecordController controller.FinancialRecordController,
@@ -70,6 +72,7 @@ func NewRouter(
 		expenseController,
 		festivalItemController,
 		financialRecordController,
+		divisionController,
 		fundInformationController,
 		healthController,
 		mailAuthController,
@@ -148,6 +151,12 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/departments", r.departmentController.CreateDepartment)
 	e.PUT("/departments/:id", r.departmentController.UpdateDepartment)
 	e.DELETE("/departments/:id", r.departmentController.DestroyDepartment)
+
+	// divisions
+	e.GET("/divisions", r.divisionController.IndexDivisions)
+	e.POST("/divisions", r.divisionController.CreateDivision)
+	e.PUT("/divisions/:id", r.divisionController.UpdateDivision)
+	e.DELETE("/divisions/:id", r.divisionController.DestroyDivision)
 
 	// expenseのRoute
 	e.GET("/expenses", r.expenseController.IndexExpense)
