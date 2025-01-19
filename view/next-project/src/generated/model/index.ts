@@ -73,6 +73,7 @@ export * from './getBureausId200';
 export * from './getBuyReportsListParams';
 export * from './getDepartments200';
 export * from './getDepartmentsId200';
+export * from './getDivisionsParams';
 export * from './getExpenses200';
 export * from './getExpensesDetails200';
 export * from './getExpensesDetailsYear200';
