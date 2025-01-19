@@ -6,7 +6,7 @@ import (
 	"mime/multipart"
 
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
-	"github.com/minio/minio-go/v7"
+	minio "github.com/minio/minio-go/v7"
 )
 
 type objectUploadRepository struct {
