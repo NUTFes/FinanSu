@@ -74,7 +74,7 @@ import type {
   GetBudgetsIdDetails200,
   GetBureaus200,
   GetBureausId200,
-  GetBuyReportsListParams,
+  GetBuyReportsDetailsParams,
   GetDepartments200,
   GetDepartmentsId200,
   GetExpenses200,
@@ -2127,15 +2127,15 @@ export const useDeleteBuyReportsId = <TError = unknown>(
 }
 
 /**
- * 購入報告で表示するbuyReport一覧の取得、主に財務向けのページ
+ * 購入報告で表示するbuy_report一覧の取得、主に財務向けのページ
  */
-export type getBuyReportsListResponse = {
+export type getBuyReportsDetailsResponse = {
   data: BuyReportDetail[];
   status: number;
   headers: Headers;
 }
 
-export const getGetBuyReportsListUrl = (params?: GetBuyReportsListParams,) => {
+export const getGetBuyReportsDetailsUrl = (params?: GetBuyReportsDetailsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -2145,12 +2145,12 @@ export const getGetBuyReportsListUrl = (params?: GetBuyReportsListParams,) => {
     }
   });
 
-  return normalizedParams.size ? `/buy_reports/list?${normalizedParams.toString()}` : `/buy_reports/list`
+  return normalizedParams.size ? `/buy_reports/details?${normalizedParams.toString()}` : `/buy_reports/details`
 }
 
-export const getBuyReportsList = async (params?: GetBuyReportsListParams, options?: RequestInit): Promise<getBuyReportsListResponse> => {
+export const getBuyReportsDetails = async (params?: GetBuyReportsDetailsParams, options?: RequestInit): Promise<getBuyReportsDetailsResponse> => {
   
-  return customFetch<Promise<getBuyReportsListResponse>>(getGetBuyReportsListUrl(params),
+  return customFetch<Promise<getBuyReportsDetailsResponse>>(getGetBuyReportsDetailsUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -2162,19 +2162,19 @@ export const getBuyReportsList = async (params?: GetBuyReportsListParams, option
 
 
 
-export const getGetBuyReportsListKey = (params?: GetBuyReportsListParams,) => [`/buy_reports/list`, ...(params ? [params]: [])] as const;
+export const getGetBuyReportsDetailsKey = (params?: GetBuyReportsDetailsParams,) => [`/buy_reports/details`, ...(params ? [params]: [])] as const;
 
-export type GetBuyReportsListQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsList>>>
-export type GetBuyReportsListQueryError = unknown
+export type GetBuyReportsDetailsQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsDetails>>>
+export type GetBuyReportsDetailsQueryError = unknown
 
-export const useGetBuyReportsList = <TError = unknown>(
-  params?: GetBuyReportsListParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsList>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+export const useGetBuyReportsDetails = <TError = unknown>(
+  params?: GetBuyReportsDetailsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsDetails>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
   const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsListKey(params) : null);
-  const swrFn = () => getBuyReportsList(params, requestOptions)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsDetailsKey(params) : null);
+  const swrFn = () => getBuyReportsDetails(params, requestOptions)
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
