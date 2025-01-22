@@ -5,8 +5,9 @@ go 1.21
 toolchain go1.23.4
 
 require (
+	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/go-testfixtures/testfixtures/v3 v3.14.0
+	github.com/go-test/deep v1.0.8 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/oapi-codegen/runtime v1.1.1
@@ -17,6 +18,8 @@ require (
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.4
 )
+
+require github.com/go-testfixtures/testfixtures/v3 v3.14.0
 
 require (
 	cel.dev/expr v0.16.0 // indirect
@@ -41,7 +44,6 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-test/deep v1.0.8 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/s2a-go v0.1.8 // indirect

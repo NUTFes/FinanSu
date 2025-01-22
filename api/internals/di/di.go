@@ -31,7 +31,10 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	budgetRepository := repository.NewBudgetRepository(client, crud)
 	bureauRepository := repository.NewBureauRepository(client, crud)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
+	divisionRepository := repository.NewDivisionRepository(client, crud)
 	expenseRepository := repository.NewExpenseRepository(client, crud)
+	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
+	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
@@ -50,17 +53,30 @@ func InitializeServer() (db.Client, *echo.Echo) {
 
 	// UseCase
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
-	activityInformationUseCase := usecase.NewActivityInformationUseCase(activityInformationRepository)
+	activityInformationUseCase := usecase.NewActivityInformationUseCase(
+		activityInformationRepository,
+	)
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
+	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
+	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository)
+	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
-	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(passwordResetTokenRepository, userRepository, mailAuthRepository)
+	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
+		passwordResetTokenRepository,
+		userRepository,
+		mailAuthRepository,
+	)
 	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
-	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository, bureauRepository, expenseRepository)
+	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(
+		purchaseOrderRepository,
+		bureauRepository,
+		expenseRepository,
+	)
 	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
 	receiptUseCase := usecase.NewReceiptUseCase(receiptRepository)
 	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
@@ -73,16 +89,23 @@ func InitializeServer() (db.Client, *echo.Echo) {
 
 	// Controller
 	activityController := controller.NewActivityController(activityUseCase)
-	activityInformationController := controller.NewActivityInformationController(activityInformationUseCase)
+	activityInformationController := controller.NewActivityInformationController(
+		activityInformationUseCase,
+	)
 	activityStyleController := controller.NewActivityStyleController(activityStyleUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	bureauController := controller.NewBureauController(bureauUseCase)
 	departmentController := controller.NewDepartmentController(departmentUseCase)
+	divisionController := controller.NewDivisionController(divisionUseCase)
 	expenseController := controller.NewExpenseController(expenseUseCase)
+	festivalItemController := controller.NewFestivalItemController(festivalUseCase)
+	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
-	passwordResetTokenController := controller.NewPasswordResetTokenController(passwordResetTokenUseCase)
+	passwordResetTokenController := controller.NewPasswordResetTokenController(
+		passwordResetTokenUseCase,
+	)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
 	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
 	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
@@ -103,7 +126,10 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		budgetController,
 		bureauController,
 		departmentController,
+		divisionController,
 		expenseController,
+		festivalItemController,
+		financialRecordController,
 		fundInformationController,
 		healthcheckController,
 		mailAuthController,
