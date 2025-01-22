@@ -684,10 +684,9 @@ paths:
               required:
                 - file
                 - buy_report
-        required: true
       responses:
         "200":
-          description: 作成されたbuyReportが返ってくる
+          description: 作成されたbuy_reportが返ってくる
           content:
             application/json:
               schema:
@@ -745,11 +744,11 @@ paths:
             application/json:
               schema:
                 type: object
-  /buy_reports/list:
+  /buy_reports/details:
     get:
       tags:
         - buy_report
-      description: 購入報告で表示するbuyReport一覧の取得、主に財務向けのページ
+      description: 購入報告で表示するbuy_report一覧の取得、主に財務向けのページ
       parameters:
         - name: year
           in: query
@@ -2639,7 +2638,7 @@ components:
       description: マイページで表示する購入報告の情報
       type: object
       properties:
-        ID:
+        id:
           type: integer
           example: 1
         buyReportName:
@@ -2661,7 +2660,7 @@ components:
       description: 購入報告ページで表示する詳細情報
       type: object
       properties:
-        ID:
+        id:
           type: integer
           example: 1
         financialRecordName:

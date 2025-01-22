@@ -71,11 +71,11 @@ type BuyReport struct {
 
 // BuyReportDetail 購入報告ページで表示する詳細情報
 type BuyReportDetail struct {
-	ID                  *int    `json:"ID,omitempty"`
 	Amount              *int    `json:"amount,omitempty"`
 	DivisionName        *string `json:"divisionName,omitempty"`
 	FestivalItemName    *string `json:"festivalItemName,omitempty"`
 	FinancialRecordName *string `json:"financialRecordName,omitempty"`
+	Id                  *int    `json:"id,omitempty"`
 	IsPacked            *bool   `json:"isPacked,omitempty"`
 	IsSettled           *bool   `json:"isSettled,omitempty"`
 	PaidBy              *string `json:"paidBy,omitempty"`
@@ -84,9 +84,9 @@ type BuyReportDetail struct {
 
 // BuyReportInformation マイページで表示する購入報告の情報
 type BuyReportInformation struct {
-	ID            *int                        `json:"ID,omitempty"`
 	Amount        *int                        `json:"amount,omitempty"`
 	BuyReportName *string                     `json:"buyReportName,omitempty"`
+	Id            *int                        `json:"id,omitempty"`
 	ReportDate    *string                     `json:"reportDate,omitempty"`
 	Status        *BuyReportInformationStatus `json:"status,omitempty"`
 }
@@ -318,8 +318,8 @@ type PostBuyReportsMultipartBody struct {
 	File      openapi_types.File `json:"file"`
 }
 
-// GetBuyReportsListParams defines parameters for GetBuyReportsList.
-type GetBuyReportsListParams struct {
+// GetBuyReportsDetailsParams defines parameters for GetBuyReportsDetails.
+type GetBuyReportsDetailsParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
@@ -725,8 +725,8 @@ type ServerInterface interface {
 	// (POST /buy_reports)
 	PostBuyReports(ctx echo.Context) error
 
-	// (GET /buy_reports/list)
-	GetBuyReportsList(ctx echo.Context, params GetBuyReportsListParams) error
+	// (GET /buy_reports/details)
+	GetBuyReportsDetails(ctx echo.Context, params GetBuyReportsDetailsParams) error
 
 	// (DELETE /buy_reports/{id})
 	DeleteBuyReportsId(ctx echo.Context, id int) error
@@ -1545,12 +1545,12 @@ func (w *ServerInterfaceWrapper) PostBuyReports(ctx echo.Context) error {
 	return err
 }
 
-// GetBuyReportsList converts echo context to params.
-func (w *ServerInterfaceWrapper) GetBuyReportsList(ctx echo.Context) error {
+// GetBuyReportsDetails converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
 	var err error
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params GetBuyReportsListParams
+	var params GetBuyReportsDetailsParams
 	// ------------- Optional query parameter "year" -------------
 
 	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
@@ -1559,7 +1559,7 @@ func (w *ServerInterfaceWrapper) GetBuyReportsList(ctx echo.Context) error {
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetBuyReportsList(ctx, params)
+	err = w.Handler.GetBuyReportsDetails(ctx, params)
 	return err
 }
 
@@ -3128,7 +3128,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/bureaus/:id", wrapper.PutBureausId)
 	router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
 	router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
-	router.GET(baseURL+"/buy_reports/list", wrapper.GetBuyReportsList)
+	router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
