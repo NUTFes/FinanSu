@@ -12,6 +12,7 @@ func main() {
 	time.Local = time.FixedZone("JST", 9*60*60)
 	time.LoadLocation("JST")
 
-	client := di.InitializeServer()
+	client, echo := di.InitializeServer()
+	echo.Start(":1323")
 	defer client.CloseDB()
 }
