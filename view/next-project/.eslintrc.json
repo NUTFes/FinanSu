@@ -40,5 +40,6 @@
         }
       }
     ]
-  }
+  },
+  "ignorePatterns": ["src/generated"]
 }

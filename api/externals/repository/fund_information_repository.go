@@ -68,7 +68,7 @@ func (fir *fundInformationRepository) Create(
 				",'" + remark +
 				"'," + isFirstCheck +
 				"," + isLastCheck +
-				"," + receivedAt + ")"
+				",'" + receivedAt + "')"
 	return fir.crud.UpdateDB(c, query)
 }
 
