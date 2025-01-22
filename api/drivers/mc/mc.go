@@ -2,7 +2,6 @@ package mc
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -31,7 +30,6 @@ func InitMinioClient() (Client, error) {
 		Secure: useSSL,
 	})
 	if err != nil {
-		log.Fatalln(err)
 		return Client{}, err
 	}
 

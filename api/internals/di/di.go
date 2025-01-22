@@ -26,7 +26,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 
 	minioClient, err := mc.InitMinioClient()
 	if err != nil {
-		log.Fatal("mc error")
+		fmt.Println(err)
 	}
 
 	fmt.Println(minioClient)
