@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 	"mime/multipart"
+	"strconv"
+	"time"
 
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	minio "github.com/minio/minio-go/v7"
@@ -23,8 +25,9 @@ func NewObjectUploadRepository(c mc.Client) ObjectUploadRepository {
 
 // 画像をアップロード
 func (or *objectUploadRepository) UploadFile(c context.Context, file *multipart.FileHeader) error {
+	currentYear := strconv.Itoa(time.Now().Year())
 	size := file.Size
-	fileName := "/2024/receipts/" + file.Filename
+	fileName := "/" + currentYear + "/receipts/" + file.Filename
 	openFile, err := file.Open()
 	if err != nil {
 		log.Println(err)
