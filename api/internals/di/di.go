@@ -10,9 +10,10 @@ import (
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/NUTFes/FinanSu/api/router"
+	"github.com/labstack/echo/v4"
 )
 
-func InitializeServer() db.Client {
+func InitializeServer() (db.Client, *echo.Echo) {
 	// DB接続
 	client, err := db.ConnectMySQL()
 	if err != nil {
@@ -148,7 +149,7 @@ func InitializeServer() db.Client {
 	// ↓
 
 	// Server
-	server.RunServer(router)
+	e := server.RunServer(router)
 
-	return client
+	return client, e
 }
