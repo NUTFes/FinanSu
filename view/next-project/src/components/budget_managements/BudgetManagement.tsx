@@ -41,16 +41,9 @@ export default function BudgetManagement() {
   let title = '購入報告';
   const showBudgetColumns = true;
 
-  if (festivalItemId !== null) {
-    displayItems = festivalItems;
-    title = '申請物品';
-  } else if (divisionId !== null) {
-    displayItems = divisions;
-    title = '申請部門';
-  } else {
-    displayItems = financialRecords;
-    title = '申請局';
-  }
+  let totalBudget = 0;
+  let totalExpense = 0;
+  let totalBalance = 0;
 
   const handleFinancialRecordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const frId = e.target.value ? parseInt(e.target.value, 10) : null;
@@ -76,6 +69,26 @@ export default function BudgetManagement() {
     }
   };
 
+  if (divisionId !== null) {
+    displayItems = festivalItems;
+    title = '申請物品';
+    totalBudget = festivalItemsTotal?.budget || 0;
+    totalExpense = festivalItemsTotal?.expense || 0;
+    totalBalance = festivalItemsTotal?.balance || 0;
+  } else if (financialRecordId !== null) {
+    displayItems = divisions;
+    title = '申請部門';
+    totalBudget = divisionsTotal?.budget || 0;
+    totalExpense = divisionsTotal?.expense || 0;
+    totalBalance = divisionsTotal?.balance || 0;
+  } else {
+    displayItems = financialRecords;
+    title = '申請局';
+    totalBudget = financialRecordsTotal?.budget || 0;
+    totalExpense = financialRecordsTotal?.expense || 0;
+    totalBalance = financialRecordsTotal?.balance || 0;
+  }
+
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading || isFestivalItemsLoading;
   if (isLoadingAll) {
     return <Loading />;
@@ -84,24 +97,6 @@ export default function BudgetManagement() {
   const isErrorOccurred = financialRecordError || divisionsError || festivalItemsError;
   if (isErrorOccurred) {
     return <div>error...</div>;
-  }
-
-  let totalBudget = 0;
-  let totalExpense = 0;
-  let totalBalance = 0;
-
-  if (festivalItemId !== null && festivalItemsTotal) {
-    totalBudget = festivalItemsTotal.budget || 0;
-    totalExpense = festivalItemsTotal.expense || 0;
-    totalBalance = festivalItemsTotal.balance || 0;
-  } else if (divisionId !== null && divisionsTotal) {
-    totalBudget = divisionsTotal.budget || 0;
-    totalExpense = divisionsTotal.expense || 0;
-    totalBalance = divisionsTotal.balance || 0;
-  } else if (financialRecordId !== null && financialRecordsTotal) {
-    totalBudget = financialRecordsTotal.budget || 0;
-    totalExpense = financialRecordsTotal.expense || 0;
-    totalBalance = financialRecordsTotal.balance || 0;
   }
 
   return (
