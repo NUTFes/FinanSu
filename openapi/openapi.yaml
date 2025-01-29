@@ -1230,16 +1230,21 @@ paths:
             application/json:
               schema:
                 type: object
-  /festival_items/details/{division_id}:
+  /festival_items/details/{user_id}:
     get:
       tags:
         - festival_item
-      description: divisionの予算一覧の取得
+      description: ユーザーのマイページの予算一覧の取得
       parameters:
-        - name: division_id
+        - name: user_id
           in: path
-          description: division_id
+          description: user_id
           required: true
+          schema:
+            type: integer
+        - name: year_id
+          in: query
+          description: year_id
           schema:
             type: integer
       responses:
@@ -1248,7 +1253,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/festivalItemsForMyPage"
+                type: array
+                items:
+                  $ref: "#/components/schemas/festivalItemsForMyPage"
   /financial_records:
     get:
       tags:
