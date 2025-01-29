@@ -1,88 +1,108 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
-import { useState, useEffect } from 'react';
-import {
-  Department,
-  Division,
-  Item,
-  fetchDepartments,
-  fetchDivisions,
-  fetchItems,
-} from './mockApi';
-import { Card, EditButton, AddButton, Title } from '@/components/common';
+import { Card, EditButton, AddButton, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
+import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
+import { GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
 
 export default function BudgetManagement() {
-  const [departments, setDepartments] = useState<Department[]>([]);
-  const [divisions, setDivisions] = useState<Division[]>([]);
-  const [items, setItems] = useState<Item[]>([]);
-
-  const [{ departmentId, divisionId }, setQueryState] = useQueryStates({
-    departmentId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
+  const [{ financialRecordId, divisionId, festivalItemId }, setQueryState] = useQueryStates({
+    financialRecordId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
     divisionId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
+    festivalItemId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
   });
+  const divisionsParams: GetDivisionsParams = {
+    financial_record_id: financialRecordId ?? undefined,
+  };
+  const festivalItemsParams: GetFestivalItemsParams = {
+    division_id: divisionId ?? undefined,
+  };
 
-  useEffect(() => {
-    fetchDepartments().then(setDepartments);
-  }, []);
+  const {
+    data: financialRecordData,
+    isLoading: isFinancialRecordLoading,
+    error: financialRecordError,
+  } = useGetFinancialRecords();
+  const {
+    data: divisionsData,
+    isLoading: isDivisionsLoading,
+    error: divisionsError,
+  } = useGetDivisions(divisionsParams);
+  const {
+    data: festivalItemsData,
+    isLoading: isFestivalItemsLoading,
+    error: festivalItemsError,
+  } = useGetFestivalItems(festivalItemsParams);
 
-  // FIXME: APIが実装されたら、修正する。
-  useEffect(() => {
-    if (departmentId !== null) {
-      fetchDivisions(departmentId).then(setDivisions);
-      setItems([]);
-    } else {
-      setDivisions([]);
-      setQueryState({ divisionId: null });
-      setItems([]);
-    }
-  }, [departmentId]);
+  const { financialRecords = [], total: financialRecordsTotal } = financialRecordData?.data || {};
+  const { divisions = [], total: divisionsTotal } = divisionsData?.data || {};
+  const { festivalItems = [], total: festivalItemsTotal } = festivalItemsData?.data || {};
 
-  useEffect(() => {
-    if (divisionId !== null) {
-      fetchItems(divisionId).then(setItems);
-    } else {
-      setItems([]);
-    }
-  }, [divisionId]);
-
-  // FIXME: any型はAPIのレスポンスに合わせて変更する。
-  let displayItems: any[] = [];
+  let displayItems = [];
   let title = '購入報告';
   const showBudgetColumns = true;
 
-  if (divisionId !== null) {
-    displayItems = items;
+  if (festivalItemId !== null) {
+    displayItems = festivalItems;
     title = '申請物品';
-  } else if (departmentId !== null) {
+  } else if (divisionId !== null) {
     displayItems = divisions;
     title = '申請部門';
   } else {
-    displayItems = departments;
+    displayItems = financialRecords;
     title = '申請局';
   }
 
-  const totalBudget = displayItems.reduce((sum, item) => sum + (item.budget || 0), 0);
-  const totalUsed = displayItems.reduce((sum, item) => sum + (item.used || 0), 0);
-  const totalRemaining = displayItems.reduce((sum, item) => sum + (item.remaining || 0), 0);
-
-  const handleDepartmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const deptId = e.target.value ? parseInt(e.target.value, 10) : null;
-    setQueryState({ departmentId: deptId, divisionId: null });
+  const handleFinancialRecordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const frId = e.target.value ? parseInt(e.target.value, 10) : null;
+    setQueryState({ financialRecordId: frId, divisionId: null, festivalItemId: null });
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const divId = e.target.value ? parseInt(e.target.value, 10) : null;
-    setQueryState({ divisionId: divId });
+    setQueryState({ divisionId: divId, festivalItemId: null });
   };
 
-  // FIXME: any型はAPIのレスポンスに合わせて変更する。
   const handleRowClick = (item: any) => {
-    if (departmentId === null) {
-      setQueryState({ departmentId: item.id, divisionId: null });
-    } else if (divisionId === null) {
-      setQueryState({ divisionId: item.id });
+    if (financialRecordId === null) {
+      setQueryState({ financialRecordId: item.id, divisionId: null, festivalItemId: null });
+      return;
+    }
+    if (divisionId === null) {
+      setQueryState({ divisionId: item.id, festivalItemId: null });
+      return;
+    }
+    if (festivalItemId === null && festivalItems.length) {
+      setQueryState({ festivalItemId: item.id });
     }
   };
+
+  const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading || isFestivalItemsLoading;
+  if (isLoadingAll) {
+    return <Loading />;
+  }
+
+  const isErrorOccurred = financialRecordError || divisionsError || festivalItemsError;
+  if (isErrorOccurred) {
+    return <div>error...</div>;
+  }
+
+  let totalBudget = 0;
+  let totalExpense = 0;
+  let totalBalance = 0;
+
+  if (festivalItemId !== null && festivalItemsTotal) {
+    totalBudget = festivalItemsTotal.budget || 0;
+    totalExpense = festivalItemsTotal.expense || 0;
+    totalBalance = festivalItemsTotal.balance || 0;
+  } else if (divisionId !== null && divisionsTotal) {
+    totalBudget = divisionsTotal.budget || 0;
+    totalExpense = divisionsTotal.expense || 0;
+    totalBalance = divisionsTotal.balance || 0;
+  } else if (financialRecordId !== null && financialRecordsTotal) {
+    totalBudget = financialRecordsTotal.budget || 0;
+    totalExpense = financialRecordsTotal.expense || 0;
+    totalBalance = financialRecordsTotal.balance || 0;
+  }
 
   return (
     <Card>
@@ -91,23 +111,23 @@ export default function BudgetManagement() {
           <Title>予算管理ページ</Title>
         </div>
         <div className='mb-4 flex flex-col items-center md:flex-row md:justify-between'>
-          <div className='flex flex-col gap-4 text-nowrap py-2'>
+          <div className='flex flex-col gap-4 py-2'>
             <div className='flex gap-3'>
               <span className='text-base font-light'>申請する局</span>
               <select
-                value={departmentId ?? ''}
-                onChange={handleDepartmentChange}
+                value={financialRecordId ?? ''}
+                onChange={handleFinancialRecordChange}
                 className='border-b border-black-300 focus:outline-none'
               >
                 <option value=''>ALL</option>
-                {departments.map((dept) => (
-                  <option key={dept.id} value={dept.id}>
-                    {dept.name}
+                {financialRecords.map((financialRecord) => (
+                  <option key={financialRecord.id} value={financialRecord.id}>
+                    {financialRecord.name}
                   </option>
                 ))}
               </select>
             </div>
-            <div className={`flex gap-3 ${departmentId !== null ? 'visible' : 'invisible'}`}>
+            <div className={`flex gap-3 ${financialRecordId !== null ? 'visible' : 'invisible'}`}>
               <span className='text-base font-light'>申請する部門</span>
               <select
                 value={divisionId ?? ''}
@@ -115,9 +135,9 @@ export default function BudgetManagement() {
                 className='border-b border-black-300 focus:outline-none'
               >
                 <option value=''>ALL</option>
-                {divisions.map((div) => (
-                  <option key={div.id} value={div.id}>
-                    {div.name}
+                {divisions.map((division) => (
+                  <option key={division.id} value={division.id}>
+                    {division.name}
                   </option>
                 ))}
               </select>
@@ -155,12 +175,11 @@ export default function BudgetManagement() {
                     <div className='text-center text-primary-1 underline'>{item.name}</div>
                     <EditButton />
                   </td>
-
                   {showBudgetColumns && (
                     <>
-                      <td className='py-3 text-center'>{item.budget}</td>
-                      <td className='py-3 text-center'>{item.used}</td>
-                      <td className='py-3 text-center'>{item.remaining}</td>
+                      <td className='py-3 text-center'>{item.budget ?? 0}</td>
+                      <td className='py-3 text-center'>{item.expense ?? 0}</td>
+                      <td className='py-3 text-center'>{item.balance ?? 0}</td>
                     </>
                   )}
                 </tr>
@@ -169,8 +188,8 @@ export default function BudgetManagement() {
                 <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
                   <td className='py-3 text-center font-bold'>合計</td>
                   <td className='py-3 text-center font-bold'>{totalBudget}</td>
-                  <td className='py-3 text-center font-bold'>{totalUsed}</td>
-                  <td className='py-3 text-center font-bold'>{totalRemaining}</td>
+                  <td className='py-3 text-center font-bold'>{totalExpense}</td>
+                  <td className='py-3 text-center font-bold'>{totalBalance}</td>
                 </tr>
               )}
               {displayItems.length === 0 && (
