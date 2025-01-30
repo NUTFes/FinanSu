@@ -2,9 +2,11 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
 
 type festivalItemUseCase struct {
@@ -13,6 +15,7 @@ type festivalItemUseCase struct {
 
 type FestivalItemUseCase interface {
 	GetFestivalItems(context.Context, string, string) (FestivalItemDetails, error)
+	GetFestvalItemsForMypage(context.Context, string, string) ([]FestivalItemDetailsForMypage, error)
 	CreateFestivalItem(
 		context.Context,
 		FestivalItem,
@@ -203,6 +206,144 @@ func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string
 	return nil
 }
 
+func (fiu *festivalItemUseCase) GetFestvalItemsForMypage(
+	c context.Context,
+	year string,
+	userId string,
+) ([]FestivalItemDetailsForMypage, error) {
+	// var festivalItemDetails FestivalItemDetailsForMypage
+	var festivalItemDetailsList []FestivalItemDetailsForMypage
+
+	var festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn
+
+	rows, err := fiu.rep.GetDetailByDivisionId(c, year, userId)
+	if err != nil {
+		return festivalItemDetailsList, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var festivalItemForMyPageColumn domain.FestivalItemForMyPageColumn
+		err := rows.Scan(
+			&festivalItemForMyPageColumn.UserName,
+			&festivalItemForMyPageColumn.FinancialRecordName,
+			&festivalItemForMyPageColumn.DivisionId,
+			&festivalItemForMyPageColumn.DivisionName,
+			&festivalItemForMyPageColumn.FestivalItemId,
+			&festivalItemForMyPageColumn.FestivalItemName,
+			&festivalItemForMyPageColumn.Year,
+			&festivalItemForMyPageColumn.BudgetAmount,
+			&festivalItemForMyPageColumn.BuyReportId,
+			&festivalItemForMyPageColumn.PaidBy,
+			&festivalItemForMyPageColumn.ReportAmount,
+			&festivalItemForMyPageColumn.ReportDate,
+			&festivalItemForMyPageColumn.IsPacked,
+			&festivalItemForMyPageColumn.IsSettled,
+		)
+		if err != nil {
+			fmt.Println(err)
+			return festivalItemDetailsList, err
+		}
+		festivalItemForMyPageColumns = append(festivalItemForMyPageColumns, festivalItemForMyPageColumn)
+	}
+
+	var festivalItemDetailsForMypageMap = make(map[string]FestivalItemDetailsForMypage)
+	var festivalItemMaps = make(map[string]map[string]FestivalItemWithReport)
+
+	for _, festivalItemForMyPageColumn := range festivalItemForMyPageColumns {
+		festivalItemDetailsForMypage := festivalItemDetailsForMypageMap[festivalItemForMyPageColumn.DivisionName]
+		// 局と部門名前定義
+		festivalItemDetailsForMypage.DivisionName = &festivalItemForMyPageColumn.DivisionName
+		festivalItemDetailsForMypage.FinancialRecordName = &festivalItemForMyPageColumn.FinancialRecordName
+
+		// 予算と支出データ集計
+		festivalItemMap := festivalItemMaps[festivalItemForMyPageColumn.DivisionName]
+		if festivalItemMap == nil {
+			festivalItemMap = make(map[string]FestivalItemWithReport)
+		}
+		festivalItemWithReport := festivalItemMap[festivalItemForMyPageColumn.FestivalItemName]
+		festivalItemWithReport.FestivalItemName = &festivalItemForMyPageColumn.FestivalItemName
+
+		// totalがなければ定義
+		if festivalItemWithReport.FestivalItemTotal == nil {
+			expense, budget, balance := 0, 0, 0
+			var total Total
+			total.Expense, total.Budget, total.Balance = &expense, &budget, &balance
+			festivalItemWithReport.FestivalItemTotal = &total
+		}
+
+		*festivalItemWithReport.FestivalItemTotal.Budget += festivalItemForMyPageColumn.BudgetAmount
+		*festivalItemWithReport.FestivalItemTotal.Expense += festivalItemForMyPageColumn.ReportAmount
+		*festivalItemWithReport.FestivalItemTotal.Balance += festivalItemForMyPageColumn.BudgetAmount - festivalItemForMyPageColumn.ReportAmount
+
+		buyReports := festivalItemWithReport.BuyReports
+		if buyReports == nil {
+			var buyReportSlice []generated.BuyReportInformation
+			buyReports = &buyReportSlice
+		}
+
+		var buyReport BuyReport
+		buyReport.Id = &festivalItemForMyPageColumn.BuyReportId
+		buyReport.BuyReportName = &festivalItemForMyPageColumn.PaidBy
+		buyReport.Amount = &festivalItemForMyPageColumn.ReportAmount
+		buyReport.ReportDate = &festivalItemForMyPageColumn.ReportDate
+
+		if festivalItemForMyPageColumn.IsSettled {
+			buyReport.Status = &isSettled
+		} else if festivalItemForMyPageColumn.IsPacked {
+			buyReport.Status = &isPacked
+		} else {
+			buyReport.Status = &empty
+		}
+
+		if *buyReport.Amount > 0 {
+			*buyReports = append(*buyReports, buyReport)
+		}
+
+		festivalItemWithReport.BuyReports = buyReports
+
+		festivalItemMap[festivalItemForMyPageColumn.FestivalItemName] = festivalItemWithReport
+		festivalItemMaps[festivalItemForMyPageColumn.DivisionName] = festivalItemMap
+
+		// divisionのtotalがなければ定義
+		if festivalItemDetailsForMypage.DivisionTotal == nil {
+			expense, budget, balance := 0, 0, 0
+			var total Total
+			total.Expense, total.Budget, total.Balance = &expense, &budget, &balance
+			festivalItemDetailsForMypage.DivisionTotal = &total
+		}
+
+		festivalItemDetailsForMypageMap[festivalItemForMyPageColumn.DivisionName] = festivalItemDetailsForMypage
+	}
+
+	for _, festivalItemDetails := range festivalItemDetailsForMypageMap {
+		newFestivalItemDetails := festivalItemDetails
+		festivalItems := festivalItemMaps[*festivalItemDetails.DivisionName]
+		var festivalItemWithReports []FestivalItemWithReport
+		for _, festivalItem := range festivalItems {
+			festivalItemWithReports = append(festivalItemWithReports, festivalItem)
+			*festivalItemDetails.DivisionTotal.Budget += *festivalItem.FestivalItemTotal.Budget
+			*festivalItemDetails.DivisionTotal.Expense += *festivalItem.FestivalItemTotal.Expense
+			*festivalItemDetails.DivisionTotal.Balance += *festivalItem.FestivalItemTotal.Balance
+		}
+		newFestivalItemDetails.FestivalItems = &festivalItemWithReports
+		festivalItemDetailsList = append(festivalItemDetailsList, newFestivalItemDetails)
+	}
+
+	return festivalItemDetailsList, nil
+}
+
 type FestivalItemDetails = generated.FestivalItemDetails
 type FestivalItem = generated.FestivalItem
 type FestivalItemWithBalance = generated.FestivalItemWithBalance
+type FestivalItemDetailsForMypage = generated.FestivalItemsForMyPage
+type FestivalItemWithReport = generated.FestivalItemWithReport
+type BuyReport = generated.BuyReportInformation
+
+var empty = generated.Empty
+var isPacked = generated.N1
+var isSettled = generated.N2
+
+// func convertColumnToGenerated(column domain.FestivalItemForMyPageColumn) []FestivalItemDetailsForMypage {
+// 	r
+// }

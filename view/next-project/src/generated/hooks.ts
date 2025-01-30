@@ -3490,7 +3490,7 @@ export const useDeleteFestivalItemsId = <TError = unknown>(
  * ユーザーのマイページの予算一覧の取得
  */
 export type getFestivalItemsDetailsUserIdResponse = {
-  data: FestivalItemsForMyPage;
+  data: FestivalItemsForMyPage[];
   status: number;
   headers: Headers;
 }

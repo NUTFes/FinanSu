@@ -16,7 +16,7 @@ import (
 const (
 	Empty BuyReportInformationStatus = "確認中"
 	N1    BuyReportInformationStatus = "封詰め"
-	N2    BuyReportInformationStatus = "生産完了"
+	N2    BuyReportInformationStatus = "清算完了"
 )
 
 // Defines values for GetActivitiesFilteredDetailsParamsIsDone.

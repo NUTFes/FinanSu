@@ -2662,7 +2662,7 @@ components:
           enum:
             - 確認中
             - 封詰め
-            - 生産完了
+            - 清算完了
     buyReportDetail:
       description: 購入報告ページで表示する詳細情報
       type: object
