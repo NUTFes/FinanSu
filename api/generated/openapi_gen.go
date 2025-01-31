@@ -383,8 +383,8 @@ type GetFestivalItemsParams struct {
 
 // GetFestivalItemsDetailsUserIdParams defines parameters for GetFestivalItemsDetailsUserId.
 type GetFestivalItemsDetailsUserIdParams struct {
-	// YearId year_id
-	YearId *int `form:"year_id,omitempty" json:"year_id,omitempty"`
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
 // GetFinancialRecordsParams defines parameters for GetFinancialRecords.
@@ -1953,11 +1953,11 @@ func (w *ServerInterfaceWrapper) GetFestivalItemsDetailsUserId(ctx echo.Context)
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetFestivalItemsDetailsUserIdParams
-	// ------------- Optional query parameter "year_id" -------------
+	// ------------- Optional query parameter "year" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "year_id", ctx.QueryParams(), &params.YearId)
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments

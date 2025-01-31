@@ -1242,9 +1242,9 @@ paths:
           required: true
           schema:
             type: integer
-        - name: year_id
+        - name: year
           in: query
-          description: year_id
+          description: year
           schema:
             type: integer
       responses:

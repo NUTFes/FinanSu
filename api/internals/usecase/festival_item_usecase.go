@@ -247,6 +247,22 @@ func (fiu *festivalItemUseCase) GetFestvalItemsForMypage(
 		festivalItemForMyPageColumns = append(festivalItemForMyPageColumns, festivalItemForMyPageColumn)
 	}
 
+	festivalItemDetailsList = convertColumnToGenerated(festivalItemForMyPageColumns)
+
+	return festivalItemDetailsList, nil
+}
+
+type FestivalItemDetails = generated.FestivalItemDetails
+type FestivalItem = generated.FestivalItem
+type FestivalItemWithBalance = generated.FestivalItemWithBalance
+type FestivalItemDetailsForMypage = generated.FestivalItemsForMyPage
+type FestivalItemWithReport = generated.FestivalItemWithReport
+type BuyReport = generated.BuyReportInformation
+
+func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn) []FestivalItemDetailsForMypage {
+	var festivalItemDetailsList []FestivalItemDetailsForMypage
+
+	// 部門ごとにマップを作成
 	var festivalItemDetailsForMypageMap = make(map[string]FestivalItemDetailsForMypage)
 	var festivalItemMaps = make(map[string]map[string]FestivalItemWithReport)
 
@@ -329,21 +345,9 @@ func (fiu *festivalItemUseCase) GetFestvalItemsForMypage(
 		newFestivalItemDetails.FestivalItems = &festivalItemWithReports
 		festivalItemDetailsList = append(festivalItemDetailsList, newFestivalItemDetails)
 	}
-
-	return festivalItemDetailsList, nil
+	return festivalItemDetailsList
 }
-
-type FestivalItemDetails = generated.FestivalItemDetails
-type FestivalItem = generated.FestivalItem
-type FestivalItemWithBalance = generated.FestivalItemWithBalance
-type FestivalItemDetailsForMypage = generated.FestivalItemsForMyPage
-type FestivalItemWithReport = generated.FestivalItemWithReport
-type BuyReport = generated.BuyReportInformation
 
 var empty = generated.Empty
 var isPacked = generated.N1
 var isSettled = generated.N2
-
-// func convertColumnToGenerated(column domain.FestivalItemForMyPageColumn) []FestivalItemDetailsForMypage {
-// 	r
-// }
