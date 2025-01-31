@@ -2212,6 +2212,28 @@ paths:
             application/json:
               schema:
                 type: object
+  /upload_file:
+    post:
+      tags:
+        - upload_file
+      description: ファイルアップロード
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: ファイルアップロード成功
+          content:
+            application/json:
+              schema:
+                type: object
 
   /users:
     get:

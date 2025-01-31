@@ -19,6 +19,7 @@ type router struct {
 	fundInformationController     controller.FundInformationController
 	healthcheckController         controller.HealthcheckController
 	mailAuthController            controller.MailAuthController
+	objectUploadController        controller.ObjectUploadController
 	passwordResetTokenController  controller.PasswordResetTokenController
 	purchaseItemController        controller.PurchaseItemController
 	purchaseOrderController       controller.PurchaseOrderController
@@ -50,6 +51,7 @@ func NewRouter(
 	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
 	mailAuthController controller.MailAuthController,
+	objectUploadController controller.ObjectUploadController,
 	passwordResetTokenController controller.PasswordResetTokenController,
 	purchaseItemController controller.PurchaseItemController,
 	purchaseOrderController controller.PurchaseOrderController,
@@ -76,6 +78,7 @@ func NewRouter(
 		fundInformationController,
 		healthController,
 		mailAuthController,
+		objectUploadController,
 		passwordResetTokenController,
 		purchaseItemController,
 		purchaseOrderController,
@@ -203,6 +206,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/mail_auth/signin", r.mailAuthController.SignIn)
 	e.DELETE("/mail_auth/signout", r.mailAuthController.SignOut)
 	e.GET("/mail_auth/is_signin", r.mailAuthController.IsSignIn)
+
+	// objectUploadテスト
+	e.POST("/upload_file", r.objectUploadController.UploadObject)
 
 	//password_reset
 	e.POST("/password_reset/:id", r.passwordResetTokenController.ChangePassword)

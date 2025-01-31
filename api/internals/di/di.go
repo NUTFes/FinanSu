@@ -1,9 +1,11 @@
 package di
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
@@ -22,7 +24,12 @@ func InitializeServer() (db.Client, *echo.Echo) {
 
 	crud := abstract.NewCrud(client)
 
-	// ↓
+	minioClient, err := mc.InitMinioClient()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(minioClient)
 
 	// Repository
 	activityRepository := repository.NewActivityRepository(client, crud)
@@ -37,6 +44,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
+	objectUploadRepository := repository.NewObjectUploadRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
@@ -50,6 +58,8 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	userRepository := repository.NewUserRepository(client, crud)
 	yearRepository := repository.NewYearRepository(client, crud)
 	// ↓
+
+	fmt.Println(objectUploadRepository)
 
 	// UseCase
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
@@ -66,6 +76,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
+	objectUploadUseCase := usecase.NewObjectUploadUseCase(objectUploadRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
 		passwordResetTokenRepository,
 		userRepository,
@@ -103,6 +114,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
+	objectUploadController := controller.NewObjectUploadController(objectUploadUseCase)
 	passwordResetTokenController := controller.NewPasswordResetTokenController(
 		passwordResetTokenUseCase,
 	)
@@ -133,6 +145,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		fundInformationController,
 		healthcheckController,
 		mailAuthController,
+		objectUploadController,
 		passwordResetTokenController,
 		purchaseItemController,
 		purchaseOrderController,
