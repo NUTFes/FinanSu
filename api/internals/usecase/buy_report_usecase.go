@@ -21,25 +21,8 @@ func NewBuyReportUseCase(rep rep.BuyReportRepository) BuyReportUseCase {
 }
 
 func (b *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo PostBuyReport, file *multipart.FileHeader) (PostBuyReport, error) {
-
-	// rows, err := s.rep.All(c)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// defer rows.Close()
-
-	// for rows.Next() {
-	// 	err := rows.Scan(
-	// 		&source.ID,
-	// 		&source.Name,
-	// 		&source.CreatedAt,
-	// 		&source.UpdatedAt,
-	// 	)
-	// 	if err != nil {
-	// 		return nil, errors.Wrapf(err, "cannot connect SQL")
-	// 	}
-	// 	sources = append(sources, source)
-	// }
+	// トランザクションスタート
+	
 	return buyReportInfo, nil
 }
 

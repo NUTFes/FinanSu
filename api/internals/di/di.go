@@ -56,6 +56,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	sponsorRepository := repository.NewSponsorRepository(client, crud)
 	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
 	teacherRepository := repository.NewTeacherRepository(client, crud)
+	transactionRepository := repository.NewTransactionRepository(client, crud)
 	userRepository := repository.NewUserRepository(client, crud)
 	yearRepository := repository.NewYearRepository(client, crud)
 	// ↓
@@ -72,7 +73,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
-	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository)
+	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
