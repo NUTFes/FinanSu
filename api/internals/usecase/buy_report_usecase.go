@@ -9,20 +9,56 @@ import (
 )
 
 type buyReportUseCase struct {
-	rep rep.BuyReportRepository
+	bRep rep.BuyReportRepository
+	tRep rep.TransactionRepository
+	oRep rep.ObjectUploadRepository
 }
 
 type BuyReportUseCase interface {
 	CreateBuyReport(context.Context, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 }
 
-func NewBuyReportUseCase(rep rep.BuyReportRepository) BuyReportUseCase {
-	return &buyReportUseCase{rep}
+func NewBuyReportUseCase(bRep rep.BuyReportRepository, tRep rep.TransactionRepository, oRep rep.ObjectUploadRepository) BuyReportUseCase {
+	return &buyReportUseCase{bRep, tRep, oRep}
 }
 
-func (b *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo PostBuyReport, file *multipart.FileHeader) (PostBuyReport, error) {
+func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo PostBuyReport, file *multipart.FileHeader) (PostBuyReport, error) {
 	// トランザクションスタート
-	
+	tx, _ := bru.tRep.StartTransaction(c)
+
+	// buy_report の作成
+	err := bru.bRep.CreateBuyReport(c, tx, buyReportInfo)
+	if err != nil {
+		bru.tRep.RollBack(c, tx)
+		return buyReportInfo, err
+	}
+
+	// buy_statusの初期レコード作成
+	err = bru.bRep.InitBuyStatus(c, tx)
+	if err != nil {
+		bru.tRep.RollBack(c, tx)
+		return buyReportInfo, err
+	}
+
+	// ファイルのアップロード
+	// err = bru.oRep.UploadFile(c, file)
+	// if err != nil {
+	// 	bru.tRep.RollBack(c, tx)
+	// 	return buyReportInfo, err
+	// }
+
+	// // ファイル情報の登録
+	// _, err = bru.bRep.CreateReceipt(c, tx, buyReportInfo, file)
+	// if err != nil {
+	// 	bru.tRep.RollBack(c, tx)
+	// 	return buyReportInfo, err
+	// }
+
+	// コミットしてトランザクション終了
+	if err := bru.tRep.Commit(c, tx); err != nil {
+		return buyReportInfo, err
+	}
+
 	return buyReportInfo, nil
 }
 

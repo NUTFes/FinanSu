@@ -6,6 +6,8 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	"github.com/NUTFes/FinanSu/api/generated"
+	goqu "github.com/doug-martin/goqu/v9"
 )
 
 type buyReportRepository struct {
@@ -14,103 +16,52 @@ type buyReportRepository struct {
 }
 
 type BuyReportRepository interface {
-	All(context.Context) (*sql.Rows, error)
+	CreateBuyReport(context.Context, *sql.Tx, PostBuyReport) error
+	InitBuyStatus(context.Context, *sql.Tx) error
 }
 
 func NewBuyReportRepository(c db.Client, ac abstract.Crud) BuyReportRepository {
 	return &buyReportRepository{c, ac}
 }
 
-// 全件取得
-func (brr *buyReportRepository) All(c context.Context) (*sql.Rows, error) {
-	query, _, err := dialect.From("buy_reports").ToSQL()
+// buyReport作成
+func (brr *buyReportRepository) CreateBuyReport(
+	c context.Context,
+	tx *sql.Tx,
+	buyReportInfo PostBuyReport,
+) error {
+	ds := dialect.Insert("buy_reports").
+		Rows(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy})
+	query, _, err := ds.ToSQL()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return brr.crud.Read(c, query)
+	err = brr.crud.TransactionExec(c, tx, query)
+	if err != nil {
+		return err
+	}
+
+	// last_insert_idを,mysqlの変数に格納
+	setQuery := "SET @new_buy_report_id = last_insert_id();"
+
+	err = brr.crud.TransactionExec(c, tx, setQuery)
+	return err
 }
 
-// 1件取得
-// func (sr *sponsorRepository) Find(c context.Context, id string) (*sql.Row, error) {
-// 	query, _, err := dialect.From("sponsors").Where(goqu.Ex{"id": id}).ToSQL()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return sr.crud.ReadByID(c, query)
-// }
+// buyReportのステータスを初期化
+func (brr *buyReportRepository) InitBuyStatus(
+	c context.Context,
+	tx *sql.Tx,
+) error {
+	ds := dialect.Insert("buy_statuses").
+		Rows(goqu.Record{"buy_report_id": goqu.L("@new_buy_report_id"), "is_packed": 0, "is_settled": 0})
 
-// // 作成
-// func (sr *sponsorRepository) Create(
-// 	c context.Context,
-// 	name string,
-// 	tel string,
-// 	email string,
-// 	address string,
-// 	representative string,
-// ) error {
-// 	ds := dialect.Insert("sponsors").
-// 		Rows(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative})
-// 	query, _, err := ds.ToSQL()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return sr.crud.UpdateDB(c, query)
-// }
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	err = brr.crud.TransactionExec(c, tx, query)
+	return err
+}
 
-// // 編集
-// func (sr *sponsorRepository) Update(
-// 	c context.Context,
-// 	id string,
-// 	name string,
-// 	tel string,
-// 	email string,
-// 	address string,
-// 	representative string,
-// ) error {
-// 	ds := dialect.Update("sponsors").
-// 		Set(goqu.Record{"name": name, "tel": tel, "email": email, "address": address, "representative": representative}).
-// 		Where(goqu.Ex{"id": id})
-// 	query, _, err := ds.ToSQL()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return sr.crud.UpdateDB(c, query)
-// }
-
-// // 削除
-// func (sr *sponsorRepository) Delete(
-// 	c context.Context,
-// 	id string,
-// ) error {
-// 	ds := dialect.Delete("sponsors").Where(goqu.Ex{"id": id})
-// 	query, _, err := ds.ToSQL()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return sr.crud.UpdateDB(c, query)
-
-// }
-
-// // 最新のsponcerを取得する
-// func (sr *sponsorRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-// 	query, _, err := dialect.From("sponsors").Order(goqu.I("id").Desc()).Limit(1).ToSQL()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return sr.crud.ReadByID(c, query)
-// }
-
-// // 年度別に取得
-// func (sr *sponsorRepository) AllByPeriod(c context.Context, year string) (*sql.Rows, error) {
-// 	query, _, err := dialect.Select("sponsors.*").
-// 		From("sponsors").
-// 		InnerJoin(goqu.I("year_periods"), goqu.On(goqu.I("sponsors.created_at").Gt(goqu.I("year_periods.started_at")), goqu.I("sponsors.created_at").Lt(goqu.I("year_periods.ended_at")))).
-// 		InnerJoin(goqu.I("years"), goqu.On(goqu.I("year_periods.year_id").Eq(goqu.I("years.id")))).
-// 		Where(goqu.Ex{"years.year": year}).
-// 		Order(goqu.I("sponsors.id").Desc()).
-// 		ToSQL()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return sr.crud.Read(c, query)
-// }
+type PostBuyReport = generated.BuyReport

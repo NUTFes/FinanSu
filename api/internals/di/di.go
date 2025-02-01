@@ -69,7 +69,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
-	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectUploadRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
