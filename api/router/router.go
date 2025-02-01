@@ -11,6 +11,7 @@ type router struct {
 	activityStyleController       controller.ActivityStyleController
 	budgetController              controller.BudgetController
 	bureauController              controller.BureauController
+	buyReportController           controller.BuyReportController
 	departmentController          controller.DepartmentController
 	expenseController             controller.ExpenseController
 	festivalItemController        controller.FestivalItemController
@@ -43,6 +44,7 @@ func NewRouter(
 	activitystyleController controller.ActivityStyleController,
 	budgetController controller.BudgetController,
 	bureauController controller.BureauController,
+	buyReportController controller.BuyReportController,
 	departmentController controller.DepartmentController,
 	divisionController controller.DivisionController,
 	expenseController controller.ExpenseController,
@@ -70,6 +72,7 @@ func NewRouter(
 		activitystyleController,
 		budgetController,
 		bureauController,
+		buyReportController,
 		departmentController,
 		expenseController,
 		festivalItemController,
@@ -144,6 +147,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/bureaus", r.bureauController.CreateBureau)
 	e.PUT("/bureaus/:id", r.bureauController.UpdateBureau)
 	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
+
+	// buyReportsのRoute
+	e.POST("/buy_reports", r.buyReportController.IndexBuyReport)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)

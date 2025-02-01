@@ -37,6 +37,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleRepository := repository.NewActivityStyleRepository(client, crud)
 	budgetRepository := repository.NewBudgetRepository(client, crud)
 	bureauRepository := repository.NewBureauRepository(client, crud)
+	buyReportRepository := repository.NewBuyReportRepository(client, crud)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
 	divisionRepository := repository.NewDivisionRepository(client, crud)
 	expenseRepository := repository.NewExpenseRepository(client, crud)
@@ -59,8 +60,6 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	yearRepository := repository.NewYearRepository(client, crud)
 	// ↓
 
-	fmt.Println(objectUploadRepository)
-
 	// UseCase
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
 	activityInformationUseCase := usecase.NewActivityInformationUseCase(
@@ -69,6 +68,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
@@ -106,6 +106,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleController := controller.NewActivityStyleController(activityStyleUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	bureauController := controller.NewBureauController(bureauUseCase)
+	buyReportContoroller := controller.NewBuyReportController(buyReportUseCase)
 	departmentController := controller.NewDepartmentController(departmentUseCase)
 	divisionController := controller.NewDivisionController(divisionUseCase)
 	expenseController := controller.NewExpenseController(expenseUseCase)
@@ -137,6 +138,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		activityStyleController,
 		budgetController,
 		bureauController,
+		buyReportContoroller,
 		departmentController,
 		divisionController,
 		expenseController,
