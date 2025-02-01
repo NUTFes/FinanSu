@@ -149,7 +149,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
 
 	// buyReportsのRoute
-	e.POST("/buy_reports", r.buyReportController.IndexBuyReport)
+	e.POST("/buy_reports", r.buyReportController.CreateBuyReport)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)

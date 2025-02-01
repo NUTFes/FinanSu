@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"mime/multipart"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
-	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"github.com/NUTFes/FinanSu/api/generated"
 )
 
 type buyReportUseCase struct {
@@ -12,15 +13,15 @@ type buyReportUseCase struct {
 }
 
 type BuyReportUseCase interface {
-	GetBuyReports(context.Context) ([]domain.BuyReport, error)
+	CreateBuyReport(context.Context, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 }
 
 func NewBuyReportUseCase(rep rep.BuyReportRepository) BuyReportUseCase {
 	return &buyReportUseCase{rep}
 }
 
-func (b *buyReportUseCase) GetBuyReports(c context.Context) ([]domain.BuyReport, error) {
-	var sources []domain.BuyReport
+func (b *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo PostBuyReport, file *multipart.FileHeader) (PostBuyReport, error) {
+
 	// rows, err := s.rep.All(c)
 	// if err != nil {
 	// 	return nil, err
@@ -39,7 +40,7 @@ func (b *buyReportUseCase) GetBuyReports(c context.Context) ([]domain.BuyReport,
 	// 	}
 	// 	sources = append(sources, source)
 	// }
-	return sources, nil
+	return buyReportInfo, nil
 }
 
 // func (s *sourceUseCase) GetSourceByID(c context.Context, id string) (domain.Source, error) {
@@ -93,3 +94,5 @@ func (b *buyReportUseCase) GetBuyReports(c context.Context) ([]domain.BuyReport,
 // 	err := s.rep.Destroy(c, id)
 // 	return err
 // }
+
+type PostBuyReport = generated.BuyReport
