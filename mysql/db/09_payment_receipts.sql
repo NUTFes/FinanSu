@@ -10,5 +10,9 @@ CREATE TABLE payment_receipts (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY buy_report_id_foreign_key (buy_report_id) REFERENCES buy_reports (id)
+    FOREIGN KEY buy_report_id_foreign_key (buy_report_id) REFERENCES buy_reports (id) ON DELETE CASCADE
 );
+
+INSERT INTO payment_receipts (buy_report_id, bucket_name, file_name, file_type, remark) VALUES (1, 'payment-receipts', 'receipt-1.jpg', 'image/jpeg', '');
+INSERT INTO payment_receipts (buy_report_id, bucket_name, file_name, file_type, remark) VALUES (2, 'payment-receipts', 'receipt-2.jpg', 'image/jpeg', '');
+INSERT INTO payment_receipts (buy_report_id, bucket_name, file_name, file_type, remark) VALUES (3, 'payment-receipts', 'receipt-3.jpg', 'image/jpeg', '');
