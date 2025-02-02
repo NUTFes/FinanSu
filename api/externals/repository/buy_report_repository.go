@@ -17,8 +17,10 @@ type buyReportRepository struct {
 
 type BuyReportRepository interface {
 	CreateBuyReport(context.Context, *sql.Tx, PostBuyReport) (int64, error)
+	UpdateBuyReport(context.Context, *sql.Tx, string, PostBuyReport) error
 	InitBuyStatus(context.Context, *sql.Tx) error
 	CreatePaymentReceipt(context.Context, *sql.Tx, FileInfo) error
+	GetPaymentReceipt(context.Context, *sql.Tx, string) (*sql.Row, error)
 }
 
 func NewBuyReportRepository(c db.Client, ac abstract.Crud) BuyReportRepository {
@@ -56,6 +58,25 @@ func (brr *buyReportRepository) CreateBuyReport(
 	return id, err
 }
 
+// buyReport作成
+func (brr *buyReportRepository) UpdateBuyReport(
+	c context.Context,
+	tx *sql.Tx,
+	id string,
+	buyReportInfo PostBuyReport,
+) error {
+	ds := dialect.Update("buy_reports").
+		Set(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy}).
+		Where(goqu.Ex{"id": id})
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	err = brr.crud.TransactionExec(c, tx, query)
+	return err
+}
+
 // buyReportのステータスを初期化
 func (brr *buyReportRepository) InitBuyStatus(
 	c context.Context,
@@ -86,6 +107,24 @@ func (brr *buyReportRepository) CreatePaymentReceipt(
 	}
 	err = brr.crud.TransactionExec(c, tx, query)
 	return err
+}
+
+func (brr *buyReportRepository) GetPaymentReceipt(
+	c context.Context,
+	tx *sql.Tx,
+	id string,
+) (*sql.Row, error) {
+	query, _, err := dialect.From("payment_receipts").Select("payment_receipts.*", "years.year").
+		InnerJoin(goqu.I("buy_reports"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("payment_receipts.buy_report_id")))).
+		InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
+		InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("years.id").Eq(goqu.I("financial_records.year_id")))).
+		Where(goqu.Ex{"buy_report_id": id}).ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return brr.crud.TransactionReadByID(c, tx, query)
 }
 
 type PostBuyReport = generated.BuyReport

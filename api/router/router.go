@@ -150,6 +150,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// buyReportsのRoute
 	e.POST("/buy_reports", r.buyReportController.CreateBuyReport)
+	e.PUT("/buy_reports/:id", r.buyReportController.UpdateBuyReport)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)

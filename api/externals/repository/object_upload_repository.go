@@ -18,6 +18,7 @@ type objectHandleRepository struct {
 
 type ObjectHandleRepository interface {
 	UploadFile(context.Context, *multipart.FileHeader, string, string) (FileInfo, error)
+	DeleteFile(context.Context, string) error
 }
 
 func NewObjectHandleRepository(c mc.Client) ObjectHandleRepository {
@@ -50,6 +51,16 @@ func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.
 	fileInfo.FileType = file.Header.Get("Content-Type")
 	fileInfo.Size = size
 	return fileInfo, nil
+}
+
+// ファイルを削除
+func (or *objectHandleRepository) DeleteFile(c context.Context, fileName string) error {
+	err := or.client.RemoveObject(c, BUCKET_NAME, fileName, minio.RemoveObjectOptions{})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
 }
 
 type FileInfo = domain.FileInformation
