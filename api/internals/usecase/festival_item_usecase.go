@@ -15,7 +15,7 @@ type festivalItemUseCase struct {
 
 type FestivalItemUseCase interface {
 	GetFestivalItems(context.Context, string, string) (FestivalItemDetails, error)
-	GetFestvalItemsForMypage(context.Context, string, string) ([]FestivalItemDetailsForMypage, error)
+	GetFestivalItemsForMypage(context.Context, string, string) ([]FestivalItemDetailsForMypage, error)
 	CreateFestivalItem(
 		context.Context,
 		FestivalItem,
@@ -206,12 +206,11 @@ func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string
 	return nil
 }
 
-func (fiu *festivalItemUseCase) GetFestvalItemsForMypage(
+func (fiu *festivalItemUseCase) GetFestivalItemsForMypage(
 	c context.Context,
 	year string,
 	userId string,
 ) ([]FestivalItemDetailsForMypage, error) {
-	// var festivalItemDetails FestivalItemDetailsForMypage
 	var festivalItemDetailsList []FestivalItemDetailsForMypage
 
 	var festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn
