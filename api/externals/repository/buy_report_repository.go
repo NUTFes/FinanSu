@@ -18,6 +18,7 @@ type buyReportRepository struct {
 type BuyReportRepository interface {
 	CreateBuyReport(context.Context, *sql.Tx, PostBuyReport) (int64, error)
 	UpdateBuyReport(context.Context, *sql.Tx, string, PostBuyReport) error
+	DeleteBuyReport(context.Context, *sql.Tx, string) error
 	InitBuyStatus(context.Context, *sql.Tx) error
 	CreatePaymentReceipt(context.Context, *sql.Tx, FileInfo) error
 	UpdatePaymentReceipt(context.Context, *sql.Tx, string, FileInfo) error
@@ -71,6 +72,22 @@ func (brr *buyReportRepository) UpdateBuyReport(
 		Set(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy}).
 		Where(goqu.Ex{"id": id})
 
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	err = brr.crud.TransactionExec(c, tx, query)
+	return err
+}
+
+// buyReport削除
+func (brr *buyReportRepository) DeleteBuyReport(
+	c context.Context,
+	tx *sql.Tx,
+	buyReportId string,
+) error {
+	ds := dialect.Delete("buy_reports").
+		Where(goqu.Ex{"id": buyReportId})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err

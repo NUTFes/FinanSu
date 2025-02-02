@@ -16,6 +16,7 @@ type buyReportController struct {
 type BuyReportController interface {
 	CreateBuyReport(echo.Context) error
 	UpdateBuyReport(echo.Context) error
+	DeleteBuyReport(echo.Context) error
 }
 
 func NewBuyReportController(u usecase.BuyReportUseCase) BuyReportController {
@@ -74,6 +75,17 @@ func (s *buyReportController) UpdateBuyReport(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, buyReportInfo)
+}
+
+// Delete
+func (s *buyReportController) DeleteBuyReport(c echo.Context) error {
+	ctx := c.Request().Context()
+	id := c.Param("id")
+	err := s.u.DeleteBuyReport(ctx, id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "buy_report delete failed")
+	}
+	return c.String(http.StatusOK, "buy_report delete success")
 }
 
 type BuyReport = generated.BuyReport

@@ -21,6 +21,7 @@ type buyReportUseCase struct {
 type BuyReportUseCase interface {
 	CreateBuyReport(context.Context, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	UpdateBuyReport(context.Context, string, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
+	DeleteBuyReport(context.Context, string) error
 }
 
 func NewBuyReportUseCase(bRep rep.BuyReportRepository, tRep rep.TransactionRepository, oRep rep.ObjectHandleRepository) BuyReportUseCase {
@@ -173,6 +174,56 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 	}
 
 	return resBuyReport, nil
+}
+
+func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId string) error {
+	// トランザクションスタート
+	tx, _ := bru.tRep.StartTransaction(c)
+
+	// 登録されているファイル情報の取得
+	var paymentReceipt PaymentReceiptWithYear
+	row, err := bru.bRep.GetPaymentReceipt(c, tx, buyReportId)
+	if err != nil {
+		bru.tRep.RollBack(c, tx)
+		return err
+	}
+	err = row.Scan(
+		&paymentReceipt.ID,
+		&paymentReceipt.BuyReportID,
+		&paymentReceipt.BucketName,
+		&paymentReceipt.FileName,
+		&paymentReceipt.FileType,
+		&paymentReceipt.Remark,
+		&paymentReceipt.CreatedAt,
+		&paymentReceipt.UpdatedAt,
+		&paymentReceipt.Year,
+	)
+	if err != nil {
+		bru.tRep.RollBack(c, tx)
+		return err
+	}
+
+	// 登録されているファイルの削除
+	filePath := convertFilePath(paymentReceipt)
+	err = bru.oRep.DeleteFile(c, filePath)
+	if err != nil {
+		bru.tRep.RollBack(c, tx)
+		return err
+	}
+
+	// buy_reportの削除
+	err = bru.bRep.DeleteBuyReport(c, tx, buyReportId)
+	if err != nil {
+		bru.tRep.RollBack(c, tx)
+		return err
+	}
+
+	// コミットしてトランザクション終了
+	if err := bru.tRep.Commit(c, tx); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type PostBuyReport = generated.BuyReport
