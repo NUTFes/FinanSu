@@ -20,6 +20,7 @@ type BuyReportRepository interface {
 	UpdateBuyReport(context.Context, *sql.Tx, string, PostBuyReport) error
 	InitBuyStatus(context.Context, *sql.Tx) error
 	CreatePaymentReceipt(context.Context, *sql.Tx, FileInfo) error
+	UpdatePaymentReceipt(context.Context, *sql.Tx, string, FileInfo) error
 	GetPaymentReceipt(context.Context, *sql.Tx, string) (*sql.Row, error)
 }
 
@@ -109,6 +110,25 @@ func (brr *buyReportRepository) CreatePaymentReceipt(
 	return err
 }
 
+// payment_receipt更新
+func (brr *buyReportRepository) UpdatePaymentReceipt(
+	c context.Context,
+	tx *sql.Tx,
+	id string,
+	fileInfo FileInfo,
+) error {
+	ds := dialect.Update("payment_receipts").
+		Set(goqu.Record{"bucket_name": BUCKET_NAME, "file_name": fileInfo.FileName, "file_type": fileInfo.FileType, "remark": ""}).
+		Where(goqu.Ex{"buy_report_id": id})
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	err = brr.crud.TransactionExec(c, tx, query)
+	return err
+}
+
+// payment_receipt取得
 func (brr *buyReportRepository) GetPaymentReceipt(
 	c context.Context,
 	tx *sql.Tx,

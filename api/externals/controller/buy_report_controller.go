@@ -69,11 +69,11 @@ func (s *buyReportController) UpdateBuyReport(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "buy_report is not valid")
 	}
 
-	_, err = s.u.UpdateBuyReport(ctx, id, buyReportInfo, file)
+	buyReportInfo, err = s.u.UpdateBuyReport(ctx, id, buyReportInfo, file)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, buyReportInfo)
 }
 
 type BuyReport = generated.BuyReport

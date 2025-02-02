@@ -47,7 +47,8 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 	}
 
 	// ファイル名の生成
-	filename := generateFileName(*buyReportInfo.Id, file)
+	buyReportIdStr := strconv.Itoa(*buyReportInfo.Id)
+	filename := generateFileName(buyReportIdStr, file)
 
 	// ファイルのアップロード
 	fileInfo, err := bru.oRep.UploadFile(c, file, DIR_NAME, filename)
@@ -114,24 +115,23 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, id string, buyRe
 			bru.tRep.RollBack(c, tx)
 			return buyReportInfo, err
 		}
+
+		// ファイル名生成
+		newFilename := generateFileName(id, file)
+		// 新ファイルのアップロード
+		fileInformation, err := bru.oRep.UploadFile(c, file, DIR_NAME, newFilename)
+		if err != nil {
+			bru.tRep.RollBack(c, tx)
+			return buyReportInfo, err
+		}
+
+		// ファイル情報のデータベース更新
+		err = bru.bRep.UpdatePaymentReceipt(c, tx, id, fileInformation)
+		if err != nil {
+			bru.tRep.RollBack(c, tx)
+			return buyReportInfo, err
+		}
 	}
-
-	// // ファイル名の生成
-	// filename := generateFileName(*buyReportInfo.Id, file)
-
-	// // ファイルのアップロード
-	// fileInfo, err := bru.oRep.UploadFile(c, file, DIR_NAME, filename)
-	// if err != nil {
-	// 	bru.tRep.RollBack(c, tx)
-	// 	return buyReportInfo, err
-	// }
-
-	// // ファイル情報のデータベース登録
-	// err = bru.bRep.CreatePaymentReceipt(c, tx, fileInfo)
-	// if err != nil {
-	// 	bru.tRep.RollBack(c, tx)
-	// 	return buyReportInfo, err
-	// }
 
 	// コミットしてトランザクション終了
 	if err := bru.tRep.Commit(c, tx); err != nil {
@@ -146,11 +146,11 @@ type PaymentReceiptWithYear = domain.PaymentReceiptWithYear
 
 var DIR_NAME = "receipts"
 
-func generateFileName(buyReportId int, file *multipart.FileHeader) string {
+func generateFileName(buyReportId string, file *multipart.FileHeader) string {
 	fileSplits := strings.Split(file.Filename, ".")
 	today := time.Now()
 	dateStr := today.Format("20060102")
-	filename := "No" + strconv.Itoa(buyReportId) + "_receipt_" + dateStr + "." + fileSplits[len(fileSplits)-1]
+	filename := "No" + buyReportId + "_receipt_" + dateStr + "." + fileSplits[len(fileSplits)-1]
 	return filename
 }
 
