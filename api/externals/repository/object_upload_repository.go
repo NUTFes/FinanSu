@@ -8,39 +8,50 @@ import (
 	"time"
 
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	minio "github.com/minio/minio-go/v7"
 )
 
-type objectUploadRepository struct {
+type objectHandleRepository struct {
 	client mc.Client
 }
 
-type ObjectUploadRepository interface {
-	UploadFile(context.Context, *multipart.FileHeader) error
+type ObjectHandleRepository interface {
+	UploadFile(context.Context, *multipart.FileHeader, string) (FileInfo, error)
 }
 
-func NewObjectUploadRepository(c mc.Client) ObjectUploadRepository {
-	return &objectUploadRepository{c}
+func NewObjectHandleRepository(c mc.Client) ObjectHandleRepository {
+	return &objectHandleRepository{c}
 }
 
 // 画像をアップロード
-func (or *objectUploadRepository) UploadFile(c context.Context, file *multipart.FileHeader) error {
+func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.FileHeader, dirName string) (FileInfo, error) {
 	currentYear := strconv.Itoa(time.Now().Year())
 	size := file.Size
-	fileName := "/" + currentYear + "/receipts/" + file.Filename
+	fileName := "/" + currentYear + "/" + dirName + "/" + file.Filename
+
+	var fileInfo FileInfo
+
 	openFile, err := file.Open()
 	if err != nil {
 		log.Println(err)
-		return err
+		return fileInfo, err
 	}
 	defer openFile.Close()
 
-	info, err := or.client.PutObject(c, "finansu", fileName, openFile, size, minio.PutObjectOptions{})
+	info, err := or.client.PutObject(c, BUCKET_NAME, fileName, openFile, size, minio.PutObjectOptions{})
 	if err != nil {
 		log.Println(err)
-		return err
+		return fileInfo, err
 	}
 	log.Println(info)
 
-	return nil
+	fileInfo.FileName = file.Filename
+	fileInfo.FileType = file.Header.Get("Content-Type")
+	fileInfo.Size = size
+	return fileInfo, nil
 }
+
+type FileInfo = domain.FileInformation
+
+var BUCKET_NAME = "finansu"

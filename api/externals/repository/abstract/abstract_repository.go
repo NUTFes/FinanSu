@@ -19,6 +19,7 @@ type Crud interface {
 	UpdateDB(context.Context, string) error
 	StartTransaction(context.Context) (*sql.Tx, error)
 	TransactionExec(context.Context, *sql.Tx, string) error
+	TransactionReadByID(context.Context, *sql.Tx, string) (*sql.Row, error)
 	Commit(context.Context, *sql.Tx) error
 	RollBack(context.Context, *sql.Tx) error
 }
@@ -62,6 +63,13 @@ func (a abstractRepository) TransactionExec(ctx context.Context, tx *sql.Tx, que
 	_, err := tx.ExecContext(ctx, query)
 	fmt.Printf("\x1b[36m%s\n", query)
 	return err
+}
+
+func (a abstractRepository) TransactionReadByID(ctx context.Context, tx *sql.Tx, query string) (*sql.Row, error) {
+	fmt.Printf("\x1b[36m%s\n", "TransactionReadByID")
+	row := tx.QueryRowContext(ctx, query)
+	fmt.Printf("\x1b[36m%s\n", query)
+	return row, nil
 }
 
 func (a abstractRepository) Commit(ctx context.Context, tx *sql.Tx) error {

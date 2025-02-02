@@ -8,19 +8,20 @@ import (
 )
 
 type objectUploadUseCase struct {
-	rep rep.ObjectUploadRepository
+	rep rep.ObjectHandleRepository
 }
 
 type ObjectUploadUseCase interface {
 	UploadFile(context.Context, *multipart.FileHeader) error
 }
 
-func NewObjectUploadUseCase(rep rep.ObjectUploadRepository) ObjectUploadUseCase {
+func NewObjectUploadUseCase(rep rep.ObjectHandleRepository) ObjectUploadUseCase {
 	return &objectUploadUseCase{rep}
 }
 
 func (b *objectUploadUseCase) UploadFile(c context.Context, file *multipart.FileHeader) error {
-	if err := b.rep.UploadFile(c, file); err != nil {
+	dirName := "receipts"
+	if _, err := b.rep.UploadFile(c, file, dirName); err != nil {
 		return err
 	}
 

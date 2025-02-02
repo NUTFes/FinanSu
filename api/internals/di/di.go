@@ -45,7 +45,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
-	objectUploadRepository := repository.NewObjectUploadRepository(minioClient)
+	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
@@ -69,7 +69,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
-	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectUploadRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
@@ -77,7 +77,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
-	objectUploadUseCase := usecase.NewObjectUploadUseCase(objectUploadRepository)
+	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
 		passwordResetTokenRepository,
 		userRepository,
@@ -116,7 +116,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
-	objectUploadController := controller.NewObjectUploadController(objectUploadUseCase)
+	objectUploadController := controller.NewObjectUploadController(objectHandleUseCase)
 	passwordResetTokenController := controller.NewPasswordResetTokenController(
 		passwordResetTokenUseCase,
 	)
