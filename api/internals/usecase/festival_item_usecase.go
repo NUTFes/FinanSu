@@ -282,9 +282,11 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		// totalがなければ定義
 		if festivalItemWithReport.FestivalItemTotal == nil {
 			expense, budget, balance := 0, 0, 0
-			var total Total
-			total.Expense, total.Budget, total.Balance = &expense, &budget, &balance
-			festivalItemWithReport.FestivalItemTotal = &total
+			festivalItemWithReport.FestivalItemTotal = &Total{
+				Expense: &expense,
+				Budget:  &budget,
+				Balance: &balance,
+			}
 		}
 
 		*festivalItemWithReport.FestivalItemTotal.Budget += festivalItemForMyPageColumn.BudgetAmount
@@ -293,15 +295,15 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 
 		buyReports := festivalItemWithReport.BuyReports
 		if buyReports == nil {
-			var buyReportSlice []generated.BuyReportInformation
-			buyReports = &buyReportSlice
+			buyReports = &[]generated.BuyReportInformation{}
 		}
 
-		var buyReport BuyReport
-		buyReport.Id = &festivalItemForMyPageColumn.BuyReportId
-		buyReport.BuyReportName = &festivalItemForMyPageColumn.PaidBy
-		buyReport.Amount = &festivalItemForMyPageColumn.ReportAmount
-		buyReport.ReportDate = &festivalItemForMyPageColumn.ReportDate
+		buyReport := BuyReport{
+			Id:            &festivalItemForMyPageColumn.BuyReportId,
+			BuyReportName: &festivalItemForMyPageColumn.PaidBy,
+			Amount:        &festivalItemForMyPageColumn.ReportAmount,
+			ReportDate:    &festivalItemForMyPageColumn.ReportDate,
+		}
 
 		if festivalItemForMyPageColumn.IsSettled {
 			buyReport.Status = &isSettled
@@ -311,6 +313,7 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 			buyReport.Status = &empty
 		}
 
+		// 報告が0以上のみ、buyReportsに追加
 		if *buyReport.Amount > 0 {
 			*buyReports = append(*buyReports, buyReport)
 		}
@@ -323,9 +326,11 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		// divisionのtotalがなければ定義
 		if festivalItemDetailsForMypage.DivisionTotal == nil {
 			expense, budget, balance := 0, 0, 0
-			var total Total
-			total.Expense, total.Budget, total.Balance = &expense, &budget, &balance
-			festivalItemDetailsForMypage.DivisionTotal = &total
+			festivalItemDetailsForMypage.DivisionTotal = &Total{
+				Expense: &expense,
+				Budget:  &budget,
+				Balance: &balance,
+			}
 		}
 
 		festivalItemDetailsForMypageMap[festivalItemForMyPageColumn.DivisionName] = festivalItemDetailsForMypage
