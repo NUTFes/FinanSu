@@ -21,7 +21,8 @@ func NewObjectUploadUseCase(rep rep.ObjectHandleRepository) ObjectUploadUseCase 
 
 func (b *objectUploadUseCase) UploadFile(c context.Context, file *multipart.FileHeader) error {
 	dirName := "receipts"
-	if _, err := b.rep.UploadFile(c, file, dirName); err != nil {
+	fileName := file.Filename
+	if _, err := b.rep.UploadFile(c, file, dirName, fileName); err != nil {
 		return err
 	}
 

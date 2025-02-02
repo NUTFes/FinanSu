@@ -3,6 +3,9 @@ package usecase
 import (
 	"context"
 	"mime/multipart"
+	"strconv"
+	"strings"
+	"time"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -41,8 +44,13 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 		return buyReportInfo, err
 	}
 
+	fileSplits := strings.Split(file.Filename, ".")
+	today := time.Now()
+	dateStr := today.Format("20060102")
+	filename := "No" + strconv.Itoa(int(buyReportId)) + "_receipt_" + dateStr + "." + fileSplits[len(fileSplits)-1]
+
 	// ファイルのアップロード
-	fileInfo, err := bru.oRep.UploadFile(c, file, DIR_NAME)
+	fileInfo, err := bru.oRep.UploadFile(c, file, DIR_NAME, filename)
 	if err != nil {
 		bru.tRep.RollBack(c, tx)
 		return buyReportInfo, err

@@ -17,7 +17,7 @@ type objectHandleRepository struct {
 }
 
 type ObjectHandleRepository interface {
-	UploadFile(context.Context, *multipart.FileHeader, string) (FileInfo, error)
+	UploadFile(context.Context, *multipart.FileHeader, string, string) (FileInfo, error)
 }
 
 func NewObjectHandleRepository(c mc.Client) ObjectHandleRepository {
@@ -25,10 +25,10 @@ func NewObjectHandleRepository(c mc.Client) ObjectHandleRepository {
 }
 
 // 画像をアップロード
-func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.FileHeader, dirName string) (FileInfo, error) {
+func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.FileHeader, dirName string, fileName string) (FileInfo, error) {
 	currentYear := strconv.Itoa(time.Now().Year())
 	size := file.Size
-	fileName := "/" + currentYear + "/" + dirName + "/" + file.Filename
+	registerFileName := "/" + currentYear + "/" + dirName + "/" + fileName
 
 	var fileInfo FileInfo
 
@@ -39,14 +39,14 @@ func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.
 	}
 	defer openFile.Close()
 
-	info, err := or.client.PutObject(c, BUCKET_NAME, fileName, openFile, size, minio.PutObjectOptions{})
+	info, err := or.client.PutObject(c, BUCKET_NAME, registerFileName, openFile, size, minio.PutObjectOptions{})
 	if err != nil {
 		log.Println(err)
 		return fileInfo, err
 	}
 	log.Println(info)
 
-	fileInfo.FileName = file.Filename
+	fileInfo.FileName = fileName
 	fileInfo.FileType = file.Header.Get("Content-Type")
 	fileInfo.Size = size
 	return fileInfo, nil
