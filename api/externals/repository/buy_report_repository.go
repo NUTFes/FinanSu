@@ -22,6 +22,7 @@ type BuyReportRepository interface {
 	CreatePaymentReceipt(context.Context, *sql.Tx, FileInfo) error
 	UpdatePaymentReceipt(context.Context, *sql.Tx, string, FileInfo) error
 	GetPaymentReceipt(context.Context, *sql.Tx, string) (*sql.Row, error)
+	GetBuyReportById(context.Context, string) (*sql.Row, error)
 }
 
 func NewBuyReportRepository(c db.Client, ac abstract.Crud) BuyReportRepository {
@@ -114,12 +115,12 @@ func (brr *buyReportRepository) CreatePaymentReceipt(
 func (brr *buyReportRepository) UpdatePaymentReceipt(
 	c context.Context,
 	tx *sql.Tx,
-	id string,
+	buyReportId string,
 	fileInfo FileInfo,
 ) error {
 	ds := dialect.Update("payment_receipts").
 		Set(goqu.Record{"bucket_name": BUCKET_NAME, "file_name": fileInfo.FileName, "file_type": fileInfo.FileType, "remark": ""}).
-		Where(goqu.Ex{"buy_report_id": id})
+		Where(goqu.Ex{"buy_report_id": buyReportId})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
@@ -145,6 +146,21 @@ func (brr *buyReportRepository) GetPaymentReceipt(
 		return nil, err
 	}
 	return brr.crud.TransactionReadByID(c, tx, query)
+}
+
+// 最新のレコード取得
+func (brr *buyReportRepository) GetBuyReportById(
+	c context.Context,
+	id string,
+) (*sql.Row, error) {
+	query, _, err := dialect.From("buy_reports").
+		Select("id", "festival_item_id", "amount", "paid_by").
+		Where(goqu.Ex{"buy_reports.id": id}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return brr.crud.ReadByID(c, query)
 }
 
 type PostBuyReport = generated.BuyReport
