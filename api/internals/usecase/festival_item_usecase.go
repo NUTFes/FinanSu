@@ -272,8 +272,8 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		festivalItemDetailsForMypage.FinancialRecordName = &festivalItemForMyPageColumn.FinancialRecordName
 
 		// 予算と支出データ集計
-		festivalItemMap := festivalItemMaps[festivalItemForMyPageColumn.DivisionName]
-		if festivalItemMap == nil {
+		festivalItemMap, ok := festivalItemMaps[festivalItemForMyPageColumn.DivisionName]
+		if !ok {
 			festivalItemMap = make(map[string]FestivalItemWithReport)
 		}
 		festivalItemWithReport := festivalItemMap[festivalItemForMyPageColumn.FestivalItemName]
