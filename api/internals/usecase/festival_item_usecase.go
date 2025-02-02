@@ -261,7 +261,7 @@ type BuyReport = generated.BuyReportInformation
 func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn) []FestivalItemDetailsForMypage {
 	var festivalItemDetailsList []FestivalItemDetailsForMypage
 
-	// 部門ごとにマップを作成
+	// NOTE ColumnsをDetailsListの型に合わせてマッピングする。値が無い場合は初期化する。
 	var festivalItemDetailsForMypageMap = make(map[string]FestivalItemDetailsForMypage)
 	var festivalItemMaps = make(map[string]map[string]FestivalItemWithReport)
 
