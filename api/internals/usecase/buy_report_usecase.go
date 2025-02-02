@@ -44,10 +44,8 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 		return buyReportInfo, err
 	}
 
-	fileSplits := strings.Split(file.Filename, ".")
-	today := time.Now()
-	dateStr := today.Format("20060102")
-	filename := "No" + strconv.Itoa(int(buyReportId)) + "_receipt_" + dateStr + "." + fileSplits[len(fileSplits)-1]
+	// ファイル名の生成
+	filename := generateFileName(*buyReportInfo.Id, file)
 
 	// ファイルのアップロード
 	fileInfo, err := bru.oRep.UploadFile(c, file, DIR_NAME, filename)
@@ -126,3 +124,11 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 type PostBuyReport = generated.BuyReport
 
 var DIR_NAME = "receipts"
+
+func generateFileName(buyReportId int, file *multipart.FileHeader) string {
+	fileSplits := strings.Split(file.Filename, ".")
+	today := time.Now()
+	dateStr := today.Format("20060102")
+	filename := "No" + strconv.Itoa(buyReportId) + "_receipt_" + dateStr + "." + fileSplits[len(fileSplits)-1]
+	return filename
+}
