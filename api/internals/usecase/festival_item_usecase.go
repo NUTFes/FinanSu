@@ -305,11 +305,12 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 			ReportDate:    &festivalItemForMyPageColumn.ReportDate,
 		}
 
-		if festivalItemForMyPageColumn.IsSettled {
+		switch {
+		case festivalItemForMyPageColumn.IsSettled:
 			buyReport.Status = &isSettled
-		} else if festivalItemForMyPageColumn.IsPacked {
+		case festivalItemForMyPageColumn.IsPacked:
 			buyReport.Status = &isPacked
-		} else {
+		default:
 			buyReport.Status = &empty
 		}
 
