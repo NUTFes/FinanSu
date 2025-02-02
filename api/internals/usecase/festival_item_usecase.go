@@ -215,7 +215,7 @@ func (fiu *festivalItemUseCase) GetFestivalItemsForMypage(
 
 	var festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn
 
-	rows, err := fiu.rep.GetDetailByDivisionId(c, year, userId)
+	rows, err := fiu.rep.GetDetailsByDivisionId(c, year, userId)
 	if err != nil {
 		return festivalItemDetailsList, err
 	}

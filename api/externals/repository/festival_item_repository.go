@@ -29,7 +29,7 @@ type FestivalItemRepository interface {
 	StartTransaction(context.Context) (*sql.Tx, error)
 	RollBack(context.Context, *sql.Tx) error
 	Commit(context.Context, *sql.Tx) error
-	GetDetailByDivisionId(context.Context, string, string) (*sql.Rows, error)
+	GetDetailsByDivisionId(context.Context, string, string) (*sql.Rows, error)
 }
 
 func NewFestivalItemRepository(c db.Client, ac abstract.Crud) FestivalItemRepository {
@@ -193,7 +193,7 @@ func (fir *festivalItemRepository) Commit(c context.Context, tx *sql.Tx) error {
 }
 
 // 年度別と部門で取得
-func (fir *festivalItemRepository) GetDetailByDivisionId(
+func (fir *festivalItemRepository) GetDetailsByDivisionId(
 	c context.Context,
 	year string,
 	userId string,
