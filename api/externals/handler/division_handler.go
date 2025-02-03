@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
@@ -36,11 +37,10 @@ func (h *Handler) PostDivisions(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/divisions/:id", wrapper.DeleteDivisionsId)
-func (h *Handler) DeleteDivisionsId(c echo.Context) error {
+func (h *Handler) DeleteDivisionsId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
-
-	err := h.divisionUseCase.DestroyDivision(ctx, id)
+	idStr := strconv.Itoa(id)
+	err := h.divisionUseCase.DestroyDivision(ctx, idStr)
 	if err != nil {
 		return err
 	}

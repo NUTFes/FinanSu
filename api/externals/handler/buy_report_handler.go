@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
@@ -49,10 +50,10 @@ func (h *Handler) GetBuyReportsDetails(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
-func (h *Handler) DeleteBuyReportsId(c echo.Context) error {
+func (h *Handler) DeleteBuyReportsId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
-	err := h.buyReportUseCase.DeleteBuyReport(ctx, id)
+	idStr := strconv.Itoa(id)
+	err := h.buyReportUseCase.DeleteBuyReport(ctx, idStr)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "buy_report delete failed")
 	}

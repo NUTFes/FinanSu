@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
@@ -33,9 +34,9 @@ func (h *Handler) PostBureaus(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/bureaus/:id", wrapper.DeleteBureausId)
-func (h *Handler) DeleteBureausId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.bureauUseCase.DestroyBureau(c.Request().Context(), id)
+func (h *Handler) DeleteBureausId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.bureauUseCase.DestroyBureau(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}

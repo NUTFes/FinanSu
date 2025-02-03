@@ -39,9 +39,9 @@ func (h *Handler) PostActivityInformations(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/activity_informations/:id", wrapper.DeleteActivityInformationsId)
-func (h *Handler) DeleteActivityInformationsId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.activityInformationUseCase.DestroyActivityInformation(c.Request().Context(), id)
+func (h *Handler) DeleteActivityInformationsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.activityInformationUseCase.DestroyActivityInformation(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}

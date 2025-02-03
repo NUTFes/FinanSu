@@ -35,9 +35,9 @@ func (h *Handler) PostActivityStyles(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/activity_styles/:id", wrapper.DeleteActivityStylesId)
-func (h *Handler) DeleteActivityStylesId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.activityStyleUseCase.DestroyActivityStyle(c.Request().Context(), id)
+func (h *Handler) DeleteActivityStylesId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.activityStyleUseCase.DestroyActivityStyle(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
