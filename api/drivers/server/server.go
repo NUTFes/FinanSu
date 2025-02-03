@@ -1,16 +1,15 @@
 package server
 
 import (
-	_ "github.com/NUTFes/FinanSu/api/docs"
-	"github.com/NUTFes/FinanSu/api/router"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoSwagger "github.com/swaggo/echo-swagger"
 	"net/http"
 	"os"
+
+	"github.com/NUTFes/FinanSu/api/router"
+	echo "github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
-func RunServer(router router.Router) {
+func RunServer(router router.Router) *echo.Echo {
 	// echoのインスタンス
 	e := echo.New()
 
@@ -28,16 +27,13 @@ func RunServer(router router.Router) {
 
 	// CORS対策
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000", "http://localhost:3001", "127.0.0.1:3001", "https://finansu.nutfes.net"}, // ドメイン
+		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000", "http://localhost:3001", "127.0.0.1:3001", "http://localhost:8000", "127.0.0.1:8000", "https://finansu.nutfes.net"}, // ドメイン
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 	}))
 
 	// ルーティング
 	router.ProvideRouter(e)
 
-	// swagger
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
-
 	// サーバー起動
-	e.Start(":1323")
+	return e
 }

@@ -82,17 +82,16 @@ func (u *userController) DestroyUser(c echo.Context) error {
 
 // Destroy
 func (u *userController) DestroyMultiUsers(c echo.Context) error {
-	 destroyUser := new(domain.DestroyUserIDs)
+	destroyUser := new(domain.DestroyUserIDs)
 	if err := c.Bind(destroyUser); err != nil {
 		return err
 	}
 	err := u.u.DestroyMultiUsers(c.Request().Context(), destroyUser.DeleteIDs)
 	if err != nil {
-		return c.String(http.StatusBadRequest,err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.String(http.StatusOK, "Destroy Users")
 }
-
 
 // ログインユーザーの取得
 func (auth *userController) GetCurrentUser(c echo.Context) error {
@@ -107,4 +106,3 @@ func (auth *userController) GetCurrentUser(c echo.Context) error {
 		return nil
 	}
 }
-

@@ -1,56 +1,37 @@
 import clsx from 'clsx';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
-import { get } from '@/utils/api/api_methods';
-import { Card, Title } from '@components/common';
+import { useGetSponsorsPeriodsYear, useGetYearsPeriods } from '@/generated/hooks';
+import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
-import { Sponsor, YearPeriod } from '@type/common';
-
-interface Props {
-  sponsor: Sponsor[];
-  yearPeriods: YearPeriod[];
-}
 
 const date = new Date();
 
-export const getServerSideProps = async () => {
-  const getPeriodsUrl = process.env.SSR_API_URI + '/years/periods';
-  const periodsRes = await get(getPeriodsUrl);
-  const getSponsorViewUrl =
-    process.env.SSR_API_URI +
-    '/sponsors/periods/' +
-    (periodsRes ? String(periodsRes[periodsRes.length - 1].year) : String(date.getFullYear()));
+const Sponsorship: NextPage = () => {
+  const {
+    data: yearPeriodsData,
+    isLoading: isYearPeriodsLoading,
+    error: yearPeriodsError,
+  } = useGetYearsPeriods();
+  const yearPeriods = yearPeriodsData?.data;
 
-  return {
-    props: {
-      sponsorView: getSponsorViewUrl,
-      yearPeriods: periodsRes,
-    },
-  };
-};
-
-const Sponsorship: NextPage<Props> = (props: Props) => {
-  const [sponsors, setSponsors] = useState<Sponsor[]>(props.sponsor);
-
-  const yearPeriods = props.yearPeriods;
   const [selectedYear, setSelectedYear] = useState<string>(
     yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
   );
 
-  //年度別のsponsorsを取得
-  const getSponsors = async () => {
-    const getSponsorViewUrlByYear = process.env.CSR_API_URI + '/sponsors/periods/' + selectedYear;
-    const getSponsorsByYears = await get(getSponsorViewUrlByYear);
-    setSponsors(getSponsorsByYears);
-  };
+  const {
+    data: sponsorsData,
+    isLoading: isSponsorsLoading,
+    error: sponsorsError,
+  } = useGetSponsorsPeriodsYear(Number(selectedYear));
+  const sponsors = sponsorsData?.data;
 
-  useEffect(() => {
-    getSponsors();
-  }, [selectedYear]);
+  if (isYearPeriodsLoading || isSponsorsLoading) return <Loading />;
+  if (yearPeriodsError || sponsorsError) return <div>error...</div>;
 
   return (
     <MainLayout>
@@ -67,10 +48,10 @@ const Sponsorship: NextPage<Props> = (props: Props) => {
               defaultValue={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              {props.yearPeriods &&
-                props.yearPeriods.map((year) => {
+              {yearPeriods &&
+                yearPeriods.map((year, index) => {
                   return (
-                    <option value={year.year} key={year.id}>
+                    <option value={year.year} key={index}>
                       {year.year}年度
                     </option>
                   );

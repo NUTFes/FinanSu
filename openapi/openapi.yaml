@@ -1,0 +1,2987 @@
+openapi: 3.0.1
+info:
+  title: NUTFes FinanSu API
+  description: FinanSu APIドキュメント
+  contact: {}
+  version: 2.0.0
+
+servers:
+  - url: http://localhost:1323/
+
+paths:
+  /activities:
+    get:
+      tags:
+        - activity
+      description: activitiesの一覧を取得
+      responses:
+        "200":
+          description: activitiesの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - activity
+      description: activitiesの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity"
+        required: true
+      responses:
+        "200":
+          description: create されたactivityが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity
+
+  /activities/details:
+    get:
+      tags:
+        - activity
+      description: "activitiesとsponsor,sponsorStyle,userの一覧を取得"
+      responses:
+        "200":
+          description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activities/details/{year}:
+    get:
+      tags:
+        - activity
+      description: "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得"
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activities/filtered_details:
+    get:
+      tags:
+        - activity
+      description: "activitiesとsponsor,sponsorStyle,userの一覧を取得"
+      parameters:
+        - name: is_done
+          in: query
+          description: 完了状態を表すフラグ
+          required: false
+          schema:
+            type: string
+            enum:
+              - all
+              - true
+              - false
+        - name: sponsor_style_id
+          in: query
+          description: スポンサースタイルIDの配列
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 1
+        - name: keyword
+          in: query
+          description: キーワード検索用の文字列
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: keyword
+
+  /activities/filtered_details/{year}:
+    get:
+      tags:
+        - activity
+      description: "activitiesとsponsor,sponsorStyle,userの一覧を取得"
+      parameters:
+        - name: year
+          in: path
+          description: Filter by year.
+          required: true
+          schema:
+            type: string
+        - name: is_done
+          in: query
+          description: 完了状態を表すフラグ
+          required: false
+          schema:
+            type: string
+            enum:
+              - all
+              - true
+              - false
+        - name: sponsor_style_id
+          in: query
+          description: スポンサースタイルIDの配列
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 1
+        - name: keyword
+          in: query
+          description: キーワード検索用の文字列
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: keyword
+
+  /activities/{id}:
+    get:
+      tags:
+        - activity
+      description: IDで指定されたactivitiesの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activitiesの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - activity
+      description: activitiesの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity"
+        required: false
+      responses:
+        "200":
+          description: 更新されたactivitiesが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity
+    delete:
+      tags:
+        - activity
+      description: IDを指定してactivitiesの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activitiesの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activity_informations:
+    get:
+      tags:
+        - activity_information
+      description: activity_informationの一覧を取得
+      responses:
+        "200":
+          description: activity_informationの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - activity_information
+      description: activity_informationの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity_information"
+        required: false
+      responses:
+        "200":
+          description: create されたactivity_informationが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_information
+
+  /activity_informations/{id}:
+    get:
+      tags:
+        - activity_information
+      description: IDで指定されたactivity_informationsの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_informationの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - activity_information
+      description: activity_informationの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity_information"
+        required: false
+      responses:
+        "200":
+          description: 更新されたactivity_informationが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_information
+    delete:
+      tags:
+        - activity_information
+      description: IDを指定してactivity_informationの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_informationの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activity_styles:
+    get:
+      tags:
+        - activity_style
+      description: activity_styleの一覧を取得
+      responses:
+        "200":
+          description: activity_styleの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - activity_style
+      description: activity_styleの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity_style"
+        required: false
+      responses:
+        "200":
+          description: createされたactivity_styleが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_style
+
+  /activity_styles/{id}:
+    get:
+      tags:
+        - activity_style
+      description: IDで指定されたactivity_styleの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_styleの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - activity_style
+      description: activity_styleの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity_style"
+        required: false
+      responses:
+        "200":
+          description: 更新されたactivity_styleが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_style
+    delete:
+      tags:
+        - activity_style
+      description: IDを指定してactivity_styleの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_styleの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /budgets:
+    get:
+      tags:
+        - budget
+      description: budgetの一覧を取得
+      responses:
+        "200":
+          description: budgetの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - budget
+      description: budgetの作成
+      parameters:
+        - name: price
+          in: query
+          description: price
+          required: true
+          schema:
+            type: integer
+        - name: year_id
+          in: query
+          description: year_id
+          schema:
+            type: integer
+        - name: source_id
+          in: query
+          description: source_id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: create されたbudgetが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /budgets/details:
+    get:
+      tags:
+        - budget
+      description: budgetに紐づくyearとsourceの一覧を取得
+      responses:
+        "200":
+          description: budgetに紐づくyearとsourceの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /budgets/details/{year}:
+    get:
+      tags:
+        - budget
+      description: 年度で指定されたbudgetsに紐づく年度とソースを取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度で指定されたbudgetsに紐づく年度とソースを取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /budgets/{id}:
+    get:
+      tags:
+        - budget
+      description: IDで指定されたbudgetの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: budgetの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - budget
+      description: budgetの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: price
+          in: query
+          description: price
+          schema:
+            type: integer
+        - name: year_id
+          in: query
+          description: year_id
+          schema:
+            type: integer
+        - name: source_id
+          in: query
+          description: source_id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 更新されたbudgetが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - budget
+      description: IDを指定してbudgetの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: budgetの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /budgets/{id}/details:
+    get:
+      tags:
+        - budget
+      description: IDで指定されたbudgetに紐づくyearとsourceを取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: budgetに紐づくyearとsourceを取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /bureaus:
+    get:
+      tags:
+        - bureau
+      description: bureauの一覧を取得
+      responses:
+        "200":
+          description: bureauの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - bureau
+      description: bureauの作成
+      parameters:
+        - name: name
+          in: query
+          description: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: create されたbureauが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /bureaus/{id}:
+    get:
+      tags:
+        - bureau
+      description: IDで指定されたbureauの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: bureauの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - bureau
+      description: bureauの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたbureauが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - bureau
+      description: IDを指定してbureauの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: bureauの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /buy_reports:
+    post:
+      tags:
+        - buy_report
+      description: 購入報告を行うAPI
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                buy_report:
+                  $ref: "#/components/schemas/buyReport"
+              required:
+                - file
+                - buy_report
+      responses:
+        "200":
+          description: 作成されたbuy_reportが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReport"
+  /buy_reports/{id}:
+    put:
+      tags:
+        - buy_report
+      description: 購入報告を修正するAPI、画像がある場合は画像も更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 購入報告書のファイル、ない場合更新しないようにする
+                buy_report:
+                  $ref: "#/components/schemas/buyReport"
+              required:
+                - buy_report
+        required: true
+      responses:
+        "200":
+          description: 更新されたbuy_reportが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReport"
+      x-codegen-request-body-name: buy_report
+    delete:
+      tags:
+        - buy_report
+      description: IDを指定してbuy_reportの削除、紐づいた画像も削除、マイページから削除できる
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /buy_reports/details:
+    get:
+      tags:
+        - buy_report
+      description: 購入報告で表示するbuy_report一覧の取得、主に財務向けのページ
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/buyReportDetail"
+  /buy_report/status/{buy_report_id}:
+    put:
+      tags:
+        - buy_report
+      description: buy_reportのステータス更新、財務が封詰め、精算済みにするAPI
+      parameters:
+        - name: buy_report_id
+          in: path
+          description: buy_report_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isPacked:
+                  type: boolean
+                  example: false
+                  description: 封筒に詰めたか
+                isSettled:
+                  type: boolean
+                  example: false
+                  description: 精算済みか
+      responses:
+        "200":
+          description: 更新されたbuy_reportが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReportDetail"
+
+  /departments:
+    get:
+      tags:
+        - department
+      description: departmentの一覧の取得
+      responses:
+        "200":
+          description: departmentの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - department
+      description: departmentの作成
+      parameters:
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 作成されたdepartmentが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /departments/{id}:
+    get:
+      tags:
+        - department
+      description: IDで指定されたdepartmentの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: departmentの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - department
+      description: departmentの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたdepartmentが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - department
+      description: IDを指定してdepartmentの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: departmentの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /divisions:
+    get:
+      tags:
+        - division
+      description: division一覧の取得
+        クエリでyearを指定することで年度ごとのdivisionを取得可能
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_record_id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionDetails"
+    post:
+      tags:
+        - division
+      description: divisionの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/division"
+        required: true
+      responses:
+        "200":
+          description: 作成されたdivisionが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
+  /divisions/{id}:
+    put:
+      tags:
+        - division
+      description: divisionの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/division"
+        required: true
+      responses:
+        "200":
+          description: 更新されたdivisionが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/divisionWithBalance"
+      x-codegen-request-body-name: division
+    delete:
+      tags:
+        - division
+      description: IDを指定してdivisionの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /expenses:
+    get:
+      tags:
+        - expense
+      description: expenseの一覧の取得
+      responses:
+        "200":
+          description: expenseの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - expense
+      description: expenseの作成
+      parameters:
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+        - name: year_id
+          in: query
+          description: year_id
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 作成されたexpenseが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /expenses/details:
+    get:
+      tags:
+        - expense
+      description: expenseに紐づくpurchase_itemの一覧を取得
+      responses:
+        "200":
+          description: expenseに紐づくpurchase_itemの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /expenses/{id}:
+    get:
+      tags:
+        - expense
+      description: IDで指定されたexpenseの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: expenseの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - expense
+      description: expenseの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+        - name: year_id
+          in: query
+          description: year_id
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたexpenseが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - expense
+      description: IDを指定してexpenseの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: expenseの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /expenses/{id}/details:
+    get:
+      tags:
+        - expense
+      description: IDで指定されたexpenseに紐づくpurchase_itemsを取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: IDで指定されたexpenseに紐づくpurchase_itemsを取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /expenses/details/{year}:
+    get:
+      tags:
+        - expense
+      description: 年度で指定されたexpenseに紐づく購入申請と購入報告を取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: yearで指定されたexpenseに紐づく購入申請と購入報告を取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /expenses/fiscalyear/{year}:
+    get:
+      tags:
+        - expense
+      description: 年度で指定されたexpensesを取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: yearで指定されたexpensesを取得
+          content:
+            application/json:
+              schema:
+                type: object
+  /festival_items:
+    get:
+      tags:
+        - festival_item
+      description: festival_itemの一覧の取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: division_id
+          in: query
+          description: division_id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemDetails"
+    post:
+      tags:
+        - festival_item
+      description: festival_itemの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/festivalItem"
+        required: true
+      responses:
+        "200":
+          description: 作成されたfestival_itemが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
+  /festival_items/{id}:
+    put:
+      tags:
+        - festival_item
+      description: festival_itemの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/festivalItem"
+        required: true
+      responses:
+        "200":
+          description: 更新されたfestival_itemが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItemWithBalance"
+      x-codegen-request-body-name: festivalItem
+    delete:
+      tags:
+        - festival_item
+      description: IDを指定してfestival_itemの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /festival_items/details/{user_id}:
+    get:
+      tags:
+        - festival_item
+      description: ユーザーのマイページの予算一覧の取得
+      parameters:
+        - name: user_id
+          in: path
+          description: user_id
+          required: true
+          schema:
+            type: integer
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/festivalItemsForMyPage"
+  /financial_records:
+    get:
+      tags:
+        - financial_record
+      description: financial_recordの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの一覧の取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordDetails"
+    post:
+      tags:
+        - financial_record
+      description: financial_recordの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/financialRecord"
+        required: true
+      responses:
+        "200":
+          description: create されたfinancial_recordが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
+  /financial_records/{id}:
+    put:
+      tags:
+        - financial_record
+      description: financial_recordの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/financialRecord"
+        required: true
+      responses:
+        "200":
+          description: 更新されたfinancial_recordが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecordWithBalance"
+      x-codegen-request-body-name: financial_record
+    delete:
+      tags:
+        - financial_record
+      description: IDを指定してfinancial_recordの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /fund_informations:
+    get:
+      tags:
+        - fund_information
+      description: fund_informationの一覧を取得
+      responses:
+        "200":
+          description: fund_informationの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - fund_information
+      description: fund_informationの作成
+      parameters:
+        - name: user_id
+          in: query
+          description: user_id
+          required: true
+          schema:
+            type: integer
+        - name: teacher_id
+          in: query
+          description: teacher_id
+          required: true
+          schema:
+            type: integer
+        - name: price
+          in: query
+          description: price
+          required: true
+          schema:
+            type: integer
+        - name: remark
+          in: query
+          description: remark
+          schema:
+            type: string
+        - name: is_first_check
+          in: query
+          description: is_first_check
+          schema:
+            type: boolean
+        - name: is_last_check
+          in: query
+          description: is_last_check
+          schema:
+            type: boolean
+        - name: received_at
+          in: query
+          description: received_at
+          schema:
+            type: string
+      responses:
+        "200":
+          description: create されたfund_informationが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /fund_informations/details:
+    get:
+      tags:
+        - fund_information
+      description: fund_informationに紐づくteacherとuserの一覧を取得
+      responses:
+        "200":
+          description: fund_informationに紐づくteacherとuserの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /fund_informations/{id}:
+    get:
+      tags:
+        - fund_information
+      description: IDで指定されたfund_informationの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: fund_informationの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - fund_information
+      description: fund_informationの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: user_id
+          in: query
+          description: user_id
+          required: true
+          schema:
+            type: integer
+        - name: teacher_id
+          in: query
+          description: teacher_id
+          required: true
+          schema:
+            type: integer
+        - name: price
+          in: query
+          description: price
+          required: true
+          schema:
+            type: integer
+        - name: remark
+          in: query
+          description: remark
+          schema:
+            type: string
+        - name: is_first_check
+          in: query
+          description: is_first_check
+          schema:
+            type: boolean
+        - name: is_last_check
+          in: query
+          description: is_last_check
+          schema:
+            type: boolean
+        - name: received_at
+          in: query
+          description: received_at
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたfund_informationが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - fund_information
+      description: IDを指定してfund_informationの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: fund_informationの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /fund_informations/{id}/details:
+    get:
+      tags:
+        - fund_information
+      description: IDで指定されたfund_informatinに紐づくteacherとuserを取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: fund_informatinに紐づくteacherとuserを取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /fund_informations/details/{year}:
+    get:
+      tags:
+        - fund_information
+      description: 年度で指定されたfund_informationsに紐づくデータを取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度で指定されたfund_informationsに紐づくデータを取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /password_reset/{id}:
+    post:
+      tags:
+        - password_reset
+      description: password_変更
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/passwordResetData"
+        required: false
+      responses:
+        "200":
+          description: passwordを変更する
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: passwordResetData
+
+  /password_reset/request:
+    post:
+      tags:
+        - password_reset
+      description: password_reset_token発行リクエスト
+      parameters:
+        - name: email
+          in: query
+          description: email
+          schema:
+            type: string
+      responses:
+        "200":
+          description: password_reset_tokenをメールアドレスに送信する
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /password_reset/{id}/valid:
+    post:
+      tags:
+        - password_reset
+      description: トークンの称号
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: query
+          description: token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: password_reset_tokenが正しい確認する
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /receipts:
+    get:
+      tags:
+        - receipt
+      description: receiptの一覧を取得
+      responses:
+        "200":
+          description: receiptの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - receipt
+      description: receiptの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/receipt"
+        required: false
+      responses:
+        "200":
+          description: create されたreceiptが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: receipt
+
+  /receipts/{id}:
+    get:
+      tags:
+        - receipt
+      description: IDで指定されたreceiptの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: receiptの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - receipt
+      description: receiptの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/receipt"
+        required: false
+      responses:
+        "200":
+          description: 更新されたreceiptが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: receipt
+    delete:
+      tags:
+        - receipt
+      description: IDを指定してreceiptの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: receiptの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /receipts/reports/{id}:
+    get:
+      tags:
+        - receipt
+      description: 購入報告に紐づいたreceiptの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: reportsIDを指定してreceiptの取得
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /sources:
+    get:
+      tags:
+        - source
+      description: sourceの一覧の取得
+      responses:
+        "200":
+          description: sourceの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - source
+      description: sourceの作成
+      parameters:
+        - name: name
+          in: query
+          description: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 作成されたsourceが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /sources/{id}:
+    get:
+      tags:
+        - source
+      description: IDで指定されたsourceの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: sourceの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - source
+      description: sourceの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたsourceが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - source
+      description: IDを指定してsourceの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: sourceの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /sponsors:
+    get:
+      tags:
+        - sponsor
+      description: sponsorの一覧の取得
+      responses:
+        "200":
+          description: sponsorsの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#/components/schemas/sponsor"
+    post:
+      tags:
+        - sponsor
+      description: sponsorの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/sponsor"
+        required: false
+      responses:
+        "200":
+          description: 作成されたsponsorが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: sponsor
+
+  /sponsors/{id}:
+    get:
+      tags:
+        - sponsor
+      description: IDで指定されたsponsorの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: sponsorの取得
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#/components/schemas/sponsor"
+    put:
+      tags:
+        - sponsor
+      description: sponsorの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/sponsor"
+        required: false
+      responses:
+        "200":
+          description: 更新されたsponsorが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: sponsor
+    delete:
+      tags:
+        - sponsor
+      description: IDを指定してsponsorの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: sponsorの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /sponsors/periods/{year}:
+    get:
+      tags:
+        - sponsor
+      description: 年度で指定されたsponsorを取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: sponsorの取得完了
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/sponsor"
+  /sponsorstyles:
+    get:
+      tags:
+        - sponsorstyle
+      description: sponsorstyleの一覧の取得
+      responses:
+        "200":
+          description: sponsorstyleの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - sponsorstyle
+      description: sponsorstyleの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/sponsorStyle"
+        required: false
+      responses:
+        "200":
+          description: 作成されたsponsorstyleが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: sponsorStyle
+
+  /sponsorstyles/{id}:
+    get:
+      tags:
+        - sponsorstyle
+      description: IDで指定されたsponsorstyleの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: sponsorstyleの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - sponsorstyle
+      description: sponsorstyleの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/sponsorStyle"
+        required: false
+      responses:
+        "200":
+          description: 更新されたsponsorstyleが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: sponsorStyle
+    delete:
+      tags:
+        - sponsorstyle
+      description: IDを指定してsponsorstyleの論理削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: sponsorstyleの論理削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /teachers:
+    get:
+      tags:
+        - teacher
+      description: teacherの一覧を取得
+      responses:
+        "200":
+          description: teacherの一覧を取得
+          # NOTE 型が定義されておらず、generateできないためコメントアウト
+          # content:
+          #   "*/*":
+          #     schema:
+          #       type: array
+    post:
+      tags:
+        - teacher
+      description: teacherの作成
+      parameters:
+        - name: name
+          in: query
+          description: 名前
+          required: true
+          schema:
+            type: string
+        - name: position
+          in: query
+          description: 役職
+          required: true
+          schema:
+            type: string
+        - name: department_id
+          in: query
+          description: 学科ID
+          schema:
+            type: integer
+        - name: room
+          in: query
+          description: 部屋番号
+          schema:
+            type: string
+        - name: is_black
+          in: query
+          description: ブラックリストの真偽
+          schema:
+            type: boolean
+        - name: remark
+          in: query
+          description: 備考
+          schema:
+            type: string
+      responses:
+        "200":
+          description: createされたteacherが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /teachers/delete:
+    delete:
+      tags:
+        - teacher
+      description: teacherの複数削除
+      requestBody:
+        content:
+          "*/*":
+            schema:
+              $ref: "#/components/schemas/destroyTeacherIDs"
+        required: false
+      responses:
+        "200":
+          description: 複数のteacherをidで削除できる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: destroyTeacherIDs
+
+  /teachers/{id}:
+    get:
+      tags:
+        - teacher
+      description: IDで指定されたteacherの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: teacherの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - teacher
+      description: teacherの更新
+      parameters:
+        - name: id
+          in: path
+          description: Teacherのid
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: 教員の名前
+          required: true
+          schema:
+            type: string
+        - name: position
+          in: query
+          description: 教員の役職
+          required: true
+          schema:
+            type: string
+        - name: department_id
+          in: query
+          description: 学科ID
+          schema:
+            type: integer
+        - name: room
+          in: query
+          description: 部屋番号
+          schema:
+            type: string
+        - name: is_black
+          in: query
+          description: ブラックリストに入っているか
+          schema:
+            type: boolean
+        - name: remark
+          in: query
+          description: 備考欄
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたteacherが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - teacher
+      description: IDを指定してteacherの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: teacherの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /teachers/fundRegistered/{year}:
+    get:
+      tags:
+        - teacher
+      description: 募金登録済みのteacherのidを取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 募金登録済みのteacherのidを取得
+          content:
+            application/json:
+              schema:
+                type: object
+  /upload_file:
+    post:
+      tags:
+        - upload_file
+      description: ファイルアップロード
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: ファイルアップロード成功
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /users:
+    get:
+      tags:
+        - user
+      description: userの一覧を取得
+      responses:
+        "200":
+          description: userの一覧を取得
+          # content:
+          #   "*/*":
+          #     schema:
+          #       type: array
+    post:
+      tags:
+        - user
+      description: userの作成
+      parameters:
+        - name: name
+          in: query
+          description: name
+          required: true
+          schema:
+            type: string
+        - name: bureau_id
+          in: query
+          description: bureau_d
+          required: true
+          schema:
+            type: integer
+        - name: role_id
+          in: query
+          description: role_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: createされたuserが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /users/delete:
+    delete:
+      tags:
+        - user
+      description: userの複数作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/destroyUserIDs"
+        required: false
+      responses:
+        "200":
+          description: 複数のuserをidで削除できる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: destroyUserIDs
+
+  /users/{id}:
+    get:
+      tags:
+        - user
+      description: IDで指定されたuserの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: userの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - user
+      description: userの更新
+      parameters:
+        - name: id
+          in: path
+          description: userのid
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name
+          required: true
+          schema:
+            type: string
+        - name: bureau_id
+          in: query
+          description: bureau_d
+          required: true
+          schema:
+            type: integer
+        - name: role_id
+          in: query
+          description: role_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 更新されたuserが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - user
+      description: IDを指定してuserの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: userの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /years:
+    get:
+      tags:
+        - year
+      description: yearの一覧の取得
+      responses:
+        "200":
+          description: yearの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/year_periods"
+    post:
+      tags:
+        - year
+      description: yearの作成
+      parameters:
+        - name: year
+          in: query
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 作成されたyearが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /years/{id}:
+    get:
+      tags:
+        - year
+      description: IDで指定されたyearの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: yearの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/year_periods"
+    put:
+      tags:
+        - year
+      description: yearの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: year
+          in: query
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 更新されたyearが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - year
+      description: IDを指定してyearの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: yearの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /years/periods:
+    get:
+      tags:
+        - year_periods
+      description: 年度一覧の取得
+      responses:
+        "200":
+          description: year_periodsの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/year_periods"
+    post:
+      tags:
+        - year_periods
+      description: year_periodsの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/year_periods"
+        required: false
+      responses:
+        "200":
+          description: 作成されたyear_periodsが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: year_periods
+
+  /years/periods/{id}:
+    put:
+      tags:
+        - year_periods
+      description: year_periodsの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/year_periods"
+        required: false
+      responses:
+        "200":
+          description: 更新されたyear_periodsが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: year_periods
+    delete:
+      tags:
+        - year_periods
+      description: IDを指定してyear_periodsの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: year_periodsの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  schemas:
+    activity:
+      required:
+        - expense
+        - feature
+        - isDone
+        - remark
+        - sponsorID
+        - userID
+      type: object
+      properties:
+        sponsorID:
+          type: integer
+          example: 1
+        userID:
+          type: integer
+          example: 1
+        isDone:
+          type: boolean
+          example: false
+        feature:
+          type: string
+          example: なし
+        expense:
+          type: integer
+          example: 0
+        remark:
+          type: string
+          example: なし
+        design:
+          type: integer
+          example: 0
+        url:
+          type: string
+          example: ""
+    activity_information:
+      type: object
+      properties:
+        activityID:
+          type: integer
+          example: 1
+        bucketName:
+          type: string
+          example: なし
+        fileName:
+          type: string
+          example: なし
+        fileType:
+          type: string
+          example: なし
+        designProgress:
+          type: integer
+          example: 1
+        fileInformation:
+          type: string
+          example: ""
+    activity_style:
+      required:
+        - activityID
+        - sponsorStyleID
+      type: object
+      properties:
+        activityID:
+          type: integer
+          example: 1
+        sponsorStyleID:
+          type: integer
+          example: 1
+    buyReport:
+      description: 購入報告の際のパラメータ
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        festivalItemID:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 1000
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
+      required:
+        - festivalItemID
+        - amount
+        - paidBy
+    buyReportInformation:
+      description: マイページで表示する購入報告の情報
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        buyReportName:
+          type: string
+          example: 段ボール
+        amount:
+          type: integer
+          example: 1000
+        reportDate:
+          type: string
+          example: 2024-01-01
+        status:
+          type: string
+          enum:
+            - 確認中
+            - 封詰め
+            - 清算完了
+    buyReportDetail:
+      description: 購入報告ページで表示する詳細情報
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        financialRecordName:
+          type: string
+          example: 企画局
+        divisionName:
+          type: string
+          example: ビンゴ部門
+        festivalItemName:
+          type: string
+          example: 段ボール
+        amount:
+          type: integer
+          example: 1000
+        reportDate:
+          type: string
+          example: 2024-01-01
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
+        isPacked:
+          type: boolean
+          example: false
+        isSettled:
+          type: boolean
+          example: false
+    division:
+      required:
+        - name
+        - financialRecordID
+      type: object
+      properties:
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecordID:
+          type: integer
+          example: 1
+    divisionDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        divisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/divisionWithBalance"
+    divisionWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000
+    festivalItem:
+      required:
+        - name
+        - divisionId
+        - amount
+      type: object
+      properties:
+        name:
+          type: string
+          example: 農ポリ
+        divisionId:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 10000
+        memo:
+          type: string
+          example: ""
+    festivalItemDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        festivalItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/festivalItemWithBalance"
+    festivalItemsForMyPage:
+      type: object
+      properties:
+        divisionTotal:
+          $ref: "#/components/schemas/total"
+        financialRecordName:
+          type: string
+          example: 企画局
+        divisionName:
+          type: string
+          example: ビンゴ部門
+        festivalItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/festivalItemWithReport"
+    festivalItemWithReport:
+      type: object
+      properties:
+        festivalItemTotal:
+          $ref: "#/components/schemas/total"
+        festivalItemName:
+          type: string
+          example: ビンゴ景品
+        buyReports:
+          type: array
+          items:
+            $ref: "#/components/schemas/buyReportInformation"
+    festivalItemWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 農ポリ
+        division:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000
+        memo:
+          type: string
+          example: ""
+    financialRecord:
+      required:
+        - name
+        - year_id
+      type: object
+      properties:
+        name:
+          type: string
+          example: 総務局
+        year_id:
+          type: integer
+          example: 1
+    financialRecordDetails:
+      type: object
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        financialRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/financialRecordWithBalance"
+    financialRecordWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 総務局
+        year:
+          type: integer
+          example: 2024
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
+    sponsorStyle:
+      required:
+        - feature
+        - price
+        - style
+      type: object
+      properties:
+        style:
+          type: string
+          example: 1分の1
+        feature:
+          type: string
+          example: カラー
+        price:
+          type: integer
+          example: 30000
+    sponsor:
+      required:
+        - address
+        - email
+        - name
+        - representative
+        - tel
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 0
+        name:
+          type: string
+          example: 企業1
+        tel:
+          type: string
+          example: "09000000000"
+        email:
+          type: string
+          example: test@example.com
+        address:
+          type: string
+          example: ○○1-1
+        representative:
+          type: string
+          example: 長岡太郎(社長)
+    passwordResetData:
+      type: object
+      properties:
+        token:
+          type: string
+          example: ""
+        password:
+          type: string
+          example: ""
+        confirmPassword:
+          type: string
+          example: ""
+    destroyTeacherIDs:
+      required:
+        - deleteIDs
+      type: object
+      properties:
+        deleteIDs:
+          type: array
+          example: []
+          items:
+            type: number
+    destroyUserIDs:
+      required:
+        - deleteIDs
+      type: object
+      properties:
+        deleteIDs:
+          type: array
+          example: []
+          items:
+            type: number
+    receipt:
+      required:
+        - purchaseReportID
+      type: object
+      properties:
+        purchaseReportID:
+          type: integer
+          example: 1
+        bucketName:
+          type: string
+          example: ""
+        fileName:
+          type: string
+          example: ""
+        fileType:
+          type: string
+          example: ""
+        remark:
+          type: string
+          example: ""
+    total:
+      type: object
+      properties:
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
+    year_periods:
+      required:
+        - endedAt
+        - startedAt
+        - year
+      type: object
+      properties:
+        year:
+          type: integer
+          example: 2024
+        startedAt:
+          type: string
+          example: 0000-00-00T00:00:00Z
+        endedAt:
+          type: string
+          example: 0000-00-00T00:00:00Z
+
+x-original-swagger-version: "2.0"
