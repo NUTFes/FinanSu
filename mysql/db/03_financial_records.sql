@@ -9,3 +9,10 @@ CREATE TABLE financial_records (
     PRIMARY KEY (id),
     FOREIGN KEY year_id_foreign_key (year_id) REFERENCES years (id)
 );
+
+INSERT INTO financial_records (name, year_id) VALUES ('制作局', 2);
+INSERT INTO financial_records (name, year_id) VALUES ('渉外局', 2);
+INSERT INTO financial_records (name, year_id) VALUES ('企画局', 2);
+INSERT INTO financial_records (name, year_id) VALUES ('財務局', 2);
+INSERT INTO financial_records (name, year_id) VALUES ('情報局', 2);
+INSERT INTO financial_records (name, year_id) VALUES ('総務局', 2);

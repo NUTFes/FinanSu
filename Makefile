@@ -73,8 +73,15 @@ ent-db:
 run-eslint:
 	docker compose exec view npm run lint
 
-generate-openapi:
+gen:
+	make gen-api
+	make gen-front-api
+
+gen-api:
 	docker compose run --rm api oapi-codegen -config /openapi/config.yaml /openapi/openapi.yaml
+
+gen-front-api:
+	docker compose run --rm view npx orval
 
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
