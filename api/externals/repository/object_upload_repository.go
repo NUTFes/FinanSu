@@ -4,8 +4,6 @@ import (
 	"context"
 	"log"
 	"mime/multipart"
-	"strconv"
-	"time"
 
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -17,7 +15,7 @@ type objectHandleRepository struct {
 }
 
 type ObjectHandleRepository interface {
-	UploadFile(context.Context, *multipart.FileHeader, string, string) (FileInfo, error)
+	UploadFile(context.Context, *multipart.FileHeader, string, string, string) (FileInfo, error)
 	DeleteFile(context.Context, string) error
 }
 
@@ -26,10 +24,9 @@ func NewObjectHandleRepository(c mc.Client) ObjectHandleRepository {
 }
 
 // 画像をアップロード
-func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.FileHeader, dirName string, fileName string) (FileInfo, error) {
-	currentYear := strconv.Itoa(time.Now().Year())
+func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.FileHeader, year string, dirName string, fileName string) (FileInfo, error) {
 	size := file.Size
-	registerFileName := "/" + currentYear + "/" + dirName + "/" + fileName
+	registerFilePath := "/" + year + "/" + dirName + "/" + fileName
 
 	var fileInfo FileInfo
 
@@ -40,7 +37,7 @@ func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.
 	}
 	defer openFile.Close()
 
-	info, err := or.client.PutObject(c, BUCKET_NAME, registerFileName, openFile, size, minio.PutObjectOptions{})
+	info, err := or.client.PutObject(c, BUCKET_NAME, registerFilePath, openFile, size, minio.PutObjectOptions{})
 	if err != nil {
 		log.Println(err)
 		return fileInfo, err

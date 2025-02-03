@@ -3,6 +3,8 @@ package usecase
 import (
 	"context"
 	"mime/multipart"
+	"strconv"
+	"time"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 )
@@ -22,7 +24,8 @@ func NewObjectUploadUseCase(rep rep.ObjectHandleRepository) ObjectUploadUseCase 
 func (b *objectUploadUseCase) UploadFile(c context.Context, file *multipart.FileHeader) error {
 	dirName := "receipts"
 	fileName := file.Filename
-	if _, err := b.rep.UploadFile(c, file, dirName, fileName); err != nil {
+	year := strconv.Itoa(time.Now().Year())
+	if _, err := b.rep.UploadFile(c, file, year, dirName, fileName); err != nil {
 		return err
 	}
 

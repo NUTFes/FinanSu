@@ -52,8 +52,20 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 	buyReportIdStr := strconv.Itoa(*buyReportInfo.Id)
 	filename := generateFileName(buyReportIdStr, file)
 
+	// financial_recordの年度の取得
+	var year string
+	row, err := bru.bRep.GetYearByBuyReportId(c, tx, buyReportIdStr)
+	if err != nil {
+		bru.tRep.RollBack(c, tx)
+		return buyReportInfo, err
+	}
+	if err = row.Scan(&year); err != nil {
+		bru.tRep.RollBack(c, tx)
+		return buyReportInfo, err
+	}
+
 	// ファイルのアップロード
-	fileInfo, err := bru.oRep.UploadFile(c, file, DIR_NAME, filename)
+	fileInfo, err := bru.oRep.UploadFile(c, file, year, DIR_NAME, filename)
 	if err != nil {
 		bru.tRep.RollBack(c, tx)
 		return buyReportInfo, err
@@ -72,7 +84,7 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 	}
 
 	// 更新データ取得
-	row, err := bru.bRep.GetBuyReportById(c, buyReportIdStr)
+	row, err = bru.bRep.GetBuyReportById(c, buyReportIdStr)
 	if err != nil {
 		return buyReportInfo, err
 	}
@@ -137,8 +149,10 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 
 		// ファイル名生成
 		newFilename := generateFileName(buyReportId, file)
+
+		year := strconv.Itoa(paymentReceipt.Year)
 		// 新ファイルのアップロード
-		fileInformation, err := bru.oRep.UploadFile(c, file, DIR_NAME, newFilename)
+		fileInformation, err := bru.oRep.UploadFile(c, file, year, DIR_NAME, newFilename)
 		if err != nil {
 			bru.tRep.RollBack(c, tx)
 			return resBuyReport, err
