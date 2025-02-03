@@ -175,6 +175,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// festival items
 	e.GET("/festival_items", r.festivalItemController.IndexFestivalItems)
+	e.GET("/festival_items/details/:user_id", r.festivalItemController.IndexFestivalItemsForMypage)
 	e.POST("/festival_items", r.festivalItemController.CreateFestivalItem)
 	e.PUT("/festival_items/:id", r.festivalItemController.UpdateFestivalItem)
 	e.DELETE("/festival_items/:id", r.festivalItemController.DestroyFestivalItem)

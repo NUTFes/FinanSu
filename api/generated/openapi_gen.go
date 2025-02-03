@@ -16,7 +16,7 @@ import (
 const (
 	Empty BuyReportInformationStatus = "確認中"
 	N1    BuyReportInformationStatus = "封詰め"
-	N2    BuyReportInformationStatus = "生産完了"
+	N2    BuyReportInformationStatus = "清算完了"
 )
 
 // Defines values for GetActivitiesFilteredDetailsParamsIsDone.
@@ -379,6 +379,12 @@ type GetFestivalItemsParams struct {
 
 	// DivisionId division_id
 	DivisionId *int `form:"division_id,omitempty" json:"division_id,omitempty"`
+}
+
+// GetFestivalItemsDetailsUserIdParams defines parameters for GetFestivalItemsDetailsUserId.
+type GetFestivalItemsDetailsUserIdParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
 // GetFinancialRecordsParams defines parameters for GetFinancialRecords.
@@ -794,8 +800,8 @@ type ServerInterface interface {
 	// (POST /festival_items)
 	PostFestivalItems(ctx echo.Context) error
 
-	// (GET /festival_items/details/{division_id})
-	GetFestivalItemsDetailsDivisionId(ctx echo.Context, divisionId int) error
+	// (GET /festival_items/details/{user_id})
+	GetFestivalItemsDetailsUserId(ctx echo.Context, userId int, params GetFestivalItemsDetailsUserIdParams) error
 
 	// (DELETE /festival_items/{id})
 	DeleteFestivalItemsId(ctx echo.Context, id int) error
@@ -1934,19 +1940,28 @@ func (w *ServerInterfaceWrapper) PostFestivalItems(ctx echo.Context) error {
 	return err
 }
 
-// GetFestivalItemsDetailsDivisionId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFestivalItemsDetailsDivisionId(ctx echo.Context) error {
+// GetFestivalItemsDetailsUserId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFestivalItemsDetailsUserId(ctx echo.Context) error {
 	var err error
-	// ------------- Path parameter "division_id" -------------
-	var divisionId int
+	// ------------- Path parameter "user_id" -------------
+	var userId int
 
-	err = runtime.BindStyledParameterWithOptions("simple", "division_id", ctx.Param("division_id"), &divisionId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	err = runtime.BindStyledParameterWithOptions("simple", "user_id", ctx.Param("user_id"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter division_id: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetFestivalItemsDetailsUserIdParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFestivalItemsDetailsDivisionId(ctx, divisionId)
+	err = w.Handler.GetFestivalItemsDetailsUserId(ctx, userId, params)
 	return err
 }
 
@@ -3151,7 +3166,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/expenses/:id/details", wrapper.GetExpensesIdDetails)
 	router.GET(baseURL+"/festival_items", wrapper.GetFestivalItems)
 	router.POST(baseURL+"/festival_items", wrapper.PostFestivalItems)
-	router.GET(baseURL+"/festival_items/details/:division_id", wrapper.GetFestivalItemsDetailsDivisionId)
+	router.GET(baseURL+"/festival_items/details/:user_id", wrapper.GetFestivalItemsDetailsUserId)
 	router.DELETE(baseURL+"/festival_items/:id", wrapper.DeleteFestivalItemsId)
 	router.PUT(baseURL+"/festival_items/:id", wrapper.PutFestivalItemsId)
 	router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
