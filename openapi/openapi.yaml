@@ -1218,7 +1218,98 @@ paths:
             application/json:
               schema:
                 type: object
-
+  /mail_auth/signup:
+    post:
+      tags:
+        - mail_auth
+      description: ユーザー登録
+      parameters:
+        - name: email
+          in: query
+          description: email
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: password
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ユーザー登録完了
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: mailAuthSignUp
+  /mail_auth/signin:
+    post:
+      tags:
+        - mail_auth
+      description: ログイン
+      parameters:
+        - name: email
+          in: query
+          description: email
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: password
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ログイン完了
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: mailAuthSignIn
+  /mail_auth/signout:
+    delete:
+      tags:
+        - mail_auth
+      description: ログアウト
+      parameters:
+        - in: header
+          name: Access-Token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ログアウト完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /mail_auth/is_signin:
+    get:
+      tags:
+        - mail_auth
+      description: ログイン状態の確認
+      parameters:
+        - in: header
+          name: Access-Token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ログイン状態の確認
+          content:
+            application/json:
+              schema:
+                type: object
   /password_reset/{id}:
     post:
       tags:

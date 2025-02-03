@@ -31,6 +31,7 @@ import type {
   DeleteFestivalItemsId200,
   DeleteFinancialRecordsId200,
   DeleteFundInformationsId200,
+  DeleteMailAuthSignout200,
   DeleteSponsorsId200,
   DeleteSponsorstylesId200,
   DeleteTeachersDelete200,
@@ -77,6 +78,7 @@ import type {
   GetFundInformationsDetailsYear200,
   GetFundInformationsId200,
   GetFundInformationsIdDetails200,
+  GetMailAuthIsSignin200,
   GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
@@ -93,6 +95,10 @@ import type {
   PostDepartmentsParams,
   PostFundInformations200,
   PostFundInformationsParams,
+  PostMailAuthSignin200,
+  PostMailAuthSigninParams,
+  PostMailAuthSignup200,
+  PostMailAuthSignupParams,
   PostPasswordResetId200,
   PostPasswordResetIdValid200,
   PostPasswordResetIdValidParams,
@@ -3291,6 +3297,239 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
   const isEnabled = swrOptions?.enabled !== false && !!(year)
   const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFundInformationsDetailsYearKey(year) : null);
   const swrFn = () => getFundInformationsDetailsYear(year, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * ユーザー登録
+ */
+export type postMailAuthSignupResponse = {
+  data: PostMailAuthSignup200;
+  status: number;
+  headers: Headers;
+}
+
+export const getPostMailAuthSignupUrl = (params: PostMailAuthSignupParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  return normalizedParams.size ? `/mail_auth/signup?${normalizedParams.toString()}` : `/mail_auth/signup`
+}
+
+export const postMailAuthSignup = async (params: PostMailAuthSignupParams, options?: RequestInit): Promise<postMailAuthSignupResponse> => {
+  
+  return customFetch<Promise<postMailAuthSignupResponse>>(getPostMailAuthSignupUrl(params),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostMailAuthSignupMutationFetcher = (params: PostMailAuthSignupParams, options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, __: { arg: Arguments }): Promise<postMailAuthSignupResponse> => {
+    return postMailAuthSignup(params, options);
+  }
+}
+export const getPostMailAuthSignupMutationKey = (params: PostMailAuthSignupParams,) => [`/mail_auth/signup`, ...(params ? [params]: [])] as const;
+
+export type PostMailAuthSignupMutationResult = NonNullable<Awaited<ReturnType<typeof postMailAuthSignup>>>
+export type PostMailAuthSignupMutationError = unknown
+
+export const usePostMailAuthSignup = <TError = unknown>(
+  params: PostMailAuthSignupParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postMailAuthSignup>>, TError, Key, Arguments, Awaited<ReturnType<typeof postMailAuthSignup>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getPostMailAuthSignupMutationKey(params);
+  const swrFn = getPostMailAuthSignupMutationFetcher(params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * ログイン
+ */
+export type postMailAuthSigninResponse = {
+  data: PostMailAuthSignin200;
+  status: number;
+  headers: Headers;
+}
+
+export const getPostMailAuthSigninUrl = (params: PostMailAuthSigninParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  return normalizedParams.size ? `/mail_auth/signin?${normalizedParams.toString()}` : `/mail_auth/signin`
+}
+
+export const postMailAuthSignin = async (params: PostMailAuthSigninParams, options?: RequestInit): Promise<postMailAuthSigninResponse> => {
+  
+  return customFetch<Promise<postMailAuthSigninResponse>>(getPostMailAuthSigninUrl(params),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostMailAuthSigninMutationFetcher = (params: PostMailAuthSigninParams, options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, __: { arg: Arguments }): Promise<postMailAuthSigninResponse> => {
+    return postMailAuthSignin(params, options);
+  }
+}
+export const getPostMailAuthSigninMutationKey = (params: PostMailAuthSigninParams,) => [`/mail_auth/signin`, ...(params ? [params]: [])] as const;
+
+export type PostMailAuthSigninMutationResult = NonNullable<Awaited<ReturnType<typeof postMailAuthSignin>>>
+export type PostMailAuthSigninMutationError = unknown
+
+export const usePostMailAuthSignin = <TError = unknown>(
+  params: PostMailAuthSigninParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postMailAuthSignin>>, TError, Key, Arguments, Awaited<ReturnType<typeof postMailAuthSignin>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getPostMailAuthSigninMutationKey(params);
+  const swrFn = getPostMailAuthSigninMutationFetcher(params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * ログアウト
+ */
+export type deleteMailAuthSignoutResponse = {
+  data: DeleteMailAuthSignout200;
+  status: number;
+  headers: Headers;
+}
+
+export const getDeleteMailAuthSignoutUrl = () => {
+
+
+  return `/mail_auth/signout`
+}
+
+export const deleteMailAuthSignout = async ( options?: RequestInit): Promise<deleteMailAuthSignoutResponse> => {
+  
+  return customFetch<Promise<deleteMailAuthSignoutResponse>>(getDeleteMailAuthSignoutUrl(),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+);}
+
+
+
+
+export const getDeleteMailAuthSignoutMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, __: { arg: Arguments }): Promise<deleteMailAuthSignoutResponse> => {
+    return deleteMailAuthSignout(options);
+  }
+}
+export const getDeleteMailAuthSignoutMutationKey = () => [`/mail_auth/signout`] as const;
+
+export type DeleteMailAuthSignoutMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMailAuthSignout>>>
+export type DeleteMailAuthSignoutMutationError = unknown
+
+export const useDeleteMailAuthSignout = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteMailAuthSignout>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteMailAuthSignout>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getDeleteMailAuthSignoutMutationKey();
+  const swrFn = getDeleteMailAuthSignoutMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * ログイン状態の確認
+ */
+export type getMailAuthIsSigninResponse = {
+  data: GetMailAuthIsSignin200;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetMailAuthIsSigninUrl = () => {
+
+
+  return `/mail_auth/is_signin`
+}
+
+export const getMailAuthIsSignin = async ( options?: RequestInit): Promise<getMailAuthIsSigninResponse> => {
+  
+  return customFetch<Promise<getMailAuthIsSigninResponse>>(getGetMailAuthIsSigninUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetMailAuthIsSigninKey = () => [`/mail_auth/is_signin`] as const;
+
+export type GetMailAuthIsSigninQueryResult = NonNullable<Awaited<ReturnType<typeof getMailAuthIsSignin>>>
+export type GetMailAuthIsSigninQueryError = unknown
+
+export const useGetMailAuthIsSignin = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getMailAuthIsSignin>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetMailAuthIsSigninKey() : null);
+  const swrFn = () => getMailAuthIsSignin(requestOptions)
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 

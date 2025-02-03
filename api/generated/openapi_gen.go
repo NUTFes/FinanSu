@@ -390,6 +390,37 @@ type PutFundInformationsIdParams struct {
 	ReceivedAt *string `form:"received_at,omitempty" json:"received_at,omitempty"`
 }
 
+// GetMailAuthIsSigninParams defines parameters for GetMailAuthIsSignin.
+type GetMailAuthIsSigninParams struct {
+	AccessToken *string `json:"Access-Token,omitempty"`
+}
+
+// PostMailAuthSigninParams defines parameters for PostMailAuthSignin.
+type PostMailAuthSigninParams struct {
+	// Email email
+	Email string `form:"email" json:"email"`
+
+	// Password password
+	Password string `form:"password" json:"password"`
+}
+
+// DeleteMailAuthSignoutParams defines parameters for DeleteMailAuthSignout.
+type DeleteMailAuthSignoutParams struct {
+	AccessToken *string `json:"Access-Token,omitempty"`
+}
+
+// PostMailAuthSignupParams defines parameters for PostMailAuthSignup.
+type PostMailAuthSignupParams struct {
+	// Email email
+	Email string `form:"email" json:"email"`
+
+	// Password password
+	Password string `form:"password" json:"password"`
+
+	// UserId user_id
+	UserId int `form:"user_id" json:"user_id"`
+}
+
 // PostPasswordResetRequestParams defines parameters for PostPasswordResetRequest.
 type PostPasswordResetRequestParams struct {
 	// Email email
@@ -727,6 +758,18 @@ type ServerInterface interface {
 
 	// (GET /fund_informations/{id}/details)
 	GetFundInformationsIdDetails(ctx echo.Context, id int) error
+
+	// (GET /mail_auth/is_signin)
+	GetMailAuthIsSignin(ctx echo.Context, params GetMailAuthIsSigninParams) error
+
+	// (POST /mail_auth/signin)
+	PostMailAuthSignin(ctx echo.Context, params PostMailAuthSigninParams) error
+
+	// (DELETE /mail_auth/signout)
+	DeleteMailAuthSignout(ctx echo.Context, params DeleteMailAuthSignoutParams) error
+
+	// (POST /mail_auth/signup)
+	PostMailAuthSignup(ctx echo.Context, params PostMailAuthSignupParams) error
 
 	// (POST /password_reset/request)
 	PostPasswordResetRequest(ctx echo.Context, params PostPasswordResetRequestParams) error
@@ -1816,6 +1859,121 @@ func (w *ServerInterfaceWrapper) GetFundInformationsIdDetails(ctx echo.Context) 
 	return err
 }
 
+// GetMailAuthIsSignin converts echo context to params.
+func (w *ServerInterfaceWrapper) GetMailAuthIsSignin(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetMailAuthIsSigninParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Access-Token" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Access-Token")]; found {
+		var AccessToken string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Access-Token, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Access-Token", valueList[0], &AccessToken, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Access-Token: %s", err))
+		}
+
+		params.AccessToken = &AccessToken
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetMailAuthIsSignin(ctx, params)
+	return err
+}
+
+// PostMailAuthSignin converts echo context to params.
+func (w *ServerInterfaceWrapper) PostMailAuthSignin(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params PostMailAuthSigninParams
+	// ------------- Required query parameter "email" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "email", ctx.QueryParams(), &params.Email)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter email: %s", err))
+	}
+
+	// ------------- Required query parameter "password" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "password", ctx.QueryParams(), &params.Password)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter password: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostMailAuthSignin(ctx, params)
+	return err
+}
+
+// DeleteMailAuthSignout converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteMailAuthSignout(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteMailAuthSignoutParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Access-Token" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Access-Token")]; found {
+		var AccessToken string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Access-Token, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Access-Token", valueList[0], &AccessToken, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Access-Token: %s", err))
+		}
+
+		params.AccessToken = &AccessToken
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteMailAuthSignout(ctx, params)
+	return err
+}
+
+// PostMailAuthSignup converts echo context to params.
+func (w *ServerInterfaceWrapper) PostMailAuthSignup(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params PostMailAuthSignupParams
+	// ------------- Required query parameter "email" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "email", ctx.QueryParams(), &params.Email)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter email: %s", err))
+	}
+
+	// ------------- Required query parameter "password" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "password", ctx.QueryParams(), &params.Password)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter password: %s", err))
+	}
+
+	// ------------- Required query parameter "user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "user_id", ctx.QueryParams(), &params.UserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostMailAuthSignup(ctx, params)
+	return err
+}
+
 // PostPasswordResetRequest converts echo context to params.
 func (w *ServerInterfaceWrapper) PostPasswordResetRequest(ctx echo.Context) error {
 	var err error
@@ -2550,6 +2708,10 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/fund_informations/:id", wrapper.GetFundInformationsId)
 	router.PUT(baseURL+"/fund_informations/:id", wrapper.PutFundInformationsId)
 	router.GET(baseURL+"/fund_informations/:id/details", wrapper.GetFundInformationsIdDetails)
+	router.GET(baseURL+"/mail_auth/is_signin", wrapper.GetMailAuthIsSignin)
+	router.POST(baseURL+"/mail_auth/signin", wrapper.PostMailAuthSignin)
+	router.DELETE(baseURL+"/mail_auth/signout", wrapper.DeleteMailAuthSignout)
+	router.POST(baseURL+"/mail_auth/signup", wrapper.PostMailAuthSignup)
 	router.POST(baseURL+"/password_reset/request", wrapper.PostPasswordResetRequest)
 	router.POST(baseURL+"/password_reset/:id", wrapper.PostPasswordResetId)
 	router.POST(baseURL+"/password_reset/:id/valid", wrapper.PostPasswordResetIdValid)
