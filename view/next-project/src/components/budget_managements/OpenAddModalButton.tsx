@@ -1,0 +1,31 @@
+import * as React from 'react';
+import { useState } from 'react';
+
+import { AddButton } from '../common';
+import AddModal from '@components/budget_managements/AddBudgetManagementModal';
+import { Source, Year } from '@type/common';
+
+interface Props {
+  children?: React.ReactNode;
+  sources: Source[];
+  years: Year[];
+}
+
+export default function OpenAddModalButton(props: Props) {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <AddButton
+        onClick={() => {
+          setShowModal(true);
+        }}
+      >
+        {props.children}
+      </AddButton>
+      {showModal && (
+        <AddModal setShowModal={setShowModal} years={props.years} />
+      )}
+    </>
+  );
+}
