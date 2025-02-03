@@ -253,7 +253,7 @@ func generateFileName(buyReportId string, file *multipart.FileHeader) string {
 	return filename
 }
 
-func convertFilePath(paymentRececipt PaymentReceiptWithYear) string {
-	filePath := "/" + strconv.Itoa(paymentRececipt.Year) + "/" + DIR_NAME + "/" + paymentRececipt.FileName
+func convertFilePath(paymentReceipt PaymentReceiptWithYear) string {
+	filePath := "/" + strconv.Itoa(paymentReceipt.Year) + "/" + DIR_NAME + "/" + paymentReceipt.FileName
 	return filePath
 }
