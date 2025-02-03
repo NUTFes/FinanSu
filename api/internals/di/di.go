@@ -8,6 +8,7 @@ import (
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
+	"github.com/NUTFes/FinanSu/api/externals/handler"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
@@ -162,10 +163,31 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		yearController,
 	)
 
-	// ↓
+	fmt.Println("router", router)
+
+	handler := handler.NewHandler(
+		activityUseCase,
+		activityInformationUseCase,
+		activityStyleUseCase,
+		bureauUseCase,
+		buyReportUseCase,
+		departmentUseCase,
+		divisionUseCase,
+		festivalUseCase,
+		financialRecordUseCase,
+		fundInformationUseCase,
+		mailAuthUseCase,
+		objectHandleUseCase,
+		passwordResetTokenUseCase,
+		sponsorUseCase,
+		sponsorStyleUseCase,
+		teacherUseCase,
+		userUseCase,
+		yearUseCase,
+	)
 
 	// Server
-	e := server.RunServer(router)
+	e := server.RunServer2(handler)
 
 	return client, e
 }
