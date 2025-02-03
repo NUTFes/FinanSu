@@ -48,15 +48,15 @@ func (h *Handler) DeleteDivisionsId(c echo.Context, id int) error {
 }
 
 // router.PUT(baseURL+"/divisions/:id", wrapper.PutDivisionsId)
-func (h *Handler) PutDivisionsId(c echo.Context) error {
+func (h *Handler) PutDivisionsId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
+	idStr := strconv.Itoa(id)
 	division := new(Division)
 
 	if err := c.Bind(division); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
-	updatedDivision, err := h.divisionUseCase.UpdateDivision(ctx, id, *division)
+	updatedDivision, err := h.divisionUseCase.UpdateDivision(ctx, idStr, *division)
 	if err != nil {
 		return err
 	}

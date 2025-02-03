@@ -44,9 +44,9 @@ func (h *Handler) DeleteBureausId(c echo.Context, id int) error {
 }
 
 // router.GET(baseURL+"/bureaus/:id", wrapper.GetBureausId)
-func (h *Handler) GetBureausId(c echo.Context) error {
-	id := c.Param("id")
-	bureau, err := h.bureauUseCase.GetBureauByID(c.Request().Context(), id)
+func (h *Handler) GetBureausId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	bureau, err := h.bureauUseCase.GetBureauByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -54,14 +54,14 @@ func (h *Handler) GetBureausId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/bureaus/:id", wrapper.PutBureausId)
-func (h *Handler) PutBureausId(c echo.Context) error {
-	id := c.Param("id")
+func (h *Handler) PutBureausId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
 	bureau := new(domain.Bureau)
 	if err := c.Bind(bureau); err != nil {
 		return err
 	}
 
-	updatedBureau, err := h.bureauUseCase.UpdateBureau(c.Request().Context(), id, bureau.Name)
+	updatedBureau, err := h.bureauUseCase.UpdateBureau(c.Request().Context(), idStr, bureau.Name)
 	if err != nil {
 		return err
 	}

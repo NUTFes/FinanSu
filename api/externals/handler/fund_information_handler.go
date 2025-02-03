@@ -2,7 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
 )
 
@@ -16,16 +18,16 @@ func (h *Handler) GetFundInformations(c echo.Context) error {
 }
 
 // router.POST(baseURL+"/fund_informations", wrapper.PostFundInformations)
-func (h *Handler) PostFundInformations(c echo.Context) error {
-	userID := c.QueryParam("user_id")
-	teacherID := c.QueryParam("teacher_id")
-	price := c.QueryParam("price")
-	remark := c.QueryParam("remark")
-	isFirstCheck := c.QueryParam("is_first_check")
-	isLastCheck := c.QueryParam("is_last_check")
-	receivedAt := c.QueryParam("received_at")
+func (h *Handler) PostFundInformations(c echo.Context, params generated.PostFundInformationsParams) error {
+	userID := strconv.Itoa(params.UserId)
+	teacherID := strconv.Itoa(params.TeacherId)
+	price := strconv.Itoa(params.Price)
+	remark := params.Remark
+	isFirstCheck := strconv.FormatBool(*params.IsFirstCheck)
+	isLastCheck := strconv.FormatBool(*params.IsLastCheck)
+	receivedAt := params.ReceivedAt
 
-	latestFundInformation, err := h.fundInformationUseCase.CreateFundInformation(c.Request().Context(), userID, teacherID, price, remark, isFirstCheck, isLastCheck, receivedAt)
+	latestFundInformation, err := h.fundInformationUseCase.CreateFundInformation(c.Request().Context(), userID, teacherID, price, *remark, isFirstCheck, isLastCheck, *receivedAt)
 	if err != nil {
 		return err
 	}
@@ -42,9 +44,9 @@ func (h *Handler) GetFundInformationsDetails(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/fund_informations/details/:year", wrapper.GetFundInformationsDetailsYear)
-func (h *Handler) GetFundInformationsDetailsYear(c echo.Context) error {
-	year := c.Param("year")
-	fundInformationDetails, err := h.fundInformationUseCase.GetFundInformationDetailsByPeriod(c.Request().Context(), year)
+func (h *Handler) GetFundInformationsDetailsYear(c echo.Context, year int) error {
+	yearStr := strconv.Itoa(year)
+	fundInformationDetails, err := h.fundInformationUseCase.GetFundInformationDetailsByPeriod(c.Request().Context(), yearStr)
 	if err != nil {
 		return err
 	}
@@ -52,9 +54,9 @@ func (h *Handler) GetFundInformationsDetailsYear(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/fund_informations/:id", wrapper.DeleteFundInformationsId)
-func (h *Handler) DeleteFundInformationsId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.fundInformationUseCase.DestroyFundInformation(c.Request().Context(), id)
+func (h *Handler) DeleteFundInformationsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.fundInformationUseCase.DestroyFundInformation(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -62,9 +64,9 @@ func (h *Handler) DeleteFundInformationsId(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/fund_informations/:id", wrapper.GetFundInformationsId)
-func (h *Handler) GetFundInformationsId(c echo.Context) error {
-	id := c.Param("id")
-	fundInformation, err := h.fundInformationUseCase.GetFundInformationByID(c.Request().Context(), id)
+func (h *Handler) GetFundInformationsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	fundInformation, err := h.fundInformationUseCase.GetFundInformationByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -72,17 +74,17 @@ func (h *Handler) GetFundInformationsId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/fund_informations/:id", wrapper.PutFundInformationsId)
-func (h *Handler) PutFundInformationsId(c echo.Context) error {
-	id := c.Param("id")
-	userID := c.QueryParam("user_id")
-	teacherID := c.QueryParam("teacher_id")
-	price := c.QueryParam("price")
-	remark := c.QueryParam("remark")
-	isFirstCheck := c.QueryParam("is_first_check")
-	isLastCheck := c.QueryParam("is_last_check")
-	receivedAt := c.QueryParam("received_at")
+func (h *Handler) PutFundInformationsId(c echo.Context, id int, params generated.PostFundInformationsParams) error {
+	idStr := strconv.Itoa(id)
+	userId := strconv.Itoa(params.UserId)
+	teacherId := strconv.Itoa(params.TeacherId)
+	price := strconv.Itoa(params.Price)
+	remark := params.Remark
+	isFirstCheck := strconv.FormatBool(*params.IsFirstCheck)
+	isLastCheck := strconv.FormatBool(*params.IsLastCheck)
+	receivedAt := params.ReceivedAt
 
-	updatedFundInformation, err := h.fundInformationUseCase.UpdateFundInformation(c.Request().Context(), id, userID, teacherID, price, remark, isFirstCheck, isLastCheck, receivedAt)
+	updatedFundInformation, err := h.fundInformationUseCase.UpdateFundInformation(c.Request().Context(), idStr, userId, teacherId, price, *remark, isFirstCheck, isLastCheck, *receivedAt)
 	if err != nil {
 		return err
 	}
@@ -90,9 +92,9 @@ func (h *Handler) PutFundInformationsId(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/fund_informations/:id/details", wrapper.GetFundInformationsIdDetails)
-func (h *Handler) GetFundInformationsIdDetails(c echo.Context) error {
-	id := c.Param("id")
-	fundInformationDetail, err := h.fundInformationUseCase.GetFundInformationDetailByID(c.Request().Context(), id)
+func (h *Handler) GetFundInformationsIdDetails(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	fundInformationDetail, err := h.fundInformationUseCase.GetFundInformationDetailByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}

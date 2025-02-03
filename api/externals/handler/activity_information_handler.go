@@ -49,9 +49,9 @@ func (h *Handler) DeleteActivityInformationsId(c echo.Context, id int) error {
 }
 
 // router.GET(baseURL+"/activity_informations/:id", wrapper.GetActivityInformationsId)
-func (h *Handler) GetActivityInformationsId(c echo.Context) error {
-	id := c.Param("id")
-	activityInformation, err := h.activityInformationUseCase.GetActivityInformationByID(c.Request().Context(), id)
+func (h *Handler) GetActivityInformationsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	activityInformation, err := h.activityInformationUseCase.GetActivityInformationByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -59,14 +59,14 @@ func (h *Handler) GetActivityInformationsId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/activity_informations/:id", wrapper.PutActivityInformationsId)
-func (h *Handler) PutActivityInformationsId(c echo.Context) error {
-	id := c.Param("id")
+func (h *Handler) PutActivityInformationsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
 	activityInformation := new(domain.ActivityInformation)
 	if err := c.Bind(activityInformation); err != nil {
 		return err
 	}
 	updatedActivity, err := h.activityInformationUseCase.UpdateActivityInformation(c.Request().Context(),
-		id,
+		idStr,
 		strconv.Itoa(int(activityInformation.ActivityId)),
 		activityInformation.BucketName,
 		activityInformation.FileName,

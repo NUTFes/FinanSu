@@ -45,9 +45,9 @@ func (h *Handler) DeleteActivityStylesId(c echo.Context, id int) error {
 }
 
 // router.GET(baseURL+"/activity_styles/:id", wrapper.GetActivityStylesId)
-func (h *Handler) GetActivityStylesId(c echo.Context) error {
-	id := c.Param("id")
-	activityStyle, err := h.activityStyleUseCase.GetActivityStyleByID(c.Request().Context(), id)
+func (h *Handler) GetActivityStylesId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	activityStyle, err := h.activityStyleUseCase.GetActivityStyleByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -55,14 +55,14 @@ func (h *Handler) GetActivityStylesId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/activity_styles/:id", wrapper.PutActivityStylesId)
-func (h *Handler) PutActivityStylesId(c echo.Context) error {
-	id := c.Param("id")
+func (h *Handler) PutActivityStylesId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
 	activityStyle := new(domain.ActivityStyle)
 	if err := c.Bind(activityStyle); err != nil {
 		return err
 	}
 
-	updatedActivityStyle, err := h.activityStyleUseCase.UpdateActivityStyle(c.Request().Context(), id,
+	updatedActivityStyle, err := h.activityStyleUseCase.UpdateActivityStyle(c.Request().Context(), idStr,
 		strconv.Itoa(int(activityStyle.ActivityID)),
 		strconv.Itoa(int(activityStyle.SponsoStyleID)),
 	)
@@ -71,61 +71,3 @@ func (h *Handler) PutActivityStylesId(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, updatedActivityStyle)
 }
-
-// // Index
-// func (a *activityStyleController) IndexActivityStyle(c echo.Context) error {
-// 	activityStyles, err := a.u.GetActivityStyle(c.Request().Context())
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return c.JSON(http.StatusOK, activityStyles)
-// }
-
-// // Show
-// func (a *activityStyleController) ShowActivityStyle(c echo.Context) error {
-// 	id := c.Param("id")
-// 	activityStyle, err := a.u.GetActivityStyleByID(c.Request().Context(), id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return c.JSON(http.StatusOK, activityStyle)
-// }
-
-// // Create
-// func (a *activityStyleController) CreateActivityStyle(c echo.Context) error {
-// 	activityStyle := new(domain.ActivityStyle)
-// 	if err := c.Bind(activityStyle); err != nil {
-// 		fmt.Println("err")
-// 		return err
-// 	}
-// 	latastActivityStyle, err := a.u.CreateActivityStyle(c.Request().Context() , strconv.Itoa(int(activityStyle.ActivityID)), strconv.Itoa(int(activityStyle.SponsoStyleID)))
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return c.JSON(http.StatusOK, latastActivityStyle)
-// }
-
-// // Update
-// func (a *activityStyleController) UpdateActivityStyle(c echo.Context) error {
-// 	id := c.Param("id")
-// 	activityStyle := new(domain.ActivityStyle)
-// 	if err := c.Bind(activityStyle); err != nil {
-// 		fmt.Println("err")
-// 		return err
-// 	}
-// 	updatedActivityStyle, err := a.u.UpdateActivityStyle(c.Request().Context(), id , strconv.Itoa(int(activityStyle.ActivityID)), strconv.Itoa(int(activityStyle.SponsoStyleID)))
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return c.JSON(http.StatusOK, updatedActivityStyle)
-// }
-
-// // Destroy
-// func (a *activityStyleController) DestroyActivityStyle(c echo.Context) error {
-// 	id := c.Param("id")
-// 	err := a.u.DestroyActivityStyle(c.Request().Context(), id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return c.String(http.StatusOK, "Destroy ActivityStyle")
-// }

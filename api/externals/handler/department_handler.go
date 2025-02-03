@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
 )
@@ -42,9 +43,9 @@ func (h *Handler) DeleteDepartmentsId(c echo.Context, id int) error {
 }
 
 // router.GET(baseURL+"/departments/:id", wrapper.GetDepartmentsId)
-func (h *Handler) GetDepartmentsId(c echo.Context) error {
-	id := c.Param("id")
-	department, err := h.departmentUseCase.GetDepartmentByID(c.Request().Context(), id)
+func (h *Handler) GetDepartmentsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	department, err := h.departmentUseCase.GetDepartmentByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -52,10 +53,10 @@ func (h *Handler) GetDepartmentsId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/departments/:id", wrapper.PutDepartmentsId)
-func (h *Handler) PutDepartmentsId(c echo.Context) error {
-	id := c.Param("id")
-	name := c.QueryParam("name")
-	updatedDepartment, err := h.departmentUseCase.UpdateDepartment(c.Request().Context(), id, name)
+func (h *Handler) PutDepartmentsId(c echo.Context, id int, params generated.PutDepartmentsIdParams) error {
+	idStr := strconv.Itoa(id)
+	name := params.Name
+	updatedDepartment, err := h.departmentUseCase.UpdateDepartment(c.Request().Context(), idStr, *name)
 	if err != nil {
 		return err
 	}

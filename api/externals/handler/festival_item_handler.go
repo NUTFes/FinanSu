@@ -2,16 +2,17 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
 )
 
 // router.GET(baseURL+"/festival_items", wrapper.GetFestivalItems)
-func (h *Handler) GetFestivalItems(c echo.Context) error {
+func (h *Handler) GetFestivalItems(c echo.Context, params generated.GetFestivalItemsParams) error {
 	ctx := c.Request().Context()
-	year := c.QueryParam("year")
-	divisionId := c.QueryParam("division_id")
+	year := strconv.Itoa(*params.Year)
+	divisionId := strconv.Itoa(*params.DivisionId)
 	var festivalItemDetails FestivalItemDetails
 
 	festivalItemDetails, err := h.festivalItemUseCase.GetFestivalItems(ctx, year, divisionId)
@@ -38,13 +39,13 @@ func (h *Handler) PostFestivalItems(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/festival_items/details/:user_id", wrapper.GetFestivalItemsDetailsUserId)
-func (h *Handler) GetFestivalItemsDetailsUserId(c echo.Context) error {
+func (h *Handler) GetFestivalItemsDetailsUserId(c echo.Context, userId int, params generated.GetFestivalItemsDetailsUserIdParams) error {
 	ctx := c.Request().Context()
-	userId := c.Param("user_id")
-	year := c.QueryParam("year")
+	userIdStr := strconv.Itoa(userId)
+	year := strconv.Itoa(*params.Year)
 	var festivalItemDetails []FestivalItemsForMyPage
 
-	festivalItemDetails, err := h.festivalItemUseCase.GetFestivalItemsForMypage(ctx, year, userId)
+	festivalItemDetails, err := h.festivalItemUseCase.GetFestivalItemsForMypage(ctx, year, userIdStr)
 	if err != nil {
 		return err
 	}
@@ -52,11 +53,11 @@ func (h *Handler) GetFestivalItemsDetailsUserId(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/festival_items/:id", wrapper.DeleteFestivalItemsId)
-func (h *Handler) DeleteFestivalItemsId(c echo.Context) error {
+func (h *Handler) DeleteFestivalItemsId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
+	idStr := strconv.Itoa(id)
 
-	err := h.festivalItemUseCase.DestroyFestivalItem(ctx, id)
+	err := h.festivalItemUseCase.DestroyFestivalItem(ctx, idStr)
 	if err != nil {
 		return err
 	}
@@ -64,16 +65,16 @@ func (h *Handler) DeleteFestivalItemsId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/festival_items/:id", wrapper.PutFestivalItemsId)
-func (h *Handler) PutFestivalItemsId(c echo.Context) error {
+func (h *Handler) PutFestivalItemsId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
 	festivalItem := new(FestivalItem)
+	idStr := strconv.Itoa(id)
 
 	if err := c.Bind(festivalItem); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
 
-	updatedFestivalItem, err := h.festivalItemUseCase.UpdateFestivalItem(ctx, id, *festivalItem)
+	updatedFestivalItem, err := h.festivalItemUseCase.UpdateFestivalItem(ctx, idStr, *festivalItem)
 	if err != nil {
 		return err
 	}

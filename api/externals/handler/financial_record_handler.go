@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
@@ -31,9 +32,9 @@ func (h *Handler) PostFinancialRecords(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/financial_records/:id", wrapper.DeleteFinancialRecordsId)
-func (h *Handler) DeleteFinancialRecordsId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.financialRecordUseCase.DestroyFinancialRecord(c.Request().Context(), id)
+func (h *Handler) DeleteFinancialRecordsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.financialRecordUseCase.DestroyFinancialRecord(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -41,15 +42,15 @@ func (h *Handler) DeleteFinancialRecordsId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
-func (h *Handler) PutFinancialRecordsId(c echo.Context) error {
-	id := c.Param("id")
+func (h *Handler) PutFinancialRecordsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
 	financialRecord := new(FinancialRecord)
 	if err := c.Bind(financialRecord); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
 	updatedFinancialRecord, err := h.financialRecordUseCase.UpdateFinancialRecord(
 		c.Request().Context(),
-		id,
+		idStr,
 		*financialRecord,
 	)
 	if err != nil {

@@ -61,9 +61,9 @@ func (h *Handler) DeleteBuyReportsId(c echo.Context, id int) error {
 }
 
 // router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
-func (h *Handler) PutBuyReportsId(c echo.Context) error {
+func (h *Handler) PutBuyReportsId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
+	idStr := strconv.Itoa(id)
 	// ファイル取得
 	file, _ := c.FormFile("file")
 	// JSON データを取得
@@ -79,7 +79,7 @@ func (h *Handler) PutBuyReportsId(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "buy_report is not valid")
 	}
 
-	buyReportInfo, err = h.buyReportUseCase.UpdateBuyReport(ctx, id, buyReportInfo, file)
+	buyReportInfo, err = h.buyReportUseCase.UpdateBuyReport(ctx, idStr, buyReportInfo, file)
 	if err != nil {
 		return err
 	}
