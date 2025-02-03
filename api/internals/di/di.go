@@ -37,6 +37,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleRepository := repository.NewActivityStyleRepository(client, crud)
 	budgetRepository := repository.NewBudgetRepository(client, crud)
 	bureauRepository := repository.NewBureauRepository(client, crud)
+	buyReportRepository := repository.NewBuyReportRepository(client, crud)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
 	divisionRepository := repository.NewDivisionRepository(client, crud)
 	expenseRepository := repository.NewExpenseRepository(client, crud)
@@ -44,7 +45,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
-	objectUploadRepository := repository.NewObjectUploadRepository(minioClient)
+	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
@@ -55,11 +56,10 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	sponsorRepository := repository.NewSponsorRepository(client, crud)
 	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
 	teacherRepository := repository.NewTeacherRepository(client, crud)
+	transactionRepository := repository.NewTransactionRepository(client, crud)
 	userRepository := repository.NewUserRepository(client, crud)
 	yearRepository := repository.NewYearRepository(client, crud)
 	// ↓
-
-	fmt.Println(objectUploadRepository)
 
 	// UseCase
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
@@ -69,14 +69,15 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
-	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository)
+	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
-	objectUploadUseCase := usecase.NewObjectUploadUseCase(objectUploadRepository)
+	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
 		passwordResetTokenRepository,
 		userRepository,
@@ -106,6 +107,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleController := controller.NewActivityStyleController(activityStyleUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	bureauController := controller.NewBureauController(bureauUseCase)
+	buyReportContoroller := controller.NewBuyReportController(buyReportUseCase)
 	departmentController := controller.NewDepartmentController(departmentUseCase)
 	divisionController := controller.NewDivisionController(divisionUseCase)
 	expenseController := controller.NewExpenseController(expenseUseCase)
@@ -114,7 +116,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
-	objectUploadController := controller.NewObjectUploadController(objectUploadUseCase)
+	objectUploadController := controller.NewObjectUploadController(objectHandleUseCase)
 	passwordResetTokenController := controller.NewPasswordResetTokenController(
 		passwordResetTokenUseCase,
 	)
@@ -137,6 +139,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		activityStyleController,
 		budgetController,
 		bureauController,
+		buyReportContoroller,
 		departmentController,
 		divisionController,
 		expenseController,

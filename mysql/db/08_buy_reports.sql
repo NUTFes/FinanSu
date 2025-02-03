@@ -11,3 +11,11 @@ CREATE TABLE buy_reports (
     PRIMARY KEY (id),
     FOREIGN KEY festival_item_id_foreign_key (festival_item_id) REFERENCES festival_items (id)
 );
+
+INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (1, 5000, '', 'テスト太郎');
+INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (1, 4000, '', 'テスト太郎');
+INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (2, 5000, '', 'テスト太郎');
+INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (3, 2000, '', 'テスト2太郎');
+INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (3, 2000, '', 'テスト2太郎');
+INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (3, 2000, '', 'テスト2太郎');
+INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (4, 10000, '', 'テスト3太郎');

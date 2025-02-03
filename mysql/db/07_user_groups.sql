@@ -10,3 +10,7 @@ CREATE TABLE user_groups (
     FOREIGN KEY user_id_foreign_key (user_id) REFERENCES users (id),
     FOREIGN KEY group_id_foreign_key (group_id) REFERENCES divisions (id)
 );
+
+INSERT INTO user_groups (user_id, group_id) VALUES (1, 1);
+INSERT INTO user_groups (user_id, group_id) VALUES (1, 2);
+INSERT INTO user_groups (user_id, group_id) VALUES (2, 3);

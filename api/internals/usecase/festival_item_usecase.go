@@ -10,7 +10,8 @@ import (
 )
 
 type festivalItemUseCase struct {
-	rep rep.FestivalItemRepository
+	fRep rep.FestivalItemRepository
+	tRep rep.TransactionRepository
 }
 
 type FestivalItemUseCase interface {
@@ -28,8 +29,8 @@ type FestivalItemUseCase interface {
 	DestroyFestivalItem(context.Context, string) error
 }
 
-func NewFestivalItemUseCase(rep rep.FestivalItemRepository) FestivalItemUseCase {
-	return &festivalItemUseCase{rep}
+func NewFestivalItemUseCase(fRep rep.FestivalItemRepository, tRep rep.TransactionRepository) FestivalItemUseCase {
+	return &festivalItemUseCase{fRep, tRep}
 }
 
 func (fiu *festivalItemUseCase) GetFestivalItems(
@@ -40,7 +41,7 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 	var festivalItemDetails FestivalItemDetails
 	var festivalItems []FestivalItemWithBalance
 
-	rows, err := fiu.rep.AllByPeriodAndDivision(c, year, divisionId)
+	rows, err := fiu.fRep.AllByPeriodAndDivision(c, year, divisionId)
 	if err != nil {
 		return festivalItemDetails, err
 	}
@@ -93,26 +94,26 @@ func (fiu *festivalItemUseCase) CreateFestivalItem(
 	latestFestivalItemWithBalance := FestivalItemWithBalance{}
 
 	// トランザクションスタート
-	tx, _ := fiu.rep.StartTransaction(c)
+	tx, _ := fiu.tRep.StartTransaction(c)
 
-	if err := fiu.rep.CreateFestivalItem(c, tx, festivalItem); err != nil {
+	if err := fiu.fRep.CreateFestivalItem(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.rep.RollBack(c, tx)
+		fiu.tRep.RollBack(c, tx)
 		return latestFestivalItemWithBalance, err
 	}
 
-	if err := fiu.rep.CreateItemBudget(c, tx, festivalItem); err != nil {
+	if err := fiu.fRep.CreateItemBudget(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.rep.RollBack(c, tx)
+		fiu.tRep.RollBack(c, tx)
 		return latestFestivalItemWithBalance, err
 	}
 
 	// コミットしてトランザクション終了
-	if err := fiu.rep.Commit(c, tx); err != nil {
+	if err := fiu.tRep.Commit(c, tx); err != nil {
 		return latestFestivalItemWithBalance, err
 	}
 
-	row, err := fiu.rep.FindLatestRecord(c)
+	row, err := fiu.fRep.FindLatestRecord(c)
 	if err != nil {
 		return latestFestivalItemWithBalance, err
 	}
@@ -141,26 +142,26 @@ func (fiu *festivalItemUseCase) UpdateFestivalItem(
 	updateFestivalItemWithBalance := FestivalItemWithBalance{}
 
 	// トランザクションスタート
-	tx, _ := fiu.rep.StartTransaction(c)
+	tx, _ := fiu.tRep.StartTransaction(c)
 
-	if err := fiu.rep.UpdateFestivalItem(c, tx, id, festivalItem); err != nil {
+	if err := fiu.fRep.UpdateFestivalItem(c, tx, id, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.rep.RollBack(c, tx)
+		fiu.tRep.RollBack(c, tx)
 		return updateFestivalItemWithBalance, err
 	}
 
-	if err := fiu.rep.UpdateItemBudget(c, tx, id, festivalItem); err != nil {
+	if err := fiu.fRep.UpdateItemBudget(c, tx, id, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.rep.RollBack(c, tx)
+		fiu.tRep.RollBack(c, tx)
 		return updateFestivalItemWithBalance, err
 	}
 
 	// コミットしてトランザクション終了
-	if err := fiu.rep.Commit(c, tx); err != nil {
+	if err := fiu.tRep.Commit(c, tx); err != nil {
 		return updateFestivalItemWithBalance, err
 	}
 
-	row, err := fiu.rep.GetById(c, id)
+	row, err := fiu.fRep.GetById(c, id)
 	if err != nil {
 		return updateFestivalItemWithBalance, err
 	}
@@ -183,23 +184,23 @@ func (fiu *festivalItemUseCase) UpdateFestivalItem(
 
 func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string) error {
 	// トランザクションスタート
-	tx, _ := fiu.rep.StartTransaction(c)
+	tx, _ := fiu.tRep.StartTransaction(c)
 
 	// 先に紐づく予算を削除
-	err := fiu.rep.DeleteItemBudget(c, tx, id)
+	err := fiu.fRep.DeleteItemBudget(c, tx, id)
 	if err != nil {
-		fiu.rep.RollBack(c, tx)
+		fiu.tRep.RollBack(c, tx)
 	}
 
 	// 購入物品を削除
-	err = fiu.rep.DeleteFestivalItem(c, tx, id)
+	err = fiu.fRep.DeleteFestivalItem(c, tx, id)
 	if err != nil {
-		fiu.rep.RollBack(c, tx)
+		fiu.tRep.RollBack(c, tx)
 		return err
 	}
 
 	// コミットしてトランザクション終了
-	if err = fiu.rep.Commit(c, tx); err != nil {
+	if err = fiu.tRep.Commit(c, tx); err != nil {
 		return err
 	}
 
@@ -215,7 +216,7 @@ func (fiu *festivalItemUseCase) GetFestivalItemsForMypage(
 
 	var festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn
 
-	rows, err := fiu.rep.GetDetailsByDivisionId(c, year, userId)
+	rows, err := fiu.fRep.GetDetailsByDivisionId(c, year, userId)
 	if err != nil {
 		return festivalItemDetailsList, err
 	}

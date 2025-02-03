@@ -26,9 +26,6 @@ type FestivalItemRepository interface {
 	DeleteFestivalItem(context.Context, *sql.Tx, string) error
 	DeleteItemBudget(context.Context, *sql.Tx, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
-	StartTransaction(context.Context) (*sql.Tx, error)
-	RollBack(context.Context, *sql.Tx) error
-	Commit(context.Context, *sql.Tx) error
 	GetDetailsByDivisionId(context.Context, string, string) (*sql.Rows, error)
 }
 
@@ -178,18 +175,6 @@ func (fir *festivalItemRepository) FindLatestRecord(c context.Context) (*sql.Row
 		return nil, err
 	}
 	return fir.crud.ReadByID(c, query)
-}
-
-func (fir *festivalItemRepository) StartTransaction(c context.Context) (*sql.Tx, error) {
-	return fir.crud.StartTransaction(c)
-}
-
-func (fir *festivalItemRepository) RollBack(c context.Context, tx *sql.Tx) error {
-	return fir.crud.RollBack(c, tx)
-}
-
-func (fir *festivalItemRepository) Commit(c context.Context, tx *sql.Tx) error {
-	return fir.crud.Commit(c, tx)
 }
 
 // 年度別と部門で取得
