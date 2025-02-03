@@ -145,6 +145,57 @@ import { customFetch } from '../mutator/custom-instance';
   type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 /**
+ * health check
+ */
+export type getResponse = {
+  data: string;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetUrl = () => {
+
+
+  return `/`
+}
+
+export const get = async ( options?: RequestInit): Promise<getResponse> => {
+  
+  return customFetch<Promise<getResponse>>(getGetUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetKey = () => [`/`] as const;
+
+export type GetQueryResult = NonNullable<Awaited<ReturnType<typeof get>>>
+export type GetQueryError = unknown
+
+export const useGet = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof get>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetKey() : null);
+  const swrFn = () => get(requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
  * activitiesの一覧を取得
  */
 export type getActivitiesResponse = {

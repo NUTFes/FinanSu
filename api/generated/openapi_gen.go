@@ -560,6 +560,9 @@ type PutYearsPeriodsIdJSONRequestBody = YearPeriods
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
+	// (GET /)
+	Get(ctx echo.Context) error
+
 	// (GET /activities)
 	GetActivities(ctx echo.Context) error
 
@@ -840,6 +843,15 @@ type ServerInterface interface {
 // ServerInterfaceWrapper converts echo contexts to parameters.
 type ServerInterfaceWrapper struct {
 	Handler ServerInterface
+}
+
+// Get converts echo context to params.
+func (w *ServerInterfaceWrapper) Get(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.Get(ctx)
+	return err
 }
 
 // GetActivities converts echo context to params.
@@ -2482,6 +2494,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
+	router.GET(baseURL+"/", wrapper.Get)
 	router.GET(baseURL+"/activities", wrapper.GetActivities)
 	router.POST(baseURL+"/activities", wrapper.PostActivities)
 	router.GET(baseURL+"/activities/details", wrapper.GetActivitiesDetails)
