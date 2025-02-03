@@ -26,7 +26,7 @@ type FestivalItemRepository interface {
 	DeleteFestivalItem(context.Context, *sql.Tx, string) error
 	DeleteItemBudget(context.Context, *sql.Tx, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
-	GetDetailByDivisionId(context.Context, string, string) (*sql.Rows, error)
+	GetDetailsByDivisionId(context.Context, string, string) (*sql.Rows, error)
 }
 
 func NewFestivalItemRepository(c db.Client, ac abstract.Crud) FestivalItemRepository {
@@ -178,7 +178,7 @@ func (fir *festivalItemRepository) FindLatestRecord(c context.Context) (*sql.Row
 }
 
 // 年度別と部門で取得
-func (fir *festivalItemRepository) GetDetailByDivisionId(
+func (fir *festivalItemRepository) GetDetailsByDivisionId(
 	c context.Context,
 	year string,
 	userId string,
@@ -231,7 +231,7 @@ var selectFestivalItemForMypageQuery = dialect.Select(
 	goqu.COALESCE(goqu.I("buy_reports.id"), 0).As("buyReportId"),
 	goqu.COALESCE(goqu.I("buy_reports.paid_by"), "").As("paidBy"),
 	goqu.COALESCE(goqu.I("buy_reports.amount"), 0).As("reportAmount"),
-	goqu.COALESCE(goqu.I("buy_reports.created_at"), "2025-01-29 20:53:44").As("reportDate"),
+	goqu.COALESCE(goqu.I("buy_reports.created_at"), "2000-01-01 00:00:00").As("reportDate"),
 	goqu.COALESCE(goqu.I("buy_statuses.is_packed"), 0).As("isPacked"),
 	goqu.COALESCE(goqu.I("buy_statuses.is_settled"), 0).As("isSettled")).
 	From("festival_items").

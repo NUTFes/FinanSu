@@ -43,7 +43,7 @@ func (f *festivalItemController) IndexFestivalItemsForMypage(c echo.Context) err
 	year := c.QueryParam("year")
 	var festivalItemDetails []FestivalItemsForMyPage
 
-	festivalItemDetails, err := f.u.GetFestvalItemsForMypage(ctx, year, userId)
+	festivalItemDetails, err := f.u.GetFestivalItemsForMypage(ctx, year, userId)
 	if err != nil {
 		return err
 	}

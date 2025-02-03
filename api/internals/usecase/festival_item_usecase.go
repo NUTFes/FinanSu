@@ -16,7 +16,7 @@ type festivalItemUseCase struct {
 
 type FestivalItemUseCase interface {
 	GetFestivalItems(context.Context, string, string) (FestivalItemDetails, error)
-	GetFestvalItemsForMypage(context.Context, string, string) ([]FestivalItemDetailsForMypage, error)
+	GetFestivalItemsForMypage(context.Context, string, string) ([]FestivalItemDetailsForMypage, error)
 	CreateFestivalItem(
 		context.Context,
 		FestivalItem,
@@ -207,17 +207,16 @@ func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string
 	return nil
 }
 
-func (fiu *festivalItemUseCase) GetFestvalItemsForMypage(
+func (fiu *festivalItemUseCase) GetFestivalItemsForMypage(
 	c context.Context,
 	year string,
 	userId string,
 ) ([]FestivalItemDetailsForMypage, error) {
-	// var festivalItemDetails FestivalItemDetailsForMypage
 	var festivalItemDetailsList []FestivalItemDetailsForMypage
 
 	var festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn
 
-	rows, err := fiu.fRep.GetDetailByDivisionId(c, year, userId)
+	rows, err := fiu.fRep.GetDetailsByDivisionId(c, year, userId)
 	if err != nil {
 		return festivalItemDetailsList, err
 	}
@@ -263,7 +262,7 @@ type BuyReport = generated.BuyReportInformation
 func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItemForMyPageColumn) []FestivalItemDetailsForMypage {
 	var festivalItemDetailsList []FestivalItemDetailsForMypage
 
-	// 部門ごとにマップを作成
+	// NOTE ColumnsをDetailsListの型に合わせてマッピングする。値が無い場合は初期化する。
 	var festivalItemDetailsForMypageMap = make(map[string]FestivalItemDetailsForMypage)
 	var festivalItemMaps = make(map[string]map[string]FestivalItemWithReport)
 
@@ -274,8 +273,8 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		festivalItemDetailsForMypage.FinancialRecordName = &festivalItemForMyPageColumn.FinancialRecordName
 
 		// 予算と支出データ集計
-		festivalItemMap := festivalItemMaps[festivalItemForMyPageColumn.DivisionName]
-		if festivalItemMap == nil {
+		festivalItemMap, ok := festivalItemMaps[festivalItemForMyPageColumn.DivisionName]
+		if !ok {
 			festivalItemMap = make(map[string]FestivalItemWithReport)
 		}
 		festivalItemWithReport := festivalItemMap[festivalItemForMyPageColumn.FestivalItemName]
@@ -284,9 +283,11 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		// totalがなければ定義
 		if festivalItemWithReport.FestivalItemTotal == nil {
 			expense, budget, balance := 0, 0, 0
-			var total Total
-			total.Expense, total.Budget, total.Balance = &expense, &budget, &balance
-			festivalItemWithReport.FestivalItemTotal = &total
+			festivalItemWithReport.FestivalItemTotal = &Total{
+				Expense: &expense,
+				Budget:  &budget,
+				Balance: &balance,
+			}
 		}
 
 		*festivalItemWithReport.FestivalItemTotal.Budget += festivalItemForMyPageColumn.BudgetAmount
@@ -295,24 +296,26 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 
 		buyReports := festivalItemWithReport.BuyReports
 		if buyReports == nil {
-			var buyReportSlice []generated.BuyReportInformation
-			buyReports = &buyReportSlice
+			buyReports = &[]generated.BuyReportInformation{}
 		}
 
-		var buyReport BuyReport
-		buyReport.Id = &festivalItemForMyPageColumn.BuyReportId
-		buyReport.BuyReportName = &festivalItemForMyPageColumn.PaidBy
-		buyReport.Amount = &festivalItemForMyPageColumn.ReportAmount
-		buyReport.ReportDate = &festivalItemForMyPageColumn.ReportDate
+		buyReport := BuyReport{
+			Id:            &festivalItemForMyPageColumn.BuyReportId,
+			BuyReportName: &festivalItemForMyPageColumn.PaidBy,
+			Amount:        &festivalItemForMyPageColumn.ReportAmount,
+			ReportDate:    &festivalItemForMyPageColumn.ReportDate,
+		}
 
-		if festivalItemForMyPageColumn.IsSettled {
+		switch {
+		case festivalItemForMyPageColumn.IsSettled:
 			buyReport.Status = &isSettled
-		} else if festivalItemForMyPageColumn.IsPacked {
+		case festivalItemForMyPageColumn.IsPacked:
 			buyReport.Status = &isPacked
-		} else {
+		default:
 			buyReport.Status = &empty
 		}
 
+		// 報告が0以上のみ、buyReportsに追加
 		if *buyReport.Amount > 0 {
 			*buyReports = append(*buyReports, buyReport)
 		}
@@ -325,9 +328,11 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		// divisionのtotalがなければ定義
 		if festivalItemDetailsForMypage.DivisionTotal == nil {
 			expense, budget, balance := 0, 0, 0
-			var total Total
-			total.Expense, total.Budget, total.Balance = &expense, &budget, &balance
-			festivalItemDetailsForMypage.DivisionTotal = &total
+			festivalItemDetailsForMypage.DivisionTotal = &Total{
+				Expense: &expense,
+				Budget:  &budget,
+				Balance: &balance,
+			}
 		}
 
 		festivalItemDetailsForMypageMap[festivalItemForMyPageColumn.DivisionName] = festivalItemDetailsForMypage
