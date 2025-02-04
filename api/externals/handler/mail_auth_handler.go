@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -13,7 +12,6 @@ import (
 func (h *Handler) GetMailAuthIsSignin(c echo.Context, params generated.GetMailAuthIsSigninParams) error {
 	// headerからトークンを取得する
 	accessToken := params.AccessToken
-	fmt.Println(accessToken)
 	isSignIn, err := h.mailAuthUseCase.IsSignIn(c.Request().Context(), *accessToken)
 	if err != nil {
 		return nil
@@ -26,7 +24,6 @@ func (h *Handler) GetMailAuthIsSignin(c echo.Context, params generated.GetMailAu
 func (h *Handler) PostMailAuthSignin(c echo.Context, params generated.PostMailAuthSigninParams) error {
 	email := params.Email
 	password := params.Password
-	fmt.Println(email, password)
 	token, err := h.mailAuthUseCase.SignIn(c.Request().Context(), email, password)
 	if err != nil {
 		return err
