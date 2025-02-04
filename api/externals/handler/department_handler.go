@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
-	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
 )
 
@@ -19,13 +18,8 @@ func (h *Handler) GetDepartments(c echo.Context) error {
 }
 
 // router.POST(baseURL+"/departments", wrapper.PostDepartments)
-func (h *Handler) PostDepartments(c echo.Context) error {
-	department := new(domain.Department)
-	if err := c.Bind(department); err != nil {
-		return err
-	}
-
-	latastDepartment, err := h.departmentUseCase.CreateDepartment(c.Request().Context(), department.Name)
+func (h *Handler) PostDepartments(c echo.Context, params generated.PostDepartmentsParams) error {
+	latastDepartment, err := h.departmentUseCase.CreateDepartment(c.Request().Context(), *params.Name)
 	if err != nil {
 		return err
 	}

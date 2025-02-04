@@ -2,7 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
 )
@@ -17,14 +19,14 @@ func (h *Handler) GetTeachers(c echo.Context) error {
 }
 
 // router.POST(baseURL+"/teachers", wrapper.PostTeachers)
-func (h *Handler) PostTeachers(c echo.Context) error {
-	name := c.QueryParam("name")
-	position := c.QueryParam("position")
-	departmentID := c.QueryParam("department_id")
-	room := c.QueryParam("room")
-	isBlack := c.QueryParam("is_black")
-	remark := c.QueryParam("remark")
-	latestTeacher, err := h.teacherUseCase.CreateTeacher(c.Request().Context(), name, position, departmentID, room, isBlack, remark)
+func (h *Handler) PostTeachers(c echo.Context, params generated.PostTeachersParams) error {
+	name := params.Name
+	position := params.Position
+	departmentID := strconv.Itoa(*params.DepartmentId)
+	room := params.Room
+	isBlack := strconv.FormatBool(*params.IsBlack)
+	remark := params.Remark
+	latestTeacher, err := h.teacherUseCase.CreateTeacher(c.Request().Context(), name, position, departmentID, *room, isBlack, *remark)
 	if err != nil {
 		return err
 	}
@@ -46,9 +48,9 @@ func (h *Handler) DeleteTeachersDelete(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/teachers/fundRegistered/:year", wrapper.GetTeachersFundRegisteredYear)
-func (h *Handler) GetTeachersFundRegisteredYear(c echo.Context) error {
-	year := c.Param("year")
-	fundRegisteredTeachers, err := h.teacherUseCase.GetFundRegisteredByPeriods(c.Request().Context(), year)
+func (h *Handler) GetTeachersFundRegisteredYear(c echo.Context, year int) error {
+	yearStr := strconv.Itoa(year)
+	fundRegisteredTeachers, err := h.teacherUseCase.GetFundRegisteredByPeriods(c.Request().Context(), yearStr)
 	if err != nil {
 		return err
 	}
@@ -56,9 +58,9 @@ func (h *Handler) GetTeachersFundRegisteredYear(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/teachers/:id", wrapper.DeleteTeachersId)
-func (h *Handler) DeleteTeachersId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.teacherUseCase.DestroyTeacher(c.Request().Context(), id)
+func (h *Handler) DeleteTeachersId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.teacherUseCase.DestroyTeacher(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -66,9 +68,9 @@ func (h *Handler) DeleteTeachersId(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/teachers/:id", wrapper.GetTeachersId)
-func (h *Handler) GetTeachersId(c echo.Context) error {
-	id := c.Param("id")
-	teacher, err := h.teacherUseCase.GetTeacherByID(c.Request().Context(), id)
+func (h *Handler) GetTeachersId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	teacher, err := h.teacherUseCase.GetTeacherByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -76,15 +78,15 @@ func (h *Handler) GetTeachersId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/teachers/:id", wrapper.PutTeachersId)
-func (h *Handler) PutTeachersId(c echo.Context) error {
-	id := c.Param("id")
-	name := c.QueryParam("name")
-	position := c.QueryParam("position")
-	departmentID := c.QueryParam("department_id")
-	room := c.QueryParam("room")
-	isBlack := c.QueryParam("is_black")
-	remark := c.QueryParam("remark")
-	updateTeacher, err := h.teacherUseCase.UpdateTeacher(c.Request().Context(), id, name, position, departmentID, room, isBlack, remark)
+func (h *Handler) PutTeachersId(c echo.Context, id int, params generated.PutTeachersIdParams) error {
+	idStr := strconv.Itoa(id)
+	name := params.Name
+	position := params.Position
+	departmentID := strconv.Itoa(*params.DepartmentId)
+	room := params.Room
+	isBlack := strconv.FormatBool(*params.IsBlack)
+	remark := params.Remark
+	updateTeacher, err := h.teacherUseCase.UpdateTeacher(c.Request().Context(), idStr, name, position, departmentID, *room, isBlack, *remark)
 	if err != nil {
 		return err
 	}

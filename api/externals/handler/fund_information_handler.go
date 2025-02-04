@@ -74,7 +74,7 @@ func (h *Handler) GetFundInformationsId(c echo.Context, id int) error {
 }
 
 // router.PUT(baseURL+"/fund_informations/:id", wrapper.PutFundInformationsId)
-func (h *Handler) PutFundInformationsId(c echo.Context, id int, params generated.PostFundInformationsParams) error {
+func (h *Handler) PutFundInformationsId(c echo.Context, id int, params generated.PutFundInformationsIdParams) error {
 	idStr := strconv.Itoa(id)
 	userId := strconv.Itoa(params.UserId)
 	teacherId := strconv.Itoa(params.TeacherId)

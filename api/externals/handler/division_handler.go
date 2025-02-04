@@ -9,10 +9,10 @@ import (
 )
 
 // router.GET(baseURL+"/divisions", wrapper.GetDivisions)
-func (h *Handler) GetDivisions(c echo.Context) error {
+func (h *Handler) GetDivisions(c echo.Context, params generated.GetDivisionsParams) error {
 	ctx := c.Request().Context()
-	year := c.QueryParam("year")
-	financialRecordId := c.QueryParam("financial_record_id")
+	year := strconv.Itoa(*params.Year)
+	financialRecordId := strconv.Itoa(*params.FinancialRecordId)
 
 	divisionDetails, err := h.divisionUseCase.GetDivisions(ctx, year, financialRecordId)
 	if err != nil {

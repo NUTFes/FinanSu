@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,14 +18,10 @@ func (h *Handler) GetBureaus(c echo.Context) error {
 }
 
 // router.POST(baseURL+"/bureaus", wrapper.PostBureaus)
-func (h *Handler) PostBureaus(c echo.Context) error {
-	bureau := new(domain.Bureau)
-	if err := c.Bind(bureau); err != nil {
-		return err
-	}
-
+func (h *Handler) PostBureaus(c echo.Context, params generated.PostBureausParams) error {
+	name := params.Name
 	latastBureau, err := h.bureauUseCase.CreateBureau(c.Request().Context(),
-		bureau.Name,
+		name,
 	)
 	if err != nil {
 		return err
@@ -54,14 +50,10 @@ func (h *Handler) GetBureausId(c echo.Context, id int) error {
 }
 
 // router.PUT(baseURL+"/bureaus/:id", wrapper.PutBureausId)
-func (h *Handler) PutBureausId(c echo.Context, id int) error {
+func (h *Handler) PutBureausId(c echo.Context, id int, params generated.PutBureausIdParams) error {
 	idStr := strconv.Itoa(id)
-	bureau := new(domain.Bureau)
-	if err := c.Bind(bureau); err != nil {
-		return err
-	}
-
-	updatedBureau, err := h.bureauUseCase.UpdateBureau(c.Request().Context(), idStr, bureau.Name)
+	name := *params.Name
+	updatedBureau, err := h.bureauUseCase.UpdateBureau(c.Request().Context(), idStr, name)
 	if err != nil {
 		return err
 	}

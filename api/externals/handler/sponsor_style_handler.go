@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
@@ -35,9 +36,9 @@ func (h *Handler) PostSponsorstyles(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/sponsorstyles/:id", wrapper.DeleteSponsorstylesId)
-func (h *Handler) DeleteSponsorstylesId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.sponsorStyleUseCase.DestroySponsorStyle(c.Request().Context(), id)
+func (h *Handler) DeleteSponsorstylesId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.sponsorStyleUseCase.DestroySponsorStyle(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -45,9 +46,9 @@ func (h *Handler) DeleteSponsorstylesId(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/sponsorstyles/:id", wrapper.GetSponsorstylesId)
-func (h *Handler) GetSponsorstylesId(c echo.Context) error {
-	id := c.Param("id")
-	sponsorstyle, err := h.sponsorStyleUseCase.GetSponsorStylesByID(c.Request().Context(), id)
+func (h *Handler) GetSponsorstylesId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	sponsorstyle, err := h.sponsorStyleUseCase.GetSponsorStylesByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -55,14 +56,14 @@ func (h *Handler) GetSponsorstylesId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/sponsorstyles/:id", wrapper.PutSponsorstylesId)
-func (h *Handler) PutSponsorstylesId(c echo.Context) error {
-	id := c.Param("id")
+func (h *Handler) PutSponsorstylesId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
 	sponsorstyle := new(domain.SponsorStyle)
 	if err := c.Bind(sponsorstyle); err != nil {
 		return err
 	}
 
-	updatedSponsorstyle, err := h.sponsorStyleUseCase.UpdateSponsorStyle(c.Request().Context(), id, sponsorstyle.Style, sponsorstyle.Feature, sponsorstyle.Price)
+	updatedSponsorstyle, err := h.sponsorStyleUseCase.UpdateSponsorStyle(c.Request().Context(), idStr, sponsorstyle.Style, sponsorstyle.Feature, sponsorstyle.Price)
 	if err != nil {
 		return err
 	}

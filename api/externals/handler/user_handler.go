@@ -2,7 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
 )
@@ -17,10 +19,10 @@ func (h *Handler) GetUsers(c echo.Context) error {
 }
 
 // router.POST(baseURL+"/users", wrapper.PostUsers)
-func (h *Handler) PostUsers(c echo.Context) error {
-	name := c.QueryParam("name")
-	bureauID := c.QueryParam("bureau_id")
-	roleID := c.QueryParam("role_id")
+func (h *Handler) PostUsers(c echo.Context, params generated.PostUsersParams) error {
+	name := params.Name
+	bureauID := strconv.Itoa(params.BureauId)
+	roleID := strconv.Itoa(params.RoleId)
 	latastUser, err := h.userUseCase.CreateUser(c.Request().Context(), name, bureauID, roleID)
 	if err != nil {
 		return err
@@ -42,9 +44,9 @@ func (h *Handler) DeleteUsersDelete(c echo.Context) error {
 }
 
 // router.DELETE(baseURL+"/users/:id", wrapper.DeleteUsersId)
-func (h *Handler) DeleteUsersId(c echo.Context) error {
-	id := c.Param("id")
-	err := h.userUseCase.DestroyUser(c.Request().Context(), id)
+func (h *Handler) DeleteUsersId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.userUseCase.DestroyUser(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -52,9 +54,9 @@ func (h *Handler) DeleteUsersId(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/users/:id", wrapper.GetUsersId)
-func (h *Handler) GetUsersId(c echo.Context) error {
-	id := c.Param("id")
-	user, err := h.userUseCase.GetUserByID(c.Request().Context(), id)
+func (h *Handler) GetUsersId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	user, err := h.userUseCase.GetUserByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
@@ -62,12 +64,12 @@ func (h *Handler) GetUsersId(c echo.Context) error {
 }
 
 // router.PUT(baseURL+"/users/:id", wrapper.PutUsersId)
-func (h *Handler) PutUsersId(c echo.Context) error {
-	id := c.Param("id")
-	name := c.QueryParam("name")
-	bureauID := c.QueryParam("bureau_id")
-	roleID := c.QueryParam("role_id")
-	updatedUser, err := h.userUseCase.UpdateUser(c.Request().Context(), id, name, bureauID, roleID)
+func (h *Handler) PutUsersId(c echo.Context, id int, params generated.PutUsersIdParams) error {
+	idStr := strconv.Itoa(id)
+	name := params.Name
+	bureauID := strconv.Itoa(params.BureauId)
+	roleID := strconv.Itoa(params.RoleId)
+	updatedUser, err := h.userUseCase.UpdateUser(c.Request().Context(), idStr, name, bureauID, roleID)
 	if err != nil {
 		return err
 	}

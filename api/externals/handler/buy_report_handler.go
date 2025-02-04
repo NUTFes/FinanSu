@@ -10,7 +10,7 @@ import (
 )
 
 // router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
-func (h *Handler) PutBuyReportStatusBuyReportId(c echo.Context) error {
+func (h *Handler) PutBuyReportStatusBuyReportId(c echo.Context, id int) error {
 	// 未実装
 	return c.String(http.StatusNotImplemented, "PutBuyReportStatusBuyReportId is not implemented")
 }
@@ -44,7 +44,7 @@ func (h *Handler) PostBuyReports(c echo.Context) error {
 }
 
 // router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
-func (h *Handler) GetBuyReportsDetails(c echo.Context) error {
+func (h *Handler) GetBuyReportsDetails(c echo.Context, params generated.GetBuyReportsDetailsParams) error {
 	//未実装
 	return c.String(http.StatusNotImplemented, "GetBuyReportsDetails is not implemented")
 }

@@ -9,8 +9,9 @@ import (
 )
 
 // router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
-func (h *Handler) GetFinancialRecords(c echo.Context) error {
-	financialRecordDetails, err := h.financialRecordUseCase.GetFinancialRecords(c.Request().Context())
+func (h *Handler) GetFinancialRecords(c echo.Context, params generated.GetFinancialRecordsParams) error {
+	yearStr := strconv.Itoa(*params.Year)
+	financialRecordDetails, err := h.financialRecordUseCase.GetFinancialRecordsByYears(c.Request().Context(), yearStr)
 	if err != nil {
 		return err
 	}

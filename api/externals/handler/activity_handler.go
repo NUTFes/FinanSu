@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
 )
@@ -86,10 +87,13 @@ func (h *Handler) GetActivitiesDetailsYear(c echo.Context, year int) error {
 	return c.JSON(http.StatusOK, activities)
 }
 
-func (h *Handler) GetActivitiesFilteredDetails(c echo.Context) error {
-	isDone := c.QueryParam("is_done")
-	sponsorStyleIDs := c.QueryParams()["sponsor_style_id"]
-	keyword := c.QueryParam("keyword")
+func (h *Handler) GetActivitiesFilteredDetails(c echo.Context, params generated.GetActivitiesFilteredDetailsParams) error {
+	isDone := string(*params.IsDone)
+	sponsorStyleIDs := []string{}
+	for _, id := range *params.SponsorStyleId {
+		sponsorStyleIDs = append(sponsorStyleIDs, strconv.Itoa(int(id)))
+	}
+	keyword := *params.Keyword
 	activities, err := h.activityUseCase.GetFilteredActivityDetail(c.Request().Context(), isDone, sponsorStyleIDs, keyword)
 	if err != nil {
 		return err
@@ -97,11 +101,13 @@ func (h *Handler) GetActivitiesFilteredDetails(c echo.Context) error {
 	return c.JSON(http.StatusOK, activities)
 }
 
-func (h *Handler) GetActivitiesFilteredDetailsYear(c echo.Context) error {
-	isDone := c.QueryParam("is_done")
-	sponsorStyleIDs := c.QueryParams()["sponsor_style_id"]
-	year := c.Param("year")
-	keyword := c.QueryParam("keyword")
+func (h *Handler) GetActivitiesFilteredDetailsYear(c echo.Context, year string, params generated.GetActivitiesFilteredDetailsYearParams) error {
+	isDone := string(*params.IsDone)
+	sponsorStyleIDs := []string{}
+	for _, id := range *params.SponsorStyleId {
+		sponsorStyleIDs = append(sponsorStyleIDs, strconv.Itoa(int(id)))
+	}
+	keyword := *params.Keyword
 	activities, err := h.activityUseCase.GetFilteredActivityDetailByPeriod(c.Request().Context(), isDone, sponsorStyleIDs, year, keyword)
 	if err != nil {
 		return err
