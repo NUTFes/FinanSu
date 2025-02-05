@@ -151,22 +151,28 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ item, truncateItemName }) =
   return (
     <tr>
       <td colSpan={5}>
-        <div className="w-full md:w-[90%] flex justify-start px-2">
-          <div className="mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3">
+        <div className='flex w-full justify-start px-2 md:w-[90%]'>
+          <div className='mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3'>
             <table
-              className="w-full table-auto whitespace-normal break-words text-sm text-[#333]"
+              className='w-full table-auto whitespace-normal break-words text-sm text-[#333]'
               onClick={(e) => e.stopPropagation()}
             >
               <tbody>
                 {(item.subitems || []).map((subitem) => (
                   <tr key={subitem.name}>
-                    <td className="w-[30%] px-2 py-2 text-left text-nowrap">
+                    <td className='w-[30%] text-nowrap px-2 py-2 text-left'>
                       {truncateItemName(subitem.name)}
                     </td>
-                    <td className="w-[15%] px-2 py-2 text-center text-nowrap">{subitem.purchase_date || '-'}</td>
-                    <td className="w-[15%] px-2 py-2 text-center text-nowrap">{subitem.reporter || '-'}</td>
-                    <td className="w-[15%] px-2 py-2 text-center text-nowrap">{subitem.used.toLocaleString()}</td>
-                    <td className="w-[15%] px-2 py-2">
+                    <td className='w-[15%] text-nowrap px-2 py-2 text-center'>
+                      {subitem.purchase_date || '-'}
+                    </td>
+                    <td className='w-[15%] text-nowrap px-2 py-2 text-center'>
+                      {subitem.reporter || '-'}
+                    </td>
+                    <td className='w-[15%] text-nowrap px-2 py-2 text-center'>
+                      {subitem.used.toLocaleString()}
+                    </td>
+                    <td className='w-[15%] px-2 py-2'>
                       <Status status={subitem.status} />
                     </td>
                   </tr>

@@ -56,7 +56,7 @@ const mockData: Department[] = [
             reporter: '技大太郎',
             purchase_date: '1/13',
             status: '清算完了',
-          }
+          },
         ],
       },
       {

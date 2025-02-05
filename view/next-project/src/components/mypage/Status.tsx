@@ -31,7 +31,7 @@ const Status = ({ status }: StatusProps) => {
   return (
     <div className='flex items-center gap-2'>
       <GrStatusGoodSmall size={'15px'} color={iconColor} />
-      <div className='text-black text-sm font-normal text-nowrap'>{statusText}</div>
+      <div className='text-black text-nowrap text-sm font-normal'>{statusText}</div>
     </div>
   );
 };

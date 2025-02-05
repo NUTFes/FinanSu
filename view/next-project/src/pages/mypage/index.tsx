@@ -14,8 +14,10 @@ const MyPage = () => {
   return (
     <MainLayout>
       <Card>
-        <div className={`mx-5 mt-10 min-h-full aspect-square md:aspect-auto md:min-h-[80vh] ${notoSansJP.className}`}>
-          <div className='flex justify-between items-center mb-8'>
+        <div
+          className={`mx-5 mt-10 aspect-square min-h-full md:aspect-auto md:min-h-[80vh] ${notoSansJP.className}`}
+        >
+          <div className='mb-8 flex items-center justify-between'>
             <h2 className='text-2xl font-thin text-[#333]'>マイページ</h2>
             <PrimaryButton>
               <div className='flex items-center gap-2'>
