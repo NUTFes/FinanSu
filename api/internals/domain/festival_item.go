@@ -12,3 +12,20 @@ type FestivalItem struct {
 	CreatedAt  time.Time `json:"createdAt"`
 	UpdatedAt  time.Time `json:"updatedAt"`
 }
+
+type FestivalItemForMyPageColumn struct {
+	UserName            string
+	FinancialRecordName string
+	DivisionId          int
+	DivisionName        string
+	FestivalItemId      int
+	FestivalItemName    string
+	Year                int
+	BudgetAmount        int
+	BuyReportId         int
+	PaidBy              string
+	ReportAmount        int
+	ReportDate          string
+	IsPacked            bool
+	IsSettled           bool
+}

@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func RunServer(router router.Router) {
+func RunServer(router router.Router) *echo.Echo {
 	// echoのインスタンス
 	e := echo.New()
 
@@ -35,5 +35,5 @@ func RunServer(router router.Router) {
 	router.ProvideRouter(e)
 
 	// サーバー起動
-	e.Start(":1323")
+	return e
 }

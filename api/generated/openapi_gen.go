@@ -9,6 +9,14 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/oapi-codegen/runtime"
+	openapi_types "github.com/oapi-codegen/runtime/types"
+)
+
+// Defines values for BuyReportInformationStatus.
+const (
+	Empty BuyReportInformationStatus = "確認中"
+	N1    BuyReportInformationStatus = "封詰め"
+	N2    BuyReportInformationStatus = "清算完了"
 )
 
 // Defines values for GetActivitiesFilteredDetailsParamsIsDone.
@@ -52,6 +60,39 @@ type ActivityStyle struct {
 	ActivityID     int `json:"activityID"`
 	SponsorStyleID int `json:"sponsorStyleID"`
 }
+
+// BuyReport 購入報告の際のパラメータ
+type BuyReport struct {
+	Amount         int    `json:"amount"`
+	FestivalItemID int    `json:"festivalItemID"`
+	Id             *int   `json:"id,omitempty"`
+	PaidBy         string `json:"paidBy"`
+}
+
+// BuyReportDetail 購入報告ページで表示する詳細情報
+type BuyReportDetail struct {
+	Amount              *int    `json:"amount,omitempty"`
+	DivisionName        *string `json:"divisionName,omitempty"`
+	FestivalItemName    *string `json:"festivalItemName,omitempty"`
+	FinancialRecordName *string `json:"financialRecordName,omitempty"`
+	Id                  *int    `json:"id,omitempty"`
+	IsPacked            *bool   `json:"isPacked,omitempty"`
+	IsSettled           *bool   `json:"isSettled,omitempty"`
+	PaidBy              *string `json:"paidBy,omitempty"`
+	ReportDate          *string `json:"reportDate,omitempty"`
+}
+
+// BuyReportInformation マイページで表示する購入報告の情報
+type BuyReportInformation struct {
+	Amount        *int                        `json:"amount,omitempty"`
+	BuyReportName *string                     `json:"buyReportName,omitempty"`
+	Id            *int                        `json:"id,omitempty"`
+	ReportDate    *string                     `json:"reportDate,omitempty"`
+	Status        *BuyReportInformationStatus `json:"status,omitempty"`
+}
+
+// BuyReportInformationStatus defines model for BuyReportInformation.Status.
+type BuyReportInformationStatus string
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
 type DestroyTeacherIDs struct {
@@ -109,6 +150,21 @@ type FestivalItemWithBalance struct {
 	Id              *int    `json:"id,omitempty"`
 	Memo            *string `json:"memo,omitempty"`
 	Name            *string `json:"name,omitempty"`
+}
+
+// FestivalItemWithReport defines model for festivalItemWithReport.
+type FestivalItemWithReport struct {
+	BuyReports        *[]BuyReportInformation `json:"buyReports,omitempty"`
+	FestivalItemName  *string                 `json:"festivalItemName,omitempty"`
+	FestivalItemTotal *Total                  `json:"festivalItemTotal,omitempty"`
+}
+
+// FestivalItemsForMyPage defines model for festivalItemsForMyPage.
+type FestivalItemsForMyPage struct {
+	DivisionName        *string                   `json:"divisionName,omitempty"`
+	DivisionTotal       *Total                    `json:"divisionTotal,omitempty"`
+	FestivalItems       *[]FestivalItemWithReport `json:"festivalItems,omitempty"`
+	FinancialRecordName *string                   `json:"financialRecordName,omitempty"`
 }
 
 // FinancialRecord defines model for financialRecord.
@@ -246,6 +302,37 @@ type PutBureausIdParams struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty"`
 }
 
+// PutBuyReportStatusBuyReportIdJSONBody defines parameters for PutBuyReportStatusBuyReportId.
+type PutBuyReportStatusBuyReportIdJSONBody struct {
+	// IsPacked 封筒に詰めたか
+	IsPacked *bool `json:"isPacked,omitempty"`
+
+	// IsSettled 精算済みか
+	IsSettled *bool `json:"isSettled,omitempty"`
+}
+
+// PostBuyReportsMultipartBody defines parameters for PostBuyReports.
+type PostBuyReportsMultipartBody struct {
+	// BuyReport 購入報告の際のパラメータ
+	BuyReport BuyReport          `json:"buy_report"`
+	File      openapi_types.File `json:"file"`
+}
+
+// GetBuyReportsDetailsParams defines parameters for GetBuyReportsDetails.
+type GetBuyReportsDetailsParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+}
+
+// PutBuyReportsIdMultipartBody defines parameters for PutBuyReportsId.
+type PutBuyReportsIdMultipartBody struct {
+	// BuyReport 購入報告の際のパラメータ
+	BuyReport BuyReport `json:"buy_report"`
+
+	// File 購入報告書のファイル、ない場合更新しないようにする
+	File *openapi_types.File `json:"file,omitempty"`
+}
+
 // PostDepartmentsParams defines parameters for PostDepartments.
 type PostDepartmentsParams struct {
 	// Name name
@@ -292,6 +379,12 @@ type GetFestivalItemsParams struct {
 
 	// DivisionId division_id
 	DivisionId *int `form:"division_id,omitempty" json:"division_id,omitempty"`
+}
+
+// GetFestivalItemsDetailsUserIdParams defines parameters for GetFestivalItemsDetailsUserId.
+type GetFestivalItemsDetailsUserIdParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
 // GetFinancialRecordsParams defines parameters for GetFinancialRecords.
@@ -414,6 +507,11 @@ type PutTeachersIdParams struct {
 	Remark *string `form:"remark,omitempty" json:"remark,omitempty"`
 }
 
+// PostUploadFileMultipartBody defines parameters for PostUploadFile.
+type PostUploadFileMultipartBody struct {
+	File *openapi_types.File `json:"file,omitempty"`
+}
+
 // PostUsersParams defines parameters for PostUsers.
 type PostUsersParams struct {
 	// Name name
@@ -468,6 +566,15 @@ type PostActivityStylesJSONRequestBody = ActivityStyle
 // PutActivityStylesIdJSONRequestBody defines body for PutActivityStylesId for application/json ContentType.
 type PutActivityStylesIdJSONRequestBody = ActivityStyle
 
+// PutBuyReportStatusBuyReportIdJSONRequestBody defines body for PutBuyReportStatusBuyReportId for application/json ContentType.
+type PutBuyReportStatusBuyReportIdJSONRequestBody PutBuyReportStatusBuyReportIdJSONBody
+
+// PostBuyReportsMultipartRequestBody defines body for PostBuyReports for multipart/form-data ContentType.
+type PostBuyReportsMultipartRequestBody PostBuyReportsMultipartBody
+
+// PutBuyReportsIdMultipartRequestBody defines body for PutBuyReportsId for multipart/form-data ContentType.
+type PutBuyReportsIdMultipartRequestBody PutBuyReportsIdMultipartBody
+
 // PostDivisionsJSONRequestBody defines body for PostDivisions for application/json ContentType.
 type PostDivisionsJSONRequestBody = Division
 
@@ -506,6 +613,9 @@ type PostSponsorstylesJSONRequestBody = SponsorStyle
 
 // PutSponsorstylesIdJSONRequestBody defines body for PutSponsorstylesId for application/json ContentType.
 type PutSponsorstylesIdJSONRequestBody = SponsorStyle
+
+// PostUploadFileMultipartRequestBody defines body for PostUploadFile for multipart/form-data ContentType.
+type PostUploadFileMultipartRequestBody PostUploadFileMultipartBody
 
 // DeleteUsersDeleteJSONRequestBody defines body for DeleteUsersDelete for application/json ContentType.
 type DeleteUsersDeleteJSONRequestBody = DestroyUserIDs
@@ -615,6 +725,21 @@ type ServerInterface interface {
 	// (PUT /bureaus/{id})
 	PutBureausId(ctx echo.Context, id int, params PutBureausIdParams) error
 
+	// (PUT /buy_report/status/{buy_report_id})
+	PutBuyReportStatusBuyReportId(ctx echo.Context, buyReportId int) error
+
+	// (POST /buy_reports)
+	PostBuyReports(ctx echo.Context) error
+
+	// (GET /buy_reports/details)
+	GetBuyReportsDetails(ctx echo.Context, params GetBuyReportsDetailsParams) error
+
+	// (DELETE /buy_reports/{id})
+	DeleteBuyReportsId(ctx echo.Context, id int) error
+
+	// (PUT /buy_reports/{id})
+	PutBuyReportsId(ctx echo.Context, id int) error
+
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
 
@@ -674,6 +799,9 @@ type ServerInterface interface {
 
 	// (POST /festival_items)
 	PostFestivalItems(ctx echo.Context) error
+
+	// (GET /festival_items/details/{user_id})
+	GetFestivalItemsDetailsUserId(ctx echo.Context, userId int, params GetFestivalItemsDetailsUserIdParams) error
 
 	// (DELETE /festival_items/{id})
 	DeleteFestivalItemsId(ctx echo.Context, id int) error
@@ -812,6 +940,9 @@ type ServerInterface interface {
 
 	// (PUT /teachers/{id})
 	PutTeachersId(ctx echo.Context, id int, params PutTeachersIdParams) error
+
+	// (POST /upload_file)
+	PostUploadFile(ctx echo.Context) error
 
 	// (GET /users)
 	GetUsers(ctx echo.Context) error
@@ -1395,6 +1526,81 @@ func (w *ServerInterfaceWrapper) PutBureausId(ctx echo.Context) error {
 	return err
 }
 
+// PutBuyReportStatusBuyReportId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutBuyReportStatusBuyReportId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "buy_report_id" -------------
+	var buyReportId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "buy_report_id", ctx.Param("buy_report_id"), &buyReportId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter buy_report_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutBuyReportStatusBuyReportId(ctx, buyReportId)
+	return err
+}
+
+// PostBuyReports converts echo context to params.
+func (w *ServerInterfaceWrapper) PostBuyReports(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostBuyReports(ctx)
+	return err
+}
+
+// GetBuyReportsDetails converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetBuyReportsDetailsParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetBuyReportsDetails(ctx, params)
+	return err
+}
+
+// DeleteBuyReportsId converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteBuyReportsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteBuyReportsId(ctx, id)
+	return err
+}
+
+// PutBuyReportsId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
 // GetDepartments converts echo context to params.
 func (w *ServerInterfaceWrapper) GetDepartments(ctx echo.Context) error {
 	var err error
@@ -1731,6 +1937,31 @@ func (w *ServerInterfaceWrapper) PostFestivalItems(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostFestivalItems(ctx)
+	return err
+}
+
+// GetFestivalItemsDetailsUserId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFestivalItemsDetailsUserId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "user_id" -------------
+	var userId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "user_id", ctx.Param("user_id"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetFestivalItemsDetailsUserIdParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetFestivalItemsDetailsUserId(ctx, userId, params)
 	return err
 }
 
@@ -2586,6 +2817,15 @@ func (w *ServerInterfaceWrapper) PutTeachersId(ctx echo.Context) error {
 	return err
 }
 
+// PostUploadFile converts echo context to params.
+func (w *ServerInterfaceWrapper) PostUploadFile(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostUploadFile(ctx)
+	return err
+}
+
 // GetUsers converts echo context to params.
 func (w *ServerInterfaceWrapper) GetUsers(ctx echo.Context) error {
 	var err error
@@ -2901,6 +3141,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/bureaus/:id", wrapper.DeleteBureausId)
 	router.GET(baseURL+"/bureaus/:id", wrapper.GetBureausId)
 	router.PUT(baseURL+"/bureaus/:id", wrapper.PutBureausId)
+	router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
+	router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
+	router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
+	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
+	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)
@@ -2921,6 +3166,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/expenses/:id/details", wrapper.GetExpensesIdDetails)
 	router.GET(baseURL+"/festival_items", wrapper.GetFestivalItems)
 	router.POST(baseURL+"/festival_items", wrapper.PostFestivalItems)
+	router.GET(baseURL+"/festival_items/details/:user_id", wrapper.GetFestivalItemsDetailsUserId)
 	router.DELETE(baseURL+"/festival_items/:id", wrapper.DeleteFestivalItemsId)
 	router.PUT(baseURL+"/festival_items/:id", wrapper.PutFestivalItemsId)
 	router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
@@ -2967,6 +3213,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/teachers/:id", wrapper.DeleteTeachersId)
 	router.GET(baseURL+"/teachers/:id", wrapper.GetTeachersId)
 	router.PUT(baseURL+"/teachers/:id", wrapper.PutTeachersId)
+	router.POST(baseURL+"/upload_file", wrapper.PostUploadFile)
 	router.GET(baseURL+"/users", wrapper.GetUsers)
 	router.POST(baseURL+"/users", wrapper.PostUsers)
 	router.DELETE(baseURL+"/users/delete", wrapper.DeleteUsersDelete)

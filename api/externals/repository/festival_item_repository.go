@@ -26,9 +26,7 @@ type FestivalItemRepository interface {
 	DeleteFestivalItem(context.Context, *sql.Tx, string) error
 	DeleteItemBudget(context.Context, *sql.Tx, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
-	StartTransaction(context.Context) (*sql.Tx, error)
-	RollBack(context.Context, *sql.Tx) error
-	Commit(context.Context, *sql.Tx) error
+	GetDetailsByDivisionId(context.Context, string, string) (*sql.Rows, error)
 }
 
 func NewFestivalItemRepository(c db.Client, ac abstract.Crud) FestivalItemRepository {
@@ -179,16 +177,28 @@ func (fir *festivalItemRepository) FindLatestRecord(c context.Context) (*sql.Row
 	return fir.crud.ReadByID(c, query)
 }
 
-func (fir *festivalItemRepository) StartTransaction(c context.Context) (*sql.Tx, error) {
-	return fir.crud.StartTransaction(c)
-}
+// 年度別と部門で取得
+func (fir *festivalItemRepository) GetDetailsByDivisionId(
+	c context.Context,
+	year string,
+	userId string,
+) (*sql.Rows, error) {
+	ds := selectFestivalItemForMypageQuery
+	if userId != "" {
+		ds = ds.Where(goqu.Ex{"users.id": userId})
+	}
 
-func (fir *festivalItemRepository) RollBack(c context.Context, tx *sql.Tx) error {
-	return fir.crud.RollBack(c, tx)
-}
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
 
-func (fir *festivalItemRepository) Commit(c context.Context, tx *sql.Tx) error {
-	return fir.crud.Commit(c, tx)
+	query, _, err := ds.ToSQL()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return fir.crud.Read(c, query)
 }
 
 var selectFestivalItemQuery = dialect.Select(
@@ -207,4 +217,30 @@ var selectFestivalItemQuery = dialect.Select(
 	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
 	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
 	GroupBy("festival_items.id", "item_budgets.amount").
+	Order(goqu.I("festival_items.id").Desc())
+
+var selectFestivalItemForMypageQuery = dialect.Select(
+	goqu.I("users.name").As("userName"),
+	goqu.I("financial_records.name").As("financialRecordName"),
+	goqu.I("divisions.id").As("divisionId"),
+	goqu.I("divisions.name").As("divisionName"),
+	goqu.I("festival_items.id").As("festivalItemId"),
+	goqu.I("festival_items.name").As("festivalItemName"),
+	goqu.I("years.year"),
+	goqu.COALESCE(goqu.I("item_budgets.amount"), 0).As("budgetAmount"),
+	goqu.COALESCE(goqu.I("buy_reports.id"), 0).As("buyReportId"),
+	goqu.COALESCE(goqu.I("buy_reports.paid_by"), "").As("paidBy"),
+	goqu.COALESCE(goqu.I("buy_reports.amount"), 0).As("reportAmount"),
+	goqu.COALESCE(goqu.I("buy_reports.created_at"), "2000-01-01 00:00:00").As("reportDate"),
+	goqu.COALESCE(goqu.I("buy_statuses.is_packed"), 0).As("isPacked"),
+	goqu.COALESCE(goqu.I("buy_statuses.is_settled"), 0).As("isSettled")).
+	From("festival_items").
+	InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
+	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+	InnerJoin(goqu.I("user_groups"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("user_groups.group_id")))).
+	InnerJoin(goqu.I("users"), goqu.On(goqu.I("users.id").Eq(goqu.I("user_groups.user_id")))).
+	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+	LeftJoin(goqu.I("buy_statuses"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("buy_statuses.buy_report_id")))).
 	Order(goqu.I("festival_items.id").Desc())

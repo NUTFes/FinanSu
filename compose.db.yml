@@ -4,6 +4,7 @@ services:
     container_name: "nutfes-finansu-db"
     volumes:
       - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
+      - ./mysql/testdb:/docker-entrypoint-testdb.d # テスト用初期データ
       - ./my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_DATABASE: finansu_db

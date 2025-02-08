@@ -1,18 +1,21 @@
 package di
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/controller"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/NUTFes/FinanSu/api/router"
+	"github.com/labstack/echo/v4"
 )
 
-func InitializeServer() db.Client {
+func InitializeServer() (db.Client, *echo.Echo) {
 	// DB接続
 	client, err := db.ConnectMySQL()
 	if err != nil {
@@ -21,7 +24,12 @@ func InitializeServer() db.Client {
 
 	crud := abstract.NewCrud(client)
 
-	// ↓
+	minioClient, err := mc.InitMinioClient()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(minioClient)
 
 	// Repository
 	activityRepository := repository.NewActivityRepository(client, crud)
@@ -29,6 +37,7 @@ func InitializeServer() db.Client {
 	activityStyleRepository := repository.NewActivityStyleRepository(client, crud)
 	budgetRepository := repository.NewBudgetRepository(client, crud)
 	bureauRepository := repository.NewBureauRepository(client, crud)
+	buyReportRepository := repository.NewBuyReportRepository(client, crud)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
 	divisionRepository := repository.NewDivisionRepository(client, crud)
 	expenseRepository := repository.NewExpenseRepository(client, crud)
@@ -36,6 +45,7 @@ func InitializeServer() db.Client {
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
+	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
 	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
@@ -46,6 +56,7 @@ func InitializeServer() db.Client {
 	sponsorRepository := repository.NewSponsorRepository(client, crud)
 	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
 	teacherRepository := repository.NewTeacherRepository(client, crud)
+	transactionRepository := repository.NewTransactionRepository(client, crud)
 	userRepository := repository.NewUserRepository(client, crud)
 	yearRepository := repository.NewYearRepository(client, crud)
 	// ↓
@@ -58,13 +69,15 @@ func InitializeServer() db.Client {
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
-	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository)
+	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
+	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
 		passwordResetTokenRepository,
 		userRepository,
@@ -94,6 +107,7 @@ func InitializeServer() db.Client {
 	activityStyleController := controller.NewActivityStyleController(activityStyleUseCase)
 	budgetController := controller.NewBudgetController(budgetUseCase)
 	bureauController := controller.NewBureauController(bureauUseCase)
+	buyReportContoroller := controller.NewBuyReportController(buyReportUseCase)
 	departmentController := controller.NewDepartmentController(departmentUseCase)
 	divisionController := controller.NewDivisionController(divisionUseCase)
 	expenseController := controller.NewExpenseController(expenseUseCase)
@@ -102,6 +116,7 @@ func InitializeServer() db.Client {
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
+	objectUploadController := controller.NewObjectUploadController(objectHandleUseCase)
 	passwordResetTokenController := controller.NewPasswordResetTokenController(
 		passwordResetTokenUseCase,
 	)
@@ -124,6 +139,7 @@ func InitializeServer() db.Client {
 		activityStyleController,
 		budgetController,
 		bureauController,
+		buyReportContoroller,
 		departmentController,
 		divisionController,
 		expenseController,
@@ -132,6 +148,7 @@ func InitializeServer() db.Client {
 		fundInformationController,
 		healthcheckController,
 		mailAuthController,
+		objectUploadController,
 		passwordResetTokenController,
 		purchaseItemController,
 		purchaseOrderController,
@@ -148,7 +165,7 @@ func InitializeServer() db.Client {
 	// ↓
 
 	// Server
-	server.RunServer(router)
+	e := server.RunServer(router)
 
-	return client
+	return client, e
 }

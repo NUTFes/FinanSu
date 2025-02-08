@@ -20,6 +20,8 @@ type SponsorController interface {
 	UpdateSponsor(echo.Context) error
 	DestroySponsor(echo.Context) error
 	IndexSponsorByPeriod(echo.Context) error
+	CreateSponsorsByCsv(echo.Context) error
+	IndexSponsorsByRowAffected(echo.Context) error
 }
 
 func NewSponsorController(u usecase.SponsorUseCase) SponsorController {
@@ -92,10 +94,37 @@ func (s *sponsorController) DestroySponsor(c echo.Context) error {
 	return c.String(http.StatusOK, "Destroy Sponsor")
 }
 
-//年度別に取得
+// 年度別に取得
 func (s *sponsorController) IndexSponsorByPeriod(c echo.Context) error {
 	year := c.Param("year")
 	sponsors, err := s.u.GetSponsorByPeriod(c.Request().Context(), year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, sponsors)
+}
+
+// cavで一括登録
+func (s *sponsorController) CreateSponsorsByCsv(c echo.Context) error {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return err
+	}
+	csv, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer csv.Close()
+	csvSponsor, err := s.u.CreateSponsorsByCsv(c.Request().Context(), csv)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+	return c.JSON(http.StatusOK, csvSponsor)
+}
+
+func (s *sponsorController) IndexSponsorsByRowAffected(c echo.Context) error {
+	row := c.Param("row")
+	sponsors, err := s.u.GetSponsorByRowAffected(c.Request().Context(), row)
 	if err != nil {
 		return err
 	}
