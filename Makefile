@@ -73,6 +73,10 @@ ent-db:
 run-eslint:
 	docker compose exec view npm run lint
 
+# apiテストの実行
+run-test:
+	docker compose exec api go test ./test -v
+
 gen:
 	make gen-api
 	make gen-front-api
@@ -90,3 +94,4 @@ run-all:
 	make run-db
 	make run
 	make run-swagger
+

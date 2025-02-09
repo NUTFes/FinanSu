@@ -10,27 +10,10 @@ CREATE TABLE item_budgets (
     FOREIGN KEY festival_item_id_foreign_key (festival_item_id) REFERENCES festival_items (id)
 );
 
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (1000, 1);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (500, 2);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (2000, 3);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (0, 4);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (3000, 5);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (500, 6);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (2000, 7);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (1500, 8);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (4000, 9);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (3000, 10);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (1000, 11);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (1500, 12);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (3000, 13);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (2000, 14);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (1000, 15);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (2500, 16);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (4000, 17);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (3000, 18);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (1000, 19);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (2500, 20);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (4000, 21);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (3000, 22);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (1000, 23);
-INSERT INTO item_budgets (amount, festival_item_id) VALUES (2500, 24);
+INSERT INTO item_budgets (amount, festival_item_id) VALUES (10000, 1);
+INSERT INTO item_budgets (amount, festival_item_id) VALUES (10000, 2);
+INSERT INTO item_budgets (amount, festival_item_id) VALUES (10000, 3);
+INSERT INTO item_budgets (amount, festival_item_id) VALUES (20000, 4);
+INSERT INTO item_budgets (amount, festival_item_id) VALUES (50000, 5);
+INSERT INTO item_budgets (amount, festival_item_id) VALUES (1500000, 6);
+INSERT INTO item_budgets (amount, festival_item_id) VALUES (10000, 7);

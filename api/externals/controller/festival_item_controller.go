@@ -14,6 +14,7 @@ type festivalItemController struct {
 
 type FestivalItemController interface {
 	IndexFestivalItems(echo.Context) error
+	IndexFestivalItemsForMypage(echo.Context) error
 	CreateFestivalItem(echo.Context) error
 	UpdateFestivalItem(echo.Context) error
 	DestroyFestivalItem(echo.Context) error
@@ -30,6 +31,19 @@ func (f *festivalItemController) IndexFestivalItems(c echo.Context) error {
 	var festivalItemDetails FestivalItemDetails
 
 	festivalItemDetails, err := f.u.GetFestivalItems(ctx, year, divisionId)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, festivalItemDetails)
+}
+
+func (f *festivalItemController) IndexFestivalItemsForMypage(c echo.Context) error {
+	ctx := c.Request().Context()
+	userId := c.Param("user_id")
+	year := c.QueryParam("year")
+	var festivalItemDetails []FestivalItemsForMyPage
+
+	festivalItemDetails, err := f.u.GetFestivalItemsForMypage(ctx, year, userId)
 	if err != nil {
 		return err
 	}
@@ -76,3 +90,4 @@ func (f *festivalItemController) DestroyFestivalItem(c echo.Context) error {
 
 type FestivalItemDetails = generated.FestivalItemDetails
 type FestivalItem = generated.FestivalItem
+type FestivalItemsForMyPage = generated.FestivalItemsForMyPage

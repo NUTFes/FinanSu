@@ -11,6 +11,7 @@ type router struct {
 	activityStyleController       controller.ActivityStyleController
 	budgetController              controller.BudgetController
 	bureauController              controller.BureauController
+	buyReportController           controller.BuyReportController
 	departmentController          controller.DepartmentController
 	expenseController             controller.ExpenseController
 	festivalItemController        controller.FestivalItemController
@@ -19,6 +20,7 @@ type router struct {
 	fundInformationController     controller.FundInformationController
 	healthcheckController         controller.HealthcheckController
 	mailAuthController            controller.MailAuthController
+	objectUploadController        controller.ObjectUploadController
 	passwordResetTokenController  controller.PasswordResetTokenController
 	purchaseItemController        controller.PurchaseItemController
 	purchaseOrderController       controller.PurchaseOrderController
@@ -42,6 +44,7 @@ func NewRouter(
 	activitystyleController controller.ActivityStyleController,
 	budgetController controller.BudgetController,
 	bureauController controller.BureauController,
+	buyReportController controller.BuyReportController,
 	departmentController controller.DepartmentController,
 	divisionController controller.DivisionController,
 	expenseController controller.ExpenseController,
@@ -50,6 +53,7 @@ func NewRouter(
 	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
 	mailAuthController controller.MailAuthController,
+	objectUploadController controller.ObjectUploadController,
 	passwordResetTokenController controller.PasswordResetTokenController,
 	purchaseItemController controller.PurchaseItemController,
 	purchaseOrderController controller.PurchaseOrderController,
@@ -68,6 +72,7 @@ func NewRouter(
 		activitystyleController,
 		budgetController,
 		bureauController,
+		buyReportController,
 		departmentController,
 		expenseController,
 		festivalItemController,
@@ -76,6 +81,7 @@ func NewRouter(
 		fundInformationController,
 		healthController,
 		mailAuthController,
+		objectUploadController,
 		passwordResetTokenController,
 		purchaseItemController,
 		purchaseOrderController,
@@ -142,6 +148,11 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/bureaus/:id", r.bureauController.UpdateBureau)
 	e.DELETE("/bureaus/:id", r.bureauController.DestroyBureau)
 
+	// buyReportsのRoute
+	e.POST("/buy_reports", r.buyReportController.CreateBuyReport)
+	e.PUT("/buy_reports/:id", r.buyReportController.UpdateBuyReport)
+	e.DELETE("/buy_reports/:id", r.buyReportController.DeleteBuyReport)
+
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
 
@@ -172,6 +183,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// festival items
 	e.GET("/festival_items", r.festivalItemController.IndexFestivalItems)
+	e.GET("/festival_items/details/:user_id", r.festivalItemController.IndexFestivalItemsForMypage)
 	e.POST("/festival_items", r.festivalItemController.CreateFestivalItem)
 	e.PUT("/festival_items/:id", r.festivalItemController.UpdateFestivalItem)
 	e.DELETE("/festival_items/:id", r.festivalItemController.DestroyFestivalItem)
@@ -203,6 +215,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/mail_auth/signin", r.mailAuthController.SignIn)
 	e.DELETE("/mail_auth/signout", r.mailAuthController.SignOut)
 	e.GET("/mail_auth/is_signin", r.mailAuthController.IsSignIn)
+
+	// objectUploadテスト
+	e.POST("/upload_file", r.objectUploadController.UploadObject)
 
 	//password_reset
 	e.POST("/password_reset/:id", r.passwordResetTokenController.ChangePassword)
@@ -268,6 +283,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/sponsors/:id", r.sponsorController.UpdateSponsor)
 	e.DELETE("/sponsors/:id", r.sponsorController.DestroySponsor)
 	e.GET("/sponsors/periods/:year", r.sponsorController.IndexSponsorByPeriod)
+	e.POST("/sponsors/csv", r.sponsorController.CreateSponsorsByCsv)
+	e.GET("/sponsors/rowAffected/:row", r.sponsorController.IndexSponsorsByRowAffected)
 
 	// sponsorstylesのRoute
 	e.GET("/sponsorstyles", r.sponsorStyleController.IndexSponsorStyle)
