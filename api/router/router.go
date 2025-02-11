@@ -152,6 +152,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/buy_reports", r.buyReportController.CreateBuyReport)
 	e.PUT("/buy_reports/:id", r.buyReportController.UpdateBuyReport)
 	e.DELETE("/buy_reports/:id", r.buyReportController.DeleteBuyReport)
+	e.GET("/buy_reports/details", r.buyReportController.IndexBuyReport)
+	e.PUT("/buy_report/status/:buy_report_id", r.buyReportController.UpdateBuyReportStatus)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)

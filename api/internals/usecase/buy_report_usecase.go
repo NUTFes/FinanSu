@@ -10,6 +10,7 @@ import (
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"github.com/pkg/errors"
 )
 
 type buyReportUseCase struct {
@@ -22,6 +23,8 @@ type BuyReportUseCase interface {
 	CreateBuyReport(context.Context, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	UpdateBuyReport(context.Context, string, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	DeleteBuyReport(context.Context, string) error
+	GetBuyReports(context.Context, string) ([]BuyReportDetail, error)
+	UpdateBuyReportStatus(context.Context, string, PutBuyReport) (BuyReportDetail, error)
 }
 
 func NewBuyReportUseCase(bRep rep.BuyReportRepository, tRep rep.TransactionRepository, oRep rep.ObjectHandleRepository) BuyReportUseCase {
@@ -240,8 +243,71 @@ func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId stri
 	return nil
 }
 
+func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]BuyReportDetail, error) {
+	var buyReportDetails []BuyReportDetail
+
+	rows, err := bru.bRep.AllByPeriod(c, year)
+	if err != nil {
+		return []BuyReportDetail{}, nil
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		detail := BuyReportDetail{}
+		err := rows.Scan(
+			&detail.Amount,
+			&detail.DivisionName,
+			&detail.FestivalItemName,
+			&detail.FinancialRecordName,
+			&detail.Id,
+			&detail.IsPacked,
+			&detail.IsSettled,
+			&detail.PaidBy,
+			&detail.ReportDate,
+		)
+
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+
+		buyReportDetails = append(buyReportDetails, detail)
+	}
+
+	return buyReportDetails, nil
+}
+
+func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) (BuyReportDetail, error) {
+
+	detail := BuyReportDetail{}
+
+	row, err := bru.bRep.UpdateBuyReportStatus(c, buyReportId, requestBody)
+	if err != nil {
+		return BuyReportDetail{}, nil
+	}
+
+	err = row.Scan(
+		&detail.Amount,
+		&detail.DivisionName,
+		&detail.FestivalItemName,
+		&detail.FinancialRecordName,
+		&detail.Id,
+		&detail.IsPacked,
+		&detail.IsSettled,
+		&detail.PaidBy,
+		&detail.ReportDate,
+	)
+
+	if err != nil {
+		return detail, errors.Wrapf(err, "cannot connect SQL")
+	}
+
+	return detail, nil
+}
+
 type PostBuyReport = generated.BuyReport
 type PaymentReceiptWithYear = domain.PaymentReceiptWithYear
+type BuyReportDetail = generated.BuyReportDetail
+type PutBuyReport = generated.PutBuyReportStatusBuyReportIdJSONRequestBody
 
 var DIR_NAME = "receipts"
 
