@@ -1,18 +1,17 @@
 import { GrStatusGoodSmall } from 'react-icons/gr';
+import { BuyReportInformationStatus } from '@/generated/model';
 
 interface StatusProps {
-  status: '確認中...' | '封詰め' | '清算完了' | null;
+  status: BuyReportInformationStatus;
 }
 
 const Status = ({ status }: StatusProps) => {
-  if (!status) return null;
-
   let statusText = '';
   let iconColor = '';
 
   switch (status) {
-    case '確認中...':
-      statusText = '確認中';
+    case '確認中':
+      statusText = '確認中...';
       iconColor = '#FFA53C';
       break;
     case '封詰め':
