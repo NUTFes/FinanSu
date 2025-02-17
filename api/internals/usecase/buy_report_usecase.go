@@ -267,7 +267,7 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 		)
 
 		if err != nil {
-			return nil, errors.Wrapf(err, "cannot connect SQL")
+			return nil, errors.Wrapf(err, "failed to scan SQL row")
 		}
 
 		buyReportDetails = append(buyReportDetails, detail)
@@ -280,9 +280,14 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 
 	detail := BuyReportDetail{}
 
-	row, err := bru.bRep.UpdateBuyReportStatus(c, buyReportId, requestBody)
+	err := bru.bRep.UpdateBuyReportStatus(c, buyReportId, requestBody)
 	if err != nil {
-		return BuyReportDetail{}, nil
+		return BuyReportDetail{}, err
+	}
+
+	row, err := bru.bRep.AllByPeriod(c, buyReportId)
+	if err != nil {
+		return BuyReportDetail{}, err
 	}
 
 	err = row.Scan(
@@ -298,7 +303,7 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 	)
 
 	if err != nil {
-		return detail, errors.Wrapf(err, "cannot connect SQL")
+		return detail, errors.Wrapf(err, "failed to scan SQL row for buy report id %s", buyReportId)
 	}
 
 	return detail, nil

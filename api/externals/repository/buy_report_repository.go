@@ -26,7 +26,7 @@ type BuyReportRepository interface {
 	GetBuyReportById(context.Context, string) (*sql.Row, error)
 	GetYearByBuyReportId(context.Context, *sql.Tx, string) (*sql.Row, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
-	UpdateBuyReportStatus(context.Context, string, PutBuyReport) (*sql.Row, error)
+	UpdateBuyReportStatus(context.Context, string, PutBuyReport) error
 }
 
 func NewBuyReportRepository(c db.Client, ac abstract.Crud) BuyReportRepository {
@@ -222,7 +222,7 @@ func (brr *buyReportRepository) AllByPeriod(c context.Context, year string) (*sq
 	return brr.crud.Read(c, query)
 }
 
-func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) (*sql.Row, error) {
+func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) error {
 
 	updateDs := dialect.Update("buy_statuses").
 		Set(goqu.Record{
@@ -232,24 +232,18 @@ func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, buyRepo
 		}).
 		Where(goqu.Ex{"buy_report_id": buyReportId})
 
-	updateQuery, _, err := updateDs.ToSQL()
+	query, _, err := updateDs.ToSQL()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = brr.crud.UpdateDB(c, updateQuery)
+	err = brr.crud.UpdateDB(c, query)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	getDs := selectBuyReportDetailsQuery.Where(goqu.Ex{"buy_statuses.buy_report_id": buyReportId})
+	return nil
 
-	query, _, err := getDs.ToSQL()
-	if err != nil {
-		return nil, err
-	}
-
-	return brr.crud.ReadByID(c, query)
 }
 
 type PostBuyReport = generated.BuyReport
