@@ -89,7 +89,11 @@ const TableItem: React.FC<TableItemProps> = ({
         <td className='px-2 py-4 align-top'></td>
       </tr>
       {isExpanded && hasSubitems && item.buyReports && (
-        <TableSubItem items={item.buyReports} truncateItemName={truncateItemName} />
+        <TableSubItem
+          items={item.buyReports}
+          itemsName={item?.festivalItemName}
+          truncateItemName={truncateItemName}
+        />
       )}
     </>
   );
@@ -98,10 +102,11 @@ const TableItem: React.FC<TableItemProps> = ({
 // テーブルのサブ項目
 interface TableSubItemProps {
   items: BuyReportInformation[];
+  itemsName: string | undefined;
   truncateItemName: (value: string, maxLen?: number) => string;
 }
 
-const TableSubItem: React.FC<TableSubItemProps> = ({ items, truncateItemName }) => {
+const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateItemName }) => {
   return (
     <tr>
       <td colSpan={5}>
@@ -115,7 +120,7 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, truncateItemName }) 
                 {items.map((item) => (
                   <tr key={item.buyReportName}>
                     <td className='w-[30%] text-nowrap px-2 py-2 text-left'>
-                      {truncateItemName('')}
+                      {truncateItemName(itemsName || '')}
                     </td>
                     <td className='w-[15%] text-nowrap px-2 py-2 text-center'>
                       {convertDate(item?.reportDate ?? '')}
