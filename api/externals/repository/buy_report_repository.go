@@ -26,6 +26,7 @@ type BuyReportRepository interface {
 	GetBuyReportById(context.Context, string) (*sql.Row, error)
 	GetYearByBuyReportId(context.Context, *sql.Tx, string) (*sql.Row, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
+	AllByBuyReportId(context.Context, string) (*sql.Row, error)
 	UpdateBuyReportStatus(context.Context, string, PutBuyReport) error
 }
 
@@ -220,6 +221,19 @@ func (brr *buyReportRepository) AllByPeriod(c context.Context, year string) (*sq
 	}
 
 	return brr.crud.Read(c, query)
+}
+
+func (brr *buyReportRepository) AllByBuyReportId(c context.Context, buyReportId string) (*sql.Row, error) {
+
+	ds := selectBuyReportDetailsQuery.Where(goqu.Ex{"buy_statuses.buy_report_id": buyReportId})
+
+	query, _, err := ds.ToSQL()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return brr.crud.ReadByID(c, query)
 }
 
 func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) error {
