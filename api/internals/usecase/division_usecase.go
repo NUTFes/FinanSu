@@ -13,6 +13,7 @@ type divisionUseCase struct {
 
 type DivisionUseCase interface {
 	GetDivisions(context.Context, string, string) (DivisionDetails, error)
+	GetDivisionOptions(context.Context, string, string) ([]DivisionOption, error)
 	CreateDivision(context.Context, Division) (DivisionWithBalance, error)
 	UpdateDivision(context.Context, string, Division) (DivisionWithBalance, error)
 	DestroyDivision(context.Context, string) error
@@ -67,6 +68,33 @@ func (du divisionUseCase) GetDivisions(c context.Context, year string, financial
 	details.Total = &total
 
 	return details, nil
+}
+
+func (du *divisionUseCase) GetDivisionOptions(
+	c context.Context,
+	year string,
+	user_id string,
+) ([]DivisionOption, error) {
+	var divisionOptions []DivisionOption
+
+	rows, err := du.rep.GetDivisionOptionsByUserId(c, year, user_id)
+	if err != nil {
+		return divisionOptions, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var divisionOption DivisionOption
+		if err = rows.Scan(
+			&divisionOption.DivisionId,
+			&divisionOption.Name,
+		); err != nil {
+			return divisionOptions, err
+		}
+
+		divisionOptions = append(divisionOptions, divisionOption)
+	}
+	return divisionOptions, nil
 }
 
 func (du *divisionUseCase) CreateDivision(
@@ -140,4 +168,5 @@ type (
 	Division            = generated.Division
 	DivisionDetails     = generated.DivisionDetails
 	DivisionWithBalance = generated.DivisionWithBalance
+	DivisionOption      = generated.DivisionOption
 )
