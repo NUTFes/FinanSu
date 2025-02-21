@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
 import { TbDownload } from 'react-icons/tb';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { get } from '@api/api_methods';
-import { Card, Checkbox, DeleteButton, EditButton, Title } from '@components/common';
+import { Card, Checkbox, DeleteButton, EditButton, Title, Modal } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import { YearPeriod } from '@type/common';
 
@@ -121,6 +122,7 @@ export async function getServerSideProps() {
 }
 
 export default function PurchaseReports({ yearPeriods }: { yearPeriods: YearPeriod[] }) {
+  const router = useRouter();
   const [reports] = useState<BuyReport[]>(MOCK_BUY_REPORTS);
   const [selectedYear, setSelectedYear] = useState<string>(String(yearPeriods[0].year));
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>(
@@ -151,6 +153,19 @@ export default function PurchaseReports({ yearPeriods }: { yearPeriods: YearPeri
       ...prev,
       [id]: !prev[id],
     }));
+  };
+
+  const handleEdit = (report: BuyReport) => {
+    router.push({
+      pathname: '/create_purchase_report',
+      query: {
+        from: 'purchase_report_list',
+        reportId: report.id,
+        festivalItemName: report.festivalItemName,
+        amount: report.amount,
+        paidBy: report.paidBy,
+      },
+    });
   };
 
   return (
@@ -255,6 +270,7 @@ export default function PurchaseReports({ yearPeriods }: { yearPeriods: YearPeri
                             <div className='mx-1'>
                               <EditButton
                                 isDisabled={sealChecks[report.id] && settlementChecks[report.id]}
+                                onClick={() => handleEdit(report)}
                               />
                             </div>
                             <div className='mx-1'>
