@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { TbDownload } from 'react-icons/tb';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { get } from '@api/api_methods';
-import { Card, Checkbox, DeleteButton, EditButton, Title, Modal } from '@components/common';
+import { Card, Checkbox, EditButton, Title } from '@components/common';
+import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import MainLayout from '@components/layout/MainLayout';
 import { YearPeriod } from '@type/common';
 
@@ -274,7 +275,8 @@ export default function PurchaseReports({ yearPeriods }: { yearPeriods: YearPeri
                               />
                             </div>
                             <div className='mx-1'>
-                              <DeleteButton
+                              <OpenDeleteModalButton
+                                id={report.id}
                                 isDisabled={sealChecks[report.id] && settlementChecks[report.id]}
                               />
                             </div>
