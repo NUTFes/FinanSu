@@ -1,11 +1,11 @@
 import { Box, Button, FormControl, FormLabel, Input, Select, VStack, Text } from '@chakra-ui/react';
 import { Noto_Sans_JP } from 'next/font/google';
+import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { GoPlus } from 'react-icons/go';
 import { PrimaryButton, Title } from '@/components/common';
 import MainLayout from '@/components/layout/MainLayout';
-import { useRouter } from 'next/router';
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
