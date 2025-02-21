@@ -212,6 +212,7 @@ const PurchaseReportPage = () => {
                 className='underline underline-offset-[5px]'
                 colorScheme='red'
                 variant='ghost'
+                onClick={router.back}
               >
                 キャンセル
               </Button>
