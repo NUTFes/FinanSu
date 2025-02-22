@@ -187,11 +187,12 @@ var selectFinancialRecordQueryForCsvExceptItem = dialect.Select(
 	goqu.L("0").As("expense")).
 	From("financial_records").
 	LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
-	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).Where(goqu.Or(
-	goqu.Ex{
-		"divisions.id": goqu.Op{"notIn": dialect.Select("festival_items.division_id").From("festival_items")},
-	},
-	goqu.Ex{
-		"financial_records.id": goqu.Op{"notIn": dialect.Select("divisions.financial_record_id").From("divisions")},
-	},
-))
+	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+	Where(goqu.Or(
+		goqu.Ex{
+			"divisions.id": goqu.Op{"notIn": dialect.Select("festival_items.division_id").From("festival_items")},
+		},
+		goqu.Ex{
+			"financial_records.id": goqu.Op{"notIn": dialect.Select("divisions.financial_record_id").From("divisions")},
+		},
+	))
