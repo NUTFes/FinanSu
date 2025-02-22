@@ -83,6 +83,7 @@ export * from './getExpensesId200';
 export * from './getExpensesIdDetails200';
 export * from './getFestivalItemsDetailsUserIdParams';
 export * from './getFestivalItemsParams';
+export * from './getFinancialRecordsCsvDownloadParams';
 export * from './getFinancialRecordsParams';
 export * from './getFundInformations200';
 export * from './getFundInformationsDetails200';

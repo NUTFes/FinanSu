@@ -86,6 +86,7 @@ import type {
   GetExpensesIdDetails200,
   GetFestivalItemsDetailsUserIdParams,
   GetFestivalItemsParams,
+  GetFinancialRecordsCsvDownloadParams,
   GetFinancialRecordsParams,
   GetFundInformations200,
   GetFundInformationsDetails200,
@@ -3770,6 +3771,64 @@ export const useDeleteFinancialRecordsId = <TError = unknown>(
   const swrFn = getDeleteFinancialRecordsIdMutationFetcher(id, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * financial_recordの年度予算のCSVをダウンロード
+ */
+export type getFinancialRecordsCsvDownloadResponse = {
+  data: Blob;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetFinancialRecordsCsvDownloadUrl = (params: GetFinancialRecordsCsvDownloadParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  return normalizedParams.size ? `/financial_records/csv/download?${normalizedParams.toString()}` : `/financial_records/csv/download`
+}
+
+export const getFinancialRecordsCsvDownload = async (params: GetFinancialRecordsCsvDownloadParams, options?: RequestInit): Promise<getFinancialRecordsCsvDownloadResponse> => {
+  
+  return customFetch<Promise<getFinancialRecordsCsvDownloadResponse>>(getGetFinancialRecordsCsvDownloadUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetFinancialRecordsCsvDownloadKey = (params: GetFinancialRecordsCsvDownloadParams,) => [`/financial_records/csv/download`, ...(params ? [params]: [])] as const;
+
+export type GetFinancialRecordsCsvDownloadQueryResult = NonNullable<Awaited<ReturnType<typeof getFinancialRecordsCsvDownload>>>
+export type GetFinancialRecordsCsvDownloadQueryError = unknown
+
+export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
+  params: GetFinancialRecordsCsvDownloadParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecordsCsvDownload>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFinancialRecordsCsvDownloadKey(params) : null);
+  const swrFn = () => getFinancialRecordsCsvDownload(params, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,

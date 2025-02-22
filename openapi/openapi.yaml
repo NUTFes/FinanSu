@@ -1335,6 +1335,31 @@ paths:
             application/json:
               schema:
                 type: object
+  /financial_records/csv/download:
+    get:
+      tags:
+        - financial_record
+      description: financial_recordの年度予算のCSVをダウンロード
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: financial_recordの年度予算のCSV取得
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=financial_record.csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
   /fund_informations:
     get:
       tags:

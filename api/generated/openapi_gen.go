@@ -393,6 +393,12 @@ type GetFinancialRecordsParams struct {
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
+// GetFinancialRecordsCsvDownloadParams defines parameters for GetFinancialRecordsCsvDownload.
+type GetFinancialRecordsCsvDownloadParams struct {
+	// Year year
+	Year int `form:"year" json:"year"`
+}
+
 // PostFundInformationsParams defines parameters for PostFundInformations.
 type PostFundInformationsParams struct {
 	// UserId user_id
@@ -814,6 +820,9 @@ type ServerInterface interface {
 
 	// (POST /financial_records)
 	PostFinancialRecords(ctx echo.Context) error
+
+	// (GET /financial_records/csv/download)
+	GetFinancialRecordsCsvDownload(ctx echo.Context, params GetFinancialRecordsCsvDownloadParams) error
 
 	// (DELETE /financial_records/{id})
 	DeleteFinancialRecordsId(ctx echo.Context, id int) error
@@ -2024,6 +2033,24 @@ func (w *ServerInterfaceWrapper) PostFinancialRecords(ctx echo.Context) error {
 	return err
 }
 
+// GetFinancialRecordsCsvDownload converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFinancialRecordsCsvDownload(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetFinancialRecordsCsvDownloadParams
+	// ------------- Required query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetFinancialRecordsCsvDownload(ctx, params)
+	return err
+}
+
 // DeleteFinancialRecordsId converts echo context to params.
 func (w *ServerInterfaceWrapper) DeleteFinancialRecordsId(ctx echo.Context) error {
 	var err error
@@ -3171,6 +3198,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/festival_items/:id", wrapper.PutFestivalItemsId)
 	router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
 	router.POST(baseURL+"/financial_records", wrapper.PostFinancialRecords)
+	router.GET(baseURL+"/financial_records/csv/download", wrapper.GetFinancialRecordsCsvDownload)
 	router.DELETE(baseURL+"/financial_records/:id", wrapper.DeleteFinancialRecordsId)
 	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
 	router.GET(baseURL+"/fund_informations", wrapper.GetFundInformations)
