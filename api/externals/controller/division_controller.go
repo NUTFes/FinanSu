@@ -39,13 +39,13 @@ func (d *divisionController) IndexDivisions(c echo.Context) error {
 func (d *divisionController) GetDivisionOptions(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
-	user_id := c.QueryParam("user_id")
+	userId := c.QueryParam("user_id")
 
-	divisionDetails, err := d.u.GetDivisionOptions(ctx, year, user_id)
+	divisionOptions, err := d.u.GetDivisionOptions(ctx, year, userId)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, divisionDetails)
+	return c.JSON(http.StatusOK, divisionOptions)
 }
 
 func (d *divisionController) CreateDivision(c echo.Context) error {
