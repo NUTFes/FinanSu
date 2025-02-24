@@ -74,7 +74,7 @@ export const MyPageLinkItems: LinkItemProps[] = [
   {
     name: 'マイページ',
     icon: <MdFaceUnlock className='mx-2 text-xl' />,
-    href: '/mypage',
+    href: '/my_page',
     isParent: false,
   },
 ];
