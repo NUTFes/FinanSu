@@ -17,6 +17,8 @@ type BuyReportController interface {
 	CreateBuyReport(echo.Context) error
 	UpdateBuyReport(echo.Context) error
 	DeleteBuyReport(echo.Context) error
+	IndexBuyReport(echo.Context) error
+	UpdateBuyReportStatus(echo.Context) error
 }
 
 func NewBuyReportController(u usecase.BuyReportUseCase) BuyReportController {
@@ -88,4 +90,36 @@ func (s *buyReportController) DeleteBuyReport(c echo.Context) error {
 	return c.String(http.StatusOK, "buy_report delete success")
 }
 
+// Index
+func (s *buyReportController) IndexBuyReport(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to buy_reports")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetails)
+}
+
+// UpdateStatus
+func (s *buyReportController) UpdateBuyReportStatus(c echo.Context) error {
+	ctx := c.Request().Context()
+	buyReportId := c.Param("buy_report_id")
+	var requestBody BuyReportStatusRequestBody
+	if err := c.Bind(&requestBody); err != nil {
+		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+
+	buyReportDetail, err := s.u.UpdateBuyReportStatus(ctx, buyReportId, requestBody)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed update buy_reports")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetail)
+}
+
 type BuyReport = generated.BuyReport
+type BuyReportDetails = []generated.BuyReportDetail
+type BuyReportStatusRequestBody = generated.PutBuyReportStatusBuyReportIdJSONRequestBody
