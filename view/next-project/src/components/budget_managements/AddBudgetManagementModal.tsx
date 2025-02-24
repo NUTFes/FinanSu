@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useGetFinancialRecords, useGetDivisions, postFestivalItems } from '@/generated/hooks';
-import { DivisionWithBalance, FinancialRecordWithBalance, GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
+import { DivisionWithBalance, FinancialRecordWithBalance, GetDivisionsParams } from '@/generated/model';
 import { PrimaryButton, Input, Modal, Loading } from '@components/common';
 
 export interface ModalProps {
@@ -21,9 +21,6 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
 
   const divisionsParams: GetDivisionsParams = {
     financial_record_id: financialRecordId ?? undefined,
-  };
-  const festivalItemsParams: GetFestivalItemsParams = {
-    division_id: divisionId ?? undefined,
   };
 
   const {
@@ -80,6 +77,8 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
     return <div>error...</div>;
   }
 
+  const isDisabled = !name || name.trim() === '' || amount === null;
+
   return (
     <Modal className='md:w-1/2'>
       <div className='ml-auto w-fit'>
@@ -134,16 +133,24 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           />
         </div>
       </div>
-      <div className='flex justify-center gap-4'>
+      <div className='flex flex-col justify-center items-center gap-4'>
         <PrimaryButton
+          disabled={isDisabled}
           onClick={() => {
             registBudget();
             router.reload();
-            closeModal();
           }}
         >
           登録する
         </PrimaryButton>
+        <div
+          className='underline text-red-600 cursor-default'
+          onClick={() => {
+            closeModal();
+          }}
+        >
+          キャンセル
+        </div>
       </div>
     </Modal>
   );
