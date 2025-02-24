@@ -1,13 +1,15 @@
+import { Tooltip } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
 import { IoMdDownload } from 'react-icons/io';
 
 interface Props {
   onClick?: () => void;
   isDisabled?: boolean;
+  tooltip?: string;
 }
 
 const DownloadButton = (props: Props) => {
-  const { onClick, isDisabled = false } = props;
+  const { onClick, isDisabled = false, tooltip = 'ダウンロード' } = props;
 
   const buttonClass = useMemo(() => {
     if (isDisabled) {
@@ -18,14 +20,16 @@ const DownloadButton = (props: Props) => {
   }, [isDisabled]);
 
   return (
-    <button
-      disabled={isDisabled}
-      className={`${buttonClass} flex h-6 w-6 min-w-0 items-center justify-center rounded-full`}
-      onClick={onClick}
-      suppressHydrationWarning
-    >
-      <IoMdDownload size={'15px'} color={'white'} />
-    </button>
+    <Tooltip label={tooltip} hasArrow>
+      <button
+        disabled={isDisabled}
+        className={`${buttonClass} flex h-6 w-6 min-w-0 items-center justify-center rounded-full`}
+        onClick={onClick}
+        suppressHydrationWarning
+      >
+        <IoMdDownload size={'15px'} color={'white'} />
+      </button>
+    </Tooltip>
   );
 };
 

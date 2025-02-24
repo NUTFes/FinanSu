@@ -270,7 +270,7 @@ export default function PurchaseReports({ yearPeriods }: { yearPeriods: YearPeri
                         <td>
                           <div className='flex'>
                             <div className='mx-1'>
-                              <DownloadButton />
+                              <DownloadButton tooltip='レシートダウンロード' />
                             </div>
                             <div className='mx-1'>
                               <EditButton
