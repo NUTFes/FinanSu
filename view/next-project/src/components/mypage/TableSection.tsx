@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { VscTriangleRight, VscTriangleDown } from 'react-icons/vsc';
 import Status from './Status';
-import {
+import type {
   BuyReportInformation,
   FestivalItemsForMyPage,
   FestivalItemWithReport,
