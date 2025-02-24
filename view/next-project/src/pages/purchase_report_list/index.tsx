@@ -7,6 +7,7 @@ import { Card, Checkbox, EditButton, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import { YearPeriod } from '@type/common';
+import DownloadButton from '@/components/common/DownloadButton';
 
 // API実装後に削除する
 const MOCK_BUY_REPORTS: BuyReport[] = [
@@ -268,6 +269,9 @@ export default function PurchaseReports({ yearPeriods }: { yearPeriods: YearPeri
                         </td>
                         <td>
                           <div className='flex'>
+                            <div className='mx-1'>
+                              <DownloadButton />
+                            </div>
                             <div className='mx-1'>
                               <EditButton
                                 isDisabled={sealChecks[report.id] && settlementChecks[report.id]}
