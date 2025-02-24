@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { TbDownload } from 'react-icons/tb';
+import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { get } from '@api/api_methods';
 import { Card, Checkbox, EditButton, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import { YearPeriod } from '@type/common';
-import DownloadButton from '@/components/common/DownloadButton';
 
 // API実装後に削除する
 const MOCK_BUY_REPORTS: BuyReport[] = [
