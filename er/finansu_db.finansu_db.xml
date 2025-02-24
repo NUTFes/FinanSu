@@ -114,7 +114,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="divisions" numRows="4" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="divisions" numRows="5" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="division_id" foreignKey="festival_items_ibfk_1" implied="false" onDeleteCascade="false" table="festival_items"/>
             <child catalog="finansu_db" column="group_id" foreignKey="user_groups_ibfk_2" implied="false" onDeleteCascade="false" table="user_groups"/>
@@ -165,7 +165,7 @@
             <column ascending="true" name="division_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="financial_records" numRows="2" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="financial_records" numRows="3" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="financial_record_id" foreignKey="divisions_ibfk_1" implied="false" onDeleteCascade="false" table="divisions"/>
          </column>
@@ -335,7 +335,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="session" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="session" numRows="1" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="auth_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="user_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
