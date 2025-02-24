@@ -171,8 +171,9 @@ export default function BudgetManagement() {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
-                      }`}
+                    className={`cursor-pointer ${
+                      index !== displayItems.length - 1 ? 'border-b' : ''
+                    }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>
