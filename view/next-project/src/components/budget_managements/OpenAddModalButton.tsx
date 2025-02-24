@@ -1,14 +1,16 @@
+import clsx from 'clsx';
 import * as React from 'react';
 import { useState } from 'react';
 
 import { AddButton } from '../common';
+import { DivisionWithBalance, FinancialRecordWithBalance } from '@/generated/model';
 import AddModal from '@components/budget_managements/AddBudgetManagementModal';
-import { Source, Year } from '@type/common';
 
 interface Props {
+  financialRecord: FinancialRecordWithBalance[];
+  divisions: DivisionWithBalance[];
+  className?: string;
   children?: React.ReactNode;
-  sources: Source[];
-  years: Year[];
 }
 
 export default function OpenAddModalButton(props: Props) {
@@ -17,6 +19,7 @@ export default function OpenAddModalButton(props: Props) {
   return (
     <>
       <AddButton
+        className={clsx(props.className)}
         onClick={() => {
           setShowModal(true);
         }}
@@ -24,7 +27,7 @@ export default function OpenAddModalButton(props: Props) {
         {props.children}
       </AddButton>
       {showModal && (
-        <AddModal setShowModal={setShowModal} years={props.years} />
+        <AddModal setShowModal={setShowModal} financialRecord={props.financialRecord} divisions={props.divisions} />
       )}
     </>
   );

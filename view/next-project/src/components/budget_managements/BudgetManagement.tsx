@@ -1,5 +1,6 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
-import { Card, EditButton, AddButton, Title, Loading } from '@/components/common';
+import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
+import { Card, EditButton, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import { GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
@@ -115,7 +116,7 @@ export default function BudgetManagement() {
                 className='border-b border-black-300 focus:outline-none'
               >
                 <option value=''>ALL</option>
-                {financialRecords.map((financialRecord) => (
+                {financialRecords && financialRecords.map((financialRecord) => (
                   <option key={financialRecord.id} value={financialRecord.id}>
                     {financialRecord.name}
                   </option>
@@ -130,7 +131,7 @@ export default function BudgetManagement() {
                 className='border-b border-black-300 focus:outline-none'
               >
                 <option value=''>ALL</option>
-                {divisions.map((division) => (
+                {divisions && divisions.map((division) => (
                   <option key={division.id} value={division.id}>
                     {division.name}
                   </option>
@@ -140,7 +141,7 @@ export default function BudgetManagement() {
           </div>
           <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
-            <AddButton className='w-full md:w-fit'>{title}登録</AddButton>
+            <OpenAddModalButton className='w-full md:w-fit' financialRecord={financialRecords} divisions={divisions}>{title}登録</OpenAddModalButton>
           </div>
         </div>
         <div className='mt-5 overflow-x-auto'>
@@ -158,16 +159,15 @@ export default function BudgetManagement() {
               </tr>
             </thead>
             <tbody>
-              {displayItems.map((item, index) => (
+              {displayItems && displayItems.map((item, index) => (
                 <tr
                   key={item.id}
-                  className={`cursor-pointer ${
-                    index !== displayItems.length - 1 ? 'border-b' : ''
-                  }`}
+                  className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
+                    }`}
                   onClick={() => handleRowClick(item)}
                 >
                   <td className='flex justify-center gap-2 py-3'>
-                    <div className='text-center text-primary-1 underline'>{item.name}</div>
+                    <div className='text-center text-primary-1'>{item.name}</div>
                     <EditButton />
                   </td>
                   {showBudgetColumns && (
@@ -179,7 +179,7 @@ export default function BudgetManagement() {
                   )}
                 </tr>
               ))}
-              {showBudgetColumns && displayItems.length > 0 && (
+              {showBudgetColumns && displayItems && displayItems.length > 0 && (
                 <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
                   <td className='py-3 text-center font-bold'>合計</td>
                   <td className='py-3 text-center font-bold'>{totalBudget}</td>
@@ -187,7 +187,7 @@ export default function BudgetManagement() {
                   <td className='py-3 text-center font-bold'>{totalBalance}</td>
                 </tr>
               )}
-              {displayItems.length === 0 && (
+              {displayItems && displayItems.length === 0 && (
                 <tr>
                   <td
                     colSpan={showBudgetColumns ? 4 : 1}
