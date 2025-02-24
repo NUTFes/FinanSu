@@ -195,6 +195,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/financial_records", r.financialRecordController.CreateFinancialRecord)
 	e.PUT("/financial_records/:id", r.financialRecordController.UpdateFinancialRecord)
 	e.DELETE("/financial_records/:id", r.financialRecordController.DestroyFinancialRecord)
+	e.GET("/financial_records/csv/download", r.financialRecordController.DownloadFinancialRecordsCSV)
 
 	// fund informations
 	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)
