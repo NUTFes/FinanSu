@@ -205,9 +205,8 @@ func (fru *financialRecordUseCase) GetFinancialRecordDetailForCSV(
 	c context.Context,
 	year string,
 ) ([][]string, error) {
-	csvData := make([][]string, 0)
-	HEADER := []string{"局", "部門", "物品", "予算申請金額", "購入金額"}
-	csvData = append(csvData, HEADER)
+	header := []string{"局", "部門", "物品", "予算申請金額", "購入金額"}
+	csvData := [][]string{header}
 	var financialRecords []FinancialRecordData
 
 	rows, err := fru.rep.AllForCSV(c, year)
