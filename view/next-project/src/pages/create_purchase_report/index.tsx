@@ -13,15 +13,21 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 // APIのつなぎ込み後に削除する。
+const MOCK_DEPARTMENTS = [
+  { id: 1, name: 'FinanSu部門' },
+  { id: 2, name: 'Bingo部門' },
+  { id: 3, name: 'インフラ部門' },
+];
+
 const MOCK_FESTIVAL_ITEMS = [
-  { id: 1, name: '景品' },
-  { id: 2, name: '文具' },
-  { id: 3, name: '装飾品' },
-  { id: 4, name: '食料品' },
+  { id: 1, name: '景品', departmentId: 2 },
+  { id: 2, name: '文具', departmentId: 1 },
+  { id: 3, name: '装飾品', departmentId: 2 },
 ];
 
 interface BuyReport {
   id: number;
+  departmentId: number;
   festivalItemID: number;
   festivalItemName: string;
   amount: number;
@@ -38,6 +44,7 @@ const PurchaseReportPage = () => {
     if (isFromReport) {
       return {
         id: Number(reportId) || 0,
+        departmentId: 0,
         festivalItemID: MOCK_FESTIVAL_ITEMS.find((item) => item.name === festivalItemName)?.id || 0,
         festivalItemName: (festivalItemName as string) || '',
         amount: Number(amount) || 0,
@@ -46,6 +53,7 @@ const PurchaseReportPage = () => {
     }
     return {
       id: 0,
+      departmentId: 0,
       festivalItemID: 0,
       festivalItemName: '',
       amount: 0,
@@ -88,6 +96,10 @@ const PurchaseReportPage = () => {
     setBuyReport((prev) => ({ ...prev, amount: Number(value) || 0 }));
   };
 
+  const filteredFestivalItems = MOCK_FESTIVAL_ITEMS.filter(
+    (item) => !buyReport.departmentId || item.departmentId === buyReport.departmentId,
+  );
+
   return (
     <MainLayout>
       <Box
@@ -100,7 +112,34 @@ const PurchaseReportPage = () => {
           />
           <form className='space-y-6'>
             <VStack spacing={4} align='stretch'>
-              <FormControl id='product' isRequired isDisabled={isFromReport}>
+              <FormControl id='department' isRequired isDisabled={isFromReport}>
+                <FormLabel>部門</FormLabel>
+                <Select
+                  placeholder='選択してください'
+                  value={buyReport.departmentId || ''}
+                  onChange={(e) => {
+                    const selectedId = parseInt(e.target.value) || 0;
+                    setBuyReport((prev) => ({
+                      ...prev,
+                      departmentId: selectedId,
+                      festivalItemID: 0,
+                      festivalItemName: '',
+                    }));
+                  }}
+                >
+                  {MOCK_DEPARTMENTS.map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl
+                id='product'
+                isRequired
+                isDisabled={isFromReport || !buyReport.departmentId}
+              >
                 <FormLabel>物品</FormLabel>
                 {isFromReport ? (
                   <Input value={buyReport.festivalItemName} disabled />
@@ -110,7 +149,7 @@ const PurchaseReportPage = () => {
                     value={buyReport.festivalItemID || ''}
                     onChange={(e) => {
                       const selectedId = parseInt(e.target.value) || 0;
-                      const selectedItem = MOCK_FESTIVAL_ITEMS.find(
+                      const selectedItem = filteredFestivalItems.find(
                         (item) => item.id === selectedId,
                       );
                       setBuyReport((prev) => ({
@@ -119,8 +158,9 @@ const PurchaseReportPage = () => {
                         festivalItemName: selectedItem?.name || '',
                       }));
                     }}
+                    isDisabled={!buyReport.departmentId}
                   >
-                    {MOCK_FESTIVAL_ITEMS.map((item) => (
+                    {filteredFestivalItems.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.name}
                       </option>
