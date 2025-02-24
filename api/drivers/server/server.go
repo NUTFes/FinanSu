@@ -4,12 +4,13 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/NUTFes/FinanSu/api/router"
+	"github.com/NUTFes/FinanSu/api/externals/handler"
+	"github.com/NUTFes/FinanSu/api/generated"
 	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func RunServer(router router.Router) *echo.Echo {
+func RunServer(server *handler.Handler) *echo.Echo {
 	// echoのインスタンス
 	e := echo.New()
 
@@ -32,8 +33,8 @@ func RunServer(router router.Router) *echo.Echo {
 	}))
 
 	// ルーティング
-	router.ProvideRouter(e)
 
+	generated.RegisterHandlers(e, server)
 	// サーバー起動
 	return e
 }

@@ -212,7 +212,7 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -233,7 +233,7 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 		activityInformations = nil
 
 		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,
@@ -310,7 +310,7 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -330,8 +330,8 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 		activity.ActivityInformation = activityInformations
 		activityInformations = nil
 
-		rows, err = a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,
@@ -408,7 +408,7 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -429,7 +429,7 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 		activityInformations = nil
 
 		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,
@@ -506,7 +506,7 @@ func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, i
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -527,7 +527,7 @@ func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, i
 		activityInformations = nil
 
 		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,
