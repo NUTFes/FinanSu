@@ -285,7 +285,7 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 		return BuyReportDetail{}, err
 	}
 
-	row, err := bru.bRep.AllByBuyReportId(c, buyReportId)
+	row, err := bru.bRep.GetByBuyReportId(c, buyReportId)
 	if err != nil {
 		return BuyReportDetail{}, err
 	}
