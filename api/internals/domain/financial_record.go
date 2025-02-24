@@ -12,7 +12,7 @@ type FinancialRecord struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-type FinancialRecordDetail struct {
+type FinancialRecordData struct {
 	FinancialRecordID   int    `json:"financialRecordId"`
 	FinancialRecordName string `json:"financialRecordName"`
 	DivisionName        string `json:"divisionName"`

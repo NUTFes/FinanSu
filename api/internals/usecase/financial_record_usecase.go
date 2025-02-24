@@ -250,4 +250,4 @@ type FinancialRecordDetails = generated.FinancialRecordDetails
 type FinancialRecord = generated.FinancialRecord
 type FinancialRecordWithBalance = generated.FinancialRecordWithBalance
 type Total = generated.Total
-type FinancialRecordData = domain.FinancialRecordDetail
+type FinancialRecordData = domain.FinancialRecordData
