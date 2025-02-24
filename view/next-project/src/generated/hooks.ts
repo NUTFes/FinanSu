@@ -47,9 +47,11 @@ import type {
   DestroyUserIDs,
   Division,
   DivisionDetails,
+  DivisionOption,
   DivisionWithBalance,
   FestivalItem,
   FestivalItemDetails,
+  FestivalItemOption,
   FestivalItemWithBalance,
   FestivalItemsForMyPage,
   FinancialRecord,
@@ -78,6 +80,7 @@ import type {
   GetDepartments200,
   GetDepartmentsId200,
   GetDivisionsParams,
+  GetDivisionsUsersParams,
   GetExpenses200,
   GetExpensesDetails200,
   GetExpensesDetailsYear200,
@@ -86,6 +89,7 @@ import type {
   GetExpensesIdDetails200,
   GetFestivalItemsDetailsUserIdParams,
   GetFestivalItemsParams,
+  GetFestivalItemsUsersParams,
   GetFinancialRecordsCsvDownloadParams,
   GetFinancialRecordsParams,
   GetFundInformations200,
@@ -2766,6 +2770,64 @@ export const useDeleteDivisionsId = <TError = unknown>(
 }
 
 /**
+ * 購入報告ページの部門一覧の取得
+ */
+export type getDivisionsUsersResponse = {
+  data: DivisionOption[];
+  status: number;
+  headers: Headers;
+}
+
+export const getGetDivisionsUsersUrl = (params: GetDivisionsUsersParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  return normalizedParams.size ? `/divisions/users?${normalizedParams.toString()}` : `/divisions/users`
+}
+
+export const getDivisionsUsers = async (params: GetDivisionsUsersParams, options?: RequestInit): Promise<getDivisionsUsersResponse> => {
+  
+  return customFetch<Promise<getDivisionsUsersResponse>>(getGetDivisionsUsersUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetDivisionsUsersKey = (params: GetDivisionsUsersParams,) => [`/divisions/users`, ...(params ? [params]: [])] as const;
+
+export type GetDivisionsUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisionsUsers>>>
+export type GetDivisionsUsersQueryError = unknown
+
+export const useGetDivisionsUsers = <TError = unknown>(
+  params: GetDivisionsUsersParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisionsUsers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsUsersKey(params) : null);
+  const swrFn = () => getDivisionsUsers(params, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
  * expenseの一覧の取得
  */
 export type getExpensesResponse = {
@@ -3540,6 +3602,64 @@ export const useGetFestivalItemsDetailsUserId = <TError = unknown>(
   const isEnabled = swrOptions?.enabled !== false && !!(userId)
   const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsDetailsUserIdKey(userId,params) : null);
   const swrFn = () => getFestivalItemsDetailsUserId(userId,params, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * 購入報告ページの物品一覧の取得
+ */
+export type getFestivalItemsUsersResponse = {
+  data: FestivalItemOption[];
+  status: number;
+  headers: Headers;
+}
+
+export const getGetFestivalItemsUsersUrl = (params: GetFestivalItemsUsersParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  return normalizedParams.size ? `/festival_items/users?${normalizedParams.toString()}` : `/festival_items/users`
+}
+
+export const getFestivalItemsUsers = async (params: GetFestivalItemsUsersParams, options?: RequestInit): Promise<getFestivalItemsUsersResponse> => {
+  
+  return customFetch<Promise<getFestivalItemsUsersResponse>>(getGetFestivalItemsUsersUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetFestivalItemsUsersKey = (params: GetFestivalItemsUsersParams,) => [`/festival_items/users`, ...(params ? [params]: [])] as const;
+
+export type GetFestivalItemsUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItemsUsers>>>
+export type GetFestivalItemsUsersQueryError = unknown
+
+export const useGetFestivalItemsUsers = <TError = unknown>(
+  params: GetFestivalItemsUsersParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsUsers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsUsersKey(params) : null);
+  const swrFn = () => getFestivalItemsUsers(params, requestOptions)
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 

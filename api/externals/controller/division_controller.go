@@ -14,6 +14,7 @@ type divisionController struct {
 
 type DivisionController interface {
 	IndexDivisions(echo.Context) error
+	GetDivisionOptions(echo.Context) error
 	CreateDivision(echo.Context) error
 	UpdateDivision(echo.Context) error
 	DestroyDivision(echo.Context) error
@@ -33,6 +34,18 @@ func (d *divisionController) IndexDivisions(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, divisionDetails)
+}
+
+func (d *divisionController) GetDivisionOptions(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+	userId := c.QueryParam("user_id")
+
+	divisionOptions, err := d.u.GetDivisionOptions(ctx, year, userId)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, divisionOptions)
 }
 
 func (d *divisionController) CreateDivision(c echo.Context) error {

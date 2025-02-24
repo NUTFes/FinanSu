@@ -973,6 +973,32 @@ paths:
             application/json:
               schema:
                 type: object
+  /divisions/users:
+    get:
+      tags:
+        - division
+      description: 購入報告ページの部門一覧の取得
+      parameters:
+        - name: year
+          in: query
+          description: 年度
+          schema:
+            type: integer
+        - name: user_id
+          in: query
+          description: ユーザーid
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: ユーザー所属の部門の一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/divisionOption"
   /expenses:
     get:
       tags:
@@ -1256,6 +1282,32 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/festivalItemsForMyPage"
+  /festival_items/users:
+    get:
+      tags:
+        - festival_item
+      description: 購入報告ページの物品一覧の取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: division_id
+          in: query
+          description: 部門id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: ユーザー所属の物品予算の一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/festivalItemOption"
   /financial_records:
     get:
       tags:
@@ -2731,6 +2783,18 @@ components:
         financialRecordID:
           type: integer
           example: 1
+    divisionOption:
+      required:
+        - name
+        - divisionId
+      type: object
+      properties:
+        name:
+          type: string
+          example: 衛生管理部門
+        divisionId:
+          type: integer
+          example: 1
     divisionDetails:
       type: object
       properties:
@@ -2780,6 +2844,18 @@ components:
         memo:
           type: string
           example: ""
+    festivalItemOption:
+      required:
+        - festivalItemId
+        - name
+      type: object
+      properties:
+        festivalItemId:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 農ポリ
     festivalItemDetails:
       type: object
       properties:

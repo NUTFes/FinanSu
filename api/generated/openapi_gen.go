@@ -116,6 +116,12 @@ type DivisionDetails struct {
 	Total     *Total                 `json:"total,omitempty"`
 }
 
+// DivisionOption defines model for divisionOption.
+type DivisionOption struct {
+	DivisionId int    `json:"divisionId"`
+	Name       string `json:"name"`
+}
+
 // DivisionWithBalance defines model for divisionWithBalance.
 type DivisionWithBalance struct {
 	Balance         *int    `json:"balance,omitempty"`
@@ -138,6 +144,12 @@ type FestivalItem struct {
 type FestivalItemDetails struct {
 	FestivalItems *[]FestivalItemWithBalance `json:"festivalItems,omitempty"`
 	Total         *Total                     `json:"total,omitempty"`
+}
+
+// FestivalItemOption defines model for festivalItemOption.
+type FestivalItemOption struct {
+	FestivalItemId int    `json:"festivalItemId"`
+	Name           string `json:"name"`
 }
 
 // FestivalItemWithBalance defines model for festivalItemWithBalance.
@@ -354,6 +366,15 @@ type GetDivisionsParams struct {
 	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
 }
 
+// GetDivisionsUsersParams defines parameters for GetDivisionsUsers.
+type GetDivisionsUsersParams struct {
+	// Year 年度
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// UserId ユーザーid
+	UserId int `form:"user_id" json:"user_id"`
+}
+
 // PostExpensesParams defines parameters for PostExpenses.
 type PostExpensesParams struct {
 	// Name name
@@ -385,6 +406,15 @@ type GetFestivalItemsParams struct {
 type GetFestivalItemsDetailsUserIdParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
+}
+
+// GetFestivalItemsUsersParams defines parameters for GetFestivalItemsUsers.
+type GetFestivalItemsUsersParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// DivisionId 部門id
+	DivisionId int `form:"division_id" json:"division_id"`
 }
 
 // GetFinancialRecordsParams defines parameters for GetFinancialRecords.
@@ -767,6 +797,9 @@ type ServerInterface interface {
 	// (POST /divisions)
 	PostDivisions(ctx echo.Context) error
 
+	// (GET /divisions/users)
+	GetDivisionsUsers(ctx echo.Context, params GetDivisionsUsersParams) error
+
 	// (DELETE /divisions/{id})
 	DeleteDivisionsId(ctx echo.Context, id int) error
 
@@ -808,6 +841,9 @@ type ServerInterface interface {
 
 	// (GET /festival_items/details/{user_id})
 	GetFestivalItemsDetailsUserId(ctx echo.Context, userId int, params GetFestivalItemsDetailsUserIdParams) error
+
+	// (GET /festival_items/users)
+	GetFestivalItemsUsers(ctx echo.Context, params GetFestivalItemsUsersParams) error
 
 	// (DELETE /festival_items/{id})
 	DeleteFestivalItemsId(ctx echo.Context, id int) error
@@ -1728,6 +1764,31 @@ func (w *ServerInterfaceWrapper) PostDivisions(ctx echo.Context) error {
 	return err
 }
 
+// GetDivisionsUsers converts echo context to params.
+func (w *ServerInterfaceWrapper) GetDivisionsUsers(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetDivisionsUsersParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Required query parameter "user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "user_id", ctx.QueryParams(), &params.UserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetDivisionsUsers(ctx, params)
+	return err
+}
+
 // DeleteDivisionsId converts echo context to params.
 func (w *ServerInterfaceWrapper) DeleteDivisionsId(ctx echo.Context) error {
 	var err error
@@ -1971,6 +2032,31 @@ func (w *ServerInterfaceWrapper) GetFestivalItemsDetailsUserId(ctx echo.Context)
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetFestivalItemsDetailsUserId(ctx, userId, params)
+	return err
+}
+
+// GetFestivalItemsUsers converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFestivalItemsUsers(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetFestivalItemsUsersParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Required query parameter "division_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "division_id", ctx.QueryParams(), &params.DivisionId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter division_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetFestivalItemsUsers(ctx, params)
 	return err
 }
 
@@ -3180,6 +3266,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/departments/:id", wrapper.PutDepartmentsId)
 	router.GET(baseURL+"/divisions", wrapper.GetDivisions)
 	router.POST(baseURL+"/divisions", wrapper.PostDivisions)
+	router.GET(baseURL+"/divisions/users", wrapper.GetDivisionsUsers)
 	router.DELETE(baseURL+"/divisions/:id", wrapper.DeleteDivisionsId)
 	router.PUT(baseURL+"/divisions/:id", wrapper.PutDivisionsId)
 	router.GET(baseURL+"/expenses", wrapper.GetExpenses)
@@ -3194,6 +3281,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/festival_items", wrapper.GetFestivalItems)
 	router.POST(baseURL+"/festival_items", wrapper.PostFestivalItems)
 	router.GET(baseURL+"/festival_items/details/:user_id", wrapper.GetFestivalItemsDetailsUserId)
+	router.GET(baseURL+"/festival_items/users", wrapper.GetFestivalItemsUsers)
 	router.DELETE(baseURL+"/festival_items/:id", wrapper.DeleteFestivalItemsId)
 	router.PUT(baseURL+"/festival_items/:id", wrapper.PutFestivalItemsId)
 	router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)

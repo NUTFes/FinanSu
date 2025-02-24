@@ -165,6 +165,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// divisions
 	e.GET("/divisions", r.divisionController.IndexDivisions)
+	e.GET("/divisions/users", r.divisionController.GetDivisionOptions)
 	e.POST("/divisions", r.divisionController.CreateDivision)
 	e.PUT("/divisions/:id", r.divisionController.UpdateDivision)
 	e.DELETE("/divisions/:id", r.divisionController.DestroyDivision)
@@ -184,6 +185,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// festival items
 	e.GET("/festival_items", r.festivalItemController.IndexFestivalItems)
 	e.GET("/festival_items/details/:user_id", r.festivalItemController.IndexFestivalItemsForMypage)
+	e.GET("/festival_items/users", r.festivalItemController.IndexFestivalItemOption)
 	e.POST("/festival_items", r.festivalItemController.CreateFestivalItem)
 	e.PUT("/festival_items/:id", r.festivalItemController.UpdateFestivalItem)
 	e.DELETE("/festival_items/:id", r.festivalItemController.DestroyFestivalItem)

@@ -15,6 +15,7 @@ type festivalItemController struct {
 type FestivalItemController interface {
 	IndexFestivalItems(echo.Context) error
 	IndexFestivalItemsForMypage(echo.Context) error
+	IndexFestivalItemOption(echo.Context) error
 	CreateFestivalItem(echo.Context) error
 	UpdateFestivalItem(echo.Context) error
 	DestroyFestivalItem(echo.Context) error
@@ -48,6 +49,19 @@ func (f *festivalItemController) IndexFestivalItemsForMypage(c echo.Context) err
 		return err
 	}
 	return c.JSON(http.StatusOK, festivalItemDetails)
+}
+
+func (f *festivalItemController) IndexFestivalItemOption(c echo.Context) error {
+	ctx := c.Request().Context()
+	divisionId := c.QueryParam("division_id")
+	year := c.QueryParam("year")
+	var festivalItemOptions []FestivalItemOption
+
+	festivalItemOptions, err := f.u.GetFestivalItemOptions(ctx, year, divisionId)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, festivalItemOptions)
 }
 
 func (f *festivalItemController) CreateFestivalItem(c echo.Context) error {
@@ -91,3 +105,4 @@ func (f *festivalItemController) DestroyFestivalItem(c echo.Context) error {
 type FestivalItemDetails = generated.FestivalItemDetails
 type FestivalItem = generated.FestivalItem
 type FestivalItemsForMyPage = generated.FestivalItemsForMyPage
+type FestivalItemOption = generated.FestivalItemOption
