@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { AddButton } from '../common';
-import { DivisionWithBalance, FinancialRecordWithBalance } from '@/generated/model';
+import type { DivisionWithBalance, FinancialRecordWithBalance } from '@/generated/model';
 import AddModal from '@components/budget_managements/AddBudgetManagementModal';
 
 interface Props {

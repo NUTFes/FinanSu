@@ -37,5 +37,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 # genereated
-# GitHubのLintでErrorが発生するため、コメントアウト
-# /src/generated
+/src/generated

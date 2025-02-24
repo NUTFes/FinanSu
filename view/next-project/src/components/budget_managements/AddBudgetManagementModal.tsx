@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useGetFinancialRecords, useGetDivisions, postFestivalItems } from '@/generated/hooks';
-import {
+import type {
   DivisionWithBalance,
   FinancialRecordWithBalance,
   GetDivisionsParams,

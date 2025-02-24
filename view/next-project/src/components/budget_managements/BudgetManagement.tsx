@@ -3,7 +3,7 @@ import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButt
 import { Card, EditButton, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
-import { GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
+import type { GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
 
 export default function BudgetManagement() {
   const [{ financialRecordId, divisionId, festivalItemId }, setQueryState] = useQueryStates({
@@ -171,9 +171,8 @@ export default function BudgetManagement() {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${
-                      index !== displayItems.length - 1 ? 'border-b' : ''
-                    }`}
+                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
+                      }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>
