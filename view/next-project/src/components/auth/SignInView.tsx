@@ -39,7 +39,7 @@ export default function SignInView() {
       };
       setAuth(authData);
       setUser(userRes);
-      Router.push('/purchaseorders');
+      Router.push('/my_page');
     } else {
       alert(
         'ログインに失敗しました。メールアドレスもしくはパスワードが間違っている可能性があります',
