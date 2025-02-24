@@ -3,7 +3,7 @@ import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import { HiOutlineShoppingCart, HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
 import { IoIosArrowDropup } from 'react-icons/io';
-import { MdOutlineSavings, MdOutlineWorkOutline } from 'react-icons/md';
+import { MdOutlineSavings, MdOutlineWorkOutline, MdFaceUnlock } from 'react-icons/md';
 
 interface LinkItemProps {
   name: string;
@@ -72,5 +72,14 @@ export const RelationLinkItems: LinkItemProps[] = [
     name: '協賛企業',
     icon: <BsBuilding className='mx-2 text-xl' />,
     href: '/sponsors',
+  },
+];
+
+export const MyPageLinkItems: LinkItemProps[] = [
+  {
+    name: 'マイページ',
+    icon: <MdFaceUnlock className='mx-2 text-xl' />,
+    href: '/my_page',
+    isParent: false,
   },
 ];

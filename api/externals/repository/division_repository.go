@@ -18,6 +18,7 @@ type divisionRepository struct {
 type DivisionRepository interface {
 	AllByPeriodAndFinancialRecord(context.Context, string, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
+	GetDivisionOptionsByUserId(context.Context, string, string) (*sql.Rows, error)
 	Create(context.Context, Division) error
 	Update(context.Context, string, Division) error
 	Delete(context.Context, string) error
@@ -64,6 +65,30 @@ func (dr *divisionRepository) GetById(
 		return nil, err
 	}
 	return dr.crud.ReadByID(c, ds)
+}
+
+// ユーザーIDで部門オプションを取得
+func (dr *divisionRepository) GetDivisionOptionsByUserId(
+	c context.Context,
+	year string,
+	userId string,
+) (*sql.Rows, error) {
+	ds := selectDivisionOptionsQuery
+
+	if userId != "" {
+		ds = ds.Where(goqu.Ex{"users.id": userId})
+	}
+
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
+
+	// クエリを構築し、SQLを生成
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return dr.crud.Read(c, query)
 }
 
 // 部門作成
@@ -138,3 +163,12 @@ var selectDivisionQuery = dialect.From("divisions").
 	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
 	GroupBy(goqu.I("divisions.id")).
 	Order(goqu.I("divisions.id").Desc())
+
+var selectDivisionOptionsQuery = dialect.From("divisions").
+	Select(
+		goqu.I("divisions.id").As("divisionId"),
+		goqu.I("divisions.name").As("name")).
+	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+	InnerJoin(goqu.I("user_groups"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("user_groups.group_id")))).
+	InnerJoin(goqu.I("users"), goqu.On(goqu.I("users.id").Eq(goqu.I("user_groups.user_id"))))

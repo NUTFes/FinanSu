@@ -27,6 +27,7 @@ type FestivalItemRepository interface {
 	DeleteItemBudget(context.Context, *sql.Tx, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	GetDetailsByDivisionId(context.Context, string, string) (*sql.Rows, error)
+	GetFestivalItemOptions(context.Context, string, string) (*sql.Rows, error)
 }
 
 func NewFestivalItemRepository(c db.Client, ac abstract.Crud) FestivalItemRepository {
@@ -201,6 +202,29 @@ func (fir *festivalItemRepository) GetDetailsByDivisionId(
 	return fir.crud.Read(c, query)
 }
 
+func (fir *festivalItemRepository) GetFestivalItemOptions(
+	c context.Context,
+	year string,
+	divisionId string,
+) (*sql.Rows, error) {
+	ds := selectFestivalItemOptionsQuery
+	if divisionId != "" {
+		ds = ds.Where(goqu.Ex{"divisions.id": divisionId})
+	}
+
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
+
+	query, _, err := ds.ToSQL()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return fir.crud.Read(c, query)
+}
+
 var selectFestivalItemQuery = dialect.Select(
 	"festival_items.id",
 	"festival_items.name",
@@ -244,3 +268,11 @@ var selectFestivalItemForMypageQuery = dialect.Select(
 	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
 	LeftJoin(goqu.I("buy_statuses"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("buy_statuses.buy_report_id")))).
 	Order(goqu.I("festival_items.id").Desc())
+
+var selectFestivalItemOptionsQuery = dialect.Select(
+	goqu.I("festival_items.id").As("festivalItemId"),
+	goqu.I("festival_items.name").As("name")).
+	From("festival_items").
+	InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
+	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id"))))
