@@ -7,28 +7,28 @@
  */
 
 export type PostTeachersParams = {
-/**
- * 名前
- */
-name: string;
-/**
- * 役職
- */
-position: string;
-/**
- * 学科ID
- */
-department_id?: number;
-/**
- * 部屋番号
- */
-room?: string;
-/**
- * ブラックリストの真偽
- */
-is_black?: boolean;
-/**
- * 備考
- */
-remark?: string;
+  /**
+   * 名前
+   */
+  name: string;
+  /**
+   * 役職
+   */
+  position: string;
+  /**
+   * 学科ID
+   */
+  department_id?: number;
+  /**
+   * 部屋番号
+   */
+  room?: string;
+  /**
+   * ブラックリストの真偽
+   */
+  is_black?: boolean;
+  /**
+   * 備考
+   */
+  remark?: string;
 };

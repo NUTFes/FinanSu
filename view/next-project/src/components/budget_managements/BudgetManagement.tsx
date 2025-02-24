@@ -116,11 +116,12 @@ export default function BudgetManagement() {
                 className='border-b border-black-300 focus:outline-none'
               >
                 <option value=''>ALL</option>
-                {financialRecords && financialRecords.map((financialRecord) => (
-                  <option key={financialRecord.id} value={financialRecord.id}>
-                    {financialRecord.name}
-                  </option>
-                ))}
+                {financialRecords &&
+                  financialRecords.map((financialRecord) => (
+                    <option key={financialRecord.id} value={financialRecord.id}>
+                      {financialRecord.name}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className={`flex gap-3 ${financialRecordId !== null ? 'visible' : 'invisible'}`}>
@@ -131,17 +132,24 @@ export default function BudgetManagement() {
                 className='border-b border-black-300 focus:outline-none'
               >
                 <option value=''>ALL</option>
-                {divisions && divisions.map((division) => (
-                  <option key={division.id} value={division.id}>
-                    {division.name}
-                  </option>
-                ))}
+                {divisions &&
+                  divisions.map((division) => (
+                    <option key={division.id} value={division.id}>
+                      {division.name}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
           <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
-            <OpenAddModalButton className='w-full md:w-fit' financialRecord={financialRecords} divisions={divisions}>{title}登録</OpenAddModalButton>
+            <OpenAddModalButton
+              className='w-full md:w-fit'
+              financialRecord={financialRecords}
+              divisions={divisions}
+            >
+              {title}登録
+            </OpenAddModalButton>
           </div>
         </div>
         <div className='mt-5 overflow-x-auto'>
@@ -159,26 +167,28 @@ export default function BudgetManagement() {
               </tr>
             </thead>
             <tbody>
-              {displayItems && displayItems.map((item, index) => (
-                <tr
-                  key={item.id}
-                  className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
+              {displayItems &&
+                displayItems.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    className={`cursor-pointer ${
+                      index !== displayItems.length - 1 ? 'border-b' : ''
                     }`}
-                  onClick={() => handleRowClick(item)}
-                >
-                  <td className='flex justify-center gap-2 py-3'>
-                    <div className='text-center text-primary-1'>{item.name}</div>
-                    <EditButton />
-                  </td>
-                  {showBudgetColumns && (
-                    <>
-                      <td className='py-3 text-center'>{item.budget ?? 0}</td>
-                      <td className='py-3 text-center'>{item.expense ?? 0}</td>
-                      <td className='py-3 text-center'>{item.balance ?? 0}</td>
-                    </>
-                  )}
-                </tr>
-              ))}
+                    onClick={() => handleRowClick(item)}
+                  >
+                    <td className='flex justify-center gap-2 py-3'>
+                      <div className='text-center text-primary-1'>{item.name}</div>
+                      <EditButton />
+                    </td>
+                    {showBudgetColumns && (
+                      <>
+                        <td className='py-3 text-center'>{item.budget ?? 0}</td>
+                        <td className='py-3 text-center'>{item.expense ?? 0}</td>
+                        <td className='py-3 text-center'>{item.balance ?? 0}</td>
+                      </>
+                    )}
+                  </tr>
+                ))}
               {showBudgetColumns && displayItems && displayItems.length > 0 && (
                 <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
                   <td className='py-3 text-center font-bold'>合計</td>

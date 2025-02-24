@@ -4,7 +4,11 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useGetFinancialRecords, useGetDivisions, postFestivalItems } from '@/generated/hooks';
-import { DivisionWithBalance, FinancialRecordWithBalance, GetDivisionsParams } from '@/generated/model';
+import {
+  DivisionWithBalance,
+  FinancialRecordWithBalance,
+  GetDivisionsParams,
+} from '@/generated/model';
 import { PrimaryButton, Input, Modal, Loading } from '@components/common';
 
 export interface ModalProps {
@@ -54,7 +58,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const amount = e.target.value ? parseInt(e.target.value, 10) : null;
-    setAmount(amount)
+    setAmount(amount);
   };
 
   const closeModal = () => {
@@ -64,7 +68,12 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const router = useRouter();
 
   const registBudget = async () => {
-    await postFestivalItems({ divisionId: divisionId ?? 0, amount: amount ?? 0, name: name ?? '', memo: '' });
+    await postFestivalItems({
+      divisionId: divisionId ?? 0,
+      amount: amount ?? 0,
+      name: name ?? '',
+      memo: '',
+    });
   };
 
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading;
@@ -94,11 +103,12 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
             className='border-b border-black-300 focus:outline-none'
           >
             <option value=''>ALL</option>
-            {financialRecords && financialRecords.map((financialRecord) => (
-              <option key={financialRecord.id} value={financialRecord.id}>
-                {financialRecord.name}
-              </option>
-            ))}
+            {financialRecords &&
+              financialRecords.map((financialRecord) => (
+                <option key={financialRecord.id} value={financialRecord.id}>
+                  {financialRecord.name}
+                </option>
+              ))}
           </select>
         </div>
         <p>申請部門名</p>
@@ -109,31 +119,24 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
             className='border-b border-black-300 focus:outline-none'
           >
             <option value=''>ALL</option>
-            {divisions && divisions.map((division) => (
-              <option key={division.id} value={division.id}>
-                {division.name}
-              </option>
-            ))}
+            {divisions &&
+              divisions.map((division) => (
+                <option key={division.id} value={division.id}>
+                  {division.name}
+                </option>
+              ))}
           </select>
         </div>
         <p>申請物品名</p>
         <div className='col-span-4 w-full'>
-          <Input
-            className='w-full'
-            value={name ?? ''}
-            onChange={handlefestivalItemChange}
-          />
+          <Input className='w-full' value={name ?? ''} onChange={handlefestivalItemChange} />
         </div>
         <p>金額</p>
         <div className='col-span-4 w-full'>
-          <Input
-            className='w-full'
-            value={amount ?? ''}
-            onChange={handleAmountChange}
-          />
+          <Input className='w-full' value={amount ?? ''} onChange={handleAmountChange} />
         </div>
       </div>
-      <div className='flex flex-col justify-center items-center gap-4'>
+      <div className='flex flex-col items-center justify-center gap-4'>
         <PrimaryButton
           disabled={isDisabled}
           onClick={() => {
@@ -144,7 +147,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           登録する
         </PrimaryButton>
         <div
-          className='underline text-red-600 cursor-default'
+          className='cursor-default text-red-600 underline'
           onClick={() => {
             closeModal();
           }}
