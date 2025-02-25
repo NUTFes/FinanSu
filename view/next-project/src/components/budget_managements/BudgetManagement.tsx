@@ -1,11 +1,31 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
+import { useState } from 'react';
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
 import { Card, EditButton, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import type { GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
+import { Year } from '@/type/common';
+import { get } from '@/utils/api/api_methods';
 
-export default function BudgetManagement() {
+interface Props {
+  years: Year[];
+}
+
+const date = new Date();
+
+export async function getServerSideProps() {
+  const getYearUrl = process.env.SSR_API_URI + '/years';
+  const yearRes = await get(getYearUrl);
+  return {
+    props: {
+      years: yearRes,
+    },
+  };
+}
+
+export default function BudgetManagement(props: Props) {
+  const { years } = props;
   const [{ financialRecordId, divisionId, festivalItemId }, setQueryState] = useQueryStates({
     financialRecordId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
     divisionId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
@@ -17,6 +37,10 @@ export default function BudgetManagement() {
   const festivalItemsParams: GetFestivalItemsParams = {
     division_id: divisionId ?? undefined,
   };
+
+  const [selectedYear, setSelectedYear] = useState<Year>(
+    years ? years[years.length - 1] : { id: 3, year: 2025 }
+  );
 
   const {
     data: financialRecordData,
@@ -145,8 +169,7 @@ export default function BudgetManagement() {
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
             <OpenAddModalButton
               className='w-full md:w-fit'
-              financialRecord={financialRecords}
-              divisions={divisions}
+              year={selectedYear}
             >
               {title}登録
             </OpenAddModalButton>
@@ -171,9 +194,8 @@ export default function BudgetManagement() {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${
-                      index !== displayItems.length - 1 ? 'border-b' : ''
-                    }`}
+                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
+                      }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>

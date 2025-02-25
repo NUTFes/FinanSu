@@ -3,12 +3,11 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { AddButton } from '../common';
-import type { DivisionWithBalance, FinancialRecordWithBalance } from '@/generated/model';
+import { Year } from '@/type/common';
 import AddModal from '@components/budget_managements/AddBudgetManagementModal';
 
 interface Props {
-  financialRecord: FinancialRecordWithBalance[];
-  divisions: DivisionWithBalance[];
+  year: Year;
   className?: string;
   children?: React.ReactNode;
 }
@@ -29,8 +28,7 @@ export default function OpenAddModalButton(props: Props) {
       {showModal && (
         <AddModal
           setShowModal={setShowModal}
-          financialRecord={props.financialRecord}
-          divisions={props.divisions}
+          year={props.year}
         />
       )}
     </>
