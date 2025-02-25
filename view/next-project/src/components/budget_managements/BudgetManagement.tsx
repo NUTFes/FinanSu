@@ -4,7 +4,12 @@ import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButt
 import { Card, EditButton, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
-import type { Division, FinancialRecord, GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
+import type {
+  Division,
+  FinancialRecord,
+  GetDivisionsParams,
+  GetFestivalItemsParams,
+} from '@/generated/model';
 import { Year } from '@/type/common';
 import { get } from '@/utils/api/api_methods';
 
@@ -99,8 +104,7 @@ export default function BudgetManagement(props: Props) {
         name: '',
       };
       setFr(recordWithId);
-    }
-    else if (divisionId === null) {
+    } else if (divisionId === null) {
       setPahse(2);
       const foundRecord = financialRecords.find((fr) => fr.id === financialRecordId);
       if (foundRecord) {
@@ -119,8 +123,7 @@ export default function BudgetManagement(props: Props) {
         name: '',
       };
       setDiv(divisionWithId);
-    }
-    else {
+    } else {
       setPahse(3);
       const foundDivison = divisions.find((div) => div.id === divisionId);
       if (foundDivison) {
@@ -134,7 +137,7 @@ export default function BudgetManagement(props: Props) {
         setDiv(divisionWithId);
       }
     }
-  }, [financialRecordId, divisionId])
+  }, [financialRecordId, divisionId]);
 
   const handleRowClick = (item: any) => {
     if (financialRecordId === null) {
@@ -228,7 +231,13 @@ export default function BudgetManagement(props: Props) {
           </div>
           <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
-            <OpenAddModalButton className='w-full md:w-fit' phase={pahse} year={selectedYear} fr={fr} div={div}>
+            <OpenAddModalButton
+              className='w-full md:w-fit'
+              phase={pahse}
+              year={selectedYear}
+              fr={fr}
+              div={div}
+            >
               {title}登録
             </OpenAddModalButton>
           </div>
@@ -252,8 +261,9 @@ export default function BudgetManagement(props: Props) {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
-                      }`}
+                    className={`cursor-pointer ${
+                      index !== displayItems.length - 1 ? 'border-b' : ''
+                    }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>

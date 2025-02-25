@@ -3,11 +3,7 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import {
-  usePostFestivalItems,
-  usePostFinancialRecords,
-  usePostDivisions,
-} from '@/generated/hooks';
+import { usePostFestivalItems, usePostFinancialRecords, usePostDivisions } from '@/generated/hooks';
 import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 import { Year } from '@/type/common';
 import { PrimaryButton, Input, Modal } from '@components/common';
@@ -99,8 +95,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   };
 
   // 各フェーズで登録中の状態をまとめる
-  const isMutating =
-    isMutatingFR || isMutatingDiv || isMutatingFI;
+  const isMutating = isMutatingFR || isMutatingDiv || isMutatingFI;
   // disable 状態は、各フェーズの入力値チェックおよび送信中の場合
   let isDisabled = false;
   if (phase === 1) {
