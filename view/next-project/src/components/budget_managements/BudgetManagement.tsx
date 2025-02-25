@@ -39,7 +39,7 @@ export default function BudgetManagement(props: Props) {
   };
 
   const [selectedYear, setSelectedYear] = useState<Year>(
-    years ? years[years.length - 1] : { id: 3, year: 2025 }
+    years ? years[years.length - 1] : { id: 3, year: 2025 },
   );
 
   const {
@@ -167,10 +167,7 @@ export default function BudgetManagement(props: Props) {
           </div>
           <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
-            <OpenAddModalButton
-              className='w-full md:w-fit'
-              year={selectedYear}
-            >
+            <OpenAddModalButton className='w-full md:w-fit' year={selectedYear}>
               {title}登録
             </OpenAddModalButton>
           </div>
@@ -194,8 +191,9 @@ export default function BudgetManagement(props: Props) {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
-                      }`}
+                    className={`cursor-pointer ${
+                      index !== displayItems.length - 1 ? 'border-b' : ''
+                    }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>

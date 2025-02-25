@@ -3,12 +3,14 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import { usePostFestivalItems, usePostFinancialRecords, usePostDivisions, usePutFinancialRecordsId, usePutDivisionsId } from '@/generated/hooks';
-import type {
-  Division,
-  FestivalItem,
-  FinancialRecord,
-} from '@/generated/model';
+import {
+  usePostFestivalItems,
+  usePostFinancialRecords,
+  usePostDivisions,
+  usePutFinancialRecordsId,
+  usePutDivisionsId,
+} from '@/generated/hooks';
+import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 import { Year } from '@/type/common';
 import { PrimaryButton, Input, Modal } from '@components/common';
 
@@ -41,19 +43,19 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const [phase, setPhase] = useState(1);
 
   // 登録済みの結果（IDなど）を保持する state
-  const [registeredFinancialRecord, setRegisteredFinancialRecord] = useState<FinancialRecordWithId | null>(null);
+  const [registeredFinancialRecord, setRegisteredFinancialRecord] =
+    useState<FinancialRecordWithId | null>(null);
   const [registeredDivision, setRegisteredDivision] = useState<DivisionWithId | null>(null);
 
   // API呼び出し用フック（各フェーズで登録処理を実行）
   const { trigger: triggerFinancialRecord, isMutating: isMutatingFR } = usePostFinancialRecords();
   const { trigger: triggerDivision, isMutating: isMutatingDiv } = usePostDivisions();
   const { trigger: triggerFestivalItem, isMutating: isMutatingFI } = usePostFestivalItems();
-  const { trigger: updateFinancialRecord, isMutating: isMutatingUpdateFR } = usePutFinancialRecordsId(
-    registeredFinancialRecord?.id ?? 0,
-  );
+  const { trigger: updateFinancialRecord, isMutating: isMutatingUpdateFR } =
+    usePutFinancialRecordsId(registeredFinancialRecord?.id ?? 0);
   const { trigger: updateDivision, isMutating: isMutatingUpdateDiv } = usePutDivisionsId(
     registeredDivision?.id ?? 0,
-    {}
+    {},
   );
 
   // 各フェーズの「次へ」または「登録する」ボタン押下時の処理
@@ -70,7 +72,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           const response = await triggerFinancialRecord(newRecord);
           const recordWithId: FinancialRecordWithId = {
             ...newRecord,
-            id: response.data.id ?? 0
+            id: response.data.id ?? 0,
           };
           setRegisteredFinancialRecord(recordWithId);
         } else {
@@ -95,7 +97,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           const response = await triggerDivision(newDivision);
           const divisionWithId: DivisionWithId = {
             ...newDivision,
-            id: response.data.id ?? 0
+            id: response.data.id ?? 0,
           };
           setRegisteredDivision(divisionWithId);
         } else {
@@ -132,7 +134,8 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   };
 
   // 各フェーズで登録中の状態をまとめる
-  const isMutating = isMutatingFR || isMutatingUpdateFR || isMutatingDiv || isMutatingUpdateDiv || isMutatingFI;
+  const isMutating =
+    isMutatingFR || isMutatingUpdateFR || isMutatingDiv || isMutatingUpdateDiv || isMutatingFI;
   // disable 状態は、各フェーズの入力値チェックおよび送信中の場合
   let isDisabled = false;
   if (phase === 1) {
@@ -163,7 +166,11 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
       <>
         <p>申請局名</p>
         <div className='col-span-4 w-full'>
-          <Input value={financialRecordName} readOnly className="pointer-events-none border-0 bg-gray-100" />
+          <Input
+            value={financialRecordName}
+            readOnly
+            className='bg-gray-100 pointer-events-none border-0'
+          />
         </div>
         <p>申請部門名</p>
         <div className='col-span-4 w-full'>
@@ -180,11 +187,19 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
       <>
         <p>申請局名</p>
         <div className='col-span-4 w-full'>
-          <Input value={financialRecordName} readOnly className="pointer-events-none border-0 bg-gray-100" />
+          <Input
+            value={financialRecordName}
+            readOnly
+            className='bg-gray-100 pointer-events-none border-0'
+          />
         </div>
         <p>申請部門名</p>
         <div className='col-span-4 w-full'>
-          <Input value={divisionName} readOnly className="pointer-events-none border-0 bg-gray-100" />
+          <Input
+            value={divisionName}
+            readOnly
+            className='bg-gray-100 pointer-events-none border-0'
+          />
         </div>
         <p>申請物品名</p>
         <div className='col-span-4 w-full'>
@@ -229,11 +244,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
       </div>
       <div className='flex flex-col items-center justify-center gap-4'>
         <div className='flex gap-4'>
-          {phase > 1 && (
-            <PrimaryButton onClick={handleBack}>
-              戻る
-            </PrimaryButton>
-          )}
+          {phase > 1 && <PrimaryButton onClick={handleBack}>戻る</PrimaryButton>}
           <PrimaryButton disabled={isDisabled} onClick={handleNext}>
             {isMutating ? '登録中' : phase === 3 ? '登録する' : '次へ'}
           </PrimaryButton>
