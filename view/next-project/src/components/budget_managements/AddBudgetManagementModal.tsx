@@ -94,7 +94,13 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
     return <div>error...</div>;
   }
 
-  const isDisabled = financialRecordId === null || divisionId === null || !name || name.trim() === '' || amount === null || isMutating;
+  const isDisabled =
+    financialRecordId === null ||
+    divisionId === null ||
+    !name ||
+    name.trim() === '' ||
+    amount === null ||
+    isMutating;
 
   return (
     <Modal className='md:w-1/2'>
