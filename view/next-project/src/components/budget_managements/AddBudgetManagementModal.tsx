@@ -3,9 +3,10 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import { useGetFinancialRecords, useGetDivisions, postFestivalItems } from '@/generated/hooks';
+import { useGetFinancialRecords, useGetDivisions, usePostFestivalItems } from '@/generated/hooks';
 import type {
   DivisionWithBalance,
+  FestivalItem,
   FinancialRecordWithBalance,
   GetDivisionsParams,
 } from '@/generated/model';
@@ -27,6 +28,8 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
     financial_record_id: financialRecordId ?? undefined,
   };
 
+  const { trigger, data, error, isMutating } = usePostFestivalItems();
+
   const {
     data: financialRecordData,
     isLoading: isFinancialRecordLoading,
@@ -42,13 +45,16 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const { divisions = [], total: divisionsTotal } = divisionsData?.data || {};
 
   const handleFinancialRecordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const frId = e.target.value ? parseInt(e.target.value, 10) : null;
-    setFinancialRecordId(frId);
+    const frId = e.target.value;
+    setFinancialRecordId(frId === '' ? null : parseInt(frId, 10));
+    if (frId !== null) {
+      setDivisionId(null);
+    }
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const divId = e.target.value ? parseInt(e.target.value, 10) : null;
-    setDivisionId(divId);
+    const divId = e.target.value;
+    setDivisionId(divId === '' ? null : parseInt(divId, 10));
   };
 
   const handlefestivalItemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,12 +74,14 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const router = useRouter();
 
   const registBudget = async () => {
-    await postFestivalItems({
+    const newItem: FestivalItem = {
       divisionId: divisionId ?? 0,
       amount: amount ?? 0,
       name: name ?? '',
       memo: '',
-    });
+    };
+
+    await trigger(newItem);
   };
 
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading;
@@ -86,7 +94,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
     return <div>error...</div>;
   }
 
-  const isDisabled = !name || name.trim() === '' || amount === null;
+  const isDisabled = financialRecordId === null || divisionId === null || !name || name.trim() === '' || amount === null || isMutating;
 
   return (
     <Modal className='md:w-1/2'>
@@ -144,7 +152,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
             router.reload();
           }}
         >
-          登録する
+          {isMutating ? '登録中' : '登録する'}
         </PrimaryButton>
         <div
           className='cursor-default text-red-600 underline'
