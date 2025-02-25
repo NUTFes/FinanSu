@@ -1,18 +1,24 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
 import { Card, EditButton, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
-import type { GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
+import type { Division, FinancialRecord, GetDivisionsParams, GetFestivalItemsParams } from '@/generated/model';
 import { Year } from '@/type/common';
 import { get } from '@/utils/api/api_methods';
+
+interface FinancialRecordWithId extends FinancialRecord {
+  id: number;
+}
+
+interface DivisionWithId extends Division {
+  id: number;
+}
 
 interface Props {
   years: Year[];
 }
-
-const date = new Date();
 
 export async function getServerSideProps() {
   const getYearUrl = process.env.SSR_API_URI + '/years';
@@ -65,6 +71,10 @@ export default function BudgetManagement(props: Props) {
   let displayItems = [];
   let title = '購入報告';
   const showBudgetColumns = true;
+  const [pahse, setPahse] = useState<number>(1);
+  const [fr, setFr] = useState<FinancialRecordWithId>();
+  const [frId, setFrId] = useState<number>(0);
+  const [div, setDiv] = useState<DivisionWithId>();
 
   let totalBudget = 0;
   let totalExpense = 0;
@@ -79,6 +89,52 @@ export default function BudgetManagement(props: Props) {
     const divId = e.target.value ? parseInt(e.target.value, 10) : null;
     setQueryState({ divisionId: divId, festivalItemId: null });
   };
+
+  useEffect(() => {
+    if (financialRecordId === null) {
+      setPahse(1);
+      const recordWithId: FinancialRecordWithId = {
+        id: 0,
+        year_id: selectedYear.id ?? 3,
+        name: '',
+      };
+      setFr(recordWithId);
+    }
+    else if (divisionId === null) {
+      setPahse(2);
+      const foundRecord = financialRecords.find((fr) => fr.id === financialRecordId);
+      if (foundRecord) {
+        // FinancialRecordWithId に変換する
+        const recordWithId: FinancialRecordWithId = {
+          ...foundRecord,
+          id: foundRecord.id ?? 0,
+          year_id: selectedYear.id ?? 3,
+          name: foundRecord.name ?? '',
+        };
+        setFr(recordWithId);
+      }
+      const divisionWithId: DivisionWithId = {
+        id: 0,
+        financialRecordID: financialRecordId ?? 0,
+        name: '',
+      };
+      setDiv(divisionWithId);
+    }
+    else {
+      setPahse(3);
+      const foundDivison = divisions.find((div) => div.id === divisionId);
+      if (foundDivison) {
+        // FinancialRecordWithId に変換する
+        const divisionWithId: DivisionWithId = {
+          ...foundDivison,
+          id: foundDivison.id ?? 0,
+          financialRecordID: financialRecordId ?? 0,
+          name: foundDivison.name ?? '',
+        };
+        setDiv(divisionWithId);
+      }
+    }
+  }, [financialRecordId, divisionId])
 
   const handleRowClick = (item: any) => {
     if (financialRecordId === null) {
@@ -113,6 +169,11 @@ export default function BudgetManagement(props: Props) {
     totalExpense = financialRecordsTotal?.expense || 0;
     totalBalance = financialRecordsTotal?.balance || 0;
   }
+
+  // 3桁ごとにカンマを付けるフォーマッタ
+  const formatNumber = (num: number): string => {
+    return num.toLocaleString('en-US'); // ロケールに合わせて変更可能
+  };
 
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading || isFestivalItemsLoading;
   if (isLoadingAll) {
@@ -167,7 +228,7 @@ export default function BudgetManagement(props: Props) {
           </div>
           <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
-            <OpenAddModalButton className='w-full md:w-fit' year={selectedYear}>
+            <OpenAddModalButton className='w-full md:w-fit' phase={pahse} year={selectedYear} fr={fr} div={div}>
               {title}登録
             </OpenAddModalButton>
           </div>
@@ -191,9 +252,8 @@ export default function BudgetManagement(props: Props) {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${
-                      index !== displayItems.length - 1 ? 'border-b' : ''
-                    }`}
+                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
+                      }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>
@@ -202,9 +262,9 @@ export default function BudgetManagement(props: Props) {
                     </td>
                     {showBudgetColumns && (
                       <>
-                        <td className='py-3 text-center'>{item.budget ?? 0}</td>
-                        <td className='py-3 text-center'>{item.expense ?? 0}</td>
-                        <td className='py-3 text-center'>{item.balance ?? 0}</td>
+                        <td className='py-3 text-center'>{formatNumber(item.budget ?? 0) ?? 0}</td>
+                        <td className='py-3 text-center'>{formatNumber(item.expense ?? 0) ?? 0}</td>
+                        <td className='py-3 text-center'>{formatNumber(item.balance ?? 0) ?? 0}</td>
                       </>
                     )}
                   </tr>
@@ -212,9 +272,9 @@ export default function BudgetManagement(props: Props) {
               {showBudgetColumns && displayItems && displayItems.length > 0 && (
                 <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
                   <td className='py-3 text-center font-bold'>合計</td>
-                  <td className='py-3 text-center font-bold'>{totalBudget}</td>
-                  <td className='py-3 text-center font-bold'>{totalExpense}</td>
-                  <td className='py-3 text-center font-bold'>{totalBalance}</td>
+                  <td className='py-3 text-center font-bold'>{formatNumber(totalBudget)}</td>
+                  <td className='py-3 text-center font-bold'>{formatNumber(totalExpense)}</td>
+                  <td className='py-3 text-center font-bold'>{formatNumber(totalBalance)}</td>
                 </tr>
               )}
               {displayItems && displayItems.length === 0 && (
