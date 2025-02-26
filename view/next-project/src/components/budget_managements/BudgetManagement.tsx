@@ -78,7 +78,6 @@ export default function BudgetManagement(props: Props) {
   const showBudgetColumns = true;
   const [pahse, setPahse] = useState<number>(1);
   const [fr, setFr] = useState<FinancialRecordWithId>();
-  const [frId, setFrId] = useState<number>(0);
   const [div, setDiv] = useState<DivisionWithId>();
 
   let totalBudget = 0;
@@ -125,6 +124,17 @@ export default function BudgetManagement(props: Props) {
       setDiv(divisionWithId);
     } else {
       setPahse(3);
+      const foundRecord = financialRecords.find((fr) => fr.id === financialRecordId);
+      if (foundRecord) {
+        // FinancialRecordWithId に変換する
+        const recordWithId: FinancialRecordWithId = {
+          ...foundRecord,
+          id: foundRecord.id ?? 0,
+          year_id: selectedYear.id ?? 3,
+          name: foundRecord.name ?? '',
+        };
+        setFr(recordWithId);
+      }
       const foundDivison = divisions.find((div) => div.id === divisionId);
       if (foundDivison) {
         // FinancialRecordWithId に変換する
@@ -137,7 +147,7 @@ export default function BudgetManagement(props: Props) {
         setDiv(divisionWithId);
       }
     }
-  }, [financialRecordId, divisionId]);
+  }, [financialRecordId, divisionId, selectedYear.id, financialRecords, divisions]);
 
   const handleRowClick = (item: any) => {
     if (financialRecordId === null) {
@@ -261,9 +271,8 @@ export default function BudgetManagement(props: Props) {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${
-                      index !== displayItems.length - 1 ? 'border-b' : ''
-                    }`}
+                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
+                      }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>
