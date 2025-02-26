@@ -152,6 +152,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/buy_reports", r.buyReportController.CreateBuyReport)
 	e.PUT("/buy_reports/:id", r.buyReportController.UpdateBuyReport)
 	e.DELETE("/buy_reports/:id", r.buyReportController.DeleteBuyReport)
+	e.GET("/buy_reports/details", r.buyReportController.IndexBuyReport)
+	e.PUT("/buy_report/status/:buy_report_id", r.buyReportController.UpdateBuyReportStatus)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
@@ -165,6 +167,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// divisions
 	e.GET("/divisions", r.divisionController.IndexDivisions)
+	e.GET("/divisions/users", r.divisionController.GetDivisionOptions)
 	e.POST("/divisions", r.divisionController.CreateDivision)
 	e.PUT("/divisions/:id", r.divisionController.UpdateDivision)
 	e.DELETE("/divisions/:id", r.divisionController.DestroyDivision)
@@ -184,6 +187,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// festival items
 	e.GET("/festival_items", r.festivalItemController.IndexFestivalItems)
 	e.GET("/festival_items/details/:user_id", r.festivalItemController.IndexFestivalItemsForMypage)
+	e.GET("/festival_items/users", r.festivalItemController.IndexFestivalItemOption)
 	e.POST("/festival_items", r.festivalItemController.CreateFestivalItem)
 	e.PUT("/festival_items/:id", r.festivalItemController.UpdateFestivalItem)
 	e.DELETE("/festival_items/:id", r.festivalItemController.DestroyFestivalItem)
@@ -193,6 +197,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.POST("/financial_records", r.financialRecordController.CreateFinancialRecord)
 	e.PUT("/financial_records/:id", r.financialRecordController.UpdateFinancialRecord)
 	e.DELETE("/financial_records/:id", r.financialRecordController.DestroyFinancialRecord)
+	e.GET("/financial_records/csv/download", r.financialRecordController.DownloadFinancialRecordsCSV)
 
 	// fund informations
 	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)

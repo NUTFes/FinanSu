@@ -23,6 +23,7 @@ type FinancialRecordRepository interface {
 	Update(context.Context, string, generated.FinancialRecord) error
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
+	AllForCSV(context.Context, string) (*sql.Rows, error)
 }
 
 func NewFinancialRecordRepository(c db.Client, ac abstract.Crud) FinancialRecordRepository {
@@ -126,6 +127,27 @@ func (frr *financialRecordRepository) FindLatestRecord(c context.Context) (*sql.
 	return frr.crud.ReadByID(c, query)
 }
 
+// 年度別に取得
+func (frr *financialRecordRepository) AllForCSV(
+	c context.Context,
+	year string,
+) (*sql.Rows, error) {
+	ds := selectFinancialRecordQueryForCSV
+	dsExceptItem := selectFinancialRecordQueryForCsvExceptItem
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+		dsExceptItem = dsExceptItem.Where(goqu.Ex{"years.year": year})
+	}
+	// 2つのdsをUNION
+	sql := ds.Union(dsExceptItem).Order(goqu.I("id").Asc())
+	query, _, err := sql.ToSQL()
+
+	if err != nil {
+		return nil, err
+	}
+	return frr.crud.Read(c, query)
+}
+
 var selectFinancialRecordQuery = dialect.Select(
 	"financial_records.id",
 	"financial_records.name", "years.year",
@@ -139,3 +161,38 @@ var selectFinancialRecordQuery = dialect.Select(
 	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
 	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
 	GroupBy("financial_records.id")
+
+// 予算・部門がないものを取得するds
+var selectFinancialRecordQueryForCSV = dialect.Select(
+	"financial_records.id",
+	"financial_records.name",
+	"divisions.name",
+	"festival_items.name",
+	goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
+	goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense")).
+	From("festival_items").
+	InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
+	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).GroupBy("festival_items.id")
+
+// 予算・部門がないものを取得するds
+var selectFinancialRecordQueryForCsvExceptItem = dialect.Select(
+	"financial_records.id",
+	"financial_records.name",
+	goqu.COALESCE(goqu.I("divisions.name"), "").As("divisionName"),
+	goqu.L("''").As("festivalItemName"),
+	goqu.L("0").As("budget"),
+	goqu.L("0").As("expense")).
+	From("financial_records").
+	LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+	Where(goqu.Or(
+		goqu.Ex{
+			"divisions.id": goqu.Op{"notIn": dialect.Select("festival_items.division_id").From("festival_items")},
+		},
+		goqu.Ex{
+			"financial_records.id": goqu.Op{"notIn": dialect.Select("divisions.financial_record_id").From("divisions")},
+		},
+	))
