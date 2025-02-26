@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useReducer } from 'react';
+import Link from 'next/link';
 
 import { FinanceLinkItems, RelationLinkItems, MyPageLinkItems } from '@/constants/linkItem';
 
@@ -96,12 +97,12 @@ const NavItem = (props: NavItemProps) => {
           {props.children}
         </div>
       ) : (
-        <a href={props.href}>
+        <Link href={props.href}>
           <div className={clsx(className)}>
             {props.icon}
             {props.children}
           </div>
-        </a>
+        </Link>
       )}
     </>
   );

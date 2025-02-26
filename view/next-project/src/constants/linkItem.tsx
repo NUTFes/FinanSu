@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
 import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { FaChalkboardTeacher } from 'react-icons/fa';
-import { HiOutlineShoppingCart, HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
+import { HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
 import { IoIosArrowDropup } from 'react-icons/io';
 import { MdOutlineSavings, MdOutlineWorkOutline, MdFaceUnlock } from 'react-icons/md';
+import { LiaDonateSolid } from 'react-icons/lia';
 
 interface LinkItemProps {
   name: string;
@@ -20,29 +21,29 @@ export const FinanceLinkItems: LinkItemProps[] = [
     isParent: true,
   },
   {
-    name: '予算',
+    name: '予算管理',
     icon: <HiCurrencyDollar className='mx-2 text-xl' />,
-    href: '/budgets',
+    href: '/budget_managements',
+  },
+  {
+    name: '収支管理',
+    icon: <MdOutlineSavings className='mx-2 text-xl' />,
+    href: '/fund_informations',
+  },
+  {
+    name: '購入報告一覧',
+    icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
+    href: '/purchase_report_list',
   },
   {
     name: '学内募金',
-    icon: <MdOutlineSavings className='mx-2 text-xl' />,
-    href: '/fund_informations',
+    icon: <LiaDonateSolid className='mx-2 text-xl' />,
+    href: '',
   },
   {
     name: '教員一覧',
     icon: <FaChalkboardTeacher className='mx-2 text-xl' />,
     href: '/teachers',
-  },
-  {
-    name: '購入申請',
-    icon: <HiOutlineShoppingCart className='mx-2 text-xl' />,
-    href: '/purchaseorders',
-  },
-  {
-    name: '購入報告',
-    icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
-    href: '/purchasereports',
   },
 ];
 
@@ -72,7 +73,7 @@ export const RelationLinkItems: LinkItemProps[] = [
 
 export const MyPageLinkItems: LinkItemProps[] = [
   {
-    name: 'マイページ',
+    name: 'My Page',
     icon: <MdFaceUnlock className='mx-2 text-xl' />,
     href: '/my_page',
     isParent: false,
