@@ -38,7 +38,8 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 
 	// buy_report の作成
 	buyReportId, err := bru.bRep.CreateBuyReport(c, tx, buyReportInfo)
-	*buyReportInfo.Id = int(buyReportId)
+	intBuyReportId := int(buyReportId)
+	buyReportInfo.Id = &intBuyReportId
 	if err != nil {
 		bru.tRep.RollBack(c, tx)
 		return buyReportInfo, err
