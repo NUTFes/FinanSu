@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useGetDivisionsUsers, useGetFestivalItemsUsers } from '@/generated/hooks';
 import { usePostBuyReports, usePutBuyReportsId } from '@/generated/hooks';
-import { DivisionOption, BuyReport } from '@/generated/model';
+import { DivisionOption } from '@/generated/model';
+import type { BuyReport, PostBuyReportsBody } from '@/generated/model';
 import { userAtom } from '@/store/atoms';
 import { User } from '@/type/common';
 
@@ -138,7 +139,7 @@ export const usePurchaseReportForm = (router: NextRouter) => {
           return;
         }
 
-        const requestData = {
+        const requestData: PostBuyReportsBody = {
           buy_report: buyReport,
           file: receiptFile,
         };
