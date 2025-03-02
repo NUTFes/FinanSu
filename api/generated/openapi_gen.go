@@ -107,6 +107,7 @@ type DestroyUserIDs struct {
 // Division defines model for division.
 type Division struct {
 	FinancialRecordID int    `json:"financialRecordID"`
+	Id                *int   `json:"id,omitempty"`
 	Name              string `json:"name"`
 }
 
@@ -136,6 +137,7 @@ type DivisionWithBalance struct {
 type FestivalItem struct {
 	Amount     int     `json:"amount"`
 	DivisionId int     `json:"divisionId"`
+	Id         *int    `json:"id,omitempty"`
 	Memo       *string `json:"memo,omitempty"`
 	Name       string  `json:"name"`
 }
@@ -181,6 +183,7 @@ type FestivalItemsForMyPage struct {
 
 // FinancialRecord defines model for financialRecord.
 type FinancialRecord struct {
+	Id     *int   `json:"id,omitempty"`
 	Name   string `json:"name"`
 	YearId int    `json:"year_id"`
 }
@@ -803,6 +806,9 @@ type ServerInterface interface {
 	// (DELETE /divisions/{id})
 	DeleteDivisionsId(ctx echo.Context, id int) error
 
+	// (GET /divisions/{id})
+	GetDivisionsId(ctx echo.Context, id int) error
+
 	// (PUT /divisions/{id})
 	PutDivisionsId(ctx echo.Context, id int) error
 
@@ -848,6 +854,9 @@ type ServerInterface interface {
 	// (DELETE /festival_items/{id})
 	DeleteFestivalItemsId(ctx echo.Context, id int) error
 
+	// (GET /festival_items/{id})
+	GetFestivalItemsId(ctx echo.Context, id int) error
+
 	// (PUT /festival_items/{id})
 	PutFestivalItemsId(ctx echo.Context, id int) error
 
@@ -862,6 +871,9 @@ type ServerInterface interface {
 
 	// (DELETE /financial_records/{id})
 	DeleteFinancialRecordsId(ctx echo.Context, id int) error
+
+	// (GET /financial_records/{id})
+	GetFinancialRecordsId(ctx echo.Context, id int) error
 
 	// (PUT /financial_records/{id})
 	PutFinancialRecordsId(ctx echo.Context, id int) error
@@ -1805,6 +1817,22 @@ func (w *ServerInterfaceWrapper) DeleteDivisionsId(ctx echo.Context) error {
 	return err
 }
 
+// GetDivisionsId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetDivisionsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetDivisionsId(ctx, id)
+	return err
+}
+
 // PutDivisionsId converts echo context to params.
 func (w *ServerInterfaceWrapper) PutDivisionsId(ctx echo.Context) error {
 	var err error
@@ -2076,6 +2104,22 @@ func (w *ServerInterfaceWrapper) DeleteFestivalItemsId(ctx echo.Context) error {
 	return err
 }
 
+// GetFestivalItemsId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFestivalItemsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetFestivalItemsId(ctx, id)
+	return err
+}
+
 // PutFestivalItemsId converts echo context to params.
 func (w *ServerInterfaceWrapper) PutFestivalItemsId(ctx echo.Context) error {
 	var err error
@@ -2150,6 +2194,22 @@ func (w *ServerInterfaceWrapper) DeleteFinancialRecordsId(ctx echo.Context) erro
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteFinancialRecordsId(ctx, id)
+	return err
+}
+
+// GetFinancialRecordsId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFinancialRecordsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetFinancialRecordsId(ctx, id)
 	return err
 }
 
@@ -3268,6 +3328,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/divisions", wrapper.PostDivisions)
 	router.GET(baseURL+"/divisions/users", wrapper.GetDivisionsUsers)
 	router.DELETE(baseURL+"/divisions/:id", wrapper.DeleteDivisionsId)
+	router.GET(baseURL+"/divisions/:id", wrapper.GetDivisionsId)
 	router.PUT(baseURL+"/divisions/:id", wrapper.PutDivisionsId)
 	router.GET(baseURL+"/expenses", wrapper.GetExpenses)
 	router.POST(baseURL+"/expenses", wrapper.PostExpenses)
@@ -3283,11 +3344,13 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/festival_items/details/:user_id", wrapper.GetFestivalItemsDetailsUserId)
 	router.GET(baseURL+"/festival_items/users", wrapper.GetFestivalItemsUsers)
 	router.DELETE(baseURL+"/festival_items/:id", wrapper.DeleteFestivalItemsId)
+	router.GET(baseURL+"/festival_items/:id", wrapper.GetFestivalItemsId)
 	router.PUT(baseURL+"/festival_items/:id", wrapper.PutFestivalItemsId)
 	router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
 	router.POST(baseURL+"/financial_records", wrapper.PostFinancialRecords)
 	router.GET(baseURL+"/financial_records/csv/download", wrapper.GetFinancialRecordsCsvDownload)
 	router.DELETE(baseURL+"/financial_records/:id", wrapper.DeleteFinancialRecordsId)
+	router.GET(baseURL+"/financial_records/:id", wrapper.GetFinancialRecordsId)
 	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
 	router.GET(baseURL+"/fund_informations", wrapper.GetFundInformations)
 	router.POST(baseURL+"/fund_informations", wrapper.PostFundInformations)

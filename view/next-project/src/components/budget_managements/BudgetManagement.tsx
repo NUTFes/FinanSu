@@ -1,8 +1,9 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
 import { useEffect, useState } from 'react';
 import formatNumber from '../common/Formatter';
+import OpenEditModalButton from './OpenEditModalButton';
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
-import { Card, EditButton, Title, Loading } from '@/components/common';
+import { Card, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import type {
@@ -12,7 +13,6 @@ import type {
   GetFestivalItemsParams,
 } from '@/generated/model';
 import { Year } from '@/type/common';
-import { get } from '@/utils/api/api_methods';
 
 interface FinancialRecordWithId extends FinancialRecord {
   id: number;
@@ -24,16 +24,6 @@ interface DivisionWithId extends Division {
 
 interface Props {
   years: Year[];
-}
-
-export async function getServerSideProps() {
-  const getYearUrl = process.env.SSR_API_URI + '/years';
-  const yearRes = await get(getYearUrl);
-  return {
-    props: {
-      years: yearRes,
-    },
-  };
 }
 
 export default function BudgetManagement(props: Props) {
@@ -77,7 +67,7 @@ export default function BudgetManagement(props: Props) {
   let displayItems = [];
   let title = '購入報告';
   const showBudgetColumns = true;
-  const [pahse, setPahse] = useState<number>(1);
+  const [phase, setPhase] = useState<number>(1);
   const [fr, setFr] = useState<FinancialRecordWithId>();
   const [div, setDiv] = useState<DivisionWithId>();
 
@@ -97,7 +87,7 @@ export default function BudgetManagement(props: Props) {
 
   useEffect(() => {
     if (financialRecordId === null) {
-      setPahse(1);
+      setPhase(1);
       const recordWithId: FinancialRecordWithId = {
         id: 0,
         year_id: selectedYear.id ?? 3,
@@ -105,7 +95,7 @@ export default function BudgetManagement(props: Props) {
       };
       setFr(recordWithId);
     } else if (divisionId === null) {
-      setPahse(2);
+      setPhase(2);
       const foundRecord = financialRecords.find((fr) => fr.id === financialRecordId);
       if (foundRecord) {
         // FinancialRecordWithId に変換する
@@ -124,7 +114,7 @@ export default function BudgetManagement(props: Props) {
       };
       setDiv(divisionWithId);
     } else {
-      setPahse(3);
+      setPhase(3);
       const foundRecord = financialRecords.find((fr) => fr.id === financialRecordId);
       if (foundRecord) {
         // FinancialRecordWithId に変換する
@@ -239,7 +229,7 @@ export default function BudgetManagement(props: Props) {
             <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
             <OpenAddModalButton
               className='w-full md:w-fit'
-              phase={pahse}
+              phase={phase}
               year={selectedYear}
               fr={fr}
               div={div}
@@ -274,7 +264,13 @@ export default function BudgetManagement(props: Props) {
                   >
                     <td className='flex justify-center gap-2 py-3'>
                       <div className='text-center text-primary-1'>{item.name}</div>
-                      <EditButton />
+                      <OpenEditModalButton
+                        className='w-full md:w-fit'
+                        phase={phase}
+                        year={selectedYear}
+                        fr={fr}
+                        div={div}
+                      />
                     </td>
                     {showBudgetColumns && (
                       <>
