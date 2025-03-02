@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
+import formatNumber from '../common/Formatter';
 import { usePostFestivalItems, usePostFinancialRecords, usePostDivisions } from '@/generated/hooks';
 import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 import { Year } from '@/type/common';
@@ -31,17 +32,10 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const [festivalItemName, setFestivalItemName] = useState('');
   const [amount, setAmount] = useState<number | null>(null);
 
-  console.log(phase);
+  const router = useRouter();
 
   const closeModal = () => {
     props.setShowModal(false);
-  };
-
-  const router = useRouter();
-
-  // 3桁ごとにカンマを付けるフォーマッタ
-  const formatNumber = (num: number): string => {
-    return num.toLocaleString('en-US'); // ロケールに合わせて変更可能
   };
 
   // 文字列からカンマを除去して数値に変換
@@ -59,35 +53,42 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   // 各フェーズの「次へ」または「登録する」ボタン押下時の処理
   const handleNext = async () => {
     try {
-      if (phase === 1) {
-        if (!financialRecordName.trim()) return;
-        // 新規登録の場合
-        const newRecord: FinancialRecord = {
-          name: financialRecordName,
-          year_id: year?.id ?? 0,
-        };
-        await triggerFinancialRecord(newRecord);
-      } else if (phase === 2) {
-        if (!divisionName.trim()) return;
-        const newDivision: Division = {
-          name: divisionName,
-          // 登録済みのFinancialRecordのidを利用
-          financialRecordID: fr?.id ?? 0,
-        };
-        await triggerDivision(newDivision);
-      } else if (phase === 3) {
-        if (!festivalItemName.trim() || amount === null) return;
-        const newFestivalItem: FestivalItem = {
-          name: festivalItemName,
-          amount: amount,
-          // 登録済みの部門IDを利用
-          divisionId: div?.id ?? 0,
-          memo: '',
-        };
-        await triggerFestivalItem(newFestivalItem);
+      switch (phase) {
+        case 1: {
+          if (!financialRecordName.trim()) return;
+          // 新規登録の場合
+          const newRecord: FinancialRecord = {
+            name: financialRecordName,
+            year_id: year?.id ?? 0,
+          };
+          await triggerFinancialRecord(newRecord);
+          break;
+        }
+        case 2: {
+          if (!divisionName.trim()) return;
+          const newDivision: Division = {
+            name: divisionName,
+            // 登録済みのFinancialRecordのidを利用
+            financialRecordID: fr?.id ?? 0,
+          };
+          await triggerDivision(newDivision);
+          break;
+        }
+        case 3: {
+          if (!festivalItemName.trim() || amount === null) return;
+          const newFestivalItem: FestivalItem = {
+            name: festivalItemName,
+            amount: amount,
+            // 登録済みの部門IDを利用
+            divisionId: div?.id ?? 0,
+            memo: '',
+          };
+          await triggerFestivalItem(newFestivalItem);
+          break;
+        }
       }
-      router.reload();
       closeModal();
+      router.reload();
     } catch (error: any) {
       console.error('登録エラー:', error.message);
       alert(`登録エラー: ${error.message}`);

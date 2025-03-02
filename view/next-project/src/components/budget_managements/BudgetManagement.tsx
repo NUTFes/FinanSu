@@ -1,5 +1,6 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
 import { useEffect, useState } from 'react';
+import formatNumber from '../common/Formatter';
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
 import { Card, EditButton, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
@@ -183,11 +184,6 @@ export default function BudgetManagement(props: Props) {
     totalBalance = financialRecordsTotal?.balance || 0;
   }
 
-  // 3桁ごとにカンマを付けるフォーマッタ
-  const formatNumber = (num: number): string => {
-    return num.toLocaleString('en-US'); // ロケールに合わせて変更可能
-  };
-
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading || isFestivalItemsLoading;
   if (isLoadingAll) {
     return <Loading />;
@@ -271,9 +267,8 @@ export default function BudgetManagement(props: Props) {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${
-                      index !== displayItems.length - 1 ? 'border-b' : ''
-                    }`}
+                    className={`cursor-pointer ${index !== displayItems.length - 1 ? 'border-b' : ''
+                      }`}
                     onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>
