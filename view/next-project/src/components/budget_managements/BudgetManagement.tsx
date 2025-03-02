@@ -1,5 +1,5 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import formatNumber from '../common/Formatter';
 import OpenEditModalButton from './OpenEditModalButton';
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
@@ -48,16 +48,19 @@ export default function BudgetManagement(props: Props) {
     data: financialRecordData,
     isLoading: isFinancialRecordLoading,
     error: financialRecordError,
+    mutate: mutateFinancialRecords,
   } = useGetFinancialRecords();
   const {
     data: divisionsData,
     isLoading: isDivisionsLoading,
     error: divisionsError,
+    mutate: mutateDivisions,
   } = useGetDivisions(divisionsParams);
   const {
     data: festivalItemsData,
     isLoading: isFestivalItemsLoading,
     error: festivalItemsError,
+    mutate: mutateFestivalItems,
   } = useGetFestivalItems(festivalItemsParams);
 
   const { financialRecords = [], total: financialRecordsTotal } = financialRecordData?.data || {};
@@ -174,6 +177,28 @@ export default function BudgetManagement(props: Props) {
     totalBalance = financialRecordsTotal?.balance || 0;
   }
 
+  // データの再取得を行うコールバック関数
+  const handleRegisterSuccess = useCallback(
+    (phase: number) => {
+      // フェーズに応じて適切なデータを再取得する
+      switch (phase) {
+        case 1:
+          // 財務記録が登録された場合、財務記録のリストを再取得
+          mutateFinancialRecords();
+          break;
+        case 2:
+          // 部門が登録された場合、部門のリストを再取得
+          mutateDivisions();
+          break;
+        case 3:
+          // 物品が登録された場合、物品のリストを再取得
+          mutateFestivalItems();
+          break;
+      }
+    },
+    [mutateFinancialRecords, mutateDivisions, mutateFestivalItems],
+  );
+
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading || isFestivalItemsLoading;
   if (isLoadingAll) {
     return <Loading />;
@@ -183,7 +208,6 @@ export default function BudgetManagement(props: Props) {
   if (isErrorOccurred) {
     return <div>error...</div>;
   }
-
   return (
     <Card>
       <div className='px-4 py-10'>
@@ -271,6 +295,7 @@ export default function BudgetManagement(props: Props) {
                         financialRecordId={financialRecordId || item.id || 0}
                         divisionId={divisionId || item.id || 0}
                         festivalItemId={item.id || undefined || 0}
+                        onSuccess={handleRegisterSuccess}
                       />
                     </td>
                     {showBudgetColumns && (

@@ -22,10 +22,11 @@ export interface ModalProps {
   financialRecordId: number;
   divisionId: number;
   festivalItemId: number;
+  onSuccess?: (phase: number) => void;
 }
 
 const EditBudgetManagementModal: FC<ModalProps> = (props) => {
-  const { phase, financialRecordId, divisionId, festivalItemId } = props;
+  const { phase, financialRecordId, divisionId, festivalItemId, onSuccess } = props;
 
   const { data: financialRecordData } = useGetFinancialRecordsId(financialRecordId);
   const { data: divisionData } = useGetDivisionsId(divisionId);
@@ -85,6 +86,10 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
         }
       }
       closeModal();
+
+      if (onSuccess) {
+        onSuccess(phase);
+      }
     } catch (error: any) {
       console.error('登録エラー:', error.message);
       alert(`登録エラー: ${error.message}`);

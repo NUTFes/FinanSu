@@ -21,12 +21,13 @@ interface Props {
   financialRecordId: number;
   divisionId: number;
   festivalItemId: number;
+  onSuccess?: (phase: number) => void;
 }
 
 export default function OpenEditModalButton(props: Props) {
   const [showModal, setShowModal] = useState(false);
 
-  const { phase, year, financialRecordId, divisionId, festivalItemId } = props;
+  const { phase, year, financialRecordId, divisionId, festivalItemId, onSuccess } = props;
   return (
     <>
       <EditButton
@@ -42,6 +43,7 @@ export default function OpenEditModalButton(props: Props) {
           financialRecordId={financialRecordId}
           divisionId={divisionId}
           festivalItemId={festivalItemId}
+          onSuccess={onSuccess}
         />
       )}
     </>
