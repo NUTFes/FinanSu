@@ -8,17 +8,18 @@ import {
   VStack,
   Spinner,
   FormErrorMessage,
+  Center,
 } from '@chakra-ui/react';
 import { Noto_Sans_JP } from 'next/font/google';
 import { useRouter } from 'next/router';
 import React, { useRef, useState, useEffect } from 'react';
 import { PrimaryButton, Title } from '@/components/common';
 import FileUploadField from '@/components/create_purchase_report/FileUploadField';
+import FormField from '@/components/create_purchase_report/FormField';
 import { usePurchaseReportForm } from '@/components/create_purchase_report/usePurchaseReportForm';
 import {
   validateFile,
   validateAmount,
-  MAX_AMOUNT,
   ERROR_MESSAGES,
 } from '@/components/create_purchase_report/validators';
 import MainLayout from '@/components/layout/MainLayout';
@@ -35,8 +36,10 @@ const notoSansJP = Noto_Sans_JP({
 const PurchaseReportPage = () => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileError, setFileError] = useState<string>('');
-  const [amountError, setAmountError] = useState<string>('');
+  const [formErrors, setFormErrors] = useState({
+    fileError: '',
+    amountError: '',
+  });
 
   const {
     isEditMode,
@@ -46,29 +49,32 @@ const PurchaseReportPage = () => {
     setUploadedFile,
     departments,
     festivalItems,
-    selectedDivisionId,
-    setSelectedDivisionId,
+    activeDivisionId,
     handleSubmit,
     isProcessing,
     festivalItemName,
     divisionName,
+    isReportDataLoading,
+    handleAmountChange,
+    handleDivisionChange,
+    handleItemChange,
   } = usePurchaseReportForm(router);
 
-  // アップロードファイルの検証
   useEffect(() => {
+    // アップロードファイルの検証
     if (uploadedFile) {
       const { isValid, errorMessage } = validateFile(uploadedFile, false);
-      setFileError(isValid ? '' : errorMessage || '');
+      setFormErrors((prev) => ({ ...prev, fileError: isValid ? '' : errorMessage || '' }));
     } else if (!isEditMode) {
-      setFileError(ERROR_MESSAGES.FILE_REQUIRED);
+      setFormErrors((prev) => ({ ...prev, fileError: ERROR_MESSAGES.FILE_REQUIRED }));
+    } else {
+      setFormErrors((prev) => ({ ...prev, fileError: '' }));
     }
-  }, [uploadedFile, isEditMode]);
 
-  // 金額の検証
-  useEffect(() => {
+    // 金額の検証
     const { isValid, errorMessage } = validateAmount(purchaseReport.amount, false);
-    setAmountError(isValid ? '' : errorMessage || '');
-  }, [purchaseReport.amount]);
+    setFormErrors((prev) => ({ ...prev, amountError: isValid ? '' : errorMessage || '' }));
+  }, [uploadedFile, isEditMode, purchaseReport.amount]);
 
   // ファイル変更処理
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,49 +85,47 @@ const PurchaseReportPage = () => {
     const { isValid, errorMessage } = validateFile(targetFile);
 
     if (!isValid) {
-      setFileError(errorMessage || '');
+      setFormErrors((prev) => ({ ...prev, fileError: errorMessage || '' }));
       if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
-    setFileError('');
+    setFormErrors((prev) => ({ ...prev, fileError: '' }));
     setUploadedFile(targetFile);
   };
 
-  // 金額入力処理
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^\d]/g, '');
-    const numValue = value === '' ? 0 : Number(value);
-    const limitedValue = Math.min(numValue, MAX_AMOUNT);
-    setPurchaseReport((prev) => ({ ...prev, amount: limitedValue }));
-  };
-
-  // 部門選択処理
-  const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = parseInt(e.target.value) || 0;
-    setSelectedDivisionId(selectedId);
-    setPurchaseReport((prev) => ({ ...prev, festivalItemID: 0 }));
-  };
-
-  // 物品選択処理
-  const handleItemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = parseInt(e.target.value) || 0;
-    setPurchaseReport((prev) => ({ ...prev, festivalItemID: selectedId }));
-  };
-
-  // フォーム送信の検証
+  // フォームのバリデーション
   const isFormValid = isEditMode
-    ? purchaseReport.amount > 0 && !!purchaseReport.festivalItemID && !isProcessing && !amountError
+    ? purchaseReport.amount > 0 &&
+      !!purchaseReport.festivalItemID &&
+      !isProcessing &&
+      !formErrors.amountError
     : !!uploadedFile &&
       !!purchaseReport.paidBy &&
       purchaseReport.amount > 0 &&
       !!purchaseReport.festivalItemID &&
-      !!selectedDivisionId &&
+      !!activeDivisionId &&
       !isProcessing &&
-      !fileError &&
-      !amountError;
+      !formErrors.fileError &&
+      !formErrors.amountError;
 
-  const filteredFestivalItems = selectedDivisionId && !isEditMode ? festivalItems : [];
+  // ローディング中の表示
+  if (isEditMode && isReportDataLoading) {
+    return (
+      <MainLayout>
+        <Box
+          className={`flex ${CONTAINER_HEIGHT_CLASS} items-center justify-center ${notoSansJP.className}`}
+        >
+          <Center>
+            <Spinner size='xl' />
+            <p className='ml-3'>データを読み込み中...</p>
+          </Center>
+        </Box>
+      </MainLayout>
+    );
+  }
+
+  const filteredFestivalItems = activeDivisionId ? festivalItems : [];
 
   return (
     <MainLayout>
@@ -137,14 +141,13 @@ const PurchaseReportPage = () => {
           <form className='space-y-6'>
             <VStack spacing={4} align='stretch'>
               {/* 部門選択フォーム */}
-              <FormControl id='department' isRequired isDisabled={isEditMode}>
-                <FormLabel>部門</FormLabel>
+              <FormField id='department' label='部門' isRequired isDisabled={isEditMode}>
                 {isEditMode && divisionName ? (
                   <Input value={divisionName || ''} disabled />
                 ) : (
                   <Select
                     placeholder='選択してください'
-                    value={selectedDivisionId || ''}
+                    value={activeDivisionId || ''}
                     onChange={handleDivisionChange}
                   >
                     {departments.map((dept) => (
@@ -154,11 +157,10 @@ const PurchaseReportPage = () => {
                     ))}
                   </Select>
                 )}
-              </FormControl>
+              </FormField>
 
               {/* 物品選択フォーム */}
-              <FormControl id='product' isRequired isDisabled={isEditMode}>
-                <FormLabel>物品</FormLabel>
+              <FormField id='product' label='物品' isRequired isDisabled={isEditMode}>
                 {isEditMode && festivalItemName ? (
                   <Input value={festivalItemName || ''} disabled />
                 ) : (
@@ -166,7 +168,7 @@ const PurchaseReportPage = () => {
                     placeholder='選択してください'
                     value={purchaseReport.festivalItemID || ''}
                     onChange={handleItemChange}
-                    isDisabled={!selectedDivisionId}
+                    isDisabled={!activeDivisionId}
                   >
                     {filteredFestivalItems.map((item) => (
                       <option key={item.festivalItemId} value={item.festivalItemId}>
@@ -175,11 +177,10 @@ const PurchaseReportPage = () => {
                     ))}
                   </Select>
                 )}
-              </FormControl>
+              </FormField>
 
               {/* 立替者入力フォーム */}
-              <FormControl id='proposer' isRequired>
-                <FormLabel>立替者</FormLabel>
+              <FormField id='proposer' label='立替者' isRequired isDisabled={isEditMode}>
                 <Input
                   type='text'
                   value={purchaseReport.paidBy}
@@ -188,12 +189,11 @@ const PurchaseReportPage = () => {
                   }
                   placeholder='立替者を入力してください'
                   required
-                  disabled={isEditMode}
                 />
-              </FormControl>
+              </FormField>
 
               {/* 金額入力フォーム */}
-              <FormControl id='amount' isRequired isInvalid={!!amountError}>
+              <FormControl id='amount' isRequired isInvalid={!!formErrors.amountError}>
                 <FormLabel>金額</FormLabel>
                 <Input
                   type='text'
@@ -202,7 +202,9 @@ const PurchaseReportPage = () => {
                   placeholder='金額を入力してください'
                   required
                 />
-                {amountError && <FormErrorMessage>{amountError}</FormErrorMessage>}
+                {formErrors.amountError && (
+                  <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
+                )}
               </FormControl>
 
               {/* ファイルアップロードフォーム */}
@@ -211,7 +213,7 @@ const PurchaseReportPage = () => {
                 uploadedFile={uploadedFile}
                 fileInputRef={fileInputRef}
                 handleFileChange={handleFileChange}
-                validationError={fileError}
+                validationError={formErrors.fileError}
               />
             </VStack>
           </form>
