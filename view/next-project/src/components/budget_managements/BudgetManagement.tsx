@@ -1,6 +1,7 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 import formatNumber from '../common/Formatter';
+import OpenDeleteModalButton from './OpenDeleteModalButton';
 import OpenEditModalButton from './OpenEditModalButton';
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
 import { Card, Title, Loading } from '@/components/common';
@@ -208,6 +209,10 @@ export default function BudgetManagement(props: Props) {
   if (isErrorOccurred) {
     return <div>error...</div>;
   }
+
+  function preventClick(event: React.MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+  }
   return (
     <Card>
       <div className='px-4 py-10'>
@@ -284,10 +289,14 @@ export default function BudgetManagement(props: Props) {
                     className={`cursor-pointer ${
                       index !== displayItems.length - 1 ? 'border-b' : ''
                     }`}
-                    onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>
-                      <div className='text-center text-primary-1'>{item.name}</div>
+                      <div
+                        className='text-center text-primary-1'
+                        onClick={() => handleRowClick(item)}
+                      >
+                        {item.name}
+                      </div>
                       <OpenEditModalButton
                         className='w-full md:w-fit'
                         phase={phase}
@@ -295,6 +304,12 @@ export default function BudgetManagement(props: Props) {
                         financialRecordId={financialRecordId || item.id || 0}
                         divisionId={divisionId || item.id || 0}
                         festivalItemId={item.id || undefined || 0}
+                        onSuccess={handleRegisterSuccess}
+                      />
+                      <OpenDeleteModalButton
+                        phase={phase}
+                        id={item?.id ?? 0}
+                        name={item.name ?? ''}
                         onSuccess={handleRegisterSuccess}
                       />
                     </td>

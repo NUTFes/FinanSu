@@ -191,7 +191,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   }
 
   return (
-    <Modal className='md:w-1/2'>
+    <Modal className='md:w-1/2' onClick={closeModal}>
       <div className='ml-auto w-fit'>
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
       </div>

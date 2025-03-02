@@ -2,17 +2,8 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { EditButton } from '../common';
-import { Division, FinancialRecord } from '@/generated/model';
 import { Year } from '@/type/common';
 import EditModal from '@components/budget_managements/EditBudgetManagementModal';
-
-interface FinancialRecordWithId extends FinancialRecord {
-  id: number;
-}
-
-interface DivisionWithId extends Division {
-  id: number;
-}
 
 interface Props {
   phase: number;
@@ -22,6 +13,7 @@ interface Props {
   divisionId: number;
   festivalItemId: number;
   onSuccess?: (phase: number) => void;
+  onClick?: () => void;
 }
 
 export default function OpenEditModalButton(props: Props) {

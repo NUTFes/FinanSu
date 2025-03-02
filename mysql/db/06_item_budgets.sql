@@ -7,7 +7,7 @@ CREATE TABLE item_budgets (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY festival_item_id_foreign_key (festival_item_id) REFERENCES festival_items (id)
+    FOREIGN KEY festival_item_id_foreign_key (festival_item_id) REFERENCES festival_items (id) ON DELETE CASCADE
 );
 
 INSERT INTO item_budgets (amount, festival_item_id) VALUES (10000, 1);
