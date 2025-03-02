@@ -18,6 +18,7 @@ type BuyReportController interface {
 	UpdateBuyReport(echo.Context) error
 	DeleteBuyReport(echo.Context) error
 	IndexBuyReport(echo.Context) error
+	GetBuyReportById(echo.Context) error
 	UpdateBuyReportStatus(echo.Context) error
 }
 
@@ -101,6 +102,19 @@ func (s *buyReportController) IndexBuyReport(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, buyReportDetails)
+}
+
+// Get
+func (s *buyReportController) GetBuyReportById(c echo.Context) error {
+	ctx := c.Request().Context()
+	id := c.Param("id")
+
+	buyReportDetail, err := s.u.GetBuyReportById(ctx, id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to buy_report")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetail)
 }
 
 // UpdateStatus

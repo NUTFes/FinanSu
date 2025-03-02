@@ -24,6 +24,7 @@ type BuyReportUseCase interface {
 	UpdateBuyReport(context.Context, string, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	DeleteBuyReport(context.Context, string) error
 	GetBuyReports(context.Context, string) ([]BuyReportDetail, error)
+	GetBuyReportById(context.Context, string) (BuyReportWithDivisionId, error)
 	UpdateBuyReportStatus(context.Context, string, PutBuyReport) (BuyReportDetail, error)
 }
 
@@ -310,10 +311,34 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 	return detail, nil
 }
 
+func (bru *buyReportUseCase) GetBuyReportById(c context.Context, buyReportId string) (BuyReportWithDivisionId, error) {
+	buyReport := BuyReportWithDivisionId{}
+
+	row, err := bru.bRep.GetBuyReportWithDivisionIdById(c, buyReportId)
+	if err != nil {
+		return buyReport, err
+	}
+
+	err = row.Scan(
+		&buyReport.Id,
+		&buyReport.DivisionId,
+		&buyReport.FestivalItemID,
+		&buyReport.Amount,
+		&buyReport.PaidBy,
+	)
+
+	if err != nil {
+		return buyReport, errors.Wrapf(err, "failed to scan SQL row for buy report id %s", buyReportId)
+	}
+
+	return buyReport, nil
+}
+
 type PostBuyReport = generated.BuyReport
 type PaymentReceiptWithYear = domain.PaymentReceiptWithYear
 type BuyReportDetail = generated.BuyReportDetail
 type PutBuyReport = generated.PutBuyReportStatusBuyReportIdJSONRequestBody
+type BuyReportWithDivisionId = generated.BuyReportWithDivisionId
 
 var DIR_NAME = "receipts"
 
