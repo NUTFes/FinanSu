@@ -210,9 +210,8 @@ export default function BudgetManagement(props: Props) {
     return <div>error...</div>;
   }
 
-  function preventClick(event: React.MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation();
-  }
+  const csvDownloadLink = `${process.env.CSR_API_URI}/financial_records/csv/download?year=${selectedYear.year}`;
+
   return (
     <Card>
       <div className='px-4 py-10'>
@@ -255,7 +254,11 @@ export default function BudgetManagement(props: Props) {
             </div>
           </div>
           <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
-            <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
+            <PrimaryButton className='w-full md:w-fit'>
+              <a href={csvDownloadLink} download>
+                CSVダウンロード
+              </a>
+            </PrimaryButton>
             <OpenAddModalButton
               className='w-full md:w-fit'
               phase={phase}
