@@ -16,6 +16,7 @@ type financialRecordController struct {
 
 type FinancialRecordController interface {
 	IndexFinancialRecords(echo.Context) error
+	GetFinancialRecord(echo.Context) error
 	CreateFinancialRecord(echo.Context) error
 	UpdateFinancialRecord(echo.Context) error
 	DestroyFinancialRecord(echo.Context) error
@@ -44,6 +45,15 @@ func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error 
 		return err
 	}
 	return c.JSON(http.StatusOK, financialRecordDetails)
+}
+
+func (f *financialRecordController) GetFinancialRecord(c echo.Context) error {
+	id := c.Param("id")
+	financialRecord, err := f.u.GetFinancialRecord(c.Request().Context(), id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, financialRecord)
 }
 
 func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error {
