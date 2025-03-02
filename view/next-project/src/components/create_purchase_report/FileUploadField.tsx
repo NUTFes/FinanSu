@@ -53,7 +53,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </span>
         </Button>
       )}
-      {validationError ? (
+      {validationError && !isEditMode ? (
         <Box className='mt-6 flex items-center justify-center gap-2'>
           <FaExclamationCircle color='#B91C1C' className='pt-[1px]' />
           <Text className='text-sm text-[#B91C1C]'>{validationError}</Text>
