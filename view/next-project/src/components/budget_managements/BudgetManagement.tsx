@@ -268,8 +268,9 @@ export default function BudgetManagement(props: Props) {
                         className='w-full md:w-fit'
                         phase={phase}
                         year={selectedYear}
-                        fr={fr}
-                        div={div}
+                        financialRecordId={financialRecordId || item.id || 0}
+                        divisionId={divisionId || item.id || 0}
+                        festivalItemId={item.id || undefined || 0}
                       />
                     </td>
                     {showBudgetColumns && (

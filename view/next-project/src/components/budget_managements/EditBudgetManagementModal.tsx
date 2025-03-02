@@ -1,38 +1,49 @@
-import { useRouter } from 'next/router';
 import * as React from 'react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import formatNumber from '../common/Formatter';
-import { usePostFestivalItems, usePostFinancialRecords, usePostDivisions } from '@/generated/hooks';
+import {
+  useGetFinancialRecordsId,
+  useGetDivisionsId,
+  useGetFestivalItemsId,
+  usePutFinancialRecordsId,
+  usePutDivisionsId,
+  usePutFestivalItemsId,
+} from '@/generated/hooks';
 import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 import { Year } from '@/type/common';
 import { PrimaryButton, Input, Modal } from '@components/common';
-
-interface FinancialRecordWithId extends FinancialRecord {
-  id: number;
-}
-
-interface DivisionWithId extends Division {
-  id: number;
-}
 
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   phase: number;
   year?: Year;
-  fr?: FinancialRecordWithId;
-  div?: DivisionWithId;
+  financialRecordId: number;
+  divisionId: number;
+  festivalItemId: number;
 }
 
 const EditBudgetManagementModal: FC<ModalProps> = (props) => {
-  const { phase, year, fr, div } = props;
-  const [financialRecordName, setFinancialRecordName] = useState(fr?.name ?? '');
-  const [divisionName, setDivisionName] = useState(div?.name ?? '');
-  const [festivalItemName, setFestivalItemName] = useState('');
-  const [amount, setAmount] = useState<number | null>(null);
+  const { phase, financialRecordId, divisionId, festivalItemId } = props;
 
-  const router = useRouter();
+  const { data: financialRecordData } = useGetFinancialRecordsId(financialRecordId);
+  const { data: divisionData } = useGetDivisionsId(divisionId);
+  const { data: festivalItemData } = useGetFestivalItemsId(festivalItemId);
+
+  const [financialRecord, setFinancialRecord] = useState<FinancialRecord | null>(
+    financialRecordData?.data ?? null,
+  );
+  const [division, setDivision] = useState<Division | null>(divisionData?.data ?? null);
+  const [festivalItem, setFestivalItem] = useState<FestivalItem | null>(
+    festivalItemData?.data ?? null,
+  );
+
+  useEffect(() => {
+    setFinancialRecord(financialRecordData?.data ?? null);
+    setDivision(divisionData?.data ?? null);
+    setFestivalItem(festivalItemData?.data ?? null);
+  }, [financialRecordData, divisionData, festivalItemData]);
 
   const closeModal = () => {
     props.setShowModal(false);
@@ -46,49 +57,34 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
   };
 
   // API呼び出し用フック（各フェーズで登録処理を実行）
-  const { trigger: triggerFinancialRecord, isMutating: isMutatingFR } = usePostFinancialRecords();
-  const { trigger: triggerDivision, isMutating: isMutatingDiv } = usePostDivisions();
-  const { trigger: triggerFestivalItem, isMutating: isMutatingFI } = usePostFestivalItems();
+  const { trigger: triggerFinancialRecord, isMutating: isMutatingFR } =
+    usePutFinancialRecordsId(festivalItemId);
+  const { trigger: triggerDivision, isMutating: isMutatingDiv } = usePutDivisionsId(divisionId);
+  const { trigger: triggerFestivalItem, isMutating: isMutatingFI } =
+    usePutFestivalItemsId(festivalItemId);
 
-  // 各フェーズの「次へ」または「登録する」ボタン押下時の処理
-  const handleNext = async () => {
+  // post処理
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       switch (phase) {
         case 1: {
-          if (!financialRecordName.trim()) return;
-          // 新規登録の場合
-          const newRecord: FinancialRecord = {
-            name: financialRecordName,
-            year_id: year?.id ?? 0,
-          };
-          await triggerFinancialRecord(newRecord);
+          if (financialRecord === null) return;
+          await triggerFinancialRecord(financialRecord);
           break;
         }
         case 2: {
-          if (!divisionName.trim()) return;
-          const newDivision: Division = {
-            name: divisionName,
-            // 登録済みのFinancialRecordのidを利用
-            financialRecordID: fr?.id ?? 0,
-          };
-          await triggerDivision(newDivision);
+          if (division === null) return;
+          await triggerDivision(division);
           break;
         }
         case 3: {
-          if (!festivalItemName.trim() || amount === null) return;
-          const newFestivalItem: FestivalItem = {
-            name: festivalItemName,
-            amount: amount,
-            // 登録済みの部門IDを利用
-            divisionId: div?.id ?? 0,
-            memo: '',
-          };
-          await triggerFestivalItem(newFestivalItem);
+          if (festivalItem === null) return;
+          await triggerFestivalItem(festivalItem);
           break;
         }
       }
       closeModal();
-      router.reload();
     } catch (error: any) {
       console.error('登録エラー:', error.message);
       alert(`登録エラー: ${error.message}`);
@@ -97,122 +93,144 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
 
   // 各フェーズで登録中の状態をまとめる
   const isMutating = isMutatingFR || isMutatingDiv || isMutatingFI;
-  // disable 状態は、各フェーズの入力値チェックおよび送信中の場合
-  let isDisabled = false;
-  if (phase === 1) {
-    isDisabled = !financialRecordName.trim() || isMutating;
-  } else if (phase === 2) {
-    isDisabled = !divisionName.trim() || isMutating;
-  } else if (phase === 3) {
-    isDisabled = !festivalItemName.trim() || amount === null || isMutating;
-  }
 
+  // 登録ボタンの無効化
+  let isDisabled = false;
   // 各フェーズごとの入力フォーム
   let content;
-  if (phase === 1) {
-    content = (
-      <>
-        <p>申請局名</p>
-        <div className='col-span-4 w-full'>
-          <Input
-            value={financialRecordName}
-            onChange={(e) => setFinancialRecordName(e.target.value)}
-            placeholder='申請局名を入力'
-          />
-        </div>
-      </>
-    );
-  } else if (phase === 2) {
-    content = (
-      <>
-        <p>申請局名</p>
-        <div className='col-span-4 w-full'>
-          <Input
-            value={financialRecordName}
-            readOnly
-            className='bg-gray-100 pointer-events-none border-0'
-          />
-        </div>
-        <p>申請部門名</p>
-        <div className='col-span-4 w-full'>
-          <Input
-            value={divisionName}
-            onChange={(e) => setDivisionName(e.target.value)}
-            placeholder='申請部門名を入力'
-          />
-        </div>
-      </>
-    );
-  } else if (phase === 3) {
-    content = (
-      <>
-        <p>申請局名</p>
-        <div className='col-span-4 w-full'>
-          <Input
-            value={financialRecordName}
-            readOnly
-            className='bg-gray-100 pointer-events-none border-0'
-          />
-        </div>
-        <p>申請部門名</p>
-        <div className='col-span-4 w-full'>
-          <Input
-            value={divisionName}
-            readOnly
-            className='bg-gray-100 pointer-events-none border-0'
-          />
-        </div>
-        <p>申請物品名</p>
-        <div className='col-span-4 w-full'>
-          <Input
-            value={festivalItemName}
-            onChange={(e) => setFestivalItemName(e.target.value)}
-            placeholder='申請物品名を入力'
-          />
-        </div>
-        <p>金額</p>
-        <div className='col-span-4 w-full'>
-          <Input
-            value={amount !== null ? formatNumber(amount) : ''}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === '') {
-                setAmount(null);
-              } else {
-                const parsed = parseNumber(value);
-                setAmount(parsed);
+  switch (phase) {
+    case 1:
+      isDisabled = !financialRecord?.name.trim() || isMutating;
+      content = (
+        <>
+          <p>申請局名</p>
+          <div className='col-span-4 w-full'>
+            <Input
+              value={financialRecord?.name}
+              onChange={(e) =>
+                setFinancialRecord({
+                  ...financialRecord,
+                  name: e.target.value,
+                  year_id: financialRecord?.year_id ?? 0,
+                })
               }
-            }}
-            placeholder='金額を入力'
-          />
-        </div>
-      </>
-    );
+              placeholder='申請局名を入力'
+            />
+          </div>
+        </>
+      );
+      break;
+    case 2:
+      isDisabled = !division?.name.trim() || isMutating;
+      content = (
+        <>
+          <p>申請局名</p>
+          <div className='col-span-4 w-full'>
+            <p>{financialRecord?.name}</p>
+          </div>
+          <p>申請部門名</p>
+          <div className='col-span-4 w-full'>
+            <Input
+              value={division?.name}
+              onChange={(e) =>
+                setDivision({
+                  ...division,
+                  name: e.target.value,
+                  financialRecordID: division?.financialRecordID ?? 0,
+                })
+              }
+              placeholder='申請部門名を入力'
+            />
+          </div>
+        </>
+      );
+      break;
+    case 3:
+      isDisabled = !festivalItem?.name.trim() || festivalItem?.amount === null || isMutating;
+      content = (
+        <>
+          <p>申請局名</p>
+          <div className='col-span-4 w-full'>
+            <p>{financialRecord?.name}</p>
+          </div>
+          <p>申請部門名</p>
+          <div className='col-span-4 w-full'>
+            <p>{division?.name}</p>
+          </div>
+          <p>申請物品名</p>
+          <div className='col-span-4 w-full'>
+            <Input
+              value={festivalItem?.name}
+              onChange={(e) =>
+                setFestivalItem({
+                  ...festivalItem,
+                  name: e.target.value,
+                  amount: festivalItem?.amount ?? 0,
+                  divisionId: festivalItem?.divisionId ?? 0,
+                  memo: festivalItem?.memo ?? '',
+                })
+              }
+              placeholder='申請物品名を入力'
+            />
+          </div>
+          <p>金額</p>
+          <div className='col-span-4 w-full'>
+            <Input
+              value={festivalItem?.amount !== null ? formatNumber(festivalItem?.amount || 0) : ''}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setFestivalItem({
+                    ...festivalItem,
+                    name: festivalItem?.name ?? '',
+                    amount: 0,
+                    divisionId: festivalItem?.divisionId ?? 0,
+                  });
+                } else {
+                  const parsed = parseNumber(value);
+                  setFestivalItem({
+                    ...festivalItem,
+                    name: festivalItem?.name ?? '',
+                    amount: parsed ?? 0,
+                    divisionId: festivalItem?.divisionId ?? 0,
+                  });
+                }
+              }}
+              placeholder='金額を入力'
+            />
+          </div>
+        </>
+      );
+      break;
+    default:
+      break;
   }
 
   return (
     <Modal className='md:w-1/2'>
-      <div className='ml-auto w-fit'>
-        <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
-      </div>
-      <div className='mx-auto w-fit text-xl'>
-        {phase === 1 && '申請局登録'}
-        {phase === 2 && '申請部門登録'}
-        {phase === 3 && '申請物品登録'}
-      </div>
-      <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
-        {content}
-      </div>
-      <div className='flex flex-col items-center justify-center gap-4'>
-        <div className='flex gap-4'>
-          <PrimaryButton disabled={isDisabled} onClick={handleNext}>
-            {isMutating ? '登録中' : '登録する'}
-          </PrimaryButton>
+      <form onSubmit={handleSubmit}>
+        <div className='ml-auto w-fit'>
+          <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
         </div>
-        <div className='cursor-default text-red-600 underline' onClick={closeModal}>
-          キャンセル
+        <div className='mx-auto w-fit text-xl'>
+          {phase === 1 && '申請局編集'}
+          {phase === 2 && '申請部門編集'}
+          {phase === 3 && '申請物品編集'}
         </div>
-      </div>
+        <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+          {content}
+        </div>
+        <div className='flex flex-col items-center justify-center gap-4'>
+          <div className='flex gap-4'>
+            <PrimaryButton disabled={isDisabled} type='submit'>
+              {isMutating ? '登録中' : '更新する'}
+            </PrimaryButton>
+          </div>
+          <div className='cursor-default text-red-600 underline' onClick={closeModal}>
+            キャンセル
+          </div>
+        </div>
+      </form>
     </Modal>
   );
 };

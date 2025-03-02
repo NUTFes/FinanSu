@@ -16,16 +16,17 @@ interface DivisionWithId extends Division {
 
 interface Props {
   phase: number;
-  year?: Year;
-  fr?: FinancialRecordWithId;
-  div?: DivisionWithId;
   className?: string;
-  children?: React.ReactNode;
+  year?: Year;
+  financialRecordId: number;
+  divisionId: number;
+  festivalItemId: number;
 }
 
 export default function OpenEditModalButton(props: Props) {
   const [showModal, setShowModal] = useState(false);
 
+  const { phase, year, financialRecordId, divisionId, festivalItemId } = props;
   return (
     <>
       <EditButton
@@ -36,10 +37,11 @@ export default function OpenEditModalButton(props: Props) {
       {showModal && (
         <EditModal
           setShowModal={setShowModal}
-          phase={props.phase}
-          year={props.year}
-          fr={props.fr}
-          div={props.div}
+          phase={phase}
+          year={year}
+          financialRecordId={financialRecordId}
+          divisionId={divisionId}
+          festivalItemId={festivalItemId}
         />
       )}
     </>

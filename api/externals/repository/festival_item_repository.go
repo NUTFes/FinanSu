@@ -229,7 +229,7 @@ func (fir *festivalItemRepository) GetFestivalItemOptions(
 // IDでFestivalItemを取得
 func (fir *festivalItemRepository) GetFestivalItemById(
 	c context.Context,
-	divisionId string,
+	festivalItemId string,
 ) (*sql.Row, error) {
 	ds := dialect.Select(
 		"festival_items.id",
@@ -240,7 +240,7 @@ func (fir *festivalItemRepository) GetFestivalItemById(
 	).
 		From("festival_items").
 		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
-		Where(goqu.Ex{"festival_items.division_id": divisionId})
+		Where(goqu.Ex{"festival_items.id": festivalItemId})
 
 	query, _, err := ds.ToSQL()
 
