@@ -264,6 +264,7 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 			&detail.IsSettled,
 			&detail.PaidBy,
 			&detail.ReportDate,
+			&detail.FileName,
 		)
 
 		if err != nil {
