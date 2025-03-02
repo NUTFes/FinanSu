@@ -23,7 +23,7 @@ export interface ValidationResult {
  * @param showAlert アラートを表示するかどうか
  * @returns 検証結果
  */
-export const validateFile = (file: File | null, showAlert: boolean = true): ValidationResult => {
+export const validateFile = (file: File | null, showAlert = true): ValidationResult => {
   if (!file) {
     return {
       isValid: false,
@@ -56,7 +56,7 @@ export const validateFile = (file: File | null, showAlert: boolean = true): Vali
  * @param showAlert アラートを表示するかどうか
  * @returns 検証結果
  */
-export const validateAmount = (amount: number, showAlert: boolean = true): ValidationResult => {
+export const validateAmount = (amount: number, showAlert = true): ValidationResult => {
   if (amount <= 0) {
     if (showAlert) alert(ERROR_MESSAGES.INVALID_AMOUNT);
     return {
@@ -81,8 +81,8 @@ export const validateAmount = (amount: number, showAlert: boolean = true): Valid
  * @returns 検証結果
  */
 export const validateRequiredFields = (
-  fields: Record<string, any>,
-  showAlert: boolean = true,
+  fields: Record<string, unknown>,
+  showAlert = true,
 ): ValidationResult => {
   for (const [key, value] of Object.entries(fields)) {
     if (!value && value !== 0) {
