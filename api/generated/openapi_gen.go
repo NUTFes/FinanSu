@@ -74,6 +74,7 @@ type BuyReportDetail struct {
 	Amount              *int    `json:"amount,omitempty"`
 	DivisionName        *string `json:"divisionName,omitempty"`
 	FestivalItemName    *string `json:"festivalItemName,omitempty"`
+	FileName            *string `json:"fileName,omitempty"`
 	FinancialRecordName *string `json:"financialRecordName,omitempty"`
 	Id                  *int    `json:"id,omitempty"`
 	IsPacked            *bool   `json:"isPacked,omitempty"`
