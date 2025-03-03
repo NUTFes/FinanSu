@@ -178,27 +178,11 @@ export default function BudgetManagement(props: Props) {
     totalBalance = financialRecordsTotal?.balance || 0;
   }
 
-  // データの再取得を行うコールバック関数
-  const handleRegisterSuccess = useCallback(
-    (phase: number) => {
-      // フェーズに応じて適切なデータを再取得する
-      switch (phase) {
-        case 1:
-          // 財務記録が登録された場合、財務記録のリストを再取得
-          mutateFinancialRecords();
-          break;
-        case 2:
-          // 部門が登録された場合、部門のリストを再取得
-          mutateDivisions();
-          break;
-        case 3:
-          // 物品が登録された場合、物品のリストを再取得
-          mutateFestivalItems();
-          break;
-      }
-    },
-    [mutateFinancialRecords, mutateDivisions, mutateFestivalItems],
-  );
+  const handleRegisterSuccess = useCallback(() => {
+    mutateFinancialRecords();
+    mutateDivisions();
+    mutateFestivalItems();
+  }, [mutateFinancialRecords, mutateDivisions, mutateFestivalItems]);
 
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading || isFestivalItemsLoading;
   if (isLoadingAll) {
@@ -265,6 +249,7 @@ export default function BudgetManagement(props: Props) {
               year={selectedYear}
               fr={fr}
               div={div}
+              onSuccess={handleRegisterSuccess}
             >
               {title}登録
             </OpenAddModalButton>
