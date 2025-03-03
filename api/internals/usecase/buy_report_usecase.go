@@ -143,7 +143,7 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 		}
 
 		// 登録されているファイルの削除
-		filePath := convertFilePath(paymentReceipt)
+		filePath := convertFilePath(paymentReceipt.Year, paymentReceipt.FileName)
 		err = bru.oRep.DeleteFile(c, filePath)
 		if err != nil {
 			bru.tRep.RollBack(c, tx)
@@ -221,7 +221,7 @@ func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId stri
 	}
 
 	// 登録されているファイルの削除
-	filePath := convertFilePath(paymentReceipt)
+	filePath := convertFilePath(paymentReceipt.Year, paymentReceipt.FileName)
 	err = bru.oRep.DeleteFile(c, filePath)
 	if err != nil {
 		bru.tRep.RollBack(c, tx)
@@ -248,7 +248,7 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 
 	rows, err := bru.bRep.AllByPeriod(c, year)
 	if err != nil {
-		return []BuyReportDetail{}, nil
+		return []BuyReportDetail{}, err
 	}
 	defer rows.Close()
 
@@ -265,13 +265,17 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 			&detail.PaidBy,
 			&detail.ReportDate,
 			&detail.FileName,
+			&detail.Year,
 		)
-
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to scan SQL row")
 		}
-
 		buyReportDetails = append(buyReportDetails, detail)
+	}
+
+	for i, buyReportDetail := range buyReportDetails {
+		filePath := convertFilePath(*buyReportDetail.Year, *buyReportDetail.FileName)
+		buyReportDetails[i].FilePath = filePath
 	}
 
 	return buyReportDetails, nil
@@ -325,7 +329,7 @@ func generateFileName(buyReportId string, file *multipart.FileHeader) string {
 	return filename
 }
 
-func convertFilePath(paymentReceipt PaymentReceiptWithYear) string {
-	filePath := "/" + strconv.Itoa(paymentReceipt.Year) + "/" + DIR_NAME + "/" + paymentReceipt.FileName
+func convertFilePath(year int, fileName string) string {
+	filePath := "/" + strconv.Itoa(year) + "/" + DIR_NAME + "/" + fileName
 	return filePath
 }

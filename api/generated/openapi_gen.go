@@ -71,16 +71,18 @@ type BuyReport struct {
 
 // BuyReportDetail 購入報告ページで表示する詳細情報
 type BuyReportDetail struct {
-	Amount              *int    `json:"amount,omitempty"`
-	DivisionName        *string `json:"divisionName,omitempty"`
-	FestivalItemName    *string `json:"festivalItemName,omitempty"`
+	Amount              int     `json:"amount"`
+	DivisionName        string  `json:"divisionName"`
+	FestivalItemName    string  `json:"festivalItemName"`
 	FileName            *string `json:"fileName,omitempty"`
-	FinancialRecordName *string `json:"financialRecordName,omitempty"`
-	Id                  *int    `json:"id,omitempty"`
-	IsPacked            *bool   `json:"isPacked,omitempty"`
-	IsSettled           *bool   `json:"isSettled,omitempty"`
-	PaidBy              *string `json:"paidBy,omitempty"`
-	ReportDate          *string `json:"reportDate,omitempty"`
+	FilePath            string  `json:"filePath"`
+	FinancialRecordName string  `json:"financialRecordName"`
+	Id                  int     `json:"id"`
+	IsPacked            bool    `json:"isPacked"`
+	IsSettled           bool    `json:"isSettled"`
+	PaidBy              string  `json:"paidBy"`
+	ReportDate          string  `json:"reportDate"`
+	Year                *int    `json:"year,omitempty"`
 }
 
 // BuyReportInformation マイページで表示する購入報告の情報
