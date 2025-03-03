@@ -1,10 +1,11 @@
+import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { TbDownload } from 'react-icons/tb';
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetBuyReportsDetails, useGetYearsPeriods } from '@/generated/hooks';
-import { GetBuyReportsDetailsParams, BuyReportDetail } from '@/generated/model';
+import type { GetBuyReportsDetailsParams, BuyReportDetail } from '@/generated/model';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -75,10 +76,14 @@ export default function PurchaseReports() {
     });
   };
 
-  if (isYearPeriodsLoading) return <Loading />;
-  if (yearPeriodsError) return;
-  if (isBuyReportsLoading) return <Loading />;
-  if (buyReportsError) return;
+  const download = async (url: string, fileName: string) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    saveAs(blob, fileName);
+  };
+
+  if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
+  if (yearPeriodsError || buyReportsError) return router.push('/500');
 
   return (
     <MainLayout>
@@ -180,7 +185,10 @@ export default function PurchaseReports() {
                         <td>
                           <div className='flex'>
                             <div className='mx-1'>
-                              <DownloadButton tooltip='レシートダウンロード' />
+                              <DownloadButton
+                                tooltip='レシートダウンロード'
+                                onClick={() => download(report.filePath, report.fileName ?? '')}
+                              />
                             </div>
                             <div className='mx-1'>
                               <EditButton
