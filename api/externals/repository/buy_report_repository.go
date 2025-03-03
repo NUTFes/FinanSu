@@ -273,7 +273,8 @@ var selectBuyReportDetailsQuery = dialect.From("buy_reports").Select(
 	"buy_statuses.is_settled",
 	"buy_reports.paid_by",
 	goqu.I("buy_reports.created_at").As("reportDate"),
-	goqu.I("payment_receipts.file_name").As("receiptFileName"),
+	"payment_receipts.file_name",
+	"years.year",
 ).
 	InnerJoin(goqu.I("buy_statuses"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("buy_statuses.buy_report_id")))).
 	InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("buy_reports.festival_item_id").Eq(goqu.I("festival_items.id")))).
