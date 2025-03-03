@@ -23,10 +23,11 @@ export interface ModalProps {
   year?: Year;
   fr?: FinancialRecordWithId;
   div?: DivisionWithId;
+  onSuccess?: (phase: number) => void;
 }
 
 const AddBudgetManagementModal: FC<ModalProps> = (props) => {
-  const { phase, year, fr, div } = props;
+  const { phase, year, fr, div, onSuccess } = props;
   const [financialRecordName, setFinancialRecordName] = useState(fr?.name ?? '');
   const [divisionName, setDivisionName] = useState(div?.name ?? '');
   const [festivalItemName, setFestivalItemName] = useState('');
@@ -88,7 +89,10 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
         }
       }
       closeModal();
-      router.reload();
+
+      if (onSuccess) {
+        onSuccess(phase);
+      }
     } catch (error: any) {
       console.error('登録エラー:', error.message);
       alert(`登録エラー: ${error.message}`);

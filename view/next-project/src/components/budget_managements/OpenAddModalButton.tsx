@@ -22,6 +22,7 @@ interface Props {
   div?: DivisionWithId;
   className?: string;
   children?: React.ReactNode;
+  onSuccess?: (phase: number) => void;
 }
 
 export default function OpenAddModalButton(props: Props) {
@@ -44,6 +45,7 @@ export default function OpenAddModalButton(props: Props) {
           year={props.year}
           fr={props.fr}
           div={props.div}
+          onSuccess={props.onSuccess}
         />
       )}
     </>
