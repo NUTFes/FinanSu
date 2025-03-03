@@ -12,7 +12,7 @@ interface Props {
   financialRecordId: number;
   divisionId: number;
   festivalItemId: number;
-  onSuccess?: (phase: number) => void;
+  onSuccess?: () => void;
   onClick?: () => void;
 }
 

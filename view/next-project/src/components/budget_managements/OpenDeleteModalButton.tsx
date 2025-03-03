@@ -9,7 +9,7 @@ interface Props {
   className?: string;
   id: number;
   name: string;
-  onSuccess?: (phase: number) => void;
+  onSuccess?: () => void;
 }
 
 export default function OpenDeleteModalButton(props: Props) {

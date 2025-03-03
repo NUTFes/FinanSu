@@ -22,7 +22,7 @@ export interface ModalProps {
   financialRecordId: number;
   divisionId: number;
   festivalItemId: number;
-  onSuccess?: (phase: number) => void;
+  onSuccess?: () => void;
 }
 
 const EditBudgetManagementModal: FC<ModalProps> = (props) => {
@@ -88,7 +88,7 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
       closeModal();
 
       if (onSuccess) {
-        onSuccess(phase);
+        onSuccess();
       }
     } catch (error: any) {
       console.error('登録エラー:', error.message);

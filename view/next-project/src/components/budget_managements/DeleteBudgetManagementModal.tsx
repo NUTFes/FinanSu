@@ -14,7 +14,7 @@ export interface ModalProps {
   phase: number;
   id: number;
   name: string;
-  onSuccess?: (phase: number) => void;
+  onSuccess?: () => void;
 }
 
 const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
@@ -51,7 +51,7 @@ const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
       closeModal();
 
       if (onSuccess) {
-        onSuccess(phase);
+        onSuccess();
       }
     } catch (error: any) {
       console.error('削除エラー:', error.message);

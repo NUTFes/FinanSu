@@ -23,7 +23,7 @@ export interface ModalProps {
   year?: Year;
   fr?: FinancialRecordWithId;
   div?: DivisionWithId;
-  onSuccess?: (phase: number) => void;
+  onSuccess?: () => void;
 }
 
 const AddBudgetManagementModal: FC<ModalProps> = (props) => {
@@ -91,7 +91,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
       closeModal();
 
       if (onSuccess) {
-        onSuccess(phase);
+        onSuccess();
       }
     } catch (error: any) {
       console.error('登録エラー:', error.message);
