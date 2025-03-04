@@ -1,11 +1,19 @@
 import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import { TbDownload } from 'react-icons/tb';
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import { useGetBuyReportsDetails, useGetYearsPeriods } from '@/generated/hooks';
-import type { GetBuyReportsDetailsParams, BuyReportDetail } from '@/generated/model';
+import {
+  useGetBuyReportsDetails,
+  useGetYearsPeriods,
+  usePutBuyReportStatusBuyReportId,
+} from '@/generated/hooks';
+import type {
+  GetBuyReportsDetailsParams,
+  BuyReportDetail,
+  PutBuyReportStatusBuyReportIdBody,
+} from '@/generated/model';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -29,16 +37,30 @@ export default function PurchaseReports() {
     isLoading: isBuyReportsLoading,
     error: buyReportsError,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
+  const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
-  const buyReports = buyReportsData?.data ?? [];
+  // const buyReports = buyReportsData?.data ?? [];
 
-  const [sealChecks, setSealChecks] = useState<Record<number, boolean>>(
-    buyReports ? Object.fromEntries(buyReports.map((report) => [report.id, report.isPacked])) : {},
-  );
+  // const [sealChecks, setSealChecks] = useState<Record<number, boolean>>(
+  //   Object.fromEntries(buyReports.map((report) => [report.id, report.isPacked])),
+  // );
 
-  const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>(
-    buyReports ? Object.fromEntries(buyReports.map((report) => [report.id, report.isSettled])) : {},
-  );
+  // const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>(
+  //   Object.fromEntries(buyReports.map((report) => [report.id, report.isSettled])),
+  // );
+  const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
+  const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    if (buyReports.length > 0) {
+      setSealChecks(
+        Object.fromEntries(buyReports.map((report) => [report.id, report.isPacked ?? false])),
+      );
+      setSettlementChecks(
+        Object.fromEntries(buyReports.map((report) => [report.id, report.isSettled ?? false])),
+      );
+    }
+  }, [buyReports]);
 
   const formatDate = useCallback((date: string) => {
     const datetime = date.replace('T', ' ');
@@ -81,6 +103,30 @@ export default function PurchaseReports() {
     const blob = await response.blob();
     saveAs(blob, fileName);
   };
+
+  const [buyReportId, setBuyReportId] = useState<number>(0);
+
+  const { trigger } = usePutBuyReportStatusBuyReportId(buyReportId);
+
+  const updateStatus = useCallback(async () => {
+    if (!buyReportId) return;
+
+    const putBuyReportStatusBuyReportIdBody: PutBuyReportStatusBuyReportIdBody = {
+      isPacked: sealChecks[buyReportId],
+      isSettled: settlementChecks[buyReportId],
+    };
+    console.log('Sending update payload:', putBuyReportStatusBuyReportIdBody);
+
+    try {
+      await trigger(putBuyReportStatusBuyReportIdBody);
+    } catch (error) {
+      console.error('Failed to update buy_reports:', error);
+    }
+  }, [buyReportId, sealChecks, settlementChecks, trigger]);
+
+  useEffect(() => {
+    updateStatus();
+  }, [updateStatus]);
 
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
@@ -172,14 +218,20 @@ export default function PurchaseReports() {
                           <Checkbox
                             className='accent-primary-5'
                             checked={sealChecks[report.id ?? 0] || false}
-                            onChange={() => updateSealCheck(report.id ?? 0)}
+                            onChange={() => {
+                              setBuyReportId(report.id);
+                              updateSealCheck(report.id ?? 0);
+                            }}
                           />
                         </td>
                         <td className='px-4 py-2 text-center'>
                           <Checkbox
                             className='accent-primary-5'
                             checked={settlementChecks[report.id ?? 0] || false}
-                            onChange={() => updateSettlementCheck(report.id ?? 0)}
+                            onChange={() => {
+                              setBuyReportId(report.id);
+                              updateSettlementCheck(report.id ?? 0);
+                            }}
                           />
                         </td>
                         <td>
