@@ -21,14 +21,7 @@ const getUrl = (contextUrl: string): string => {
 };
 
 // NOTE: Add headers
-const getHeaders = (headers?: HeadersInit, body?: BodyInit): HeadersInit => {
-  // FormData の場合は Content-Type ヘッダーを設定しない
-  if (body instanceof FormData) {
-    return {
-      ...headers,
-    };
-  }
-
+const getHeaders = (headers?: HeadersInit): HeadersInit => {
   return {
     ...headers,
     'Content-Type': 'application/json',
@@ -37,7 +30,7 @@ const getHeaders = (headers?: HeadersInit, body?: BodyInit): HeadersInit => {
 
 export const customFetch = async <T>(url: string, options: RequestInit): Promise<T> => {
   const requestUrl = getUrl(url);
-  const requestHeaders = getHeaders(options.headers, options.body ?? undefined);
+  const requestHeaders = getHeaders(options.headers);
 
   const requestInit: RequestInit = {
     ...options,
