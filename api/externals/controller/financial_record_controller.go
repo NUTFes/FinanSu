@@ -31,16 +31,17 @@ func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error 
 	year := c.QueryParam("year")
 	var financialRecordDetails FinancialRecordDetails
 	var err error
+	ctx := c.Request().Context()
 
 	if year != "" {
-		financialRecordDetails, err = f.u.GetFinancialRecordsByYears(c.Request().Context(), year)
+		financialRecordDetails, err = f.u.GetFinancialRecordsByYears(ctx, year)
 		if err != nil {
 			return err
 		}
 		return c.JSON(http.StatusOK, financialRecordDetails)
 	}
 
-	financialRecordDetails, err = f.u.GetFinancialRecords(c.Request().Context())
+	financialRecordDetails, err = f.u.GetFinancialRecords(ctx)
 	if err != nil {
 		return err
 	}

@@ -67,7 +67,8 @@ func (f *festivalItemController) IndexFestivalItemOption(c echo.Context) error {
 
 func (f *festivalItemController) GetFestivalItem(c echo.Context) error {
 	id := c.Param("id")
-	festivalItem, err := f.u.GetFestivalItem(c.Request().Context(), id)
+	ctx := c.Request().Context()
+	festivalItem, err := f.u.GetFestivalItem(ctx, id)
 	if err != nil {
 		return err
 	}
