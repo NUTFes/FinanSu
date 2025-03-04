@@ -97,6 +97,15 @@ type BuyReportInformation struct {
 // BuyReportInformationStatus defines model for BuyReportInformation.Status.
 type BuyReportInformationStatus string
 
+// BuyReportWithDivisionId 購入報告の際のパラメータ、部門と物品IDを含む
+type BuyReportWithDivisionId struct {
+	Amount         *int    `json:"amount,omitempty"`
+	DivisionId     *int    `json:"divisionId,omitempty"`
+	FestivalItemID *int    `json:"festivalItemID,omitempty"`
+	Id             *int    `json:"id,omitempty"`
+	PaidBy         *string `json:"paidBy,omitempty"`
+}
+
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
 type DestroyTeacherIDs struct {
 	DeleteIDs []float32 `json:"deleteIDs"`
@@ -775,6 +784,9 @@ type ServerInterface interface {
 
 	// (DELETE /buy_reports/{id})
 	DeleteBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /buy_reports/{id})
+	GetBuyReportsId(ctx echo.Context, id int) error
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
@@ -1630,6 +1642,22 @@ func (w *ServerInterfaceWrapper) DeleteBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteBuyReportsId(ctx, id)
+	return err
+}
+
+// GetBuyReportsId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetBuyReportsId(ctx, id)
 	return err
 }
 
@@ -3261,6 +3289,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
 	router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
+	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)

@@ -150,6 +150,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// buyReportsのRoute
 	e.POST("/buy_reports", r.buyReportController.CreateBuyReport)
+	e.GET("/buy_reports/:id", r.buyReportController.GetBuyReportById)
 	e.PUT("/buy_reports/:id", r.buyReportController.UpdateBuyReport)
 	e.DELETE("/buy_reports/:id", r.buyReportController.DeleteBuyReport)
 	e.GET("/buy_reports/details", r.buyReportController.IndexBuyReport)
