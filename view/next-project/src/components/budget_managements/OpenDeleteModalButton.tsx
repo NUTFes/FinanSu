@@ -6,10 +6,9 @@ import DeleteModal from '@components/budget_managements/DeleteBudgetManagementMo
 
 interface Props {
   phase: number;
-  className?: string;
   id: number;
   name: string;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 export default function OpenDeleteModalButton(props: Props) {

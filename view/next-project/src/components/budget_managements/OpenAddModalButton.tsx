@@ -22,7 +22,7 @@ interface Props {
   div?: DivisionWithId;
   className?: string;
   children?: React.ReactNode;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 export default function OpenAddModalButton(props: Props) {

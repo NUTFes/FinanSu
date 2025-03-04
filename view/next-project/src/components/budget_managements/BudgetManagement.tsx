@@ -286,9 +286,7 @@ export default function BudgetManagement(props: Props) {
                         {item.name}
                       </div>
                       <OpenEditModalButton
-                        className='w-full md:w-fit'
                         phase={phase}
-                        year={selectedYear}
                         financialRecordId={financialRecordId || item.id || 0}
                         divisionId={divisionId || item.id || 0}
                         festivalItemId={item.id || undefined || 0}

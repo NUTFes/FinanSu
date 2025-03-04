@@ -12,17 +12,15 @@ import {
   usePutFestivalItemsId,
 } from '@/generated/hooks';
 import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
-import { Year } from '@/type/common';
 import { PrimaryButton, Input, Modal } from '@components/common';
 
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   phase: number;
-  year?: Year;
   financialRecordId: number;
   divisionId: number;
   festivalItemId: number;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const EditBudgetManagementModal: FC<ModalProps> = (props) => {
@@ -91,7 +89,6 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
         onSuccess();
       }
     } catch (error: any) {
-      console.error('登録エラー:', error.message);
       alert(`登録エラー: ${error.message}`);
     }
   };
@@ -226,11 +223,9 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
           {content}
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>
-          <div className='flex gap-4'>
-            <PrimaryButton disabled={isDisabled} type='submit'>
-              {isMutating ? '登録中' : '更新する'}
-            </PrimaryButton>
-          </div>
+          <PrimaryButton disabled={isDisabled} type='submit'>
+            {isMutating ? '登録中' : '更新する'}
+          </PrimaryButton>
           <div className='cursor-default text-red-600 underline' onClick={closeModal}>
             キャンセル
           </div>

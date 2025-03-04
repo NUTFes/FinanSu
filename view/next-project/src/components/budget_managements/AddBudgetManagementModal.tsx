@@ -23,7 +23,7 @@ export interface ModalProps {
   year?: Year;
   fr?: FinancialRecordWithId;
   div?: DivisionWithId;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const AddBudgetManagementModal: FC<ModalProps> = (props) => {

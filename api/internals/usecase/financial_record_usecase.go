@@ -144,7 +144,7 @@ func (fru *financialRecordUseCase) GetFinancialRecord(
 	c context.Context,
 	id string,
 ) (FinancialRecord, error) {
-	financialRecord := FinancialRecord{}
+	var financialRecord FinancialRecord
 	row, err := fru.rep.GetFinancialRecordById(c, id)
 	if err != nil {
 		return financialRecord, err

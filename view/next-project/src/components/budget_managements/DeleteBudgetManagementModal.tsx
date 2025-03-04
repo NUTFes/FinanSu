@@ -14,7 +14,7 @@ export interface ModalProps {
   phase: number;
   id: number;
   name: string;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
@@ -54,7 +54,6 @@ const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
         onSuccess();
       }
     } catch (error: any) {
-      console.error('削除エラー:', error.message);
       alert(`削除エラー: ${error.message}`);
     }
   };
@@ -77,11 +76,9 @@ const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
           <div className='mx-auto my-5 w-fit text-xl'>{name}を削除しますか？</div>
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>
-          <div className='flex gap-4'>
-            <PrimaryButton disabled={isMutating} type='submit'>
-              {isMutating ? '削除中' : '削除する'}
-            </PrimaryButton>
-          </div>
+          <PrimaryButton disabled={isMutating} type='submit'>
+            {isMutating ? '削除中' : '削除する'}
+          </PrimaryButton>
           <div className='cursor-default text-red-600 underline' onClick={closeModal}>
             キャンセル
           </div>
