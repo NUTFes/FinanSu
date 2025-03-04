@@ -307,6 +307,8 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 		&detail.IsSettled,
 		&detail.PaidBy,
 		&detail.ReportDate,
+		&detail.FileName,
+		&detail.Year,
 	)
 
 	if err != nil {
