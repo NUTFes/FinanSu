@@ -39,18 +39,10 @@ export default function PurchaseReports() {
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
-  // const buyReports = buyReportsData?.data ?? [];
-
-  // const [sealChecks, setSealChecks] = useState<Record<number, boolean>>(
-  //   Object.fromEntries(buyReports.map((report) => [report.id, report.isPacked])),
-  // );
-
-  // const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>(
-  //   Object.fromEntries(buyReports.map((report) => [report.id, report.isSettled])),
-  // );
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
 
+  // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
   useEffect(() => {
     if (buyReports.length > 0) {
       setSealChecks(
@@ -61,15 +53,6 @@ export default function PurchaseReports() {
       );
     }
   }, [buyReports]);
-
-  const formatDate = useCallback((date: string) => {
-    const datetime = date.replace('T', ' ');
-    return datetime.substring(5, datetime.length - 10).replace('-', '/');
-  }, []);
-
-  const formatAmount = useCallback((amount: number) => {
-    return amount.toLocaleString();
-  }, []);
 
   const updateSealCheck = (id: number) => {
     setSealChecks((prev) => ({
@@ -98,6 +81,15 @@ export default function PurchaseReports() {
     });
   };
 
+  const formatDate = useCallback((date: string) => {
+    const datetime = date.replace('T', ' ');
+    return datetime.substring(5, datetime.length - 10).replace('-', '/');
+  }, []);
+
+  const formatAmount = useCallback((amount: number) => {
+    return amount.toLocaleString();
+  }, []);
+
   const download = async (url: string, fileName: string) => {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -105,7 +97,6 @@ export default function PurchaseReports() {
   };
 
   const [buyReportId, setBuyReportId] = useState<number>(0);
-
   const { trigger } = usePutBuyReportStatusBuyReportId(buyReportId);
 
   const updateStatus = useCallback(async () => {
@@ -115,7 +106,6 @@ export default function PurchaseReports() {
       isPacked: sealChecks[buyReportId],
       isSettled: settlementChecks[buyReportId],
     };
-    console.log('Sending update payload:', putBuyReportStatusBuyReportIdBody);
 
     try {
       await trigger(putBuyReportStatusBuyReportIdBody);
@@ -219,7 +209,7 @@ export default function PurchaseReports() {
                             className='accent-primary-5'
                             checked={sealChecks[report.id ?? 0] || false}
                             onChange={() => {
-                              setBuyReportId(report.id);
+                              setBuyReportId(report.id ?? 0);
                               updateSealCheck(report.id ?? 0);
                             }}
                           />
@@ -229,7 +219,7 @@ export default function PurchaseReports() {
                             className='accent-primary-5'
                             checked={settlementChecks[report.id ?? 0] || false}
                             onChange={() => {
-                              setBuyReportId(report.id);
+                              setBuyReportId(report.id ?? 0);
                               updateSettlementCheck(report.id ?? 0);
                             }}
                           />
