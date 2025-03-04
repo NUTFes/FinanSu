@@ -2771,6 +2771,26 @@ components:
         isSettled:
           type: boolean
           example: false
+        fileName:
+          type: string
+          example: test.png
+        year:
+          type: integer
+          example: 2025
+        filePath:
+          type: string
+          example: /2025/receipts/FileName
+      required:
+        - amount
+        - divisionName
+        - festivalItemName
+        - financialRecordName
+        - id
+        - isPacked
+        - isSettled
+        - paidBy
+        - reportDate
+        - filePath
     division:
       required:
         - name
