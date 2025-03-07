@@ -930,6 +930,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/divisionWithBalance"
   /divisions/{id}:
+    get:
+      tags:
+        - division
+      description: IDで指定されたdivisionの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/division"
     put:
       tags:
         - division
@@ -1213,6 +1231,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/festivalItemWithBalance"
   /festival_items/{id}:
+    get:
+      tags:
+        - festival_item
+      description: IDで指定されたfestival_itemの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItem"
     put:
       tags:
         - festival_item
@@ -1344,6 +1380,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/financialRecordWithBalance"
   /financial_records/{id}:
+    get:
+      tags:
+        - financial_record
+      description: IDで指定されたfinancial_recordの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecord"
     put:
       tags:
         - financial_record
@@ -2797,6 +2851,9 @@ components:
         - financialRecordID
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
           example: 衛生管理部門
@@ -2852,6 +2909,9 @@ components:
         - amount
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
           example: 農ポリ
@@ -2945,6 +3005,9 @@ components:
         - year_id
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
           example: 総務局

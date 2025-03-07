@@ -14,6 +14,7 @@ type divisionUseCase struct {
 type DivisionUseCase interface {
 	GetDivisions(context.Context, string, string) (DivisionDetails, error)
 	GetDivisionOptions(context.Context, string, string) ([]DivisionOption, error)
+	GetDivision(context.Context, string) (Division, error)
 	CreateDivision(context.Context, Division) (DivisionWithBalance, error)
 	UpdateDivision(context.Context, string, Division) (DivisionWithBalance, error)
 	DestroyDivision(context.Context, string) error
@@ -95,6 +96,22 @@ func (du *divisionUseCase) GetDivisionOptions(
 		divisionOptions = append(divisionOptions, divisionOption)
 	}
 	return divisionOptions, nil
+}
+
+func (du *divisionUseCase) GetDivision(c context.Context, id string) (Division, error) {
+	division := Division{}
+
+	row, err := du.rep.GetDivisionById(c, id)
+	if err != nil {
+		return division, err
+	}
+
+	row.Scan(
+		&division.Id,
+		&division.Name,
+		&division.FinancialRecordID,
+	)
+	return division, nil
 }
 
 func (du *divisionUseCase) CreateDivision(

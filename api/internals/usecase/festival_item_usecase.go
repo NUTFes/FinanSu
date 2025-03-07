@@ -18,6 +18,7 @@ type FestivalItemUseCase interface {
 	GetFestivalItems(context.Context, string, string) (FestivalItemDetails, error)
 	GetFestivalItemsForMypage(context.Context, string, string) ([]FestivalItemDetailsForMypage, error)
 	GetFestivalItemOptions(context.Context, string, string) ([]FestivalItemOption, error)
+	GetFestivalItem(context.Context, string) (FestivalItem, error)
 	CreateFestivalItem(
 		context.Context,
 		FestivalItem,
@@ -86,6 +87,29 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 
 	festivalItemDetails.Total = &total
 	return festivalItemDetails, nil
+}
+
+func (fiu *festivalItemUseCase) GetFestivalItem(c context.Context, id string) (FestivalItem, error) {
+	var festivalItem FestivalItem
+
+	row, err := fiu.fRep.GetFestivalItemById(c, id)
+	if err != nil {
+		return festivalItem, err
+	}
+
+	err = row.Scan(
+		&festivalItem.Id,
+		&festivalItem.Name,
+		&festivalItem.DivisionId,
+		&festivalItem.Memo,
+		&festivalItem.Amount,
+	)
+
+	if err != nil {
+		return festivalItem, err
+	}
+
+	return festivalItem, nil
 }
 
 func (fiu *festivalItemUseCase) CreateFestivalItem(

@@ -23,7 +23,7 @@ export interface ModalProps {
   year?: Year;
   fr?: FinancialRecordWithId;
   div?: DivisionWithId;
-  onSuccess?: (phase: number) => void;
+  onSuccess: () => void;
 }
 
 const AddBudgetManagementModal: FC<ModalProps> = (props) => {
@@ -52,7 +52,8 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const { trigger: triggerFestivalItem, isMutating: isMutatingFI } = usePostFestivalItems();
 
   // 各フェーズの「次へ」または「登録する」ボタン押下時の処理
-  const handleNext = async () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       switch (phase) {
         case 1: {
@@ -91,7 +92,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
       closeModal();
 
       if (onSuccess) {
-        onSuccess(phase);
+        onSuccess();
       }
     } catch (error: any) {
       console.error('登録エラー:', error.message);
@@ -195,28 +196,30 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   }
 
   return (
-    <Modal className='md:w-1/2'>
-      <div className='ml-auto w-fit'>
-        <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
-      </div>
-      <div className='mx-auto w-fit text-xl'>
-        {phase === 1 && '申請局登録'}
-        {phase === 2 && '申請部門登録'}
-        {phase === 3 && '申請物品登録'}
-      </div>
-      <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
-        {content}
-      </div>
-      <div className='flex flex-col items-center justify-center gap-4'>
-        <div className='flex gap-4'>
-          <PrimaryButton disabled={isDisabled} onClick={handleNext}>
-            {isMutating ? '登録中' : '登録する'}
-          </PrimaryButton>
+    <Modal className='md:w-1/2' onClick={closeModal}>
+      <form onSubmit={handleSubmit}>
+        <div className='ml-auto w-fit'>
+          <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
         </div>
-        <div className='cursor-default text-red-600 underline' onClick={closeModal}>
-          キャンセル
+        <div className='mx-auto w-fit text-xl'>
+          {phase === 1 && '申請局登録'}
+          {phase === 2 && '申請部門登録'}
+          {phase === 3 && '申請物品登録'}
         </div>
-      </div>
+        <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+          {content}
+        </div>
+        <div className='flex flex-col items-center justify-center gap-4'>
+          <div className='flex gap-4'>
+            <PrimaryButton disabled={isDisabled} type='submit'>
+              {isMutating ? '登録中' : '登録する'}
+            </PrimaryButton>
+          </div>
+          <div className='cursor-default text-red-600 underline' onClick={closeModal}>
+            キャンセル
+          </div>
+        </div>
+      </form>
     </Modal>
   );
 };

@@ -2656,6 +2656,57 @@ export const usePostDivisions = <TError = unknown>(
 }
 
 /**
+ * IDで指定されたdivisionの取得
+ */
+export type getDivisionsIdResponse = {
+  data: Division;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetDivisionsIdUrl = (id: number,) => {
+
+
+  return `/divisions/${id}`
+}
+
+export const getDivisionsId = async (id: number, options?: RequestInit): Promise<getDivisionsIdResponse> => {
+  
+  return customFetch<Promise<getDivisionsIdResponse>>(getGetDivisionsIdUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetDivisionsIdKey = (id: number,) => [`/divisions/${id}`] as const;
+
+export type GetDivisionsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisionsId>>>
+export type GetDivisionsIdQueryError = unknown
+
+export const useGetDivisionsId = <TError = unknown>(
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisionsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsIdKey(id) : null);
+  const swrFn = () => getDivisionsId(id, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
  * divisionの更新
  */
 export type putDivisionsIdResponse = {
@@ -3436,6 +3487,57 @@ export const usePostFestivalItems = <TError = unknown>(
 }
 
 /**
+ * IDで指定されたfestival_itemの取得
+ */
+export type getFestivalItemsIdResponse = {
+  data: FestivalItem;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetFestivalItemsIdUrl = (id: number,) => {
+
+
+  return `/festival_items/${id}`
+}
+
+export const getFestivalItemsId = async (id: number, options?: RequestInit): Promise<getFestivalItemsIdResponse> => {
+  
+  return customFetch<Promise<getFestivalItemsIdResponse>>(getGetFestivalItemsIdUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetFestivalItemsIdKey = (id: number,) => [`/festival_items/${id}`] as const;
+
+export type GetFestivalItemsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItemsId>>>
+export type GetFestivalItemsIdQueryError = unknown
+
+export const useGetFestivalItemsId = <TError = unknown>(
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsIdKey(id) : null);
+  const swrFn = () => getFestivalItemsId(id, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
  * festival_itemの更新
  */
 export type putFestivalItemsIdResponse = {
@@ -3777,6 +3879,57 @@ export const usePostFinancialRecords = <TError = unknown>(
   const swrFn = getPostFinancialRecordsMutationFetcher(requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * IDで指定されたfinancial_recordの取得
+ */
+export type getFinancialRecordsIdResponse = {
+  data: FinancialRecord;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetFinancialRecordsIdUrl = (id: number,) => {
+
+
+  return `/financial_records/${id}`
+}
+
+export const getFinancialRecordsId = async (id: number, options?: RequestInit): Promise<getFinancialRecordsIdResponse> => {
+  
+  return customFetch<Promise<getFinancialRecordsIdResponse>>(getGetFinancialRecordsIdUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetFinancialRecordsIdKey = (id: number,) => [`/financial_records/${id}`] as const;
+
+export type GetFinancialRecordsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFinancialRecordsId>>>
+export type GetFinancialRecordsIdQueryError = unknown
+
+export const useGetFinancialRecordsId = <TError = unknown>(
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecordsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFinancialRecordsIdKey(id) : null);
+  const swrFn = () => getFinancialRecordsId(id, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,

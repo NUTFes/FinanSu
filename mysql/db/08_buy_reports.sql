@@ -9,7 +9,7 @@ CREATE TABLE buy_reports (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY festival_item_id_foreign_key (festival_item_id) REFERENCES festival_items (id)
+    FOREIGN KEY festival_item_id_foreign_key (festival_item_id) REFERENCES festival_items (id) ON DELETE CASCADE
 );
 
 INSERT INTO buy_reports (festival_item_id, amount, memo, paid_by) VALUES (1, 5000, '', 'テスト太郎');

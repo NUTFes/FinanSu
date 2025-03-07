@@ -16,6 +16,7 @@ type FestivalItemController interface {
 	IndexFestivalItems(echo.Context) error
 	IndexFestivalItemsForMypage(echo.Context) error
 	IndexFestivalItemOption(echo.Context) error
+	GetFestivalItem(echo.Context) error
 	CreateFestivalItem(echo.Context) error
 	UpdateFestivalItem(echo.Context) error
 	DestroyFestivalItem(echo.Context) error
@@ -62,6 +63,16 @@ func (f *festivalItemController) IndexFestivalItemOption(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, festivalItemOptions)
+}
+
+func (f *festivalItemController) GetFestivalItem(c echo.Context) error {
+	id := c.Param("id")
+	ctx := c.Request().Context()
+	festivalItem, err := f.u.GetFestivalItem(ctx, id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, festivalItem)
 }
 
 func (f *festivalItemController) CreateFestivalItem(c echo.Context) error {

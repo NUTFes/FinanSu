@@ -1,8 +1,10 @@
 import { useQueryStates, parseAsInteger } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 import formatNumber from '../common/Formatter';
+import OpenDeleteModalButton from './OpenDeleteModalButton';
+import OpenEditModalButton from './OpenEditModalButton';
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
-import { Card, EditButton, Title, Loading } from '@/components/common';
+import { Card, Title, Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import type {
@@ -12,7 +14,6 @@ import type {
   GetFestivalItemsParams,
 } from '@/generated/model';
 import { Year } from '@/type/common';
-import { get } from '@/utils/api/api_methods';
 
 interface FinancialRecordWithId extends FinancialRecord {
   id: number;
@@ -24,16 +25,6 @@ interface DivisionWithId extends Division {
 
 interface Props {
   years: Year[];
-}
-
-export async function getServerSideProps() {
-  const getYearUrl = process.env.SSR_API_URI + '/years';
-  const yearRes = await get(getYearUrl);
-  return {
-    props: {
-      years: yearRes,
-    },
-  };
 }
 
 export default function BudgetManagement(props: Props) {
@@ -80,7 +71,7 @@ export default function BudgetManagement(props: Props) {
   let displayItems = [];
   let title = '購入報告';
   const showBudgetColumns = true;
-  const [pahse, setPahse] = useState<number>(1);
+  const [phase, setPhase] = useState<number>(1);
   const [fr, setFr] = useState<FinancialRecordWithId>();
   const [div, setDiv] = useState<DivisionWithId>();
 
@@ -100,7 +91,7 @@ export default function BudgetManagement(props: Props) {
 
   useEffect(() => {
     if (financialRecordId === null) {
-      setPahse(1);
+      setPhase(1);
       const recordWithId: FinancialRecordWithId = {
         id: 0,
         year_id: selectedYear.id ?? 3,
@@ -108,7 +99,7 @@ export default function BudgetManagement(props: Props) {
       };
       setFr(recordWithId);
     } else if (divisionId === null) {
-      setPahse(2);
+      setPhase(2);
       const foundRecord = financialRecords.find((fr) => fr.id === financialRecordId);
       if (foundRecord) {
         // FinancialRecordWithId に変換する
@@ -127,7 +118,7 @@ export default function BudgetManagement(props: Props) {
       };
       setDiv(divisionWithId);
     } else {
-      setPahse(3);
+      setPhase(3);
       const foundRecord = financialRecords.find((fr) => fr.id === financialRecordId);
       if (foundRecord) {
         // FinancialRecordWithId に変換する
@@ -187,26 +178,11 @@ export default function BudgetManagement(props: Props) {
     totalBalance = financialRecordsTotal?.balance || 0;
   }
 
-  const handleRegisterSuccess = useCallback(
-    (phase: number) => {
-      // フェーズに応じて適切なデータを再取得する
-      switch (phase) {
-        case 1:
-          // 財務記録が登録された場合、財務記録のリストを再取得
-          mutateFinancialRecords();
-          break;
-        case 2:
-          // 部門が登録された場合、部門のリストを再取得
-          mutateDivisions();
-          break;
-        case 3:
-          // 物品が登録された場合、物品のリストを再取得
-          mutateFestivalItems();
-          break;
-      }
-    },
-    [mutateFinancialRecords, mutateDivisions, mutateFestivalItems],
-  );
+  const handleRegisterSuccess = useCallback(() => {
+    mutateFinancialRecords();
+    mutateDivisions();
+    mutateFestivalItems();
+  }, [mutateFinancialRecords, mutateDivisions, mutateFestivalItems]);
 
   const isLoadingAll = isFinancialRecordLoading || isDivisionsLoading || isFestivalItemsLoading;
   if (isLoadingAll) {
@@ -217,6 +193,8 @@ export default function BudgetManagement(props: Props) {
   if (isErrorOccurred) {
     return <div>error...</div>;
   }
+
+  const csvDownloadLink = `${process.env.CSR_API_URI}/financial_records/csv/download?year=${selectedYear.year}`;
 
   return (
     <Card>
@@ -260,10 +238,14 @@ export default function BudgetManagement(props: Props) {
             </div>
           </div>
           <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
-            <PrimaryButton className='w-full md:w-fit'>CSVダウンロード</PrimaryButton>
+            <PrimaryButton className='w-full md:w-fit'>
+              <a href={csvDownloadLink} download>
+                CSVダウンロード
+              </a>
+            </PrimaryButton>
             <OpenAddModalButton
               className='w-full md:w-fit'
-              phase={pahse}
+              phase={phase}
               year={selectedYear}
               fr={fr}
               div={div}
@@ -295,11 +277,27 @@ export default function BudgetManagement(props: Props) {
                     className={`cursor-pointer ${
                       index !== displayItems.length - 1 ? 'border-b' : ''
                     }`}
-                    onClick={() => handleRowClick(item)}
                   >
                     <td className='flex justify-center gap-2 py-3'>
-                      <div className='text-center text-primary-1'>{item.name}</div>
-                      <EditButton />
+                      <div
+                        className='text-center text-primary-1'
+                        onClick={() => handleRowClick(item)}
+                      >
+                        {item.name}
+                      </div>
+                      <OpenEditModalButton
+                        phase={phase}
+                        financialRecordId={financialRecordId || item.id || 0}
+                        divisionId={divisionId || item.id || 0}
+                        festivalItemId={item.id || undefined || 0}
+                        onSuccess={handleRegisterSuccess}
+                      />
+                      <OpenDeleteModalButton
+                        phase={phase}
+                        id={item?.id ?? 0}
+                        name={item.name ?? ''}
+                        onSuccess={handleRegisterSuccess}
+                      />
                     </td>
                     {showBudgetColumns && (
                       <>

@@ -7,7 +7,7 @@ CREATE TABLE financial_records (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY year_id_foreign_key (year_id) REFERENCES years (id)
+    FOREIGN KEY year_id_foreign_key (year_id) REFERENCES years (id) ON DELETE CASCADE
 );
 
 INSERT INTO financial_records (name, year_id) VALUES ('総務局', 3);

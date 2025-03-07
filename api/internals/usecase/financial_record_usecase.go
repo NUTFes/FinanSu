@@ -17,6 +17,7 @@ type financialRecordUseCase struct {
 type FinancialRecordUseCase interface {
 	GetFinancialRecords(context.Context) (FinancialRecordDetails, error)
 	GetFinancialRecordsByYears(context.Context, string) (FinancialRecordDetails, error)
+	GetFinancialRecord(context.Context, string) (FinancialRecord, error)
 	CreateFinancialRecord(
 		context.Context,
 		FinancialRecord,
@@ -137,6 +138,28 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	financialRecordDetails.FinancialRecords = &financialRecords
 
 	return financialRecordDetails, err
+}
+
+func (fru *financialRecordUseCase) GetFinancialRecord(
+	c context.Context,
+	id string,
+) (FinancialRecord, error) {
+	var financialRecord FinancialRecord
+	row, err := fru.rep.GetFinancialRecordById(c, id)
+	if err != nil {
+		return financialRecord, err
+	}
+
+	err = row.Scan(
+		&financialRecord.Id,
+		&financialRecord.Name,
+		&financialRecord.YearId,
+	)
+	if err != nil {
+		return financialRecord, err
+	}
+
+	return financialRecord, nil
 }
 
 func (fru *financialRecordUseCase) CreateFinancialRecord(

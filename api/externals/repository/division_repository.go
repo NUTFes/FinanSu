@@ -19,6 +19,7 @@ type DivisionRepository interface {
 	AllByPeriodAndFinancialRecord(context.Context, string, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
 	GetDivisionOptionsByUserId(context.Context, string, string) (*sql.Rows, error)
+	GetDivisionById(context.Context, string) (*sql.Row, error)
 	Create(context.Context, Division) error
 	Update(context.Context, string, Division) error
 	Delete(context.Context, string) error
@@ -61,6 +62,22 @@ func (dr *divisionRepository) GetById(
 	ds, _, err := selectDivisionQuery.
 		Where(goqu.Ex{"divisions.id": id}).
 		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return dr.crud.ReadByID(c, ds)
+}
+
+// IDでdivisionのみ取得
+func (dr *divisionRepository) GetDivisionById(
+	c context.Context,
+	id string,
+) (*sql.Row, error) {
+	ds, _, err := dialect.From("divisions").
+		Select("id", "name", "financial_record_id").
+		Where(goqu.Ex{"id": id}).
+		ToSQL()
+
 	if err != nil {
 		return nil, err
 	}
