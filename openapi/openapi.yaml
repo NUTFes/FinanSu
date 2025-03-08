@@ -692,6 +692,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/buyReport"
   /buy_reports/{id}:
+    get:
+      tags:
+        - buy_report
+      description: IDで指定されたbuy_reportの取得（購入報告編集用）
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReportWithDivisionId"
     put:
       tags:
         - buy_report
@@ -2794,6 +2812,25 @@ components:
             - 確認中
             - 封詰め
             - 清算完了
+    buyReportWithDivisionId:
+      description: 購入報告の際のパラメータ、部門と物品IDを含む
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        divisionId:
+          type: integer
+          example: 1
+        festivalItemID:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 1000
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
     buyReportDetail:
       description: 購入報告ページで表示する詳細情報
       type: object

@@ -28,6 +28,7 @@ type BuyReportRepository interface {
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
 	GetByBuyReportId(context.Context, string) (*sql.Row, error)
 	UpdateBuyReportStatus(context.Context, string, PutBuyReport) error
+	GetBuyReportWithDivisionIdById(context.Context, string) (*sql.Row, error)
 }
 
 func NewBuyReportRepository(c db.Client, ac abstract.Crud) BuyReportRepository {
@@ -169,13 +170,27 @@ func (brr *buyReportRepository) GetPaymentReceipt(
 	return brr.crud.TransactionReadByID(c, tx, query)
 }
 
-// 最新のレコード取得
+// idによるbuyReport取得
 func (brr *buyReportRepository) GetBuyReportById(
 	c context.Context,
 	id string,
 ) (*sql.Row, error) {
 	query, _, err := dialect.From("buy_reports").
 		Select("id", "festival_item_id", "amount", "paid_by").
+		Where(goqu.Ex{"buy_reports.id": id}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return brr.crud.ReadByID(c, query)
+}
+
+// idによるbuyReport取得
+func (brr *buyReportRepository) GetBuyReportWithDivisionIdById(
+	c context.Context,
+	id string,
+) (*sql.Row, error) {
+	query, _, err := selectBuyReportWithDivisionIdDetailsQuery.
 		Where(goqu.Ex{"buy_reports.id": id}).
 		ToSQL()
 	if err != nil {
@@ -283,3 +298,12 @@ var selectBuyReportDetailsQuery = dialect.From("buy_reports").Select(
 	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
 	InnerJoin(goqu.I("payment_receipts"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("payment_receipts.buy_report_id")))).
 	Order(goqu.I("reportDate").Desc())
+
+var selectBuyReportWithDivisionIdDetailsQuery = dialect.From("buy_reports").Select(
+	"buy_reports.id",
+	"festival_items.division_id",
+	"buy_reports.festival_item_id",
+	"buy_reports.amount",
+	"buy_reports.paid_by",
+).
+	InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("buy_reports.festival_item_id").Eq(goqu.I("festival_items.id"))))

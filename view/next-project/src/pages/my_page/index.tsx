@@ -1,4 +1,5 @@
 import { Noto_Sans_JP } from 'next/font/google';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import { useRecoilValue } from 'recoil';
@@ -15,6 +16,7 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 const MyPage = () => {
+  const router = useRouter();
   const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
@@ -27,6 +29,11 @@ const MyPage = () => {
   const { data, error, isLoading } = useGetFestivalItemsDetailsUserId(userId, {
     year,
   });
+
+  const handleCreatePurchaseReport = () => {
+    router.push('/create_purchase_report');
+  };
+
   if (isLoading) return <Loading />;
   if (error) return <div>エラーが発生しました</div>;
   const resData = data?.data;
@@ -37,7 +44,7 @@ const MyPage = () => {
           <div className='mb-8 flex items-center justify-between'>
             <h2 className='text-2xl font-thin text-[#333]'>マイページ</h2>
             {resData && (
-              <PrimaryButton>
+              <PrimaryButton onClick={handleCreatePurchaseReport}>
                 <div className='flex items-center gap-2'>
                   購入報告
                   <RiAddCircleLine size={20} />

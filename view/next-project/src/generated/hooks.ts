@@ -21,6 +21,7 @@ import type {
   ActivityStyle,
   BuyReport,
   BuyReportDetail,
+  BuyReportWithDivisionId,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
   DeleteActivityStylesId200,
@@ -2009,6 +2010,57 @@ export const usePostBuyReports = <TError = unknown>(
   const swrFn = getPostBuyReportsMutationFetcher(requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * IDで指定されたbuy_reportの取得（購入報告編集用）
+ */
+export type getBuyReportsIdResponse = {
+  data: BuyReportWithDivisionId;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetBuyReportsIdUrl = (id: number,) => {
+
+
+  return `/buy_reports/${id}`
+}
+
+export const getBuyReportsId = async (id: number, options?: RequestInit): Promise<getBuyReportsIdResponse> => {
+  
+  return customFetch<Promise<getBuyReportsIdResponse>>(getGetBuyReportsIdUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetBuyReportsIdKey = (id: number,) => [`/buy_reports/${id}`] as const;
+
+export type GetBuyReportsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsId>>>
+export type GetBuyReportsIdQueryError = unknown
+
+export const useGetBuyReportsId = <TError = unknown>(
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsIdKey(id) : null);
+  const swrFn = () => getBuyReportsId(id, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
