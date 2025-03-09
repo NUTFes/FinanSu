@@ -75,9 +75,6 @@ export default function PurchaseReports() {
       query: {
         from: 'purchase_report_list',
         id: report.id,
-        festivalItemName: report.festivalItemName,
-        amount: report.amount,
-        paidBy: report.paidBy,
       },
     });
   };
@@ -121,7 +118,6 @@ export default function PurchaseReports() {
 
   const onSuccess = useCallback(() => {
     mutateBuyReportData();
-    console.log('呼ばれたよ');
   }, [mutateBuyReportData]);
 
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
