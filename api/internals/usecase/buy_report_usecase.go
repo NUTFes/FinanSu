@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 	"mime/multipart"
 	"strconv"
 	"strings"
@@ -40,14 +41,18 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 	buyReportId, err := bru.bRep.CreateBuyReport(c, tx, buyReportInfo)
 	*buyReportInfo.Id = int(buyReportId)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return buyReportInfo, err
+		}
 		return buyReportInfo, err
 	}
 
 	// buy_statusの初期レコード作成
 	err = bru.bRep.InitBuyStatus(c, tx)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return buyReportInfo, err
+		}
 		return buyReportInfo, err
 	}
 
@@ -59,25 +64,33 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 	var year string
 	row, err := bru.bRep.GetYearByBuyReportId(c, tx, buyReportIdStr)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return buyReportInfo, err
+		}
 		return buyReportInfo, err
 	}
 	if err = row.Scan(&year); err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return buyReportInfo, err
+		}
 		return buyReportInfo, err
 	}
 
 	// ファイルのアップロード
 	fileInfo, err := bru.oRep.UploadFile(c, file, year, DIR_NAME, filename)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return buyReportInfo, err
+		}
 		return buyReportInfo, err
 	}
 
 	// ファイル情報のデータベース登録
 	err = bru.bRep.CreatePaymentReceipt(c, tx, fileInfo)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return buyReportInfo, err
+		}
 		return buyReportInfo, err
 	}
 
@@ -108,12 +121,17 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId string, buyReportInfo PostBuyReport, file *multipart.FileHeader) (PostBuyReport, error) {
 	var resBuyReport PostBuyReport
 	// トランザクションスタート
-	tx, _ := bru.tRep.StartTransaction(c)
+	tx, err := bru.tRep.StartTransaction(c)
+	if err != nil {
+		return resBuyReport, err
+	}
 
 	// buy_report の更新
-	err := bru.bRep.UpdateBuyReport(c, tx, buyReportId, buyReportInfo)
+	err = bru.bRep.UpdateBuyReport(c, tx, buyReportId, buyReportInfo)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return buyReportInfo, err
+		}
 		return resBuyReport, err
 	}
 
@@ -123,9 +141,12 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 		// 登録されているファイル情報の取得
 		row, err := bru.bRep.GetPaymentReceipt(c, tx, buyReportId)
 		if err != nil {
-			bru.tRep.RollBack(c, tx)
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
 			return resBuyReport, err
 		}
+
 		err = row.Scan(
 			&paymentReceipt.ID,
 			&paymentReceipt.BuyReportID,
@@ -138,7 +159,9 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 			&paymentReceipt.Year,
 		)
 		if err != nil {
-			bru.tRep.RollBack(c, tx)
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
 			return resBuyReport, err
 		}
 
@@ -146,7 +169,9 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 		filePath := convertFilePath(paymentReceipt)
 		err = bru.oRep.DeleteFile(c, filePath)
 		if err != nil {
-			bru.tRep.RollBack(c, tx)
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
 			return resBuyReport, err
 		}
 
@@ -157,14 +182,18 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 		// 新ファイルのアップロード
 		fileInformation, err := bru.oRep.UploadFile(c, file, year, DIR_NAME, newFilename)
 		if err != nil {
-			bru.tRep.RollBack(c, tx)
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
 			return resBuyReport, err
 		}
 
 		// ファイル情報のデータベース更新
 		err = bru.bRep.UpdatePaymentReceipt(c, tx, buyReportId, fileInformation)
 		if err != nil {
-			bru.tRep.RollBack(c, tx)
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
 			return resBuyReport, err
 		}
 	}
@@ -195,13 +224,18 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 
 func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId string) error {
 	// トランザクションスタート
-	tx, _ := bru.tRep.StartTransaction(c)
+	tx, err := bru.tRep.StartTransaction(c)
+	if err != nil {
+		return err
+	}
 
 	// 登録されているファイル情報の取得
 	var paymentReceipt PaymentReceiptWithYear
 	row, err := bru.bRep.GetPaymentReceipt(c, tx, buyReportId)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 		return err
 	}
 	err = row.Scan(
@@ -216,7 +250,9 @@ func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId stri
 		&paymentReceipt.Year,
 	)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 		return err
 	}
 
@@ -224,14 +260,18 @@ func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId stri
 	filePath := convertFilePath(paymentReceipt)
 	err = bru.oRep.DeleteFile(c, filePath)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 		return err
 	}
 
 	// buy_reportの削除
 	err = bru.bRep.DeleteBuyReport(c, tx, buyReportId)
 	if err != nil {
-		bru.tRep.RollBack(c, tx)
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 		return err
 	}
 
@@ -250,7 +290,11 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 	if err != nil {
 		return []BuyReportDetail{}, nil
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		detail := BuyReportDetail{}
@@ -277,7 +321,6 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 }
 
 func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) (BuyReportDetail, error) {
-
 	detail := BuyReportDetail{}
 
 	err := bru.bRep.UpdateBuyReportStatus(c, buyReportId, requestBody)

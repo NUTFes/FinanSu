@@ -28,6 +28,9 @@ func NewMailAuthRepository(client db.Client, crud abstract.Crud) MailAuthReposit
 // 作成
 func (r *mailAuthRepository) CreateMailAuth(c context.Context, email string, password string, userID string) (int64, error) {
 	result, err := r.client.DB().ExecContext(c, "insert into mail_auth (email, password, user_id) values ('"+email+"','"+password+"',"+userID+")")
+	if err != nil {
+		return 0, err
+	}
 	lastInsertID, err := result.LastInsertId()
 	return lastInsertID, err
 }
@@ -50,6 +53,6 @@ func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) *sql
 
 // パスワードの変更
 func (r *mailAuthRepository) ChangePasswordByUserID(c context.Context, userID string, password string) error {
-	query := "UPDATE mail_auth SET password = '"+ password +"' WHERE user_id = " + userID
+	query := "UPDATE mail_auth SET password = '" + password + "' WHERE user_id = " + userID
 	return r.crud.UpdateDB(c, query)
 }

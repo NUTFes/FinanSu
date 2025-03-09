@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -31,7 +32,11 @@ func (du divisionUseCase) GetDivisions(c context.Context, year string, financial
 	if err != nil {
 		return DivisionDetails{}, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var division DivisionWithBalance
@@ -81,7 +86,11 @@ func (du *divisionUseCase) GetDivisionOptions(
 	if err != nil {
 		return divisionOptions, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var divisionOption DivisionOption
