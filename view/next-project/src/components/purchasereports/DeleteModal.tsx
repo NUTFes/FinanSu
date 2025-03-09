@@ -26,7 +26,7 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
   };
 
   if (delTrigger) {
-    router.push('/500');
+    alert(delTrigger)
   }
 
   return (
