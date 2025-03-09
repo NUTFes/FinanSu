@@ -7,8 +7,8 @@
  */
 
 export type GetBuyReportsListParams = {
-/**
- * year
- */
-year?: number;
+  /**
+   * year
+   */
+  year?: number;
 };

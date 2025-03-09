@@ -7,12 +7,12 @@
  */
 
 export type PostExpensesParams = {
-/**
- * name
- */
-name?: string;
-/**
- * year_id
- */
-year_id?: string;
+  /**
+   * name
+   */
+  name?: string;
+  /**
+   * year_id
+   */
+  year_id?: string;
 };

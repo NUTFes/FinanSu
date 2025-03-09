@@ -7,16 +7,16 @@
  */
 
 export type PostBudgetsParams = {
-/**
- * price
- */
-price: number;
-/**
- * year_id
- */
-year_id?: number;
-/**
- * source_id
- */
-source_id?: number;
+  /**
+   * price
+   */
+  price: number;
+  /**
+   * year_id
+   */
+  year_id?: number;
+  /**
+   * source_id
+   */
+  source_id?: number;
 };
