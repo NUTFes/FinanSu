@@ -14,7 +14,9 @@ jobs:
         uses: reviewdog/action-golangci-lint@v2
         with:
           workdir: ./api
-          fail_on_error: true
+          fail_level: error
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
 # name: Lint
 
 # on:
