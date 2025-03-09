@@ -15,7 +15,6 @@ jobs:
         with:
           workdir: ./api
           fail_on_error: true
-          timeout: 5m
 # name: Lint
 
 # on:

@@ -164,7 +164,6 @@ func (du *divisionUseCase) UpdateDivision(
 }
 
 func (du *divisionUseCase) DestroyDivision(c context.Context, id string) error {
-
 	if err := du.rep.Delete(c, id); err != nil {
 		return err
 	}
