@@ -18,7 +18,6 @@ jobs:
         uses: reviewdog/action-golangci-lint@v2
         with:
           github_token: ${{ github.token }}
-          golangci_lint_flags: "--config=../.golangci.yml"
           level: info
           workdir: ./api
           fail_on_error: true
