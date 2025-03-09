@@ -10,13 +10,16 @@
  * 購入報告ページで表示する詳細情報
  */
 export interface BuyReportDetail {
-  amount?: number;
-  divisionName?: string;
-  festivalItemName?: string;
-  financialRecordName?: string;
-  id?: number;
-  isPacked?: boolean;
-  isSettled?: boolean;
-  paidBy?: string;
-  reportDate?: string;
+  amount: number;
+  divisionName: string;
+  festivalItemName: string;
+  fileName?: string;
+  filePath: string;
+  financialRecordName: string;
+  id: number;
+  isPacked: boolean;
+  isSettled: boolean;
+  paidBy: string;
+  reportDate: string;
+  year?: number;
 }
