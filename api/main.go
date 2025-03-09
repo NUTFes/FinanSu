@@ -10,14 +10,10 @@ import (
 func main() {
 	// JSTに設定
 	time.Local = time.FixedZone("JST", 9*60*60)
-	_, err := time.LoadLocation("JST")
-	if err != nil {
-		panic(err)
-	}
 
 	client, echo := di.InitializeServer()
 
-	if err = echo.Start(":1323"); err != nil {
+	if err := echo.Start(":1323"); err != nil {
 		panic(err)
 	}
 
