@@ -7,12 +7,12 @@
  */
 
 export type GetFestivalItemsUsersParams = {
-/**
- * year
- */
-year?: number;
-/**
- * 部門id
- */
-division_id: number;
+  /**
+   * year
+   */
+  year?: number;
+  /**
+   * 部門id
+   */
+  division_id: number;
 };
