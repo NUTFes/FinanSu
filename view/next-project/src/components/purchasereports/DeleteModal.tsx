@@ -8,6 +8,7 @@ interface ModalProps {
   openModal: boolean;
   children?: React.ReactNode;
   id: number;
+  onDeleteSuccess: () => void;
 }
 
 const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
@@ -17,11 +18,16 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
 
-  const { trigger } = useDeleteBuyReportsId(props.id);
+  const { trigger, error: delTrigger } = useDeleteBuyReportsId(props.id);
 
   const deletePurchaseReport = async () => {
     await trigger();
+    props.onDeleteSuccess();
   };
+
+  if (delTrigger) {
+    router.push('/500');
+  }
 
   return (
     <Modal className='md:w-1/2'>
@@ -39,7 +45,6 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
             onClick={() => {
               deletePurchaseReport();
               closeModal();
-              router.reload();
             }}
           >
             削除

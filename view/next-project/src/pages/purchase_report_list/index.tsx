@@ -36,6 +36,7 @@ export default function PurchaseReports() {
     data: buyReportsData,
     isLoading: isBuyReportsLoading,
     error: buyReportsError,
+    mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
@@ -73,7 +74,7 @@ export default function PurchaseReports() {
       pathname: '/create_purchase_report',
       query: {
         from: 'purchase_report_list',
-        reportId: report.id,
+        id: report.id,
         festivalItemName: report.festivalItemName,
         amount: report.amount,
         paidBy: report.paidBy,
@@ -97,7 +98,7 @@ export default function PurchaseReports() {
   };
 
   const [buyReportId, setBuyReportId] = useState<number>(0);
-  const { trigger } = usePutBuyReportStatusBuyReportId(buyReportId);
+  const { trigger, error: statusError } = usePutBuyReportStatusBuyReportId(buyReportId);
 
   const updateStatus = useCallback(async () => {
     if (!buyReportId) return;
@@ -109,14 +110,19 @@ export default function PurchaseReports() {
 
     try {
       await trigger(putBuyReportStatusBuyReportIdBody);
-    } catch (error) {
-      console.error('Failed to update buy_reports:', error);
+    } catch {
+      console.error('Failed to update buy_reports:', statusError);
     }
-  }, [buyReportId, sealChecks, settlementChecks, trigger]);
+  }, [buyReportId, sealChecks, settlementChecks, trigger, statusError]);
 
   useEffect(() => {
     updateStatus();
   }, [updateStatus]);
+
+  const onSuccess = useCallback(() => {
+    mutateBuyReportData();
+    console.log('呼ばれたよ');
+  }, [mutateBuyReportData]);
 
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
@@ -246,6 +252,7 @@ export default function PurchaseReports() {
                                 isDisabled={
                                   sealChecks[report.id ?? 0] && settlementChecks[report.id ?? 0]
                                 }
+                                onDeleteSuccess={() => onSuccess()}
                               />
                             </div>
                           </div>
