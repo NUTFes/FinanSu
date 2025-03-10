@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 import { SearchSelect } from '@components/common';
 
 const meta: Meta<typeof SearchSelect> = {

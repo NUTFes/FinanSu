@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { DetailPage1 } from '@components/sponsoractivities';
 
 const meta: Meta<typeof DetailPage1> = {

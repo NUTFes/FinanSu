@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { RecoilRoot } from 'recoil';
 import { PURCHASE_REPORT_VIEW, EXPENSES } from '../constants';
 import { DetailModal } from '@components/purchasereports/';
