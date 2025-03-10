@@ -12,5 +12,5 @@ module.exports = {
     SSR_API_URI: isProd ? 'https://finansu-api.nutfes.net' : 'http://nutfes-finansu-api:1323',
     CSR_API_URI: isProd ? 'https://finansu-api.nutfes.net' : 'http://localhost:1323',
   },
-  output: "standalone",
+  output: 'standalone',
 };
