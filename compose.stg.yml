@@ -7,10 +7,9 @@ services:
 
   view:
     build:
-      context: ./view
-      dockerfile: prod.Dockerfile
+      context: ./
+      dockerfile: prod.view.Dockerfile
     container_name: "nutfes-finansu-view"
-    command: "npm run start"
     ports: ["3000:3000"]
     depends_on: ["api"]
 
