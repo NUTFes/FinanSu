@@ -5,12 +5,15 @@ FROM base AS builder
 
 WORKDIR /app
 
-COPY ./view/next-project/ /app/
-RUN npm install
+COPY ./view/next-project/package*.json ./
+RUN npm ci
+
+
+COPY ./view/next-project/ ./
 RUN npm run build
 
 # Create runner image
-FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runner
+FROM gcr.io/distroless/nodejs20-debian12:nonroot AS runner
 
 WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/FinanSu"
@@ -22,10 +25,8 @@ COPY --from=builder --chown=65532:65532 /app/.next/static /app/.next/static
 COPY --from=builder --chown=65532:65532 /app/public /app/public
 
 ARG PORT=3000
-
-ENV HOSTNAME="0.0.0.0"
-ENV PORT=$PORT
-
-EXPOSE $PORT
+ENV HOSTNAME=0.0.0.0
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 
 ENTRYPOINT [ "/nodejs/bin/node", "server.js" ]
