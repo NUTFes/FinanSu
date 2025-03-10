@@ -8,5 +8,6 @@
 
 export interface Division {
   financialRecordID: number;
+  id?: number;
   name: string;
 }

@@ -9,6 +9,7 @@
 export interface FestivalItem {
   amount: number;
   divisionId: number;
+  id?: number;
   memo?: string;
   name: string;
 }

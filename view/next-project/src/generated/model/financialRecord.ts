@@ -7,6 +7,7 @@
  */
 
 export interface FinancialRecord {
+  id?: number;
   name: string;
   year_id: number;
 }

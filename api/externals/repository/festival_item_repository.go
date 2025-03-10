@@ -19,6 +19,7 @@ type FestivalItem = generated.FestivalItem
 type FestivalItemRepository interface {
 	AllByPeriodAndDivision(context.Context, string, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
+	GetFestivalItemById(context.Context, string) (*sql.Row, error)
 	CreateFestivalItem(context.Context, *sql.Tx, FestivalItem) error
 	CreateItemBudget(context.Context, *sql.Tx, FestivalItem) error
 	UpdateFestivalItem(context.Context, *sql.Tx, string, FestivalItem) error
@@ -223,6 +224,31 @@ func (fir *festivalItemRepository) GetFestivalItemOptions(
 	}
 
 	return fir.crud.Read(c, query)
+}
+
+// IDでFestivalItemを取得
+func (fir *festivalItemRepository) GetFestivalItemById(
+	c context.Context,
+	festivalItemId string,
+) (*sql.Row, error) {
+	ds := dialect.Select(
+		"festival_items.id",
+		"festival_items.name",
+		"festival_items.division_id",
+		"festival_items.memo",
+		"item_budgets.amount",
+	).
+		From("festival_items").
+		LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
+		Where(goqu.Ex{"festival_items.id": festivalItemId})
+
+	query, _, err := ds.ToSQL()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return fir.crud.ReadByID(c, query)
 }
 
 var selectFestivalItemQuery = dialect.Select(

@@ -9,6 +9,7 @@ interface Props {
   id?: string;
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
   children?: React.ReactNode;
   type?: string;
   datalist?: {

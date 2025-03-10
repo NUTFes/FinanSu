@@ -19,6 +19,7 @@ type FinancialRecordRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
+	GetFinancialRecordById(context.Context, string) (*sql.Row, error)
 	Create(context.Context, generated.FinancialRecord) error
 	Update(context.Context, string, generated.FinancialRecord) error
 	Delete(context.Context, string) error
@@ -64,6 +65,21 @@ func (frr *financialRecordRepository) GetById(
 ) (*sql.Row, error) {
 	query, _, err := selectFinancialRecordQuery.
 		Where(goqu.Ex{"financial_records.id": id}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return frr.crud.ReadByID(c, query)
+}
+
+// IDでfinancial_recordsのみ取得
+func (frr *financialRecordRepository) GetFinancialRecordById(
+	c context.Context,
+	id string,
+) (*sql.Row, error) {
+	query, _, err := dialect.Select("id", "name", "year_id").
+		From("financial_records").
+		Where(goqu.Ex{"id": id}).
 		ToSQL()
 	if err != nil {
 		return nil, err

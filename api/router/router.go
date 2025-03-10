@@ -169,6 +169,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// divisions
 	e.GET("/divisions", r.divisionController.IndexDivisions)
 	e.GET("/divisions/users", r.divisionController.GetDivisionOptions)
+	e.GET("/divisions/:id", r.divisionController.GetDivision)
 	e.POST("/divisions", r.divisionController.CreateDivision)
 	e.PUT("/divisions/:id", r.divisionController.UpdateDivision)
 	e.DELETE("/divisions/:id", r.divisionController.DestroyDivision)
@@ -188,6 +189,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// festival items
 	e.GET("/festival_items", r.festivalItemController.IndexFestivalItems)
 	e.GET("/festival_items/details/:user_id", r.festivalItemController.IndexFestivalItemsForMypage)
+	e.GET("/festival_items/:id", r.festivalItemController.GetFestivalItem)
 	e.GET("/festival_items/users", r.festivalItemController.IndexFestivalItemOption)
 	e.POST("/festival_items", r.festivalItemController.CreateFestivalItem)
 	e.PUT("/festival_items/:id", r.festivalItemController.UpdateFestivalItem)
@@ -195,6 +197,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// financial_records
 	e.GET("/financial_records", r.financialRecordController.IndexFinancialRecords)
+	e.GET("/financial_records/:id", r.financialRecordController.GetFinancialRecord)
 	e.POST("/financial_records", r.financialRecordController.CreateFinancialRecord)
 	e.PUT("/financial_records/:id", r.financialRecordController.UpdateFinancialRecord)
 	e.DELETE("/financial_records/:id", r.financialRecordController.DestroyFinancialRecord)
