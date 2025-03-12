@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -236,7 +235,7 @@ func (p *passwordResetTokenUseCase) ValidPasswordResetToken(c context.Context, i
 
 	// トークンが有効か
 	if err = bcrypt.CompareHashAndPassword([]byte(passwordResetToken.Token), []byte(token)); err != nil {
-		return fmt.Errorf("トークンが正しくありません")
+		return errors.New("トークンが正しくありません")
 	}
 
 	// 有効期限が過ぎていないか
