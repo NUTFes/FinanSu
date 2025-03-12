@@ -108,7 +108,7 @@ func (y *yearRepository) CreateYearPeriod(c context.Context, year string, starte
 	if err != nil {
 		return err
 	}
-	query = `SELECT id FROM years WHERE year = ` + year + ";"
+	query = `SELECT id FROM years WHERE year = ` + year + `;`
 	row, err := y.crud.ReadByID(c, query)
 	if err != nil {
 		return err
@@ -154,7 +154,7 @@ func (y *yearRepository) UpdateYearPeriod(c context.Context, id string, year str
 			year_id = ` + strconv.Itoa(last_id) +
 		", started_at = '" + startedAt +
 		"', ended_at = '" + endedAt +
-		"' WHERE id = " + id + ";"
+		"' WHERE id = " + id + `;`
 	return y.crud.UpdateDB(c, query)
 }
 
@@ -173,7 +173,7 @@ func (y *yearRepository) FindYearPeriodByID(c context.Context, id string) (*sql.
 			year_periods
 		ON
 			years.id = year_periods.year_id
-		WHERE year_periods.id = ` + id + ";"
+		WHERE year_periods.id = ` + id + `;`
 	return y.crud.ReadByID(c, query)
 }
 
