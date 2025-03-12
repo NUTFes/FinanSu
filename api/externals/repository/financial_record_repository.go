@@ -51,8 +51,11 @@ func (frr *financialRecordRepository) AllByPeriod(
 	if err != nil {
 		return nil, err
 	}
-	defer stmt.Close()
-
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
 	return stmt.QueryContext(c, year)
 }
 
@@ -67,7 +70,11 @@ func (frr *financialRecordRepository) GetById(
 	if err != nil {
 		return nil, err
 	}
-
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
 	return stmt.QueryRowContext(c, id), nil
 }
 
@@ -137,6 +144,11 @@ func (frr *financialRecordRepository) FindLatestRecord(c context.Context) (*sql.
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
 	return stmt.QueryRowContext(c), nil
 }
 
@@ -161,7 +173,7 @@ func (frr *financialRecordRepository) AllForCSV(
 	return frr.crud.Read(c, query)
 }
 
-var selectFestvalItemGroupSQL = `
+var selectFestivalItemGroupSQL = `
 	SELECT
 		festival_items.division_id,
 		item_budgets.amount,
