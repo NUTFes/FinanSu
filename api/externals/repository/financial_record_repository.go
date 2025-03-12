@@ -230,7 +230,7 @@ func makeSelectFinancialRecordDetailsSQL(conditions []string) string {
 	GROUP BY
 		financial_records.id
 	ORDER BY
-		financial_records.id`, selectFestvalItemGroupSQL, condition)
+		financial_records.id`, selectFestivalItemGroupSQL, condition)
 }
 
 // 予算・部門があるものを取得するds
