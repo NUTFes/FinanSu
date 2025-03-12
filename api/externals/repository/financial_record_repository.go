@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -35,13 +36,8 @@ func NewFinancialRecordRepository(c db.Client, ac abstract.Crud) FinancialRecord
 func (frr *financialRecordRepository) All(
 	c context.Context,
 ) (*sql.Rows, error) {
-	query, _, err := selectFinancialRecordQuery.
-		ToSQL()
-
-	if err != nil {
-		return nil, err
-	}
-	return frr.crud.Read(c, query)
+	conditions := make([]string, 0)
+	return frr.crud.Read(c, makeSelectFinancialRecordDetailsSQL(conditions))
 }
 
 // 年度別に取得
@@ -49,13 +45,15 @@ func (frr *financialRecordRepository) AllByPeriod(
 	c context.Context,
 	year string,
 ) (*sql.Rows, error) {
-	query, _, err := selectFinancialRecordQuery.
-		Where(goqu.Ex{"years.year": year}).
-		ToSQL()
+	conditions := []string{"years.year = ?"}
+	query := makeSelectFinancialRecordDetailsSQL(conditions)
+	stmt, err := frr.crud.Prepare(c, query)
 	if err != nil {
 		return nil, err
 	}
-	return frr.crud.Read(c, query)
+	defer stmt.Close()
+
+	return stmt.QueryContext(c, year)
 }
 
 // IDで取得
@@ -63,13 +61,14 @@ func (frr *financialRecordRepository) GetById(
 	c context.Context,
 	id string,
 ) (*sql.Row, error) {
-	query, _, err := selectFinancialRecordQuery.
-		Where(goqu.Ex{"financial_records.id": id}).
-		ToSQL()
+	conditions := []string{"financial_records.id = ?"}
+	query := makeSelectFinancialRecordDetailsSQL(conditions)
+	stmt, err := frr.crud.Prepare(c, query)
 	if err != nil {
 		return nil, err
 	}
-	return frr.crud.ReadByID(c, query)
+
+	return stmt.QueryRowContext(c, id), nil
 }
 
 // IDでfinancial_recordsのみ取得
@@ -131,16 +130,14 @@ func (frr *financialRecordRepository) Delete(
 
 }
 
-// 最新のsponcerを取得する
 func (frr *financialRecordRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-	query, _, err := selectFinancialRecordQuery.
-		Order(goqu.I("id").Desc()).
-		Limit(1).
-		ToSQL()
+	conditions := []string{"financial_records.id = LAST_INSERT_ID()"}
+	query := makeSelectFinancialRecordDetailsSQL(conditions)
+	stmt, err := frr.crud.Prepare(c, query)
 	if err != nil {
 		return nil, err
 	}
-	return frr.crud.ReadByID(c, query)
+	return stmt.QueryRowContext(c), nil
 }
 
 // 年度別に取得
@@ -164,21 +161,67 @@ func (frr *financialRecordRepository) AllForCSV(
 	return frr.crud.Read(c, query)
 }
 
-var selectFinancialRecordQuery = dialect.Select(
-	"financial_records.id",
-	"financial_records.name", "years.year",
-	goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
-	goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
-	goqu.L("COALESCE(SUM(item_budgets.amount), 0) - COALESCE(SUM(buy_reports.amount), 0)").As("balance")).
-	From("financial_records").
-	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
-	LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
-	LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
-	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
-	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
-	GroupBy("financial_records.id")
+var selectFestvalItemGroupSQL = `
+	SELECT
+		festival_items.division_id,
+		item_budgets.amount,
+		COALESCE(SUM(buy_reports.amount), 0) AS expense
+	FROM
+		festival_items
+	INNER JOIN
+		item_budgets
+	ON
+		(festival_items.id = item_budgets.festival_item_id)
+	LEFT JOIN
+		buy_reports
+	ON
+		(festival_items.id = buy_reports.festival_item_id)
+	GROUP BY
+		item_budgets.id
+`
 
-// 予算・部門がないものを取得するds
+func makeSelectFinancialRecordDetailsSQL(conditions []string) string {
+	condition := ""
+	if len(conditions) > 0 {
+		for _, c := range conditions {
+			condition += fmt.Sprintf(" AND %s", c)
+		}
+	}
+	return fmt.Sprintf(`
+	WITH
+		festival_items_group
+	AS ( %s )
+	SELECT
+		financial_records.id,
+		financial_records.name,
+		years.year,
+		COALESCE(SUM(festival_items_group.amount), 0) AS budget,
+		COALESCE(SUM(festival_items_group.expense), 0) AS expense,
+		COALESCE(SUM(festival_items_group.amount), 0) - COALESCE(SUM(festival_items_group.expense), 0) AS balance
+	FROM
+		financial_records
+	INNER JOIN
+		years
+	ON
+		(financial_records.year_id = years.id)
+	LEFT JOIN
+		divisions
+	ON
+		(financial_records.id = divisions.financial_record_id)
+	LEFT JOIN
+		festival_items_group
+	ON
+		(festival_items_group.division_id = divisions.id)
+	WHERE
+		1=1
+		%s
+	GROUP BY
+		financial_records.id
+	ORDER BY
+		financial_records.id`, selectFestvalItemGroupSQL, condition)
+}
+
+// 予算・部門があるものを取得するds
 var selectFinancialRecordQueryForCSV = dialect.Select(
 	"financial_records.id",
 	"financial_records.name",
