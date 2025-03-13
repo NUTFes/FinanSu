@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
@@ -39,7 +40,11 @@ func (a *activityUseCase) GetActivity(c context.Context) ([]domain.Activity, err
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -69,6 +74,10 @@ func (a *activityUseCase) GetActivityByID(c context.Context, id string) (domain.
 	var activity domain.Activity
 
 	row, err := a.rep.Find(c, id)
+	if err != nil {
+		return activity, err
+	}
+
 	err = row.Scan(
 		&activity.ID,
 		&activity.UserID,
@@ -100,28 +109,35 @@ func (a *activityUseCase) CreateActivity(
 	remark string,
 	design string,
 	url string) (domain.Activity, error) {
-	latastActivity := domain.Activity{}
+	latestActivity := domain.Activity{}
 
 	err := a.rep.Create(c, userID, isDone, sponsorID, feature, expense, remark, design, url)
-	row, err := a.rep.FindLatestRecord(c)
-	err = row.Scan(
-		&latastActivity.ID,
-		&latastActivity.UserID,
-		&latastActivity.IsDone,
-		&latastActivity.SponsorID,
-		&latastActivity.Feature,
-		&latastActivity.Expense,
-		&latastActivity.Remark,
-		&latastActivity.Design,
-		&latastActivity.Url,
-		&latastActivity.CreatedAt,
-		&latastActivity.UpdatedAt,
-	)
-
 	if err != nil {
-		return latastActivity, err
+		return latestActivity, err
 	}
-	return latastActivity, nil
+	row, err := a.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestActivity, err
+	}
+
+	err = row.Scan(
+		&latestActivity.ID,
+		&latestActivity.UserID,
+		&latestActivity.IsDone,
+		&latestActivity.SponsorID,
+		&latestActivity.Feature,
+		&latestActivity.Expense,
+		&latestActivity.Remark,
+		&latestActivity.Design,
+		&latestActivity.Url,
+		&latestActivity.CreatedAt,
+		&latestActivity.UpdatedAt,
+	)
+	if err != nil {
+		return latestActivity, err
+	}
+
+	return latestActivity, nil
 }
 
 func (a *activityUseCase) UpdateActivity(
@@ -137,7 +153,14 @@ func (a *activityUseCase) UpdateActivity(
 	url string) (domain.Activity, error) {
 	updatedActivity := domain.Activity{}
 	err := a.rep.Update(c, id, userID, isDone, sponsorID, feature, expense, remark, design, url)
+	if err != nil {
+		return updatedActivity, err
+	}
 	row, err := a.rep.Find(c, id)
+	if err != nil {
+		return updatedActivity, err
+	}
+
 	err = row.Scan(
 		&updatedActivity.ID,
 		&updatedActivity.UserID,
@@ -176,7 +199,11 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -212,7 +239,11 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		if err != nil {
+			return nil, err
+		}
+
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -233,7 +264,11 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 		activityInformations = nil
 
 		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		if err != nil {
+			return nil, err
+		}
+
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,
@@ -261,7 +296,6 @@ func (a *activityUseCase) GetActivityDetail(c context.Context) ([]domain.Activit
 }
 
 func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year string) ([]domain.ActivityDetail, error) {
-
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
 	styleDetail := domain.StyleDetail{}
@@ -274,7 +308,11 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -310,7 +348,10 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -330,8 +371,11 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 		activity.ActivityInformation = activityInformations
 		activityInformations = nil
 
-		rows, err = a.rep.FindSponsorStyle(c,strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,
@@ -359,7 +403,6 @@ func (a *activityUseCase) GetActivityDetailsByPeriod(c context.Context, year str
 }
 
 func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone string, sponsorStyleIDs []string, keyword string) ([]domain.ActivityDetail, error) {
-
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
 	styleDetail := domain.StyleDetail{}
@@ -372,7 +415,11 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -408,7 +455,11 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		if err != nil {
+			return nil, err
+		}
+
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -429,7 +480,11 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 		activityInformations = nil
 
 		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		if err != nil {
+			return nil, err
+		}
+
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,
@@ -457,7 +512,6 @@ func (a *activityUseCase) GetFilteredActivityDetail(c context.Context, isDone st
 }
 
 func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, isDone string, sponsorStyleIDs []string, year string, keyword string) ([]domain.ActivityDetail, error) {
-
 	activity := domain.ActivityDetail{}
 	var activities []domain.ActivityDetail
 	styleDetail := domain.StyleDetail{}
@@ -470,7 +524,11 @@ func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, i
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -506,7 +564,11 @@ func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, i
 		}
 
 		rows, err := a.rep.FindActivityInformation(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		if err != nil {
+			return nil, err
+		}
+
+		for rows.Next() {
 			err := rows.Scan(
 				&activityInformation.ID,
 				&activityInformation.ActivityId,
@@ -527,7 +589,11 @@ func (a *activityUseCase) GetFilteredActivityDetailByPeriod(c context.Context, i
 		activityInformations = nil
 
 		rows, err = a.rep.FindSponsorStyle(c, strconv.Itoa(int(activity.Activity.ID)))
-		for rows.Next(){
+		if err != nil {
+			return nil, err
+		}
+
+		for rows.Next() {
 			err := rows.Scan(
 				&styleDetail.ActivityStyle.ID,
 				&styleDetail.ActivityStyle.ActivityID,

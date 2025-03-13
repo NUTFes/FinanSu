@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -48,7 +49,12 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 		return festivalItemDetails, err
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		var festivalItem FestivalItemWithBalance
 		err := rows.Scan(
@@ -123,13 +129,17 @@ func (fiu *festivalItemUseCase) CreateFestivalItem(
 
 	if err := fiu.fRep.CreateFestivalItem(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return latestFestivalItemWithBalance, err
+		}
 		return latestFestivalItemWithBalance, err
 	}
 
 	if err := fiu.fRep.CreateItemBudget(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return latestFestivalItemWithBalance, err
+		}
 		return latestFestivalItemWithBalance, err
 	}
 
@@ -171,13 +181,17 @@ func (fiu *festivalItemUseCase) UpdateFestivalItem(
 
 	if err := fiu.fRep.UpdateFestivalItem(c, tx, id, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return updateFestivalItemWithBalance, err
+		}
 		return updateFestivalItemWithBalance, err
 	}
 
 	if err := fiu.fRep.UpdateItemBudget(c, tx, id, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return updateFestivalItemWithBalance, err
+		}
 		return updateFestivalItemWithBalance, err
 	}
 
@@ -214,13 +228,17 @@ func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string
 	// 先に紐づく予算を削除
 	err := fiu.fRep.DeleteItemBudget(c, tx, id)
 	if err != nil {
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 	}
 
 	// 購入物品を削除
 	err = fiu.fRep.DeleteFestivalItem(c, tx, id)
 	if err != nil {
-		fiu.tRep.RollBack(c, tx)
+		if err = fiu.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 		return err
 	}
 
@@ -246,7 +264,12 @@ func (fiu *festivalItemUseCase) GetFestivalItemsForMypage(
 		return festivalItemDetailsList, err
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		var festivalItemForMyPageColumn domain.FestivalItemForMyPageColumn
 		err := rows.Scan(
@@ -289,7 +312,12 @@ func (fiu *festivalItemUseCase) GetFestivalItemOptions(
 		return festivalItemOptions, err
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		var festivalItemOption FestivalItemOption
 		err := rows.Scan(

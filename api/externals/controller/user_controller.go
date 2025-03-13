@@ -99,10 +99,8 @@ func (auth *userController) GetCurrentUser(c echo.Context) error {
 	accessToken := c.Request().Header["Access-Token"][0]
 	user, err := auth.u.GetCurrentUser(c.Request().Context(), accessToken)
 	if err != nil {
-		c.JSON(http.StatusNotFound, user)
-		return err
+		return c.JSON(http.StatusNotFound, user)
 	} else {
-		c.JSON(http.StatusOK, user)
-		return nil
+		return c.JSON(http.StatusOK, user)
 	}
 }

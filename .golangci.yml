@@ -1,2 +1,16 @@
-issues:
-  exclude-use-default: false
+linters-settings:
+  golint:
+    min-confidence: 0.8
+
+linters:
+  enable:
+    - golint
+    - errcheck
+    - staticcheck
+    - gosimple
+    - unused
+    - structcheck
+    - varcheck
+
+run:
+  timeout: 5m
