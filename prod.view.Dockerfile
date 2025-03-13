@@ -18,7 +18,9 @@ FROM gcr.io/distroless/nodejs20-debian12:nonroot AS runner
 WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/FinanSu"
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_APP_ENV="production"
+
+ARG NEXT_PUBLIC_APP_ENV=production
+ENV NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV}
 
 COPY --from=builder --chown=65532:65532 /app/.next/standalone /app/
 COPY --from=builder --chown=65532:65532 /app/.next/static /app/.next/static

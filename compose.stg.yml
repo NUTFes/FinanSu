@@ -9,6 +9,8 @@ services:
     build:
       context: ./
       dockerfile: prod.view.Dockerfile
+      args:
+        NEXT_PUBLIC_APP_ENV: "stg"
     container_name: "nutfes-finansu-view"
     ports: ["3000:3000"]
     depends_on: ["api"]
