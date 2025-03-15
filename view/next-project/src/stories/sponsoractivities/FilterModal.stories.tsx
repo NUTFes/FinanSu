@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { SPONSOR_STYLE, SPONSOR_FILTERTYPE } from '../constants';
 import { FilterModal } from '@components/sponsoractivities';
 

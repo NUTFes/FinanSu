@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { Modal } from '@components/common';
 
 const meta: Meta<typeof Modal> = {

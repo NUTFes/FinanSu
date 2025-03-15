@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { RecoilRoot } from 'recoil';
 import { PurchaseReportItemNumModal } from '@components/purchasereports';
 
