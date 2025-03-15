@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import BudgetEditModal, { BudgetProps } from '@components/budgets/EditModal';
 
 const meta: Meta<typeof BudgetEditModal> = {

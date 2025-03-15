@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { OpenEditModalButton } from '@components/yearperiods';
 
 const meta: Meta<typeof OpenEditModalButton> = {

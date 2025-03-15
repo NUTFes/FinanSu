@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { EditModal } from '@components/yearperiods';
 
 const meta: Meta<typeof EditModal> = {

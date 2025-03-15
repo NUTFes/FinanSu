@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { DeleteModal } from '@components/purchasereports';
 
 const meta: Meta<typeof DeleteModal> = {

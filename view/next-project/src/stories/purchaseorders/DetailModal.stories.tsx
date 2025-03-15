@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { RecoilRoot } from 'recoil';
 import { DetailModal, ModalProps } from '@components/purchaseorders/';
 
