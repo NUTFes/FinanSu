@@ -8,6 +8,8 @@ import (
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/transform"
 )
 
 type financialRecordController struct {
@@ -119,7 +121,15 @@ func (f *financialRecordController) DownloadFinancialRecordsCSV(c echo.Context) 
 }
 
 func makeCSV(writer http.ResponseWriter, records [][]string) error {
-	csvWriter := csv.NewWriter(writer)
+	// Shift_JISエンコーディング用の変換を設定
+	encoder := japanese.ShiftJIS.NewEncoder()
+
+	// writerに対してエンコーダを設定して変換する
+	shiftJISWriter := transform.NewWriter(writer, encoder)
+
+	// CSVライターを作成
+	csvWriter := csv.NewWriter(shiftJISWriter)
+
 	for _, record := range records {
 		if err := csvWriter.Write(record); err != nil {
 			http.Error(writer, "CSVの書き込み中にエラーが発生しました", http.StatusInternalServerError)
