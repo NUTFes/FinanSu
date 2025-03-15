@@ -7,17 +7,16 @@ services:
 
   view:
     build:
-      context: ./view
-      dockerfile: prod.Dockerfile
+      context: ./
+      dockerfile: prod.view.Dockerfile
     container_name: "nutfes-finansu-view"
-    command: "npm run start"
     ports: ["3000:3000"]
     depends_on: ["api"]
 
   api:
     build:
-      context: ./api
-      dockerfile: prod.Dockerfile
+      context: ./
+      dockerfile: prod.api.Dockerfile
     container_name: "nutfes-finansu-api"
     env_file: ["./finansu.env"]
     ports: ["1323:1323"]

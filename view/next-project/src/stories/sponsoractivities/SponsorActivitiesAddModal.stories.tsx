@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { USER, SPONSOR, SPONSOR_STYLE, YEAEPERIOD } from '../constants';
 import { SponsorActivitiesAddModal } from '@components/sponsoractivities';
 

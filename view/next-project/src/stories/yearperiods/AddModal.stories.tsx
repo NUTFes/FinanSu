@@ -1,5 +1,5 @@
 // /Users/kobayashiryota/Workspace/FinanSu/view/next-project/src/stories/yearperiods/AddModal.stories.tsx
-import { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { RecoilRoot } from 'recoil';
 import { AddModal } from '@components/yearperiods';
 
