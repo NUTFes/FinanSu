@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { ReceiptModal } from '@components/purchasereports';
 
 const meta: Meta<typeof ReceiptModal> = {

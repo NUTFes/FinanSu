@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -24,18 +25,32 @@ var (
 
 func TestMain(m *testing.M) {
 	var err error
-	os.Setenv("NUTMEG_DB_USER", "finansu")
-	os.Setenv("NUTMEG_DB_PASSWORD", "password")
-	os.Setenv("NUTMEG_DB_HOST", "nutfes-finansu-db")
-	os.Setenv("NUTMEG_DB_PORT", "3306")
-	os.Setenv("NUTMEG_DB_NAME", "finansu_test_db")
+	if err = os.Setenv("NUTMEG_DB_USER", "finansu"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("NUTMEG_DB_PASSWORD", "password"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("NUTMEG_DB_HOST", "nutfes-finansu-db"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("NUTMEG_DB_PORT", "3306"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("NUTMEG_DB_NAME", "finansu_test_db"); err != nil {
+		log.Fatal(err)
+	}
 
 	// テスト前処理
 	db, err = sql.Open("mysql", "finansu:password@tcp(nutfes-finansu-db:3306)/finansu_test_db")
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	fixtures, err = testfixtures.New(
 		testfixtures.Database(db),          // You database connection
@@ -49,10 +64,6 @@ func TestMain(m *testing.M) {
 
 	// テスト実行
 	code := m.Run()
-
-	if err != nil {
-		fmt.Print(err.Error())
-	}
 
 	os.Exit(code)
 }
@@ -78,7 +89,11 @@ func TestHelloHandler(t *testing.T) {
 		return
 	}
 
-	defer r.Body.Close()
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			t.Errorf("Error closing response body: %s", err)
+		}
+	}()
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -106,7 +121,11 @@ func TestGetUserHandler(t *testing.T) {
 		return
 	}
 
-	defer r.Body.Close()
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			t.Errorf("Error closing response body: %s", err)
+		}
+	}()
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -147,7 +166,11 @@ func TestAddUserHandler(t *testing.T) {
 		return
 	}
 
-	defer r.Body.Close()
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			t.Errorf("Error closing response body: %s", err)
+		}
+	}()
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {

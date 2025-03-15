@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { BureauLabel } from '@components/common';
 
 const meta: Meta<typeof BureauLabel> = {

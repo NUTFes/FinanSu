@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
@@ -47,7 +48,11 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordWithBalance
@@ -100,7 +105,11 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordWithBalance
@@ -237,7 +246,11 @@ func (fru *financialRecordUseCase) GetFinancialRecordDetailForCSV(
 		return csvData, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordData

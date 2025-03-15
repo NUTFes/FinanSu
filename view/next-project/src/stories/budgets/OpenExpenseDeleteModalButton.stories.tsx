@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { OpenExpenseDeleteModalButton } from '@components/budgets';
 
 const meta: Meta<typeof OpenExpenseDeleteModalButton> = {

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -35,7 +36,11 @@ func (b *budgetUseCase) GetBudgets(c context.Context) ([]domain.Budget, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -58,6 +63,10 @@ func (b *budgetUseCase) GetBudgetByID(c context.Context, id string) (domain.Budg
 	var budget domain.Budget
 
 	row, err := b.rep.Find(c, id)
+	if err != nil {
+		return budget, err
+	}
+
 	err = row.Scan(
 		&budget.ID,
 		&budget.Price,
@@ -73,29 +82,43 @@ func (b *budgetUseCase) GetBudgetByID(c context.Context, id string) (domain.Budg
 }
 
 func (b *budgetUseCase) CreateBudget(c context.Context, price string, yearID string, sourceID string) (domain.Budget, error) {
-	latastBudget := domain.Budget{}
+	latestBudget := domain.Budget{}
 
-	err := b.rep.Create(c, price, yearID, sourceID)
+	if err := b.rep.Create(c, price, yearID, sourceID); err != nil {
+		return latestBudget, err
+	}
+
 	row, err := b.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestBudget, err
+	}
+
 	err = row.Scan(
-		&latastBudget.ID,
-		&latastBudget.Price,
-		&latastBudget.YearID,
-		&latastBudget.SourceID,
-		&latastBudget.CreatedAt,
-		&latastBudget.UpdatedAt,
+		&latestBudget.ID,
+		&latestBudget.Price,
+		&latestBudget.YearID,
+		&latestBudget.SourceID,
+		&latestBudget.CreatedAt,
+		&latestBudget.UpdatedAt,
 	)
 	if err != nil {
-		return latastBudget, err
+		return latestBudget, err
 	}
-	return latastBudget, nil
+	return latestBudget, nil
 }
 
 func (b *budgetUseCase) UpdateBudget(c context.Context, id string, price string, yearID string, sourceID string) (domain.Budget, error) {
 	updatedBudget := domain.Budget{}
 
-	err := b.rep.Update(c, id, price, yearID, sourceID)
+	if err := b.rep.Update(c, id, price, yearID, sourceID); err != nil {
+		return updatedBudget, err
+	}
+
 	row, err := b.rep.Find(c, id)
+	if err != nil {
+		return updatedBudget, err
+	}
+
 	err = row.Scan(
 		&updatedBudget.ID,
 		&updatedBudget.Price,
@@ -107,6 +130,7 @@ func (b *budgetUseCase) UpdateBudget(c context.Context, id string, price string,
 	if err != nil {
 		return updatedBudget, err
 	}
+
 	return updatedBudget, nil
 }
 
@@ -120,6 +144,10 @@ func (b *budgetUseCase) GetBudgetDetailByID(c context.Context, id string) (domai
 	var budgetDetail domain.BudgetDetail
 
 	row, err := b.rep.FindDetailByID(c, id)
+	if err != nil {
+		return budgetDetail, err
+	}
+
 	err = row.Scan(
 		&budgetDetail.Budget.ID,
 		&budgetDetail.Budget.Price,
@@ -150,7 +178,11 @@ func (b *budgetUseCase) GetBudgetDetails(c context.Context) ([]domain.BudgetDeta
 	if err != nil {
 		return nil, err
 	}
-	// defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -177,7 +209,6 @@ func (b *budgetUseCase) GetBudgetDetails(c context.Context) ([]domain.BudgetDeta
 	return budgetDetails, nil
 }
 
-
 func (b *budgetUseCase) GetBudgetDetailsByPeriod(c context.Context, year string) ([]domain.BudgetDetail, error) {
 	budgetDetail := domain.BudgetDetail{}
 	var budgetDetails []domain.BudgetDetail
@@ -186,7 +217,11 @@ func (b *budgetUseCase) GetBudgetDetailsByPeriod(c context.Context, year string)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(

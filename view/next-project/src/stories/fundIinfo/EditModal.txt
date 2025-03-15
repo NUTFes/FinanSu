@@ -1,6 +1,6 @@
 // todo: 後で移行します
 import { action } from '@storybook/addon-actions';
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
 import EditModal from '../components/fund_information/EditModal';

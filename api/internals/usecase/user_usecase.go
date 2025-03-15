@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"database/sql"
+	"log"
 	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
@@ -38,7 +39,12 @@ func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -64,6 +70,10 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 	var user domain.User
 
 	row, err := u.userRep.Find(c, id)
+	if err != nil {
+		return user, err
+	}
+
 	err = row.Scan(
 		&user.ID,
 		&user.Name,
@@ -84,7 +94,15 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {
 	latastUser := domain.User{}
 	err := u.userRep.Create(c, name, bureauID, roleID)
+	if err != nil {
+		return latastUser, err
+	}
+
 	row, err := u.userRep.FindNewRecord(c)
+	if err != nil {
+		return latastUser, err
+	}
+
 	err = row.Scan(
 		&latastUser.ID,
 		&latastUser.Name,
@@ -101,9 +119,16 @@ func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string
 }
 
 func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bureauID string, roleID string) (domain.User, error) {
-	updatedUser := domain.User{}
-	u.userRep.Update(c, id, name, bureauID, roleID)
+	var updatedUser domain.User
+	if err := u.userRep.Update(c, id, name, bureauID, roleID); err != nil {
+		return updatedUser, err
+	}
+
 	row, err := u.userRep.Find(c, id)
+	if err != nil {
+		return updatedUser, err
+	}
+
 	err = row.Scan(
 		&updatedUser.ID,
 		&updatedUser.Name,
@@ -150,6 +175,10 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 
 	// userIDの該当するuserを取得
 	row, err = u.userRep.Find(c, strconv.Itoa(session.UserID))
+	if err != nil {
+		return user, err
+	}
+
 	err = row.Scan(
 		&user.ID,
 		&user.Name,

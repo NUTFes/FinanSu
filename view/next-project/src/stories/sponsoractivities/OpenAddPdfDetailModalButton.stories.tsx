@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { OpenAddPdfDetailModalButton } from '@components/sponsoractivities';
 
 const meta: Meta<typeof OpenAddPdfDetailModalButton> = {

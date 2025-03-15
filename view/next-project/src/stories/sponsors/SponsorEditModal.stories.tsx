@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { useState } from 'react';
 import SponsorEditModal from '@components/sponsors/SponsorEditModal';
 import { Sponsor } from '@type/common';

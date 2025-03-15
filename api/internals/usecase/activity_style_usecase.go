@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -20,7 +21,7 @@ type ActivityStyleUseCase interface {
 	DestroyActivityStyle(context.Context, string) error
 }
 
-func NewActivityStyleUseCase(rep rep.ActivityStyleRepository) ActivityStyleUseCase{
+func NewActivityStyleUseCase(rep rep.ActivityStyleRepository) ActivityStyleUseCase {
 	return &activityStyleUseCase{rep}
 }
 
@@ -34,7 +35,11 @@ func (a *activityStyleUseCase) GetActivityStyle(c context.Context) ([]domain.Act
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -58,6 +63,10 @@ func (a *activityStyleUseCase) GetActivityStyleByID(c context.Context, id string
 	var activityStyle domain.ActivityStyle
 
 	row, err := a.rep.Find(c, id)
+	if err != nil {
+		return activityStyle, err
+	}
+
 	err = row.Scan(
 		&activityStyle.ID,
 		&activityStyle.ActivityID,
@@ -77,11 +86,18 @@ func (a *activityStyleUseCase) CreateActivityStyle(
 	c context.Context,
 	activityID string,
 	sponsorStyleID string,
-	) (domain.ActivityStyle, error) {
+) (domain.ActivityStyle, error) {
 	latastActivityStyle := domain.ActivityStyle{}
 
-	err := a.rep.Create(c, activityID, sponsorStyleID)
+	if err := a.rep.Create(c, activityID, sponsorStyleID); err != nil {
+		return latastActivityStyle, err
+	}
+
 	row, err := a.rep.FindLatestRecord(c)
+	if err != nil {
+		return latastActivityStyle, err
+	}
+
 	err = row.Scan(
 		&latastActivityStyle.ID,
 		&latastActivityStyle.ActivityID,
@@ -101,14 +117,22 @@ func (a *activityStyleUseCase) UpdateActivityStyle(
 	id string,
 	activityID string,
 	sponsorStyleID string,
-	) (domain.ActivityStyle, error) {
+) (domain.ActivityStyle, error) {
 	updatedActivityStyle := domain.ActivityStyle{}
 	err := a.rep.Update(c, id, activityID, sponsorStyleID)
+	if err != nil {
+		return updatedActivityStyle, err
+	}
+
 	row, err := a.rep.Find(c, id)
+	if err != nil {
+		return updatedActivityStyle, err
+	}
+
 	err = row.Scan(
 		&updatedActivityStyle.ID,
 		&updatedActivityStyle.ActivityID,
-		&updatedActivityStyle.SponsoStyleID,	
+		&updatedActivityStyle.SponsoStyleID,
 		&updatedActivityStyle.CreatedAt,
 		&updatedActivityStyle.UpdatedAt,
 	)

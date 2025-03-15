@@ -27,7 +27,7 @@ func NewPurchaseReportUseCase(rep rep.PurchaseReportRepository) PurchaseReportUs
 	return &purchaseReportUseCase{rep}
 }
 
-//PurchaseReportsの取得(Gets)
+// PurchaseReportsの取得(Gets)
 func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.PurchaseReport, error) {
 	purchaseReport := domain.PurchaseReport{}
 	var purchaseReports []domain.PurchaseReport
@@ -56,10 +56,14 @@ func (p *purchaseReportUseCase) GetPurchaseReports(c context.Context) ([]domain.
 	return purchaseReports, nil
 }
 
-//purchaseReportの取得(Get)
+// purchaseReportの取得(Get)
 func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id string) (domain.PurchaseReport, error) {
 	purchaseReport := domain.PurchaseReport{}
 	row, err := p.rep.Find(c, id)
+	if err != nil {
+		return purchaseReport, err
+	}
+
 	err = row.Scan(
 		&purchaseReport.ID,
 		&purchaseReport.UserID,
@@ -78,7 +82,7 @@ func (p *purchaseReportUseCase) GetPurchaseReportByID(c context.Context, id stri
 	return purchaseReport, nil
 }
 
-//PurchaseReportの作成(create)
+// PurchaseReportの作成(create)
 func (p *purchaseReportUseCase) CreatePurchaseReport(
 	c context.Context,
 	UserID string,
@@ -89,28 +93,35 @@ func (p *purchaseReportUseCase) CreatePurchaseReport(
 	Remark string,
 	Buyer string,
 ) (domain.PurchaseReport, error) {
-	p.rep.Create(c, UserID ,Discount, Addition, FinanceCheck, PurchaseOrderID, Remark, Buyer)
-	latastPurchaseReport := domain.PurchaseReport{}
+	var latestPurchaseReport domain.PurchaseReport
+	if err := p.rep.Create(c, UserID, Discount, Addition, FinanceCheck, PurchaseOrderID, Remark, Buyer); err != nil {
+		return latestPurchaseReport, err
+	}
+
 	row, err := p.rep.FindNewRecord(c)
+	if err != nil {
+		return latestPurchaseReport, err
+	}
+
 	err = row.Scan(
-		&latastPurchaseReport.ID,
-		&latastPurchaseReport.UserID,
-		&latastPurchaseReport.Discount,
-		&latastPurchaseReport.Addition,
-		&latastPurchaseReport.FinanceCheck,
-		&latastPurchaseReport.PurchaseOrderID,
-		&latastPurchaseReport.Remark,
-		&latastPurchaseReport.Buyer,
-		&latastPurchaseReport.CreatedAt,
-		&latastPurchaseReport.UpdatedAt,
+		&latestPurchaseReport.ID,
+		&latestPurchaseReport.UserID,
+		&latestPurchaseReport.Discount,
+		&latestPurchaseReport.Addition,
+		&latestPurchaseReport.FinanceCheck,
+		&latestPurchaseReport.PurchaseOrderID,
+		&latestPurchaseReport.Remark,
+		&latestPurchaseReport.Buyer,
+		&latestPurchaseReport.CreatedAt,
+		&latestPurchaseReport.UpdatedAt,
 	)
 	if err != nil {
-		return latastPurchaseReport, err
+		return latestPurchaseReport, err
 	}
-	return latastPurchaseReport, nil
+	return latestPurchaseReport, nil
 }
 
-//PurchaseReportの修正(update)
+// PurchaseReportの修正(update)
 func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	c context.Context,
 	id string,
@@ -122,9 +133,16 @@ func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	Remark string,
 	Buyer string,
 ) (domain.PurchaseReport, error) {
-	p.rep.Update(c,id, UserID, Discount, Addition, FinanceCheck, PurchaseOrderID, Remark, Buyer)
-	updatedPurchaseReport := domain.PurchaseReport{}
+	var updatedPurchaseReport domain.PurchaseReport
+	if err := p.rep.Update(c, id, UserID, Discount, Addition, FinanceCheck, PurchaseOrderID, Remark, Buyer); err != nil {
+		return updatedPurchaseReport, err
+	}
+
 	row, err := p.rep.Find(c, id)
+	if err != nil {
+		return updatedPurchaseReport, err
+	}
+
 	err = row.Scan(
 		&updatedPurchaseReport.ID,
 		&updatedPurchaseReport.UserID,
@@ -143,7 +161,7 @@ func (p *purchaseReportUseCase) UpdatePurchaseReport(
 	return updatedPurchaseReport, nil
 }
 
-//PurchaseReportの削除(delate)
+// PurchaseReportの削除(delate)
 func (p *purchaseReportUseCase) DestroyPurchaseReport(
 	c context.Context,
 	id string,
@@ -152,9 +170,9 @@ func (p *purchaseReportUseCase) DestroyPurchaseReport(
 	return err
 }
 
-//Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
+// Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
 func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]domain.PurchaseReportDetails, error) {
-	purchaseReportDetail:= domain.PurchaseReportDetails{}
+	purchaseReportDetail := domain.PurchaseReportDetails{}
 	var purchaseReportDetails []domain.PurchaseReportDetails
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
@@ -200,6 +218,10 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]d
 			return nil, err
 		}
 		rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
+		if err != nil {
+			return nil, err
+		}
+
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,
@@ -225,12 +247,16 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetails(c context.Context) ([]d
 	return purchaseReportDetails, nil
 }
 
-//idで選択しPurchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
+// idで選択しPurchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
 func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, id string) (domain.PurchaseReportDetails, error) {
-	purchaseReportDetail := domain.PurchaseReportDetails{}
-	purchaseItem := domain.PurchaseItem{}
+	var purchaseReportDetail domain.PurchaseReportDetails
+	var purchaseItem domain.PurchaseItem
 	var purchaseItems []domain.PurchaseItem
 	row, err := p.rep.FindDetail(c, id)
+	if err != nil {
+		return purchaseReportDetail, err
+	}
+
 	err = row.Scan(
 		&purchaseReportDetail.PurchaseReport.ID,
 		&purchaseReportDetail.PurchaseReport.UserID,
@@ -268,6 +294,10 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 		return purchaseReportDetail, err
 	}
 	rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
+	if err != nil {
+		return purchaseReportDetail, err
+	}
+
 	for rows.Next() {
 		err := rows.Scan(
 			&purchaseItem.ID,
@@ -290,9 +320,9 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailByID(c context.Context, i
 	return purchaseReportDetail, nil
 }
 
-//Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
+// Purchase_reportに紐づく、Purchase_orderからPurchase_itemsの取得(GETS)
 func (p *purchaseReportUseCase) GetPurchaseReportDetailsByYear(c context.Context, year string) ([]domain.PurchaseReportDetails, error) {
-	purchaseReportDetail:= domain.PurchaseReportDetails{}
+	purchaseReportDetail := domain.PurchaseReportDetails{}
 	var purchaseReportDetails []domain.PurchaseReportDetails
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
@@ -338,6 +368,10 @@ func (p *purchaseReportUseCase) GetPurchaseReportDetailsByYear(c context.Context
 			return nil, err
 		}
 		rows, err := p.rep.AllItemInfo(c, strconv.Itoa(int(purchaseReportDetail.PurchaseReport.PurchaseOrderID)))
+		if err != nil {
+			return nil, err
+		}
+
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,

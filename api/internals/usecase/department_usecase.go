@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -34,7 +35,11 @@ func (d *departmentUseCase) GetDepartments(c context.Context) ([]domain.Departme
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -56,6 +61,10 @@ func (d *departmentUseCase) GetDepartments(c context.Context) ([]domain.Departme
 func (d *departmentUseCase) GetDepartmentByID(c context.Context, id string) (domain.Department, error) {
 	var department domain.Department
 	row, err := d.rep.Find(c, id)
+	if err != nil {
+		return department, err
+	}
+
 	err = row.Scan(
 		&department.ID,
 		&department.Name,
@@ -69,25 +78,38 @@ func (d *departmentUseCase) GetDepartmentByID(c context.Context, id string) (dom
 }
 
 func (d *departmentUseCase) CreateDepartment(c context.Context, name string) (domain.Department, error) {
-	latastDepartment := domain.Department{}
-	err := d.rep.Create(c, name)
+	latestDepartment := domain.Department{}
+	if err := d.rep.Create(c, name); err != nil {
+		return latestDepartment, err
+	}
+
 	row, err := d.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestDepartment, err
+	}
+
 	err = row.Scan(
-		&latastDepartment.ID,
-		&latastDepartment.Name,
-		&latastDepartment.CreatedAt,
-		&latastDepartment.UpdatedAt,
+		&latestDepartment.ID,
+		&latestDepartment.Name,
+		&latestDepartment.CreatedAt,
+		&latestDepartment.UpdatedAt,
 	)
 	if err != nil {
-		return latastDepartment, err
+		return latestDepartment, err
 	}
-	return latastDepartment, err
+	return latestDepartment, err
 }
 
 func (d *departmentUseCase) UpdateDepartment(c context.Context, id string, name string) (domain.Department, error) {
-	updatedDepartment := domain.Department{}
-	err := d.rep.Update(c, id, name)
-	row, err := d.rep.Find(c,id)
+	var updatedDepartment domain.Department
+	if err := d.rep.Update(c, id, name); err != nil {
+		return updatedDepartment, err
+	}
+	row, err := d.rep.Find(c, id)
+	if err != nil {
+		return updatedDepartment, err
+	}
+
 	err = row.Scan(
 		&updatedDepartment.ID,
 		&updatedDepartment.Name,

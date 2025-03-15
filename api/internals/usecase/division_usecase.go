@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -30,22 +31,25 @@ func (du divisionUseCase) GetDivisions(c context.Context, year string, financial
 
 	rows, err := du.rep.AllByPeriodAndFinancialRecord(c, year, financialRecordId)
 	if err != nil {
-		return DivisionDetails{}, err
+		return details, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var division DivisionWithBalance
-		err := rows.Scan(
+		if err := rows.Scan(
 			&division.Id,
 			&division.Name,
 			&division.FinancialRecord,
 			&division.Budget,
 			&division.Expense,
 			&division.Balance,
-		)
-		if err != nil {
-			return DivisionDetails{}, err
+		); err != nil {
+			return details, err
 		}
 		divisions = append(divisions, division)
 	}
@@ -82,7 +86,11 @@ func (du *divisionUseCase) GetDivisionOptions(
 	if err != nil {
 		return divisionOptions, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var divisionOption DivisionOption
@@ -128,15 +136,15 @@ func (du *divisionUseCase) CreateDivision(
 	if err != nil {
 		return latestDivisionWithBalance, err
 	}
-	err = row.Scan(
+
+	if err = row.Scan(
 		&latestDivisionWithBalance.Id,
 		&latestDivisionWithBalance.Name,
 		&latestDivisionWithBalance.FinancialRecord,
 		&latestDivisionWithBalance.Budget,
 		&latestDivisionWithBalance.Expense,
 		&latestDivisionWithBalance.Balance,
-	)
-	if err != nil {
+	); err != nil {
 		return latestDivisionWithBalance, err
 	}
 
@@ -158,15 +166,14 @@ func (du *divisionUseCase) UpdateDivision(
 	if err != nil {
 		return updatedDivisionWithBalance, err
 	}
-	err = row.Scan(
+	if err = row.Scan(
 		&updatedDivisionWithBalance.Id,
 		&updatedDivisionWithBalance.Name,
 		&updatedDivisionWithBalance.FinancialRecord,
 		&updatedDivisionWithBalance.Budget,
 		&updatedDivisionWithBalance.Expense,
 		&updatedDivisionWithBalance.Balance,
-	)
-	if err != nil {
+	); err != nil {
 		return updatedDivisionWithBalance, err
 	}
 
@@ -174,7 +181,6 @@ func (du *divisionUseCase) UpdateDivision(
 }
 
 func (du *divisionUseCase) DestroyDivision(c context.Context, id string) error {
-
 	if err := du.rep.Delete(c, id); err != nil {
 		return err
 	}
