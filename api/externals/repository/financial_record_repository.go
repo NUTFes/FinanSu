@@ -157,25 +157,24 @@ func (frr *financialRecordRepository) AllForCSV(
 	c context.Context,
 	year string,
 ) (*sql.Rows, error) {
-	ds := selectFinancialRecordQueryForCSV
-	dsExceptItem := selectFinancialRecordQueryForCsvExceptItem
-	if year != "" {
-		ds = ds.Where(goqu.Ex{"years.year": year})
-		dsExceptItem = dsExceptItem.Where(goqu.Ex{"years.year": year})
-	}
-	// 2つのdsをUNION
-	sql := ds.Union(dsExceptItem).Order(goqu.I("id").Asc())
-	query, _, err := sql.ToSQL()
-
+	query := makeSelectFinancialRecordQueryForCsvExceptItemSQL()
+	stmt, err := frr.crud.Prepare(c, query)
 	if err != nil {
 		return nil, err
 	}
-	return frr.crud.Read(c, query)
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+	return stmt.QueryContext(c, year, year)
 }
 
 var selectFestivalItemGroupSQL = `
 	SELECT
+		festival_items.id,
 		festival_items.division_id,
+		festival_items.name,
 		item_budgets.amount,
 		COALESCE(SUM(buy_reports.amount), 0) AS expense
 	FROM
@@ -233,37 +232,65 @@ func makeSelectFinancialRecordDetailsSQL(conditions []string) string {
 		financial_records.id`, selectFestivalItemGroupSQL, condition)
 }
 
-// 予算・部門があるものを取得するds
-var selectFinancialRecordQueryForCSV = dialect.Select(
-	"financial_records.id",
-	"financial_records.name",
-	"divisions.name",
-	"festival_items.name",
-	goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
-	goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense")).
-	From("festival_items").
-	InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
-	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
-	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
-	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
-	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).GroupBy("festival_items.id")
+// CSV用の予算・部門を取得するクエリ
+var selectFinancialRecordQueryForCsvSQL = `
+	SELECT
+		financial_records.id,
+		financial_records.name,
+		divisions.name,
+		festival_items_group.name,
+		festival_items_group.amount AS budget,
+		festival_items_group.expense AS expense
+	FROM
+		festival_items_group
+	INNER JOIN
+		divisions
+	ON
+		festival_items_group.division_id = divisions.id
+	INNER JOIN
+		financial_records
+	ON
+		divisions.financial_record_id = financial_records.id
+	INNER JOIN
+		years
+	ON
+		financial_records.year_id = years.id
+	WHERE years.year = ?
+`
 
-// 予算・部門がないものを取得するds
-var selectFinancialRecordQueryForCsvExceptItem = dialect.Select(
-	"financial_records.id",
-	"financial_records.name",
-	goqu.COALESCE(goqu.I("divisions.name"), "").As("divisionName"),
-	goqu.L("''").As("festivalItemName"),
-	goqu.L("0").As("budget"),
-	goqu.L("0").As("expense")).
-	From("financial_records").
-	LeftJoin(goqu.I("divisions"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
-	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
-	Where(goqu.Or(
-		goqu.Ex{
-			"divisions.id": goqu.Op{"notIn": dialect.Select("festival_items.division_id").From("festival_items")},
-		},
-		goqu.Ex{
-			"financial_records.id": goqu.Op{"notIn": dialect.Select("divisions.financial_record_id").From("divisions")},
-		},
-	))
+// 予算・部門がないものを取得するクエリ
+var selectFinancialRecordQueryForCsvExceptItemSQL = `
+	SELECT
+		financial_records.id,
+		financial_records.name,
+		COALESCE(divisions.name, '') AS divisionName,
+		'' AS festivalItemName,
+		0 AS budget,
+		0 AS expense
+	FROM
+		financial_records
+	LEFT JOIN
+		divisions
+	ON
+		divisions.financial_record_id = financial_records.id
+	INNER JOIN
+		years
+	ON
+		financial_records.year_id = years.id
+	WHERE
+		(divisions.id NOT IN (SELECT festival_items.division_id FROM festival_items)
+			OR
+		financial_records.id NOT IN (SELECT divisions.financial_record_id FROM divisions))
+	AND years.year = ?
+`
+
+// csv用の予算・部門を取得するクエリ
+func makeSelectFinancialRecordQueryForCsvExceptItemSQL() string {
+	return fmt.Sprintf(`
+		WITH festival_items_group AS ( %s )
+			%s
+		UNION
+			( %s )
+		ORDER BY id ASC
+		`, selectFestivalItemGroupSQL, selectFinancialRecordQueryForCsvSQL, selectFinancialRecordQueryForCsvExceptItemSQL)
+}
