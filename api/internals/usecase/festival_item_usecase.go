@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sort"
+	"strings"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -347,7 +349,7 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 	// NOTE ColumnsをDetailsListの型に合わせてマッピングする。値が無い場合は初期化する。
 	var festivalItemDetailsForMypageMap = make(map[string]FestivalItemDetailsForMypage)
 	var festivalItemMaps = make(map[string]map[string]FestivalItemWithReport)
-
+	var budgetMap = make(map[int]int, 0)
 	for _, festivalItemForMyPageColumn := range festivalItemForMyPageColumns {
 		festivalItemDetailsForMypage := festivalItemDetailsForMypageMap[festivalItemForMyPageColumn.DivisionName]
 		// 局と部門名前定義
@@ -383,10 +385,15 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 			Amount:        &festivalItemForMyPageColumn.ReportAmount,
 			ReportDate:    &festivalItemForMyPageColumn.ReportDate,
 		}
+		_, ok = budgetMap[festivalItemForMyPageColumn.FestivalItemId]
+		if !ok {
+			budgetMap[festivalItemForMyPageColumn.FestivalItemId] = festivalItemForMyPageColumn.BudgetAmount
+			*festivalItemWithReport.FestivalItemTotal.Budget += festivalItemForMyPageColumn.BudgetAmount
+			*festivalItemWithReport.FestivalItemTotal.Balance += festivalItemForMyPageColumn.BudgetAmount
+		}
 
-		*festivalItemWithReport.FestivalItemTotal.Budget += festivalItemForMyPageColumn.BudgetAmount
 		*festivalItemWithReport.FestivalItemTotal.Expense += festivalItemForMyPageColumn.ReportAmount
-		*festivalItemWithReport.FestivalItemTotal.Balance += festivalItemForMyPageColumn.BudgetAmount - festivalItemForMyPageColumn.ReportAmount
+		*festivalItemWithReport.FestivalItemTotal.Balance -= festivalItemForMyPageColumn.ReportAmount
 		switch {
 		case festivalItemForMyPageColumn.IsSettled:
 			buyReport.Status = &isSettled
@@ -432,6 +439,10 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		newFestivalItemDetails.FestivalItems = &festivalItemWithReports
 		festivalItemDetailsList = append(festivalItemDetailsList, newFestivalItemDetails)
 	}
+
+	sort.Slice(festivalItemDetailsList, func(i, j int) bool {
+		return strings.Compare(*festivalItemDetailsList[i].DivisionName, *festivalItemDetailsList[j].DivisionName) < 0
+	})
 	return festivalItemDetailsList
 }
 
