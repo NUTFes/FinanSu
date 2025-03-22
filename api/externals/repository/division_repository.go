@@ -198,34 +198,41 @@ func makeSelectDivisionsSQL(conditions []string) string {
 			condition += fmt.Sprintf(" AND %s", c)
 		}
 	}
+
 	return fmt.Sprintf(`
-	SELECT
-		divisions.id,
-		divisions.name,
-		financial_records.name,
-		COALESCE(SUM(item_budgets.amount), 0) AS budget,
-		COALESCE(SUM(buy_reports.amount), 0) AS expense,
-		COALESCE(SUM(item_budgets.amount), 0) - COALESCE(SUM(buy_reports.amount), 0) AS balance
-	FROM
-		divisions
-	INNER JOIN financial_records
-		ON financial_records.id = divisions.financial_record_id
-	INNER JOIN years
-		ON financial_records.year_id = years.id
-	LEFT JOIN festival_items
-		ON divisions.id = festival_items.division_id
-	LEFT JOIN item_budgets
-		ON festival_items.id = item_budgets.festival_item_id
-	LEFT JOIN buy_reports
-		ON festival_items.id = buy_reports.festival_item_id
-	WHERE 1=1
+		WITH item_budget_sum AS (
+			SELECT
+				divisions.id AS division_id,
+				SUM(item_budgets.amount) AS total_budget
+			FROM divisions
+			LEFT JOIN festival_items ON divisions.id = festival_items.division_id
+			LEFT JOIN item_budgets ON festival_items.id = item_budgets.festival_item_id
+			GROUP BY divisions.id
+		),
+		buy_report_sum AS (
+			SELECT
+				divisions.id AS division_id,
+				SUM(buy_reports.amount) AS total_expense
+			FROM divisions
+			LEFT JOIN festival_items ON divisions.id = festival_items.division_id
+			LEFT JOIN buy_reports ON festival_items.id = buy_reports.festival_item_id
+			GROUP BY divisions.id
+		)
+		SELECT
+			divisions.id,
+			divisions.name,
+			financial_records.name,
+			COALESCE(item_budget_sum.total_budget, 0) AS budget,
+			COALESCE(buy_report_sum.total_expense, 0) AS expense,
+			COALESCE(item_budget_sum.total_budget, 0) - COALESCE(buy_report_sum.total_expense, 0) AS balance
+		FROM divisions
+		INNER JOIN financial_records ON financial_records.id = divisions.financial_record_id
+		INNER JOIN years ON financial_records.year_id = years.id
+		LEFT JOIN item_budget_sum ON item_budget_sum.division_id = divisions.id
+		LEFT JOIN buy_report_sum ON buy_report_sum.division_id = divisions.id
+		WHERE 1=1
 		%s
-	GROUP BY
-		divisions.id,
-		divisions.name,
-		financial_records.name
-	ORDER BY
-		divisions.id DESC
+		ORDER BY divisions.id DESC
 	`, condition)
 }
 
