@@ -114,11 +114,14 @@ func (du *divisionUseCase) GetDivision(c context.Context, id string) (Division, 
 		return division, err
 	}
 
-	row.Scan(
+	if err = row.Scan(
 		&division.Id,
 		&division.Name,
 		&division.FinancialRecordID,
-	)
+	); err != nil {
+		return division, err
+	}
+
 	return division, nil
 }
 
