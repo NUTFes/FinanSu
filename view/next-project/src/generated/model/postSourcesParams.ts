@@ -7,8 +7,8 @@
  */
 
 export type PostSourcesParams = {
-/**
- * name
- */
-name: string;
+  /**
+   * name
+   */
+  name: string;
 };
