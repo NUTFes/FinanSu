@@ -7,8 +7,8 @@
  */
 
 export type PutBureausIdParams = {
-/**
- * name
- */
-name?: string;
+  /**
+   * name
+   */
+  name?: string;
 };

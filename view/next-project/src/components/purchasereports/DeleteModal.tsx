@@ -26,7 +26,7 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
   };
 
   if (delTrigger) {
-    alert(delTrigger)
+    alert(delTrigger);
   }
 
   return (
