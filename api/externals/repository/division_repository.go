@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -106,19 +105,19 @@ func (dr *divisionRepository) GetDivisionOptionsByUserId(
 	year string,
 	userId string,
 ) (*sql.Rows, error) {
-	var conditions []string
-	var args []interface{}
+	ds := selectDivisionOptionsQuery
 
 	if userId != "" {
-		conditions = append(conditions, "users.id = ?")
-		args = append(args, userId)
+		ds = ds.Where(goqu.Ex{"users.id": userId})
 	}
 	if year != "" {
-		conditions = append(conditions, "years.year = ?")
-		args = append(args, year)
+		ds = ds.Where(goqu.Ex{"years.year": year})
 	}
 
-	query := makeSelectDivisionOptionsSQL(conditions)
+	query, args, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
 
 	stmt, err := dr.crud.Prepare(c, query)
 	if err != nil {
@@ -176,16 +175,8 @@ func (dr *divisionRepository) Delete(
 func (dr *divisionRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
 	conditions := []string{"divisions.id = LAST_INSERT_ID()"}
 	query := makeSelectDivisionsSQL(conditions)
-	stmt, err := dr.crud.Prepare(c, query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := stmt.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}()
-	return stmt.QueryRowContext(c), nil
+
+	return dr.client.DB().QueryRowContext(c, query), nil
 }
 
 type Division = generated.Division
@@ -236,23 +227,25 @@ func makeSelectDivisionsSQL(conditions []string) string {
 	`, condition)
 }
 
-func makeSelectDivisionOptionsSQL(conditions []string) string {
-	whereClause := ""
-	if len(conditions) > 0 {
-		whereClause = "WHERE " + strings.Join(conditions, " AND ")
-	}
-
-	return fmt.Sprintf(`
-		SELECT
-			divisions.id AS divisionId,
-			divisions.name AS name
-		FROM
-			divisions
-		INNER JOIN financial_records ON financial_records.id = divisions.financial_record_id
-		INNER JOIN years ON financial_records.year_id = years.id
-		INNER JOIN user_groups ON divisions.id = user_groups.group_id
-		INNER JOIN users ON users.id = user_groups.user_id
-		%s
-		ORDER BY divisions.id DESC
-	`, whereClause)
-}
+var selectDivisionOptionsQuery = dialect.From("divisions").
+	Select(
+		goqu.I("divisions.id").As("divisionId"),
+		goqu.I("divisions.name").As("name"),
+	).
+	Join(
+		goqu.I("financial_records"),
+		goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id"))),
+	).
+	Join(
+		goqu.I("years"),
+		goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id"))),
+	).
+	Join(
+		goqu.I("user_groups"),
+		goqu.On(goqu.I("divisions.id").Eq(goqu.I("user_groups.group_id"))),
+	).
+	Join(
+		goqu.I("users"),
+		goqu.On(goqu.I("users.id").Eq(goqu.I("user_groups.user_id"))),
+	).
+	Order(goqu.I("divisions.id").Desc())
