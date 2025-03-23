@@ -184,16 +184,8 @@ func (fir *festivalItemRepository) DeleteItemBudget(
 func (fir *festivalItemRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
 	conditions := []string{"festival_items.id = LAST_INSERT_ID()"}
 	query := makeSelectFestivalItemSQL(conditions)
-	stmt, err := fir.crud.Prepare(c, query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := stmt.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}()
-	return stmt.QueryRowContext(c), nil
+
+	return fir.client.DB().QueryRowContext(c, query), nil
 }
 
 // 年度別と部門で取得
@@ -230,19 +222,19 @@ func (fir *festivalItemRepository) GetFestivalItemOptions(
 	year string,
 	divisionId string,
 ) (*sql.Rows, error) {
-	var conditions []string
-	var args []interface{}
+	ds := selectFestivalItemOptionsQuery
 
 	if divisionId != "" {
-		conditions = append(conditions, "divisions.id = ?")
-		args = append(args, divisionId)
+		ds = ds.Where(goqu.Ex{"divisions.id": divisionId})
 	}
 	if year != "" {
-		conditions = append(conditions, "years.year = ?")
-		args = append(args, year)
+		ds = ds.Where(goqu.Ex{"years.year": year})
 	}
 
-	query := makeSelectFestivalItemOptionsSQL(conditions)
+	query, args, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
 
 	stmt, err := fir.crud.Prepare(c, query)
 	if err != nil {
@@ -315,23 +307,15 @@ func makeSelectFestivalItemSQL(conditions []string) string {
 	`, whereClause)
 }
 
-func makeSelectFestivalItemOptionsSQL(conditions []string) string {
-	whereClause := ""
-	if len(conditions) > 0 {
-		whereClause = "WHERE " + strings.Join(conditions, " AND ")
-	}
-	return fmt.Sprintf(`
-		SELECT
-			festival_items.id AS festivalItemId,
-			festival_items.name AS name
-		FROM festival_items
-		INNER JOIN divisions ON festival_items.division_id = divisions.id
-		INNER JOIN financial_records ON divisions.financial_record_id = financial_records.id
-		INNER JOIN years ON financial_records.year_id = years.id
-		%s
-		ORDER BY festival_items.id DESC
-	`, whereClause)
-}
+var selectFestivalItemOptionsQuery = dialect.From("festival_items").
+	Select(
+		goqu.I("festival_items.id").As("festivalItemId"),
+		goqu.I("festival_items.name").As("name"),
+	).
+	Join(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
+	Join(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+	Join(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+	Order(goqu.I("festival_items.id").Desc())
 
 func makeSelectFestivalItemForMypageSQL(conditions []string) string {
 	whereClause := ""
