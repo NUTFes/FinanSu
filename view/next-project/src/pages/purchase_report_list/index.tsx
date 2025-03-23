@@ -27,6 +27,13 @@ export default function PurchaseReports() {
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
 
+  useEffect(() => {
+    if (yearPeriods && yearPeriods.length > 0) {
+      const latestYear = Math.max(...yearPeriods.map((period) => period.year));
+      setSelectedYear(latestYear);
+    }
+  }, [yearPeriods]);
+
   const [selectedYear, setSelectedYear] = useState<number>(
     yearPeriods && yearPeriods.length > 0 ? yearPeriods[0].year : 0,
   );
@@ -56,17 +63,31 @@ export default function PurchaseReports() {
   }, [buyReports]);
 
   const updateSealCheck = (id: number) => {
-    setSealChecks((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    setSealChecks((prev) => {
+      const newValue = !prev[id];
+      if (!newValue) {
+        setSettlementChecks((prevSettlement) => ({
+          ...prevSettlement,
+          [id]: false,
+        }));
+      }
+      return {
+        ...prev,
+        [id]: newValue,
+      };
+    });
   };
 
   const updateSettlementCheck = (id: number) => {
-    setSettlementChecks((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    setSettlementChecks((prev) => {
+      if (!sealChecks[id]) {
+        return prev;
+      }
+      return {
+        ...prev,
+        [id]: !prev[id],
+      };
+    });
   };
 
   const handleEdit = (report: BuyReportDetail) => {
@@ -224,6 +245,7 @@ export default function PurchaseReports() {
                               setBuyReportId(report.id ?? 0);
                               updateSettlementCheck(report.id ?? 0);
                             }}
+                            disabled={!sealChecks[report.id ?? 0]}
                           />
                         </td>
                         <td>
