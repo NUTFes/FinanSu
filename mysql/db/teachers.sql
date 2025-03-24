@@ -5,6 +5,7 @@ CREATE TABLE teachers(
   name varchar(255) not null,
   position varchar(255) not null,
   department_id int(10),
+  building varchar(255),
   room varchar(255),
   is_black boolean,
   remark varchar(255),
@@ -14,5 +15,5 @@ CREATE TABLE teachers(
   PRIMARY KEY (id)
 );
 
-INSERT into teachers (name, position, department_id, room,  is_black, remark) values ('test-name', 'test-position', 1, '605', false, "test-remark" );
-INSERT into teachers (name, position, department_id, room,  is_black, remark) values ('test-teacher', 'test-position2', 1, '605', false, "test-remark" );
+INSERT into teachers (name, position, department_id, building, room, is_black, remark) values ('test-name', 'test-position', 1, 'test', '605', false, "test-remark" );
+INSERT into teachers (name, position, department_id, building, room, is_black, remark) values ('test-teacher', 'test-position2', 1, 'test', '605', false, "test-remark" );
