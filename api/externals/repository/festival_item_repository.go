@@ -194,19 +194,19 @@ func (fir *festivalItemRepository) GetDetailsByDivisionId(
 	year string,
 	userId string,
 ) (*sql.Rows, error) {
-	ds := selectFestivalItemForMypageQuery
+	var conditions []string
+	var args []interface{}
 
 	if userId != "" {
-		ds = ds.Where(goqu.Ex{"users.id": userId})
+		conditions = append(conditions, "users.id = ?")
+		args = append(args, userId)
 	}
 	if year != "" {
-		ds = ds.Where(goqu.Ex{"years.year": year})
+		conditions = append(conditions, "years.year = ?")
+		args = append(args, year)
 	}
 
-	query, args, err := ds.ToSQL()
-	if err != nil {
-		return nil, err
-	}
+	query := makeSelectFestivalItemForMypageSQL(conditions)
 
 	stmt, err := fir.crud.Prepare(c, query)
 	if err != nil {
@@ -317,29 +317,37 @@ var selectFestivalItemOptionsQuery = dialect.From("festival_items").
 	Join(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
 	Order(goqu.I("festival_items.id").Desc())
 
-var selectFestivalItemForMypageQuery = dialect.From("festival_items").
-	Select(
-		goqu.I("users.name").As("userName"),
-		goqu.I("financial_records.name").As("financialRecordName"),
-		goqu.I("divisions.id").As("divisionId"),
-		goqu.I("divisions.name").As("divisionName"),
-		goqu.I("festival_items.id").As("festivalItemId"),
-		goqu.I("festival_items.name").As("festivalItemName"),
-		goqu.I("years.year"),
-		goqu.COALESCE(goqu.I("item_budgets.amount"), 0).As("budgetAmount"),
-		goqu.COALESCE(goqu.I("buy_reports.id"), 0).As("buyReportId"),
-		goqu.COALESCE(goqu.I("buy_reports.paid_by"), "").As("paidBy"),
-		goqu.COALESCE(goqu.I("buy_reports.amount"), 0).As("reportAmount"),
-		goqu.COALESCE(goqu.I("buy_reports.created_at"), goqu.L("'2000-01-01 00:00:00'")).As("reportDate"),
-		goqu.COALESCE(goqu.I("buy_statuses.is_packed"), 0).As("isPacked"),
-		goqu.COALESCE(goqu.I("buy_statuses.is_settled"), 0).As("isSettled"),
-	).
-	Join(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
-	Join(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
-	Join(goqu.I("user_groups"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("user_groups.group_id")))).
-	Join(goqu.I("users"), goqu.On(goqu.I("users.id").Eq(goqu.I("user_groups.user_id")))).
-	Join(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
-	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
-	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
-	LeftJoin(goqu.I("buy_statuses"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("buy_statuses.buy_report_id")))).
-	Order(goqu.I("festival_items.id").Desc())
+func makeSelectFestivalItemForMypageSQL(conditions []string) string {
+	whereClause := ""
+	if len(conditions) > 0 {
+		whereClause = "WHERE " + strings.Join(conditions, " AND ")
+	}
+	return fmt.Sprintf(`
+		SELECT
+			users.name AS userName,
+			financial_records.name AS financialRecordName,
+			divisions.id AS divisionId,
+			divisions.name AS divisionName,
+			festival_items.id AS festivalItemId,
+			festival_items.name AS festivalItemName,
+			years.year,
+			COALESCE(item_budgets.amount, 0) AS budgetAmount,
+			COALESCE(buy_reports.id, 0) AS buyReportId,
+			COALESCE(buy_reports.paid_by, '') AS paidBy,
+			COALESCE(buy_reports.amount, 0) AS reportAmount,
+			COALESCE(buy_reports.created_at, '2000-01-01 00:00:00') AS reportDate,
+			COALESCE(buy_statuses.is_packed, 0) AS isPacked,
+			COALESCE(buy_statuses.is_settled, 0) AS isSettled
+		FROM festival_items
+		INNER JOIN divisions ON festival_items.division_id = divisions.id
+		INNER JOIN financial_records ON divisions.financial_record_id = financial_records.id
+		INNER JOIN user_groups ON divisions.id = user_groups.group_id
+		INNER JOIN users ON users.id = user_groups.user_id
+		INNER JOIN years ON financial_records.year_id = years.id
+		LEFT JOIN item_budgets ON festival_items.id = item_budgets.festival_item_id
+		LEFT JOIN buy_reports ON festival_items.id = buy_reports.festival_item_id
+		LEFT JOIN buy_statuses ON buy_reports.id = buy_statuses.buy_report_id
+		%s
+		ORDER BY festival_items.id DESC
+	`, whereClause)
+}
