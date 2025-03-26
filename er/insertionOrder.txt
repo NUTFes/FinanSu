@@ -1,3 +1,4 @@
+buildings
 users
 years
 financial_records
@@ -7,6 +8,7 @@ buy_reports
 buy_statuses
 item_budgets
 payment_receipts
+room_numbers
 user_groups
 activities
 activity_informations

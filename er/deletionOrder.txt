@@ -20,6 +20,7 @@ activity_styles
 activity_informations
 activities
 user_groups
+room_numbers
 payment_receipts
 item_budgets
 buy_statuses
@@ -29,3 +30,4 @@ divisions
 financial_records
 years
 users
+buildings

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>activity_styles - finansu_db.finansu_db</title>
+        <title>buildings - finansu_db.finansu_db</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>activity_styles</h1><p><span id="recordNumber">4</span> rows</p><br />
+                    <h1>buildings</h1><p><span id="recordNumber">27</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -117,6 +117,11 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="room_numbers.building_id references buildings.id via room_numbers_ibfk_1"><a href='room_numbers.html'>room_numbers</a><span class='relatedKey'>.building_id</span></td>
+                                                <td class="constraint detail">room_numbers_ibfk_1</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -126,27 +131,10 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="activity_id">activity_id</span></td>
-                                    <td>INT</td>
-                                    <td>10</td>
-                                    <td title='nullable'>√</td>
+                                    <td><span id="name">name</span></td>
+                                    <td>VARCHAR</td>
+                                    <td>255</td>
                                     <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="sponsor_style_id">sponsor_style_id</span></td>
-                                    <td>INT</td>
-                                    <td>10</td>
-                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -251,9 +239,10 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="activity_styles.html" target="_top" title="activity_styles" alt="" coords="5,5,349,221">
+<area shape="rect" id="node1" href="room_numbers.html" target="_top" title="room_numbers" alt="" coords="343,5,571,152">
+<area shape="rect" id="node2" href="buildings.html" target="_top" title="buildings" alt="" coords="5,32,299,219">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/activity_styles.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/buildings.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
