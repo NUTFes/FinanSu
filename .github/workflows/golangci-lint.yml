@@ -15,7 +15,6 @@ jobs:
       - name: golangci-lint
         uses: reviewdog/action-golangci-lint@v2
         with:
-          golangci_lint_version: v2.0.2
           workdir: ./api
           fail_level: error
           github_token: ${{ secrets.GITHUB_TOKEN }}
