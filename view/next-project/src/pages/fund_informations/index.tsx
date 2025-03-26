@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import { useState, useMemo, useCallback } from 'react';
-import { Title, Card } from '@components/common';
-import MainLayout from '@components/layout/MainLayout';
-import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
 import FundInformationTable from '@/components/fund_information/FundInformationTable';
+import { Title, Card } from '@components/common';
+import OpenAddModalButton from '@components/fund_information/OpenAddModalButton';
+import MainLayout from '@components/layout/MainLayout';
 
 export interface FundInformation {
   id: number;
