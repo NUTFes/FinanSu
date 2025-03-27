@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>departments</h1><p><span id="recordNumber">13</span> rows</p><br />
+                    <h1>departments</h1><p><span id="recordNumber">0</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -117,6 +117,11 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="teachers.department_id references departments.id via teachers_ibfk_2"><a href='teachers.html'>teachers</a><span class='relatedKey'>.department_id</span></td>
+                                                <td class="constraint detail">teachers_ibfk_2</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -230,13 +235,23 @@
                                 <h5>Close relationships within degrees of separation</h5>
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
+                                    <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="departments.html" target="_top" title="departments" alt="" coords="5,5,315,192">
+<area shape="rect" id="node1" href="teachers.html" target="_top" title="teachers" alt="" coords="359,5,568,181">
+<area shape="rect" id="node2" href="departments.html" target="_top" title="departments" alt="" coords="5,32,315,219">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/departments.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="teachers.html" target="_top" title="teachers" alt="" coords="359,64,568,240">
+<area shape="rect" id="node2" href="departments.html" target="_top" title="departments" alt="" coords="5,5,315,192">
+<area shape="rect" id="node3" href="teacher_rooms.html" target="_top" title="teacher_rooms" alt="" coords="46,209,274,297">
+</map>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/departments.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
