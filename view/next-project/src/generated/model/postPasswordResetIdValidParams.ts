@@ -7,8 +7,8 @@
  */
 
 export type PostPasswordResetIdValidParams = {
-/**
- * token
- */
-token?: string;
+  /**
+   * token
+   */
+  token?: string;
 };
