@@ -6,13 +6,4 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type GetFestivalItemsUsersParams = {
-/**
- * year
- */
-year?: number;
-/**
- * 部門id
- */
-division_id: number;
-};
+export type DeleteIncomesId200 = { [key: string]: unknown };

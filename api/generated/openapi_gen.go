@@ -216,6 +216,24 @@ type FinancialRecordWithBalance struct {
 	Year    *int    `json:"year,omitempty"`
 }
 
+// Income defines model for income.
+type Income struct {
+	Amount int    `json:"amount"`
+	Id     *int   `json:"id,omitempty"`
+	Name   string `json:"name"`
+	YearId int    `json:"year_id"`
+}
+
+// IncomeExpenditureManagement defines model for incomeExpenditureManagement.
+type IncomeExpenditureManagement struct {
+	Amount         *int    `json:"amount,omitempty"`
+	Content        *string `json:"content,omitempty"`
+	CurrentBalance *int    `json:"currentBalance,omitempty"`
+	Date           *string `json:"date,omitempty"`
+	Detail         *string `json:"detail,omitempty"`
+	IsChecked      *bool   `json:"isChecked,omitempty"`
+}
+
 // PasswordResetData defines model for passwordResetData.
 type PasswordResetData struct {
 	ConfirmPassword *string `json:"confirmPassword,omitempty"`
@@ -492,6 +510,18 @@ type PutFundInformationsIdParams struct {
 	ReceivedAt *string `form:"received_at,omitempty" json:"received_at,omitempty"`
 }
 
+// GetIncomeExpenditureManagementsParams defines parameters for GetIncomeExpenditureManagements.
+type GetIncomeExpenditureManagementsParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+}
+
+// PostIncomeExpenditureManagementsCheckIdJSONBody defines parameters for PostIncomeExpenditureManagementsCheckId.
+type PostIncomeExpenditureManagementsCheckIdJSONBody struct {
+	// IsChecked チェック済みかどうか
+	IsChecked *bool `json:"isChecked,omitempty"`
+}
+
 // PostPasswordResetRequestParams defines parameters for PostPasswordResetRequest.
 type PostPasswordResetRequestParams struct {
 	// Email email
@@ -643,6 +673,15 @@ type PostFinancialRecordsJSONRequestBody = FinancialRecord
 
 // PutFinancialRecordsIdJSONRequestBody defines body for PutFinancialRecordsId for application/json ContentType.
 type PutFinancialRecordsIdJSONRequestBody = FinancialRecord
+
+// PostIncomeExpenditureManagementsCheckIdJSONRequestBody defines body for PostIncomeExpenditureManagementsCheckId for application/json ContentType.
+type PostIncomeExpenditureManagementsCheckIdJSONRequestBody PostIncomeExpenditureManagementsCheckIdJSONBody
+
+// PostIncomesJSONRequestBody defines body for PostIncomes for application/json ContentType.
+type PostIncomesJSONRequestBody = Income
+
+// PutIncomesIdJSONRequestBody defines body for PutIncomesId for application/json ContentType.
+type PutIncomesIdJSONRequestBody = Income
 
 // PostPasswordResetIdJSONRequestBody defines body for PostPasswordResetId for application/json ContentType.
 type PostPasswordResetIdJSONRequestBody = PasswordResetData
@@ -916,6 +955,24 @@ type ServerInterface interface {
 
 	// (GET /fund_informations/{id}/details)
 	GetFundInformationsIdDetails(ctx echo.Context, id int) error
+
+	// (GET /income_expenditure_managements)
+	GetIncomeExpenditureManagements(ctx echo.Context, params GetIncomeExpenditureManagementsParams) error
+
+	// (POST /income_expenditure_managements/check/{id})
+	PostIncomeExpenditureManagementsCheckId(ctx echo.Context, id int) error
+
+	// (POST /incomes)
+	PostIncomes(ctx echo.Context) error
+
+	// (DELETE /incomes/{id})
+	DeleteIncomesId(ctx echo.Context, id int) error
+
+	// (GET /incomes/{id})
+	GetIncomesId(ctx echo.Context, id int) error
+
+	// (PUT /incomes/{id})
+	PutIncomesId(ctx echo.Context, id int) error
 
 	// (POST /password_reset/request)
 	PostPasswordResetRequest(ctx echo.Context, params PostPasswordResetRequestParams) error
@@ -2469,6 +2526,97 @@ func (w *ServerInterfaceWrapper) GetFundInformationsIdDetails(ctx echo.Context) 
 	return err
 }
 
+// GetIncomeExpenditureManagements converts echo context to params.
+func (w *ServerInterfaceWrapper) GetIncomeExpenditureManagements(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetIncomeExpenditureManagementsParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetIncomeExpenditureManagements(ctx, params)
+	return err
+}
+
+// PostIncomeExpenditureManagementsCheckId converts echo context to params.
+func (w *ServerInterfaceWrapper) PostIncomeExpenditureManagementsCheckId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostIncomeExpenditureManagementsCheckId(ctx, id)
+	return err
+}
+
+// PostIncomes converts echo context to params.
+func (w *ServerInterfaceWrapper) PostIncomes(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostIncomes(ctx)
+	return err
+}
+
+// DeleteIncomesId converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteIncomesId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteIncomesId(ctx, id)
+	return err
+}
+
+// GetIncomesId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetIncomesId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetIncomesId(ctx, id)
+	return err
+}
+
+// PutIncomesId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutIncomesId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutIncomesId(ctx, id)
+	return err
+}
+
 // PostPasswordResetRequest converts echo context to params.
 func (w *ServerInterfaceWrapper) PostPasswordResetRequest(ctx echo.Context) error {
 	var err error
@@ -3392,6 +3540,12 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/fund_informations/:id", wrapper.GetFundInformationsId)
 	router.PUT(baseURL+"/fund_informations/:id", wrapper.PutFundInformationsId)
 	router.GET(baseURL+"/fund_informations/:id/details", wrapper.GetFundInformationsIdDetails)
+	router.GET(baseURL+"/income_expenditure_managements", wrapper.GetIncomeExpenditureManagements)
+	router.POST(baseURL+"/income_expenditure_managements/check/:id", wrapper.PostIncomeExpenditureManagementsCheckId)
+	router.POST(baseURL+"/incomes", wrapper.PostIncomes)
+	router.DELETE(baseURL+"/incomes/:id", wrapper.DeleteIncomesId)
+	router.GET(baseURL+"/incomes/:id", wrapper.GetIncomesId)
+	router.PUT(baseURL+"/incomes/:id", wrapper.PutIncomesId)
 	router.POST(baseURL+"/password_reset/request", wrapper.PostPasswordResetRequest)
 	router.POST(baseURL+"/password_reset/:id", wrapper.PostPasswordResetId)
 	router.POST(baseURL+"/password_reset/:id/valid", wrapper.PostPasswordResetIdValid)

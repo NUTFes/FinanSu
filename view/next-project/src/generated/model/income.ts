@@ -6,13 +6,9 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type GetFestivalItemsUsersParams = {
-/**
- * year
- */
-year?: number;
-/**
- * 部門id
- */
-division_id: number;
-};
+export interface Income {
+  id?: number;
+  name: string;
+  amount: number;
+  year_id: number;
+}
