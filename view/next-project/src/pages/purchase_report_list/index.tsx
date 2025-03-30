@@ -63,26 +63,22 @@ export default function PurchaseReports() {
   }, [buyReports]);
 
   const updateSealCheck = (id: number) => {
+    if (sealChecks[id]) {
+      setSettlementChecks((prevSettlement) => ({
+        ...prevSettlement,
+        [id]: false,
+      }));
+    }
     setSealChecks((prev) => {
-      const newValue = !prev[id];
-      if (!newValue) {
-        setSettlementChecks((prevSettlement) => ({
-          ...prevSettlement,
-          [id]: false,
-        }));
-      }
       return {
         ...prev,
-        [id]: newValue,
+        [id]: !prev[id],
       };
     });
   };
 
   const updateSettlementCheck = (id: number) => {
     setSettlementChecks((prev) => {
-      if (!sealChecks[id]) {
-        return prev;
-      }
       return {
         ...prev,
         [id]: !prev[id],
