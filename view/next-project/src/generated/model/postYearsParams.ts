@@ -7,8 +7,8 @@
  */
 
 export type PostYearsParams = {
-/**
- * year
- */
-year: number;
+  /**
+   * year
+   */
+  year: number;
 };

@@ -7,8 +7,8 @@
  */
 
 export type GetFinancialRecordsCsvDownloadParams = {
-/**
- * year
- */
-year: number;
+  /**
+   * year
+   */
+  year: number;
 };
