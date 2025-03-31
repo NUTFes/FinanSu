@@ -7,8 +7,8 @@
  */
 
 export type PostBureausParams = {
-/**
- * name
- */
-name: string;
+  /**
+   * name
+   */
+  name: string;
 };
