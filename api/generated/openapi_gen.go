@@ -226,12 +226,18 @@ type Income struct {
 
 // IncomeExpenditureManagement defines model for incomeExpenditureManagement.
 type IncomeExpenditureManagement struct {
-	Amount         *int    `json:"amount,omitempty"`
-	Content        *string `json:"content,omitempty"`
-	CurrentBalance *int    `json:"currentBalance,omitempty"`
-	Date           *string `json:"date,omitempty"`
+	Amount         int     `json:"amount"`
+	Content        string  `json:"content"`
+	CurrentBalance int     `json:"currentBalance"`
+	Date           string  `json:"date"`
 	Detail         *string `json:"detail,omitempty"`
-	IsChecked      *bool   `json:"isChecked,omitempty"`
+	IsChecked      bool    `json:"isChecked"`
+}
+
+// IncomeExpenditureManagementDetails defines model for incomeExpenditureManagementDetails.
+type IncomeExpenditureManagementDetails struct {
+	IncomeExpenditureManagements []IncomeExpenditureManagement `json:"incomeExpenditureManagements"`
+	Total                        Total                         `json:"total"`
 }
 
 // PasswordResetData defines model for passwordResetData.
@@ -516,8 +522,8 @@ type GetIncomeExpenditureManagementsParams struct {
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
-// PostIncomeExpenditureManagementsCheckIdJSONBody defines parameters for PostIncomeExpenditureManagementsCheckId.
-type PostIncomeExpenditureManagementsCheckIdJSONBody struct {
+// PutIncomeExpenditureManagementsCheckIdJSONBody defines parameters for PutIncomeExpenditureManagementsCheckId.
+type PutIncomeExpenditureManagementsCheckIdJSONBody struct {
 	// IsChecked チェック済みかどうか
 	IsChecked *bool `json:"isChecked,omitempty"`
 }
@@ -674,8 +680,8 @@ type PostFinancialRecordsJSONRequestBody = FinancialRecord
 // PutFinancialRecordsIdJSONRequestBody defines body for PutFinancialRecordsId for application/json ContentType.
 type PutFinancialRecordsIdJSONRequestBody = FinancialRecord
 
-// PostIncomeExpenditureManagementsCheckIdJSONRequestBody defines body for PostIncomeExpenditureManagementsCheckId for application/json ContentType.
-type PostIncomeExpenditureManagementsCheckIdJSONRequestBody PostIncomeExpenditureManagementsCheckIdJSONBody
+// PutIncomeExpenditureManagementsCheckIdJSONRequestBody defines body for PutIncomeExpenditureManagementsCheckId for application/json ContentType.
+type PutIncomeExpenditureManagementsCheckIdJSONRequestBody PutIncomeExpenditureManagementsCheckIdJSONBody
 
 // PostIncomesJSONRequestBody defines body for PostIncomes for application/json ContentType.
 type PostIncomesJSONRequestBody = Income
@@ -959,8 +965,8 @@ type ServerInterface interface {
 	// (GET /income_expenditure_managements)
 	GetIncomeExpenditureManagements(ctx echo.Context, params GetIncomeExpenditureManagementsParams) error
 
-	// (POST /income_expenditure_managements/check/{id})
-	PostIncomeExpenditureManagementsCheckId(ctx echo.Context, id int) error
+	// (PUT /income_expenditure_managements/check/{id})
+	PutIncomeExpenditureManagementsCheckId(ctx echo.Context, id int) error
 
 	// (POST /incomes)
 	PostIncomes(ctx echo.Context) error
@@ -2544,8 +2550,8 @@ func (w *ServerInterfaceWrapper) GetIncomeExpenditureManagements(ctx echo.Contex
 	return err
 }
 
-// PostIncomeExpenditureManagementsCheckId converts echo context to params.
-func (w *ServerInterfaceWrapper) PostIncomeExpenditureManagementsCheckId(ctx echo.Context) error {
+// PutIncomeExpenditureManagementsCheckId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutIncomeExpenditureManagementsCheckId(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
 	var id int
@@ -2556,7 +2562,7 @@ func (w *ServerInterfaceWrapper) PostIncomeExpenditureManagementsCheckId(ctx ech
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostIncomeExpenditureManagementsCheckId(ctx, id)
+	err = w.Handler.PutIncomeExpenditureManagementsCheckId(ctx, id)
 	return err
 }
 
@@ -3541,7 +3547,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/fund_informations/:id", wrapper.PutFundInformationsId)
 	router.GET(baseURL+"/fund_informations/:id/details", wrapper.GetFundInformationsIdDetails)
 	router.GET(baseURL+"/income_expenditure_managements", wrapper.GetIncomeExpenditureManagements)
-	router.POST(baseURL+"/income_expenditure_managements/check/:id", wrapper.PostIncomeExpenditureManagementsCheckId)
+	router.PUT(baseURL+"/income_expenditure_managements/check/:id", wrapper.PutIncomeExpenditureManagementsCheckId)
 	router.POST(baseURL+"/incomes", wrapper.PostIncomes)
 	router.DELETE(baseURL+"/incomes/:id", wrapper.DeleteIncomesId)
 	router.GET(baseURL+"/incomes/:id", wrapper.GetIncomesId)

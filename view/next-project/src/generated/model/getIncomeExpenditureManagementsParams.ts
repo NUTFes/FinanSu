@@ -7,8 +7,8 @@
  */
 
 export type GetIncomeExpenditureManagementsParams = {
-  /**
-   * year
-   */
-  year?: number;
+/**
+ * year
+ */
+year?: number;
 };

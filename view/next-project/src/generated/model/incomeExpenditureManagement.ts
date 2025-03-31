@@ -7,10 +7,10 @@
  */
 
 export interface IncomeExpenditureManagement {
-  content?: string;
+  content: string;
   detail?: string;
-  amount?: number;
-  currentBalance?: number;
-  date?: string;
-  isChecked?: boolean;
+  amount: number;
+  currentBalance: number;
+  date: string;
+  isChecked: boolean;
 }

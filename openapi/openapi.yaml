@@ -1789,17 +1789,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  incomeExpenditureManagements:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/incomeExpenditureManagement"
-                  totalBalance:
-                    type: integer
-                    description: 合計残高
+                $ref: "#/components/schemas/incomeExpenditureManagementDetails"
   /income_expenditure_managements/check/{id}:
-    post:
+    put:
       tags:
         - income_expenditure_management
       description: income_expenditure_managementのチェック
@@ -3234,6 +3226,12 @@ components:
           example: 1
     incomeExpenditureManagement:
       type: object
+      required:
+        - content
+        - amount
+        - currentBalance
+        - date
+        - isChecked
       properties:
         content:
           type: string
@@ -3253,6 +3251,18 @@ components:
         isChecked:
           type: boolean
           example: false
+    incomeExpenditureManagementDetails:
+      type: object
+      required:
+        - total
+        - incomeExpenditureManagements
+      properties:
+        total:
+          $ref: "#/components/schemas/total"
+        incomeExpenditureManagements:
+          type: array
+          items:
+            $ref: "#/components/schemas/incomeExpenditureManagement"
     sponsorStyle:
       required:
         - feature
