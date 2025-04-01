@@ -30,6 +30,7 @@ import type {
   DeleteFestivalItemsId200,
   DeleteFinancialRecordsId200,
   DeleteFundInformationsId200,
+  DeleteIncomesId200,
   DeleteReceiptsId200,
   DeleteSourcesId200,
   DeleteSponsorsId200,
@@ -94,6 +95,7 @@ import type {
   GetFundInformationsDetailsYear200,
   GetFundInformationsId200,
   GetFundInformationsIdDetails200,
+  GetIncomeExpenditureManagementsParams,
   GetReceipts200,
   GetReceiptsId200,
   GetReceiptsReportsId200,
@@ -104,6 +106,8 @@ import type {
   GetTeachersFundRegisteredYear200,
   GetTeachersId200,
   GetUsersId200,
+  Income,
+  IncomeExpenditureManagementDetails,
   PasswordResetData,
   PostActivities200,
   PostActivityInformations200,
@@ -153,6 +157,9 @@ import type {
   PutExpensesIdParams,
   PutFundInformationsId200,
   PutFundInformationsIdParams,
+  PutIncomeExpenditureManagementsCheckId200,
+  PutIncomeExpenditureManagementsCheckIdBody,
+  PutIncomesId200,
   PutReceiptsId200,
   PutSourcesId200,
   PutSourcesIdParams,
@@ -5453,6 +5460,428 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
   const swrFn = () => getFundInformationsDetailsYear(year, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * incomeの作成
+ */
+export type postIncomesResponse200 = {
+  data: Income;
+  status: 200;
+};
+
+export type postIncomesResponseComposite = postIncomesResponse200;
+
+export type postIncomesResponse = postIncomesResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostIncomesUrl = () => {
+  return `/incomes`;
+};
+
+export const postIncomes = async (
+  income: Income,
+  options?: RequestInit,
+): Promise<postIncomesResponse> => {
+  return customFetch<postIncomesResponse>(getPostIncomesUrl(), {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(income),
+  });
+};
+
+export const getPostIncomesMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, { arg }: { arg: Income }): Promise<postIncomesResponse> => {
+    return postIncomes(arg, options);
+  };
+};
+export const getPostIncomesMutationKey = () => [`/incomes`] as const;
+
+export type PostIncomesMutationResult = NonNullable<Awaited<ReturnType<typeof postIncomes>>>;
+export type PostIncomesMutationError = unknown;
+
+export const usePostIncomes = <TError = unknown>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postIncomes>>,
+    TError,
+    Key,
+    Income,
+    Awaited<ReturnType<typeof postIncomes>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostIncomesMutationKey();
+  const swrFn = getPostIncomesMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * IDで指定されたincomeの取得
+ */
+export type getIncomesIdResponse200 = {
+  data: Income;
+  status: 200;
+};
+
+export type getIncomesIdResponseComposite = getIncomesIdResponse200;
+
+export type getIncomesIdResponse = getIncomesIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetIncomesIdUrl = (id: number) => {
+  return `/incomes/${id}`;
+};
+
+export const getIncomesId = async (
+  id: number,
+  options?: RequestInit,
+): Promise<getIncomesIdResponse> => {
+  return customFetch<getIncomesIdResponse>(getGetIncomesIdUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetIncomesIdKey = (id: number) => [`/incomes/${id}`] as const;
+
+export type GetIncomesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomesId>>>;
+export type GetIncomesIdQueryError = unknown;
+
+export const useGetIncomesId = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getIncomesId>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!id;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetIncomesIdKey(id) : null));
+  const swrFn = () => getIncomesId(id, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * incomeの更新
+ */
+export type putIncomesIdResponse200 = {
+  data: PutIncomesId200;
+  status: 200;
+};
+
+export type putIncomesIdResponseComposite = putIncomesIdResponse200;
+
+export type putIncomesIdResponse = putIncomesIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getPutIncomesIdUrl = (id: number) => {
+  return `/incomes/${id}`;
+};
+
+export const putIncomesId = async (
+  id: number,
+  income: Income,
+  options?: RequestInit,
+): Promise<putIncomesIdResponse> => {
+  return customFetch<putIncomesIdResponse>(getPutIncomesIdUrl(id), {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(income),
+  });
+};
+
+export const getPutIncomesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, { arg }: { arg: Income }): Promise<putIncomesIdResponse> => {
+    return putIncomesId(id, arg, options);
+  };
+};
+export const getPutIncomesIdMutationKey = (id: number) => [`/incomes/${id}`] as const;
+
+export type PutIncomesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putIncomesId>>>;
+export type PutIncomesIdMutationError = unknown;
+
+export const usePutIncomesId = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putIncomesId>>,
+      TError,
+      Key,
+      Income,
+      Awaited<ReturnType<typeof putIncomesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPutIncomesIdMutationKey(id);
+  const swrFn = getPutIncomesIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * IDを指定してincomeの削除
+ */
+export type deleteIncomesIdResponse200 = {
+  data: DeleteIncomesId200;
+  status: 200;
+};
+
+export type deleteIncomesIdResponseComposite = deleteIncomesIdResponse200;
+
+export type deleteIncomesIdResponse = deleteIncomesIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getDeleteIncomesIdUrl = (id: number) => {
+  return `/incomes/${id}`;
+};
+
+export const deleteIncomesId = async (
+  id: number,
+  options?: RequestInit,
+): Promise<deleteIncomesIdResponse> => {
+  return customFetch<deleteIncomesIdResponse>(getDeleteIncomesIdUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+};
+
+export const getDeleteIncomesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, __: { arg: Arguments }): Promise<deleteIncomesIdResponse> => {
+    return deleteIncomesId(id, options);
+  };
+};
+export const getDeleteIncomesIdMutationKey = (id: number) => [`/incomes/${id}`] as const;
+
+export type DeleteIncomesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteIncomesId>>
+>;
+export type DeleteIncomesIdMutationError = unknown;
+
+export const useDeleteIncomesId = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteIncomesId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteIncomesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getDeleteIncomesIdMutationKey(id);
+  const swrFn = getDeleteIncomesIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * income_expenditure_managementの一覧を取得
+ */
+export type getIncomeExpenditureManagementsResponse200 = {
+  data: IncomeExpenditureManagementDetails;
+  status: 200;
+};
+
+export type getIncomeExpenditureManagementsResponseComposite =
+  getIncomeExpenditureManagementsResponse200;
+
+export type getIncomeExpenditureManagementsResponse =
+  getIncomeExpenditureManagementsResponseComposite & {
+    headers: Headers;
+  };
+
+export const getGetIncomeExpenditureManagementsUrl = (
+  params?: GetIncomeExpenditureManagementsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/income_expenditure_managements?${stringifiedParams}`
+    : `/income_expenditure_managements`;
+};
+
+export const getIncomeExpenditureManagements = async (
+  params?: GetIncomeExpenditureManagementsParams,
+  options?: RequestInit,
+): Promise<getIncomeExpenditureManagementsResponse> => {
+  return customFetch<getIncomeExpenditureManagementsResponse>(
+    getGetIncomeExpenditureManagementsUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetIncomeExpenditureManagementsKey = (
+  params?: GetIncomeExpenditureManagementsParams,
+) => [`/income_expenditure_managements`, ...(params ? [params] : [])] as const;
+
+export type GetIncomeExpenditureManagementsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getIncomeExpenditureManagements>>
+>;
+export type GetIncomeExpenditureManagementsQueryError = unknown;
+
+export const useGetIncomeExpenditureManagements = <TError = unknown>(
+  params?: GetIncomeExpenditureManagementsParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getIncomeExpenditureManagements>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetIncomeExpenditureManagementsKey(params) : null));
+  const swrFn = () => getIncomeExpenditureManagements(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * income_expenditure_managementのチェック
+ */
+export type putIncomeExpenditureManagementsCheckIdResponse200 = {
+  data: PutIncomeExpenditureManagementsCheckId200;
+  status: 200;
+};
+
+export type putIncomeExpenditureManagementsCheckIdResponseComposite =
+  putIncomeExpenditureManagementsCheckIdResponse200;
+
+export type putIncomeExpenditureManagementsCheckIdResponse =
+  putIncomeExpenditureManagementsCheckIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getPutIncomeExpenditureManagementsCheckIdUrl = (id: number) => {
+  return `/income_expenditure_managements/check/${id}`;
+};
+
+export const putIncomeExpenditureManagementsCheckId = async (
+  id: number,
+  putIncomeExpenditureManagementsCheckIdBody: PutIncomeExpenditureManagementsCheckIdBody,
+  options?: RequestInit,
+): Promise<putIncomeExpenditureManagementsCheckIdResponse> => {
+  return customFetch<putIncomeExpenditureManagementsCheckIdResponse>(
+    getPutIncomeExpenditureManagementsCheckIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(putIncomeExpenditureManagementsCheckIdBody),
+    },
+  );
+};
+
+export const getPutIncomeExpenditureManagementsCheckIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (
+    _: Key,
+    { arg }: { arg: PutIncomeExpenditureManagementsCheckIdBody },
+  ): Promise<putIncomeExpenditureManagementsCheckIdResponse> => {
+    return putIncomeExpenditureManagementsCheckId(id, arg, options);
+  };
+};
+export const getPutIncomeExpenditureManagementsCheckIdMutationKey = (id: number) =>
+  [`/income_expenditure_managements/check/${id}`] as const;
+
+export type PutIncomeExpenditureManagementsCheckIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>
+>;
+export type PutIncomeExpenditureManagementsCheckIdMutationError = unknown;
+
+export const usePutIncomeExpenditureManagementsCheckId = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>,
+      TError,
+      Key,
+      PutIncomeExpenditureManagementsCheckIdBody,
+      Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPutIncomeExpenditureManagementsCheckIdMutationKey(id);
+  const swrFn = getPutIncomeExpenditureManagementsCheckIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
