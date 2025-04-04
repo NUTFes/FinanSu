@@ -44,6 +44,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
+	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
 	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
@@ -76,7 +77,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
-	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase()
+	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
 	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(

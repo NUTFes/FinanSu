@@ -23,7 +23,8 @@ func NewIncomeExpenditureManagementController(u usecase.IncomeExpenditureManagem
 
 // Index
 func (i *incomeExpenditureManagementController) IndexIncomeExpenditureManagements(c echo.Context) error {
-	incomeExpenditureManagements, err := i.u.IndexIncomeExpenditureManagements()
+	ctx := c.Request().Context()
+	incomeExpenditureManagements, err := i.u.IndexIncomeExpenditureManagements(ctx)
 	if err != nil {
 		return err
 	}
