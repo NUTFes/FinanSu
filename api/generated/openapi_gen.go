@@ -525,7 +525,7 @@ type GetIncomeExpenditureManagementsParams struct {
 // PutIncomeExpenditureManagementsCheckIdJSONBody defines parameters for PutIncomeExpenditureManagementsCheckId.
 type PutIncomeExpenditureManagementsCheckIdJSONBody struct {
 	// IsChecked チェック済みかどうか
-	IsChecked *bool `json:"isChecked,omitempty"`
+	IsChecked bool `json:"isChecked"`
 }
 
 // PostPasswordResetRequestParams defines parameters for PostPasswordResetRequest.

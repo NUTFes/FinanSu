@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -16,6 +17,7 @@ type incomeExpenditureManagementRepository struct {
 
 type IncomeExpenditureManagementRepository interface {
 	All(context.Context, string) (*sql.Rows, error)
+	UpdateChecked(context.Context, string, bool) error
 }
 
 func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) IncomeExpenditureManagementRepository {
@@ -33,6 +35,20 @@ func (ier *incomeExpenditureManagementRepository) All(c context.Context, year st
 		return nil, err
 	}
 	return ier.crud.Read(c, query)
+}
+
+// checkedの更新
+func (ier *incomeExpenditureManagementRepository) UpdateChecked(c context.Context, id string, isChecked bool) error {
+	ds := dialect.Update("income_expenditure_managements").
+		Set(goqu.Record{"is_checked": isChecked}).
+		Where(goqu.Ex{"id": id})
+
+	query, _, err := ds.ToSQL()
+	fmt.Println(query)
+	if err != nil {
+		return err
+	}
+	return ier.crud.UpdateDB(c, query)
 }
 
 var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").

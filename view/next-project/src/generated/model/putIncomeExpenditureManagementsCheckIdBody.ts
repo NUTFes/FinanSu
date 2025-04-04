@@ -8,5 +8,5 @@
 
 export type PutIncomeExpenditureManagementsCheckIdBody = {
   /** チェック済みかどうか */
-  isChecked?: boolean;
+  isChecked: boolean;
 };

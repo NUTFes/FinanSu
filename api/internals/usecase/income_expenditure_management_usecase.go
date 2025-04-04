@@ -15,6 +15,7 @@ type incomeExpenditureManagementUseCase struct {
 
 type IncomeExpenditureManagementUseCase interface {
 	IndexIncomeExpenditureManagements(context.Context, string) (*IncomeExpenditureManagementDetails, error)
+	PutIncomeExpenditureManagementCheck(context.Context, string, bool) error
 }
 
 func NewIncomeExpenditureManagementUseCase(rep repository.IncomeExpenditureManagementRepository) IncomeExpenditureManagementUseCase {
@@ -53,6 +54,13 @@ func (i *incomeExpenditureManagementUseCase) IndexIncomeExpenditureManagements(c
 	incomeExpenditureManagementDetails.IncomeExpenditureManagements = convertColumnToIncomeExpenditureManagement(IncomeExpenditureManagementColumns)
 	incomeExpenditureManagementDetails.Total = incomeExpenditureManagementDetails.IncomeExpenditureManagements[0].CurrentBalance
 	return incomeExpenditureManagementDetails, nil
+}
+
+func (i *incomeExpenditureManagementUseCase) PutIncomeExpenditureManagementCheck(ctx context.Context, id string, isChecked bool) error {
+	if err := i.rep.UpdateChecked(ctx, id, isChecked); err != nil {
+		return err
+	}
+	return nil
 }
 
 // DBから取得したデータを変換
