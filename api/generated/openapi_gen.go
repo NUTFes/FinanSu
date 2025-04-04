@@ -237,7 +237,7 @@ type IncomeExpenditureManagement struct {
 // IncomeExpenditureManagementDetails defines model for incomeExpenditureManagementDetails.
 type IncomeExpenditureManagementDetails struct {
 	IncomeExpenditureManagements []IncomeExpenditureManagement `json:"incomeExpenditureManagements"`
-	Total                        Total                         `json:"total"`
+	Total                        int                           `json:"total"`
 }
 
 // PasswordResetData defines model for passwordResetData.

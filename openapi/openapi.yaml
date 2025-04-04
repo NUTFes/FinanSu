@@ -3258,7 +3258,8 @@ components:
         - incomeExpenditureManagements
       properties:
         total:
-          $ref: "#/components/schemas/total"
+          type: integer
+          example: 100000
         incomeExpenditureManagements:
           type: array
           items:
