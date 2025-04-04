@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
@@ -24,13 +23,13 @@ func NewIncomeExpenditureManagementController(u usecase.IncomeExpenditureManagem
 // Index
 func (i *incomeExpenditureManagementController) IndexIncomeExpenditureManagements(c echo.Context) error {
 	ctx := c.Request().Context()
-	incomeExpenditureManagements, err := i.u.IndexIncomeExpenditureManagements(ctx)
+	year := c.QueryParam("year")
+
+	incomeExpenditureManagements, err := i.u.IndexIncomeExpenditureManagements(ctx, year)
 	if err != nil {
 		return err
 	}
-	fmt.Println("IndexIncomeExpenditureManagements")
-	fmt.Println(incomeExpenditureManagements)
-	return c.JSON(http.StatusOK, "not implemented")
+	return c.JSON(http.StatusOK, incomeExpenditureManagements)
 }
 
 // Put

@@ -6,6 +6,7 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
 
 type incomeExpenditureManagementUseCase struct {
@@ -13,27 +14,91 @@ type incomeExpenditureManagementUseCase struct {
 }
 
 type IncomeExpenditureManagementUseCase interface {
-	IndexIncomeExpenditureManagements(context.Context) (*incomeExpenditureManagements, error)
+	IndexIncomeExpenditureManagements(context.Context, string) (*IncomeExpenditureManagementDetails, error)
 }
 
 func NewIncomeExpenditureManagementUseCase(rep repository.IncomeExpenditureManagementRepository) IncomeExpenditureManagementUseCase {
 	return &incomeExpenditureManagementUseCase{rep}
 }
 
-func (i *incomeExpenditureManagementUseCase) IndexIncomeExpenditureManagements(ctx context.Context) (*incomeExpenditureManagements, error) {
-	incomeExpenditureManagements, err := i.rep.All(ctx)
+func (i *incomeExpenditureManagementUseCase) IndexIncomeExpenditureManagements(ctx context.Context, year string) (*IncomeExpenditureManagementDetails, error) {
+	incomeExpenditureManagementDetails := &IncomeExpenditureManagementDetails{}
+
+	rows, err := i.rep.All(ctx, year)
 	if err != nil {
 		return nil, err
 	}
 	defer func() {
-		if err := incomeExpenditureManagements.Close(); err != nil {
+		if err := rows.Close(); err != nil {
 			fmt.Println(err)
 		}
 	}()
-	fmt.Println("IndexIncomeExpenditureManagements")
-	fmt.Println(incomeExpenditureManagements)
-	return nil, nil
 
+	var IncomeExpenditureManagementColumns []IncomeExpenditureManagementColumn
+	for rows.Next() {
+		var incomeExpenditureManagement IncomeExpenditureManagementColumn
+		if err := rows.Scan(
+			&incomeExpenditureManagement.Date,
+			&incomeExpenditureManagement.Content,
+			&incomeExpenditureManagement.Detail,
+			&incomeExpenditureManagement.Amount,
+			&incomeExpenditureManagement.LogCategory,
+			&incomeExpenditureManagement.IsChecked,
+		); err != nil {
+			return nil, err
+		}
+		IncomeExpenditureManagementColumns = append(IncomeExpenditureManagementColumns, incomeExpenditureManagement)
+	}
+
+	incomeExpenditureManagementDetails.IncomeExpenditureManagements = convertColumnToIncomeExpenditureManagement(IncomeExpenditureManagementColumns)
+	incomeExpenditureManagementDetails.Total = incomeExpenditureManagementDetails.IncomeExpenditureManagements[0].CurrentBalance
+	return incomeExpenditureManagementDetails, nil
 }
 
-type incomeExpenditureManagements = generated.IncomeExpenditureManagementDetails
+// DBから取得したデータを変換
+func convertColumnToIncomeExpenditureManagement(
+	columns []IncomeExpenditureManagementColumn,
+) []IncomeExpenditureManagement {
+	var incomeExpenditureManagements []IncomeExpenditureManagement
+	for _, column := range columns {
+		amount := column.Amount
+		if column.LogCategory == LOG_CATEGORY_EXPENDITURE {
+			amount *= -1
+		}
+		incomeExpenditureManagement := IncomeExpenditureManagement{
+			Date:      column.Date.Format("2006-01-02"),
+			Content:   column.Content,
+			Detail:    &column.Detail,
+			Amount:    amount,
+			IsChecked: column.IsChecked,
+		}
+		incomeExpenditureManagements = append(incomeExpenditureManagements, incomeExpenditureManagement)
+	}
+
+	incomeExpenditureManagements = addIncomeExpenditureManagementsCurrentBalance(incomeExpenditureManagements)
+	return incomeExpenditureManagements
+}
+
+// 残高を求める関数
+func addIncomeExpenditureManagementsCurrentBalance(
+	incomeExpenditureManagements []IncomeExpenditureManagement,
+) []IncomeExpenditureManagement {
+	currentBalance := 0
+	for i := len(incomeExpenditureManagements) - 1; i >= 0; i-- {
+		currentBalance += incomeExpenditureManagements[i].Amount
+		incomeExpenditureManagements[i].CurrentBalance = currentBalance
+	}
+	return incomeExpenditureManagements
+}
+
+type (
+	IncomeExpenditureManagementDetails = generated.IncomeExpenditureManagementDetails
+	IncomeExpenditureManagement        = generated.IncomeExpenditureManagement
+	IncomeExpenditureManagementColumn  = domain.IncomeExpenditureManagementColumn
+)
+
+const (
+	LOG_CATEGORY_INCOME          = "income"
+	LOG_CATEGORY_EXPENDITURE     = "expenditure"
+	LOG_CATEGORY_SPONSOR_INCOMES = "transfer"
+)

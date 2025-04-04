@@ -15,7 +15,7 @@ type incomeExpenditureManagementRepository struct {
 }
 
 type IncomeExpenditureManagementRepository interface {
-	All(context.Context) (*sql.Rows, error)
+	All(context.Context, string) (*sql.Rows, error)
 }
 
 func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) IncomeExpenditureManagementRepository {
@@ -23,11 +23,26 @@ func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) Inc
 }
 
 // 全件取得
-func (ier *incomeExpenditureManagementRepository) All(c context.Context) (*sql.Rows, error) {
-	ds := dialect.Select("*").From("income_expenditure_managements").Order(goqu.I("income_expenditure_managements.created_at").Desc())
+func (ier *incomeExpenditureManagementRepository) All(c context.Context, year string) (*sql.Rows, error) {
+	ds := selectIncomeExpenditureManagementQuery
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"year": year})
+	}
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return nil, err
 	}
 	return ier.crud.Read(c, query)
 }
+
+var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").
+	Select(
+		goqu.I("income_expenditure_managements.created_at").As("date"),
+		goqu.I("income_expenditure_managements.content").As("content"),
+		goqu.Literal("''").As("detail"),
+		goqu.I("income_expenditure_managements.amount").As("amount"),
+		goqu.I("income_expenditure_managements.log_category").As("log_category"),
+		goqu.I("income_expenditure_managements.is_checked").As("is_checked"),
+	).
+	Join(goqu.I("years"), goqu.On(goqu.I("income_expenditure_managements.year_id").Eq(goqu.I("years.id")))).
+	Order(goqu.I("income_expenditure_managements.created_at").Desc())
