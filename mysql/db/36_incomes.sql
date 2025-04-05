@@ -1,7 +1,5 @@
 USE finansu_db;
 
-USE finansu_db;
-
 CREATE TABLE incomes (
     id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, -- 自動採番のID
     name VARCHAR(255) NOT NULL, -- 名前
