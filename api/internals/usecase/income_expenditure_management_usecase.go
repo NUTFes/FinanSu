@@ -39,11 +39,13 @@ func (i *incomeExpenditureManagementUseCase) IndexIncomeExpenditureManagements(c
 	for rows.Next() {
 		var incomeExpenditureManagement IncomeExpenditureManagementColumn
 		if err := rows.Scan(
+			&incomeExpenditureManagement.ID,
 			&incomeExpenditureManagement.Date,
 			&incomeExpenditureManagement.Content,
 			&incomeExpenditureManagement.Detail,
 			&incomeExpenditureManagement.Amount,
 			&incomeExpenditureManagement.LogCategory,
+			&incomeExpenditureManagement.ReceiveOption,
 			&incomeExpenditureManagement.IsChecked,
 		); err != nil {
 			return nil, err
@@ -73,12 +75,18 @@ func convertColumnToIncomeExpenditureManagement(
 		if column.LogCategory == LOG_CATEGORY_EXPENDITURE {
 			amount *= -1
 		}
+		receiveOption, ok := ReceiveOptionMap[column.ReceiveOption]
+		if !ok {
+			receiveOption = ""
+		}
 		incomeExpenditureManagement := IncomeExpenditureManagement{
-			Date:      column.Date.Format("2006-01-02"),
-			Content:   column.Content,
-			Detail:    &column.Detail,
-			Amount:    amount,
-			IsChecked: column.IsChecked,
+			Id:            column.ID,
+			Date:          column.Date.Format("2006-01-02"),
+			Content:       column.Content,
+			Detail:        &column.Detail,
+			Amount:        amount,
+			ReceiveOption: &receiveOption,
+			IsChecked:     column.IsChecked,
 		}
 		incomeExpenditureManagements = append(incomeExpenditureManagements, incomeExpenditureManagement)
 	}
@@ -109,4 +117,11 @@ const (
 	LOG_CATEGORY_INCOME          = "income"
 	LOG_CATEGORY_EXPENDITURE     = "expenditure"
 	LOG_CATEGORY_SPONSOR_INCOMES = "transfer"
+	RECEIVE_OPTION_TRANSFER      = "transfer"
+	RECEIVE_OPTION_HAND          = "hand"
 )
+
+var ReceiveOptionMap = map[string]string{
+	RECEIVE_OPTION_TRANSFER: "振込",
+	RECEIVE_OPTION_HAND:     "手渡し",
+}

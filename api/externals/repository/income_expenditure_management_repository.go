@@ -53,6 +53,7 @@ func (ier *incomeExpenditureManagementRepository) UpdateChecked(c context.Contex
 
 var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").
 	Select(
+		goqu.I("income_expenditure_managements.id").As("id"),
 		goqu.I("income_expenditure_managements.created_at").As("date"),
 		goqu.COALESCE(
 			goqu.COALESCE(goqu.I("incomes.name"), goqu.I("financial_records.name")),
@@ -64,6 +65,7 @@ var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_ma
 		).As("detail"),
 		goqu.I("income_expenditure_managements.amount").As("amount"),
 		goqu.I("income_expenditure_managements.log_category").As("log_category"),
+		goqu.COALESCE(goqu.I("income_expenditure_managements.receive_option"), ""),
 		goqu.I("income_expenditure_managements.is_checked").As("is_checked"),
 	).
 	Join(goqu.I("years"), goqu.On(goqu.I("income_expenditure_managements.year_id").Eq(goqu.I("years.id")))).
