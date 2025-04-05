@@ -23,7 +23,7 @@ func NewIncomeExpenditureManagementUseCase(rep repository.IncomeExpenditureManag
 }
 
 func (i *incomeExpenditureManagementUseCase) IndexIncomeExpenditureManagements(ctx context.Context, year string) (*IncomeExpenditureManagementDetails, error) {
-	incomeExpenditureManagementDetails := &IncomeExpenditureManagementDetails{}
+	var incomeExpenditureManagementDetails IncomeExpenditureManagementDetails
 
 	rows, err := i.rep.All(ctx, year)
 	if err != nil {
@@ -56,11 +56,11 @@ func (i *incomeExpenditureManagementUseCase) IndexIncomeExpenditureManagements(c
 	incomeExpenditureManagementDetails.IncomeExpenditureManagements = convertColumnToIncomeExpenditureManagement(IncomeExpenditureManagementColumns)
 	if len(incomeExpenditureManagementDetails.IncomeExpenditureManagements) == 0 {
 		incomeExpenditureManagementDetails.Total = 0
-		return incomeExpenditureManagementDetails, nil
+		return &incomeExpenditureManagementDetails, nil
 	}
 
 	incomeExpenditureManagementDetails.Total = incomeExpenditureManagementDetails.IncomeExpenditureManagements[0].CurrentBalance
-	return incomeExpenditureManagementDetails, nil
+	return &incomeExpenditureManagementDetails, nil
 }
 
 func (i *incomeExpenditureManagementUseCase) PutIncomeExpenditureManagementCheck(ctx context.Context, id string, isChecked bool) error {
