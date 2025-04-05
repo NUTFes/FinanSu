@@ -121,7 +121,7 @@ type (
 const (
 	LOG_CATEGORY_INCOME          = "income"
 	LOG_CATEGORY_EXPENDITURE     = "expenditure"
-	LOG_CATEGORY_SPONSOR_INCOMES = "transfer"
+	LOG_CATEGORY_SPONSOR_INCOMES = "sponsor's income"
 	RECEIVE_OPTION_TRANSFER      = "transfer"
 	RECEIVE_OPTION_HAND          = "hand"
 )
