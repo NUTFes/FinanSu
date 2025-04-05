@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>income_expenditure_managements - finansu_db.finansu_db</title>
+        <title>income_expenditure_links - finansu_db.finansu_db</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>income_expenditure_managements</h1><p><span id="recordNumber">3</span> rows</p><br />
+                    <h1>income_expenditure_links</h1><p><span id="recordNumber">0</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -117,26 +117,6 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="buy_report_balance_managements.income_expenditure_management_id references income_expenditure_managements.id via buy_report_balance_managements_ibfk_2"><a href='buy_report_balance_managements.html'>buy_report_balance_managements</a><span class='relatedKey'>.income_expenditure_management_id</span></td>
-                                                <td class="constraint detail">buy_report_balance_managements_ibfk_2</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="income_expenditure_links.income_expenditure_id references income_expenditure_managements.id via income_expenditure_links_ibfk_1"><a href='income_expenditure_links.html'>income_expenditure_links</a><span class='relatedKey'>.income_expenditure_id</span></td>
-                                                <td class="constraint detail">income_expenditure_links_ibfk_1</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="sponsor_activity_balance_managements.income_expenditure_management_id references income_expenditure_managements.id via sponsor_activity_balance_managements_ibfk_2"><a href='sponsor_activity_balance_managements.html'>sponsor_activity_balance_managements</a><span class='relatedKey'>.income_expenditure_management_id</span></td>
-                                                <td class="constraint detail">sponsor_activity_balance_managements_ibfk_2</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="spot_sponsor_names.income_expenditure_id references income_expenditure_managements.id via spot_sponsor_names_ibfk_1"><a href='spot_sponsor_names.html'>spot_sponsor_names</a><span class='relatedKey'>.income_expenditure_id</span></td>
-                                                <td class="constraint detail">spot_sponsor_names_ibfk_1</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -146,41 +126,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="amount">amount</span></td>
-                                    <td>INT</td>
-                                    <td>10</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="log_category">log_category</span></td>
-                                    <td>enum(&#39;income&#39;, &#39;expenditure&#39;, &#39;sponsor&#39;&#39;s income&#39;)</td>
-                                    <td>16</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="year_id">year_id</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="income_expenditure_id">income_expenditure_id</span></td>
                                     <td>INT UNSIGNED</td>
                                     <td>10</td>
                                     <td title=''></td>
@@ -193,8 +139,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="income_expenditure_managements.year_id references years.id via income_expenditure_managements_ibfk_1"><a href='years.html'>years</a><span class='relatedKey'>.id</span></td>
-                                                <td class="constraint detail">income_expenditure_managements_ibfk_1</td>
+                                                <td title="income_expenditure_links.income_expenditure_id references income_expenditure_managements.id via income_expenditure_links_ibfk_1"><a href='income_expenditure_managements.html'>income_expenditure_managements</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">income_expenditure_links_ibfk_1</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                         </table>
@@ -202,10 +148,10 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="receive_option">receive_option</span></td>
-                                    <td>enum(&#39;transfer&#39;, &#39;hand&#39;)</td>
-                                    <td>8</td>
-                                    <td title='nullable'>√</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="income_id">income_id</span></td>
+                                    <td>INT UNSIGNED</td>
+                                    <td>10</td>
+                                    <td title=''></td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -214,23 +160,11 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="is_checked">is_checked</span></td>
-                                    <td>BIT</td>
-                                    <td>1</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>0</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="income_expenditure_links.income_id references incomes.id via income_expenditure_links_ibfk_2"><a href='incomes.html'>incomes</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">income_expenditure_links_ibfk_2</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -306,10 +240,16 @@
                                     <td>id</td>
                                 </tr>
                                 <tr>
-                                    <td title='Indexed'>year_id_foreign_key</td>
+                                    <td title='Indexed'>income_expenditure_id</td>
                                     <td>Performance</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>year_id</td>
+                                    <td>income_expenditure_id</td>
+                                </tr>
+                                <tr>
+                                    <td title='Indexed'>income_id</td>
+                                    <td>Performance</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>income_id</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -334,29 +274,23 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="buy_report_balance_managements.html" target="_top" title="buy_report_balance_managements" alt="" coords="807,5,1228,181">
-<area shape="rect" id="node2" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="208,337,736,641">
-<area shape="rect" id="node4" href="years.html" target="_top" title="years" alt="" coords="5,428,164,545">
-<area shape="rect" id="node3" href="income_expenditure_links.html" target="_top" title="income_expenditure_links" alt="" coords="849,199,1185,375">
-<area shape="rect" id="node5" href="sponsor_activity_balance_managements.html" target="_top" title="sponsor_activity_balance_managements" alt="" coords="780,392,1255,568">
-<area shape="rect" id="node6" href="spot_sponsor_names.html" target="_top" title="spot_sponsor_names" alt="" coords="875,585,1160,732">
+<area shape="rect" id="node1" href="income_expenditure_links.html" target="_top" title="income_expenditure_links" alt="" coords="477,41,913,257">
+<area shape="rect" id="node2" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="5,5,433,152">
+<area shape="rect" id="node3" href="incomes.html" target="_top" title="incomes" alt="" coords="137,169,301,287">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/income_expenditure_managements.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/income_expenditure_links.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="buy_report_balance_managements.html" target="_top" title="buy_report_balance_managements" alt="" coords="807,5,1228,181">
-<area shape="rect" id="node2" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="372,25,572,113">
-<area shape="rect" id="node3" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="208,236,736,540">
-<area shape="rect" id="node5" href="years.html" target="_top" title="years" alt="" coords="5,228,164,345">
-<area shape="rect" id="node4" href="financial_records.html" target="_top" title="financial_records" alt="" coords="347,131,597,219">
-<area shape="rect" id="node6" href="income_expenditure_links.html" target="_top" title="income_expenditure_links" alt="" coords="849,389,1185,565">
-<area shape="rect" id="node7" href="incomes.html" target="_top" title="incomes" alt="" coords="390,557,554,645">
-<area shape="rect" id="node8" href="sponsor_activity_balance_managements.html" target="_top" title="sponsor_activity_balance_managements" alt="" coords="780,615,1255,791">
-<area shape="rect" id="node9" href="activities.html" target="_top" title="activities" alt="" coords="385,663,559,751">
-<area shape="rect" id="node10" href="spot_sponsor_names.html" target="_top" title="spot_sponsor_names" alt="" coords="875,209,1160,356">
+<area shape="rect" id="node1" href="buy_report_balance_managements.html" target="_top" title="buy_report_balance_managements" alt="" coords="685,5,1107,93">
+<area shape="rect" id="node2" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="187,161,615,308">
+<area shape="rect" id="node5" href="years.html" target="_top" title="years" alt="" coords="5,193,143,281">
+<area shape="rect" id="node3" href="income_expenditure_links.html" target="_top" title="income_expenditure_links" alt="" coords="678,321,1114,537">
+<area shape="rect" id="node4" href="incomes.html" target="_top" title="incomes" alt="" coords="319,383,483,500">
+<area shape="rect" id="node6" href="sponsor_activity_balance_managements.html" target="_top" title="sponsor_activity_balance_managements" alt="" coords="659,111,1133,199">
+<area shape="rect" id="node7" href="spot_sponsor_names.html" target="_top" title="spot_sponsor_names" alt="" coords="753,216,1039,304">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/income_expenditure_managements.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/income_expenditure_links.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
