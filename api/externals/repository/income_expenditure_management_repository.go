@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -44,7 +43,6 @@ func (ier *incomeExpenditureManagementRepository) UpdateChecked(c context.Contex
 		Where(goqu.Ex{"id": id})
 
 	query, _, err := ds.ToSQL()
-	fmt.Println(query)
 	if err != nil {
 		return err
 	}
