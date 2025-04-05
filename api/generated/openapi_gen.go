@@ -231,7 +231,9 @@ type IncomeExpenditureManagement struct {
 	CurrentBalance int     `json:"currentBalance"`
 	Date           string  `json:"date"`
 	Detail         *string `json:"detail,omitempty"`
+	Id             int     `json:"id"`
 	IsChecked      bool    `json:"isChecked"`
+	ReceiveOption  *string `json:"receive_option,omitempty"`
 }
 
 // IncomeExpenditureManagementDetails defines model for incomeExpenditureManagementDetails.
