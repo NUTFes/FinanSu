@@ -54,6 +54,11 @@ func (i *incomeExpenditureManagementUseCase) IndexIncomeExpenditureManagements(c
 	}
 
 	incomeExpenditureManagementDetails.IncomeExpenditureManagements = convertColumnToIncomeExpenditureManagement(IncomeExpenditureManagementColumns)
+	if len(incomeExpenditureManagementDetails.IncomeExpenditureManagements) == 0 {
+		incomeExpenditureManagementDetails.Total = 0
+		return incomeExpenditureManagementDetails, nil
+	}
+
 	incomeExpenditureManagementDetails.Total = incomeExpenditureManagementDetails.IncomeExpenditureManagements[0].CurrentBalance
 	return incomeExpenditureManagementDetails, nil
 }
