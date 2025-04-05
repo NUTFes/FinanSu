@@ -15,4 +15,4 @@ CREATE TABLE income_expenditure_links (
 INSERT INTO income_expenditure_links (income_expenditure_id, income_id, created_at, updated_at)
 VALUES
     (1, 4, NOW(), NOW()),
-    (3, 6, NOW(), NOW());
+    (2, 6, NOW(), NOW());

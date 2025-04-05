@@ -18,8 +18,8 @@ USE finansu_db;
 -- income_expenditure_managements のシードデータ挿入
 INSERT INTO income_expenditure_managements (amount, log_category, year_id, receive_option, is_checked, created_at, updated_at)
 VALUES
-    (50000, "income", 3, "hand", TRUE, NOW(), NOW()), -- 雑収入
-    (100000, "sponsor's income", 3, "transfer", FALSE, NOW(), NOW()), -- 企業協賛
+    (50000, "income", 3, "hand", FALSE, NOW(), NOW()),
+    (100000, "sponsor's income", 3, "transfer", FALSE, NOW(), NOW()),
     (5000, "expenditure", 3, NULL, FALSE, NOW(), NOW()),
     (4000, "expenditure", 3, NULL, FALSE, NOW(), NOW()),
     (5000, "expenditure", 3, NULL, FALSE, NOW(), NOW()),
