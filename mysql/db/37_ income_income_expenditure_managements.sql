@@ -1,6 +1,6 @@
 USE finansu_db;
 
-CREATE TABLE income_expenditure_links (
+CREATE TABLE income_income_expenditure_managements (
     id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     income_expenditure_id INT(10) UNSIGNED NOT NULL,
     income_id INT(10) UNSIGNED NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE income_expenditure_links (
 );
 
 -- シードデータ挿入
-INSERT INTO income_expenditure_links (income_expenditure_id, income_id, created_at, updated_at)
+INSERT INTO income_income_expenditure_managements (income_expenditure_id, income_id, created_at, updated_at)
 VALUES
     (1, 4, NOW(), NOW()),
     (2, 6, NOW(), NOW());

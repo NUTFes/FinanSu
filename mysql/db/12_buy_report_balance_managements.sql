@@ -1,6 +1,7 @@
 USE finansu_db;
 
-CREATE TABLE buy_report_balance_managements (
+-- buy_reportとincome_expenditure_managementsの中間テーブル
+CREATE TABLE buy_report_income_expenditure_managements (
     id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     buy_report_id INT(10) UNSIGNED NOT NULL,
     income_expenditure_management_id INT(10) UNSIGNED NOT NULL,
@@ -12,8 +13,8 @@ CREATE TABLE buy_report_balance_managements (
 );
 
 -- シードデータ挿入
--- buy_report_balance_managements のシードデータ挿入
-INSERT INTO buy_report_balance_managements (buy_report_id, income_expenditure_management_id, created_at, updated_at)
+-- buy_report_income_expenditure_managements のシードデータ挿入
+INSERT INTO buy_report_income_expenditure_managements (buy_report_id, income_expenditure_management_id, created_at, updated_at)
 VALUES
     (1, 3, NOW(), NOW()), -- buy_reports.id: 1 と income_expenditure_managements.id: 3 の対応
     (2, 4, NOW(), NOW()), -- buy_reports.id: 2 と income_expenditure_managements.id: 4 の対応
