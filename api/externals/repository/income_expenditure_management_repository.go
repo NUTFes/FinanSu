@@ -68,20 +68,20 @@ var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_ma
 	).
 	Join(goqu.I("years"), goqu.On(goqu.I("income_expenditure_managements.year_id").Eq(goqu.I("years.id")))).
 	LeftJoin(
-		goqu.I("income_expenditure_links"),
-		goqu.On(goqu.I("income_expenditure_managements.id").Eq(goqu.I("income_expenditure_links.income_expenditure_id"))),
+		goqu.I("income_income_expenditure_managements"),
+		goqu.On(goqu.I("income_expenditure_managements.id").Eq(goqu.I("income_income_expenditure_managements.income_expenditure_id"))),
 	).
 	LeftJoin(
 		goqu.I("incomes"),
-		goqu.On(goqu.I("income_expenditure_links.income_id").Eq(goqu.I("incomes.id"))),
+		goqu.On(goqu.I("income_income_expenditure_managements.income_id").Eq(goqu.I("incomes.id"))),
 	).
 	LeftJoin(
-		goqu.I("buy_report_balance_managements"),
-		goqu.On(goqu.I("income_expenditure_managements.id").Eq(goqu.I("buy_report_balance_managements.income_expenditure_management_id"))),
+		goqu.I("buy_report_income_expenditure_managements"),
+		goqu.On(goqu.I("income_expenditure_managements.id").Eq(goqu.I("buy_report_income_expenditure_managements.income_expenditure_management_id"))),
 	).
 	LeftJoin(
 		goqu.I("buy_reports"),
-		goqu.On(goqu.I("buy_report_balance_managements.buy_report_id").Eq(goqu.I("buy_reports.id"))),
+		goqu.On(goqu.I("buy_report_income_expenditure_managements.buy_report_id").Eq(goqu.I("buy_reports.id"))),
 	).
 	LeftJoin(
 		goqu.I("festival_items"),

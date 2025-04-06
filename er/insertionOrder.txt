@@ -11,8 +11,8 @@ buy_statuses
 item_budgets
 payment_receipts
 spot_sponsor_names
-buy_report_balance_managements
-income_expenditure_links
+buy_report_income_expenditure_managements
+income_income_expenditure_managements
 sponsor_activity_balance_managements
 user_groups
 activity_informations

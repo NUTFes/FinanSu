@@ -20,8 +20,8 @@ activity_styles
 activity_informations
 user_groups
 sponsor_activity_balance_managements
-income_expenditure_links
-buy_report_balance_managements
+income_income_expenditure_managements
+buy_report_income_expenditure_managements
 spot_sponsor_names
 payment_receipts
 item_budgets

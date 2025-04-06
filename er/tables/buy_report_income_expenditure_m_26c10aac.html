@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>buy_statuses - finansu_db.finansu_db</title>
+        <title>buy_report_income_expenditure_managements - finansu_db.finansu_db</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>buy_statuses</h1><p><span id="recordNumber">7</span> rows</p><br />
+                    <h1>buy_report_income_expenditure_managements</h1><p><span id="recordNumber">7</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -139,8 +139,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="buy_statuses.buy_report_id references buy_reports.id via buy_statuses_ibfk_1"><a href='buy_reports.html'>buy_reports</a><span class='relatedKey'>.id</span></td>
-                                                <td class="constraint detail">buy_statuses_ibfk_1</td>
+                                                <td title="buy_report_income_expenditure_managements.buy_report_id references buy_reports.id via buy_report_income_expenditure_managements_ibfk_1"><a href='buy_reports.html'>buy_reports</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">buy_report_income_expenditure_managements_ibfk_1</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                         </table>
@@ -148,35 +148,23 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="is_packed">is_packed</span></td>
-                                    <td>BIT</td>
-                                    <td>1</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="income_expenditure_management_id">income_expenditure_management_id</span></td>
+                                    <td>INT UNSIGNED</td>
+                                    <td>10</td>
                                     <td title=''></td>
                                     <td title=''></td>
-                                    <td>0</td>
+                                    <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="is_settled">is_settled</span></td>
-                                    <td>BIT</td>
-                                    <td>1</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>0</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="buy_report_income_expenditure_managements.income_expenditure_management_id references income_expenditure_managements.id via buy_report_income_expenditure_managements_ibfk_2"><a href='income_expenditure_managements.html'>income_expenditure_managements</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">buy_report_income_expenditure_managements_ibfk_2</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -257,6 +245,12 @@
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>buy_report_id</td>
                                 </tr>
+                                <tr>
+                                    <td title='Indexed'>income_expenditure_management_id_foreign_key</td>
+                                    <td>Performance</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>income_expenditure_management_id</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->
@@ -280,20 +274,26 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="buy_statuses.html" target="_top" title="buy_statuses" alt="" coords="251,5,567,251">
-<area shape="rect" id="node2" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="5,37,207,184">
+<area shape="rect" id="node1" href="buy_report_income_expenditure_m_26c10aac.html" target="_top" title="buy_report_income_expenditure_managements" alt="" coords="477,41,1120,257">
+<area shape="rect" id="node2" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="119,5,320,152">
+<area shape="rect" id="node3" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="5,169,433,316">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/buy_statuses.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/buy_report_income_expenditure_m_26c10aac.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="buy_report_income_expenditure_m_26c10aac.html" target="_top" title="buy_report_income_expenditure_managements" alt="" coords="513,5,1056,93">
-<area shape="rect" id="node2" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="268,143,469,289">
-<area shape="rect" id="node3" href="festival_items.html" target="_top" title="festival_items" alt="" coords="5,175,224,263">
-<area shape="rect" id="node4" href="buy_statuses.html" target="_top" title="buy_statuses" alt="" coords="627,111,943,356">
-<area shape="rect" id="node5" href="payment_receipts.html" target="_top" title="payment_receipts" alt="" coords="656,373,913,461">
+<area shape="rect" id="node1" href="buy_report_income_expenditure_m_26c10aac.html" target="_top" title="buy_report_income_expenditure_managements" alt="" coords="740,216,1383,432">
+<area shape="rect" id="node2" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="381,108,583,255">
+<area shape="rect" id="node3" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="268,499,696,645">
+<area shape="rect" id="node4" href="festival_items.html" target="_top" title="festival_items" alt="" coords="5,140,224,228">
+<area shape="rect" id="node6" href="years.html" target="_top" title="years" alt="" coords="46,531,183,619">
+<area shape="rect" id="node5" href="buy_statuses.html" target="_top" title="buy_statuses" alt="" coords="955,5,1167,93">
+<area shape="rect" id="node7" href="income_income_expenditure_managements.html" target="_top" title="income_income_expenditure_managements" alt="" coords="808,449,1315,537">
+<area shape="rect" id="node8" href="payment_receipts.html" target="_top" title="payment_receipts" alt="" coords="933,111,1190,199">
+<area shape="rect" id="node9" href="sponsor_activity_balance_managements.html" target="_top" title="sponsor_activity_balance_managements" alt="" coords="824,555,1299,643">
+<area shape="rect" id="node10" href="spot_sponsor_names.html" target="_top" title="spot_sponsor_names" alt="" coords="919,660,1204,748">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/buy_statuses.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/buy_report_income_expenditure_m_26c10aac.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
