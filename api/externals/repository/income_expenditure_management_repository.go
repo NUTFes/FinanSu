@@ -20,7 +20,8 @@ type IncomeExpenditureManagementRepository interface {
 	UpdateChecked(context.Context, string, bool) error
 	CreateIncomeExpenditureManagement(context.Context, *sql.Tx, domain.IncomeExpenditureManagementTableColumn) (*int, error)
 	GetIncomeExpenditureManagementByID(context.Context, string) (*sql.Row, error)
-	UpdatencomeExpenditureManagement(context.Context, *sql.Tx, string, domain.IncomeExpenditureManagementTableColumn) error
+	UpdateIncomeExpenditureManagement(context.Context, *sql.Tx, string, domain.IncomeExpenditureManagementTableColumn) error
+	DeleteIncomeExpenditureManagementByID(context.Context, string) error
 }
 
 func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) IncomeExpenditureManagementRepository {
@@ -120,7 +121,7 @@ func (ier *incomeExpenditureManagementRepository) GetIncomeExpenditureManagement
 }
 
 // IDで更新
-func (ier *incomeExpenditureManagementRepository) UpdatencomeExpenditureManagement(c context.Context, tx *sql.Tx, incomeExpenditureManagementID string, incomeExpenditureManagement domain.IncomeExpenditureManagementTableColumn) error {
+func (ier *incomeExpenditureManagementRepository) UpdateIncomeExpenditureManagement(c context.Context, tx *sql.Tx, incomeExpenditureManagementID string, incomeExpenditureManagement domain.IncomeExpenditureManagementTableColumn) error {
 	ds := dialect.Update("income_expenditure_managements").
 		Set(goqu.Record{
 			"amount":         incomeExpenditureManagement.Amount,
@@ -135,6 +136,18 @@ func (ier *incomeExpenditureManagementRepository) UpdatencomeExpenditureManageme
 		return err
 	}
 	return ier.crud.TransactionExec(c, tx, query)
+}
+
+// IDで削除
+func (ier *incomeExpenditureManagementRepository) DeleteIncomeExpenditureManagementByID(c context.Context, id string) error {
+	ds := dialect.Delete("income_expenditure_managements").
+		Where(goqu.Ex{"id": id})
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	return ier.crud.UpdateDB(c, query)
 }
 
 var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").

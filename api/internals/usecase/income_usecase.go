@@ -163,7 +163,7 @@ func (uc *incomeUseCase) UpdateIncome(ctx context.Context, incomeExpenditureMana
 	}
 
 	// 収支管理の更新
-	if err := uc.incomeExpenditureManagementRepository.UpdatencomeExpenditureManagement(ctx, tx, incomeExpenditureManagementID, IncomeExpenditureManagementData); err != nil {
+	if err := uc.incomeExpenditureManagementRepository.UpdateIncomeExpenditureManagement(ctx, tx, incomeExpenditureManagementID, IncomeExpenditureManagementData); err != nil {
 		uc.transactionRepository.RollBack(ctx, tx)
 		return nil, err
 	}
@@ -218,7 +218,11 @@ func (uc *incomeUseCase) UpdateIncome(ctx context.Context, incomeExpenditureMana
 	return &income, nil
 }
 
-func (uc *incomeUseCase) DeleteIncome(ctx context.Context, incomeID string) error {
+func (uc *incomeUseCase) DeleteIncome(ctx context.Context, incomeExpenditureManagementID string) error {
+	// incomeExpenditureManagementIDで削除
+	if err := uc.incomeExpenditureManagementRepository.DeleteIncomeExpenditureManagementByID(ctx, incomeExpenditureManagementID); err != nil {
+		return err
+	}
 	return nil
 }
 
