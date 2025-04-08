@@ -19,9 +19,11 @@ type IncomeExpenditureManagementRepository interface {
 	All(context.Context, string) (*sql.Rows, error)
 	UpdateChecked(context.Context, string, bool) error
 	CreateIncomeExpenditureManagement(context.Context, *sql.Tx, domain.IncomeExpenditureManagementTableColumn) (*int, error)
+	CreateIncomeExpenditureManagementByBuyReport(context.Context, *sql.Tx, domain.IncomeExpenditureManagementTableColumn) (*int, error)
 	GetIncomeExpenditureManagementByID(context.Context, string) (*sql.Row, error)
 	UpdateIncomeExpenditureManagement(context.Context, *sql.Tx, string, domain.IncomeExpenditureManagementTableColumn) error
 	DeleteIncomeExpenditureManagementByID(context.Context, string) error
+	GetIncomeExpenditureManagementByBuyReportId(context.Context, *sql.Tx, string) (*sql.Row, error)
 }
 
 func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) IncomeExpenditureManagementRepository {
@@ -148,6 +150,67 @@ func (ier *incomeExpenditureManagementRepository) DeleteIncomeExpenditureManagem
 		return err
 	}
 	return ier.crud.UpdateDB(c, query)
+}
+
+// BuyReportIDで取得
+func (ier *incomeExpenditureManagementRepository) GetIncomeExpenditureManagementByBuyReportId(c context.Context, tx *sql.Tx, buyReportID string) (*sql.Row, error) {
+	ds := dialect.From("buy_report_income_expenditure_managements").
+		Select(
+			goqu.I("buy_report_income_expenditure_managements.income_expenditure_management_id").As("income_expenditure_management_id"),
+		).
+		Join(
+			goqu.I("income_expenditure_managements"),
+			goqu.On(goqu.I("buy_report_income_expenditure_managements.income_expenditure_management_id").Eq(goqu.I("income_expenditure_managements.id"))),
+		).
+		Where(
+			goqu.Ex{
+				"buy_report_income_expenditure_managements.buy_report_id": buyReportID,
+			},
+		).Limit(1)
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return ier.crud.TransactionReadByID(c, tx, query)
+}
+
+// 新規作成
+func (ier *incomeExpenditureManagementRepository) CreateIncomeExpenditureManagementByBuyReport(c context.Context, tx *sql.Tx, incomeExpenditureManagement domain.IncomeExpenditureManagementTableColumn) (*int, error) {
+	var id *int
+	ds := dialect.Insert("income_expenditure_managements").
+		Rows(
+			goqu.Record{
+				"amount":       incomeExpenditureManagement.Amount,
+				"log_category": incomeExpenditureManagement.LogCategory,
+				"year_id":      incomeExpenditureManagement.YearID,
+				"is_checked":   incomeExpenditureManagement.IsChecked,
+			},
+		)
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return id, err
+	}
+
+	if err := ier.crud.TransactionExec(c, tx, query); err != nil {
+		return id, err
+	}
+	// last_insert_idを,mysqlの変数に格納
+	setQuery := "SET @new_income_expenditure_managements_id = last_insert_id();"
+	err = ier.crud.TransactionExec(c, tx, setQuery)
+	if err != nil {
+		return id, err
+	}
+	row, err := ier.crud.TransactionReadByID(c, tx, "SELECT @new_income_expenditure_managements_id")
+	if err != nil {
+		return id, err
+	}
+	err = row.Scan(&id)
+	if err != nil {
+		return id, err
+	}
+	return id, nil
 }
 
 var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").

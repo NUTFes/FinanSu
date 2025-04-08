@@ -18,6 +18,7 @@ type buyReportUseCase struct {
 	bRep rep.BuyReportRepository
 	tRep rep.TransactionRepository
 	oRep rep.ObjectHandleRepository
+	iRep rep.IncomeExpenditureManagementRepository
 }
 
 type BuyReportUseCase interface {
@@ -29,8 +30,13 @@ type BuyReportUseCase interface {
 	UpdateBuyReportStatus(context.Context, string, PutBuyReport) (BuyReportDetail, error)
 }
 
-func NewBuyReportUseCase(bRep rep.BuyReportRepository, tRep rep.TransactionRepository, oRep rep.ObjectHandleRepository) BuyReportUseCase {
-	return &buyReportUseCase{bRep, tRep, oRep}
+func NewBuyReportUseCase(
+	bRep rep.BuyReportRepository,
+	tRep rep.TransactionRepository,
+	oRep rep.ObjectHandleRepository,
+	iRep rep.IncomeExpenditureManagementRepository,
+) BuyReportUseCase {
+	return &buyReportUseCase{bRep, tRep, oRep, iRep}
 }
 
 func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo PostBuyReport, file *multipart.FileHeader) (PostBuyReport, error) {
@@ -328,16 +334,94 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 }
 
 func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) (BuyReportDetail, error) {
-	detail := BuyReportDetail{}
+	var detail BuyReportDetail
 
-	err := bru.bRep.UpdateBuyReportStatus(c, buyReportId, requestBody)
+	// トランザクションスタート
+	tx, err := bru.tRep.StartTransaction(c)
 	if err != nil {
-		return BuyReportDetail{}, err
+		return detail, err
+	}
+
+	if err := bru.bRep.UpdateBuyReportStatus(c, tx, buyReportId, requestBody); err != nil {
+		if err = bru.tRep.RollBack(c, tx); err != nil {
+			return detail, err
+		}
+		return detail, err
+	}
+
+	if *requestBody.IsPacked && *requestBody.IsSettled {
+		var incomeExpenditureManagementId *int
+		// buyRepotIdに紐づく、収支管理を取得
+		row, err := bru.iRep.GetIncomeExpenditureManagementByBuyReportId(c, tx, buyReportId)
+		if err != nil {
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return detail, err
+			}
+			return detail, err
+		}
+		if err := row.Scan(&incomeExpenditureManagementId); err != nil {
+			if err.Error() != "sql: no rows in result set" {
+				if err = bru.tRep.RollBack(c, tx); err != nil {
+					return detail, err
+				}
+			}
+		}
+		if incomeExpenditureManagementId == nil {
+			// 収支管理が存在しない場合は、収支管理を登録する
+			// buy_reportの情報を取得
+			row, err := bru.bRep.GetByReportForCreateIncomeExpenditure(c, tx, buyReportId)
+			if err != nil {
+				if err = bru.tRep.RollBack(c, tx); err != nil {
+					return detail, err
+				}
+				return detail, err
+			}
+			var buyReportDetail domain.BuyReportForIncomeExpenditureManagement
+			if err = row.Scan(
+				&buyReportDetail.ID,
+				&buyReportDetail.YearID,
+				&buyReportDetail.Amount,
+			); err != nil {
+				if err = bru.tRep.RollBack(c, tx); err != nil {
+					return detail, err
+				}
+				return detail, err
+			}
+
+			// 収支管理データ
+			expenditureManagementData := domain.IncomeExpenditureManagementTableColumn{
+				Amount:      buyReportDetail.Amount,
+				LogCategory: LOG_CATEGORY_EXPENDITURE,
+				YearID:      buyReportDetail.YearID,
+				IsChecked:   &DEFAULT_CHECKED,
+			}
+			// 収支管理を登録
+			incomeExpenditureManagementId, err = bru.iRep.CreateIncomeExpenditureManagementByBuyReport(c, tx, expenditureManagementData)
+			if err != nil {
+				if err = bru.tRep.RollBack(c, tx); err != nil {
+					return detail, err
+				}
+				return detail, err
+			}
+
+			// buy_reportと収支管理の紐付け
+			if err = bru.bRep.CreateBuyReportIncomeExpenditureManagement(c, tx, buyReportId, strconv.Itoa(*incomeExpenditureManagementId)); err != nil {
+				if err = bru.tRep.RollBack(c, tx); err != nil {
+					return detail, err
+				}
+				return detail, err
+			}
+		}
+	}
+
+	// コミット
+	if err := bru.tRep.Commit(c, tx); err != nil {
+		return detail, err
 	}
 
 	row, err := bru.bRep.GetByBuyReportId(c, buyReportId)
 	if err != nil {
-		return BuyReportDetail{}, err
+		return detail, err
 	}
 
 	err = row.Scan(
