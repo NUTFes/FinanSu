@@ -16,10 +16,10 @@ type IncomeExpenditureManagementDetailColumn struct {
 }
 
 type IncomeExpenditureManagementTableColumn struct {
-	ID            int
+	ID            *int
 	Amount        int
 	LogCategory   string
 	YearID        int
 	ReceiveOption string
-	IsChecked     bool
+	IsChecked     *bool
 }

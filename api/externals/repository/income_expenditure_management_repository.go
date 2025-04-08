@@ -20,6 +20,7 @@ type IncomeExpenditureManagementRepository interface {
 	UpdateChecked(context.Context, string, bool) error
 	CreateIncomeExpenditureManagement(context.Context, *sql.Tx, domain.IncomeExpenditureManagementTableColumn) (*int, error)
 	GetIncomeExpenditureManagementByID(context.Context, string) (*sql.Row, error)
+	UpdatencomeExpenditureManagement(context.Context, *sql.Tx, string, domain.IncomeExpenditureManagementTableColumn) error
 }
 
 func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) IncomeExpenditureManagementRepository {
@@ -116,6 +117,24 @@ func (ier *incomeExpenditureManagementRepository) GetIncomeExpenditureManagement
 		return nil, err
 	}
 	return ier.crud.ReadByID(c, query)
+}
+
+// IDで更新
+func (ier *incomeExpenditureManagementRepository) UpdatencomeExpenditureManagement(c context.Context, tx *sql.Tx, incomeExpenditureManagementID string, incomeExpenditureManagement domain.IncomeExpenditureManagementTableColumn) error {
+	ds := dialect.Update("income_expenditure_managements").
+		Set(goqu.Record{
+			"amount":         incomeExpenditureManagement.Amount,
+			"log_category":   incomeExpenditureManagement.LogCategory,
+			"year_id":        incomeExpenditureManagement.YearID,
+			"receive_option": incomeExpenditureManagement.ReceiveOption,
+		}).
+		Where(goqu.Ex{"id": incomeExpenditureManagementID})
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	return ier.crud.TransactionExec(c, tx, query)
 }
 
 var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").

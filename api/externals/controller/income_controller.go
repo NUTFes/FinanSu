@@ -45,7 +45,7 @@ func (i *incomeController) PostIncome(c echo.Context) error {
 
 	createdIncome, err := i.u.CreateIncome(c.Request().Context(), income)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "failed to create income")
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, createdIncome)
 }
@@ -78,9 +78,9 @@ func (i *incomeController) PutIncome(c echo.Context) error {
 	if err := c.Bind(&income); err != nil {
 		return c.JSON(http.StatusBadRequest, "failed to bind")
 	}
-	updatedIncome, err := i.u.UpdateIncome(c.Request().Context(), income)
+	updatedIncome, err := i.u.UpdateIncome(c.Request().Context(), incomeID, income)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "failed to update income")
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	// Return the updated income
 	return c.JSON(http.StatusOK, updatedIncome)
