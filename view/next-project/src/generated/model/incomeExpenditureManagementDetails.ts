@@ -5,10 +5,9 @@
  * FinanSu APIドキュメント
  * OpenAPI spec version: 2.0.0
  */
-import type { Total } from './total';
 import type { IncomeExpenditureManagement } from './incomeExpenditureManagement';
 
 export interface IncomeExpenditureManagementDetails {
-  total: Total;
+  total: number;
   incomeExpenditureManagements: IncomeExpenditureManagement[];
 }

@@ -1807,6 +1807,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - isChecked
               properties:
                 isChecked:
                   type: boolean
@@ -3227,12 +3229,16 @@ components:
     incomeExpenditureManagement:
       type: object
       required:
+        - id
         - content
         - amount
         - currentBalance
         - date
         - isChecked
       properties:
+        id:
+          type: integer
+          example: 1
         content:
           type: string
           example: 情報局
@@ -3245,6 +3251,9 @@ components:
         currentBalance:
           type: integer
           example: 100000
+        receive_option:
+          type: string
+          example: ""
         date:
           type: string
           example: 2024-01-01
@@ -3258,7 +3267,8 @@ components:
         - incomeExpenditureManagements
       properties:
         total:
-          $ref: "#/components/schemas/total"
+          type: integer
+          example: 100000
         incomeExpenditureManagements:
           type: array
           items:

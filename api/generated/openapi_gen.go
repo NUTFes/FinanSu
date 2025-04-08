@@ -231,13 +231,15 @@ type IncomeExpenditureManagement struct {
 	CurrentBalance int     `json:"currentBalance"`
 	Date           string  `json:"date"`
 	Detail         *string `json:"detail,omitempty"`
+	Id             int     `json:"id"`
 	IsChecked      bool    `json:"isChecked"`
+	ReceiveOption  *string `json:"receive_option,omitempty"`
 }
 
 // IncomeExpenditureManagementDetails defines model for incomeExpenditureManagementDetails.
 type IncomeExpenditureManagementDetails struct {
 	IncomeExpenditureManagements []IncomeExpenditureManagement `json:"incomeExpenditureManagements"`
-	Total                        Total                         `json:"total"`
+	Total                        int                           `json:"total"`
 }
 
 // PasswordResetData defines model for passwordResetData.
@@ -525,7 +527,7 @@ type GetIncomeExpenditureManagementsParams struct {
 // PutIncomeExpenditureManagementsCheckIdJSONBody defines parameters for PutIncomeExpenditureManagementsCheckId.
 type PutIncomeExpenditureManagementsCheckIdJSONBody struct {
 	// IsChecked チェック済みかどうか
-	IsChecked *bool `json:"isChecked,omitempty"`
+	IsChecked bool `json:"isChecked"`
 }
 
 // PostPasswordResetRequestParams defines parameters for PostPasswordResetRequest.

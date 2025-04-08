@@ -6,32 +6,33 @@ import (
 )
 
 type router struct {
-	activityController            controller.ActivityController
-	activityInformationController controller.ActivityInformationController
-	activityStyleController       controller.ActivityStyleController
-	budgetController              controller.BudgetController
-	bureauController              controller.BureauController
-	buyReportController           controller.BuyReportController
-	departmentController          controller.DepartmentController
-	expenseController             controller.ExpenseController
-	festivalItemController        controller.FestivalItemController
-	financialRecordController     controller.FinancialRecordController
-	divisionController            controller.DivisionController
-	fundInformationController     controller.FundInformationController
-	healthcheckController         controller.HealthcheckController
-	mailAuthController            controller.MailAuthController
-	objectUploadController        controller.ObjectUploadController
-	passwordResetTokenController  controller.PasswordResetTokenController
-	purchaseItemController        controller.PurchaseItemController
-	purchaseOrderController       controller.PurchaseOrderController
-	purchaseReportController      controller.PurchaseReportController
-	receiptController             controller.ReceiptController
-	sourceController              controller.SourceController
-	sponsorController             controller.SponsorController
-	sponsorStyleController        controller.SponsorStyleController
-	teacherController             controller.TeacherController
-	userController                controller.UserController
-	yearController                controller.YearController
+	activityController                    controller.ActivityController
+	activityInformationController         controller.ActivityInformationController
+	activityStyleController               controller.ActivityStyleController
+	budgetController                      controller.BudgetController
+	bureauController                      controller.BureauController
+	buyReportController                   controller.BuyReportController
+	departmentController                  controller.DepartmentController
+	expenseController                     controller.ExpenseController
+	festivalItemController                controller.FestivalItemController
+	financialRecordController             controller.FinancialRecordController
+	divisionController                    controller.DivisionController
+	fundInformationController             controller.FundInformationController
+	healthcheckController                 controller.HealthcheckController
+	incomeExpenditureManagementController controller.IncomeExpenditureManagementController
+	mailAuthController                    controller.MailAuthController
+	objectUploadController                controller.ObjectUploadController
+	passwordResetTokenController          controller.PasswordResetTokenController
+	purchaseItemController                controller.PurchaseItemController
+	purchaseOrderController               controller.PurchaseOrderController
+	purchaseReportController              controller.PurchaseReportController
+	receiptController                     controller.ReceiptController
+	sourceController                      controller.SourceController
+	sponsorController                     controller.SponsorController
+	sponsorStyleController                controller.SponsorStyleController
+	teacherController                     controller.TeacherController
+	userController                        controller.UserController
+	yearController                        controller.YearController
 }
 
 type Router interface {
@@ -52,6 +53,7 @@ func NewRouter(
 	financialRecordController controller.FinancialRecordController,
 	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
+	incomeExpenditureManagementController controller.IncomeExpenditureManagementController,
 	mailAuthController controller.MailAuthController,
 	objectUploadController controller.ObjectUploadController,
 	passwordResetTokenController controller.PasswordResetTokenController,
@@ -80,6 +82,7 @@ func NewRouter(
 		divisionController,
 		fundInformationController,
 		healthController,
+		incomeExpenditureManagementController,
 		mailAuthController,
 		objectUploadController,
 		passwordResetTokenController,
@@ -218,6 +221,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 		"/fund_informations/details/:year",
 		r.fundInformationController.IndexFundInformationDetailsByPeriod,
 	)
+
+	e.GET("income_expenditure_managements", r.incomeExpenditureManagementController.IndexIncomeExpenditureManagements)
+	e.PUT("/income_expenditure_managements/check/:id", r.incomeExpenditureManagementController.PutIncomeExpenditureManagementCheck)
 
 	// mail auth
 	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)
