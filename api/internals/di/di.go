@@ -77,6 +77,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
+	incomeUseCase := usecase.NewIncomeUseCase()
 	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
 	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
@@ -117,7 +118,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
-	iIncomeController := controller.NewIncomeController()
+	incomeController := controller.NewIncomeController(incomeUseCase)
 	incomeExpenditureManagementController := controller.NewIncomeExpenditureManagementController(incomeExpenditureManagementUseCase)
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
 	objectUploadController := controller.NewObjectUploadController(objectHandleUseCase)
@@ -151,7 +152,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		financialRecordController,
 		fundInformationController,
 		healthcheckController,
-		iIncomeController,
+		incomeController,
 		incomeExpenditureManagementController,
 		mailAuthController,
 		objectUploadController,

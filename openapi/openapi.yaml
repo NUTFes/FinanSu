@@ -1753,7 +1753,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/income"
     delete:
       tags:
         - income
