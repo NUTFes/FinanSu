@@ -19,6 +19,7 @@ type IncomeExpenditureManagementRepository interface {
 	All(context.Context, string) (*sql.Rows, error)
 	UpdateChecked(context.Context, string, bool) error
 	CreateIncomeExpenditureManagement(context.Context, *sql.Tx, domain.IncomeExpenditureManagementTableColumn) (*int, error)
+	GetIncomeExpenditureManagementByID(context.Context, string) (*sql.Row, error)
 }
 
 func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) IncomeExpenditureManagementRepository {
@@ -88,6 +89,33 @@ func (ier *incomeExpenditureManagementRepository) CreateIncomeExpenditureManagem
 		return id, err
 	}
 	return id, nil
+}
+
+// IDで取得
+func (ier *incomeExpenditureManagementRepository) GetIncomeExpenditureManagementByID(c context.Context, id string) (*sql.Row, error) {
+	ds := dialect.From("income_expenditure_managements").Select(
+		goqu.I("income_expenditure_managements.id").As("id"),
+		goqu.I("income_expenditure_managements.amount").As("amount"),
+		goqu.I("income_income_expenditure_managements.income_id").As("income_id"),
+		goqu.I("income_expenditure_managements.year_id").As("year_id"),
+		goqu.COALESCE(goqu.I("income_expenditure_managements.receive_option"), "").As("receive_option"),
+		goqu.I("spot_sponsor_names.sponsor_name").As("sponsor_name"),
+	).LeftJoin(
+		goqu.I("income_income_expenditure_managements"),
+		goqu.On(goqu.I("income_expenditure_managements.id").Eq(goqu.I("income_income_expenditure_managements.income_expenditure_id"))),
+	).LeftJoin(
+		goqu.I("spot_sponsor_names"),
+		goqu.On(goqu.I("spot_sponsor_names.income_expenditure_id").Eq(goqu.I("income_expenditure_managements.id"))),
+	).Where(
+		goqu.Ex{
+			"income_expenditure_managements.id": id,
+		},
+	).Limit(1)
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return ier.crud.ReadByID(c, query)
 }
 
 var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").

@@ -109,9 +109,23 @@ func (uc *incomeUseCase) CreateIncome(ctx context.Context, income Income) (*Inco
 	return &income, nil
 }
 
-func (uc *incomeUseCase) GetIncome(ctx context.Context, incomeID string) (*Income, error) {
-	income := &generated.Income{}
-	return income, nil
+func (uc *incomeUseCase) GetIncome(ctx context.Context, incomeExpenditureManagementID string) (*Income, error) {
+	var income Income
+	// 収入の取得
+	row, err := uc.incomeExpenditureManagementRepository.GetIncomeExpenditureManagementByID(ctx, incomeExpenditureManagementID)
+	if err != nil {
+		return nil, err
+	}
+	row.Scan(
+		&income.Id,
+		&income.Amount,
+		&income.IncomeId,
+		&income.YearId,
+		&income.ReceiveOption,
+		&income.SponsorName,
+	)
+
+	return &income, nil
 }
 
 func (uc *incomeUseCase) UpdateIncome(ctx context.Context, income Income) (*Income, error) {
