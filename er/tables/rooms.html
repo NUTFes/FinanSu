@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>festival_items - finansu_db.finansu_db</title>
+        <title>rooms - finansu_db.finansu_db</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>festival_items</h1><p><span id="recordNumber">7</span> rows</p><br />
+                    <h1>rooms</h1><p><span id="recordNumber">0</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -118,14 +118,9 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="buy_reports.festival_item_id references festival_items.id via buy_reports_ibfk_1"><a href='buy_reports.html'>buy_reports</a><span class='relatedKey'>.festival_item_id</span></td>
-                                                <td class="constraint detail">buy_reports_ibfk_1</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="item_budgets.festival_item_id references festival_items.id via item_budgets_ibfk_1"><a href='item_budgets.html'>item_budgets</a><span class='relatedKey'>.festival_item_id</span></td>
-                                                <td class="constraint detail">item_budgets_ibfk_1</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                                <td title="room_teacher.room_id references rooms.id via room_teacher_ibfk_1"><a href='room_teacher.html'>room_teacher</a><span class='relatedKey'>.room_id</span></td>
+                                                <td class="constraint detail">room_teacher_ibfk_1</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -136,26 +131,9 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="name">name</span></td>
-                                    <td>VARCHAR</td>
-                                    <td>255</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="memo">memo</span></td>
-                                    <td>VARCHAR</td>
-                                    <td>255</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="floor_id">floor_id</span></td>
+                                    <td>INT UNSIGNED</td>
+                                    <td>10</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -165,14 +143,19 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="rooms.floor_id references floors.id via rooms_ibfk_1"><a href='floors.html'>floors</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">rooms_ibfk_1</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="division_id">division_id</span></td>
-                                    <td>INT UNSIGNED</td>
-                                    <td>10</td>
+                                    <td><span id="room_name">room_name</span></td>
+                                    <td>VARCHAR</td>
+                                    <td>255</td>
                                     <td title=''></td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -182,11 +165,6 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="festival_items.division_id references divisions.id via festival_items_ibfk_1"><a href='divisions.html'>divisions</a><span class='relatedKey'>.id</span></td>
-                                                <td class="constraint detail">festival_items_ibfk_1</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -262,10 +240,10 @@
                                     <td>id</td>
                                 </tr>
                                 <tr>
-                                    <td title='Indexed'>division_id_foreign_key</td>
+                                    <td title='Indexed'>floor_id</td>
                                     <td>Performance</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>division_id</td>
+                                    <td>floor_id</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -290,25 +268,21 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="651,5,853,152">
-<area shape="rect" id="node2" href="festival_items.html" target="_top" title="festival_items" alt="" coords="281,115,600,360">
-<area shape="rect" id="node3" href="divisions.html" target="_top" title="divisions" alt="" coords="5,205,237,352">
-<area shape="rect" id="node4" href="item_budgets.html" target="_top" title="item_budgets" alt="" coords="644,169,860,316">
+<area shape="rect" id="node1" href="room_teacher.html" target="_top" title="room_teacher" alt="" coords="592,5,809,181">
+<area shape="rect" id="node2" href="rooms.html" target="_top" title="rooms" alt="" coords="252,32,548,248">
+<area shape="rect" id="node3" href="floors.html" target="_top" title="floors" alt="" coords="5,64,208,211">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/festival_items.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/rooms.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="945,169,1146,316">
-<area shape="rect" id="node2" href="festival_items.html" target="_top" title="festival_items" alt="" coords="575,115,893,360">
-<area shape="rect" id="node4" href="divisions.html" target="_top" title="divisions" alt="" coords="299,107,531,253">
-<area shape="rect" id="node3" href="buy_statuses.html" target="_top" title="buy_statuses" alt="" coords="1220,119,1432,207">
-<area shape="rect" id="node5" href="financial_records.html" target="_top" title="financial_records" alt="" coords="5,139,255,227">
-<area shape="rect" id="node6" href="item_budgets.html" target="_top" title="item_budgets" alt="" coords="937,5,1153,152">
-<area shape="rect" id="node7" href="payment_receipts.html" target="_top" title="payment_receipts" alt="" coords="1197,224,1455,312">
-<area shape="rect" id="node8" href="user_groups.html" target="_top" title="user_groups" alt="" coords="633,9,835,97">
+<area shape="rect" id="node1" href="floors.html" target="_top" title="floors" alt="" coords="271,37,473,184">
+<area shape="rect" id="node2" href="building_units.html" target="_top" title="building_units" alt="" coords="5,69,227,157">
+<area shape="rect" id="node3" href="room_teacher.html" target="_top" title="room_teacher" alt="" coords="857,79,1075,255">
+<area shape="rect" id="node4" href="rooms.html" target="_top" title="rooms" alt="" coords="517,5,813,221">
+<area shape="rect" id="node5" href="teachers.html" target="_top" title="teachers" alt="" coords="581,239,749,327">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/festival_items.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/rooms.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

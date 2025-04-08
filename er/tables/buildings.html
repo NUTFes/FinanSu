@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>buildings</h1><p><span id="recordNumber">0</span> rows</p><br />
+                    <h1>buildings</h1><p><span id="recordNumber">27</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -118,8 +118,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="teacher_rooms.building_id references buildings.id via teacher_rooms_ibfk_1"><a href='teacher_rooms.html'>teacher_rooms</a><span class='relatedKey'>.building_id</span></td>
-                                                <td class="constraint detail">teacher_rooms_ibfk_1</td>
+                                                <td title="building_units.building_id references buildings.id via building_units_ibfk_1"><a href='building_units.html'>building_units</a><span class='relatedKey'>.building_id</span></td>
+                                                <td class="constraint detail">building_units_ibfk_1</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
@@ -240,16 +240,16 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="teacher_rooms.html" target="_top" title="teacher_rooms" alt="" coords="343,5,571,152">
+<area shape="rect" id="node1" href="building_units.html" target="_top" title="building_units" alt="" coords="343,5,564,152">
 <area shape="rect" id="node2" href="buildings.html" target="_top" title="buildings" alt="" coords="5,32,299,219">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/buildings.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="teacher_rooms.html" target="_top" title="teacher_rooms" alt="" coords="343,5,571,152">
+<area shape="rect" id="node1" href="building_units.html" target="_top" title="building_units" alt="" coords="343,5,564,152">
 <area shape="rect" id="node2" href="buildings.html" target="_top" title="buildings" alt="" coords="5,32,299,219">
-<area shape="rect" id="node3" href="teachers.html" target="_top" title="teachers" alt="" coords="615,8,783,96">
+<area shape="rect" id="node3" href="floors.html" target="_top" title="floors" alt="" coords="608,8,751,96">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/buildings.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
