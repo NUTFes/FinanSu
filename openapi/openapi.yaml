@@ -1694,6 +1694,19 @@ paths:
               schema:
                 type: object
   /incomes:
+    get:
+      tags:
+        - income
+      description: 収支管理で収入の項目を取得（教育振興会費、雑収入など）
+      responses:
+        "200":
+          description: incomeの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/incomeItem"
     post:
       tags:
         - income
@@ -3217,9 +3230,9 @@ components:
         id:
           type: integer
           example: 1
-        name:
-          type: string
-          example: 収入名
+        incomeId:
+          type: integer
+          example: 1
         sponsorName:
           type: string
           example: 企業1
@@ -3229,6 +3242,20 @@ components:
         year_id:
           type: integer
           example: 1
+        receiveOption:
+          type: string
+          example: ""
+    incomeItem:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 教育振興会費
     incomeExpenditureManagement:
       type: object
       required:

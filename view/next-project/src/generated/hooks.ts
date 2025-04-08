@@ -108,6 +108,7 @@ import type {
   GetUsersId200,
   Income,
   IncomeExpenditureManagementDetails,
+  IncomeItem,
   PasswordResetData,
   PostActivities200,
   PostActivityInformations200,
@@ -159,7 +160,6 @@ import type {
   PutFundInformationsIdParams,
   PutIncomeExpenditureManagementsCheckId200,
   PutIncomeExpenditureManagementsCheckIdBody,
-  PutIncomesId200,
   PutReceiptsId200,
   PutSourcesId200,
   PutSourcesIdParams,
@@ -5468,6 +5468,57 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
 };
 
 /**
+ * incomeの一覧を取得
+ */
+export type getIncomesResponse200 = {
+  data: IncomeItem[];
+  status: 200;
+};
+
+export type getIncomesResponseComposite = getIncomesResponse200;
+
+export type getIncomesResponse = getIncomesResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetIncomesUrl = () => {
+  return `/incomes`;
+};
+
+export const getIncomes = async (options?: RequestInit): Promise<getIncomesResponse> => {
+  return customFetch<getIncomesResponse>(getGetIncomesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetIncomesKey = () => [`/incomes`] as const;
+
+export type GetIncomesQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomes>>>;
+export type GetIncomesQueryError = unknown;
+
+export const useGetIncomes = <TError = unknown>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getIncomes>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetIncomesKey() : null));
+  const swrFn = () => getIncomes(requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * incomeの作成
  */
 export type postIncomesResponse200 = {
@@ -5591,7 +5642,7 @@ export const useGetIncomesId = <TError = unknown>(
  * incomeの更新
  */
 export type putIncomesIdResponse200 = {
-  data: PutIncomesId200;
+  data: Income;
   status: 200;
 };
 

@@ -6,11 +6,7 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export interface Income {
+export interface IncomeItem {
   id?: number;
-  incomeId?: number;
-  sponsorName?: string;
-  amount: number;
-  year_id: number;
-  receiveOption?: string;
+  name: string;
 }

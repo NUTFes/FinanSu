@@ -218,11 +218,12 @@ type FinancialRecordWithBalance struct {
 
 // Income defines model for income.
 type Income struct {
-	Amount      int     `json:"amount"`
-	Id          *int    `json:"id,omitempty"`
-	Name        string  `json:"name"`
-	SponsorName *string `json:"sponsorName,omitempty"`
-	YearId      int     `json:"year_id"`
+	Amount        int     `json:"amount"`
+	Id            *int    `json:"id,omitempty"`
+	IncomeId      *int    `json:"incomeId,omitempty"`
+	ReceiveOption *string `json:"receiveOption,omitempty"`
+	SponsorName   *string `json:"sponsorName,omitempty"`
+	YearId        int     `json:"year_id"`
 }
 
 // IncomeExpenditureManagement defines model for incomeExpenditureManagement.
@@ -241,6 +242,12 @@ type IncomeExpenditureManagement struct {
 type IncomeExpenditureManagementDetails struct {
 	IncomeExpenditureManagements []IncomeExpenditureManagement `json:"incomeExpenditureManagements"`
 	Total                        int                           `json:"total"`
+}
+
+// IncomeItem defines model for incomeItem.
+type IncomeItem struct {
+	Id   *int   `json:"id,omitempty"`
+	Name string `json:"name"`
 }
 
 // PasswordResetData defines model for passwordResetData.
@@ -970,6 +977,9 @@ type ServerInterface interface {
 
 	// (PUT /income_expenditure_managements/check/{id})
 	PutIncomeExpenditureManagementsCheckId(ctx echo.Context, id int) error
+
+	// (GET /incomes)
+	GetIncomes(ctx echo.Context) error
 
 	// (POST /incomes)
 	PostIncomes(ctx echo.Context) error
@@ -2569,6 +2579,15 @@ func (w *ServerInterfaceWrapper) PutIncomeExpenditureManagementsCheckId(ctx echo
 	return err
 }
 
+// GetIncomes converts echo context to params.
+func (w *ServerInterfaceWrapper) GetIncomes(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetIncomes(ctx)
+	return err
+}
+
 // PostIncomes converts echo context to params.
 func (w *ServerInterfaceWrapper) PostIncomes(ctx echo.Context) error {
 	var err error
@@ -3551,6 +3570,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/fund_informations/:id/details", wrapper.GetFundInformationsIdDetails)
 	router.GET(baseURL+"/income_expenditure_managements", wrapper.GetIncomeExpenditureManagements)
 	router.PUT(baseURL+"/income_expenditure_managements/check/:id", wrapper.PutIncomeExpenditureManagementsCheckId)
+	router.GET(baseURL+"/incomes", wrapper.GetIncomes)
 	router.POST(baseURL+"/incomes", wrapper.PostIncomes)
 	router.DELETE(baseURL+"/incomes/:id", wrapper.DeleteIncomesId)
 	router.GET(baseURL+"/incomes/:id", wrapper.GetIncomesId)
