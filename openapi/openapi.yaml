@@ -3220,6 +3220,9 @@ components:
         name:
           type: string
           example: 収入名
+        sponsorName:
+          type: string
+          example: 企業1
         amount:
           type: integer
           example: 10000

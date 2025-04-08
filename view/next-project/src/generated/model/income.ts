@@ -9,6 +9,7 @@
 export interface Income {
   id?: number;
   name: string;
+  sponsorName?: string;
   amount: number;
   year_id: number;
 }

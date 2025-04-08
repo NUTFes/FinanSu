@@ -218,10 +218,11 @@ type FinancialRecordWithBalance struct {
 
 // Income defines model for income.
 type Income struct {
-	Amount int    `json:"amount"`
-	Id     *int   `json:"id,omitempty"`
-	Name   string `json:"name"`
-	YearId int    `json:"year_id"`
+	Amount      int     `json:"amount"`
+	Id          *int    `json:"id,omitempty"`
+	Name        string  `json:"name"`
+	SponsorName *string `json:"sponsorName,omitempty"`
+	YearId      int     `json:"year_id"`
 }
 
 // IncomeExpenditureManagement defines model for incomeExpenditureManagement.
