@@ -117,6 +117,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
+	iIncomeController := controller.NewIncomeController()
 	incomeExpenditureManagementController := controller.NewIncomeExpenditureManagementController(incomeExpenditureManagementUseCase)
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
 	objectUploadController := controller.NewObjectUploadController(objectHandleUseCase)
@@ -150,6 +151,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		financialRecordController,
 		fundInformationController,
 		healthcheckController,
+		iIncomeController,
 		incomeExpenditureManagementController,
 		mailAuthController,
 		objectUploadController,
