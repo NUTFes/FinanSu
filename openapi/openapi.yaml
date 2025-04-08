@@ -1693,7 +1693,133 @@ paths:
             application/json:
               schema:
                 type: object
-
+  /incomes:
+    post:
+      tags:
+        - income
+      description: incomeの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/income"
+        required: true
+      responses:
+        "200":
+          description: create されたincomeが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/income"
+  /incomes/{id}:
+    get:
+      tags:
+        - income
+      description: IDで指定されたincomeの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: incomeの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/income"
+    put:
+      tags:
+        - income
+      description: incomeの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/income"
+        required: true
+      responses:
+        "200":
+          description: 更新されたincomeが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - income
+      description: IDを指定してincomeの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: incomeの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /income_expenditure_managements:
+    get:
+      tags:
+        - income_expenditure_management
+      description: income_expenditure_managementの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ユーザー所属の物品予算の一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/incomeExpenditureManagementDetails"
+  /income_expenditure_managements/check/{id}:
+    put:
+      tags:
+        - income_expenditure_management
+      description: income_expenditure_managementのチェック
+      parameters:
+        - name: id
+          in: path
+          description: income_expenditure_management_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - isChecked
+              properties:
+                isChecked:
+                  type: boolean
+                  description: チェック済みかどうか
+      responses:
+        "200":
+          description: チェック済みのincome_expenditure_managementが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
   /password_reset/{id}:
     post:
       tags:
@@ -3091,6 +3217,72 @@ components:
         balance:
           type: integer
           example: 90000
+    income:
+      type: object
+      required:
+        - name
+        - amount
+        - year_id
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 収入名
+        amount:
+          type: integer
+          example: 10000
+        year_id:
+          type: integer
+          example: 1
+    incomeExpenditureManagement:
+      type: object
+      required:
+        - id
+        - content
+        - amount
+        - currentBalance
+        - date
+        - isChecked
+      properties:
+        id:
+          type: integer
+          example: 1
+        content:
+          type: string
+          example: 情報局
+        detail:
+          type: string
+          example: ビール
+        amount:
+          type: integer
+          example: 100000
+        currentBalance:
+          type: integer
+          example: 100000
+        receive_option:
+          type: string
+          example: ""
+        date:
+          type: string
+          example: 2024-01-01
+        isChecked:
+          type: boolean
+          example: false
+    incomeExpenditureManagementDetails:
+      type: object
+      required:
+        - total
+        - incomeExpenditureManagements
+      properties:
+        total:
+          type: integer
+          example: 100000
+        incomeExpenditureManagements:
+          type: array
+          items:
+            $ref: "#/components/schemas/incomeExpenditureManagement"
     sponsorStyle:
       required:
         - feature

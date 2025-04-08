@@ -91,6 +91,7 @@ gen-api:
 
 gen-front-api:
 	docker compose run --rm view npx orval
+	docker compose run --rm view npm run format
 
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
@@ -103,6 +104,5 @@ run-all:
 gen-er:
 	docker run -v "./er:/output" --net="host" schemaspy/schemaspy:snapshot -t mysql -host localhost:3306 -db finansu_db -u root -p root -connprops  allowPublicKeyRetrieval\\=false  -s finansu_db
 
-
-
-
+format:
+	docker compose run --rm view npm run format

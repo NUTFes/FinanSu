@@ -80,7 +80,7 @@
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <i class="ion ion-key"></i>
-                            <h3 class="box-title">12 Foreign Key Constraints</h3>
+                            <h3 class="box-title">15 Foreign Key Constraints</h3>
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -104,42 +104,6 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>financial_records_ibfk_1</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/financial_records.html'>financial_records</a><span>.year_id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/years.html'>years</a><span>.id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>teacher_rooms_ibfk_1</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/teacher_rooms.html'>teacher_rooms</a><span>.building_id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/buildings.html'>buildings</a><span>.id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
-                                    </tr>
-                                    <tr>
                                         <td>divisions_ibfk_1</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
@@ -152,24 +116,6 @@
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
                                                     <td><a href='tables/financial_records.html'>financial_records</a><span>.id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>item_budgets_ibfk_1</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/item_budgets.html'>item_budgets</a><span>.festival_item_id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/festival_items.html'>festival_items</a><span>.id</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -194,40 +140,40 @@
                                         <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>buy_statuses_ibfk_1</td>
+                                        <td>room_teacher_ibfk_2</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/buy_statuses.html'>buy_statuses</a><span>.buy_report_id</span></td>
+                                                    <td><a href='tables/room_teacher.html'>room_teacher</a><span>.teacher_id</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/buy_reports.html'>buy_reports</a><span>.id</span></td>
+                                                    <td><a href='tables/teachers.html'>teachers</a><span>.id</span></td>
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>buy_reports_ibfk_1</td>
+                                        <td>room_teacher_ibfk_1</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/buy_reports.html'>buy_reports</a><span>.festival_item_id</span></td>
+                                                    <td><a href='tables/room_teacher.html'>room_teacher</a><span>.room_id</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/festival_items.html'>festival_items</a><span>.id</span></td>
+                                                    <td><a href='tables/rooms.html'>rooms</a><span>.id</span></td>
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
                                         <td>user_groups_ibfk_1</td>
@@ -266,6 +212,132 @@
                                         <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
                                     </tr>
                                     <tr>
+                                        <td>floors_ibfk_1</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/floors.html'>floors</a><span>.building_unit_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/building_units.html'>building_units</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>building_units_ibfk_1</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/building_units.html'>building_units</a><span>.building_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/buildings.html'>buildings</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>financial_records_ibfk_1</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/financial_records.html'>financial_records</a><span>.year_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/years.html'>years</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>item_budgets_ibfk_1</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/item_budgets.html'>item_budgets</a><span>.festival_item_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/festival_items.html'>festival_items</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>buy_statuses_ibfk_1</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/buy_statuses.html'>buy_statuses</a><span>.buy_report_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/buy_reports.html'>buy_reports</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>rooms_ibfk_1</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/rooms.html'>rooms</a><span>.floor_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/floors.html'>floors</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>buy_reports_ibfk_1</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/buy_reports.html'>buy_reports</a><span>.festival_item_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/festival_items.html'>festival_items</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
+                                    </tr>
+                                    <tr>
                                         <td>payment_receipts_ibfk_1</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
@@ -285,24 +357,6 @@
                                     </tr>
                                     <tr>
                                         <td>teachers_ibfk_1</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/teachers.html'>teachers</a><span>.teacher_room_id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/teacher_rooms.html'>teacher_rooms</a><span>.id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>teachers_ibfk_2</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>

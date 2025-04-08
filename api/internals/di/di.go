@@ -44,6 +44,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
+	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
 	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
@@ -76,6 +77,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
 	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
+	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
 	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
@@ -115,6 +117,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
 	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
+	incomeExpenditureManagementController := controller.NewIncomeExpenditureManagementController(incomeExpenditureManagementUseCase)
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
 	objectUploadController := controller.NewObjectUploadController(objectHandleUseCase)
 	passwordResetTokenController := controller.NewPasswordResetTokenController(
@@ -147,6 +150,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		financialRecordController,
 		fundInformationController,
 		healthcheckController,
+		incomeExpenditureManagementController,
 		mailAuthController,
 		objectUploadController,
 		passwordResetTokenController,
