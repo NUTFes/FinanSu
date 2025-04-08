@@ -5468,7 +5468,7 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
 };
 
 /**
- * incomeの一覧を取得
+ * 収支管理で収入の項目を取得（教育振興会費、雑収入など）
  */
 export type getIncomesResponse200 = {
   data: IncomeItem[];

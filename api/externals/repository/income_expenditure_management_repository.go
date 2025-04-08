@@ -6,6 +6,7 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	goqu "github.com/doug-martin/goqu/v9"
 )
 
@@ -17,6 +18,7 @@ type incomeExpenditureManagementRepository struct {
 type IncomeExpenditureManagementRepository interface {
 	All(context.Context, string) (*sql.Rows, error)
 	UpdateChecked(context.Context, string, bool) error
+	CreateIncomeExpenditureManagement(context.Context, *sql.Tx, domain.IncomeExpenditureManagementTableColumn) (*int, error)
 }
 
 func NewIncomeExpenditureManagementRepository(c db.Client, ac abstract.Crud) IncomeExpenditureManagementRepository {
@@ -47,6 +49,45 @@ func (ier *incomeExpenditureManagementRepository) UpdateChecked(c context.Contex
 		return err
 	}
 	return ier.crud.UpdateDB(c, query)
+}
+
+// 新規作成
+func (ier *incomeExpenditureManagementRepository) CreateIncomeExpenditureManagement(c context.Context, tx *sql.Tx, incomeExpenditureManagement domain.IncomeExpenditureManagementTableColumn) (*int, error) {
+	var id *int
+	ds := dialect.Insert("income_expenditure_managements").
+		Rows(
+			goqu.Record{
+				"amount":         incomeExpenditureManagement.Amount,
+				"log_category":   incomeExpenditureManagement.LogCategory,
+				"year_id":        incomeExpenditureManagement.YearID,
+				"receive_option": incomeExpenditureManagement.ReceiveOption,
+				"is_checked":     incomeExpenditureManagement.IsChecked,
+			},
+		)
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return id, err
+	}
+
+	if err := ier.crud.TransactionExec(c, tx, query); err != nil {
+		return id, err
+	}
+	// last_insert_idを,mysqlの変数に格納
+	setQuery := "SET @new_income_expenditure_managements_id = last_insert_id();"
+	err = ier.crud.TransactionExec(c, tx, setQuery)
+	if err != nil {
+		return id, err
+	}
+	row, err := ier.crud.TransactionReadByID(c, tx, "SELECT @new_income_expenditure_managements_id")
+	if err != nil {
+		return id, err
+	}
+	err = row.Scan(&id)
+	if err != nil {
+		return id, err
+	}
+	return id, nil
 }
 
 var selectIncomeExpenditureManagementQuery = dialect.From("income_expenditure_managements").

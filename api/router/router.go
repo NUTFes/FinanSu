@@ -226,6 +226,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	)
 
 	// incomes
+	e.GET("/incomes", r.incomeController.IndexIncome)
 	e.POST("/incomes", r.incomeController.PostIncome)
 	e.GET("/incomes/:id", r.incomeController.GetIncome)
 	e.PUT("/incomes/:id", r.incomeController.PutIncome)

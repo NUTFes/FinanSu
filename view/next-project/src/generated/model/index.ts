@@ -112,6 +112,7 @@ export * from './income';
 export * from './incomeExpenditureManagement';
 export * from './incomeExpenditureManagementDetails';
 export * from './incomeItem';
+export * from './incomeReceiveOption';
 export * from './passwordResetData';
 export * from './postActivities200';
 export * from './postActivityInformations200';

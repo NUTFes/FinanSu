@@ -3225,7 +3225,8 @@ components:
       required:
         - name
         - amount
-        - year_id
+        - yearId
+        - incomeId
       properties:
         id:
           type: integer
@@ -3239,12 +3240,14 @@ components:
         amount:
           type: integer
           example: 10000
-        year_id:
+        yearId:
           type: integer
           example: 1
         receiveOption:
           type: string
-          example: ""
+          enum:
+            - hand
+            - transfer
     incomeItem:
       type: object
       required:
@@ -3281,7 +3284,7 @@ components:
         currentBalance:
           type: integer
           example: 100000
-        receive_option:
+        receiveOption:
           type: string
           example: ""
         date:

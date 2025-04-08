@@ -19,6 +19,12 @@ const (
 	N2    BuyReportInformationStatus = "清算完了"
 )
 
+// Defines values for IncomeReceiveOption.
+const (
+	Hand     IncomeReceiveOption = "hand"
+	Transfer IncomeReceiveOption = "transfer"
+)
+
 // Defines values for GetActivitiesFilteredDetailsParamsIsDone.
 const (
 	GetActivitiesFilteredDetailsParamsIsDoneAll   GetActivitiesFilteredDetailsParamsIsDone = "all"
@@ -218,13 +224,16 @@ type FinancialRecordWithBalance struct {
 
 // Income defines model for income.
 type Income struct {
-	Amount        int     `json:"amount"`
-	Id            *int    `json:"id,omitempty"`
-	IncomeId      *int    `json:"incomeId,omitempty"`
-	ReceiveOption *string `json:"receiveOption,omitempty"`
-	SponsorName   *string `json:"sponsorName,omitempty"`
-	YearId        int     `json:"year_id"`
+	Amount        int                  `json:"amount"`
+	Id            *int                 `json:"id,omitempty"`
+	IncomeId      int                  `json:"incomeId"`
+	ReceiveOption *IncomeReceiveOption `json:"receiveOption,omitempty"`
+	SponsorName   *string              `json:"sponsorName,omitempty"`
+	YearId        int                  `json:"yearId"`
 }
+
+// IncomeReceiveOption defines model for Income.ReceiveOption.
+type IncomeReceiveOption string
 
 // IncomeExpenditureManagement defines model for incomeExpenditureManagement.
 type IncomeExpenditureManagement struct {
@@ -235,7 +244,7 @@ type IncomeExpenditureManagement struct {
 	Detail         *string `json:"detail,omitempty"`
 	Id             int     `json:"id"`
 	IsChecked      bool    `json:"isChecked"`
-	ReceiveOption  *string `json:"receive_option,omitempty"`
+	ReceiveOption  *string `json:"receiveOption,omitempty"`
 }
 
 // IncomeExpenditureManagementDetails defines model for incomeExpenditureManagementDetails.

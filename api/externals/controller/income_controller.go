@@ -13,6 +13,7 @@ type incomeController struct {
 }
 
 type IncomeController interface {
+	IndexIncome(c echo.Context) error
 	PostIncome(c echo.Context) error
 	GetIncome(c echo.Context) error
 	PutIncome(c echo.Context) error
@@ -23,6 +24,16 @@ func NewIncomeController(
 	u usecase.IncomeUseCase,
 ) IncomeController {
 	return &incomeController{u}
+}
+
+// Get all incomeItems
+func (i *incomeController) IndexIncome(c echo.Context) error {
+	ctx := c.Request().Context()
+	incomeItems, err := i.u.GetAllIncome(ctx)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "failed to get all income items")
+	}
+	return c.JSON(http.StatusOK, incomeItems)
 }
 
 // Post
