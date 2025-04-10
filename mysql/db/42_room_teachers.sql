@@ -1,7 +1,7 @@
 use finansu_db
 
 -- roomsとteachersの中間テーブル
-CREATE TABLE room_teacher (
+CREATE TABLE room_teachers (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   room_id INT(10) unsigned not null,
   teacher_id INT(10) unsigned not null,
@@ -12,4 +12,4 @@ CREATE TABLE room_teacher (
   FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE CASCADE
 );
 
-INSERT INTO room_teacher (room_id, teacher_id) VALUES (1, 1)
+INSERT INTO room_teachers (room_id, teacher_id) VALUES (1, 1)
