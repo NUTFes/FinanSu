@@ -91,7 +91,7 @@ func (r *incomeRepository) UpdateIncome(ctx context.Context, tx *sql.Tx, incomeE
 
 	query, _, err := ds.ToSQL()
 	if err != nil {
-		return err 
+		return err
 	}
 
 	return r.crud.TransactionExec(ctx, tx, query)
