@@ -351,7 +351,7 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 
 	if *requestBody.IsPacked && *requestBody.IsSettled {
 		var incomeExpenditureManagementId *int
-		// buyRepotIdに紐づく、収支管理を取得
+		// buyReportIdに紐づく、収支管理を取得
 		row, err := bru.iRep.GetIncomeExpenditureManagementByBuyReportId(c, tx, buyReportId)
 		if err != nil {
 			if err = bru.tRep.RollBack(c, tx); err != nil {
