@@ -38,12 +38,13 @@ func (i *incomeController) IndexIncome(c echo.Context) error {
 
 // Post
 func (i *incomeController) PostIncome(c echo.Context) error {
+	ctx := c.Request().Context()
 	var income Income
 	if err := c.Bind(&income); err != nil {
 		return c.JSON(http.StatusBadRequest, "failed to bind")
 	}
 
-	createdIncome, err := i.u.CreateIncome(c.Request().Context(), income)
+	createdIncome, err := i.u.CreateIncome(ctx, income)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -52,12 +53,13 @@ func (i *incomeController) PostIncome(c echo.Context) error {
 
 // GET
 func (i *incomeController) GetIncome(c echo.Context) error {
+	ctx := c.Request().Context()
 	incomeID := c.Param("id")
 	if incomeID == "" {
 		return c.JSON(http.StatusBadRequest, "income ID is required")
 	}
 
-	income, err := i.u.GetIncome(c.Request().Context(), incomeID)
+	income, err := i.u.GetIncome(ctx, incomeID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "failed to get income")
 	}
@@ -69,6 +71,7 @@ func (i *incomeController) GetIncome(c echo.Context) error {
 
 // PUT
 func (i *incomeController) PutIncome(c echo.Context) error {
+	ctx := c.Request().Context()
 	incomeID := c.Param("id")
 	if incomeID == "" {
 		return c.JSON(http.StatusBadRequest, "income ID is required")
@@ -78,7 +81,7 @@ func (i *incomeController) PutIncome(c echo.Context) error {
 	if err := c.Bind(&income); err != nil {
 		return c.JSON(http.StatusBadRequest, "failed to bind")
 	}
-	updatedIncome, err := i.u.UpdateIncome(c.Request().Context(), incomeID, income)
+	updatedIncome, err := i.u.UpdateIncome(ctx, incomeID, income)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -88,12 +91,13 @@ func (i *incomeController) PutIncome(c echo.Context) error {
 
 // DELETE
 func (i *incomeController) DeleteIncome(c echo.Context) error {
+	ctx := c.Request().Context()
 	incomeID := c.Param("id")
 	if incomeID == "" {
 		return c.JSON(http.StatusBadRequest, "income ID is required")
 	}
 
-	if err := i.u.DeleteIncome(c.Request().Context(), incomeID); err != nil {
+	if err := i.u.DeleteIncome(ctx, incomeID); err != nil {
 		return c.JSON(http.StatusInternalServerError, "failed to delete income")
 	}
 	return c.JSON(http.StatusOK, "ok")
