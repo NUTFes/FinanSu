@@ -1706,7 +1706,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/incomeItem"
+                  $ref: "#/components/schemas/incomeCategory"
     post:
       tags:
         - income
@@ -3248,7 +3248,7 @@ components:
           enum:
             - hand
             - transfer
-    incomeItem:
+    incomeCategory:
       type: object
       required:
         - name

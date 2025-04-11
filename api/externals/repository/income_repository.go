@@ -58,9 +58,9 @@ func (r *incomeRepository) GetSponsorName(ctx context.Context, tx *sql.Tx, incom
 	return row, nil
 }
 
-func (r *incomeRepository) CreateIncome(ctx context.Context, tx *sql.Tx, incomeItemID, incomeExpenditureManagementID string) error {
+func (r *incomeRepository) CreateIncome(ctx context.Context, tx *sql.Tx, incomeCategoryID, incomeExpenditureManagementID string) error {
 	ds := dialect.Insert("income_income_expenditure_managements").Rows(
-		goqu.Record{"income_id": incomeItemID, "income_expenditure_id": incomeExpenditureManagementID},
+		goqu.Record{"income_id": incomeCategoryID, "income_expenditure_id": incomeExpenditureManagementID},
 	)
 
 	query, _, err := ds.ToSQL()
@@ -84,9 +84,9 @@ func (r *incomeRepository) CreateSponsorName(ctx context.Context, tx *sql.Tx, in
 	return r.crud.TransactionExec(ctx, tx, query)
 }
 
-func (r *incomeRepository) UpdateIncome(ctx context.Context, tx *sql.Tx, incomeExpenditureManagementID, incomeItemID string) error {
+func (r *incomeRepository) UpdateIncome(ctx context.Context, tx *sql.Tx, incomeExpenditureManagementID, incomeCategoryID string) error {
 	ds := dialect.Update("income_income_expenditure_managements").Set(
-		goqu.Record{"income_id": incomeItemID},
+		goqu.Record{"income_id": incomeCategoryID},
 	).Where(goqu.Ex{"income_expenditure_id": incomeExpenditureManagementID})
 
 	query, _, err := ds.ToSQL()

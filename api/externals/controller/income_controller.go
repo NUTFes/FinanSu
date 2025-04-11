@@ -26,14 +26,14 @@ func NewIncomeController(
 	return &incomeController{u}
 }
 
-// Get all incomeItems
+// Get all incomeCategories
 func (i *incomeController) IndexIncome(c echo.Context) error {
 	ctx := c.Request().Context()
-	incomeItems, err := i.u.GetAllIncome(ctx)
+	incomeCategories, err := i.u.GetAllIncome(ctx)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "failed to get all income items")
 	}
-	return c.JSON(http.StatusOK, incomeItems)
+	return c.JSON(http.StatusOK, incomeCategories)
 }
 
 // Post

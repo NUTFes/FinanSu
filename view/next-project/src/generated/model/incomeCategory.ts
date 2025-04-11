@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export interface IncomeItem {
+export interface IncomeCategory {
   id?: number;
   name: string;
 }

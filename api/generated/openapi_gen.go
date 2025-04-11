@@ -235,6 +235,12 @@ type Income struct {
 // IncomeReceiveOption defines model for Income.ReceiveOption.
 type IncomeReceiveOption string
 
+// IncomeCategory defines model for incomeCategory.
+type IncomeCategory struct {
+	Id   *int   `json:"id,omitempty"`
+	Name string `json:"name"`
+}
+
 // IncomeExpenditureManagement defines model for incomeExpenditureManagement.
 type IncomeExpenditureManagement struct {
 	Amount         int     `json:"amount"`
@@ -251,12 +257,6 @@ type IncomeExpenditureManagement struct {
 type IncomeExpenditureManagementDetails struct {
 	IncomeExpenditureManagements []IncomeExpenditureManagement `json:"incomeExpenditureManagements"`
 	Total                        int                           `json:"total"`
-}
-
-// IncomeItem defines model for incomeItem.
-type IncomeItem struct {
-	Id   *int   `json:"id,omitempty"`
-	Name string `json:"name"`
 }
 
 // PasswordResetData defines model for passwordResetData.

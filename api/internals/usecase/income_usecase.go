@@ -17,7 +17,7 @@ type incomeUseCase struct {
 }
 
 type IncomeUseCase interface {
-	GetAllIncome(context.Context) (*[]IncomeItem, error)
+	GetAllIncome(context.Context) (*[]IncomeCategory, error)
 	CreateIncome(context.Context, Income) (*Income, error)
 	GetIncome(context.Context, string) (*Income, error)
 	UpdateIncome(context.Context, string, Income) (*Income, error)
@@ -42,8 +42,8 @@ var (
 	SPONSOR_INCOME_ID = 6
 )
 
-func (uc *incomeUseCase) GetAllIncome(ctx context.Context) (*[]IncomeItem, error) {
-	var incomes []IncomeItem
+func (uc *incomeUseCase) GetAllIncome(ctx context.Context) (*[]IncomeCategory, error) {
+	var incomes []IncomeCategory
 	// 収入の取得
 	rows, err := uc.incomeRepository.All(ctx)
 	if err != nil {
@@ -51,7 +51,7 @@ func (uc *incomeUseCase) GetAllIncome(ctx context.Context) (*[]IncomeItem, error
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var income IncomeItem
+		var income IncomeCategory
 		rows.Scan(
 			&income.Id,
 			&income.Name,
@@ -244,6 +244,6 @@ func (uc *incomeUseCase) DeleteIncome(ctx context.Context, incomeExpenditureMana
 }
 
 type (
-	Income     = generated.Income
-	IncomeItem = generated.IncomeItem
+	Income         = generated.Income
+	IncomeCategory = generated.IncomeCategory
 )
