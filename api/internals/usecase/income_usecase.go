@@ -37,7 +37,8 @@ func NewIncomeUseCase(
 }
 
 var (
-	DEFAULT_CHECKED   = false
+	DEFAULT_CHECKED = false
+	// incomesの企業協賛のid
 	SPONSOR_INCOME_ID = 6
 )
 
