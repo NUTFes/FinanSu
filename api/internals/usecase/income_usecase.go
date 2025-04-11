@@ -108,7 +108,7 @@ func (uc *incomeUseCase) CreateIncome(ctx context.Context, income Income) (*Inco
 	}
 
 	// 企業名が含まれている場合 && incomeIDが企業協賛の場合、企業名登録
-	if income.SponsorName != nil && income.IncomeId == SPONSOR_INCOME_ID {
+	if !isSponsorNameNil && isIncomeSponsor {
 		if err = uc.incomeRepository.CreateSponsorName(ctx, tx, strconv.Itoa(*incomeExpenditureManagementID), *income.SponsorName); err != nil {
 			uc.transactionRepository.RollBack(ctx, tx)
 			return nil, err
@@ -120,6 +120,9 @@ func (uc *incomeUseCase) CreateIncome(ctx context.Context, income Income) (*Inco
 		uc.transactionRepository.RollBack(ctx, tx)
 		return nil, err
 	}
+
+	income.Id = incomeExpenditureManagementID
+
 	return &income, nil
 }
 
@@ -200,10 +203,12 @@ func (uc *incomeUseCase) UpdateIncome(ctx context.Context, incomeExpenditureMana
 		}
 	}
 
+	isNotRegisteredSponsorName := sponsorName == nil
+
 	// 企業名が含まれている場合 && incomeIDが企業協賛の場合、企業名登録
-	if income.SponsorName != nil && income.IncomeId == SPONSOR_INCOME_ID {
+	if !isSponsorNameNil && isIncomeSponsor {
 		// 企業名が登録されていない場合、企業名登録
-		if sponsorName == nil {
+		if isNotRegisteredSponsorName {
 			if err := uc.incomeRepository.CreateSponsorName(ctx, tx, incomeExpenditureManagementID, *income.SponsorName); err != nil {
 				uc.transactionRepository.RollBack(ctx, tx)
 				return nil, err
@@ -215,7 +220,7 @@ func (uc *incomeUseCase) UpdateIncome(ctx context.Context, incomeExpenditureMana
 				return nil, err
 			}
 		}
-	} else if income.SponsorName == nil && income.IncomeId != SPONSOR_INCOME_ID && sponsorName != nil {
+	} else if isSponsorNameNil && isIncomeSponsor && !isNotRegisteredSponsorName {
 		if err := uc.incomeRepository.DeleteSponsorNameByIncomeExpenditureManagementID(ctx, tx, incomeExpenditureManagementID); err != nil {
 			uc.transactionRepository.RollBack(ctx, tx)
 			return nil, err
