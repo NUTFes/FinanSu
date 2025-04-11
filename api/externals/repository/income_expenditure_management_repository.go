@@ -42,10 +42,10 @@ func (ier *incomeExpenditureManagementRepository) All(c context.Context, year st
 }
 
 // checkedの更新
-func (ier *incomeExpenditureManagementRepository) UpdateChecked(c context.Context, id string, isChecked bool) error {
+func (ier *incomeExpenditureManagementRepository) UpdateChecked(c context.Context, incomeExpenditureManagementID string, isChecked bool) error {
 	ds := dialect.Update("income_expenditure_managements").
 		Set(goqu.Record{"is_checked": isChecked}).
-		Where(goqu.Ex{"id": id})
+		Where(goqu.Ex{"id": incomeExpenditureManagementID})
 
 	query, _, err := ds.ToSQL()
 	if err != nil {
