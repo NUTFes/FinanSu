@@ -359,7 +359,7 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 			}
 			return detail, err
 		}
-		if err := row.Scan(&incomeExpenditureManagementId); err != nil {
+		if err = row.Scan(&incomeExpenditureManagementId); err != nil {
 			if err.Error() != "sql: no rows in result set" {
 				if err = bru.tRep.RollBack(c, tx); err != nil {
 					return detail, err
