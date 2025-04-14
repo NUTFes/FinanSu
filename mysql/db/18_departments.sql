@@ -21,4 +21,3 @@ INSERT into departments (name) values ('技術支援');
 INSERT into departments (name) values ('その他');
 INSERT into departments (name) values ('学長・事務');
 INSERT into departments (name) values ('FL');
-
