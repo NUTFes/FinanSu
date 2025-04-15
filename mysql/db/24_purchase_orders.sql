@@ -21,5 +21,5 @@ VALUES
   ('2024-3-28', 1, 3, false, DEFAULT, DEFAULT),
   ('2024-4-6', 1, 4, true, DEFAULT, DEFAULT),
   ('2024-4-6', 1, 5, true, DEFAULT, DEFAULT),
-  ('2023-4-6', 1, 4, true, '2022-11-16 00:00:00', '2022-11-16 00:00:00'),
-  ('2023-4-6', 1, 5, true, '2022-11-16 00:00:00', '2022-11-16 00:00:00');
+  ('2023-4-6', 1, 4, true, DEFAULT, DEFAULT),
+  ('2023-4-6', 1, 5, true, DEFAULT, DEFAULT);
