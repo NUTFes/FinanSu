@@ -5,10 +5,13 @@
  * FinanSu APIドキュメント
  * OpenAPI spec version: 2.0.0
  */
+import type { IncomeReceiveOption } from './incomeReceiveOption';
 
 export interface Income {
   id?: number;
-  name: string;
+  incomeId: number;
+  sponsorName?: string;
   amount: number;
-  year_id: number;
+  yearId: number;
+  receiveOption?: IncomeReceiveOption;
 }

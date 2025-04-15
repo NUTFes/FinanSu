@@ -1694,6 +1694,19 @@ paths:
               schema:
                 type: object
   /incomes:
+    get:
+      tags:
+        - income
+      description: 収支管理で収入の項目を取得（教育振興会費、雑収入など）
+      responses:
+        "200":
+          description: incomeの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/incomeCategory"
     post:
       tags:
         - income
@@ -1753,7 +1766,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/income"
     delete:
       tags:
         - income
@@ -3222,20 +3235,40 @@ components:
       required:
         - name
         - amount
-        - year_id
+        - yearId
+        - incomeId
+      properties:
+        id:
+          type: integer
+          example: 1
+        incomeId:
+          type: integer
+          example: 1
+        sponsorName:
+          type: string
+          example: 企業1
+        amount:
+          type: integer
+          example: 10000
+        yearId:
+          type: integer
+          example: 1
+        receiveOption:
+          type: string
+          enum:
+            - hand
+            - transfer
+    incomeCategory:
+      type: object
+      required:
+        - name
       properties:
         id:
           type: integer
           example: 1
         name:
           type: string
-          example: 収入名
-        amount:
-          type: integer
-          example: 10000
-        year_id:
-          type: integer
-          example: 1
+          example: 教育振興会費
     incomeExpenditureManagement:
       type: object
       required:
@@ -3261,7 +3294,7 @@ components:
         currentBalance:
           type: integer
           example: 100000
-        receive_option:
+        receiveOption:
           type: string
           example: ""
         date:

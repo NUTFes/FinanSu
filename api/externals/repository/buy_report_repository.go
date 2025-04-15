@@ -27,8 +27,10 @@ type BuyReportRepository interface {
 	GetYearByBuyReportId(context.Context, *sql.Tx, string) (*sql.Row, error)
 	AllByPeriod(context.Context, string) (*sql.Rows, error)
 	GetByBuyReportId(context.Context, string) (*sql.Row, error)
-	UpdateBuyReportStatus(context.Context, string, PutBuyReport) error
+	UpdateBuyReportStatus(context.Context, *sql.Tx, string, PutBuyReport) error
 	GetBuyReportWithDivisionIdById(context.Context, string) (*sql.Row, error)
+	GetByReportForCreateIncomeExpenditure(context.Context, *sql.Tx, string) (*sql.Row, error)
+	CreateBuyReportIncomeExpenditureManagement(context.Context, *sql.Tx, string, string) error
 }
 
 func NewBuyReportRepository(c db.Client, ac abstract.Crud) BuyReportRepository {
@@ -251,8 +253,7 @@ func (brr *buyReportRepository) GetByBuyReportId(c context.Context, buyReportId 
 	return brr.crud.ReadByID(c, query)
 }
 
-func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) error {
-
+func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, tx *sql.Tx, buyReportId string, requestBody PutBuyReport) error {
 	updateDs := dialect.Update("buy_statuses").
 		Set(goqu.Record{
 			"is_packed":  requestBody.IsPacked,
@@ -266,13 +267,40 @@ func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, buyRepo
 		return err
 	}
 
-	err = brr.crud.UpdateDB(c, query)
+	return brr.crud.TransactionExec(c, tx, query)
+}
+
+func (brr *buyReportRepository) GetByReportForCreateIncomeExpenditure(c context.Context, tx *sql.Tx, buyReportId string) (*sql.Row, error) {
+	query, _, err := dialect.From("buy_reports").
+		Select("buy_reports.id", "years.id", "buy_reports.amount").
+		InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
+		InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("years.id").Eq(goqu.I("financial_records.year_id")))).
+		Where(goqu.Ex{"buy_reports.id": buyReportId}).ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return brr.crud.TransactionReadByID(c, tx, query)
+}
+
+func (brr *buyReportRepository) CreateBuyReportIncomeExpenditureManagement(
+	c context.Context,
+	tx *sql.Tx,
+	buyReportId, incomeExpenditureManagementId string,
+) error {
+	ds := dialect.Insert("buy_report_income_expenditure_managements").
+		Rows(goqu.Record{
+			"buy_report_id":                    buyReportId,
+			"income_expenditure_management_id": incomeExpenditureManagementId,
+		})
+
+	query, _, err := ds.ToSQL()
 	if err != nil {
 		return err
 	}
-
-	return nil
-
+	err = brr.crud.TransactionExec(c, tx, query)
+	return err
 }
 
 type PostBuyReport = generated.BuyReport

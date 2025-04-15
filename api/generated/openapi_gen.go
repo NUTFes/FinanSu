@@ -19,6 +19,12 @@ const (
 	N2    BuyReportInformationStatus = "清算完了"
 )
 
+// Defines values for IncomeReceiveOption.
+const (
+	Hand     IncomeReceiveOption = "hand"
+	Transfer IncomeReceiveOption = "transfer"
+)
+
 // Defines values for GetActivitiesFilteredDetailsParamsIsDone.
 const (
 	GetActivitiesFilteredDetailsParamsIsDoneAll   GetActivitiesFilteredDetailsParamsIsDone = "all"
@@ -218,10 +224,21 @@ type FinancialRecordWithBalance struct {
 
 // Income defines model for income.
 type Income struct {
-	Amount int    `json:"amount"`
-	Id     *int   `json:"id,omitempty"`
-	Name   string `json:"name"`
-	YearId int    `json:"year_id"`
+	Amount        int                  `json:"amount"`
+	Id            *int                 `json:"id,omitempty"`
+	IncomeId      int                  `json:"incomeId"`
+	ReceiveOption *IncomeReceiveOption `json:"receiveOption,omitempty"`
+	SponsorName   *string              `json:"sponsorName,omitempty"`
+	YearId        int                  `json:"yearId"`
+}
+
+// IncomeReceiveOption defines model for Income.ReceiveOption.
+type IncomeReceiveOption string
+
+// IncomeCategory defines model for incomeCategory.
+type IncomeCategory struct {
+	Id   *int   `json:"id,omitempty"`
+	Name string `json:"name"`
 }
 
 // IncomeExpenditureManagement defines model for incomeExpenditureManagement.
@@ -233,7 +250,7 @@ type IncomeExpenditureManagement struct {
 	Detail         *string `json:"detail,omitempty"`
 	Id             int     `json:"id"`
 	IsChecked      bool    `json:"isChecked"`
-	ReceiveOption  *string `json:"receive_option,omitempty"`
+	ReceiveOption  *string `json:"receiveOption,omitempty"`
 }
 
 // IncomeExpenditureManagementDetails defines model for incomeExpenditureManagementDetails.
@@ -969,6 +986,9 @@ type ServerInterface interface {
 
 	// (PUT /income_expenditure_managements/check/{id})
 	PutIncomeExpenditureManagementsCheckId(ctx echo.Context, id int) error
+
+	// (GET /incomes)
+	GetIncomes(ctx echo.Context) error
 
 	// (POST /incomes)
 	PostIncomes(ctx echo.Context) error
@@ -2568,6 +2588,15 @@ func (w *ServerInterfaceWrapper) PutIncomeExpenditureManagementsCheckId(ctx echo
 	return err
 }
 
+// GetIncomes converts echo context to params.
+func (w *ServerInterfaceWrapper) GetIncomes(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetIncomes(ctx)
+	return err
+}
+
 // PostIncomes converts echo context to params.
 func (w *ServerInterfaceWrapper) PostIncomes(ctx echo.Context) error {
 	var err error
@@ -3550,6 +3579,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/fund_informations/:id/details", wrapper.GetFundInformationsIdDetails)
 	router.GET(baseURL+"/income_expenditure_managements", wrapper.GetIncomeExpenditureManagements)
 	router.PUT(baseURL+"/income_expenditure_managements/check/:id", wrapper.PutIncomeExpenditureManagementsCheckId)
+	router.GET(baseURL+"/incomes", wrapper.GetIncomes)
 	router.POST(baseURL+"/incomes", wrapper.PostIncomes)
 	router.DELETE(baseURL+"/incomes/:id", wrapper.DeleteIncomesId)
 	router.GET(baseURL+"/incomes/:id", wrapper.GetIncomesId)

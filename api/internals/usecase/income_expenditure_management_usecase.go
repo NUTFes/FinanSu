@@ -115,7 +115,7 @@ func addIncomeExpenditureManagementsCurrentBalance(
 type (
 	IncomeExpenditureManagementDetails = generated.IncomeExpenditureManagementDetails
 	IncomeExpenditureManagement        = generated.IncomeExpenditureManagement
-	IncomeExpenditureManagementColumn  = domain.IncomeExpenditureManagementColumn
+	IncomeExpenditureManagementColumn  = domain.IncomeExpenditureManagementDetailColumn
 )
 
 const (

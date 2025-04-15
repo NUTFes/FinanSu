@@ -12,7 +12,7 @@ export interface IncomeExpenditureManagement {
   detail?: string;
   amount: number;
   currentBalance: number;
-  receive_option?: string;
+  receiveOption?: string;
   date: string;
   isChecked: boolean;
 }

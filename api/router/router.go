@@ -19,6 +19,7 @@ type router struct {
 	divisionController                    controller.DivisionController
 	fundInformationController             controller.FundInformationController
 	healthcheckController                 controller.HealthcheckController
+	incomeController                      controller.IncomeController
 	incomeExpenditureManagementController controller.IncomeExpenditureManagementController
 	mailAuthController                    controller.MailAuthController
 	objectUploadController                controller.ObjectUploadController
@@ -53,6 +54,7 @@ func NewRouter(
 	financialRecordController controller.FinancialRecordController,
 	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
+	incomeController controller.IncomeController,
 	incomeExpenditureManagementController controller.IncomeExpenditureManagementController,
 	mailAuthController controller.MailAuthController,
 	objectUploadController controller.ObjectUploadController,
@@ -82,6 +84,7 @@ func NewRouter(
 		divisionController,
 		fundInformationController,
 		healthController,
+		incomeController,
 		incomeExpenditureManagementController,
 		mailAuthController,
 		objectUploadController,
@@ -222,6 +225,14 @@ func (r router) ProvideRouter(e *echo.Echo) {
 		r.fundInformationController.IndexFundInformationDetailsByPeriod,
 	)
 
+	// incomes
+	e.GET("/incomes", r.incomeController.IndexIncome)
+	e.POST("/incomes", r.incomeController.PostIncome)
+	e.GET("/incomes/:id", r.incomeController.GetIncome)
+	e.PUT("/incomes/:id", r.incomeController.PutIncome)
+	e.DELETE("/incomes/:id", r.incomeController.DeleteIncome)
+
+	// income_expenditure_managements
 	e.GET("income_expenditure_managements", r.incomeExpenditureManagementController.IndexIncomeExpenditureManagements)
 	e.PUT("/income_expenditure_managements/check/:id", r.incomeExpenditureManagementController.PutIncomeExpenditureManagementCheck)
 
