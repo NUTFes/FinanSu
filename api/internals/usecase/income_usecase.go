@@ -62,15 +62,7 @@ func (uc *incomeUseCase) GetAllIncome(ctx context.Context) (*[]IncomeCategory, e
 }
 
 func (uc *incomeUseCase) CreateIncome(ctx context.Context, income Income) (*Income, error) {
-	// INCOME_IDが企業協賛
-	isIncomeSponsor := income.IncomeId == SPONSOR_INCOME_ID
-	// 企業名が含まれている
-	isSponsorNameNil := income.SponsorName == nil
-	// INCOME_IDが企業協賛で企業名が含まれていない場合
-	incomeIsSponsorAndNotHasSponsorName := isIncomeSponsor && isSponsorNameNil
-	// 企業名が含まれていても、incomeIDが企業協賛でない場合エラーにする
-	incomeIsNotSponsorAndHasSponsorName := !isIncomeSponsor && !isSponsorNameNil
-	if incomeIsSponsorAndNotHasSponsorName || incomeIsNotSponsorAndHasSponsorName {
+	if isNotValidSponsorData(income.IncomeId, income.SponsorName) {
 		return nil, fmt.Errorf("企業協賛収入の登録が不正です。項目で企業協賛を選択し、企業名を登録してください。")
 	}
 
@@ -108,7 +100,7 @@ func (uc *incomeUseCase) CreateIncome(ctx context.Context, income Income) (*Inco
 	}
 
 	// 企業名が含まれている場合 && incomeIDが企業協賛の場合、企業名登録
-	if !isSponsorNameNil && isIncomeSponsor {
+	if !isSponsorNameNil(income.SponsorName) && isIncomeSponsor(income.IncomeId) {
 		if err = uc.incomeRepository.CreateSponsorName(ctx, tx, strconv.Itoa(*incomeExpenditureManagementID), *income.SponsorName); err != nil {
 			uc.transactionRepository.RollBack(ctx, tx)
 			return nil, err
@@ -146,15 +138,7 @@ func (uc *incomeUseCase) GetIncome(ctx context.Context, incomeExpenditureManagem
 }
 
 func (uc *incomeUseCase) UpdateIncome(ctx context.Context, incomeExpenditureManagementID string, income Income) (*Income, error) {
-	// INCOME_IDが企業協賛
-	isIncomeSponsor := income.IncomeId == SPONSOR_INCOME_ID
-	// 企業名が含まれている
-	isSponsorNameNil := income.SponsorName == nil
-	// INCOME_IDが企業協賛で企業名が含まれていない場合
-	incomeIsSponsorAndNotHasSponsorName := isIncomeSponsor && isSponsorNameNil
-	// 企業名が含まれていても、incomeIDが企業協賛でない場合エラーにする
-	incomeIsNotSponsorAndHasSponsorName := !isIncomeSponsor && !isSponsorNameNil
-	if incomeIsSponsorAndNotHasSponsorName || incomeIsNotSponsorAndHasSponsorName {
+	if isNotValidSponsorData(income.IncomeId, income.SponsorName) {
 		return nil, fmt.Errorf("企業協賛収入の登録が不正です。項目で企業協賛を選択し、企業名を登録してください。")
 	}
 	// トランザクション開始
@@ -205,6 +189,9 @@ func (uc *incomeUseCase) UpdateIncome(ctx context.Context, incomeExpenditureMana
 
 	isNotRegisteredSponsorName := sponsorName == nil
 
+	isSponsorNameNil := isSponsorNameNil(income.SponsorName)
+	isIncomeSponsor := isIncomeSponsor(income.IncomeId)
+
 	// 企業名が含まれている場合 && incomeIDが企業協賛の場合、企業名登録
 	if !isSponsorNameNil && isIncomeSponsor {
 		// 企業名が登録されていない場合、企業名登録
@@ -247,3 +234,24 @@ type (
 	Income         = generated.Income
 	IncomeCategory = generated.IncomeCategory
 )
+
+func isIncomeSponsor(incomeId int) bool {
+	return incomeId == SPONSOR_INCOME_ID
+}
+
+func isSponsorNameNil(incomeSponsorName *string) bool {
+	return incomeSponsorName == nil
+}
+
+func isNotValidSponsorData(incomeId int, incomeSponsorName *string) bool {
+	isIncomeSponsor := isIncomeSponsor(incomeId)
+	isSponsorNameNil := isSponsorNameNil(incomeSponsorName)
+	// INCOME_IDが企業協賛で企業名が含まれていない場合
+	incomeIsSponsorAndNotHasSponsorName := isIncomeSponsor && isSponsorNameNil
+	// 企業名が含まれていても、incomeIDが企業協賛でない場合エラーにする
+	incomeIsNotSponsorAndHasSponsorName := !isIncomeSponsor && !isSponsorNameNil
+	if incomeIsSponsorAndNotHasSponsorName || incomeIsNotSponsorAndHasSponsorName {
+		return true
+	}
+	return false
+}
