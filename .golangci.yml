@@ -1,16 +1,16 @@
+version: "2"
+
 linters-settings:
-  golint:
-    min-confidence: 0.8
+  unused:
+    check-struct: true
+    check-variables: true
+  revive:
+    severity: warning
 
 linters:
   enable:
-    - golint
-    - errcheck
-    - staticcheck
-    - gosimple
     - unused
-    - structcheck
-    - varcheck
+    - revive
 
 run:
   timeout: 5m
