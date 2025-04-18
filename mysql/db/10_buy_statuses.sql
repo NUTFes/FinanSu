@@ -1,13 +1,11 @@
 USE finansu_db;
 
 CREATE TABLE
-    payment_receipts (
+    buy_statuses (
         id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         buy_report_id INT(10) UNSIGNED NOT NULL,
-        bucket_name VARCHAR(255) NOT NULL,
-        file_name VARCHAR(255) NOT NULL,
-        file_type VARCHAR(255) NOT NULL,
-        remark VARCHAR(255),
+        is_packed BOOLEAN NOT NULL DEFAULT FALSE,
+        is_settled BOOLEAN NOT NULL DEFAULT FALSE,
         created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
@@ -15,8 +13,12 @@ CREATE TABLE
     );
 
 INSERT INTO
-    payment_receipts (buy_report_id, bucket_name, file_name, file_type, remark)
+    buy_statuses (buy_report_id, is_packed, is_settled)
 VALUES
-    (1, 'payment-receipts', 'receipt-1.jpg', 'image/jpeg', ''),
-    (2, 'payment-receipts', 'receipt-2.jpg', 'image/jpeg', ''),
-    (3, 'payment-receipts', 'receipt-3.jpg', 'image/jpeg', '');
+    (1, TRUE, TRUE),
+    (2, TRUE, FALSE),
+    (3, TRUE, FALSE),
+    (4, FALSE, FALSE),
+    (5, FALSE, FALSE),
+    (6, TRUE, FALSE),
+    (7, FALSE, FALSE);
