@@ -1,41 +1,41 @@
 import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+import DeleteConfirmModal from './modals/DeleteModal';
+import UncheckConfirmModal from './modals/UncheckConfirmModal';
+import { IncomeExpenditureManagement } from '@/generated/model/incomeExpenditureManagement';
 import { Checkbox, DeleteButton, EditButton } from '@components/common';
-import { FundInformation } from '@pages/fund_informations/index';
 
 interface FundInformationTableProps {
-  fundInformations: FundInformation[];
+  fundInformations: IncomeExpenditureManagement[];
   onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
-  onCheckChange?: (id: number, checked: boolean) => void;
+  onCheckChange?: (id: number, checked: boolean) => Promise<void> | void;
 }
 
 const TableHeader = () => (
   <thead>
     <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>日付</div>
       </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-left text-sm font-normal text-black-600'>
           局名 <br /> or 収入内容
         </div>
       </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-left text-sm font-normal text-black-600'>
           購入物品 <br /> or 会社名
         </div>
       </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>金額</div>
       </th>
-      <th className='w-1/8 pb-2'>
-        <div className='text-center text-sm font-normal text-black-600'>立替者</div>
-      </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>残高</div>
       </th>
-      <th className='w-1/12 pb-2'></th>
-      <th className='w-1/12 pb-2'>
+      <th className='w-[10%] pb-2'></th>
+      <th className='w-[5%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>確認</div>
       </th>
     </tr>
@@ -44,6 +44,20 @@ const TableHeader = () => (
 
 const getAmountColor = (amount: number) => (amount < 0 ? '#B91C1C' : '#0891B2');
 
+// 日付フォーマットを変換する関数
+const formatDate = (dateString: string) => {
+  if (!dateString) return '';
+  try {
+    const parts = dateString.split('-');
+    if (parts.length >= 3) {
+      return `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+    }
+    return dateString;
+  } catch {
+    return dateString;
+  }
+};
+
 const FundInformationRow = ({
   fundItem,
   isLastItem,
@@ -51,56 +65,132 @@ const FundInformationRow = ({
   onDelete,
   onCheckChange,
 }: {
-  fundItem: FundInformation;
+  fundItem: IncomeExpenditureManagement;
   isLastItem: boolean;
   onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
-  onCheckChange?: (id: number, checked: boolean) => void;
+  onCheckChange?: (id: number, checked: boolean) => Promise<void> | void;
 }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showUncheckModal, setShowUncheckModal] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+  const [localIsChecked, setLocalIsChecked] = useState(fundItem.isChecked);
+
+  useEffect(() => {
+    if (!isChecking) {
+      setLocalIsChecked(fundItem.isChecked);
+    }
+  }, [fundItem.isChecked, isChecking]);
+
   const handleEdit = () => onEdit?.(fundItem.id);
-  const handleDelete = () => onDelete?.(fundItem.id);
-  const handleCheckChange = () => onCheckChange?.(fundItem.id, !fundItem.isChecked);
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = (id: number) => {
+    onDelete?.(id);
+  };
+
+  const handleCheckChange = () => {
+    if (localIsChecked) {
+      setShowUncheckModal(true);
+    } else {
+      setIsChecking(true);
+      setLocalIsChecked(true);
+      const result = onCheckChange?.(fundItem.id, true);
+      if (result && typeof result.then === 'function') {
+        result
+          .then(() => {
+            setIsChecking(false);
+          })
+          .catch(() => {
+            setIsChecking(false);
+          });
+      } else {
+        setIsChecking(false);
+      }
+    }
+  };
+
+  const handleUncheckConfirm = (id: number) => {
+    setIsChecking(true);
+    setLocalIsChecked(false);
+    const result = onCheckChange?.(id, false);
+    if (result && typeof result.then === 'function') {
+      result
+        .then(() => {
+          setIsChecking(false);
+          setShowUncheckModal(false);
+        })
+        .catch(() => {
+          setIsChecking(false);
+          setShowUncheckModal(false);
+        });
+    } else {
+      setIsChecking(false);
+      setShowUncheckModal(false);
+    }
+  };
 
   return (
-    <tr className={clsx(!isLastItem && 'border-b')}>
-      <td className='py-3'>
-        <div className='text-center text-sm text-black-600'>{fundItem.date}</div>
-      </td>
-      <td>
-        <div className='text-left text-sm text-black-600'>{fundItem.description}</div>
-      </td>
-      <td>
-        <div className='text-left text-sm text-black-600'>{fundItem.item}</div>
-      </td>
-      <td>
-        <div className='text-center text-sm' style={{ color: getAmountColor(fundItem.amount) }}>
-          {fundItem.amount.toLocaleString()}
-        </div>
-      </td>
-      <td>
-        <div className='text-center text-sm text-black-600'>{fundItem.user}</div>
-      </td>
-      <td>
-        <div className='text-center text-sm text-black-600'>
-          {fundItem.balance.toLocaleString()}
-        </div>
-      </td>
-      <td>
-        <div className='flex justify-center gap-2'>
-          <EditButton onClick={handleEdit} />
-          <DeleteButton onClick={handleDelete} />
-        </div>
-      </td>
-      <td>
-        <div className='flex justify-center'>
-          <Checkbox
-            checked={fundItem.isChecked}
-            onChange={handleCheckChange}
-            className='accent-primary-5'
-          />
-        </div>
-      </td>
-    </tr>
+    <>
+      <tr className={clsx(!isLastItem && 'border-b')}>
+        <td className='py-3'>
+          <div className='text-center text-sm text-black-600'>{formatDate(fundItem.date)}</div>
+        </td>
+        <td>
+          <div className='text-left text-sm text-black-600'>{fundItem.content.split(' ')[0]}</div>
+        </td>
+        <td>
+          <div className='text-left text-sm text-black-600'>
+            {fundItem.content.split(' ').slice(1).join(' ') || fundItem.detail || ''}
+          </div>
+        </td>
+        <td>
+          <div className='text-center text-sm' style={{ color: getAmountColor(fundItem.amount) }}>
+            {fundItem.amount.toLocaleString()}
+          </div>
+        </td>
+        <td>
+          <div className='text-center text-sm text-black-600'>
+            {fundItem.currentBalance.toLocaleString()}
+          </div>
+        </td>
+        <td>
+          <div className='flex justify-center gap-2'>
+            <EditButton onClick={handleEdit} />
+            <DeleteButton onClick={handleDeleteClick} />
+          </div>
+        </td>
+        <td>
+          <div className='flex justify-center'>
+            <Checkbox
+              checked={localIsChecked}
+              onChange={handleCheckChange}
+              className='accent-primary-5'
+              disabled={isChecking}
+            />
+          </div>
+        </td>
+      </tr>
+
+      {showDeleteModal && (
+        <DeleteConfirmModal
+          setShowModal={setShowDeleteModal}
+          id={fundItem.id}
+          onConfirm={handleDeleteConfirm}
+        />
+      )}
+
+      {showUncheckModal && (
+        <UncheckConfirmModal
+          setShowModal={setShowUncheckModal}
+          id={fundItem.id}
+          onConfirm={handleUncheckConfirm}
+        />
+      )}
+    </>
   );
 };
 
