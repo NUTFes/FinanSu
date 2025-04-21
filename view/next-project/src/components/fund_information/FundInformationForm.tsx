@@ -127,7 +127,10 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
   // フォームの検証
   useEffect(() => {
     if (formData.amount <= 0) {
-      setFormErrors((prev) => ({ ...prev, amountError: '金額は0より大きい数値を入力してください' }));
+      setFormErrors((prev) => ({
+        ...prev,
+        amountError: '金額は0より大きい数値を入力してください',
+      }));
     } else {
       setFormErrors((prev) => ({ ...prev, amountError: '' }));
     }

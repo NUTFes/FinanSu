@@ -172,7 +172,10 @@ const EditFundInformation = () => {
   useEffect(() => {
     // 金額の検証
     if (incomeReport.amount <= 0) {
-      setFormErrors((prev) => ({ ...prev, amountError: '金額は0より大きい数値を入力してください' }));
+      setFormErrors((prev) => ({
+        ...prev,
+        amountError: '金額は0より大きい数値を入力してください',
+      }));
     } else {
       setFormErrors((prev) => ({ ...prev, amountError: '' }));
     }
@@ -217,7 +220,7 @@ const EditFundInformation = () => {
   if (isLoading) {
     return (
       <MainLayout>
-        <Box className="flex h-[calc(100vh-4rem)] items-center justify-center">
+        <Box className='flex h-[calc(100vh-4rem)] items-center justify-center'>
           <Center>
             <Spinner size='xl' />
             <p className='ml-3'>データを読み込み中...</p>
@@ -230,7 +233,7 @@ const EditFundInformation = () => {
   if (hookError) {
     return (
       <MainLayout>
-        <Box className="flex h-[calc(100vh-4rem)] items-center justify-center">
+        <Box className='flex h-[calc(100vh-4rem)] items-center justify-center'>
           <Center>
             <p className='text-red-500'>
               収入データの取得中にエラーが発生しました。ページを更新してください。
@@ -246,7 +249,7 @@ const EditFundInformation = () => {
       <Box
         className={`flex h-[calc(100vh-4rem)] items-center justify-center ${notoSansJP.className}`}
       >
-        <Box className="w-full min-w-[300px] max-w-[60%] px-4 py-8 sm:px-6 lg:px-8">
+        <Box className='w-full min-w-[300px] max-w-[60%] px-4 py-8 sm:px-6 lg:px-8'>
           <Title className='mb-6 text-center' title='収入データ修正' />
 
           <form className='space-y-6'>
