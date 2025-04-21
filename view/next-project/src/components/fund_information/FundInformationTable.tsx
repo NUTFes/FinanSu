@@ -92,7 +92,7 @@ const FundInformationRow = ({
     onDelete?.(id);
   };
 
-  const handleCheckBoxChange = () => {
+  const handleCheckBoxClick = () => {
     if (localIsChecked) {
       setShowUncheckModal(true);
     } else {
@@ -167,7 +167,7 @@ const FundInformationRow = ({
           <div className='flex justify-center'>
             <Checkbox
               checked={localIsChecked}
-              onChange={handleCheckBoxChange}
+              onChange={handleCheckBoxClick}
               className='accent-primary-5'
               disabled={isChecking}
             />
