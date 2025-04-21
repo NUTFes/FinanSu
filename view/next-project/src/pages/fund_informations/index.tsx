@@ -135,7 +135,7 @@ const FundInformationHeader = ({ totalBalance }: { totalBalance: number }) => (
   <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
     <Title title={'収支管理'} />
     <Title className='gap-0 text-xl'>
-        残高<span className='ml-1'>{totalBalance.toLocaleString()}</span>
+      残高<span className='ml-1'>{totalBalance.toLocaleString()}</span>
     </Title>
     <OpenAddModalButton teachers={[]} departments={[]} users={[]} currentYear={''}>
       収入報告
