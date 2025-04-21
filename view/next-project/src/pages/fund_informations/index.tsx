@@ -12,7 +12,7 @@ export default function FundInformations() {
     totalBalance,
     handleEdit,
     handleDelete,
-    handleCheckChange,
+    handleCheckBoxChange,
   } = useFundInformations();
 
   return (
@@ -37,7 +37,7 @@ export default function FundInformations() {
                 fundInformations={fundInformations}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
-                onCheckChange={handleCheckChange}
+                onCheckChange={handleCheckBoxChange}
               />
             )}
           </div>

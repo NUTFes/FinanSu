@@ -156,7 +156,7 @@ export function useFundInformations(id?: number) {
   );
 
   // チェック状態の更新
-  const handleCheckChange = useCallback(
+  const handleCheckBoxChange = useCallback(
     async (id: number, checked: boolean): Promise<void> => {
       try {
         setIsProcessing(true);
@@ -268,7 +268,7 @@ export function useFundInformations(id?: number) {
     totalBalance,
     handleEdit,
     handleDelete,
-    handleCheckChange,
+    handleCheckBoxChange,
     createFundInformation,
     updateFundInformation,
     currentYearId,
