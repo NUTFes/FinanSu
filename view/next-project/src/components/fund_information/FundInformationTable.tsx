@@ -12,30 +12,27 @@ interface FundInformationTableProps {
 const TableHeader = () => (
   <thead>
     <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>日付</div>
       </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-left text-sm font-normal text-black-600'>
           局名 <br /> or 収入内容
         </div>
       </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-left text-sm font-normal text-black-600'>
           購入物品 <br /> or 会社名
         </div>
       </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>金額</div>
       </th>
-      <th className='w-1/8 pb-2'>
-        <div className='text-center text-sm font-normal text-black-600'>立替者</div>
-      </th>
-      <th className='w-1/8 pb-2'>
+      <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>残高</div>
       </th>
-      <th className='w-1/12 pb-2'></th>
-      <th className='w-1/12 pb-2'>
+      <th className='w-[10%] pb-2'></th>
+      <th className='w-[5%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>確認</div>
       </th>
     </tr>
@@ -76,9 +73,6 @@ const FundInformationRow = ({
         <div className='text-center text-sm' style={{ color: getAmountColor(fundItem.amount) }}>
           {fundItem.amount.toLocaleString()}
         </div>
-      </td>
-      <td>
-        <div className='text-center text-sm text-black-600'>{fundItem.user}</div>
       </td>
       <td>
         <div className='text-center text-sm text-black-600'>
