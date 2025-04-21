@@ -56,7 +56,7 @@ const FundInformationRow = ({
 }) => {
   const handleEdit = () => onEdit?.(fundItem.id);
   const handleDelete = () => onDelete?.(fundItem.id);
-  const handleCheckChange = () => onCheckChange?.(fundItem.id, !fundItem.isChecked);
+  const handleCheckBoxClick = () => onCheckChange?.(fundItem.id, !fundItem.isChecked);
 
   return (
     <tr className={clsx(!isLastItem && 'border-b')}>
@@ -89,7 +89,7 @@ const FundInformationRow = ({
         <div className='flex justify-center'>
           <Checkbox
             checked={fundItem.isChecked}
-            onChange={handleCheckChange}
+            onChange={handleCheckBoxClick}
             className='accent-primary-5'
           />
         </div>

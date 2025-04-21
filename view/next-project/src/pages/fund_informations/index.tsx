@@ -115,7 +115,7 @@ function useFundInformations() {
     // あとで削除処理をここに実装
   }, []);
 
-  const handleCheckChange = useCallback((id: number, checked: boolean) => {
+  const handleCheckBoxClick = useCallback((id: number, checked: boolean) => {
     setFundInformations((prev) =>
       prev.map((item) => (item.id === id ? { ...item, isChecked: checked } : item)),
     );
@@ -127,7 +127,7 @@ function useFundInformations() {
     totalBalance,
     handleEdit,
     handleDelete,
-    handleCheckChange,
+    handleCheckBoxClick,
   };
 }
 
@@ -142,7 +142,7 @@ const FundInformationHeader = ({ totalBalance }: { totalBalance: number }) => (
 );
 
 export default function FundInformations() {
-  const { fundInformations, totalBalance, handleEdit, handleDelete, handleCheckChange } =
+  const { fundInformations, totalBalance, handleEdit, handleDelete, handleCheckBoxClick } =
     useFundInformations();
 
   return (
@@ -162,7 +162,7 @@ export default function FundInformations() {
               fundInformations={fundInformations}
               onEdit={handleEdit}
               onDelete={handleDelete}
-              onCheckChange={handleCheckChange}
+              onCheckChange={handleCheckBoxClick}
             />
           </div>
         </div>
