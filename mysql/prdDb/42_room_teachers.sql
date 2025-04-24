@@ -11,8 +11,3 @@ CREATE TABLE
     FOREIGN KEY (room_id) REFERENCES rooms (id) ON DELETE CASCADE,
     FOREIGN KEY (teacher_id) REFERENCES teachers (id) ON DELETE CASCADE
   );
-
--- INSERT INTO
---   room_teachers (room_id, teacher_id)
--- VALUES
---   (1, 1)
