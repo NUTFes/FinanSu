@@ -2,9 +2,9 @@ USE finansu_db;
 
 CREATE TABLE
     user_groups (
-        id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-        user_id INT(10) UNSIGNED NOT NULL,
-        group_id INT(10) UNSIGNED NOT NULL,
+        id INT (10) UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id INT (10) UNSIGNED NOT NULL,
+        group_id INT (10) UNSIGNED NOT NULL,
         created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
@@ -15,4 +15,5 @@ CREATE TABLE
 INSERT INTO
     user_groups (user_id, group_id)
 VALUES
-    (1, 1);
+    (119, 6),
+    (119, 33);
