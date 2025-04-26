@@ -159,8 +159,8 @@ const FundInformationRow = ({
         </td>
         <td>
           <div className='flex justify-center gap-2'>
-            <EditButton onClick={handleEdit} />
-            <DeleteButton onClick={handleDeleteClick} />
+            <EditButton onClick={handleEdit} isDisabled={localIsChecked} />
+            <DeleteButton onClick={handleDeleteClick} isDisabled={localIsChecked} />
           </div>
         </td>
         <td>
