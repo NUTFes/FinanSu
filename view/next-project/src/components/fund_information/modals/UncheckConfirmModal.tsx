@@ -3,7 +3,6 @@ import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@compon
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  children?: React.ReactNode;
   id: number;
   onConfirm: (id: number) => void;
 }
