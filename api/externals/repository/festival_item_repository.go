@@ -342,4 +342,4 @@ var selectFestivalItemForMypageQuery = dialect.From("festival_items").
 	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
 	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
 	LeftJoin(goqu.I("buy_statuses"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("buy_statuses.buy_report_id")))).
-	Order(goqu.I("festival_items.id").Desc())
+	Order(goqu.I("financial_records.id").Asc())

@@ -248,4 +248,4 @@ var selectDivisionOptionsQuery = dialect.From("divisions").
 		goqu.I("users"),
 		goqu.On(goqu.I("users.id").Eq(goqu.I("user_groups.user_id"))),
 	).
-	Order(goqu.I("divisions.id").Desc())
+	Order(goqu.I("divisions.id").Asc())
