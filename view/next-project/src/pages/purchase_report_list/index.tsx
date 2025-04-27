@@ -2,6 +2,7 @@ import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { TbDownload } from 'react-icons/tb';
+import { useRecoilValue } from 'recoil';
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
@@ -14,6 +15,7 @@ import type {
   BuyReportDetail,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
+import { userAtom } from '@/store/atoms';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -26,6 +28,9 @@ export default function PurchaseReports() {
     error: yearPeriodsError,
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
+  const user = useRecoilValue(userAtom);
+
+  user?.id !== 3 && router.push('/my_page');
 
   useEffect(() => {
     if (yearPeriods && yearPeriods.length > 0) {
@@ -106,7 +111,8 @@ export default function PurchaseReports() {
   }, []);
 
   const download = async (url: string, fileName: string) => {
-    const response = await fetch(url);
+    const downloadPath = `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/finansu/${url}`;
+    const response = await fetch(downloadPath);
     const blob = await response.blob();
     saveAs(blob, fileName);
   };

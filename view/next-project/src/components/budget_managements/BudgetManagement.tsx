@@ -42,7 +42,8 @@ export default function BudgetManagement(props: Props) {
   };
 
   const [selectedYear, setSelectedYear] = useState<Year>(
-    years ? years[years.length - 1] : { id: 3, year: 2025 },
+    // 本番環境では、2025のyear_idを1にします
+    years ? years[years.length - 1] : { id: 1, year: 2025 },
   );
 
   const {
