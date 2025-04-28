@@ -1,5 +1,8 @@
+import router from 'next/router';
+import { useRecoilValue } from 'recoil';
 import BudgetManagement from '@/components/budget_managements/BudgetManagement';
 import MainLayout from '@/components/layout/MainLayout';
+import { userAtom } from '@/store/atoms';
 import { Year } from '@/type/common';
 import { get } from '@/utils/api/api_methods';
 
@@ -18,6 +21,8 @@ export async function getServerSideProps() {
 }
 
 export default function Home(props: Props) {
+  const user = useRecoilValue(userAtom);
+  user?.roleID !== 3 && router.push('/my_page');
   return (
     <MainLayout>
       <BudgetManagement years={props.years} />
