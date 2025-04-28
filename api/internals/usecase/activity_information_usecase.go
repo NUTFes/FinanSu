@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -34,7 +35,12 @@ func (a *activityInformationUseCase) GetActivityInformation(c context.Context) (
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -62,6 +68,9 @@ func (a *activityInformationUseCase) GetActivityInformationByID(c context.Contex
 	var activityInformation domain.ActivityInformation
 
 	row, err := a.rep.Find(c, id)
+	if err != nil {
+		return activityInformation, err
+	}
 	err = row.Scan(
 		&activityInformation.ID,
 		&activityInformation.ActivityId,
@@ -73,7 +82,6 @@ func (a *activityInformationUseCase) GetActivityInformationByID(c context.Contex
 		&activityInformation.CreatedAt,
 		&activityInformation.UpdatedAt,
 	)
-
 	if err != nil {
 		return activityInformation, err
 	}
@@ -92,7 +100,13 @@ func (a *activityInformationUseCase) CreateActivityInformation(
 	latastActivityInformation := domain.ActivityInformation{}
 
 	err := a.rep.Create(c, activityId, bucketName, fileName, fileType, designProgress, fileInformation)
+	if err != nil {
+		return latastActivityInformation, err
+	}
 	row, err := a.rep.FindLatestRecord(c)
+	if err != nil {
+		return latastActivityInformation, err
+	}
 	err = row.Scan(
 		&latastActivityInformation.ID,
 		&latastActivityInformation.ActivityId,
@@ -122,7 +136,13 @@ func (a *activityInformationUseCase) UpdateActivityInformation(
 	fileInformation string) (domain.ActivityInformation, error) {
 	updatedActivityInformation := domain.ActivityInformation{}
 	err := a.rep.Update(c, id, activityId, bucketName, fileName, fileType, designProgress, fileInformation)
+	if err != nil {
+		return updatedActivityInformation, err
+	}
 	row, err := a.rep.Find(c, id)
+	if err != nil {
+		return updatedActivityInformation, err
+	}
 	err = row.Scan(
 		&updatedActivityInformation.ID,
 		&updatedActivityInformation.ActivityId,
@@ -133,7 +153,6 @@ func (a *activityInformationUseCase) UpdateActivityInformation(
 		&updatedActivityInformation.FileInformation,
 		&updatedActivityInformation.CreatedAt,
 		&updatedActivityInformation.UpdatedAt,
-
 	)
 	if err != nil {
 		return updatedActivityInformation, err
@@ -145,4 +164,3 @@ func (a *activityInformationUseCase) DestroyActivityInformation(c context.Contex
 	err := a.rep.Destroy(c, id)
 	return err
 }
-

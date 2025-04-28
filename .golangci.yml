@@ -1,2 +1,16 @@
-issues:
-  exclude-use-default: false
+version: "2"
+
+linters-settings:
+  unused:
+    check-struct: true
+    check-variables: true
+  revive:
+    severity: warning
+
+linters:
+  enable:
+    - unused
+    - revive
+
+run:
+  timeout: 5m

@@ -1,0 +1,10 @@
+tunnel: 824a08c1-0471-4604-9464-4b1cdcead718
+credentials-file: /home/nonroot/.cloudflared/824a08c1-0471-4604-9464-4b1cdcead718.json
+protocol: http2
+
+ingress:
+  - hostname: stg-finansu.nutfes.net
+    service: http://view:3000
+  - hostname: stg-finansu-api.nutfes.net
+    service: http://api:1323
+  - service: http_status:404

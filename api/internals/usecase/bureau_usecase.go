@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -33,7 +34,12 @@ func (b *bureauUseCase) GetBureaus(c context.Context) ([]domain.Bureau, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		err := rows.Scan(
 			&bureau.ID,
@@ -53,6 +59,10 @@ func (b *bureauUseCase) GetBureaus(c context.Context) ([]domain.Bureau, error) {
 func (b *bureauUseCase) GetBureauByID(c context.Context, id string) (domain.Bureau, error) {
 	var bureau domain.Bureau
 	row, err := b.rep.Find(c, id)
+	if err != nil {
+		return bureau, err
+	}
+
 	err = row.Scan(
 		&bureau.ID,
 		&bureau.Name,
@@ -66,25 +76,39 @@ func (b *bureauUseCase) GetBureauByID(c context.Context, id string) (domain.Bure
 }
 
 func (b *bureauUseCase) CreateBureau(c context.Context, name string) (domain.Bureau, error) {
-	latastBureau := domain.Bureau{}
-	err := b.rep.Create(c, name)
+	latestBureau := domain.Bureau{}
+	if err := b.rep.Create(c, name); err != nil {
+		return latestBureau, err
+	}
+
 	row, err := b.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestBureau, err
+	}
+
 	err = row.Scan(
-		&latastBureau.ID,
-		&latastBureau.Name,
-		&latastBureau.CreatedAt,
-		&latastBureau.UpdatedAt,
+		&latestBureau.ID,
+		&latestBureau.Name,
+		&latestBureau.CreatedAt,
+		&latestBureau.UpdatedAt,
 	)
 	if err != nil {
-		return latastBureau, err
+		return latestBureau, err
 	}
-	return latastBureau, nil
+	return latestBureau, nil
 }
 
 func (b *bureauUseCase) UpdateBureau(c context.Context, id string, name string) (domain.Bureau, error) {
 	updatedBureau := domain.Bureau{}
-	err := b.rep.Update(c, id, name)
-	row, err := b.rep.Find(c,id)
+	if err := b.rep.Update(c, id, name); err != nil {
+		return updatedBureau, err
+	}
+
+	row, err := b.rep.Find(c, id)
+	if err != nil {
+		return updatedBureau, err
+	}
+
 	err = row.Scan(
 		&updatedBureau.ID,
 		&updatedBureau.Name,
@@ -98,6 +122,5 @@ func (b *bureauUseCase) UpdateBureau(c context.Context, id string, name string) 
 }
 
 func (b *bureauUseCase) DestroyBureau(c context.Context, id string) error {
-	err := b.rep.Destroy(c, id)
-	return err
+	return b.rep.Destroy(c, id)
 }

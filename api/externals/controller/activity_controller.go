@@ -56,7 +56,7 @@ func (a *activityController) CreateActivity(c echo.Context) error {
 		fmt.Println("err")
 		return err
 	}
-	latastActivity, err := a.u.CreateActivity(c.Request().Context() , strconv.Itoa(int(activities.UserID)), strconv.FormatBool(activities.IsDone), strconv.Itoa(int(activities.SponsorID)), activities.Feature, strconv.Itoa(int(activities.Expense)), activities.Remark, strconv.Itoa(int(activities.Design)) ,activities.Url)
+	latastActivity, err := a.u.CreateActivity(c.Request().Context(), strconv.Itoa(int(activities.UserID)), strconv.FormatBool(activities.IsDone), strconv.Itoa(int(activities.SponsorID)), activities.Feature, strconv.Itoa(int(activities.Expense)), activities.Remark, strconv.Itoa(int(activities.Design)), activities.Url)
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func (a *activityController) UpdateActivity(c echo.Context) error {
 		fmt.Println("err")
 		return err
 	}
-	updatedActivity, err := a.u.UpdateActivity(c.Request().Context(), id , strconv.Itoa(int(activities.UserID)), strconv.FormatBool(activities.IsDone), strconv.Itoa(int(activities.SponsorID)), activities.Feature, strconv.Itoa(int(activities.Expense)), activities.Remark, strconv.Itoa(int(activities.Design)) ,activities.Url)
+	updatedActivity, err := a.u.UpdateActivity(c.Request().Context(), id, strconv.Itoa(int(activities.UserID)), strconv.FormatBool(activities.IsDone), strconv.Itoa(int(activities.SponsorID)), activities.Feature, strconv.Itoa(int(activities.Expense)), activities.Remark, strconv.Itoa(int(activities.Design)), activities.Url)
 	if err != nil {
 		return err
 	}

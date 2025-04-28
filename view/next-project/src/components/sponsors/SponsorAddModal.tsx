@@ -71,14 +71,16 @@ export default function SponsorAddModal() {
           />
         </div>
       </div>
-      <div className='my-6 flex w-full justify-center '>
-        <div>
-          <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+      <label>
+        <div className='my-6 flex w-full justify-center '>
+          <div>
+            <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+          </div>
+          <p className='ml-4 text-black-600 '>
+            企業名が正確である。※株式会社などがついている正しいものか
+          </p>
         </div>
-        <p className='ml-4 text-black-600 '>
-          企業名が正確である。※株式会社などがついている正しいものか
-        </p>
-      </div>
+      </label>
       <div className='mx-auto mb-5 w-fit'>
         <PrimaryButton
           className={'mx-2'}

@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: "nutfes-finansu-db"
+    volumes:
+      - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
+      - ./mysql/testdb:/docker-entrypoint-testdb.d # テスト用初期データ
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_DATABASE: finansu_db
+      MYSQL_USER: finansu
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3306:3306"
+    restart: always
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./tmp/minio/data:/data
+    command: "server /data --console-address :9001"
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password

@@ -3,9 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"os"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
-	"os"
 )
 
 type client struct {
@@ -50,7 +52,9 @@ func ConnectMySQL() (client, error) {
 
 func (c client) CloseDB() {
 	if c.db != nil {
-		c.db.Close()
+		if err := c.db.Close(); err != nil {
+			log.Printf("failed to close DB: %v", err)
+		}
 	}
 }
 

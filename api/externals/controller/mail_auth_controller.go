@@ -31,8 +31,7 @@ func (auth *mailAuthController) SignUp(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	c.JSON(http.StatusOK, token)
-	return nil
+	return c.JSON(http.StatusOK, token)
 }
 
 // sign in
@@ -43,8 +42,7 @@ func (auth *mailAuthController) SignIn(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	c.JSON(http.StatusOK, token)
-	return nil
+	return c.JSON(http.StatusOK, token)
 }
 
 // sign out
@@ -55,8 +53,7 @@ func (auth *mailAuthController) SignOut(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	c.String(http.StatusOK, "Success Sign Out")
-	return nil
+	return c.String(http.StatusOK, "Success Sign Out")
 }
 
 // ログインしてるかを確認
@@ -67,6 +64,5 @@ func (auth *mailAuthController) IsSignIn(c echo.Context) error {
 	if err != nil {
 		return nil
 	}
-	c.JSON(http.StatusOK, isSignIn)
-	return nil
+	return c.JSON(http.StatusOK, isSignIn)
 }

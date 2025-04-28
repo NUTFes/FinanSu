@@ -1,5 +1,6 @@
 import fs from 'fs';
-import { formidable } from 'formidable';
+import path from 'path';
+import { formidable, Files } from 'formidable';
 import { Client } from 'minio';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -18,6 +19,7 @@ const minioClient = new Client({
 });
 
 const BUCKET_NAME = 'finansu';
+const TEMP_DIR = path.join(process.cwd(), 'temp');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // 開発環境でバケットがない場合作成
@@ -30,57 +32,98 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     const form = formidable();
 
-    form.parse(req, async (err, fields, files: any) => {
+    form.parse(req, async (err, fields, files: Files) => {
       if (err) {
-        throw new Error('Error parsing form');
+        res.status(500).json({ message: 'Error parsing form' });
+        return;
       }
 
-      const bucketName = 'finansu';
-      const year = fields.year && fields.year[0];
-      const fileName = `${year}/advertisements/${files.file[0].originalFilename}`;
-      const file = files.file[0];
-      const mimetype = file.mimetype;
-      const metaData = {
-        'Content-Type': mimetype,
-      };
+      if (!files.file || !files.file[0]) {
+        res.status(400).json({ message: 'ファイルが見つかりません' });
+        return;
+      }
+
+      const chunkIndex = fields.chunkIndex ? parseInt(fields.chunkIndex[0]) : 0;
+      const totalChunks = fields.totalChunks ? parseInt(fields.totalChunks[0]) : 0;
+      const fileName = fields.fileName ? fields.fileName[0] : '';
+      const year = fields.year ? fields.year[0] : '';
+      const tempFilePath = path.join(TEMP_DIR, `${fileName}.part${chunkIndex}`);
 
       try {
-        const response = await minioClient.putObject(
-          bucketName,
-          fileName,
-          fs.createReadStream(files.file[0].filepath),
-          metaData,
-        );
-      } catch (err) {
-        res.status(400).json({ message: '失敗' });
-        throw new Error('Error uploading file (' + err + ')');
+        fs.mkdirSync(TEMP_DIR, { recursive: true });
+        fs.copyFileSync(files.file[0].filepath, tempFilePath);
+        fs.unlinkSync(files.file[0].filepath);
+      } catch (error) {
+        res.status(500).json({ message: 'Error handling file' });
+        return;
       }
-      return res.status(200).json({ message: '成功' });
-    });
-  }
 
-  // 変更の場合の画像を削除する
-  if (req.method === 'DELETE') {
+      if (chunkIndex === totalChunks - 1) {
+        const finalFilePath = path.join(TEMP_DIR, fileName);
+        const writeStream = fs.createWriteStream(finalFilePath);
+
+        for (let i = 0; i < totalChunks; i++) {
+          const partFilePath = path.join(TEMP_DIR, `${fileName}.part${i}`);
+          const data = fs.readFileSync(partFilePath);
+          writeStream.write(data);
+          fs.unlinkSync(partFilePath);
+        }
+
+        writeStream.end();
+
+        writeStream.on('finish', async () => {
+          if (fs.existsSync(finalFilePath)) {
+            const bucketName = 'finansu';
+            const filePath = `${year}/advertisements/${fileName}`;
+            const mimetype = files.file && files.file[0] ? files.file[0].mimetype : '';
+            const metaData = {
+              'Content-Type': mimetype,
+            };
+
+            try {
+              await minioClient.putObject(
+                bucketName,
+                filePath,
+                fs.createReadStream(finalFilePath),
+                metaData,
+              );
+              fs.unlinkSync(finalFilePath);
+              const fileUrl = `${process.env.NEXT_PUBLIC_ENDPOINT}/${bucketName}/${filePath}`;
+              res.status(200).json({ message: '成功', fileUrl });
+            } catch (err) {
+              res.status(400).json({ message: '失敗' });
+            }
+          } else {
+            res.status(500).json({ message: '結合されたファイルが存在しません' });
+          }
+        });
+      } else {
+        res.status(200).json({ message: 'チャンク受信成功' });
+      }
+    });
+  } else if (req.method === 'DELETE') {
+    // 変更の場合の画像を削除する
     const form = formidable();
 
-    form.parse(req, async (err, fields, files: any) => {
+    form.parse(req, async (err, fields) => {
       if (err) {
-        throw new Error('Error parsing form');
+        res.status(500).json({ message: 'Error parsing form' });
+        return;
       }
 
       const year = fields.year && fields.year[0];
-      const fileName = fields.fileName && fields.fileName;
+      const fileName = fields.fileName && fields.fileName[0];
       const filePath = `${year}/advertisements/${fileName}`;
 
       try {
         await minioClient.removeObject(BUCKET_NAME, filePath);
-        console.log('Removed the object');
+        res.status(200).json({ message: '成功' });
       } catch (err) {
         res.status(400).json({ message: '失敗' });
-        throw new Error('Error uploading file (' + err + ')');
       }
-      return res.status(200).json({ message: '成功' });
     });
+  } else {
+    res.status(405).json({ message: 'Method Not Allowed' });
   }
 }
 
