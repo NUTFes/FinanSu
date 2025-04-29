@@ -1,11 +1,11 @@
 import Head from 'next/head';
+import router from 'next/router';
+import { useRecoilValue } from 'recoil';
 import { FundInformationTable, FundInformationHeader } from '@/components/fund_information';
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
+import { userAtom } from '@/store/atoms';
 import { Card } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
-import { userAtom } from '@/store/atoms';
-import { useRecoilValue } from 'recoil';
-import router from 'next/router';
 
 export default function FundInformations() {
   const user = useRecoilValue(userAtom);
