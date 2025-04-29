@@ -3,8 +3,15 @@ import { FundInformationTable, FundInformationHeader } from '@/components/fund_i
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
 import { Card } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
+import { userAtom } from '@/store/atoms';
+import { useRecoilValue } from 'recoil';
+import router from 'next/router';
 
 export default function FundInformations() {
+  const user = useRecoilValue(userAtom);
+
+  user?.roleID === 1 && router.push('/my_page');
+
   const {
     fundInformations,
     isLoading,
