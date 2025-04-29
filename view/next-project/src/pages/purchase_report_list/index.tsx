@@ -30,7 +30,7 @@ export default function PurchaseReports() {
   const yearPeriods = yearPeriodsData?.data;
   const user = useRecoilValue(userAtom);
 
-  user?.id !== 3 && router.push('/my_page');
+  user?.roleID === 1 && router.push('/my_page');
 
   useEffect(() => {
     if (yearPeriods && yearPeriods.length > 0) {
@@ -40,7 +40,7 @@ export default function PurchaseReports() {
   }, [yearPeriods]);
 
   const [selectedYear, setSelectedYear] = useState<number>(
-    yearPeriods && yearPeriods.length > 0 ? yearPeriods[0].year : 0,
+    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
   );
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = { year: selectedYear };
 

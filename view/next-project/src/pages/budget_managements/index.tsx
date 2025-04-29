@@ -22,7 +22,7 @@ export async function getServerSideProps() {
 
 export default function Home(props: Props) {
   const user = useRecoilValue(userAtom);
-  user?.roleID !== 3 && router.push('/my_page');
+  user?.roleID === 1 && router.push('/my_page');
   return (
     <MainLayout>
       <BudgetManagement years={props.years} />
