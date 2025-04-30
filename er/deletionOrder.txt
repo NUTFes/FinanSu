@@ -1,14 +1,7 @@
-year_periods
-teachers
-sponsors
-sponsor_styles
-session
-roles
-password_reset_tokens
-mail_auth
-fund_informations
+expenses
 departments
 bureaus
+budgets
 activity_styles
 activity_informations
 user_groups
