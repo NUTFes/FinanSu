@@ -3,7 +3,6 @@ import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import { HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
 import { IoIosArrowDropup } from 'react-icons/io';
-import { LiaDonateSolid } from 'react-icons/lia';
 import { MdOutlineSavings, MdOutlineWorkOutline, MdFaceUnlock } from 'react-icons/md';
 
 interface LinkItemProps {
@@ -35,11 +34,12 @@ export const FinanceLinkItems: LinkItemProps[] = [
     icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
     href: '/purchase_report_list',
   },
-  {
-    name: '学内募金',
-    icon: <LiaDonateSolid className='mx-2 text-xl' />,
-    href: '',
-  },
+  //TODO:募金実装時に戻す
+  // {
+  //   name: '学内募金',
+  //   icon: <LiaDonateSolid className='mx-2 text-xl' />,
+  //   href: '',
+  // },
   {
     name: '教員一覧',
     icon: <FaChalkboardTeacher className='mx-2 text-xl' />,

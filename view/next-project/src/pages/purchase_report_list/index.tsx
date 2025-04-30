@@ -45,7 +45,7 @@ export default function PurchaseReports() {
   }, [yearPeriods]);
 
   const [selectedYear, setSelectedYear] = useState<number>(
-    yearPeriods && yearPeriods.length > 0 ? yearPeriods[0].year : 0,
+    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
   );
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
