@@ -1693,6 +1693,25 @@ paths:
             application/json:
               schema:
                 type: object
+  /fund_informations/building/{year}:
+    get:
+      tags:
+        - fund_information
+      description: 年度で指定されたfund_informationsに紐づくデータを取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度で指定されたfund_informationsに紐づくデータを取得
+          content:
+            application/json:
+              schema:
+                type: object
   /incomes:
     get:
       tags:
@@ -3475,5 +3494,17 @@ components:
         - room_number
         - is_black
         - remark
+    buildingTotal:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 技大太郎
+        totalPrice:
+          type: integer
+          example: 10000
 
 x-original-swagger-version: "2.0"
