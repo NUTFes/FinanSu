@@ -21,6 +21,7 @@ type FundInformationUseCase interface {
 	GetFundInformationDetails(context.Context) ([]domain.FundInformationDetail, error)
 	GetFundInformationDetailByID(context.Context, string) (domain.FundInformationDetail, error)
 	GetFundInformationDetailsByPeriod(context.Context, string) ([]domain.FundInformationDetail, error)
+	GetFundInformationBuildingsByPeriod(context.Context, string) ([]domain.FundInformationBuilding, error)
 }
 
 func NewFundInformationUseCase(rep rep.FundInformationRepository) FundInformationUseCase {
@@ -324,4 +325,8 @@ func (f *fundInformationUseCase) GetFundInformationDetailsByPeriod(c context.Con
 		fundInformationDetails = append(fundInformationDetails, fundInformationDetail)
 	}
 	return fundInformationDetails, nil
+}
+
+func (f *fundInformationUseCase) GetFundInformationBuildingsByPeriod(c context.Context, year string) ([]domain.FundInformationBuilding, error) {
+	return []domain.FundInformationBuilding{}, nil
 }

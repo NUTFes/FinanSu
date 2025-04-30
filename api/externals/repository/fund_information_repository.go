@@ -23,6 +23,7 @@ type FundInformationRepository interface {
 	FindDetailByID(context.Context, string) (*sql.Row, error)
 	FindLatestRecord(context.Context) (*sql.Row, error)
 	AllDetailsByPeriod(context.Context, string) (*sql.Rows, error)
+	AllBuildingsByPeriod(context.Context, string) (*sql.Rows, error)
 }
 
 func NewFundInformationRepository(c db.Client, ac abstract.Crud) FundInformationRepository {
@@ -63,12 +64,12 @@ func (fir *fundInformationRepository) Create(
 				received_at
 			) VALUES (
 				` + userID +
-				"," + teacherID +
-				"," + price +
-				",'" + remark +
-				"'," + isFirstCheck +
-				"," + isLastCheck +
-				",'" + receivedAt + "')"
+		"," + teacherID +
+		"," + price +
+		",'" + remark +
+		"'," + isFirstCheck +
+		"," + isLastCheck +
+		",'" + receivedAt + "')"
 	return fir.crud.UpdateDB(c, query)
 }
 
@@ -198,6 +199,11 @@ func (fir *fundInformationRepository) AllDetailsByPeriod(c context.Context, year
 			year_periods.year_id = years.id
 		WHERE
 			years.year = ` + year +
-			" ORDER BY fund_informations.updated_at DESC;"
+		" ORDER BY fund_informations.updated_at DESC;"
 	return fir.crud.Read(c, query)
+}
+
+func (fir *fundInformationRepository) AllBuildingsByPeriod(c context.Context, year string) (*sql.Rows, error) {
+
+	return fir.crud.Read(c, nil)
 }

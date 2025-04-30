@@ -21,5 +21,12 @@ type FundInformationDetail struct {
 	FundInformation FundInformation `json:"fundInformation"`
 	User            User            `json:"user"`
 	Teacher         Teacher         `json:"teacher"`
-	Department		Department		`json:"department"`
+	Department      Department      `json:"department"`
+}
+
+type FundInformationBuilding struct {
+	BuildingID   int    `json:"buildingId"`
+	BuildingName string `json:"buildingName"`
+	Price        int    `json:"price"`
+	Year         int    `json:"year"`
 }
