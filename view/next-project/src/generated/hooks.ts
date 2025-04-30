@@ -91,6 +91,7 @@ import type {
   GetFinancialRecordsCsvDownloadParams,
   GetFinancialRecordsParams,
   GetFundInformations200,
+  GetFundInformationsBuildingYear200,
   GetFundInformationsDetails200,
   GetFundInformationsDetailsYear200,
   GetFundInformationsId200,
@@ -104,7 +105,6 @@ import type {
   GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
-  GetTeachersId200,
   GetUsersId200,
   Income,
   IncomeCategory,
@@ -175,6 +175,7 @@ import type {
   Receipt,
   Sponsor,
   SponsorStyle,
+  Teacher,
   YearPeriods,
 } from './model';
 
@@ -5468,6 +5469,72 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
 };
 
 /**
+ * 年度で指定されたfund_informationsに紐づくデータを取得
+ */
+export type getFundInformationsBuildingYearResponse200 = {
+  data: GetFundInformationsBuildingYear200;
+  status: 200;
+};
+
+export type getFundInformationsBuildingYearResponseComposite =
+  getFundInformationsBuildingYearResponse200;
+
+export type getFundInformationsBuildingYearResponse =
+  getFundInformationsBuildingYearResponseComposite & {
+    headers: Headers;
+  };
+
+export const getGetFundInformationsBuildingYearUrl = (year: number) => {
+  return `/fund_informations/building/${year}`;
+};
+
+export const getFundInformationsBuildingYear = async (
+  year: number,
+  options?: RequestInit,
+): Promise<getFundInformationsBuildingYearResponse> => {
+  return customFetch<getFundInformationsBuildingYearResponse>(
+    getGetFundInformationsBuildingYearUrl(year),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetFundInformationsBuildingYearKey = (year: number) =>
+  [`/fund_informations/building/${year}`] as const;
+
+export type GetFundInformationsBuildingYearQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFundInformationsBuildingYear>>
+>;
+export type GetFundInformationsBuildingYearQueryError = unknown;
+
+export const useGetFundInformationsBuildingYear = <TError = unknown>(
+  year: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFundInformationsBuildingYear>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!year;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFundInformationsBuildingYearKey(year) : null));
+  const swrFn = () => getFundInformationsBuildingYear(year, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * 収支管理で収入の項目を取得（教育振興会費、雑収入など）
  */
 export type getIncomesResponse200 = {
@@ -7585,7 +7652,7 @@ export const useDeleteSponsorstylesId = <TError = unknown>(
  * teacherの一覧を取得
  */
 export type getTeachersResponse200 = {
-  data: void;
+  data: Teacher;
   status: 200;
 };
 
@@ -7781,7 +7848,7 @@ export const useDeleteTeachersDelete = <TError = unknown>(options?: {
  * IDで指定されたteacherの取得
  */
 export type getTeachersIdResponse200 = {
-  data: GetTeachersId200;
+  data: Teacher;
   status: 200;
 };
 
