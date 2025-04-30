@@ -292,6 +292,18 @@ type SponsorStyle struct {
 	Style   string `json:"style"`
 }
 
+// Teacher defines model for teacher.
+type Teacher struct {
+	Building     string  `json:"building"`
+	DepartmentId int     `json:"department_id"`
+	Id           int     `json:"id"`
+	IsBlack      bool    `json:"is_black"`
+	Name         string  `json:"name"`
+	Position     string  `json:"position"`
+	Remark       string  `json:"remark"`
+	Room         *string `json:"room,omitempty"`
+}
+
 // Total defines model for total.
 type Total struct {
 	Balance *int `json:"balance,omitempty"`
@@ -582,6 +594,9 @@ type PostTeachersParams struct {
 	// DepartmentId 学科ID
 	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
 
+	// Building 棟
+	Building *string `form:"building,omitempty" json:"building,omitempty"`
+
 	// Room 部屋番号
 	Room *string `form:"room,omitempty" json:"room,omitempty"`
 
@@ -602,6 +617,9 @@ type PutTeachersIdParams struct {
 
 	// DepartmentId 学科ID
 	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
+
+	// Building 棟
+	Building *string `form:"building,omitempty" json:"building,omitempty"`
 
 	// Room 部屋番号
 	Room *string `form:"room,omitempty" json:"room,omitempty"`
@@ -962,6 +980,9 @@ type ServerInterface interface {
 
 	// (POST /fund_informations)
 	PostFundInformations(ctx echo.Context, params PostFundInformationsParams) error
+
+	// (GET /fund_informations/building/{year})
+	GetFundInformationsBuildingYear(ctx echo.Context, year int) error
 
 	// (GET /fund_informations/details)
 	GetFundInformationsDetails(ctx echo.Context) error
@@ -2414,6 +2435,22 @@ func (w *ServerInterfaceWrapper) PostFundInformations(ctx echo.Context) error {
 	return err
 }
 
+// GetFundInformationsBuildingYear converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFundInformationsBuildingYear(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetFundInformationsBuildingYear(ctx, year)
+	return err
+}
+
 // GetFundInformationsDetails converts echo context to params.
 func (w *ServerInterfaceWrapper) GetFundInformationsDetails(ctx echo.Context) error {
 	var err error
@@ -3063,6 +3100,13 @@ func (w *ServerInterfaceWrapper) PostTeachers(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
 	}
 
+	// ------------- Optional query parameter "building" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "building", ctx.QueryParams(), &params.Building)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building: %s", err))
+	}
+
 	// ------------- Optional query parameter "room" -------------
 
 	err = runtime.BindQueryParameter("form", true, false, "room", ctx.QueryParams(), &params.Room)
@@ -3178,6 +3222,13 @@ func (w *ServerInterfaceWrapper) PutTeachersId(ctx echo.Context) error {
 	err = runtime.BindQueryParameter("form", true, false, "department_id", ctx.QueryParams(), &params.DepartmentId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "building" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "building", ctx.QueryParams(), &params.Building)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building: %s", err))
 	}
 
 	// ------------- Optional query parameter "room" -------------
@@ -3571,6 +3622,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
 	router.GET(baseURL+"/fund_informations", wrapper.GetFundInformations)
 	router.POST(baseURL+"/fund_informations", wrapper.PostFundInformations)
+	router.GET(baseURL+"/fund_informations/building/:year", wrapper.GetFundInformationsBuildingYear)
 	router.GET(baseURL+"/fund_informations/details", wrapper.GetFundInformationsDetails)
 	router.GET(baseURL+"/fund_informations/details/:year", wrapper.GetFundInformationsDetailsYear)
 	router.DELETE(baseURL+"/fund_informations/:id", wrapper.DeleteFundInformationsId)
