@@ -328,5 +328,31 @@ func (f *fundInformationUseCase) GetFundInformationDetailsByPeriod(c context.Con
 }
 
 func (f *fundInformationUseCase) GetFundInformationBuildingsByPeriod(c context.Context, year string) ([]domain.FundInformationBuilding, error) {
-	return []domain.FundInformationBuilding{}, nil
+	var fundInformationBuildings []domain.FundInformationBuilding
+
+	rows, err := f.rep.AllBuildingsByPeriod(c, year)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	for rows.Next() {
+		fundInformationBuilding := domain.FundInformationBuilding{}
+		err := rows.Scan(
+			&fundInformationBuilding.BuildingID,
+			&fundInformationBuilding.BuildingName,
+			&fundInformationBuilding.Price,
+			&fundInformationBuilding.Year,
+		)
+		if err != nil {
+			return fundInformationBuildings, err
+		}
+		fundInformationBuildings = append(fundInformationBuildings, fundInformationBuilding)
+	}
+
+	return fundInformationBuildings, nil
 }

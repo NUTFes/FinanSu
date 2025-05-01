@@ -224,6 +224,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 		"/fund_informations/details/:year",
 		r.fundInformationController.IndexFundInformationDetailsByPeriod,
 	)
+	e.GET("/fund_informations/buildings/:year", r.fundInformationController.IndexFundInformationBuildingsByPeriod)
 
 	// incomes
 	e.GET("/incomes", r.incomeController.IndexIncome)
