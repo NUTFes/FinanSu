@@ -94,6 +94,7 @@ export * from './getFinancialRecordsCsvDownloadParams';
 export * from './getFinancialRecordsParams';
 export * from './getFundInformations200';
 export * from './getFundInformationsBuildingYear200';
+export * from './getFundInformationsBuildingsYear200';
 export * from './getFundInformationsDetails200';
 export * from './getFundInformationsDetailsYear200';
 export * from './getFundInformationsId200';

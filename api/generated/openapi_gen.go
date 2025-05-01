@@ -981,8 +981,8 @@ type ServerInterface interface {
 	// (POST /fund_informations)
 	PostFundInformations(ctx echo.Context, params PostFundInformationsParams) error
 
-	// (GET /fund_informations/building/{year})
-	GetFundInformationsBuildingYear(ctx echo.Context, year int) error
+	// (GET /fund_informations/buildings/{year})
+	GetFundInformationsBuildingsYear(ctx echo.Context, year int) error
 
 	// (GET /fund_informations/details)
 	GetFundInformationsDetails(ctx echo.Context) error
@@ -2435,8 +2435,8 @@ func (w *ServerInterfaceWrapper) PostFundInformations(ctx echo.Context) error {
 	return err
 }
 
-// GetFundInformationsBuildingYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFundInformationsBuildingYear(ctx echo.Context) error {
+// GetFundInformationsBuildingsYear converts echo context to params.
+func (w *ServerInterfaceWrapper) GetFundInformationsBuildingsYear(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "year" -------------
 	var year int
@@ -2447,7 +2447,7 @@ func (w *ServerInterfaceWrapper) GetFundInformationsBuildingYear(ctx echo.Contex
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFundInformationsBuildingYear(ctx, year)
+	err = w.Handler.GetFundInformationsBuildingsYear(ctx, year)
 	return err
 }
 
@@ -3622,7 +3622,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
 	router.GET(baseURL+"/fund_informations", wrapper.GetFundInformations)
 	router.POST(baseURL+"/fund_informations", wrapper.PostFundInformations)
-	router.GET(baseURL+"/fund_informations/building/:year", wrapper.GetFundInformationsBuildingYear)
+	router.GET(baseURL+"/fund_informations/buildings/:year", wrapper.GetFundInformationsBuildingsYear)
 	router.GET(baseURL+"/fund_informations/details", wrapper.GetFundInformationsDetails)
 	router.GET(baseURL+"/fund_informations/details/:year", wrapper.GetFundInformationsDetailsYear)
 	router.DELETE(baseURL+"/fund_informations/:id", wrapper.DeleteFundInformationsId)

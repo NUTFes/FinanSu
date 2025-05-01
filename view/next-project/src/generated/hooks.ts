@@ -91,7 +91,7 @@ import type {
   GetFinancialRecordsCsvDownloadParams,
   GetFinancialRecordsParams,
   GetFundInformations200,
-  GetFundInformationsBuildingYear200,
+  GetFundInformationsBuildingsYear200,
   GetFundInformationsDetails200,
   GetFundInformationsDetailsYear200,
   GetFundInformationsId200,
@@ -5471,29 +5471,29 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
 /**
  * 年度で指定されたfund_informationsに紐づくデータを取得
  */
-export type getFundInformationsBuildingYearResponse200 = {
-  data: GetFundInformationsBuildingYear200;
+export type getFundInformationsBuildingsYearResponse200 = {
+  data: GetFundInformationsBuildingsYear200;
   status: 200;
 };
 
-export type getFundInformationsBuildingYearResponseComposite =
-  getFundInformationsBuildingYearResponse200;
+export type getFundInformationsBuildingsYearResponseComposite =
+  getFundInformationsBuildingsYearResponse200;
 
-export type getFundInformationsBuildingYearResponse =
-  getFundInformationsBuildingYearResponseComposite & {
+export type getFundInformationsBuildingsYearResponse =
+  getFundInformationsBuildingsYearResponseComposite & {
     headers: Headers;
   };
 
-export const getGetFundInformationsBuildingYearUrl = (year: number) => {
-  return `/fund_informations/building/${year}`;
+export const getGetFundInformationsBuildingsYearUrl = (year: number) => {
+  return `/fund_informations/buildings/${year}`;
 };
 
-export const getFundInformationsBuildingYear = async (
+export const getFundInformationsBuildingsYear = async (
   year: number,
   options?: RequestInit,
-): Promise<getFundInformationsBuildingYearResponse> => {
-  return customFetch<getFundInformationsBuildingYearResponse>(
-    getGetFundInformationsBuildingYearUrl(year),
+): Promise<getFundInformationsBuildingsYearResponse> => {
+  return customFetch<getFundInformationsBuildingsYearResponse>(
+    getGetFundInformationsBuildingsYearUrl(year),
     {
       ...options,
       method: 'GET',
@@ -5501,18 +5501,18 @@ export const getFundInformationsBuildingYear = async (
   );
 };
 
-export const getGetFundInformationsBuildingYearKey = (year: number) =>
-  [`/fund_informations/building/${year}`] as const;
+export const getGetFundInformationsBuildingsYearKey = (year: number) =>
+  [`/fund_informations/buildings/${year}`] as const;
 
-export type GetFundInformationsBuildingYearQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFundInformationsBuildingYear>>
+export type GetFundInformationsBuildingsYearQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFundInformationsBuildingsYear>>
 >;
-export type GetFundInformationsBuildingYearQueryError = unknown;
+export type GetFundInformationsBuildingsYearQueryError = unknown;
 
-export const useGetFundInformationsBuildingYear = <TError = unknown>(
+export const useGetFundInformationsBuildingsYear = <TError = unknown>(
   year: number,
   options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFundInformationsBuildingYear>>, TError> & {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFundInformationsBuildingsYear>>, TError> & {
       swrKey?: Key;
       enabled?: boolean;
     };
@@ -5523,8 +5523,8 @@ export const useGetFundInformationsBuildingYear = <TError = unknown>(
 
   const isEnabled = swrOptions?.enabled !== false && !!year;
   const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFundInformationsBuildingYearKey(year) : null));
-  const swrFn = () => getFundInformationsBuildingYear(year, requestOptions);
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFundInformationsBuildingsYearKey(year) : null));
+  const swrFn = () => getFundInformationsBuildingsYear(year, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
