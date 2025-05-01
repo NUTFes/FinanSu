@@ -1693,7 +1693,7 @@ paths:
             application/json:
               schema:
                 type: object
-  /fund_informations/building/{year}:
+  /fund_informations/buildings/{year}:
     get:
       tags:
         - fund_information
