@@ -1711,7 +1711,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  $ref: "#/components/schemas/buildingTotal"
   /incomes:
     get:
       tags:
@@ -3502,7 +3504,7 @@ components:
           example: 1
         name:
           type: string
-          example: 技大太郎
+          example: 機械・建設棟
         totalPrice:
           type: integer
           example: 10000
