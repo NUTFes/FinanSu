@@ -15,6 +15,7 @@ import type {
   Activity,
   ActivityInformation,
   ActivityStyle,
+  BuildingTotal,
   BuyReport,
   BuyReportDetail,
   BuyReportWithDivisionId,
@@ -91,7 +92,6 @@ import type {
   GetFinancialRecordsCsvDownloadParams,
   GetFinancialRecordsParams,
   GetFundInformations200,
-  GetFundInformationsBuildingsYear200,
   GetFundInformationsDetails200,
   GetFundInformationsDetailsYear200,
   GetFundInformationsId200,
@@ -5472,7 +5472,7 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
  * 年度で指定されたfund_informationsに紐づくデータを取得
  */
 export type getFundInformationsBuildingsYearResponse200 = {
-  data: GetFundInformationsBuildingsYear200;
+  data: BuildingTotal[];
   status: 200;
 };
 

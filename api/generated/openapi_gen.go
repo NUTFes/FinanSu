@@ -67,6 +67,13 @@ type ActivityStyle struct {
 	SponsorStyleID int `json:"sponsorStyleID"`
 }
 
+// BuildingTotal defines model for buildingTotal.
+type BuildingTotal struct {
+	Id         *int    `json:"id,omitempty"`
+	Name       *string `json:"name,omitempty"`
+	TotalPrice *int    `json:"totalPrice,omitempty"`
+}
+
 // BuyReport 購入報告の際のパラメータ
 type BuyReport struct {
 	Amount         int    `json:"amount"`
