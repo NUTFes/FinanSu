@@ -210,10 +210,9 @@ func (fir *fundInformationRepository) AllBuildingsByPeriod(c context.Context, ye
 
 	ds := db.From("fund_informations").
 		Select(
-			goqu.I("buildings.id").As("building_id"),
-			goqu.I("buildings.name").As("building_name"),
-			goqu.I("fund_informations.price").As("price"),
-			goqu.I("years.year").As("year"),
+			goqu.I("buildings.id"),
+			goqu.I("buildings.name"),
+			goqu.I("fund_informations.price"),
 		).
 		Join(goqu.T("teachers"), goqu.On(goqu.Ex{
 			"fund_informations.teacher_id": goqu.I("teachers.id"),
