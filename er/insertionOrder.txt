@@ -26,7 +26,6 @@ activity_styles
 budgets
 bureaus
 departments
-expenses
 fund_informations
 mail_auth
 password_reset_tokens

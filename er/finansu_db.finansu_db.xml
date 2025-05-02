@@ -187,18 +187,6 @@
             <column ascending="true" name="financial_record_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="expenses" numRows="10" remarks="" type="TABLE">
-         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="expense_name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="0" digits="0" id="2" name="totalPrice" nullable="true" remarks="" size="10" type="INT" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="yearID" nullable="true" remarks="" size="10" type="INT" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="5" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
-         <primaryKey column="id" sequenceNumberInPK="1"/>
-         <index name="PRIMARY" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-      </table>
       <table catalog="finansu_db" name="festival_items" numRows="7" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="festival_item_id" foreignKey="buy_reports_ibfk_1" implied="false" onDeleteCascade="true" table="buy_reports"/>
@@ -562,7 +550,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="sponsors" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="sponsors" numRows="3" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="tel" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
@@ -672,11 +660,4 @@
          </index>
       </table>
    </tables>
-   <routines>
-      <routine dataAccess="CONTAINS SQL" deterministic="false" name="updateExpense" securityType="DEFINER" type="PROCEDURE">
-         <comment/>
-         <definition language="SQL"><![CDATA[Redacted, use --include-routine-definition]]></definition>
-         <parameters/>
-      </routine>
-   </routines>
 </database>
