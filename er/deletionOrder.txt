@@ -11,7 +11,6 @@ purchase_items
 password_reset_tokens
 mail_auth
 fund_informations
-expenses
 departments
 bureaus
 budgets
