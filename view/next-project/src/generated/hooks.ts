@@ -2702,7 +2702,7 @@ export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
 };
 
 /**
- * Returns a list of donation records for a specific building and floor.
+ * 各棟の各階の学内募金情報を取得するAPI
  */
 export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponse200 = {
   data: CampusDonationByFloor[];
