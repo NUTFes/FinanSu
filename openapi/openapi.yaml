@@ -818,7 +818,9 @@ paths:
 
   /campus_donations/building/{building_id}/floor/{floor_id}:
     get:
-      description: Returns a list of donation records for a specific building and floor.
+      tags:
+        - campus_donation
+      description: 各棟の各階の学内募金情報を取得するAPI
       parameters:
         - name: building_id
           in: path
