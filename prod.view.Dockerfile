@@ -12,10 +12,10 @@ ENV NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV} \
 
 WORKDIR /app
 
-COPY ./view/next-project/package*.json ./
+COPY ./view/package*.json ./
 RUN npm ci
 
-COPY ./view/next-project/ ./
+COPY ./view/ ./
 RUN npm run build
 
 # Create runner image

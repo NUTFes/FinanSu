@@ -12,7 +12,7 @@ web/**/cert.pem
 
 tmp/*
 
-/view/next-project/.env
+/view/.env
 
 # db/
 minio/

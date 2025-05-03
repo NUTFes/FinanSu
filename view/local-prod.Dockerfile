@@ -1,6 +1,6 @@
 FROM node:20.14
-WORKDIR /app/next-project
-COPY ./next-project /app/next-project
+WORKDIR /app
+COPY . /app
 
 ENV NODE_ENV production
 ENV NEXT_PUBLIC_APP_ENV develop
