@@ -816,6 +816,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/buyReportDetail"
 
+  /campus_donations/building/{building_id}/floor/{floor_id}:
+    get:
+      description: Returns a list of donation records for a specific building and floor.
+      parameters:
+        - name: building_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the building
+        - name: floor_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the floor
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/campusDonationByFloor"
+
   /departments:
     get:
       tags:
@@ -3475,5 +3501,33 @@ components:
         - room_number
         - is_black
         - remark
+    campusDonationByFloor:
+      type: object
+      properties:
+        teacher_id:
+          type: integer
+        building_name:
+          type: string
+        unit_number:
+          type: string
+        floor_number:
+          type: string
+        room_name:
+          type: string
+        teacher_name:
+          type: string
+        price:
+          type: integer
+        is_black:
+          type: boolean
+      required:
+        - teacher_id
+        - building_name
+        - unit_number
+        - floor_number
+        - room_name
+        - teacher_name
+        - price
+        - is_black
 
 x-original-swagger-version: "2.0"
