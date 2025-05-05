@@ -7,6 +7,7 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	goqu "github.com/doug-martin/goqu/v9"
 )
 
 type teacherRepository struct {
@@ -30,7 +31,11 @@ func NewTeacherRepository(c db.Client, ac abstract.Crud) TeacherRepository {
 }
 
 func (t *teacherRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM teachers WHERE is_deleted IS FALSE ORDER BY department_id ASC "
+	query, _, err := selectTeacherWithRoomQuery.
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
 	return t.crud.Read(c, query)
 }
 
@@ -62,7 +67,12 @@ func (t *teacherRepository) AllFundRegistered(c context.Context, year string) (*
 }
 
 func (t *teacherRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "SELECT * FROM teachers WHERE id = " + id
+	query, _, err := selectTeacherWithRoomQuery.
+		Where(goqu.Ex{"teachers.id": id}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
 	return t.crud.ReadByID(c, query)
 }
 
@@ -125,7 +135,7 @@ func (t *teacherRepository) MultiDestroy(c context.Context, ids []int) error {
 	for index, id := range ids {
 		query += "id = " + strconv.Itoa(id)
 
-		if(index != len(ids)-1){
+		if index != len(ids)-1 {
 			query += " OR "
 		}
 
@@ -138,3 +148,24 @@ func (t *teacherRepository) MultiDestroy(c context.Context, ids []int) error {
 
 	return err
 }
+
+var selectTeacherWithRoomQuery = dialect.
+	From("room_teachers").
+	Join(
+		goqu.T("teachers"),
+		goqu.On(goqu.Ex{"room_teachers.teacher_id": goqu.I("teachers.id")}),
+	).
+	Join(
+		goqu.T("rooms"),
+		goqu.On(goqu.Ex{"room_teachers.room_id": goqu.I("rooms.id")}),
+	).
+	Select(
+		goqu.I("teachers.id"),
+		goqu.I("teachers.name"),
+		goqu.I("teachers.position"),
+		goqu.I("teachers.department_id"),
+		goqu.I("teachers.is_black"),
+		goqu.I("teachers.remark"),
+		goqu.I("teachers.is_deleted"),
+		goqu.I("rooms.room_name"),
+	)
