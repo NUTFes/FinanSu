@@ -15,7 +15,7 @@ CREATE TABLE
   );
 
 INSERT INTO
-  teachers (name, position, department_id, room, is_black, remark)
+  teachers (name, position, department_id, is_black, remark)
 VALUES
-  ('test-name', 'test-position', 1, '605', false, 'test-remark'),
-  ('test-teacher', 'test-position2', 1, '605', false, 'test-remark');
+  ('test-name', 'test-position', 1, false, 'test-remark'),
+  ('test-teacher', 'test-position2', 1, false, 'test-remark');
