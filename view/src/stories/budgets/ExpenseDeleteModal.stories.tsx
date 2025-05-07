@@ -1,6 +1,7 @@
-import type { Meta, StoryFn } from '@storybook/react';
 import { ExpenseDeleteModal } from '@components/budgets';
 import { ModalProps } from '@components/budgets/ExpenseDeleteModal';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof ExpenseDeleteModal> = {
   title: 'FinanSu/budgets/ExpenseDeleteModal',

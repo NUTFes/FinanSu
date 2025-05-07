@@ -47,7 +47,7 @@ export default function SponsorEditModal(props: Props) {
         </div>
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>企業情報編集</h1>
-      <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+      <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
         <p className='col-span-1 text-black-600'>企業名</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.name} onChange={handler('name')} />

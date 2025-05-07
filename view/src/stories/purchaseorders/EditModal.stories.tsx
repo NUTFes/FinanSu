@@ -1,6 +1,7 @@
-import type { Meta, StoryFn } from '@storybook/react';
 import { EditModal } from '@components/purchaseorders';
 import { PurchaseItem } from '@type/common'; // PurchaseItem 型のインポートを確認してください
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof EditModal> = {
   title: 'FinanSu/purchaseorders/EditModal',

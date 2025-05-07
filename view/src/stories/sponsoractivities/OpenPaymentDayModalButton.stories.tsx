@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { OpenPaymentDayModalButton } from '@components/sponsoractivities';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof OpenPaymentDayModalButton> = {
   title: 'FinanSu/sponsoractivities/OpenPaymentDayModalButton',

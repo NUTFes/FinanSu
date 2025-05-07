@@ -23,7 +23,7 @@ const DownloadButton = (props: Props) => {
     <Tooltip label={tooltip} hasArrow>
       <button
         disabled={isDisabled}
-        className={`${buttonClass} flex h-6 w-6 min-w-0 items-center justify-center rounded-full`}
+        className={`${buttonClass} flex size-6 min-w-0 items-center justify-center rounded-full`}
         onClick={onClick}
         suppressHydrationWarning
       >

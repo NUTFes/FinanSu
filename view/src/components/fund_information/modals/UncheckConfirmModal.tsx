@@ -1,4 +1,5 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
+
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {

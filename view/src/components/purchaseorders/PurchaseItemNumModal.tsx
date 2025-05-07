@@ -120,7 +120,7 @@ export default function PurchaseItemNumModal(props: PurchaseItemNumModalProps) {
           </div>
         </div>
         <div className='mx-auto mb-10 w-fit text-xl text-black-600'>購入申請の作成</div>
-        <div className='mb-10 grid grid-cols-5 items-center justify-items-center gap-4'>
+        <div className='mb-10 grid grid-cols-5 place-items-center gap-4'>
           <p className='grid-cols-1 text-black-600'>購入期限</p>
           <div className='col-span-4 w-full'>
             <Input

@@ -1,11 +1,12 @@
 import { clsx } from 'clsx';
 import React, { FC } from 'react';
-
 import { FaChevronCircleRight } from 'react-icons/fa';
-import OpenAddPdfDetailModalButton from './OpenAddPdfDetailModalButton';
-import OpenPaymentDayModalButton from './OpenPaymentDayModalButton';
+
 import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
+
+import OpenAddPdfDetailModalButton from './OpenAddPdfDetailModalButton';
+import OpenPaymentDayModalButton from './OpenPaymentDayModalButton';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;

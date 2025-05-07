@@ -1,5 +1,6 @@
 import router from 'next/router';
 import { useState } from 'react';
+
 import { Expense, PurchaseOrder, PurchaseOrderView } from '@/type/common';
 import { put } from '@/utils/api/purchaseOrder';
 import {
@@ -50,7 +51,7 @@ export const DetailEditModal: React.FC<{
       <div className='mx-auto mb-10 w-fit text-xl text-black-600'>
         <p>購入した局と期限日を修正</p>
       </div>
-      <div className='mx-auto my-6 grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
+      <div className='mx-auto my-6 grid w-9/10 grid-cols-4 place-items-center gap-4'>
         <p className='text-lg text-black-600'>購入した局</p>
         <div className='col-span-3 w-full'>
           <Select

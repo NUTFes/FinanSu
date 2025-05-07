@@ -1,6 +1,8 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { SPONSOR_ACTIVITY_VIEW } from '../constants';
 import { PaymentDayModal } from '@components/sponsoractivities';
+
+import { SPONSOR_ACTIVITY_VIEW } from '../constants';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof PaymentDayModal> = {
   title: 'FinanSu/sponsoractivities/PaymentDayModal',

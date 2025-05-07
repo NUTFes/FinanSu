@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Input } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Input> = {
   title: 'FinanSu/common/Input',

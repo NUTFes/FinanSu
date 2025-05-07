@@ -41,7 +41,7 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛スタイルの情報
   const content = (data: SponsorStyle) => (
-    <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+    <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
       <p className='text-black-600'>協賛内容</p>
       <div className='col-span-4 w-full'>
         <Input
