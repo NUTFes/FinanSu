@@ -1,0 +1,72 @@
+export default {
+  extends: [
+    'next/core-web-vitals',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:import/errors',
+    'plugin:import/typescript',
+    'plugin:react-hooks/recommended',
+    'plugin:storybook/recommended',
+    'plugin:tailwindcss/recommended',
+    'prettier',
+  ],
+  plugins: ['@typescript-eslint', 'unused-imports', 'import', 'react-hooks', 'tailwindcss'],
+  parser: '@typescript-eslint/parser',
+  env: {
+    node: true,
+    es6: true,
+    browser: true,
+  },
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 'latest',
+    project: ['./tsconfig.json', './tsconfig.stories.json'],
+    sourceType: 'module',
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.ts', '.tsx'],
+      },
+      typescript: {},
+    },
+    react: {
+      version: 'detect',
+    },
+  },
+  rules: {
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+    ],
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling'],
+          'index',
+          'object',
+          'type',
+        ],
+        'newlines-between': 'always',
+        alphabetize: {
+          caseInsensitive: true,
+          order: 'asc',
+        },
+      },
+    ],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'tailwindcss/classnames-order': 'off',
+  },
+  ignorePatterns: ['src/generated', '*.config.js', '*.config.ts'],
+};
