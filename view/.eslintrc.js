@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   extends: [
     'next/core-web-vitals',
     'eslint:recommended',
@@ -23,7 +23,6 @@ export default {
       jsx: true,
     },
     ecmaVersion: 'latest',
-    project: ['./tsconfig.json', './tsconfig.stories.json'],
     sourceType: 'module',
   },
   settings: {
