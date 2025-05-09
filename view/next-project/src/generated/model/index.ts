@@ -15,6 +15,7 @@ export * from './buyReportDetail';
 export * from './buyReportInformation';
 export * from './buyReportInformationStatus';
 export * from './buyReportWithDivisionId';
+export * from './campusDonationByFloor';
 export * from './deleteActivitiesId200';
 export * from './deleteActivityInformationsId200';
 export * from './deleteActivityStylesId200';

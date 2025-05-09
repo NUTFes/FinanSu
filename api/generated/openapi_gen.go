@@ -119,6 +119,18 @@ type BuyReportWithDivisionId struct {
 	PaidBy         *string `json:"paidBy,omitempty"`
 }
 
+// CampusDonationByFloor defines model for campusDonationByFloor.
+type CampusDonationByFloor struct {
+	BuildingName string `json:"building_name"`
+	FloorNumber  string `json:"floor_number"`
+	IsBlack      bool   `json:"is_black"`
+	Price        int    `json:"price"`
+	RoomName     string `json:"room_name"`
+	TeacherId    int    `json:"teacher_id"`
+	TeacherName  string `json:"teacher_name"`
+	UnitNumber   string `json:"unit_number"`
+}
+
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
 type DestroyTeacherIDs struct {
 	DeleteIDs []float32 `json:"deleteIDs"`
@@ -882,6 +894,9 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /campus_donations/building/{building_id}/floor/{floor_id})
+	GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context, buildingId int, floorId int) error
 
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
@@ -1799,6 +1814,30 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCampusDonationsBuildingBuildingIdFloorFloorId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "building_id" -------------
+	var buildingId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "building_id", ctx.Param("building_id"), &buildingId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building_id: %s", err))
+	}
+
+	// ------------- Path parameter "floor_id" -------------
+	var floorId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "floor_id", ctx.Param("floor_id"), &floorId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx, buildingId, floorId)
 	return err
 }
 
@@ -3594,6 +3633,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/campus_donations/building/:building_id/floor/:floor_id", wrapper.GetCampusDonationsBuildingBuildingIdFloorFloorId)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)
