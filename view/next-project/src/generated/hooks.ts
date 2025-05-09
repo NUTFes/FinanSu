@@ -15,9 +15,11 @@ import type {
   Activity,
   ActivityInformation,
   ActivityStyle,
+  BuildingTotal,
   BuyReport,
   BuyReportDetail,
   BuyReportWithDivisionId,
+  CampusDonationByFloor,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
   DeleteActivityStylesId200,
@@ -104,7 +106,6 @@ import type {
   GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
-  GetTeachersId200,
   GetUsersId200,
   Income,
   IncomeCategory,
@@ -175,6 +176,7 @@ import type {
   Receipt,
   Sponsor,
   SponsorStyle,
+  Teacher,
   YearPeriods,
 } from './model';
 
@@ -2693,6 +2695,150 @@ export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
   const swrFn = getPutBuyReportStatusBuyReportIdMutationFetcher(buyReportId, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 各棟の各階の学内募金情報を取得するAPI
+ */
+export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponse200 = {
+  data: CampusDonationByFloor[];
+  status: 200;
+};
+
+export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponseComposite =
+  getCampusDonationsBuildingBuildingIdFloorFloorIdResponse200;
+
+export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponse =
+  getCampusDonationsBuildingBuildingIdFloorFloorIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getGetCampusDonationsBuildingBuildingIdFloorFloorIdUrl = (
+  buildingId: number,
+  floorId: number,
+) => {
+  return `/campus_donations/building/${buildingId}/floor/${floorId}`;
+};
+
+export const getCampusDonationsBuildingBuildingIdFloorFloorId = async (
+  buildingId: number,
+  floorId: number,
+  options?: RequestInit,
+): Promise<getCampusDonationsBuildingBuildingIdFloorFloorIdResponse> => {
+  return customFetch<getCampusDonationsBuildingBuildingIdFloorFloorIdResponse>(
+    getGetCampusDonationsBuildingBuildingIdFloorFloorIdUrl(buildingId, floorId),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetCampusDonationsBuildingBuildingIdFloorFloorIdKey = (
+  buildingId: number,
+  floorId: number,
+) => [`/campus_donations/building/${buildingId}/floor/${floorId}`] as const;
+
+export type GetCampusDonationsBuildingBuildingIdFloorFloorIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsBuildingBuildingIdFloorFloorId>>
+>;
+export type GetCampusDonationsBuildingBuildingIdFloorFloorIdQueryError = unknown;
+
+export const useGetCampusDonationsBuildingBuildingIdFloorFloorId = <TError = unknown>(
+  buildingId: number,
+  floorId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getCampusDonationsBuildingBuildingIdFloorFloorId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!(buildingId && floorId);
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetCampusDonationsBuildingBuildingIdFloorFloorIdKey(buildingId, floorId)
+        : null);
+  const swrFn = () =>
+    getCampusDonationsBuildingBuildingIdFloorFloorId(buildingId, floorId, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 年度で指定されたfund_informationsに紐づくデータを取得
+ */
+export type getCampusDonationsBuildingsYearResponse200 = {
+  data: BuildingTotal[];
+  status: 200;
+};
+
+export type getCampusDonationsBuildingsYearResponseComposite =
+  getCampusDonationsBuildingsYearResponse200;
+
+export type getCampusDonationsBuildingsYearResponse =
+  getCampusDonationsBuildingsYearResponseComposite & {
+    headers: Headers;
+  };
+
+export const getGetCampusDonationsBuildingsYearUrl = (year: number) => {
+  return `/campus_donations/buildings/${year}`;
+};
+
+export const getCampusDonationsBuildingsYear = async (
+  year: number,
+  options?: RequestInit,
+): Promise<getCampusDonationsBuildingsYearResponse> => {
+  return customFetch<getCampusDonationsBuildingsYearResponse>(
+    getGetCampusDonationsBuildingsYearUrl(year),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetCampusDonationsBuildingsYearKey = (year: number) =>
+  [`/campus_donations/buildings/${year}`] as const;
+
+export type GetCampusDonationsBuildingsYearQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsBuildingsYear>>
+>;
+export type GetCampusDonationsBuildingsYearQueryError = unknown;
+
+export const useGetCampusDonationsBuildingsYear = <TError = unknown>(
+  year: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getCampusDonationsBuildingsYear>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!year;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetCampusDonationsBuildingsYearKey(year) : null));
+  const swrFn = () => getCampusDonationsBuildingsYear(year, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
@@ -7585,7 +7731,7 @@ export const useDeleteSponsorstylesId = <TError = unknown>(
  * teacherの一覧を取得
  */
 export type getTeachersResponse200 = {
-  data: void;
+  data: Teacher;
   status: 200;
 };
 
@@ -7781,7 +7927,7 @@ export const useDeleteTeachersDelete = <TError = unknown>(options?: {
  * IDで指定されたteacherの取得
  */
 export type getTeachersIdResponse200 = {
-  data: GetTeachersId200;
+  data: Teacher;
   status: 200;
 };
 

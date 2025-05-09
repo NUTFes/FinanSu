@@ -67,6 +67,13 @@ type ActivityStyle struct {
 	SponsorStyleID int `json:"sponsorStyleID"`
 }
 
+// BuildingTotal defines model for buildingTotal.
+type BuildingTotal struct {
+	Id         *int    `json:"id,omitempty"`
+	Name       *string `json:"name,omitempty"`
+	TotalPrice *int    `json:"totalPrice,omitempty"`
+}
+
 // BuyReport 購入報告の際のパラメータ
 type BuyReport struct {
 	Amount         int    `json:"amount"`
@@ -110,6 +117,18 @@ type BuyReportWithDivisionId struct {
 	FestivalItemID *int    `json:"festivalItemID,omitempty"`
 	Id             *int    `json:"id,omitempty"`
 	PaidBy         *string `json:"paidBy,omitempty"`
+}
+
+// CampusDonationByFloor defines model for campusDonationByFloor.
+type CampusDonationByFloor struct {
+	BuildingName string `json:"building_name"`
+	FloorNumber  string `json:"floor_number"`
+	IsBlack      bool   `json:"is_black"`
+	Price        int    `json:"price"`
+	RoomName     string `json:"room_name"`
+	TeacherId    int    `json:"teacher_id"`
+	TeacherName  string `json:"teacher_name"`
+	UnitNumber   string `json:"unit_number"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
@@ -290,6 +309,18 @@ type SponsorStyle struct {
 	Feature string `json:"feature"`
 	Price   int    `json:"price"`
 	Style   string `json:"style"`
+}
+
+// Teacher defines model for teacher.
+type Teacher struct {
+	Building     string  `json:"building"`
+	DepartmentId int     `json:"department_id"`
+	Id           int     `json:"id"`
+	IsBlack      bool    `json:"is_black"`
+	Name         string  `json:"name"`
+	Position     string  `json:"position"`
+	Remark       string  `json:"remark"`
+	Room         *string `json:"room,omitempty"`
 }
 
 // Total defines model for total.
@@ -582,6 +613,9 @@ type PostTeachersParams struct {
 	// DepartmentId 学科ID
 	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
 
+	// Building 棟
+	Building *string `form:"building,omitempty" json:"building,omitempty"`
+
 	// Room 部屋番号
 	Room *string `form:"room,omitempty" json:"room,omitempty"`
 
@@ -602,6 +636,9 @@ type PutTeachersIdParams struct {
 
 	// DepartmentId 学科ID
 	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
+
+	// Building 棟
+	Building *string `form:"building,omitempty" json:"building,omitempty"`
 
 	// Room 部屋番号
 	Room *string `form:"room,omitempty" json:"room,omitempty"`
@@ -857,6 +894,12 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /campus_donations/building/{building_id}/floor/{floor_id})
+	GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context, buildingId int, floorId int) error
+
+	// (GET /campus_donations/buildings/{year})
+	GetCampusDonationsBuildingsYear(ctx echo.Context, year int) error
 
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
@@ -1771,6 +1814,46 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCampusDonationsBuildingBuildingIdFloorFloorId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "building_id" -------------
+	var buildingId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "building_id", ctx.Param("building_id"), &buildingId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building_id: %s", err))
+	}
+
+	// ------------- Path parameter "floor_id" -------------
+	var floorId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "floor_id", ctx.Param("floor_id"), &floorId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx, buildingId, floorId)
+	return err
+}
+
+// GetCampusDonationsBuildingsYear converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingsYear(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsBuildingsYear(ctx, year)
 	return err
 }
 
@@ -3063,6 +3146,13 @@ func (w *ServerInterfaceWrapper) PostTeachers(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
 	}
 
+	// ------------- Optional query parameter "building" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "building", ctx.QueryParams(), &params.Building)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building: %s", err))
+	}
+
 	// ------------- Optional query parameter "room" -------------
 
 	err = runtime.BindQueryParameter("form", true, false, "room", ctx.QueryParams(), &params.Room)
@@ -3178,6 +3268,13 @@ func (w *ServerInterfaceWrapper) PutTeachersId(ctx echo.Context) error {
 	err = runtime.BindQueryParameter("form", true, false, "department_id", ctx.QueryParams(), &params.DepartmentId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "building" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "building", ctx.QueryParams(), &params.Building)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building: %s", err))
 	}
 
 	// ------------- Optional query parameter "room" -------------
@@ -3536,6 +3633,8 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/campus_donations/building/:building_id/floor/:floor_id", wrapper.GetCampusDonationsBuildingBuildingIdFloorFloorId)
+	router.GET(baseURL+"/campus_donations/buildings/:year", wrapper.GetCampusDonationsBuildingsYear)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)

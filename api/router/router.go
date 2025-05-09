@@ -34,6 +34,7 @@ type router struct {
 	teacherController                     controller.TeacherController
 	userController                        controller.UserController
 	yearController                        controller.YearController
+	campusDonationController              controller.CampusDonationController
 }
 
 type Router interface {
@@ -69,6 +70,7 @@ func NewRouter(
 	teacherController controller.TeacherController,
 	userController controller.UserController,
 	yearController controller.YearController,
+	campusDonationController controller.CampusDonationController,
 ) Router {
 	return router{
 		activityController,
@@ -99,6 +101,7 @@ func NewRouter(
 		teacherController,
 		userController,
 		yearController,
+		campusDonationController,
 	}
 }
 
@@ -162,6 +165,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/buy_reports/details", r.buyReportController.IndexBuyReport)
 	e.PUT("/buy_report/status/:buy_report_id", r.buyReportController.UpdateBuyReportStatus)
 
+	// campus_donationsのRoute
+	e.GET("/campus_donations/building/:building_id/floor/:floor_id", r.campusDonationController.IndexCampusDonationByFloor)
+
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
 
@@ -224,6 +230,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 		"/fund_informations/details/:year",
 		r.fundInformationController.IndexFundInformationDetailsByPeriod,
 	)
+	e.GET("/fund_informations/buildings/:year", r.fundInformationController.IndexFundInformationBuildingsByPeriod)
 
 	// incomes
 	e.GET("/incomes", r.incomeController.IndexIncome)
