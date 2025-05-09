@@ -898,6 +898,9 @@ type ServerInterface interface {
 	// (GET /campus_donations/building/{building_id}/floor/{floor_id})
 	GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context, buildingId int, floorId int) error
 
+	// (GET /campus_donations/buildings/{year})
+	GetCampusDonationsBuildingsYear(ctx echo.Context, year int) error
+
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
 
@@ -1002,9 +1005,6 @@ type ServerInterface interface {
 
 	// (POST /fund_informations)
 	PostFundInformations(ctx echo.Context, params PostFundInformationsParams) error
-
-	// (GET /fund_informations/buildings/{year})
-	GetFundInformationsBuildingsYear(ctx echo.Context, year int) error
 
 	// (GET /fund_informations/details)
 	GetFundInformationsDetails(ctx echo.Context) error
@@ -1841,6 +1841,22 @@ func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingBuildingIdFloorFloorI
 	return err
 }
 
+// GetCampusDonationsBuildingsYear converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingsYear(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsBuildingsYear(ctx, year)
+	return err
+}
+
 // GetDepartments converts echo context to params.
 func (w *ServerInterfaceWrapper) GetDepartments(ctx echo.Context) error {
 	var err error
@@ -2478,22 +2494,6 @@ func (w *ServerInterfaceWrapper) PostFundInformations(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostFundInformations(ctx, params)
-	return err
-}
-
-// GetFundInformationsBuildingsYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFundInformationsBuildingsYear(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "year" -------------
-	var year int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFundInformationsBuildingsYear(ctx, year)
 	return err
 }
 
@@ -3634,6 +3634,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
 	router.GET(baseURL+"/campus_donations/building/:building_id/floor/:floor_id", wrapper.GetCampusDonationsBuildingBuildingIdFloorFloorId)
+	router.GET(baseURL+"/campus_donations/buildings/:year", wrapper.GetCampusDonationsBuildingsYear)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)
@@ -3669,7 +3670,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
 	router.GET(baseURL+"/fund_informations", wrapper.GetFundInformations)
 	router.POST(baseURL+"/fund_informations", wrapper.PostFundInformations)
-	router.GET(baseURL+"/fund_informations/buildings/:year", wrapper.GetFundInformationsBuildingsYear)
 	router.GET(baseURL+"/fund_informations/details", wrapper.GetFundInformationsDetails)
 	router.GET(baseURL+"/fund_informations/details/:year", wrapper.GetFundInformationsDetailsYear)
 	router.DELETE(baseURL+"/fund_informations/:id", wrapper.DeleteFundInformationsId)

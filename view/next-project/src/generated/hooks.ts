@@ -2781,6 +2781,72 @@ export const useGetCampusDonationsBuildingBuildingIdFloorFloorId = <TError = unk
 };
 
 /**
+ * 年度で指定されたfund_informationsに紐づくデータを取得
+ */
+export type getCampusDonationsBuildingsYearResponse200 = {
+  data: BuildingTotal[];
+  status: 200;
+};
+
+export type getCampusDonationsBuildingsYearResponseComposite =
+  getCampusDonationsBuildingsYearResponse200;
+
+export type getCampusDonationsBuildingsYearResponse =
+  getCampusDonationsBuildingsYearResponseComposite & {
+    headers: Headers;
+  };
+
+export const getGetCampusDonationsBuildingsYearUrl = (year: number) => {
+  return `/campus_donations/buildings/${year}`;
+};
+
+export const getCampusDonationsBuildingsYear = async (
+  year: number,
+  options?: RequestInit,
+): Promise<getCampusDonationsBuildingsYearResponse> => {
+  return customFetch<getCampusDonationsBuildingsYearResponse>(
+    getGetCampusDonationsBuildingsYearUrl(year),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetCampusDonationsBuildingsYearKey = (year: number) =>
+  [`/campus_donations/buildings/${year}`] as const;
+
+export type GetCampusDonationsBuildingsYearQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsBuildingsYear>>
+>;
+export type GetCampusDonationsBuildingsYearQueryError = unknown;
+
+export const useGetCampusDonationsBuildingsYear = <TError = unknown>(
+  year: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getCampusDonationsBuildingsYear>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!year;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetCampusDonationsBuildingsYearKey(year) : null));
+  const swrFn = () => getCampusDonationsBuildingsYear(year, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * departmentの一覧の取得
  */
 export type getDepartmentsResponse200 = {
@@ -5538,72 +5604,6 @@ export const useGetFundInformationsDetailsYear = <TError = unknown>(
   const swrKey =
     swrOptions?.swrKey ?? (() => (isEnabled ? getGetFundInformationsDetailsYearKey(year) : null));
   const swrFn = () => getFundInformationsDetailsYear(year, requestOptions);
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
-
-  return {
-    swrKey,
-    ...query,
-  };
-};
-
-/**
- * 年度で指定されたfund_informationsに紐づくデータを取得
- */
-export type getFundInformationsBuildingsYearResponse200 = {
-  data: BuildingTotal[];
-  status: 200;
-};
-
-export type getFundInformationsBuildingsYearResponseComposite =
-  getFundInformationsBuildingsYearResponse200;
-
-export type getFundInformationsBuildingsYearResponse =
-  getFundInformationsBuildingsYearResponseComposite & {
-    headers: Headers;
-  };
-
-export const getGetFundInformationsBuildingsYearUrl = (year: number) => {
-  return `/fund_informations/buildings/${year}`;
-};
-
-export const getFundInformationsBuildingsYear = async (
-  year: number,
-  options?: RequestInit,
-): Promise<getFundInformationsBuildingsYearResponse> => {
-  return customFetch<getFundInformationsBuildingsYearResponse>(
-    getGetFundInformationsBuildingsYearUrl(year),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
-
-export const getGetFundInformationsBuildingsYearKey = (year: number) =>
-  [`/fund_informations/buildings/${year}`] as const;
-
-export type GetFundInformationsBuildingsYearQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFundInformationsBuildingsYear>>
->;
-export type GetFundInformationsBuildingsYearQueryError = unknown;
-
-export const useGetFundInformationsBuildingsYear = <TError = unknown>(
-  year: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFundInformationsBuildingsYear>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
-
-  const isEnabled = swrOptions?.enabled !== false && !!year;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFundInformationsBuildingsYearKey(year) : null));
-  const swrFn = () => getFundInformationsBuildingsYear(year, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
