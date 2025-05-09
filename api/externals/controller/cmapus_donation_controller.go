@@ -13,6 +13,7 @@ type campusDonationController struct {
 
 type CampusDonationController interface {
 	IndexCampusDonationByFloor(echo.Context) error
+	IndexCampusDonationBuildingByPeriod(echo.Context) error
 }
 
 func NewCampusDonationController(u usecase.CampusDonationUseCase) CampusDonationController {
@@ -34,4 +35,14 @@ func (cdc *campusDonationController) IndexCampusDonationByFloor(c echo.Context) 
 	}
 
 	return c.JSON(http.StatusOK, campusDonationByFloors)
+}
+
+func (f *campusDonationController) IndexCampusDonationBuildingByPeriod(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.Param("year")
+	fundInformationBuildingByPeriod, err := f.u.GetCampusDonationBuildingByPeriod(ctx, year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, fundInformationBuildingByPeriod)
 }

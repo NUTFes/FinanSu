@@ -5,7 +5,6 @@ import (
 	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
-	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
 
@@ -22,7 +21,6 @@ type FundInformationUseCase interface {
 	GetFundInformationDetails(context.Context) ([]domain.FundInformationDetail, error)
 	GetFundInformationDetailByID(context.Context, string) (domain.FundInformationDetail, error)
 	GetFundInformationDetailsByPeriod(context.Context, string) ([]domain.FundInformationDetail, error)
-	GetFundInformationBuildingsByPeriod(context.Context, string) ([]BuildingTotal, error)
 }
 
 func NewFundInformationUseCase(rep rep.FundInformationRepository) FundInformationUseCase {
@@ -327,49 +325,3 @@ func (f *fundInformationUseCase) GetFundInformationDetailsByPeriod(c context.Con
 	}
 	return fundInformationDetails, nil
 }
-
-func (f *fundInformationUseCase) GetFundInformationBuildingsByPeriod(c context.Context, year string) ([]BuildingTotal, error) {
-	rows, err := f.rep.AllBuildingsByPeriod(c, year)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			log.Println(err)
-		}
-	}()
-
-	aggregated := make(map[int]*BuildingTotal)
-	for rows.Next() {
-		var buildingTotal domain.FundInformationBuilding
-		if err := rows.Scan(&buildingTotal.Id, &buildingTotal.Name, &buildingTotal.Price); err != nil {
-			return nil, err
-		}
-		if b, exists := aggregated[buildingTotal.Id]; exists {
-			if b.TotalPrice == nil {
-				b.TotalPrice = new(int)
-			}
-			*b.TotalPrice += buildingTotal.Price
-		} else {
-			id := buildingTotal.Id
-			name := buildingTotal.Name
-			price := buildingTotal.Price
-			aggregated[buildingTotal.Id] = &BuildingTotal{
-				Id:         &id,
-				Name:       &name,
-				TotalPrice: &price,
-			}
-		}
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	var result []BuildingTotal
-	for _, b := range aggregated {
-		result = append(result, *b)
-	}
-	return result, nil
-}
-
-type BuildingTotal generated.BuildingTotal
