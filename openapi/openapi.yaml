@@ -843,6 +843,27 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/campusDonationByFloor"
+  /campus_donations/buildings/{year}:
+    get:
+      tags:
+        - fund_information
+      description: 年度で指定されたfund_informationsに紐づくデータを取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度で指定されたfund_informationsに紐づくデータを取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/buildingTotal"
 
   /departments:
     get:
@@ -1721,27 +1742,6 @@ paths:
             application/json:
               schema:
                 type: object
-  /fund_informations/buildings/{year}:
-    get:
-      tags:
-        - fund_information
-      description: 年度で指定されたfund_informationsに紐づくデータを取得
-      parameters:
-        - name: year
-          in: path
-          description: year
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: 年度で指定されたfund_informationsに紐づくデータを取得
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/buildingTotal"
   /incomes:
     get:
       tags:
