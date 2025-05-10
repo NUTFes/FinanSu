@@ -292,6 +292,18 @@ type SponsorStyle struct {
 	Style   string `json:"style"`
 }
 
+// Teacher defines model for teacher.
+type Teacher struct {
+	Building     string  `json:"building"`
+	DepartmentId int     `json:"department_id"`
+	Id           int     `json:"id"`
+	IsBlack      bool    `json:"is_black"`
+	Name         string  `json:"name"`
+	Position     string  `json:"position"`
+	Remark       string  `json:"remark"`
+	Room         *string `json:"room,omitempty"`
+}
+
 // Total defines model for total.
 type Total struct {
 	Balance *int `json:"balance,omitempty"`
@@ -582,6 +594,9 @@ type PostTeachersParams struct {
 	// DepartmentId 学科ID
 	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
 
+	// Building 棟
+	Building *string `form:"building,omitempty" json:"building,omitempty"`
+
 	// Room 部屋番号
 	Room *string `form:"room,omitempty" json:"room,omitempty"`
 
@@ -602,6 +617,9 @@ type PutTeachersIdParams struct {
 
 	// DepartmentId 学科ID
 	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
+
+	// Building 棟
+	Building *string `form:"building,omitempty" json:"building,omitempty"`
 
 	// Room 部屋番号
 	Room *string `form:"room,omitempty" json:"room,omitempty"`
@@ -3063,6 +3081,13 @@ func (w *ServerInterfaceWrapper) PostTeachers(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
 	}
 
+	// ------------- Optional query parameter "building" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "building", ctx.QueryParams(), &params.Building)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building: %s", err))
+	}
+
 	// ------------- Optional query parameter "room" -------------
 
 	err = runtime.BindQueryParameter("form", true, false, "room", ctx.QueryParams(), &params.Room)
@@ -3178,6 +3203,13 @@ func (w *ServerInterfaceWrapper) PutTeachersId(ctx echo.Context) error {
 	err = runtime.BindQueryParameter("form", true, false, "department_id", ctx.QueryParams(), &params.DepartmentId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "building" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "building", ctx.QueryParams(), &params.Building)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building: %s", err))
 	}
 
 	// ------------- Optional query parameter "room" -------------

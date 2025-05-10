@@ -104,7 +104,6 @@ import type {
   GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
-  GetTeachersId200,
   GetUsersId200,
   Income,
   IncomeCategory,
@@ -175,6 +174,7 @@ import type {
   Receipt,
   Sponsor,
   SponsorStyle,
+  Teacher,
   YearPeriods,
 } from './model';
 
@@ -7585,7 +7585,7 @@ export const useDeleteSponsorstylesId = <TError = unknown>(
  * teacherの一覧を取得
  */
 export type getTeachersResponse200 = {
-  data: void;
+  data: Teacher;
   status: 200;
 };
 
@@ -7781,7 +7781,7 @@ export const useDeleteTeachersDelete = <TError = unknown>(options?: {
  * IDで指定されたteacherの取得
  */
 export type getTeachersIdResponse200 = {
-  data: GetTeachersId200;
+  data: Teacher;
   status: 200;
 };
 
