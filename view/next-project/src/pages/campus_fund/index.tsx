@@ -1,9 +1,4 @@
-import {
-  Box,
-  Grid,
-  GridItem,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import OpenEditModalButton from '@/components/campus_fund/OpenEditModalButton';
 import ReportModal from '@/components/campus_fund/ReportModal';
@@ -45,34 +40,32 @@ const CampusFund = () => {
 
   return (
     <MainLayout>
-      <Box p={8} mx="auto">
-        <Text fontSize="2xl" fontWeight="bold" color="#26C1CE" textAlign="center" mt={8}>
+      <Box p={8} mx='auto'>
+        <Text fontSize='2xl' fontWeight='bold' color='#26C1CE' textAlign='center' mt={8}>
           総募金額
         </Text>
-        <Text fontSize="6xl" fontWeight="bold" color="#04668C" textAlign="center" mb={8}>
+        <Text fontSize='6xl' fontWeight='bold' color='#04668C' textAlign='center' mb={8}>
           ¥{formatNumber(totalAmount)}
         </Text>
-        <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={6}>
+        <Grid templateColumns='repeat(auto-fit, minmax(200px, 1fr))' gap={6}>
           {buildings.map((building) => (
             <GridItem
               key={building.name}
               p={4}
-              border="1px solid #E2E8F0"
-              borderRadius="md"
-              textAlign="center"
-              cursor="pointer"
+              border='1px solid #E2E8F0'
+              borderRadius='md'
+              textAlign='center'
+              cursor='pointer'
               onClick={() => handleBuildingClick(building.name)}
             >
-              <Text fontSize="lg" fontWeight="bold">
+              <Text fontSize='lg' fontWeight='bold'>
                 {building.name}
               </Text>
-              <Text fontSize="xl" color="#26C1CE">
+              <Text fontSize='xl' color='#26C1CE'>
                 ¥{formatNumber(building.amount)}
               </Text>
-              <Box display="flex" justifyContent="center" alignItems="center" mt={8}>
-                <OpenEditModalButton className="w-full md:w-fit">
-                  報告登録
-                </OpenEditModalButton>
+              <Box display='flex' justifyContent='center' alignItems='center' mt={8}>
+                <OpenEditModalButton className='w-full md:w-fit'>報告登録</OpenEditModalButton>
               </Box>
             </GridItem>
           ))}

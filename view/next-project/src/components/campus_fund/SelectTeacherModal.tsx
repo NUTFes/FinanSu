@@ -1,12 +1,4 @@
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Select
-} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, Select } from '@chakra-ui/react';
 import { Title, Modal, CloseButton, EditButton } from '../common';
 import formatNumber from '../common/Formatter';
 
@@ -30,26 +22,26 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <Modal onClick={onClose} className="w-1/3">
-      <div className="relative p-5">
-        <div className='absolute top-2 right-2'>
+    <Modal onClick={onClose} className='w-1/3'>
+      <div className='relative p-5'>
+        <div className='absolute right-2 top-2'>
           <CloseButton onClick={onClose} />
         </div>
         <Title>
           {building || '建物名未設定'} {/* 建物名を表示 */}
           <Select
             ml={4}
-            width="auto"
-            display="inline-block"
-            variant="unstyled"
-            borderBottom="1px solid #ccc"
+            width='auto'
+            display='inline-block'
+            variant='unstyled'
+            borderBottom='1px solid #ccc'
           >
-            <option value="1F">1F</option>
-            <option value="2F">2F</option>
-            <option value="3F">3F</option>
+            <option value='1F'>1F</option>
+            <option value='2F'>2F</option>
+            <option value='3F'>3F</option>
           </Select>
         </Title>
-        <Table variant="simple" size="md" mt={4}>
+        <Table variant='simple' size='md' mt={4}>
           <Thead>
             <Tr>
               <Th>居室</Th>
@@ -65,17 +57,14 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
                 <Td>{teacher.name}</Td>
                 <Td>{teacher.amount ? `¥${formatNumber(teacher.amount)}` : '-'}</Td>
                 <Td>
-                  <EditButton
-                    size="S"
-                    onClick={() => onSelect(teacher.name)}
-                  />
+                  <EditButton size='S' onClick={() => onSelect(teacher.name)} />
                 </Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
       </div>
-    </Modal >
+    </Modal>
   );
 };
 
