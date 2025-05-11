@@ -5,7 +5,7 @@ import (
 	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
-	"github.com/NUTFes/FinanSu/api/internals/domain"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/pkg/errors"
 )
 
@@ -14,11 +14,11 @@ type teacherUseCase struct {
 }
 
 type TeacherUseCase interface {
-	GetTeachers(context.Context) ([]domain.Teacher, error)
+	GetTeachers(context.Context) ([]TeacherWithRoom, error)
 	GetFundRegisteredByPeriods(context.Context, string) ([]int, error)
-	GetTeacherByID(context.Context, string) (domain.Teacher, error)
-	CreateTeacher(context.Context, string, string, string, string, string, string) (domain.Teacher, error)
-	UpdateTeacher(context.Context, string, string, string, string, string, string, string) (domain.Teacher, error)
+	GetTeacherByID(context.Context, string) (TeacherWithRoom, error)
+	CreateTeacher(context.Context, string, string, string, string, string, string) (TeacherWithRoom, error)
+	UpdateTeacher(context.Context, string, string, string, string, string, string, string) (TeacherWithRoom, error)
 	DestroyTeacher(context.Context, string) error
 	DestroyMultiTeachers(context.Context, []int) error
 }
@@ -27,10 +27,10 @@ func NewTeacherUseCase(rep rep.TeacherRepository) TeacherUseCase {
 	return &teacherUseCase{rep}
 }
 
-func (t *teacherUseCase) GetTeachers(c context.Context) ([]domain.Teacher, error) {
+func (t *teacherUseCase) GetTeachers(c context.Context) ([]TeacherWithRoom, error) {
 
-	teacher := domain.Teacher{}
-	var teachers []domain.Teacher
+	teacher := TeacherWithRoom{}
+	var teachers []TeacherWithRoom
 
 	// クエリー実行
 	rows, err := t.rep.All(c)
@@ -46,16 +46,13 @@ func (t *teacherUseCase) GetTeachers(c context.Context) ([]domain.Teacher, error
 
 	for rows.Next() {
 		err := rows.Scan(
-			&teacher.ID,
+			&teacher.DepartmentId,
+			&teacher.Id,
+			&teacher.IsBlack,
 			&teacher.Name,
 			&teacher.Position,
-			&teacher.DepartmentID,
-			&teacher.Room,
-			&teacher.IsBlack,
 			&teacher.Remark,
-			&teacher.IsDeleted,
-			&teacher.CreatedAt,
-			&teacher.UpdatedAt,
+			&teacher.RoomName,
 		)
 
 		if err != nil {
@@ -96,8 +93,8 @@ func (t *teacherUseCase) GetFundRegisteredByPeriods(c context.Context, year stri
 	return ids, nil
 }
 
-func (t *teacherUseCase) GetTeacherByID(c context.Context, id string) (domain.Teacher, error) {
-	var teacher domain.Teacher
+func (t *teacherUseCase) GetTeacherByID(c context.Context, id string) (TeacherWithRoom, error) {
+	var teacher TeacherWithRoom
 
 	row, err := t.rep.Find(c, id)
 	if err != nil {
@@ -105,16 +102,13 @@ func (t *teacherUseCase) GetTeacherByID(c context.Context, id string) (domain.Te
 	}
 
 	err = row.Scan(
-		&teacher.ID,
+		&teacher.DepartmentId,
+		&teacher.Id,
+		&teacher.IsBlack,
 		&teacher.Name,
 		&teacher.Position,
-		&teacher.DepartmentID,
-		&teacher.Room,
-		&teacher.IsBlack,
 		&teacher.Remark,
-		&teacher.IsDeleted,
-		&teacher.CreatedAt,
-		&teacher.UpdatedAt,
+		&teacher.RoomName,
 	)
 
 	if err != nil {
@@ -131,8 +125,8 @@ func (t *teacherUseCase) CreateTeacher(
 	departmentID string,
 	room string,
 	isBlack string,
-	remark string) (domain.Teacher, error) {
-	latestTeacher := domain.Teacher{}
+	remark string) (TeacherWithRoom, error) {
+	latestTeacher := TeacherWithRoom{}
 
 	if err := t.rep.Create(c, name, position, departmentID, room, isBlack, remark); err != nil {
 		return latestTeacher, err
@@ -144,16 +138,13 @@ func (t *teacherUseCase) CreateTeacher(
 	}
 
 	err = row.Scan(
-		&latestTeacher.ID,
+		&latestTeacher.DepartmentId,
+		&latestTeacher.Id,
+		&latestTeacher.IsBlack,
 		&latestTeacher.Name,
 		&latestTeacher.Position,
-		&latestTeacher.DepartmentID,
-		&latestTeacher.Room,
-		&latestTeacher.IsBlack,
 		&latestTeacher.Remark,
-		&latestTeacher.IsDeleted,
-		&latestTeacher.CreatedAt,
-		&latestTeacher.UpdatedAt,
+		&latestTeacher.RoomName,
 	)
 
 	if err != nil {
@@ -170,29 +161,26 @@ func (t *teacherUseCase) UpdateTeacher(
 	departmentID string,
 	room string,
 	isBlack string,
-	remark string) (domain.Teacher, error) {
-	updateTeacher := domain.Teacher{}
+	remark string) (TeacherWithRoom, error) {
+	updateTeacher := TeacherWithRoom{}
 
 	if err := t.rep.Update(c, id, name, position, departmentID, room, isBlack, remark); err != nil {
-		return domain.Teacher{}, err
+		return TeacherWithRoom{}, err
 	}
 
 	row, err := t.rep.Find(c, id)
 	if err != nil {
-		return domain.Teacher{}, err
+		return TeacherWithRoom{}, err
 	}
 
 	err = row.Scan(
-		&updateTeacher.ID,
+		&updateTeacher.DepartmentId,
+		&updateTeacher.Id,
+		&updateTeacher.IsBlack,
 		&updateTeacher.Name,
 		&updateTeacher.Position,
-		&updateTeacher.DepartmentID,
-		&updateTeacher.Room,
-		&updateTeacher.IsBlack,
 		&updateTeacher.Remark,
-		&updateTeacher.IsDeleted,
-		&updateTeacher.CreatedAt,
-		&updateTeacher.UpdatedAt,
+		&updateTeacher.RoomName,
 	)
 
 	if err != nil {
@@ -210,3 +198,5 @@ func (t *teacherUseCase) DestroyMultiTeachers(c context.Context, ids []int) erro
 	err := t.rep.MultiDestroy(c, ids)
 	return err
 }
+
+type TeacherWithRoom generated.TeacherWithRoom

@@ -2326,65 +2326,53 @@ paths:
     get:
       tags:
         - teacher
-      description: teacherの一覧を取得
+      description: 教員の一覧を取得
       responses:
         "200":
-          description: teacherの一覧を取得
+          description: 教員の一覧を取得
           content:
             application/json:
               schema:
                 type: array
-                $ref: "#/components/schemas/teacher"
+                items:
+                  $ref: "#/components/schemas/teacherWithRoom"
     post:
       tags:
         - teacher
-      description: teacherの作成
-      parameters:
-        - name: name
-          in: query
-          description: 名前
-          required: true
-          schema:
-            type: string
-        - name: position
-          in: query
-          description: 役職
-          required: true
-          schema:
-            type: string
-        - name: department_id
-          in: query
-          description: 学科ID
-          schema:
-            type: integer
-        - name: building
-          in: query
-          description: 棟
-          schema:
-            type: string
-        - name: room
-          in: query
-          description: 部屋番号
-          schema:
-            type: string
-        - name: is_black
-          in: query
-          description: ブラックリストの真偽
-          schema:
-            type: boolean
-        - name: remark
-          in: query
-          description: 備考
-          schema:
-            type: string
+      description: 教員の作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 教員名
+                  example: 山田太郎
+                departmentId:
+                  type: integer
+                  description: 学科ID
+                  example: 1
+                isBlack:
+                  type: boolean
+                  description: ブラックリストの真偽
+                  example: false
+                remark:
+                  type: string
+                  description: 備考
+                  example: テスト
+                roomName:
+                  type: string
+                  description: 居室名。roomsテーブルにあるかないかの判断に使用。
+                  example: 100
       responses:
         "200":
-          description: createされたteacherが返ってくる
+          description: 作成された教員が返ってくる
           content:
             application/json:
               schema:
                 type: object
-
   /teachers/delete:
     delete:
       tags:
@@ -2404,7 +2392,6 @@ paths:
               schema:
                 type: object
       x-codegen-request-body-name: destroyTeacherIDs
-
   /teachers/{id}:
     get:
       tags:
@@ -2423,7 +2410,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/teacher"
+                $ref: "#/components/schemas/teacherWithRoom"
     put:
       tags:
         - teacher
@@ -2447,22 +2434,12 @@ paths:
           required: true
           schema:
             type: string
-        - name: department_id
+        - name: departmentId
           in: query
           description: 学科ID
           schema:
             type: integer
-        - name: building
-          in: query
-          description: 棟
-          schema:
-            type: string
-        - name: room
-          in: query
-          description: 部屋番号
-          schema:
-            type: string
-        - name: is_black
+        - name: isBlack
           in: query
           description: ブラックリストに入っているか
           schema:
@@ -2470,6 +2447,11 @@ paths:
         - name: remark
           in: query
           description: 備考欄
+          schema:
+            type: string
+        - name: roomName
+          in: query
+          description: 居室名。roomsテーブルにあるかないかの判断に使用。
           schema:
             type: string
       responses:
@@ -3439,7 +3421,7 @@ components:
         endedAt:
           type: string
           example: 0000-00-00T00:00:00Z
-    teacher:
+    teacherWithRoom:
       type: object
       properties:
         id:
@@ -3451,29 +3433,26 @@ components:
         position:
           type: string
           example: 准教授
-        department_id:
+        departmentId:
           type: integer
           example: 1
-        building:
-          type: string
-          example: 研究棟
-        room:
-          type: string
-          example: 101
-        is_black:
+        isBlack:
           type: boolean
           example: false
         remark:
           type: string
           example: 備考
+        roomName:
+          type: string
+          example: 100
       required:
         - id
         - name
         - position
-        - department_id
+        - departmentId
         - building
-        - room_number
-        - is_black
+        - isBlack
         - remark
+        - roomName
 
 x-original-swagger-version: "2.0"

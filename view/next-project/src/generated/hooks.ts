@@ -104,7 +104,6 @@ import type {
   GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
-  GetTeachersId200,
   GetUsersId200,
   Income,
   IncomeCategory,
@@ -135,7 +134,7 @@ import type {
   PostSponsors200,
   PostSponsorstyles200,
   PostTeachers200,
-  PostTeachersParams,
+  PostTeachersBody,
   PostUploadFile200,
   PostUploadFileBody,
   PostUsers200,
@@ -175,6 +174,7 @@ import type {
   Receipt,
   Sponsor,
   SponsorStyle,
+  TeacherWithRoom,
   YearPeriods,
 } from './model';
 
@@ -7582,10 +7582,10 @@ export const useDeleteSponsorstylesId = <TError = unknown>(
 };
 
 /**
- * teacherの一覧を取得
+ * 教員の一覧を取得
  */
 export type getTeachersResponse200 = {
-  data: void;
+  data: TeacherWithRoom[];
   status: 200;
 };
 
@@ -7633,7 +7633,7 @@ export const useGetTeachers = <TError = unknown>(options?: {
 };
 
 /**
- * teacherの作成
+ * 教員の作成
  */
 export type postTeachersResponse200 = {
   data: PostTeachers200;
@@ -7646,61 +7646,46 @@ export type postTeachersResponse = postTeachersResponseComposite & {
   headers: Headers;
 };
 
-export const getPostTeachersUrl = (params: PostTeachersParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/teachers?${stringifiedParams}` : `/teachers`;
+export const getPostTeachersUrl = () => {
+  return `/teachers`;
 };
 
 export const postTeachers = async (
-  params: PostTeachersParams,
+  postTeachersBody: PostTeachersBody,
   options?: RequestInit,
 ): Promise<postTeachersResponse> => {
-  return customFetch<postTeachersResponse>(getPostTeachersUrl(params), {
+  return customFetch<postTeachersResponse>(getPostTeachersUrl(), {
     ...options,
     method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(postTeachersBody),
   });
 };
 
-export const getPostTeachersMutationFetcher = (
-  params: PostTeachersParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
-  return (_: Key, __: { arg: Arguments }): Promise<postTeachersResponse> => {
-    return postTeachers(params, options);
+export const getPostTeachersMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, { arg }: { arg: PostTeachersBody }): Promise<postTeachersResponse> => {
+    return postTeachers(arg, options);
   };
 };
-export const getPostTeachersMutationKey = (params: PostTeachersParams) =>
-  [`/teachers`, ...(params ? [params] : [])] as const;
+export const getPostTeachersMutationKey = () => [`/teachers`] as const;
 
 export type PostTeachersMutationResult = NonNullable<Awaited<ReturnType<typeof postTeachers>>>;
 export type PostTeachersMutationError = unknown;
 
-export const usePostTeachers = <TError = unknown>(
-  params: PostTeachersParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postTeachers>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postTeachers>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
+export const usePostTeachers = <TError = unknown>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postTeachers>>,
+    TError,
+    Key,
+    PostTeachersBody,
+    Awaited<ReturnType<typeof postTeachers>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
   const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPostTeachersMutationKey(params);
-  const swrFn = getPostTeachersMutationFetcher(params, requestOptions);
+  const swrKey = swrOptions?.swrKey ?? getPostTeachersMutationKey();
+  const swrFn = getPostTeachersMutationFetcher(requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
@@ -7781,7 +7766,7 @@ export const useDeleteTeachersDelete = <TError = unknown>(options?: {
  * IDで指定されたteacherの取得
  */
 export type getTeachersIdResponse200 = {
-  data: GetTeachersId200;
+  data: TeacherWithRoom;
   status: 200;
 };
 
