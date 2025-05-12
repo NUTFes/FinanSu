@@ -5,6 +5,7 @@ import { TbDownload } from 'react-icons/tb';
 import { useRecoilValue } from 'recoil';
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
+import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
   useGetYearsPeriods,
@@ -19,8 +20,6 @@ import { userAtom } from '@/store/atoms';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
-import CheckSettlementConfirmModal from '@components/purchasereports/CheckSettlementConfirmModal';
-import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 
 export default function PurchaseReports() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Checkbox } from '@components/common';
 import CheckSettlementConfirmModal from './CheckSettlementConfirmModal';
+import { Checkbox } from '@components/common';
 
 interface Props {
   id: number;
