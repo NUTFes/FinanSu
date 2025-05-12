@@ -24,6 +24,10 @@ func (cdc *campusDonationController) IndexCampusDonationByFloor(c echo.Context) 
 	buildingId := c.Param("building_id")
 	floorId := c.Param("floor_id")
 
+	if buildingId == "" {
+		return c.String(http.StatusBadRequest, "building_id is required")
+	}
+
 	if floorId == "" {
 		return c.String(http.StatusBadRequest, "floor_id is required")
 	}
