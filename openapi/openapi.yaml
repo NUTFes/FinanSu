@@ -842,7 +842,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/campusDonationByFloor"
+                  $ref: "#/components/schemas/campusDonationByFloorAndBuilding"
 
   /departments:
     get:
@@ -3503,17 +3503,12 @@ components:
         - room_number
         - is_black
         - remark
-    campusDonationByFloor:
+    campusDonation:
       type: object
+      description: 教員単体の情報
       properties:
         teacher_id:
           type: integer
-        building_name:
-          type: string
-        unit_number:
-          type: string
-        floor_number:
-          type: string
         room_name:
           type: string
         teacher_name:
@@ -3524,12 +3519,41 @@ components:
           type: boolean
       required:
         - teacher_id
-        - building_name
-        - unit_number
-        - floor_number
         - room_name
         - teacher_name
         - price
-        - is_black
+        - is_Black
+    floorGroup:
+      type: object
+      description: フロアごとの教員情報
+      properties:
+        floor_id:
+          type: integer
+        floor_number:
+          type: string
+        donations:
+          type: array
+          items:
+            $ref: '#/components/schemas/campusDonation'
+      required:
+        - floor_ud
+        - floor_number
+        - donations
+    campusDonationByFloorAndBuilding:
+      type: object
+      description: 棟ごとの教員情報
+      properties:
+        building_id:
+          type: integer
+        building_name:
+          type: string
+        floors:
+          type: array
+          items:
+            $ref: '#/components/schemas/floorGroup'
+      required:
+        - building_id
+        - building_Name
+        - floors
 
 x-original-swagger-version: "2.0"
