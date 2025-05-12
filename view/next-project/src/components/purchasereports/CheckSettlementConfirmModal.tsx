@@ -24,11 +24,11 @@ const CheckSettlementConfirmModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>精算完了に変更</div>
+      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>清算完了に変更</div>
       <div className='mx-auto my-5 w-fit text-center'>
-        <p className='text-lg'>この購入報告を精算完了に変更しますか？</p>
+        <p className='text-lg'>この購入報告を清算完了に変更しますか？</p>
         <p className='mt-5 text-sm text-red-600'>
-          一度精算完了にすると、元にに戻すことはできません。
+          一度清算完了にすると、元にに戻すことはできません。
         </p>
       </div>
       <div className=''>
