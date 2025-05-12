@@ -51,37 +51,26 @@ func (cdr *campusDonationRepository) AllCampusDonationByFloor(c context.Context,
 			goqu.On(goqu.Ex{"fund_informations.teacher_id": goqu.I("teachers.id")}),
 		).
 		Select(
-			goqu.I("buildings.name"),
-			goqu.I("building_units.unit_number"),
-			goqu.I("floors.floor_number"),
-			goqu.I("rooms.room_name"),
-			goqu.I("teachers.id"),
-			goqu.I("teachers.name"),
-			goqu.I("teachers.is_black"),
-			goqu.COALESCE(goqu.SUM(goqu.I("fund_informations.price")), 0),
+			goqu.I("buildings.id").As("building_id"),
+			goqu.I("buildings.name").As("building_name"),
+			goqu.I("floors.id").As("floor_id"),
+			goqu.I("floors.floor_number").As("floor_number"),
+			goqu.I("teachers.id").As("teacher_id"),
+			goqu.I("teachers.name").As("teacher_name"),
+			goqu.I("rooms.room_name").As("room_name"),
+			goqu.I("fund_informations.price").As("price"),
+			goqu.I("teachers.is_black").As("is_black"),
 		).
 		Where(
 			goqu.Ex{"buildings.id": buildingId, "floors.id": floorId},
 		).
-		GroupBy(
-			goqu.I("buildings.name"),
-			goqu.I("building_units.unit_number"),
-			goqu.I("floors.floor_number"),
-			goqu.I("rooms.room_name"),
-			goqu.I("teachers.id"),
-			goqu.I("teachers.name"),
-			goqu.I("teachers.is_black"),
-		).
 		Order(
 			goqu.I("building_units.unit_number").Asc(),
 			goqu.I("floors.floor_number").Asc(),
-			goqu.I("rooms.room_name").Asc(),
-			goqu.I("teachers.name").Asc(),
 		).
 		ToSQL()
 
 	if err != nil {
-		// エラーハンドリング
 		log.Fatal(err)
 	}
 
