@@ -1,4 +1,5 @@
 # アプリコンテナ=view,api、DBコンテナ=db,minio
+include finansu.env
 
 # アプリコンテナのイメージのビルド
 build:
@@ -106,3 +107,23 @@ gen-er:
 
 format:
 	docker compose run --rm view npm run format
+
+# マイグレーションの実行
+migrate:
+	docker compose -f compose.migrate.yml run --rm migrate \
+		--path /migrations \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
+		up
+
+# マイグレーションの実行(ダウングレード)
+migrate-down:
+	docker compose -f compose.migrate.yml run --rm migrate \
+		--path /migrations \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
+		down
+
+# マイグレーションファイルの作成
+create-migration:
+	./scripts/create_migration.sh
+
+
