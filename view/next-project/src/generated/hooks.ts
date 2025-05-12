@@ -18,7 +18,7 @@ import type {
   BuyReport,
   BuyReportDetail,
   BuyReportWithDivisionId,
-  CampusDonationByFloor,
+  CampusDonationByFloorAndBuilding,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
   DeleteActivityStylesId200,
@@ -2705,7 +2705,7 @@ export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
  * 各棟の各階の学内募金情報を取得するAPI
  */
 export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponse200 = {
-  data: CampusDonationByFloor[];
+  data: CampusDonationByFloorAndBuilding[];
   status: 200;
 };
 

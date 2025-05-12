@@ -112,16 +112,20 @@ type BuyReportWithDivisionId struct {
 	PaidBy         *string `json:"paidBy,omitempty"`
 }
 
-// CampusDonationByFloor defines model for campusDonationByFloor.
-type CampusDonationByFloor struct {
-	BuildingName string `json:"building_name"`
-	FloorNumber  string `json:"floor_number"`
-	IsBlack      bool   `json:"is_black"`
-	Price        int    `json:"price"`
-	RoomName     string `json:"room_name"`
-	TeacherId    int    `json:"teacher_id"`
-	TeacherName  string `json:"teacher_name"`
-	UnitNumber   string `json:"unit_number"`
+// CampusDonation 教員単体の情報
+type CampusDonation struct {
+	IsBlack     *bool  `json:"is_black,omitempty"`
+	Price       int    `json:"price"`
+	RoomName    string `json:"room_name"`
+	TeacherId   int    `json:"teacher_id"`
+	TeacherName string `json:"teacher_name"`
+}
+
+// CampusDonationByFloorAndBuilding 棟ごとの教員情報
+type CampusDonationByFloorAndBuilding struct {
+	BuildingId   int          `json:"building_id"`
+	BuildingName *string      `json:"building_name,omitempty"`
+	Floors       []FloorGroup `json:"floors"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
@@ -232,6 +236,13 @@ type FinancialRecordWithBalance struct {
 	Id      *int    `json:"id,omitempty"`
 	Name    *string `json:"name,omitempty"`
 	Year    *int    `json:"year,omitempty"`
+}
+
+// FloorGroup フロアごとの教員情報
+type FloorGroup struct {
+	Donations   []CampusDonation `json:"donations"`
+	FloorId     *int             `json:"floor_id,omitempty"`
+	FloorNumber string           `json:"floor_number"`
 }
 
 // Income defines model for income.
