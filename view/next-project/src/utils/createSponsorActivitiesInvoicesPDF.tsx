@@ -1,5 +1,6 @@
 import { Document, Page, Text, Font, View, pdf, StyleSheet, PDFViewer } from '@react-pdf/renderer';
 import React from 'react';
+import { formatDateToJapanese, calculateYearInfo } from './dateUtils';
 import { Invoice } from '@type/common';
 
 Font.register({
@@ -140,7 +141,7 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => (
   <Document>
     <Page style={styles.page} size='A4'>
       <View>
-        <Text style={styles.header}>御 請 求 書</Text>
+        <Text style={styles.header}>請 求 書</Text>
       </View>
       <View style={styles.details}>
         <View style={styles.detailItem}>
@@ -154,7 +155,7 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => (
               ご担当 : {invoiceItem.managerName} 様
             </Text>
             <Text style={[styles.text_S, styles.underLine]}>
-              件名 : <Text style={styles.text_M}>技大祭企業協賛</Text>
+              件名 : <Text style={styles.text_M}>{invoiceItem.subject || '技大祭企業協賛'}</Text>
             </Text>
             <View>
               <Text style={[styles.text_S, styles.paddingTop]}>
@@ -168,13 +169,13 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => (
             </View>
           </View>
           <View>
-            <Text style={styles.marginButtom}>請求日 : {issuedDate}</Text>
+            <Text style={styles.marginButtom}>請求日 : {formatDateToJapanese(issuedDate)}</Text>
             <View>
               <View style={styles.marginButtom}>
                 <Text>技大祭実行委員会</Text>
-                <Text>〒940-2137</Text>
+                <Text>〒940-2188</Text>
                 <Text>新潟県長岡市上富岡町1603-1</Text>
-                <Text>長岡技術科学大学 大学集会施設</Text>
+                <Text>長岡技術科学大学内</Text>
               </View>
               <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
               <Text>担当 : {invoiceItem.fesStuffName}</Text>
@@ -211,7 +212,8 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => (
       </View>
       <View style={[styles.detailField, styles.marginButtom]}>
         <Text style={styles.text_S}>
-          お手数でございますが、{deadline}までに下記口座へ振込くださいますようお願い申し上げます。
+          お手数でございますが、{formatDateToJapanese(deadline)}
+          までに下記口座へ振込くださいますようお願い申し上げます。
         </Text>
         <Text style={styles.text_S}>&lt;振込先&gt;</Text>
         <Text style={styles.text_S}>銀 行 名 : 大光銀行（金融機関コード : 0532）</Text>
@@ -251,12 +253,23 @@ export const createSponsorActivitiesPDF = async (
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${issuedDate || ''}-${invoiceItem.sponsorName}-請求書.pdf`;
+
+  const { reiwa, festivalNumber } = calculateYearInfo(issuedDate);
+  link.download = `令和${reiwa}年度第${festivalNumber}回技大祭_協賛請求書_${invoiceItem.sponsorName}.pdf`;
+
   link.click();
 };
 
 export const PreviewPDF: React.FC<MyDocumentProps> = ({ invoiceItem, deadline, issuedDate }) => (
-  <PDFViewer style={{ width: '100vw', height: '100vh' }} showToolbar={false}>
+  <PDFViewer
+    style={{
+      width: '100%',
+      height: '100%',
+      maxHeight: '100%',
+      border: 'none',
+    }}
+    showToolbar={false}
+  >
     <MyDocument invoiceItem={invoiceItem} deadline={deadline} issuedDate={issuedDate} />
   </PDFViewer>
 );

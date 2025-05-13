@@ -1,3 +1,5 @@
+// 下記のeslint-disableは、@react-pdfのImageコンポーネントがalt属性をサポートしていないため、警告を無視するために追加しています。
+/* eslint-disable jsx-a11y/alt-text */
 import {
   Document,
   Page,
@@ -10,6 +12,7 @@ import {
   Image,
 } from '@react-pdf/renderer';
 import React from 'react';
+import { formatDateToJapanese, calculateYearInfo } from './dateUtils';
 import { SponsorActivityView } from '@type/common';
 
 Font.register({
@@ -141,10 +144,9 @@ const styles = StyleSheet.create({
 
 interface MyDocumentProps {
   sponsorActivitiesViewItem: SponsorActivityView;
-  totalPrice: number;
+  totalPrice?: number;
   date: string;
   paymentDay: string;
-  formatDate: (date: string) => string;
 }
 
 const MyDocument = (props: MyDocumentProps) => (
@@ -152,7 +154,7 @@ const MyDocument = (props: MyDocumentProps) => (
     <Page style={styles.page} size={{ width: 519.13, height: 241.89 }}>
       <Image
         fixed
-        style={{ width: '120px', position: 'absolute', top: 45, right: 20 }}
+        style={{ width: '120px', position: 'absolute', top: 40, right: 20 }}
         src={'43rd_Stamp.png'}
       />
       <View style={styles.pageHeader}>
@@ -160,8 +162,7 @@ const MyDocument = (props: MyDocumentProps) => (
           領{'  '}収{'  '}書
         </Text>
         <View style={styles.headerRight}>
-          <Text>No.{}</Text>
-          <Text>発行日:{props.date}</Text>
+          <Text>発行日:{formatDateToJapanese(props.date)}</Text>
         </View>
       </View>
       <View>
@@ -190,21 +191,21 @@ const MyDocument = (props: MyDocumentProps) => (
                   <View style={styles.detailField}>
                     <Text style={styles.text_S}> 但 し </Text>
                     <View style={styles.detailName}>
-                      <Text style={styles.text_S}>技大祭への広告協賛として</Text>
+                      <Text style={styles.text_S}>技大祭への協賛として</Text>
                     </View>
                   </View>
                   <View style={styles.detailField}>
                     <Text style={styles.text_S}>入金日</Text>
                     <View style={styles.detailName}>
-                      <Text style={styles.text_S}>{props.paymentDay}</Text>
+                      <Text style={styles.text_S}>{formatDateToJapanese(props.paymentDay)}</Text>
                     </View>
                   </View>
                 </View>
                 <View style={{ marginRight: '35' }}>
                   <Text>長岡技術科学大学 技大祭実行委員会</Text>
-                  <Text>〒940-2137</Text>
+                  <Text>〒940-2188</Text>
                   <Text>新潟県長岡市上富岡町1603-1</Text>
-                  <Text>大学集会施設 1号館 技大祭実行委員会</Text>
+                  <Text>長岡技術科学大学内</Text>
                   <Text>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
                 </View>
               </View>
@@ -223,11 +224,6 @@ const CalculateTotalPrice = (sponsorActivitiesViewItem: SponsorActivityView): nu
   return totalPrice;
 };
 
-const formatDate = (datetime: string) => {
-  const datetime2 = datetime.substring(0, datetime.length - 10);
-  return datetime2;
-};
-
 export const createSponsorActivitiesPDF = async (
   sponsorActivitiesViewItem: SponsorActivityView,
   date: string,
@@ -239,37 +235,39 @@ export const createSponsorActivitiesPDF = async (
       totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
       date={date}
       paymentDay={paymentDay}
-      formatDate={formatDate}
     />,
   );
   const blob = await asPdf.toBlob();
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${formatDate(sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}-${
-    sponsorActivitiesViewItem.sponsor.name
-  }-領収書.pdf`;
+
+  const { reiwa, festivalNumber } = calculateYearInfo(date);
+  const companyName = sponsorActivitiesViewItem.sponsor.name;
+  link.download = `令和${reiwa}年度第${festivalNumber}回技大祭_協賛領収書_${companyName}.pdf`;
+
   link.click();
 };
 
-interface PreviewProps {
-  sponsorActivitiesViewItem: SponsorActivityView;
-  date: string;
-  paymentDay: string;
-}
-
-export const PreviewPDF: React.FC<PreviewProps> = ({
+export const PreviewPDF: React.FC<MyDocumentProps> = ({
   sponsorActivitiesViewItem,
   date,
   paymentDay,
 }) => (
-  <PDFViewer style={{ width: '100%', height: '100%' }} showToolbar={false}>
+  <PDFViewer
+    style={{
+      width: '100%',
+      height: '100%',
+      maxHeight: '100%',
+      border: 'none',
+    }}
+    showToolbar={false}
+  >
     <MyDocument
       sponsorActivitiesViewItem={sponsorActivitiesViewItem}
       date={date}
       paymentDay={paymentDay}
       totalPrice={CalculateTotalPrice(sponsorActivitiesViewItem)}
-      formatDate={formatDate}
     />
   </PDFViewer>
 );
