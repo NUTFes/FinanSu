@@ -212,8 +212,8 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => (
       </View>
       <View style={[styles.detailField, styles.marginButtom]}>
         <Text style={styles.text_S}>
-          お手数でございますが、{formatDateToJapanese(deadline)}
-          までに下記口座へ振込くださいますようお願い申し上げます。
+          お手数をおかけしますが、{formatDateToJapanese(deadline)}
+          までに下記口座へお振込みくださいますようお願い申し上げます。
         </Text>
         <Text style={styles.text_S}>&lt;振込先&gt;</Text>
         <Text style={styles.text_S}>銀 行 名 : 大光銀行（金融機関コード : 0532）</Text>
