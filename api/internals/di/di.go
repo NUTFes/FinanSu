@@ -43,7 +43,6 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	expenseRepository := repository.NewExpenseRepository(client, crud)
 	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
-	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
 	incomeRepository := repository.NewIncomeRepository(client, crud)
 	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
@@ -77,7 +76,6 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
 	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
-	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
 	incomeUseCase := usecase.NewIncomeUseCase(incomeRepository, incomeExpenditureManagementRepository, transactionRepository)
 	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
@@ -117,7 +115,6 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	expenseController := controller.NewExpenseController(expenseUseCase)
 	festivalItemController := controller.NewFestivalItemController(festivalUseCase)
 	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
-	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
 	incomeController := controller.NewIncomeController(incomeUseCase)
 	incomeExpenditureManagementController := controller.NewIncomeExpenditureManagementController(incomeExpenditureManagementUseCase)
@@ -151,7 +148,6 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		expenseController,
 		festivalItemController,
 		financialRecordController,
-		fundInformationController,
 		healthcheckController,
 		incomeController,
 		incomeExpenditureManagementController,
