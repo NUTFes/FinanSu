@@ -73,7 +73,7 @@ func (f *campusDonationUseCase) GetCampusDonationBuildingByPeriod(c context.Cont
 
 	aggregated := make(map[int]*BuildingTotal)
 	for rows.Next() {
-		var buildingTotal domain.FundInformationBuilding
+		var buildingTotal domain.CampusDonationBuilding
 		if err := rows.Scan(&buildingTotal.Id, &buildingTotal.Name, &buildingTotal.Price); err != nil {
 			return nil, err
 		}
