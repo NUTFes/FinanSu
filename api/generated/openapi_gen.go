@@ -285,6 +285,25 @@ type PasswordResetData struct {
 	Token           *string `json:"token,omitempty"`
 }
 
+// PostRequestBodyCampusDonation defines model for postRequestBodyCampusDonation.
+type PostRequestBodyCampusDonation struct {
+	Price      *int    `json:"price,omitempty"`
+	ReceivedAt *string `json:"received_at,omitempty"`
+	TeacherId  *int    `json:"teacher_id,omitempty"`
+	UserId     *int    `json:"user_id,omitempty"`
+	YearId     *int    `json:"year_id,omitempty"`
+}
+
+// PutRequestBodyCampusDonation defines model for putRequestBodyCampusDonation.
+type PutRequestBodyCampusDonation struct {
+	Id         *int    `json:"id,omitempty"`
+	Price      *int    `json:"price,omitempty"`
+	ReceivedAt *string `json:"received_at,omitempty"`
+	TeacherId  *int    `json:"teacher_id,omitempty"`
+	UserId     *int    `json:"user_id,omitempty"`
+	YearId     *int    `json:"year_id,omitempty"`
+}
+
 // Receipt defines model for receipt.
 type Receipt struct {
 	BucketName       *string `json:"bucketName,omitempty"`
@@ -670,6 +689,12 @@ type PostBuyReportsMultipartRequestBody PostBuyReportsMultipartBody
 // PutBuyReportsIdMultipartRequestBody defines body for PutBuyReportsId for multipart/form-data ContentType.
 type PutBuyReportsIdMultipartRequestBody PutBuyReportsIdMultipartBody
 
+// PostCampusDonationsJSONRequestBody defines body for PostCampusDonations for application/json ContentType.
+type PostCampusDonationsJSONRequestBody = PostRequestBodyCampusDonation
+
+// PutCampusDonationsIdJSONRequestBody defines body for PutCampusDonationsId for application/json ContentType.
+type PutCampusDonationsIdJSONRequestBody = PutRequestBodyCampusDonation
+
 // PostDivisionsJSONRequestBody defines body for PostDivisions for application/json ContentType.
 type PostDivisionsJSONRequestBody = Division
 
@@ -847,11 +872,17 @@ type ServerInterface interface {
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
 
+	// (POST /campus_donations)
+	PostCampusDonations(ctx echo.Context) error
+
 	// (GET /campus_donations/building/{building_id}/floor/{floor_id})
 	GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context, buildingId int, floorId int) error
 
 	// (GET /campus_donations/buildings/{year})
 	GetCampusDonationsBuildingsYear(ctx echo.Context, year int) error
+
+	// (PUT /campus_donations/{id})
+	PutCampusDonationsId(ctx echo.Context, id int) error
 
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
@@ -1745,6 +1776,15 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 	return err
 }
 
+// PostCampusDonations converts echo context to params.
+func (w *ServerInterfaceWrapper) PostCampusDonations(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostCampusDonations(ctx)
+	return err
+}
+
 // GetCampusDonationsBuildingBuildingIdFloorFloorId converts echo context to params.
 func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context) error {
 	var err error
@@ -1782,6 +1822,22 @@ func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingsYear(ctx echo.Contex
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetCampusDonationsBuildingsYear(ctx, year)
+	return err
+}
+
+// PutCampusDonationsId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutCampusDonationsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutCampusDonationsId(ctx, id)
 	return err
 }
 
@@ -3352,8 +3408,10 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.POST(baseURL+"/campus_donations", wrapper.PostCampusDonations)
 	router.GET(baseURL+"/campus_donations/building/:building_id/floor/:floor_id", wrapper.GetCampusDonationsBuildingBuildingIdFloorFloorId)
 	router.GET(baseURL+"/campus_donations/buildings/:year", wrapper.GetCampusDonationsBuildingsYear)
+	router.PUT(baseURL+"/campus_donations/:id", wrapper.PutCampusDonationsId)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)

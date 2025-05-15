@@ -18,6 +18,8 @@ type campusDonationRepository struct {
 type CampusDonationRepository interface {
 	AllCampusDonationByFloor(context.Context, string, string) (*sql.Rows, error)
 	AllBuildingsByPeriod(context.Context, string) (*sql.Rows, error)
+	CreateCampusDonation(context.Context, string, string, string, string, string) error
+	UpdateCampusDonation(context.Context, string, string, string, string, string, string) error
 }
 
 func NewCampusDonationRepository(c db.Client, ac abstract.Crud) CampusDonationRepository {
@@ -142,4 +144,36 @@ func (fir *campusDonationRepository) AllBuildingsByPeriod(c context.Context, yea
 	}
 
 	return fir.crud.Read(c, query)
+}
+
+func (fir *campusDonationRepository) CreateCampusDonation(c context.Context, userId string, teacherId string, price string, receivedAt string, yearId string) error {
+	dbDialect := goqu.Dialect("mysql")
+	ds := dbDialect.Insert("campus_donations").Rows(goqu.Record{
+		"user_id":     userId,
+		"teacher_id":  teacherId,
+		"price":       price,
+		"received_at": receivedAt,
+		"year_id":     yearId,
+	})
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	return fir.crud.UpdateDB(c, query)
+}
+
+func (fir *campusDonationRepository) UpdateCampusDonation(c context.Context, id string, userId string, teacherId string, price string, receivedAt string, yearId string) error {
+	dbDialect := goqu.Dialect("mysql")
+	ds := dbDialect.Update("campus_donations").Set(goqu.Record{
+		"user_id":     userId,
+		"teacher_id":  teacherId,
+		"price":       price,
+		"received_at": receivedAt,
+		"year_id":     yearId,
+	}).Where(goqu.Ex{"id": id})
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	return fir.crud.UpdateDB(c, query)
 }

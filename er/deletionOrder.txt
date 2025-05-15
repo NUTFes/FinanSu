@@ -10,8 +10,8 @@ purchase_orders
 purchase_items
 password_reset_tokens
 mail_auth
-fund_informations
 departments
+campus_donations
 bureaus
 budgets
 activity_styles

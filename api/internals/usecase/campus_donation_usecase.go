@@ -17,6 +17,8 @@ type campusDonationUseCase struct {
 type CampusDonationUseCase interface {
 	GetCampusDonationByFloors(context.Context, string, string) ([]CampusDonationByFloor, error)
 	GetCampusDonationBuildingByPeriod(context.Context, string) ([]BuildingTotal, error)
+	CreateCampusDonation(context.Context, string, string, string, string, string) error
+	UpdateCampusDonation(context.Context, string, string, string, string, string, string) error
 }
 
 func NewCampusDonationUseCase(rep rep.CampusDonationRepository) CampusDonationUseCase {
@@ -102,6 +104,22 @@ func (f *campusDonationUseCase) GetCampusDonationBuildingByPeriod(c context.Cont
 		result = append(result, *b)
 	}
 	return result, nil
+}
+
+func (f *campusDonationUseCase) CreateCampusDonation(c context.Context, userId string, teacherId string, price string, receivedAt string, yearId string) error {
+	err := f.rep.CreateCampusDonation(c, userId, teacherId, price, receivedAt, yearId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (f *campusDonationUseCase) UpdateCampusDonation(c context.Context, id string, userId string, teacherId string, price string, receivedAt string, yearId string) error {
+	err := f.rep.UpdateCampusDonation(c, id, userId, teacherId, price, receivedAt, yearId)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 type BuildingTotal generated.BuildingTotal
