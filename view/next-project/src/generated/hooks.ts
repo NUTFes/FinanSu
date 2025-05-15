@@ -124,6 +124,7 @@ import type {
   PostPasswordResetRequest200,
   PostPasswordResetRequestParams,
   PostReceipts200,
+  PostRequestBodyCampusDonation,
   PostSources200,
   PostSourcesParams,
   PostSponsors200,
@@ -154,6 +155,7 @@ import type {
   PutIncomeExpenditureManagementsCheckId200,
   PutIncomeExpenditureManagementsCheckIdBody,
   PutReceiptsId200,
+  PutRequestBodyCampusDonation,
   PutSourcesId200,
   PutSourcesIdParams,
   PutSponsorsId200,
@@ -166,7 +168,6 @@ import type {
   PutYearsIdParams,
   PutYearsPeriodsId200,
   Receipt,
-  RequestBodyCampusDonation,
   Sponsor,
   SponsorStyle,
   Teacher,
@@ -2714,14 +2715,14 @@ export const getPostCampusDonationsUrl = () => {
 };
 
 export const postCampusDonations = async (
-  requestBodyCampusDonation: RequestBodyCampusDonation,
+  postRequestBodyCampusDonation: PostRequestBodyCampusDonation,
   options?: RequestInit,
 ): Promise<postCampusDonationsResponse> => {
   return customFetch<postCampusDonationsResponse>(getPostCampusDonationsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(requestBodyCampusDonation),
+    body: JSON.stringify(postRequestBodyCampusDonation),
   });
 };
 
@@ -2730,7 +2731,7 @@ export const getPostCampusDonationsMutationFetcher = (
 ) => {
   return (
     _: Key,
-    { arg }: { arg: RequestBodyCampusDonation },
+    { arg }: { arg: PostRequestBodyCampusDonation },
   ): Promise<postCampusDonationsResponse> => {
     return postCampusDonations(arg, options);
   };
@@ -2747,7 +2748,7 @@ export const usePostCampusDonations = <TError = unknown>(options?: {
     Awaited<ReturnType<typeof postCampusDonations>>,
     TError,
     Key,
-    RequestBodyCampusDonation,
+    PostRequestBodyCampusDonation,
     Awaited<ReturnType<typeof postCampusDonations>>
   > & { swrKey?: string };
   request?: SecondParameter<typeof customFetch>;
@@ -2785,14 +2786,14 @@ export const getPutCampusDonationsIdUrl = (id: number) => {
 
 export const putCampusDonationsId = async (
   id: number,
-  requestBodyCampusDonation: RequestBodyCampusDonation,
+  putRequestBodyCampusDonation: PutRequestBodyCampusDonation,
   options?: RequestInit,
 ): Promise<putCampusDonationsIdResponse> => {
   return customFetch<putCampusDonationsIdResponse>(getPutCampusDonationsIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(requestBodyCampusDonation),
+    body: JSON.stringify(putRequestBodyCampusDonation),
   });
 };
 
@@ -2802,7 +2803,7 @@ export const getPutCampusDonationsIdMutationFetcher = (
 ) => {
   return (
     _: Key,
-    { arg }: { arg: RequestBodyCampusDonation },
+    { arg }: { arg: PutRequestBodyCampusDonation },
   ): Promise<putCampusDonationsIdResponse> => {
     return putCampusDonationsId(id, arg, options);
   };
@@ -2822,7 +2823,7 @@ export const usePutCampusDonationsId = <TError = unknown>(
       Awaited<ReturnType<typeof putCampusDonationsId>>,
       TError,
       Key,
-      RequestBodyCampusDonation,
+      PutRequestBodyCampusDonation,
       Awaited<ReturnType<typeof putCampusDonationsId>>
     > & { swrKey?: string };
     request?: SecondParameter<typeof customFetch>;
