@@ -164,6 +164,9 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// campus_donationsのRoute
 	e.GET("/campus_donations/building/:building_id/floor/:floor_id", r.campusDonationController.IndexCampusDonationByFloor)
+	e.GET("/campus_donations/building/:building_id", r.campusDonationController.IndexCampusDonationBuildingByPeriod)
+	e.POST("/campus_donations", r.campusDonationController.CreateCampusDonation)
+	e.PUT("/campus_donations/:id", r.campusDonationController.UpdateCampusDonation)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)

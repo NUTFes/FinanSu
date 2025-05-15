@@ -285,6 +285,25 @@ type PasswordResetData struct {
 	Token           *string `json:"token,omitempty"`
 }
 
+// PostRequestBodyCampusDonation defines model for postRequestBodyCampusDonation.
+type PostRequestBodyCampusDonation struct {
+	Price      *int    `json:"price,omitempty"`
+	ReceivedAt *string `json:"received_at,omitempty"`
+	TeacherId  *int    `json:"teacher_id,omitempty"`
+	UserId     *int    `json:"user_id,omitempty"`
+	YearId     *int    `json:"year_id,omitempty"`
+}
+
+// PutRequestBodyCampusDonation defines model for putRequestBodyCampusDonation.
+type PutRequestBodyCampusDonation struct {
+	Id         *int    `json:"id,omitempty"`
+	Price      *int    `json:"price,omitempty"`
+	ReceivedAt *string `json:"received_at,omitempty"`
+	TeacherId  *int    `json:"teacher_id,omitempty"`
+	UserId     *int    `json:"user_id,omitempty"`
+	YearId     *int    `json:"year_id,omitempty"`
+}
+
 // Receipt defines model for receipt.
 type Receipt struct {
 	BucketName       *string `json:"bucketName,omitempty"`
@@ -292,15 +311,6 @@ type Receipt struct {
 	FileType         *string `json:"fileType,omitempty"`
 	PurchaseReportID int     `json:"purchaseReportID"`
 	Remark           *string `json:"remark,omitempty"`
-}
-
-// RequestBodyCampusDonation defines model for requestBodyCampusDonation.
-type RequestBodyCampusDonation struct {
-	Price      *int    `json:"price,omitempty"`
-	ReceivedAt *string `json:"received_at,omitempty"`
-	TeacherId  *int    `json:"teacher_id,omitempty"`
-	UserId     *int    `json:"user_id,omitempty"`
-	YearId     *int    `json:"year_id,omitempty"`
 }
 
 // Sponsor defines model for sponsor.
@@ -680,10 +690,10 @@ type PostBuyReportsMultipartRequestBody PostBuyReportsMultipartBody
 type PutBuyReportsIdMultipartRequestBody PutBuyReportsIdMultipartBody
 
 // PostCampusDonationsJSONRequestBody defines body for PostCampusDonations for application/json ContentType.
-type PostCampusDonationsJSONRequestBody = RequestBodyCampusDonation
+type PostCampusDonationsJSONRequestBody = PostRequestBodyCampusDonation
 
 // PutCampusDonationsIdJSONRequestBody defines body for PutCampusDonationsId for application/json ContentType.
-type PutCampusDonationsIdJSONRequestBody = RequestBodyCampusDonation
+type PutCampusDonationsIdJSONRequestBody = PutRequestBodyCampusDonation
 
 // PostDivisionsJSONRequestBody defines body for PostDivisions for application/json ContentType.
 type PostDivisionsJSONRequestBody = Division
