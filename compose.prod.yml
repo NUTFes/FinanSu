@@ -9,6 +9,10 @@ services:
     build:
       context: ./
       dockerfile: prod.view.Dockerfile
+      args:
+        - NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV}
+        - NEXT_PUBLIC_MINIO_ENDPONT=${NEXT_PUBLIC_MINIO_ENDPONT}
+
     container_name: "nutfes-finansu-view"
     ports: ["3000:3000"]
     depends_on: ["api"]
@@ -18,7 +22,7 @@ services:
       context: ./
       dockerfile: prod.api.Dockerfile
     container_name: "nutfes-finansu-api"
-    env_file: ["./finansu.env"]
+    env_file: ["./.env"]
     ports: ["1323:1323"]
     environment:
       ENV: "production"

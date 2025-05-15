@@ -1,7 +1,7 @@
 use finansu_db;
 
 CREATE TABLE
-  fund_informations (
+  campus_donations (
     id int(10) unsigned not null auto_increment,
     user_id int(10) not null,
     teacher_id int(10) not null,
@@ -16,7 +16,7 @@ CREATE TABLE
   );
 
 INSERT INTO
-  fund_informations (user_id, teacher_id, price, remark, is_first_check, is_last_check, received_at)
+  campus_donations (user_id, teacher_id, price, remark, is_first_check, is_last_check, received_at)
 VALUES
   (1, 1, 2000, "nothing", false, false, '2023-02-22'),
   (2, 2, 2000, "nothing", false, false, '2022-02-22');
