@@ -815,7 +815,49 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/buyReportDetail"
-
+  /campus_donations:
+    post:
+      tags:
+        - campus_donation
+      description: 学内募金の作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/requestBodyCampusDonation"
+        required: true
+      responses:
+        "200":
+          description: 作成された学内募金が返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+  /campus_donations/{id}:
+    put:
+      tags:
+        - campus_donation
+      description: 学内募金の更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/requestBodyCampusDonation"
+        required: true
+      responses:
+        "200":
+          description: 更新された学内募金が返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
   /campus_donations/building/{building_id}/floor/{floor_id}:
     get:
       tags:
@@ -3355,5 +3397,23 @@ components:
         - teacher_name
         - price
         - is_black
+    requestBodyCampusDonation:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        teacher_id:
+          type: integer
+          example: 1
+        price:
+          type: integer
+          example: 10000
+        received_at:
+          type: string
+          example: 2024-01-01
+        year_id:
+          type: integer
+          example: 1
 
 x-original-swagger-version: "2.0"
