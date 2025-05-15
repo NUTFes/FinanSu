@@ -47,8 +47,8 @@ func (cdr *campusDonationRepository) AllCampusDonationByFloor(c context.Context,
 			goqu.On(goqu.Ex{"teachers.id": goqu.I("room_teachers.teacher_id")}),
 		).
 		LeftJoin(
-			goqu.T("fund_informations"),
-			goqu.On(goqu.Ex{"fund_informations.teacher_id": goqu.I("teachers.id")}),
+			goqu.T("campus_donations"),
+			goqu.On(goqu.Ex{"campus_donations.teacher_id": goqu.I("teachers.id")}),
 		).
 		Select(
 			goqu.I("buildings.id").As("building_id"),
@@ -58,7 +58,7 @@ func (cdr *campusDonationRepository) AllCampusDonationByFloor(c context.Context,
 			goqu.I("teachers.id").As("teacher_id"),
 			goqu.I("teachers.name").As("teacher_name"),
 			goqu.I("rooms.room_name").As("room_name"),
-			goqu.I("fund_informations.price").As("price"),
+			goqu.I("campus_donations.price").As("price"),
 			goqu.I("teachers.is_black").As("is_black"),
 		).
 		Where(
