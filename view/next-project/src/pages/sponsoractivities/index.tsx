@@ -645,7 +645,9 @@ export default function SponsorActivities(props: Props) {
           </table>
         </div>
         {isOpenBlankReceipt && <AddBlankReceiptModal setIsOpen={setIsOpenBlankReceipt} />}
-        {isOpenBlankInvoice && <AddBlankInvoiceModal setIsOpen={setIsOpenBlankInvoice} />}
+        {isOpenBlankInvoice && (
+          <AddBlankInvoiceModal setIsOpen={setIsOpenBlankInvoice} sponsorStyles={sponsorStyles} />
+        )}
       </Card>
       {isOpen && sponsorActivitiesItem && (
         <DetailModal

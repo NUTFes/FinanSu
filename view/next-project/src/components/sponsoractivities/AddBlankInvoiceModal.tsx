@@ -10,7 +10,9 @@ import {
   Textarea,
   DeleteButton,
   AddButton,
+  Select,
 } from '@components/common';
+import { SponsorStyle } from '@type/common';
 
 interface Item {
   id: string;
@@ -21,13 +23,14 @@ interface Item {
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
+  sponsorStyles: SponsorStyle[];
 }
 
 const defaultAddress = '〒940-2188 新潟県長岡市上富岡町1360-1長岡技術科学大学内';
 const defaultSubject = '技大祭企業協賛';
 const defaultDeadline = '2025-08-29';
 
-export default function AddBlankInvoiceModal({ setIsOpen }: ModalProps) {
+export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: ModalProps) {
   const [form, setForm] = useState({
     sponsorName: '',
     managerName: '',
@@ -53,6 +56,11 @@ export default function AddBlankInvoiceModal({ setIsOpen }: ModalProps) {
     [],
   );
 
+  const parseNumericInput = useCallback((value: string): number => {
+    const numericValue = parseInt(value.replace(/^0+/, ''), 10);
+    return isNaN(numericValue) ? 0 : Math.max(0, numericValue);
+  }, []);
+
   const onItemChange = useCallback(
     (id: string, key: keyof Omit<Item, 'id'>) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setItems((prevItems) =>
@@ -61,16 +69,14 @@ export default function AddBlankInvoiceModal({ setIsOpen }: ModalProps) {
 
           let value: string | number = e.target.value;
           if (key === 'quantity' || key === 'price') {
-            // 先頭の0を削除して数値に変換
-            const numericValue = parseInt(value.toString().replace(/^0+/, ''), 10);
-            value = isNaN(numericValue) ? 0 : Math.max(0, numericValue);
+            value = parseNumericInput(value.toString());
           }
 
           return { ...item, [key]: value };
         }),
       );
     },
-    [],
+    [parseNumericInput],
   );
 
   const addItem = useCallback(() => {
@@ -91,37 +97,78 @@ export default function AddBlankInvoiceModal({ setIsOpen }: ModalProps) {
     [items],
   );
 
+  const getDisplayStyleName = useCallback(
+    (styleName: string): string => {
+      const styleObj = sponsorStyles.find((s) => s.style === styleName);
+      if (!styleObj) return styleName;
+      return styleObj.feature ? `${styleObj.style}(${styleObj.feature})` : styleObj.style;
+    },
+    [sponsorStyles],
+  );
+
+  const createInvoiceData = useCallback((): Invoice => {
+    return {
+      sponsorName: form.sponsorName,
+      managerName: form.managerName,
+      totalPrice,
+      fesStuffName: form.fesStuffName,
+      invoiceSponsorStyle: items.map((item) => ({
+        styleName: getDisplayStyleName(item.styleName),
+        price: item.price * item.quantity,
+      })),
+      issuedDate: form.issuedDate,
+      deadline: form.deadline,
+      remark: form.remark,
+      subject: form.subject,
+      address: defaultAddress,
+    } as Invoice;
+  }, [form, items, totalPrice, getDisplayStyleName]);
+
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleDownload = useCallback(async () => {
     try {
       setIsProcessing(true);
-
-      await createSponsorActivitiesPDF(
-        {
-          sponsorName: form.sponsorName,
-          managerName: form.managerName,
-          totalPrice,
-          fesStuffName: form.fesStuffName,
-          invoiceSponsorStyle: items.map((item) => ({
-            styleName: item.styleName,
-            price: item.price * item.quantity,
-          })),
-          issuedDate: form.issuedDate,
-          deadline: form.deadline,
-          remark: form.remark,
-          subject: form.subject,
-          address: defaultAddress,
-        } as Invoice,
-        form.deadline,
-        form.issuedDate,
-      );
+      const invoiceData = createInvoiceData();
+      await createSponsorActivitiesPDF(invoiceData, form.deadline, form.issuedDate);
     } catch (error) {
       console.error('PDF作成中にエラーが発生しました:', error);
     } finally {
       setIsProcessing(false);
     }
-  }, [form, items, totalPrice]);
+  }, [createInvoiceData, form.deadline, form.issuedDate]);
+
+  const styleOptions = useMemo(
+    () =>
+      sponsorStyles?.map((style) => ({
+        value: style.style,
+        label: style.feature ? `${style.style}(${style.feature})` : style.style,
+        price: style.price,
+      })) || [],
+    [sponsorStyles],
+  );
+
+  const onItemStyleChange = useCallback(
+    (id: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const selected = styleOptions.find((opt) => opt.value === e.target.value);
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                styleName: selected?.value || '',
+                price: selected?.price ?? 0,
+              }
+            : item,
+        ),
+      );
+    },
+    [styleOptions],
+  );
+
+  const isFormValid = useMemo(() => {
+    return form.sponsorName.trim() !== '' && totalPrice > 0;
+  }, [form.sponsorName, totalPrice]);
 
   return (
     <Modal className='h-[90vh] w-[95%] max-w-7xl' onClick={onClose}>
@@ -202,13 +249,14 @@ export default function AddBlankInvoiceModal({ setIsOpen }: ModalProps) {
                       className='bg-gray-50 grid grid-cols-12 items-center gap-2 rounded p-2'
                     >
                       <div className='col-span-5'>
-                        <Input
-                          type='text'
-                          placeholder='協賛内容'
-                          value={item.styleName}
-                          onChange={onItemChange(item.id, 'styleName')}
-                          className='w-full'
-                        />
+                        <Select value={item.styleName} onChange={onItemStyleChange(item.id)}>
+                          <option value=''>協賛内容を選択</option>
+                          {styleOptions.map((opt) => (
+                            <option key={opt.value + opt.label} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </Select>
                       </div>
                       <div className='col-span-2'>
                         <Input
@@ -268,10 +316,7 @@ export default function AddBlankInvoiceModal({ setIsOpen }: ModalProps) {
               </div>
 
               <div className='mt-2 flex justify-center'>
-                <PrimaryButton
-                  onClick={handleDownload}
-                  disabled={isProcessing || !form.sponsorName || totalPrice === 0}
-                >
+                <PrimaryButton onClick={handleDownload} disabled={isProcessing || !isFormValid}>
                   {isProcessing ? '処理中...' : 'ダウンロード'}
                 </PrimaryButton>
               </div>
@@ -281,23 +326,7 @@ export default function AddBlankInvoiceModal({ setIsOpen }: ModalProps) {
           <div className='border-gray-200 flex w-1/2 flex-col overflow-hidden border-l pl-4'>
             <div className='flex-1 overflow-hidden'>
               <PreviewPDF
-                invoiceItem={
-                  {
-                    sponsorName: form.sponsorName,
-                    managerName: form.managerName,
-                    totalPrice,
-                    fesStuffName: form.fesStuffName,
-                    invoiceSponsorStyle: items.map((item) => ({
-                      styleName: item.styleName,
-                      price: item.price * item.quantity,
-                    })),
-                    issuedDate: form.issuedDate,
-                    deadline: form.deadline,
-                    remark: form.remark,
-                    subject: form.subject,
-                    address: defaultAddress,
-                  } as Invoice
-                }
+                invoiceItem={createInvoiceData()}
                 deadline={form.deadline}
                 issuedDate={form.issuedDate}
               />
