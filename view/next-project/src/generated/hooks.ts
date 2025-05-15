@@ -113,6 +113,7 @@ import type {
   PostBureaus200,
   PostBureausParams,
   PostBuyReportsBody,
+  PostCampusDonations200,
   PostDepartments200,
   PostDepartmentsParams,
   PostExpenses200,
@@ -145,6 +146,7 @@ import type {
   PutBureausIdParams,
   PutBuyReportStatusBuyReportIdBody,
   PutBuyReportsIdBody,
+  PutCampusDonationsId200,
   PutDepartmentsId200,
   PutDepartmentsIdParams,
   PutExpensesId200,
@@ -164,6 +166,7 @@ import type {
   PutYearsIdParams,
   PutYearsPeriodsId200,
   Receipt,
+  RequestBodyCampusDonation,
   Sponsor,
   SponsorStyle,
   Teacher,
@@ -2683,6 +2686,152 @@ export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
 
   const swrKey = swrOptions?.swrKey ?? getPutBuyReportStatusBuyReportIdMutationKey(buyReportId);
   const swrFn = getPutBuyReportStatusBuyReportIdMutationFetcher(buyReportId, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 学内募金の作成
+ */
+export type postCampusDonationsResponse200 = {
+  data: PostCampusDonations200;
+  status: 200;
+};
+
+export type postCampusDonationsResponseComposite = postCampusDonationsResponse200;
+
+export type postCampusDonationsResponse = postCampusDonationsResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostCampusDonationsUrl = () => {
+  return `/campus_donations`;
+};
+
+export const postCampusDonations = async (
+  requestBodyCampusDonation: RequestBodyCampusDonation,
+  options?: RequestInit,
+): Promise<postCampusDonationsResponse> => {
+  return customFetch<postCampusDonationsResponse>(getPostCampusDonationsUrl(), {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(requestBodyCampusDonation),
+  });
+};
+
+export const getPostCampusDonationsMutationFetcher = (
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (
+    _: Key,
+    { arg }: { arg: RequestBodyCampusDonation },
+  ): Promise<postCampusDonationsResponse> => {
+    return postCampusDonations(arg, options);
+  };
+};
+export const getPostCampusDonationsMutationKey = () => [`/campus_donations`] as const;
+
+export type PostCampusDonationsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postCampusDonations>>
+>;
+export type PostCampusDonationsMutationError = unknown;
+
+export const usePostCampusDonations = <TError = unknown>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postCampusDonations>>,
+    TError,
+    Key,
+    RequestBodyCampusDonation,
+    Awaited<ReturnType<typeof postCampusDonations>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostCampusDonationsMutationKey();
+  const swrFn = getPostCampusDonationsMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 学内募金の更新
+ */
+export type putCampusDonationsIdResponse200 = {
+  data: PutCampusDonationsId200;
+  status: 200;
+};
+
+export type putCampusDonationsIdResponseComposite = putCampusDonationsIdResponse200;
+
+export type putCampusDonationsIdResponse = putCampusDonationsIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getPutCampusDonationsIdUrl = (id: number) => {
+  return `/campus_donations/${id}`;
+};
+
+export const putCampusDonationsId = async (
+  id: number,
+  requestBodyCampusDonation: RequestBodyCampusDonation,
+  options?: RequestInit,
+): Promise<putCampusDonationsIdResponse> => {
+  return customFetch<putCampusDonationsIdResponse>(getPutCampusDonationsIdUrl(id), {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(requestBodyCampusDonation),
+  });
+};
+
+export const getPutCampusDonationsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (
+    _: Key,
+    { arg }: { arg: RequestBodyCampusDonation },
+  ): Promise<putCampusDonationsIdResponse> => {
+    return putCampusDonationsId(id, arg, options);
+  };
+};
+export const getPutCampusDonationsIdMutationKey = (id: number) =>
+  [`/campus_donations/${id}`] as const;
+
+export type PutCampusDonationsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putCampusDonationsId>>
+>;
+export type PutCampusDonationsIdMutationError = unknown;
+
+export const usePutCampusDonationsId = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putCampusDonationsId>>,
+      TError,
+      Key,
+      RequestBodyCampusDonation,
+      Awaited<ReturnType<typeof putCampusDonationsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPutCampusDonationsIdMutationKey(id);
+  const swrFn = getPutCampusDonationsIdMutationFetcher(id, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
