@@ -25,8 +25,8 @@ activity_informations
 activity_styles
 budgets
 bureaus
+campus_donations
 departments
-fund_informations
 mail_auth
 password_reset_tokens
 purchase_items
