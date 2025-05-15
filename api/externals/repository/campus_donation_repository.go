@@ -48,8 +48,8 @@ func (cdr *campusDonationRepository) AllCampusDonationByFloor(c context.Context,
 			goqu.On(goqu.Ex{"teachers.id": goqu.I("room_teachers.teacher_id")}),
 		).
 		LeftJoin(
-			goqu.T("fund_informations"),
-			goqu.On(goqu.Ex{"fund_informations.teacher_id": goqu.I("teachers.id")}),
+			goqu.T("campus_donations"),
+			goqu.On(goqu.Ex{"campus_donations.teacher_id": goqu.I("teachers.id")}),
 		).
 		Select(
 			goqu.I("buildings.name"),
@@ -59,7 +59,7 @@ func (cdr *campusDonationRepository) AllCampusDonationByFloor(c context.Context,
 			goqu.I("teachers.id"),
 			goqu.I("teachers.name"),
 			goqu.I("teachers.is_black"),
-			goqu.COALESCE(goqu.SUM(goqu.I("fund_informations.price")), 0),
+			goqu.COALESCE(goqu.SUM(goqu.I("campus_donations.price")), 0),
 		).
 		Where(
 			goqu.Ex{"buildings.id": buildingId, "floors.id": floorId},
@@ -94,17 +94,17 @@ func (fir *campusDonationRepository) AllBuildingsByPeriod(c context.Context, yea
 
 	db := goqu.Dialect("mysql")
 
-	ds := db.From("fund_informations").
+	ds := db.From("campus_donations").
 		Select(
 			goqu.I("buildings.id"),
 			goqu.I("buildings.name"),
-			goqu.I("fund_informations.price"),
+			goqu.I("campus_donations.price"),
 		).
 		Join(goqu.T("teachers"), goqu.On(goqu.Ex{
-			"fund_informations.teacher_id": goqu.I("teachers.id"),
+			"campus_donations.teacher_id": goqu.I("teachers.id"),
 		})).
 		Join(goqu.T("users"), goqu.On(goqu.Ex{
-			"fund_informations.user_id": goqu.I("users.id"),
+			"campus_donations.user_id": goqu.I("users.id"),
 		})).
 		Join(goqu.T("departments"), goqu.On(goqu.Ex{
 			"teachers.department_id": goqu.I("departments.id"),
@@ -126,15 +126,15 @@ func (fir *campusDonationRepository) AllBuildingsByPeriod(c context.Context, yea
 		})).
 		Join(goqu.T("year_periods"),
 			goqu.On(goqu.And(
-				goqu.I("fund_informations.created_at").Gt(goqu.I("year_periods.started_at")),
-				goqu.I("fund_informations.created_at").Lt(goqu.I("year_periods.ended_at")),
+				goqu.I("campus_donations.created_at").Gt(goqu.I("year_periods.started_at")),
+				goqu.I("campus_donations.created_at").Lt(goqu.I("year_periods.ended_at")),
 			)),
 		).
 		Join(goqu.T("years"), goqu.On(goqu.Ex{
 			"year_periods.year_id": goqu.I("years.id"),
 		})).
 		Where(goqu.Ex{"years.year": year}).
-		Order(goqu.I("fund_informations.updated_at").Desc())
+		Order(goqu.I("campus_donations.updated_at").Desc())
 
 	query, _, err := ds.ToSQL()
 	if err != nil {
