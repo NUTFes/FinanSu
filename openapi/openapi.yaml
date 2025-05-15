@@ -824,7 +824,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/requestBodyCampusDonation"
+              $ref: "#/components/schemas/postRequestBodyCampusDonation"
         required: true
       responses:
         "200":
@@ -849,7 +849,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/requestBodyCampusDonation"
+              $ref: "#/components/schemas/putRequestBodyCampusDonation"
         required: true
       responses:
         "200":
@@ -3397,9 +3397,30 @@ components:
         - teacher_name
         - price
         - is_black
-    requestBodyCampusDonation:
+    postRequestBodyCampusDonation:
       type: object
       properties:
+        user_id:
+          type: integer
+          example: 1
+        teacher_id:
+          type: integer
+          example: 1
+        price:
+          type: integer
+          example: 10000
+        received_at:
+          type: string
+          example: 2024-01-01
+        year_id:
+          type: integer
+          example: 1
+    putRequestBodyCampusDonation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
         user_id:
           type: integer
           example: 1
