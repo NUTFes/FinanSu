@@ -36,7 +36,7 @@ export default function AddBlankReceiptModal({ setIsOpen }: ModalProps) {
   };
 
   return (
-    <Modal className='w-[95%] max-w-7xl' onClick={onClose}>
+    <Modal className='w-[95%] max-w-5xl' onClick={onClose}>
       <div className='flex h-full flex-col'>
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
