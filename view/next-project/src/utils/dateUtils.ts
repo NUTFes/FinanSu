@@ -1,10 +1,12 @@
 /**
- * 日付を「YYYY年MM月DD日」形式に変換
+ * 日付を「令和X年MM月DD日」形式に変換
  */
 export const formatDateToJapanese = (dateString: string): string => {
   if (!dateString) return '';
   const [year, month, day] = dateString.split('-').map(Number);
-  return `${year}年${month}月${day}日`;
+  const reiwaYear = year - 2018;
+  const reiwaStr = reiwaYear === 1 ? '元' : reiwaYear;
+  return `令和${reiwaStr}年${month}月${day}日`;
 };
 
 /**
