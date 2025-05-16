@@ -98,7 +98,6 @@ export default function AddBlankReceiptModal({ setIsOpen }: ModalProps) {
                 }
                 date={form.date}
                 paymentDay={form.paymentDay}
-                totalPrice={0}
               />
             </div>
           </div>
