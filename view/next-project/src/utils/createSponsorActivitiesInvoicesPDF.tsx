@@ -228,7 +228,7 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
                   <Text>長岡技術科学大学内</Text>
                 </View>
                 <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
-                {invoiceItem.fesStuffName && <Text>担当 : {invoiceItem.fesStuffName}</Text>}
+                <Text>担当 : {invoiceItem.fesStuffName}</Text>
               </View>
             </View>
           </View>
