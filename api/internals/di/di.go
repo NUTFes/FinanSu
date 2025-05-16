@@ -60,6 +60,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	transactionRepository := repository.NewTransactionRepository(client, crud)
 	userRepository := repository.NewUserRepository(client, crud)
 	yearRepository := repository.NewYearRepository(client, crud)
+	campusDonationRepository := repository.NewCampusDonationRepository(client, crud)
 	// ↓
 
 	// UseCase
@@ -99,6 +100,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
 	yearUseCase := usecase.NewYearUseCase(yearRepository)
+	campusDonationUseCase := usecase.NewCampusDonationUseCase(campusDonationRepository)
 	// ↓
 
 	// Controller
@@ -133,6 +135,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	teacherController := controller.NewTeacherController(teacherUseCase)
 	userController := controller.NewUserController(userUseCase)
 	yearController := controller.NewYearController(yearUseCase)
+	campusDonationController := controller.NewCampusDonationController(campusDonationUseCase)
 	// ↓
 
 	// router
@@ -164,6 +167,7 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		teacherController,
 		userController,
 		yearController,
+		campusDonationController,
 	)
 
 	// ↓
