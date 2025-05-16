@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   },
   textVertical: {
     flexDirection: 'column',
+    width: '50%',
   },
   textArea: {
     width: '85%',
@@ -137,6 +138,9 @@ const styles = StyleSheet.create({
   paddingTop: {
     paddingTop: 50,
   },
+  rightDetailsBlock: {
+    width: '45%',
+  },
 });
 
 interface MyDocumentProps {
@@ -146,7 +150,36 @@ interface MyDocumentProps {
 }
 
 const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
-  const sponsorNameChunks = invoiceItem.sponsorName.match(/.{1,16}/g) || [' '];
+  const sponsorName = invoiceItem.sponsorName || '';
+  const MAX_CHARS_PER_LINE_HINT = 15;
+  let sponsorNameLines: string[] = [];
+
+  if (/[a-zA-Z]/.test(sponsorName)) {
+    const words = sponsorName.split(' ');
+    let currentLine = '';
+    for (const word of words) {
+      if (currentLine.length === 0) {
+        currentLine = word;
+      } else if ((currentLine + ' ' + word).length <= MAX_CHARS_PER_LINE_HINT) {
+        currentLine += ' ' + word;
+      } else {
+        sponsorNameLines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    if (currentLine.length > 0) {
+      sponsorNameLines.push(currentLine);
+    }
+    if (sponsorNameLines.length === 0 && sponsorName.trim().length > 0) {
+      sponsorNameLines.push(sponsorName.trim());
+    }
+  } else {
+    sponsorNameLines = sponsorName.match(new RegExp(`.{1,${MAX_CHARS_PER_LINE_HINT}}`, 'g')) || [];
+  }
+
+  if (sponsorNameLines.length === 0) {
+    sponsorNameLines.push(' ');
+  }
 
   return (
     <Document>
@@ -159,19 +192,17 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
             <View style={styles.textVertical}>
               <View style={[styles.underLine, styles.sponsorNameAndOnchuContainer]}>
                 <View style={styles.sponsorNameChunksContainer}>
-                  {sponsorNameChunks.map((chunk, index) => (
+                  {sponsorNameLines.map((line, index) => (
                     <Text key={index} style={styles.text_M}>
-                      {chunk}
+                      {line}
                     </Text>
                   ))}
                 </View>
                 <Text style={[styles.text_M, { marginLeft: '5pt', flexShrink: 0 }]}>御中</Text>
               </View>
-              {invoiceItem.managerName && (
-                <Text style={[styles.text_S, styles.marginBottom]}>
-                  ご担当 : {invoiceItem.managerName} 様
-                </Text>
-              )}
+              <Text style={[styles.text_S, styles.marginBottom]}>
+                ご担当 : {invoiceItem.managerName} 様
+              </Text>
               <Text style={[styles.text_S, styles.underLine]}>
                 件名 : <Text style={styles.text_M}>{invoiceItem.subject || '技大祭企業協賛'}</Text>
               </Text>
@@ -187,7 +218,7 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
                 </View>
               </View>
             </View>
-            <View>
+            <View style={styles.rightDetailsBlock}>
               <Text style={styles.marginBottom}>請求日 : {formatDateToJapanese(issuedDate)}</Text>
               <View>
                 <View style={styles.marginBottom}>

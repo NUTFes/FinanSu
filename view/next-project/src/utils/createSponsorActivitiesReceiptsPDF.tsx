@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
   },
   text_M: {
     fontSize: 15,
-    flexWrap: 'wrap',
   },
   text_L: {
     fontSize: 20,
@@ -99,7 +98,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
     minWidth: '250',
-    fontSize: 20,
     borderStyle: 'solid',
     borderWidth: 0.7,
     borderTop: 0,
@@ -152,7 +150,21 @@ interface MyDocumentProps {
 }
 
 const MyDocument = (props: MyDocumentProps) => {
-  const companyNameChunks = props.sponsorActivitiesViewItem.sponsor.name.match(/.{1,18}/g) || [' '];
+  const sponsorName = props.sponsorActivitiesViewItem.sponsor.name;
+
+  let companyNameFontSize = 15;
+  const nameLength = sponsorName.length;
+
+  if (nameLength > 18 && nameLength <= 22) {
+    companyNameFontSize = 13;
+  } else if (nameLength > 22 && nameLength <= 26) {
+    companyNameFontSize = 11;
+  } else if (nameLength > 26 && nameLength <= 30) {
+    companyNameFontSize = 9;
+  } else if (nameLength > 30) {
+    companyNameFontSize = 8;
+  }
+
   return (
     <Document>
       <Page style={styles.page} size={{ width: 519.13, height: 241.89 }}>
@@ -175,11 +187,9 @@ const MyDocument = (props: MyDocumentProps) => {
               <View style={styles.textVertical}>
                 <View style={styles.nameField}>
                   <View style={styles.name}>
-                    {companyNameChunks.map((chunk, index) => (
-                      <Text key={index} style={styles.text_M}>
-                        {chunk}
-                      </Text>
-                    ))}
+                    <Text style={[styles.text_M, { fontSize: companyNameFontSize }]}>
+                      {sponsorName}
+                    </Text>
                   </View>
                   <Text style={styles.text_M}>御中</Text>
                 </View>
