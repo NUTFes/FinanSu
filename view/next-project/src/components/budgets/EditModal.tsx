@@ -61,7 +61,7 @@ const BudgetEditModal: FC<BudgetProps> = (props) => {
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
       </div>
       <div className='mx-auto w-fit text-xl'>予算の編集</div>
-      <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+      <div className='my-10 grid grid-cols-5 place-items-center gap-5 text-black-600'>
         <p>年度</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.yearID} onChange={handler('yearID')}>

@@ -178,7 +178,7 @@ export default function EditModal(props: ModalProps) {
 
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
-    <div className='mx-auto my-6 grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
+    <div className='mx-auto my-6 grid w-9/10 grid-cols-4 place-items-center gap-4'>
       <p className='text-lg text-black-600'>物品名</p>
       <div className='col-span-3 w-full'>
         <Input
@@ -258,7 +258,7 @@ export default function EditModal(props: ModalProps) {
               {isDone ? (
                 // 編集完了した時に完了と戻るボタンを表示
                 <>
-                  <div className='mx-auto my-5 mb-6 grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
+                  <div className='mx-auto my-5 mb-6 grid w-9/10 grid-cols-4 place-items-center gap-4'>
                     <p className='text-lg text-black-600'>割引</p>
                     <div className='col-span-3 w-full'>
                       <Input

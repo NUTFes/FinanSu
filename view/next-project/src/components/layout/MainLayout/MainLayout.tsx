@@ -3,12 +3,14 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import s from './MainLayout.module.css';
+
 import { authAtom, userAtom } from '@/store/atoms';
 import 'tailwindcss/tailwind.css';
 import { Header, SideNav } from '@components/common';
 import { User } from '@type/common';
 import { get_with_token_valid } from '@utils/api/api_methods';
+
+import s from './MainLayout.module.css';
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -66,7 +68,7 @@ export default function MainLayout(props: LayoutProps) {
           >
             <SideNav />
           </div>
-          <div className={clsx('h-full w-full', { 'md:w-7/8': isSideNavOpen }, s.content)}>
+          <div className={clsx('size-full', { 'md:w-7/8': isSideNavOpen }, s.content)}>
             {props.children}
           </div>
         </div>

@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Checkbox } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Checkbox> = {
   title: 'FinanSu/common/Checkbox',

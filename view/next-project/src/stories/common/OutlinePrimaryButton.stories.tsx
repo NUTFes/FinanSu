@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { OutlinePrimaryButton } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof OutlinePrimaryButton> = {
   title: 'FinanSu/common/OutlinePrimaryButton',

@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { OpenExpenseAddModalButton } from '@components/budgets';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof OpenExpenseAddModalButton> = {
   title: 'FinanSu/budgets/OpenExpenseAddModalButton',

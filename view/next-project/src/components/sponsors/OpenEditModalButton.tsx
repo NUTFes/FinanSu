@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import SponsorEditModal from './SponsorEditModal';
 import { EditButton } from '@components/common';
 import { Sponsor } from '@type/common';
+
+import SponsorEditModal from './SponsorEditModal';
 
 interface Props {
   children?: React.ReactNode;

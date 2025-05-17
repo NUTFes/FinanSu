@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
+
 import { PrimaryButton, OutlinePrimaryButton, CloseButton, Modal, Input } from '@components/common';
 import { Invoice, InvoiceSponsorStyle } from '@type/common';
 
@@ -65,7 +66,7 @@ export default function EditInvoiceModal(props: ModalProps) {
       </div>
       <div className='mx-auto mb-10 w-fit text-xl text-black-600'>請求書の修正</div>
       <div className=''>
-        <div className='my-4 grid grid-cols-5 items-center justify-items-center gap-2'>
+        <div className='my-4 grid grid-cols-5 place-items-center gap-2'>
           <p className='text-black-600'>企業名</p>
           <div className='col-span-4 w-full'>
             <Input value={editInvoice.sponsorName} onChange={handler('sponsorName')}></Input>

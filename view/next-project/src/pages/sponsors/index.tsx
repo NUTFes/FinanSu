@@ -1,13 +1,15 @@
 import clsx from 'clsx';
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
+
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
 import { useGetSponsorsPeriodsYear, useGetYearsPeriods } from '@/generated/hooks';
 import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
+
+import type { NextPage } from 'next';
 
 const date = new Date();
 

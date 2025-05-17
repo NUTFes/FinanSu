@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { AddButton } from '../common';
 import { Department } from '@/type/common';
 import AddModal from '@components/teacher/AddModal';
+
+import { AddButton } from '../common';
 
 interface Props {
   departments: Department[];

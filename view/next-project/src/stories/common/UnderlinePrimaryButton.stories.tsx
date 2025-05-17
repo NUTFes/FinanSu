@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { UnderlinePrimaryButton } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof UnderlinePrimaryButton> = {
   title: 'FinanSu/common/UnderlinePrimaryButton',

@@ -3,11 +3,14 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import formatNumber from '../common/Formatter';
+
 import { usePostFestivalItems, usePostFinancialRecords, usePostDivisions } from '@/generated/hooks';
-import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 import { Year } from '@/type/common';
 import { PrimaryButton, Input, Modal } from '@components/common';
+
+import formatNumber from '../common/Formatter';
+
+import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 
 interface FinancialRecordWithId extends FinancialRecord {
   id: number;
@@ -206,7 +209,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           {phase === 2 && '申請部門登録'}
           {phase === 3 && '申請物品登録'}
         </div>
-        <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+        <div className='my-10 grid grid-cols-5 place-items-center gap-5 text-black-600'>
           {content}
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>

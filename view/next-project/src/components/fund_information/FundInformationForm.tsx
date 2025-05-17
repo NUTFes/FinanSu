@@ -14,6 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
 import { PrimaryButton } from '@components/common';
 

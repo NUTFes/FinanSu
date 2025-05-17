@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { EditButton } from '../common';
-import EditModal from './EditModal';
 import {
   SponsorActivity,
   SponsorStyle,
@@ -12,6 +10,9 @@ import {
   ActivityStyle,
   YearPeriod,
 } from '@/type/common';
+
+import { EditButton } from '../common';
+import EditModal from './EditModal';
 
 interface Props {
   children?: React.ReactNode;

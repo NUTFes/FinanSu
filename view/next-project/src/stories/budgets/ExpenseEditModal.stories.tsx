@@ -1,6 +1,7 @@
-import type { Meta, StoryFn } from '@storybook/react';
 import { ExpenseEditModal } from '@components/budgets';
 import { ModalProps } from '@components/budgets/ExpenseEditModal';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof ExpenseEditModal> = {
   title: 'FinanSu/budgets/ExpenseEditModal',

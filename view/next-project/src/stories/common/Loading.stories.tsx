@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Loading } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Loading> = {
   title: 'FinanSu/common/Loading',

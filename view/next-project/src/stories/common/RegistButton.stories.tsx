@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { RegistButton } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof RegistButton> = {
   title: 'FinanSu/common/RegistButton',

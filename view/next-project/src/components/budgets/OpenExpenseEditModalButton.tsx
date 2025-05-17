@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import ExpenseEditModal from './ExpenseEditModal';
 import { EditButton } from '@components/common';
 import { Expense } from '@type/common';
+
+import ExpenseEditModal from './ExpenseEditModal';
 
 export interface Props {
   id: number;

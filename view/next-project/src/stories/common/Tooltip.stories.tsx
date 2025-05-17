@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Tooltip } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'FinanSu/common/Tooltip',

@@ -1,5 +1,6 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
+
 import { SponsorActivityView, SponsorStyleDetail } from '../type/common';
 
 export const createSponsorActivityFormPdf = async (

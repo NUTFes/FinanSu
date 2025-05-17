@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
-import EditModal from './EditModal';
 import { EditButton } from '@components/common';
 import { YearPeriod } from '@type/common';
+
+import EditModal from './EditModal';
 
 interface Props {
   yearPeriod: YearPeriod;
