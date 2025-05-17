@@ -11,7 +11,8 @@
     "lint:fix": "next lint --dir src --fix",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.12",
