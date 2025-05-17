@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Modal } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Modal> = {
   title: 'FinanSu/common/Modal',

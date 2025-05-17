@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 import { PrimaryButton } from '@/components/common';
-
 import Link from '@/components/common/Link';
 import SignInView from '@components/auth/SignInView';
 import SignUpView from '@components/auth/SignUpView';

@@ -1,6 +1,8 @@
-import type { Meta, StoryFn } from '@storybook/react';
 import { RecoilRoot } from 'recoil';
+
 import { DetailModal, ModalProps } from '@components/purchaseorders/';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta = {
   title: 'FinanSu/purchaseorders/DetailModal',

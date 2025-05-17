@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { VscTriangleRight, VscTriangleDown } from 'react-icons/vsc';
+
 import Status from './Status';
+
 import type {
   BuyReportInformation,
   FestivalItemsForMyPage,
@@ -29,11 +31,11 @@ const convertDate = (date: string) => {
 const TableHeader: React.FC = () => (
   <thead className='bg-gray-100'>
     <tr className='border-b border-primary-1 py-3 text-sm'>
-      <th className='w-1/3 py-2 pb-2 pl-14 pr-4 text-left font-normal text-black-600'>物品名</th>
-      <th className='w-1/8 px-2 py-2 pb-2 text-left font-normal text-black-600'>予算</th>
-      <th className='w-1/8 px-2 py-2 pb-2 text-left font-normal text-black-600'>使用額</th>
-      <th className='w-1/8 px-2 py-2 pb-2 text-left font-normal text-black-600'>残高</th>
-      <th className='px-2 py-2 pb-2 text-left font-normal text-black-600'></th>
+      <th className='w-1/3 py-2 pl-14 pr-4 text-left font-normal text-black-600'>物品名</th>
+      <th className='w-1/8 p-2 text-left font-normal text-black-600'>予算</th>
+      <th className='w-1/8 p-2 text-left font-normal text-black-600'>使用額</th>
+      <th className='w-1/8 p-2 text-left font-normal text-black-600'>残高</th>
+      <th className='p-2 text-left font-normal text-black-600'></th>
     </tr>
   </thead>
 );
@@ -62,7 +64,7 @@ const TableItem: React.FC<TableItemProps> = ({
           if (hasSubitems) toggleItem(item.festivalItemName || '');
         }}
       >
-        <td className='py-4 pl-8 pr-4 text-left align-top text-[#333]'>
+        <td className='py-4 pl-8 pr-4 text-left align-top text-black-300'>
           {hasSubitems && (
             <span className='inline-flex items-center gap-1'>
               <span className='text-blue-500 flex items-center'>
@@ -78,7 +80,7 @@ const TableItem: React.FC<TableItemProps> = ({
             </span>
           )}
           {!hasSubitems && (
-            <span className='text-sm text-[#333]'>
+            <span className='text-sm text-black-300'>
               {truncateItemName(item?.festivalItemName || '')}
             </span>
           )}
@@ -110,28 +112,28 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateI
   return (
     <tr>
       <td colSpan={5}>
-        <div className='flex w-full justify-start px-2 md:w-[90%]'>
+        <div className='flex w-full justify-start px-2 md:w-9/10'>
           <div className='mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3'>
             <table
-              className='w-full table-auto whitespace-normal break-words text-sm text-[#333]'
+              className='w-full table-auto whitespace-normal break-words text-sm text-black-300'
               onClick={(e) => e.stopPropagation()}
             >
               <tbody>
                 {items.map((item) => (
                   <tr key={item.buyReportName}>
-                    <td className='w-[30%] text-nowrap px-2 py-2 text-left'>
+                    <td className='w-[30%] text-nowrap p-2 text-left'>
                       {truncateItemName(itemsName || '')}
                     </td>
-                    <td className='w-[15%] text-nowrap px-2 py-2 text-center'>
+                    <td className='w-[15%] text-nowrap p-2 text-center'>
                       {convertDate(item?.reportDate ?? '')}
                     </td>
-                    <td className='w-[15%] text-nowrap px-2 py-2 text-center'>
+                    <td className='w-[15%] text-nowrap p-2 text-center'>
                       {item.buyReportName || '-'}
                     </td>
-                    <td className='w-[15%] text-nowrap px-2 py-2 text-center'>
+                    <td className='w-[15%] text-nowrap p-2 text-center'>
                       {item.amount ? item.amount.toLocaleString() : '-'}
                     </td>
-                    <td className='w-[15%] px-2 py-2'>
+                    <td className='w-[15%] p-2'>
                       <Status status={item.status || '確認中'} />
                     </td>
                   </tr>
@@ -182,7 +184,7 @@ const TableSection: React.FC<TableSectionProps> = ({ festivalItemDetails }) => {
 
   return (
     <div className='mb-8'>
-      <h3 className='mb-2 text-base font-light text-[#333]'>{festivalItemDetails.divisionName}</h3>
+      <h3 className='mb-2 text-base font-light text-black-300'>{festivalItemDetails.divisionName}</h3>
 
       <div className='w-full overflow-x-auto'>
         <table className='min-w-full table-fixed text-nowrap'>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import formatNumber from '../common/Formatter';
+
 import {
   useGetFinancialRecordsId,
   useGetDivisionsId,
@@ -11,8 +11,12 @@ import {
   usePutDivisionsId,
   usePutFestivalItemsId,
 } from '@/generated/hooks';
-import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 import { PrimaryButton, Input, Modal } from '@components/common';
+
+import formatNumber from '../common/Formatter';
+
+import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
+
 
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -219,7 +223,7 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
           {phase === 2 && '申請部門編集'}
           {phase === 3 && '申請物品編集'}
         </div>
-        <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+        <div className='my-10 grid grid-cols-5 place-items-center gap-5 text-black-600'>
           {content}
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useEffect, useMemo } from 'react';
-
 import { MdFilterList, MdCircle } from 'react-icons/md';
 import { RiExternalLinkLine } from 'react-icons/ri';
+
 import { Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
@@ -272,7 +272,7 @@ export default function SponsorActivities(props: Props) {
               </select>
               <div className='flex items-center justify-center'>
                 <button
-                  className='rounded-md px-1 py-1 hover:bg-white-100 hover:outline-base-1'
+                  className='rounded-md p-1 hover:bg-white-100 hover:outline-base-1'
                   onClick={() => {
                     setIsFilerOpen(!isFilerOpen);
                   }}
@@ -337,13 +337,13 @@ export default function SponsorActivities(props: Props) {
                   <div>
                     {sponsorActivitiesItem.sponsorActivity.isDone && (
                       <div className='flex items-center gap-1'>
-                        <div className='h-4 w-4 rounded-full bg-[#7087FF]' />
+                        <div className='size-4 rounded-full bg-[#7087FF]' />
                         <p>回収完了</p>
                       </div>
                     )}
                     {!sponsorActivitiesItem.sponsorActivity.isDone && (
                       <div className='flex items-center gap-1'>
-                        <div className='h-4 w-4 rounded-full bg-[#FFA53C]' />
+                        <div className='size-4 rounded-full bg-[#FFA53C]' />
                         <p>未回収</p>
                       </div>
                     )}

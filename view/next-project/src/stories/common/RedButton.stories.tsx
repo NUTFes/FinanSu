@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { RedButton } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof RedButton> = {
   title: 'FinanSu/common/RedButton',

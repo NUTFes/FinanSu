@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { SideNav } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof SideNav> = {
   title: 'FinanSu/common/SideNav',

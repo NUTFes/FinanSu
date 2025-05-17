@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { DeleteModal } from '@components/sponsors';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof DeleteModal> = {
   title: 'FinanSu/sponsors/DeleteModal',

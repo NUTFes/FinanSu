@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { SponsorAddModal } from '@components/sponsors';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof SponsorAddModal> = {
   title: 'FinanSu/sponsors/SponsorAddModal',

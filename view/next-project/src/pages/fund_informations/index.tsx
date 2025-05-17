@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import router from 'next/router';
 import { useRecoilValue } from 'recoil';
+
 import { FundInformationTable, FundInformationHeader } from '@/components/fund_information';
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
 import { userAtom } from '@/store/atoms';
@@ -30,7 +31,7 @@ export default function FundInformations() {
       </Head>
       <Card>
         <div className='mx-5 mt-10 min-h-[calc(100vh-12rem)]'>
-          <div className='mx-4 my-4'>
+          <div className='m-4'>
             <FundInformationHeader totalBalance={totalBalance} />
           </div>
 
