@@ -17,7 +17,6 @@ import formatNumber from '../common/Formatter';
 
 import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 
-
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   phase: number;

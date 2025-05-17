@@ -184,7 +184,9 @@ const TableSection: React.FC<TableSectionProps> = ({ festivalItemDetails }) => {
 
   return (
     <div className='mb-8'>
-      <h3 className='mb-2 text-base font-light text-black-300'>{festivalItemDetails.divisionName}</h3>
+      <h3 className='mb-2 text-base font-light text-black-300'>
+        {festivalItemDetails.divisionName}
+      </h3>
 
       <div className='w-full overflow-x-auto'>
         <table className='min-w-full table-fixed text-nowrap'>

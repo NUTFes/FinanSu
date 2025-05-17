@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-
 import EditModal from '@components/budgets/EditModal';
 import { Source, Year } from '@type/common';
 
