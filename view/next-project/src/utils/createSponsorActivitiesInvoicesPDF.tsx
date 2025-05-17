@@ -1,6 +1,6 @@
 import { Document, Page, Text, Font, View, pdf, StyleSheet, PDFViewer } from '@react-pdf/renderer';
 import React from 'react';
-import { formatDateToJapanese, calculateYearInfo } from './dateUtils';
+import { formatDateToJapanese, calculateYearInfo } from './dateConverter';
 import { Invoice } from '@type/common';
 
 Font.register({

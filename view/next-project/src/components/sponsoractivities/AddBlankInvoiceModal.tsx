@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Invoice } from '@/type/common';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
-import { getToday } from '@/utils/dateUtils';
+import { getToday } from '@/utils/dateConverter';
 import {
   Modal,
   Input,

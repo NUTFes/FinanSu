@@ -12,7 +12,7 @@ import {
   Image,
 } from '@react-pdf/renderer';
 import React from 'react';
-import { formatDateToJapanese, calculateYearInfo } from './dateUtils';
+import { formatDateToJapanese, calculateYearInfo } from './dateConverter';
 import { SponsorActivityView } from '@type/common';
 
 Font.register({

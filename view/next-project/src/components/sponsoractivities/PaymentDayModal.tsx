@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesReceiptsPDF';
-import { getToday } from '@/utils/dateUtils';
+import { getToday } from '@/utils/dateConverter';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
