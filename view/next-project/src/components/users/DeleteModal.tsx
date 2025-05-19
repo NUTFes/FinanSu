@@ -4,7 +4,7 @@ import { multiDel } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 import { User } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   children?: React.ReactNode;
   deleteUsers?: { users: User[]; ids: number[] };
