@@ -292,6 +292,17 @@ type SponsorStyle struct {
 	Style   string `json:"style"`
 }
 
+// TeacherWithRoom defines model for teacherWithRoom.
+type TeacherWithRoom struct {
+	DepartmentId int    `json:"departmentId"`
+	Id           int    `json:"id"`
+	IsBlack      bool   `json:"isBlack"`
+	Name         string `json:"name"`
+	Position     string `json:"position"`
+	Remark       string `json:"remark"`
+	RoomName     string `json:"roomName"`
+}
+
 // Total defines model for total.
 type Total struct {
 	Balance *int `json:"balance,omitempty"`
@@ -571,25 +582,22 @@ type PutSourcesIdParams struct {
 	Name string `form:"name" json:"name"`
 }
 
-// PostTeachersParams defines parameters for PostTeachers.
-type PostTeachersParams struct {
-	// Name 名前
-	Name string `form:"name" json:"name"`
-
-	// Position 役職
-	Position string `form:"position" json:"position"`
-
+// PostTeachersJSONBody defines parameters for PostTeachers.
+type PostTeachersJSONBody struct {
 	// DepartmentId 学科ID
-	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
-
-	// Room 部屋番号
-	Room *string `form:"room,omitempty" json:"room,omitempty"`
+	DepartmentId *int `json:"departmentId,omitempty"`
 
 	// IsBlack ブラックリストの真偽
-	IsBlack *bool `form:"is_black,omitempty" json:"is_black,omitempty"`
+	IsBlack *bool `json:"isBlack,omitempty"`
+
+	// Name 教員名
+	Name *string `json:"name,omitempty"`
 
 	// Remark 備考
-	Remark *string `form:"remark,omitempty" json:"remark,omitempty"`
+	Remark *string `json:"remark,omitempty"`
+
+	// RoomName 居室名。roomsテーブルにあるかないかの判断に使用。
+	RoomName *string `json:"roomName,omitempty"`
 }
 
 // PutTeachersIdParams defines parameters for PutTeachersId.
@@ -601,16 +609,16 @@ type PutTeachersIdParams struct {
 	Position string `form:"position" json:"position"`
 
 	// DepartmentId 学科ID
-	DepartmentId *int `form:"department_id,omitempty" json:"department_id,omitempty"`
-
-	// Room 部屋番号
-	Room *string `form:"room,omitempty" json:"room,omitempty"`
+	DepartmentId *int `form:"departmentId,omitempty" json:"departmentId,omitempty"`
 
 	// IsBlack ブラックリストに入っているか
-	IsBlack *bool `form:"is_black,omitempty" json:"is_black,omitempty"`
+	IsBlack *bool `form:"isBlack,omitempty" json:"isBlack,omitempty"`
 
 	// Remark 備考欄
 	Remark *string `form:"remark,omitempty" json:"remark,omitempty"`
+
+	// RoomName 居室名。roomsテーブルにあるかないかの判断に使用。
+	RoomName *string `form:"roomName,omitempty" json:"roomName,omitempty"`
 }
 
 // PostUploadFileMultipartBody defines parameters for PostUploadFile.
@@ -728,6 +736,9 @@ type PostSponsorstylesJSONRequestBody = SponsorStyle
 
 // PutSponsorstylesIdJSONRequestBody defines body for PutSponsorstylesId for application/json ContentType.
 type PutSponsorstylesIdJSONRequestBody = SponsorStyle
+
+// PostTeachersJSONRequestBody defines body for PostTeachers for application/json ContentType.
+type PostTeachersJSONRequestBody PostTeachersJSONBody
 
 // PostUploadFileMultipartRequestBody defines body for PostUploadFile for multipart/form-data ContentType.
 type PostUploadFileMultipartRequestBody PostUploadFileMultipartBody
@@ -1081,7 +1092,7 @@ type ServerInterface interface {
 	GetTeachers(ctx echo.Context) error
 
 	// (POST /teachers)
-	PostTeachers(ctx echo.Context, params PostTeachersParams) error
+	PostTeachers(ctx echo.Context) error
 
 	// (DELETE /teachers/delete)
 	DeleteTeachersDelete(ctx echo.Context) error
@@ -3040,52 +3051,8 @@ func (w *ServerInterfaceWrapper) GetTeachers(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PostTeachers(ctx echo.Context) error {
 	var err error
 
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostTeachersParams
-	// ------------- Required query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// ------------- Required query parameter "position" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "position", ctx.QueryParams(), &params.Position)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter position: %s", err))
-	}
-
-	// ------------- Optional query parameter "department_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "department_id", ctx.QueryParams(), &params.DepartmentId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
-	}
-
-	// ------------- Optional query parameter "room" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "room", ctx.QueryParams(), &params.Room)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter room: %s", err))
-	}
-
-	// ------------- Optional query parameter "is_black" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_black", ctx.QueryParams(), &params.IsBlack)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter is_black: %s", err))
-	}
-
-	// ------------- Optional query parameter "remark" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "remark", ctx.QueryParams(), &params.Remark)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter remark: %s", err))
-	}
-
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostTeachers(ctx, params)
+	err = w.Handler.PostTeachers(ctx)
 	return err
 }
 
@@ -3173,25 +3140,18 @@ func (w *ServerInterfaceWrapper) PutTeachersId(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter position: %s", err))
 	}
 
-	// ------------- Optional query parameter "department_id" -------------
+	// ------------- Optional query parameter "departmentId" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "department_id", ctx.QueryParams(), &params.DepartmentId)
+	err = runtime.BindQueryParameter("form", true, false, "departmentId", ctx.QueryParams(), &params.DepartmentId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter department_id: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter departmentId: %s", err))
 	}
 
-	// ------------- Optional query parameter "room" -------------
+	// ------------- Optional query parameter "isBlack" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "room", ctx.QueryParams(), &params.Room)
+	err = runtime.BindQueryParameter("form", true, false, "isBlack", ctx.QueryParams(), &params.IsBlack)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter room: %s", err))
-	}
-
-	// ------------- Optional query parameter "is_black" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_black", ctx.QueryParams(), &params.IsBlack)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter is_black: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter isBlack: %s", err))
 	}
 
 	// ------------- Optional query parameter "remark" -------------
@@ -3199,6 +3159,13 @@ func (w *ServerInterfaceWrapper) PutTeachersId(ctx echo.Context) error {
 	err = runtime.BindQueryParameter("form", true, false, "remark", ctx.QueryParams(), &params.Remark)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter remark: %s", err))
+	}
+
+	// ------------- Optional query parameter "roomName" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "roomName", ctx.QueryParams(), &params.RoomName)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter roomName: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments

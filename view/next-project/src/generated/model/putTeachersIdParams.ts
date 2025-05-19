@@ -18,17 +18,17 @@ export type PutTeachersIdParams = {
   /**
    * 学科ID
    */
-  department_id?: number;
-  /**
-   * 部屋番号
-   */
-  room?: string;
+  departmentId?: number;
   /**
    * ブラックリストに入っているか
    */
-  is_black?: boolean;
+  isBlack?: boolean;
   /**
    * 備考欄
    */
   remark?: string;
+  /**
+   * 居室名。roomsテーブルにあるかないかの判断に使用。
+   */
+  roomName?: string;
 };
