@@ -1,0 +1,9 @@
+services:
+  migrate:
+    image: migrate/migrate:latest
+    container_name: "nutfes-finansu-migrate"
+    command: "migrate -version"
+    env_file:
+      - finansu.env
+    volumes:
+      - ./mysql/migrations:/migrations
