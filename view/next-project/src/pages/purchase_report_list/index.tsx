@@ -56,9 +56,6 @@ export default function PurchaseReports() {
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
 
-  const [showSettlementModal, setShowSettlementModal] = useState(false);
-  const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
-
   // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
   useEffect(() => {
     if (buyReports.length > 0) {
