@@ -851,8 +851,8 @@ type ServerInterface interface {
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
 
-	// (GET /campus_donations/building/{building_id}/floor/{floor_id})
-	GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context, buildingId int, floorId int) error
+	// (GET /campus_donations/year/{year_id}/building/{building_id}/floor/{floor_id})
+	GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId(ctx echo.Context, yearId int, buildingId int, floorId int) error
 
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
@@ -1746,9 +1746,17 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 	return err
 }
 
-// GetCampusDonationsBuildingBuildingIdFloorFloorId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx echo.Context) error {
+// GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "year_id" -------------
+	var yearId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year_id", ctx.Param("year_id"), &yearId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
+	}
+
 	// ------------- Path parameter "building_id" -------------
 	var buildingId int
 
@@ -1766,7 +1774,7 @@ func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingBuildingIdFloorFloorI
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetCampusDonationsBuildingBuildingIdFloorFloorId(ctx, buildingId, floorId)
+	err = w.Handler.GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId(ctx, yearId, buildingId, floorId)
 	return err
 }
 
@@ -3337,7 +3345,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
-	router.GET(baseURL+"/campus_donations/building/:building_id/floor/:floor_id", wrapper.GetCampusDonationsBuildingBuildingIdFloorFloorId)
+	router.GET(baseURL+"/campus_donations/year/:year_id/building/:building_id/floor/:floor_id", wrapper.GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)

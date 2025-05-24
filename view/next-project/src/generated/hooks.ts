@@ -2694,33 +2694,35 @@ export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
 /**
  * 各棟の各階の学内募金情報を取得するAPI
  */
-export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponse200 = {
+export type getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdResponse200 = {
   data: CampusDonationByFloorAndBuilding[];
   status: 200;
 };
 
-export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponseComposite =
-  getCampusDonationsBuildingBuildingIdFloorFloorIdResponse200;
+export type getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdResponseComposite =
+  getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdResponse200;
 
-export type getCampusDonationsBuildingBuildingIdFloorFloorIdResponse =
-  getCampusDonationsBuildingBuildingIdFloorFloorIdResponseComposite & {
+export type getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdResponse =
+  getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdResponseComposite & {
     headers: Headers;
   };
 
-export const getGetCampusDonationsBuildingBuildingIdFloorFloorIdUrl = (
+export const getGetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdUrl = (
+  yearId: number,
   buildingId: number,
   floorId: number,
 ) => {
-  return `/campus_donations/building/${buildingId}/floor/${floorId}`;
+  return `/campus_donations/year/${yearId}/building/${buildingId}/floor/${floorId}`;
 };
 
-export const getCampusDonationsBuildingBuildingIdFloorFloorId = async (
+export const getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId = async (
+  yearId: number,
   buildingId: number,
   floorId: number,
   options?: RequestInit,
-): Promise<getCampusDonationsBuildingBuildingIdFloorFloorIdResponse> => {
-  return customFetch<getCampusDonationsBuildingBuildingIdFloorFloorIdResponse>(
-    getGetCampusDonationsBuildingBuildingIdFloorFloorIdUrl(buildingId, floorId),
+): Promise<getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdResponse> => {
+  return customFetch<getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdResponse>(
+    getGetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdUrl(yearId, buildingId, floorId),
     {
       ...options,
       method: 'GET',
@@ -2728,22 +2730,24 @@ export const getCampusDonationsBuildingBuildingIdFloorFloorId = async (
   );
 };
 
-export const getGetCampusDonationsBuildingBuildingIdFloorFloorIdKey = (
+export const getGetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdKey = (
+  yearId: number,
   buildingId: number,
   floorId: number,
-) => [`/campus_donations/building/${buildingId}/floor/${floorId}`] as const;
+) => [`/campus_donations/year/${yearId}/building/${buildingId}/floor/${floorId}`] as const;
 
-export type GetCampusDonationsBuildingBuildingIdFloorFloorIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getCampusDonationsBuildingBuildingIdFloorFloorId>>
+export type GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId>>
 >;
-export type GetCampusDonationsBuildingBuildingIdFloorFloorIdQueryError = unknown;
+export type GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdQueryError = unknown;
 
-export const useGetCampusDonationsBuildingBuildingIdFloorFloorId = <TError = unknown>(
+export const useGetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId = <TError = unknown>(
+  yearId: number,
   buildingId: number,
   floorId: number,
   options?: {
     swr?: SWRConfiguration<
-      Awaited<ReturnType<typeof getCampusDonationsBuildingBuildingIdFloorFloorId>>,
+      Awaited<ReturnType<typeof getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId>>,
       TError
     > & { swrKey?: Key; enabled?: boolean };
     request?: SecondParameter<typeof customFetch>;
@@ -2751,15 +2755,24 @@ export const useGetCampusDonationsBuildingBuildingIdFloorFloorId = <TError = unk
 ) => {
   const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && !!(buildingId && floorId);
+  const isEnabled = swrOptions?.enabled !== false && !!(yearId && buildingId && floorId);
   const swrKey =
     swrOptions?.swrKey ??
     (() =>
       isEnabled
-        ? getGetCampusDonationsBuildingBuildingIdFloorFloorIdKey(buildingId, floorId)
+        ? getGetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorIdKey(
+            yearId,
+            buildingId,
+            floorId,
+          )
         : null);
   const swrFn = () =>
-    getCampusDonationsBuildingBuildingIdFloorFloorId(buildingId, floorId, requestOptions);
+    getCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId(
+      yearId,
+      buildingId,
+      floorId,
+      requestOptions,
+    );
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
