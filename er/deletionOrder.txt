@@ -10,7 +10,6 @@ purchase_orders
 purchase_items
 password_reset_tokens
 mail_auth
-fund_informations
 departments
 bureaus
 budgets
@@ -24,6 +23,7 @@ buy_report_income_expenditure_managements
 spot_sponsor_names
 payment_receipts
 item_budgets
+campus_donations
 buy_statuses
 rooms
 buy_reports
