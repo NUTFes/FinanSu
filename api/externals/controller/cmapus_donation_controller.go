@@ -1,0 +1,41 @@
+package controller
+
+import (
+	"net/http"
+
+	"github.com/NUTFes/FinanSu/api/internals/usecase"
+	"github.com/labstack/echo/v4"
+)
+
+type campusDonationController struct {
+	u usecase.CampusDonationUseCase
+}
+
+type CampusDonationController interface {
+	IndexCampusDonationByFloor(echo.Context) error
+}
+
+func NewCampusDonationController(u usecase.CampusDonationUseCase) CampusDonationController {
+	return &campusDonationController{u}
+}
+
+func (cdc *campusDonationController) IndexCampusDonationByFloor(c echo.Context) error {
+	ctx := c.Request().Context()
+	buildingId := c.Param("building_id")
+	floorId := c.Param("floor_id")
+
+	if buildingId == "" {
+		return c.String(http.StatusBadRequest, "building_id is required")
+	}
+
+	if floorId == "" {
+		return c.String(http.StatusBadRequest, "floor_id is required")
+	}
+
+	campusDonationByFloors, err := cdc.u.GetCampusDonationByFloors(ctx, buildingId, floorId)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to get campus donation by floor")
+	}
+
+	return c.JSON(http.StatusOK, campusDonationByFloors)
+}
