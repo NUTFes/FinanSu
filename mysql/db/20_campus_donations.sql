@@ -14,7 +14,9 @@ CREATE TABLE
     created_at datetime not null default current_timestamp,
     updated_at datetime not null default current_timestamp on update current_timestamp,
     PRIMARY KEY (id),
-    FOREIGN KEY (year_id) REFERENCES years (id) ON DELETE CASCADE
+    FOREIGN KEY (year_id) REFERENCES years (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (teacher_id) REFERENCES teachers (id) ON DELETE CASCADE
   );
 
 INSERT INTO
