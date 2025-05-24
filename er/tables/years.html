@@ -118,6 +118,11 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="campus_donations.year_id references years.id via campus_donations_ibfk_1"><a href='campus_donations.html'>campus_donations</a><span class='relatedKey'>.year_id</span></td>
+                                                <td class="constraint detail">campus_donations_ibfk_1</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="financial_records.year_id references years.id via financial_records_ibfk_1"><a href='financial_records.html'>financial_records</a><span class='relatedKey'>.year_id</span></td>
                                                 <td class="constraint detail">financial_records_ibfk_1</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
@@ -245,22 +250,24 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="financial_records.html" target="_top" title="financial_records" alt="" coords="432,5,681,152">
-<area shape="rect" id="node2" href="years.html" target="_top" title="years" alt="" coords="5,115,299,301">
-<area shape="rect" id="node3" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="343,169,771,316">
+<area shape="rect" id="node1" href="campus_donations.html" target="_top" title="campus_donations" alt="" coords="425,5,689,152">
+<area shape="rect" id="node2" href="years.html" target="_top" title="years" alt="" coords="5,196,299,383">
+<area shape="rect" id="node3" href="financial_records.html" target="_top" title="financial_records" alt="" coords="432,169,681,316">
+<area shape="rect" id="node4" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="343,333,771,480">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/years.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
 <area shape="rect" id="node1" href="buy_report_income_expenditure_m_26c10aac.html" target="_top" title="buy_report_income_expenditure_managements" alt="" coords="815,5,1357,93">
-<area shape="rect" id="node2" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="343,213,771,360">
-<area shape="rect" id="node5" href="years.html" target="_top" title="years" alt="" coords="5,333,299,520">
-<area shape="rect" id="node3" href="divisions.html" target="_top" title="divisions" alt="" coords="1001,427,1171,515">
-<area shape="rect" id="node4" href="financial_records.html" target="_top" title="financial_records" alt="" coords="432,400,681,547">
-<area shape="rect" id="node6" href="income_income_expenditure_managements.html" target="_top" title="income_income_expenditure_managements" alt="" coords="833,111,1339,199">
-<area shape="rect" id="node7" href="sponsor_activity_balance_managements.html" target="_top" title="sponsor_activity_balance_managements" alt="" coords="849,216,1323,304">
-<area shape="rect" id="node8" href="spot_sponsor_names.html" target="_top" title="spot_sponsor_names" alt="" coords="943,321,1229,409">
+<area shape="rect" id="node2" href="income_expenditure_managements.html" target="_top" title="income_expenditure_managements" alt="" coords="343,160,771,307">
+<area shape="rect" id="node4" href="years.html" target="_top" title="years" alt="" coords="5,351,299,537">
+<area shape="rect" id="node3" href="campus_donations.html" target="_top" title="campus_donations" alt="" coords="425,324,689,471">
+<area shape="rect" id="node5" href="divisions.html" target="_top" title="divisions" alt="" coords="1001,491,1171,579">
+<area shape="rect" id="node6" href="financial_records.html" target="_top" title="financial_records" alt="" coords="432,488,681,635">
+<area shape="rect" id="node7" href="income_income_expenditure_managements.html" target="_top" title="income_income_expenditure_managements" alt="" coords="833,111,1339,199">
+<area shape="rect" id="node8" href="sponsor_activity_balance_managements.html" target="_top" title="sponsor_activity_balance_managements" alt="" coords="849,216,1323,304">
+<area shape="rect" id="node9" href="spot_sponsor_names.html" target="_top" title="spot_sponsor_names" alt="" coords="943,321,1229,409">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/years.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
