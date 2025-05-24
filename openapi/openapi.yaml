@@ -816,7 +816,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/buyReportDetail"
 
-  /campus_donations/building/{building_id}/floor/{floor_id}:
+  /campus_donations/year/{year_id}/building/{building_id}/floor/{floor_id}:
     get:
       tags:
         - campus_donation
@@ -834,6 +834,12 @@ paths:
           schema:
             type: integer
           description: ID of the floor
+        - name: year_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the year
       responses:
         "200":
           description: Successful response
@@ -3325,7 +3331,7 @@ components:
         donations:
           type: array
           items:
-            $ref: '#/components/schemas/campusDonation'
+            $ref: "#/components/schemas/campusDonation"
       required:
         - floor_ud
         - floor_number
@@ -3341,7 +3347,7 @@ components:
         floors:
           type: array
           items:
-            $ref: '#/components/schemas/floorGroup'
+            $ref: "#/components/schemas/floorGroup"
       required:
         - building_id
         - building_Name
