@@ -8,6 +8,7 @@ import (
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 type campusDonationUseCase struct {
@@ -23,7 +24,6 @@ func NewCampusDonationUseCase(rep rep.CampusDonationRepository) CampusDonationUs
 }
 
 func (cdu *campusDonationUseCase) GetCampusDonationByFloors(c context.Context, buildingId string, floorId string) ([]CampusDonationByFloorAndBuilding, error) {
-
 	//クエリ実行
 	rows, err := cdu.rep.AllCampusDonationByFloor(c, buildingId, floorId)
 	if err != nil {
@@ -54,52 +54,62 @@ func (cdu *campusDonationUseCase) GetCampusDonationByFloors(c context.Context, b
 		campusDonationRecords = append(campusDonationRecords, campusDonationRecord)
 	}
 
-	// --- （2）ネスト構造にマップ→スライス化 ---
-	groupMap := make(map[int]*generated.CampusDonationByFloorAndBuilding)
-	for _, r := range campusDonationRecords {
-		buildingGroup, ok := groupMap[r.BuildingId]
+	return convertCampusDonationRecordsToNestedStructure(campusDonationRecords), nil
+}
+
+// convertCampusDonationRecordsToNestedStructure はcampusDonationRecordをネスト構造に変換する。
+func convertCampusDonationRecordsToNestedStructure(records []domain.CampusDonationRecord) []CampusDonationByFloorAndBuilding {
+	// 建物ごとにグループ化するためのマップを作成
+	groupMap := make(map[int]*CampusDonationByFloorAndBuilding)
+
+	for _, record := range records {
+		buildingGroup, ok := groupMap[record.BuildingId]
 		if !ok {
-			buildingGroup = &generated.CampusDonationByFloorAndBuilding{
-				BuildingId:   r.BuildingId,
-				BuildingName: r.BuildingName,
-				Floors:       []generated.FloorGroup{},
+			buildingGroup = &CampusDonationByFloorAndBuilding{
+				BuildingId:   record.BuildingId,
+				BuildingName: record.BuildingName,
+				Floors:       []FloorGroup{},
 			}
-			groupMap[r.BuildingId] = buildingGroup
+			groupMap[record.BuildingId] = buildingGroup
 		}
-		// Floor レベル取得 or 初期化
-    var floorGroup *generated.FloorGroup
+
+		// floorGroupの検索
+		var floorGroup *FloorGroup
 		for i := range buildingGroup.Floors {
-        if buildingGroup.Floors[i].FloorId != nil && r.FloorId != nil &&
-            *buildingGroup.Floors[i].FloorId == *r.FloorId {
-            floorGroup = &buildingGroup.Floors[i]
-            break
+			if buildingGroup.Floors[i].FloorId != nil && record.FloorId != nil &&
+				*buildingGroup.Floors[i].FloorId == *record.FloorId {
+				floorGroup = &buildingGroup.Floors[i]
+				break
 			}
 		}
+		// ない場合、floorGroupを作成
 		if floorGroup == nil {
-			newFg := generated.FloorGroup{
-				FloorId:     r.FloorId,
-				FloorNumber: r.FloorNumber,
-				Donations:   []generated.CampusDonation{},
+			newFloorGroup := FloorGroup{
+				FloorId:     record.FloorId,
+				FloorNumber: record.FloorNumber,
+				Donations:   []CampusDonation{},
 			}
-			buildingGroup.Floors = append(buildingGroup.Floors, newFg)
+			buildingGroup.Floors = append(buildingGroup.Floors, newFloorGroup)
 			floorGroup = &buildingGroup.Floors[len(buildingGroup.Floors)-1]
 		}
-		// Donation 追加
-		floorGroup.Donations = append(floorGroup.Donations, generated.CampusDonation{
-			TeacherId:   r.TeacherId,
-			TeacherName: r.TeacherName,
-			RoomName:    r.RoomName,
-			Price:       r.Price,
-			IsBlack:     r.IsBlack,
+
+		// campusDonationの追加
+		floorGroup.Donations = append(floorGroup.Donations, CampusDonation{
+			TeacherId:   record.TeacherId,
+			TeacherName: record.TeacherName,
+			RoomName:    record.RoomName,
+			Price:       record.Price,
+			IsBlack:     record.IsBlack,
 		})
 	}
-	// map→slice
-	var result []generated.CampusDonationByFloorAndBuilding
-	for _, gb := range groupMap {
-		result = append(result, *gb)
-	}
-	return result, nil
+
+	// lo.MapToSliceを使用してマップをスライスに変換
+	return lo.MapToSlice(groupMap, func(_ int, v *CampusDonationByFloorAndBuilding) CampusDonationByFloorAndBuilding {
+		return *v
+	})
 }
 
 type CampusDonationByFloorAndBuilding = generated.CampusDonationByFloorAndBuilding
 type CampusDonationRecord = domain.CampusDonationRecord
+type FloorGroup = generated.FloorGroup
+type CampusDonation = generated.CampusDonation
