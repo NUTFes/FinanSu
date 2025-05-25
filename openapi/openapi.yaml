@@ -816,7 +816,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/buyReportDetail"
 
-  /campus_donations/building/{building_id}/floor/{floor_id}:
+  /campus_donations/year/{year_id}/building/{building_id}/floor/{floor_id}:
     get:
       tags:
         - campus_donation
@@ -834,6 +834,12 @@ paths:
           schema:
             type: integer
           description: ID of the floor
+        - name: year_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the year
       responses:
         "200":
           description: Successful response
@@ -842,7 +848,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/campusDonationByFloor"
+                  $ref: "#/components/schemas/campusDonationByFloorAndBuilding"
   /campus_donations/buildings/{year}:
     get:
       tags:
@@ -3327,17 +3333,12 @@ components:
         totalPrice:
           type: integer
           example: 10000
-    campusDonationByFloor:
+    campusDonation:
       type: object
+      description: 教員単体の情報
       properties:
         teacher_id:
           type: integer
-        building_name:
-          type: string
-        unit_number:
-          type: string
-        floor_number:
-          type: string
         room_name:
           type: string
         teacher_name:
@@ -3348,12 +3349,41 @@ components:
           type: boolean
       required:
         - teacher_id
-        - building_name
-        - unit_number
-        - floor_number
         - room_name
         - teacher_name
         - price
-        - is_black
+        - is_Black
+    floorGroup:
+      type: object
+      description: フロアごとの教員情報
+      properties:
+        floor_id:
+          type: integer
+        floor_number:
+          type: string
+        donations:
+          type: array
+          items:
+            $ref: "#/components/schemas/campusDonation"
+      required:
+        - floor_ud
+        - floor_number
+        - donations
+    campusDonationByFloorAndBuilding:
+      type: object
+      description: 棟ごとの教員情報
+      properties:
+        building_id:
+          type: integer
+        building_name:
+          type: string
+        floors:
+          type: array
+          items:
+            $ref: "#/components/schemas/floorGroup"
+      required:
+        - building_id
+        - building_Name
+        - floors
 
 x-original-swagger-version: "2.0"

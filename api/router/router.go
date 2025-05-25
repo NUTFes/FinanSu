@@ -163,8 +163,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/buy_report/status/:buy_report_id", r.buyReportController.UpdateBuyReportStatus)
 
 	// campus_donationsのRoute
-	e.GET("/campus_donations/building/:building_id/floor/:floor_id", r.campusDonationController.IndexCampusDonationByFloor)
-	e.GET(" /campus_donations/buildings/:year", r.campusDonationController.IndexCampusDonationBuildingByPeriod)
+	e.GET("/campus_donations/buildings/:year", r.campusDonationController.IndexCampusDonationBuildingByPeriod)
+	e.GET("/campus_donations/year/:year_id/building/:building_id/floor/:floor_id", r.campusDonationController.IndexCampusDonationByFloor)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
