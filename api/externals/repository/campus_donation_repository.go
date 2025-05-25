@@ -81,9 +81,7 @@ func (cdr *campusDonationRepository) AllCampusDonationByFloor(c context.Context,
 
 func (fir *campusDonationRepository) AllBuildingsByPeriod(c context.Context, year string) (*sql.Rows, error) {
 
-	db := goqu.Dialect("mysql")
-
-	ds := db.From("campus_donations").
+	ds := dialect.From("campus_donations").
 		Select(
 			goqu.I("buildings.id"),
 			goqu.I("buildings.name"),
