@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesReceiptsPDF';
+import { getToday } from '@/utils/dateConverter';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import { SponsorActivityView } from '@type/common';
 
@@ -15,31 +16,10 @@ interface FormDateFormat {
 }
 
 export default function PaymentDayModal(props: ModalProps) {
-  const today = new Date();
-  const yyyy = String(today.getFullYear());
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
-  const paymentDay = `${yyyy}-${mm}-${dd}`;
-  const ymd = `${yyyy}-${mm}-${dd}`;
+  // 現在の日付を取得
+  const today = getToday();
 
-  const [formData, setFormData] = useState<FormDateFormat>({ receivedAt: ymd });
-
-  const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-  const toReiwaYear = (year: number) => {
-    const reiwaStartYear = 2019;
-    const reiwaYear = year - reiwaStartYear + 1;
-    return reiwaYear === 1 ? '元' : `${reiwaYear}`;
-  };
-  const getWeekday = (date: Date) => {
-    return weekdays[date.getDay()];
-  };
-  const formatDate = (date: string, showWeekday = true) => {
-    const [year, month, day] = date.split('-').map(Number);
-    const dateObj = new Date(year, month - 1, day);
-    const reiwaYear = toReiwaYear(year);
-    const weekday = getWeekday(dateObj);
-    return `令和${reiwaYear}年${month}月${day}日${showWeekday ? `(${weekday})` : ''}`;
-  };
+  const [formData, setFormData] = useState<FormDateFormat>({ receivedAt: today });
 
   const handler =
     (input: string) =>
@@ -73,8 +53,8 @@ export default function PaymentDayModal(props: ModalProps) {
             onClick={async () => {
               createSponsorActivitiesPDF(
                 props.sponsorActivitiesViewItem,
-                formatDate(paymentDay, false),
-                formatDate(formData.receivedAt, false),
+                today,
+                formData.receivedAt,
               );
               onClose();
             }}
@@ -85,8 +65,8 @@ export default function PaymentDayModal(props: ModalProps) {
         <div className='h-[21rem] justify-center overflow-x-auto md:flex'>
           <PreviewPDF
             sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
-            date={formatDate(paymentDay, false)}
-            paymentDay={formatDate(formData.receivedAt, false)}
+            date={today}
+            paymentDay={formData.receivedAt}
           />
         </div>
       </div>

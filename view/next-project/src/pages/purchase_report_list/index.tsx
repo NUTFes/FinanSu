@@ -5,6 +5,7 @@ import { TbDownload } from 'react-icons/tb';
 import { useRecoilValue } from 'recoil';
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
+import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
   useGetYearsPeriods,
@@ -68,27 +69,23 @@ export default function PurchaseReports() {
   }, [buyReports]);
 
   const updateSealCheck = (id: number) => {
-    if (sealChecks[id]) {
-      setSettlementChecks((prevSettlement) => ({
-        ...prevSettlement,
-        [id]: false,
-      }));
+    if (settlementChecks[id]) {
+      return;
     }
-    setSealChecks((prev) => {
-      return {
-        ...prev,
-        [id]: !prev[id],
-      };
-    });
+    setSealChecks((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   const updateSettlementCheck = (id: number) => {
-    setSettlementChecks((prev) => {
-      return {
-        ...prev,
-        [id]: !prev[id],
-      };
-    });
+    if (settlementChecks[id]) {
+      return;
+    }
+    setSettlementChecks((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   const handleEdit = (report: BuyReportDetail) => {
@@ -240,12 +237,12 @@ export default function PurchaseReports() {
                           />
                         </td>
                         <td className='px-4 py-2 text-center'>
-                          <Checkbox
-                            className='accent-primary-5'
-                            checked={settlementChecks[report.id ?? 0] || false}
-                            onChange={() => {
-                              setBuyReportId(report.id ?? 0);
-                              updateSettlementCheck(report.id ?? 0);
+                          <OpenCheckSettlementModalButton
+                            id={report.id ?? 0}
+                            isChecked={settlementChecks[report.id ?? 0]}
+                            onConfirm={(id) => {
+                              setBuyReportId(id);
+                              updateSettlementCheck(id);
                             }}
                             disabled={!sealChecks[report.id ?? 0]}
                           />
