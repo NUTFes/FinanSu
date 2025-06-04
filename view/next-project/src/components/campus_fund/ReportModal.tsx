@@ -1,4 +1,13 @@
-import { VStack, FormLabel, HStack, Text, Button, InputGroup, InputRightElement, Icon } from '@chakra-ui/react';
+import {
+  VStack,
+  FormLabel,
+  HStack,
+  Text,
+  Button,
+  InputGroup,
+  InputRightElement,
+  Icon,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { FaRegCalendarAlt } from 'react-icons/fa';
@@ -45,18 +54,23 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
             >
               日時
             </FormLabel>
-            <InputGroup w="full" zIndex={2}>
+            <InputGroup w='full' zIndex={2}>
               <DatePicker
                 selected={selectedDate}
                 onChange={(date: Date | null) => setSelectedDate(date)}
                 dateFormat='yyyy/MM/dd'
                 placeholderText='日付を選択'
-                className='border-gray-400 focus:border-teal-400 w-full border-b focus:outline-none text-sm md:text-base pr-10'
+                className='border-gray-400 focus:border-teal-400 w-full border-b pr-10 text-sm focus:outline-none md:text-base'
                 popperPlacement='bottom'
-                popperClassName="z-datepicker-gal"
+                popperClassName='z-datepicker-gal'
               />
-              <InputRightElement pointerEvents="none" right="10px" top="50%" transform="translateY(-50%)">
-                <Icon as={FaRegCalendarAlt} color="gray.400" boxSize={5} />
+              <InputRightElement
+                pointerEvents='none'
+                right='10px'
+                top='50%'
+                transform='translateY(-50%)'
+              >
+                <Icon as={FaRegCalendarAlt} color='gray.400' boxSize={5} />
               </InputRightElement>
             </InputGroup>
           </HStack>
@@ -75,7 +89,7 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
             <input
               value={user ? `${user.name}` : ''}
               readOnly={true}
-              className='border-gray-400 bg-gray-100 w-full border-b focus:outline-none text-sm md:text-base'
+              className='border-gray-400 bg-gray-100 w-full border-b text-sm focus:outline-none md:text-base'
             />
           </HStack>
 
@@ -99,18 +113,23 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
                   setAmount(formatNumber(Number(value)));
                 }
               }}
-              className='border-gray-400 focus:border-teal-400 border-b focus:outline-none text-sm md:text-base'
+              className='border-gray-400 focus:border-teal-400 border-b text-sm focus:outline-none md:text-base'
             />
           </HStack>
 
           {/* 戻る＆追加ボタン */}
           <HStack spacing={4} w='100%' justify='center'>
-            <Button zIndex={1} colorScheme='gray' variant='outline' onClick={onBack} minW='100px' fontSize={{ base: 'xs', md: 'sm' }}>
+            <Button
+              zIndex={1}
+              colorScheme='gray'
+              variant='outline'
+              onClick={onBack}
+              minW='100px'
+              fontSize={{ base: 'xs', md: 'sm' }}
+            >
               戻る
             </Button>
-            <PrimaryButton onClick={onClose}>
-              追加する
-            </PrimaryButton>
+            <PrimaryButton onClick={onClose}>追加する</PrimaryButton>
           </HStack>
         </VStack>
       </div>

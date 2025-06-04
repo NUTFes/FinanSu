@@ -14,18 +14,18 @@ interface Props {
 const OtherBuildingsCard = ({ teachers }: Props) => (
   <Box
     p={4}
-    border="2px dashed #FF69B4"
-    borderRadius="md"
-    bg="#FFF0F6"
+    border='2px dashed #FF69B4'
+    borderRadius='md'
+    bg='#FFF0F6'
     minW={0}
-    w="100%"
-    maxW="100%"
-    boxShadow="md"
+    w='100%'
+    maxW='100%'
+    boxShadow='md'
   >
-    <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight="bold" color="#D72660" mb={2}>
+    <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight='bold' color='#D72660' mb={2}>
       その他
     </Text>
-    <Table variant="simple" size="sm">
+    <Table variant='simple' size='sm'>
       <Thead>
         <Tr>
           <Th fontSize={{ base: 'xs', md: 'sm' }}>棟名</Th>
@@ -40,7 +40,9 @@ const OtherBuildingsCard = ({ teachers }: Props) => (
             <Td fontSize={{ base: 'xs', md: 'sm' }}>{t.building}</Td>
             <Td fontSize={{ base: 'xs', md: 'sm' }}>{t.room}</Td>
             <Td fontSize={{ base: 'xs', md: 'sm' }}>{t.name}</Td>
-            <Td fontSize={{ base: 'xs', md: 'sm' }}>{t.amount ? `¥${t.amount.toLocaleString()}` : ''}</Td>
+            <Td fontSize={{ base: 'xs', md: 'sm' }}>
+              {t.amount ? `¥${t.amount.toLocaleString()}` : ''}
+            </Td>
           </Tr>
         ))}
       </Tbody>

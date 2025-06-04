@@ -88,7 +88,10 @@ const CampusFund = () => {
           building={selectedBuilding}
           teacher={
             selectedTeacher
-              ? { name: selectedTeacher, room: buildings.find(b => b.name === selectedBuilding)?.name || '' }
+              ? {
+                  name: selectedTeacher,
+                  room: buildings.find((b) => b.name === selectedBuilding)?.name || '',
+                }
               : null
           }
           onBack={() => {
