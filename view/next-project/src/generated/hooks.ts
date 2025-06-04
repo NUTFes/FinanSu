@@ -79,6 +79,7 @@ import type {
   GetDepartmentsId200,
   GetDivisionsParams,
   GetDivisionsUsersParams,
+  GetDivisionsYearsParams,
   GetExpenses200,
   GetExpensesDetails200,
   GetExpensesDetailsYear200,
@@ -104,7 +105,6 @@ import type {
   GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
-  GetTeachersId200,
   GetUsersId200,
   Income,
   IncomeCategory,
@@ -175,6 +175,7 @@ import type {
   Receipt,
   Sponsor,
   SponsorStyle,
+  Teacher,
   YearPeriods,
 } from './model';
 
@@ -3432,6 +3433,78 @@ export const useGetDivisionsUsers = <TError = unknown>(
   const isEnabled = swrOptions?.enabled !== false;
   const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDivisionsUsersKey(params) : null));
   const swrFn = () => getDivisionsUsers(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 年度ごとのdivisionの一覧を取得
+ */
+export type getDivisionsYearsResponse200 = {
+  data: DivisionOption[];
+  status: 200;
+};
+
+export type getDivisionsYearsResponseComposite = getDivisionsYearsResponse200;
+
+export type getDivisionsYearsResponse = getDivisionsYearsResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetDivisionsYearsUrl = (params?: GetDivisionsYearsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/divisions/years?${stringifiedParams}`
+    : `/divisions/years`;
+};
+
+export const getDivisionsYears = async (
+  params?: GetDivisionsYearsParams,
+  options?: RequestInit,
+): Promise<getDivisionsYearsResponse> => {
+  return customFetch<getDivisionsYearsResponse>(getGetDivisionsYearsUrl(params), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetDivisionsYearsKey = (params?: GetDivisionsYearsParams) =>
+  [`/divisions/years`, ...(params ? [params] : [])] as const;
+
+export type GetDivisionsYearsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getDivisionsYears>>
+>;
+export type GetDivisionsYearsQueryError = unknown;
+
+export const useGetDivisionsYears = <TError = unknown>(
+  params?: GetDivisionsYearsParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getDivisionsYears>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDivisionsYearsKey(params) : null));
+  const swrFn = () => getDivisionsYears(params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
@@ -7585,7 +7658,7 @@ export const useDeleteSponsorstylesId = <TError = unknown>(
  * teacherの一覧を取得
  */
 export type getTeachersResponse200 = {
-  data: void;
+  data: Teacher;
   status: 200;
 };
 
@@ -7781,7 +7854,7 @@ export const useDeleteTeachersDelete = <TError = unknown>(options?: {
  * IDで指定されたteacherの取得
  */
 export type getTeachersIdResponse200 = {
-  data: GetTeachersId200;
+  data: Teacher;
   status: 200;
 };
 
