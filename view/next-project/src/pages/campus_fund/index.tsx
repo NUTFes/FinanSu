@@ -1,6 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import OpenEditModalButton from '@/components/campus_fund/OpenEditModalButton';
 import ReportModal from '@/components/campus_fund/ReportModal';
 import SelectTeacherModal from '@/components/campus_fund/SelectTeacherModal';
 import formatNumber from '@/components/common/Formatter';
@@ -29,25 +28,28 @@ const CampusFund = () => {
 
   const handleBuildingClick = (building: string) => {
     setSelectedBuilding(building);
-    setIsSelectTeacherOpen(true); // 教員選択モーダルを開く
+    setIsSelectTeacherOpen(true);
   };
 
   const handleTeacherSelect = (teacher: string) => {
     setSelectedTeacher(teacher);
-    setIsSelectTeacherOpen(false); // 教員選択モーダルを閉じる
-    setIsReportModalOpen(true); // 報告モーダルを開く
+    setIsSelectTeacherOpen(false);
+    setIsReportModalOpen(true);
   };
 
   return (
     <MainLayout>
-      <Box p={8} mx='auto'>
+      <Box p={{ base: 2, md: 8 }} mx='auto' maxW='1200px'>
         <Text fontSize='2xl' fontWeight='bold' color='#26C1CE' textAlign='center' mt={8}>
           総募金額
         </Text>
         <Text fontSize='6xl' fontWeight='bold' color='#04668C' textAlign='center' mb={8}>
           ¥{formatNumber(totalAmount)}
         </Text>
-        <Grid templateColumns='repeat(auto-fit, minmax(200px, 1fr))' gap={6}>
+        <Grid
+          templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }}
+          gap={4}
+        >
           {buildings.map((building) => (
             <GridItem
               key={building.name}
@@ -57,6 +59,9 @@ const CampusFund = () => {
               textAlign='center'
               cursor='pointer'
               onClick={() => handleBuildingClick(building.name)}
+              bg='white'
+              _hover={{ boxShadow: 'md', bg: '#f0f9fa' }}
+              minW={0}
             >
               <Text fontSize='lg' fontWeight='bold'>
                 {building.name}
@@ -64,9 +69,6 @@ const CampusFund = () => {
               <Text fontSize='xl' color='#26C1CE'>
                 ¥{formatNumber(building.amount)}
               </Text>
-              <Box display='flex' justifyContent='center' alignItems='center' mt={8}>
-                <OpenEditModalButton className='w-full md:w-fit'>報告登録</OpenEditModalButton>
-              </Box>
             </GridItem>
           ))}
         </Grid>
@@ -84,7 +86,15 @@ const CampusFund = () => {
           isOpen={isReportModalOpen}
           onClose={() => setIsReportModalOpen(false)}
           building={selectedBuilding}
-          teacher={selectedTeacher}
+          teacher={
+            selectedTeacher
+              ? { name: selectedTeacher, room: buildings.find(b => b.name === selectedBuilding)?.name || '' }
+              : null
+          }
+          onBack={() => {
+            setIsReportModalOpen(false);
+            setIsSelectTeacherOpen(true);
+          }}
         />
       </Box>
     </MainLayout>
