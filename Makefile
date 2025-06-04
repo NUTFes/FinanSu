@@ -126,4 +126,7 @@ migrate-down:
 create-migration:
 	./scripts/create_migration.sh
 
+# シードデータの投入
+seed-db:
+	docker compose -f compose.db.yml run --rm db bash ./scripts/seed.sh
 
