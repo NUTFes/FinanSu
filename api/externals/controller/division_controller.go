@@ -104,7 +104,7 @@ func (d *divisionController) DestroyDivision(c echo.Context) error {
 func (d *divisionController) GetDivisionsYears(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
-	// usecase層で年度ごとのdivisionOptionを取得するギャル！
+	// Retrieve division options for each year from the usecase layer.
 	divisions, err := d.u.GetDivisionsYears(ctx, year)
 	if err != nil {
 		return err
