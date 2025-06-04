@@ -112,6 +112,22 @@ type BuyReportWithDivisionId struct {
 	PaidBy         *string `json:"paidBy,omitempty"`
 }
 
+// CampusDonation 教員単体の情報
+type CampusDonation struct {
+	IsBlack     *bool  `json:"is_black,omitempty"`
+	Price       int    `json:"price"`
+	RoomName    string `json:"room_name"`
+	TeacherId   int    `json:"teacher_id"`
+	TeacherName string `json:"teacher_name"`
+}
+
+// CampusDonationByFloorAndBuilding 棟ごとの教員情報
+type CampusDonationByFloorAndBuilding struct {
+	BuildingId   int          `json:"building_id"`
+	BuildingName *string      `json:"building_name,omitempty"`
+	Floors       []FloorGroup `json:"floors"`
+}
+
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
 type DestroyTeacherIDs struct {
 	DeleteIDs []float32 `json:"deleteIDs"`
@@ -220,6 +236,13 @@ type FinancialRecordWithBalance struct {
 	Id      *int    `json:"id,omitempty"`
 	Name    *string `json:"name,omitempty"`
 	Year    *int    `json:"year,omitempty"`
+}
+
+// FloorGroup フロアごとの教員情報
+type FloorGroup struct {
+	Donations   []CampusDonation `json:"donations"`
+	FloorId     *int             `json:"floor_id,omitempty"`
+	FloorNumber string           `json:"floor_number"`
 }
 
 // Income defines model for income.
@@ -827,6 +850,9 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /campus_donations/year/{year_id}/building/{building_id}/floor/{floor_id})
+	GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId(ctx echo.Context, yearId int, buildingId int, floorId int) error
 
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
@@ -1717,6 +1743,38 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year_id" -------------
+	var yearId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year_id", ctx.Param("year_id"), &yearId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
+	}
+
+	// ------------- Path parameter "building_id" -------------
+	var buildingId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "building_id", ctx.Param("building_id"), &buildingId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building_id: %s", err))
+	}
+
+	// ------------- Path parameter "floor_id" -------------
+	var floorId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "floor_id", ctx.Param("floor_id"), &floorId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId(ctx, yearId, buildingId, floorId)
 	return err
 }
 
@@ -3287,6 +3345,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/campus_donations/year/:year_id/building/:building_id/floor/:floor_id", wrapper.GetCampusDonationsYearYearIdBuildingBuildingIdFloorFloorId)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)

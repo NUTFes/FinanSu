@@ -816,6 +816,40 @@ paths:
               schema:
                 $ref: "#/components/schemas/buyReportDetail"
 
+  /campus_donations/year/{year_id}/building/{building_id}/floor/{floor_id}:
+    get:
+      tags:
+        - campus_donation
+      description: 各棟の各階の学内募金情報を取得するAPI
+      parameters:
+        - name: building_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the building
+        - name: floor_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the floor
+        - name: year_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the year
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/campusDonationByFloorAndBuilding"
+
   /departments:
     get:
       tags:
@@ -3266,5 +3300,57 @@ components:
         - room_number
         - is_black
         - remark
+    campusDonation:
+      type: object
+      description: 教員単体の情報
+      properties:
+        teacher_id:
+          type: integer
+        room_name:
+          type: string
+        teacher_name:
+          type: string
+        price:
+          type: integer
+        is_black:
+          type: boolean
+      required:
+        - teacher_id
+        - room_name
+        - teacher_name
+        - price
+        - is_Black
+    floorGroup:
+      type: object
+      description: フロアごとの教員情報
+      properties:
+        floor_id:
+          type: integer
+        floor_number:
+          type: string
+        donations:
+          type: array
+          items:
+            $ref: "#/components/schemas/campusDonation"
+      required:
+        - floor_ud
+        - floor_number
+        - donations
+    campusDonationByFloorAndBuilding:
+      type: object
+      description: 棟ごとの教員情報
+      properties:
+        building_id:
+          type: integer
+        building_name:
+          type: string
+        floors:
+          type: array
+          items:
+            $ref: "#/components/schemas/floorGroup"
+      required:
+        - building_id
+        - building_Name
+        - floors
 
 x-original-swagger-version: "2.0"
