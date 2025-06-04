@@ -58,7 +58,7 @@ func (cdr *campusDonationRepository) AllCampusDonationByFloor(c context.Context,
 			goqu.I("teachers.id").As("teacher_id"),
 			goqu.I("teachers.name").As("teacher_name"),
 			goqu.I("rooms.room_name").As("room_name"),
-			goqu.I("campus_donations.price").As("price"),
+			goqu.COALESCE(goqu.I("campus_donations.price"), 0).As("price"),
 			goqu.I("teachers.is_black").As("is_black"),
 		).
 		Where(
