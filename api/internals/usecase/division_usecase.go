@@ -19,6 +19,7 @@ type DivisionUseCase interface {
 	CreateDivision(context.Context, Division) (DivisionWithBalance, error)
 	UpdateDivision(context.Context, string, Division) (DivisionWithBalance, error)
 	DestroyDivision(context.Context, string) error
+	GetDivisionsYears(context.Context, string) ([]DivisionOption, error)
 }
 
 func NewDivisionUseCase(rep rep.DivisionRepository) DivisionUseCase {
@@ -188,6 +189,32 @@ func (du *divisionUseCase) DestroyDivision(c context.Context, id string) error {
 		return err
 	}
 	return nil
+}
+
+func (du *divisionUseCase) GetDivisionsYears(c context.Context, year string) ([]DivisionOption, error) {
+	var divisionOptions []DivisionOption
+
+	rows, err := du.rep.GetDivisionsYears(c, year)
+	if err != nil {
+		return divisionOptions, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	for rows.Next() {
+		var divisionOption DivisionOption
+		if err = rows.Scan(
+			&divisionOption.DivisionId,
+			&divisionOption.Name,
+		); err != nil {
+			return divisionOptions, err
+		}
+		divisionOptions = append(divisionOptions, divisionOption)
+	}
+	return divisionOptions, nil
 }
 
 type (
