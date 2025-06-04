@@ -20,6 +20,10 @@ export type PutTeachersIdParams = {
    */
   department_id?: number;
   /**
+   * 棟
+   */
+  building?: string;
+  /**
    * 部屋番号
    */
   room?: string;
