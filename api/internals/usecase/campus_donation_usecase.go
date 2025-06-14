@@ -58,6 +58,50 @@ func (cdu *campusDonationUseCase) GetCampusDonationByFloors(c context.Context, b
 	return convertCampusDonationRecordsToNestedStructure(campusDonationRecords), nil
 }
 
+func (f *campusDonationUseCase) GetCampusDonationBuildingByPeriod(c context.Context, year string) ([]BuildingTotal, error) {
+	rows, err := f.rep.AllBuildingsByPeriod(c, year)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	aggregated := make(map[int]*BuildingTotal)
+	for rows.Next() {
+		var buildingTotal domain.CampusDonationBuilding
+		if err := rows.Scan(&buildingTotal.Id, &buildingTotal.Name, &buildingTotal.Price); err != nil {
+			return nil, err
+		}
+		if b, exists := aggregated[buildingTotal.Id]; exists {
+			if b.TotalPrice == nil {
+				b.TotalPrice = new(int)
+			}
+			*b.TotalPrice += buildingTotal.Price
+			continue
+		}
+		id := buildingTotal.Id
+		name := buildingTotal.Name
+		price := buildingTotal.Price
+		aggregated[buildingTotal.Id] = &BuildingTotal{
+			Id:         &id,
+			Name:       &name,
+			TotalPrice: &price,
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	var result []BuildingTotal
+	for _, b := range aggregated {
+		result = append(result, *b)
+	}
+	return result, nil
+}
+
 // convertCampusDonationRecordsToNestedStructure はcampusDonationRecordをネスト構造に変換する。
 func convertCampusDonationRecordsToNestedStructure(records []domain.CampusDonationRecord) []CampusDonationByFloorAndBuilding {
 	// 建物ごとにグループ化するためのマップを作成
@@ -108,50 +152,6 @@ func convertCampusDonationRecordsToNestedStructure(records []domain.CampusDonati
 	return lo.MapToSlice(groupMap, func(_ int, v *CampusDonationByFloorAndBuilding) CampusDonationByFloorAndBuilding {
 		return *v
 	})
-}
-
-func (f *campusDonationUseCase) GetCampusDonationBuildingByPeriod(c context.Context, year string) ([]BuildingTotal, error) {
-	rows, err := f.rep.AllBuildingsByPeriod(c, year)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			log.Println(err)
-		}
-	}()
-
-	aggregated := make(map[int]*BuildingTotal)
-	for rows.Next() {
-		var buildingTotal domain.CampusDonationBuilding
-		if err := rows.Scan(&buildingTotal.Id, &buildingTotal.Name, &buildingTotal.Price); err != nil {
-			return nil, err
-		}
-		if b, exists := aggregated[buildingTotal.Id]; exists {
-			if b.TotalPrice == nil {
-				b.TotalPrice = new(int)
-			}
-			*b.TotalPrice += buildingTotal.Price
-		} else {
-			id := buildingTotal.Id
-			name := buildingTotal.Name
-			price := buildingTotal.Price
-			aggregated[buildingTotal.Id] = &BuildingTotal{
-				Id:         &id,
-				Name:       &name,
-				TotalPrice: &price,
-			}
-		}
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	var result []BuildingTotal
-	for _, b := range aggregated {
-		result = append(result, *b)
-	}
-	return result, nil
 }
 
 type CampusDonationByFloor = generated.CampusDonationByFloor
