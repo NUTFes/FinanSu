@@ -77,6 +77,85 @@ make seed        # データベースシード実行
 - **MinIO Console**: http://localhost:9001
 - **Storybook**: http://localhost:6006
 
+### システム設計図
+
+```mermaid
+graph TB
+    subgraph "Frontend (Next.js)"
+        UI[React Components]
+        Store[Recoil Store]
+        Hooks[Generated API Hooks]
+        Pages[Next.js Pages]
+    end
+
+    subgraph "Backend (Go)"
+        subgraph "Clean Architecture"
+            Controllers[Controllers<br/>HTTP Handlers]
+            UseCases[Use Cases<br/>Business Logic]
+            Repositories[Repositories<br/>Data Access]
+            Domain[Domain Models]
+        end
+        Generated[Generated Code<br/>OpenAPI]
+    end
+
+    subgraph "Infrastructure"
+        MySQL[(MySQL Database)]
+        MinIO[(MinIO<br/>Object Storage)]
+        Swagger[Swagger UI]
+    end
+
+    subgraph "Development"
+        OpenAPI[OpenAPI Spec<br/>openapi.yaml]
+        Docker[Docker Compose]
+        Storybook[Storybook]
+    end
+
+    %% Frontend Flow
+    UI --> Store
+    UI --> Hooks
+    Pages --> UI
+    Hooks --> Controllers
+
+    %% Backend Flow
+    Controllers --> UseCases
+    UseCases --> Repositories
+    UseCases --> Domain
+    Repositories --> MySQL
+    Controllers --> MinIO
+
+    %% Code Generation
+    OpenAPI --> Generated
+    OpenAPI --> Hooks
+    Generated --> Controllers
+
+    %% Documentation
+    OpenAPI --> Swagger
+    UI --> Storybook
+
+    %% Infrastructure
+    Docker -.-> MySQL
+    Docker -.-> MinIO
+    Docker -.-> UI
+    Docker -.-> Controllers
+
+    classDef frontend fill:#e1f5fe
+    classDef backend fill:#f3e5f5
+    classDef infrastructure fill:#e8f5e8
+    classDef development fill:#fff3e0
+
+    class UI,Store,Hooks,Pages frontend
+    class Controllers,UseCases,Repositories,Domain,Generated backend
+    class MySQL,MinIO,Swagger infrastructure
+    class OpenAPI,Docker,Storybook development
+```
+
+### アーキテクチャの特徴
+
+1. **OpenAPI駆動開発**: 全ての型安全性がOpenAPI仕様から生成
+2. **Clean Architecture**: バックエンドは依存関係逆転により保守性を確保
+3. **型安全性**: フロントエンドからバックエンドまで一貫した型チェック
+4. **コンテナ化**: Docker Composeによる一貫した開発環境
+
 ### プロジェクト構造
 ```
 /api/               # Go backend (Clean Architecture)
