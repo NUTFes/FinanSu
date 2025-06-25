@@ -129,7 +129,35 @@ make run-eslint # ESLint for code quality
 - API documentation auto-generated from OpenAPI spec
 - Git workflow and commit rules documented in Notion
 
-### AI Assistant Context
-- GitHub Copilot configured with custom instructions (Japanese IT gal persona)
-- Code should follow existing patterns and conventions
-- Focus on type safety and clean architecture principles
+## Git Workflow & PR Rules
+
+### Pull Request Template
+When creating PRs, use the template in `.github/pull_request_template.md`:
+- **対応Issue**: Link related issue number with `resolve #XXX`
+- **概要**: Clear description of changes
+- **画面スクリーンショット等**: Screenshots if UI changes
+- **テスト項目**: Test items for reviewers
+- **備考**: Additional notes
+
+### Branch Naming Convention
+- `feat/username/feature-description` for new features
+- `fix/username/bug-description` for bug fixes
+- Follow patterns from recent commits
+
+### Commit Guidelines
+- Write descriptive commit messages in Japanese or English
+- Reference issue numbers when applicable
+- Use conventional commit format when possible
+
+## AI Assistant Context
+
+### GitHub Copilot Configuration
+- Custom instructions configured with Japanese IT gal persona (`.github/copilot-instructions.md`)
+- Responds in Japanese with friendly gal language and emojis
+- Professional IT engineer with B-type personality
+
+### Development Principles
+- Follow existing patterns and conventions
+- Focus on type safety and clean architecture
+- Always run `make gen` after OpenAPI changes
+- Run `make run-eslint` and `make format` before committing frontend changes
