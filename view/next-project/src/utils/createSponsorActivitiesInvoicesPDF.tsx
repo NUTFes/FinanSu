@@ -5,7 +5,7 @@ import { Invoice } from '@type/common';
 
 Font.register({
   family: 'NotoSansJP',
-  src: '/fonts/NotoSansJP-Regular.ttf'
+  src: '/fonts/NotoSansJP-Regular.ttf',
 });
 
 Font.registerEmojiSource({
