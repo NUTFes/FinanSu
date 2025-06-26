@@ -5,7 +5,12 @@ import { Invoice } from '@type/common';
 
 Font.register({
   family: 'NotoSansJP',
-  src: 'https://fonts.gstatic.com/ea/notosansjapanese/v6/NotoSansJP-Regular.woff2',
+  src: '/fonts/NotoSansJP-Regular.ttf'
+});
+
+Font.registerEmojiSource({
+  format: 'png',
+  url: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/',
 });
 
 const styles = StyleSheet.create({
