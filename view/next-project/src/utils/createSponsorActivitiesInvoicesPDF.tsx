@@ -247,9 +247,9 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
               <Text style={[styles.commonTableCol, styles.tableCol_L]}>
                 {sponsorStyle.styleName}
               </Text>
-              <Text style={[styles.commonTableCol, styles.tableCol_S]}>1</Text>
+              <Text style={[styles.commonTableCol, styles.tableCol_S]}>{sponsorStyle.quantity}</Text>
               <Text style={[styles.commonTableCol, styles.tableCol_M]}>
-                ¥ {sponsorStyle.price.toLocaleString()}
+                ¥ {sponsorStyle.unitPrice.toLocaleString()}
               </Text>
               <Text style={[styles.commonTableCol, styles.tableCol_M]}>
                 ¥ {sponsorStyle.price.toLocaleString()}
