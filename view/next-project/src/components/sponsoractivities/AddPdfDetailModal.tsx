@@ -28,7 +28,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
         styleName: `${sponsorStyle.style}(${sponsorStyle.feature})`,
         price: sponsorStyle.price,
         quantity: 1,
-        unitPrice: sponsorStyle.price
+        unitPrice: sponsorStyle.price,
       };
       return res;
     });
