@@ -106,3 +106,7 @@ gen-er:
 
 format:
 	docker compose run --rm view npm run format
+
+# Wireコードを生成
+wire-gen:
+	cd api/internals/di && ~/go/bin/wire gen
