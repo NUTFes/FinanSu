@@ -45,7 +45,10 @@ require (
 	golang.org/x/time v0.7.0 // indirect
 )
 
-require github.com/go-testfixtures/testfixtures/v3 v3.14.0
+require (
+	github.com/go-testfixtures/testfixtures/v3 v3.14.0
+	github.com/google/wire v0.6.0
+)
 
 require (
 	cel.dev/expr v0.16.0 // indirect
