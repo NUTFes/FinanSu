@@ -1,8 +1,6 @@
 ---
-alwaysApply: true
-description: GitHub MCPを使用したPR作成方法とテンプレート活用のガイド
+alwaysApply: false
 ---
-
 # GitHub MCP を使用した PR 作成方法
 
 ## 基本的な PR 作成の流れ
