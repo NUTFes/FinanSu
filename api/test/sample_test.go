@@ -85,6 +85,7 @@ func TestHelloHandler(t *testing.T) {
 	testServer := httptest.NewServer(serverComponents.Echo) // サーバを立てる
 	t.Cleanup(func() {
 		testServer.Close()
+		serverComponents.Client.CloseDB()
 	})
 
 	r, err := http.Get(testServer.URL + "/")
@@ -121,6 +122,7 @@ func TestGetUserHandler(t *testing.T) {
 	testServer := httptest.NewServer(serverComponents.Echo) // サーバを立てる
 	t.Cleanup(func() {
 		testServer.Close()
+		serverComponents.Client.CloseDB()
 	})
 
 	r, err := http.Get(testServer.URL + "/users")
@@ -156,6 +158,7 @@ func TestAddUserHandler(t *testing.T) {
 	testServer := httptest.NewServer(serverComponents.Echo)
 	t.Cleanup(func() {
 		testServer.Close()
+		serverComponents.Client.CloseDB()
 	})
 
 	u, err := url.Parse(testServer.URL + "/users")
