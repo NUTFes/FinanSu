@@ -1,0 +1,120 @@
+---
+alwaysApply: true
+description: GitHub MCPを使用したPR作成方法とテンプレート活用のガイド
+---
+
+# GitHub MCP を使用した PR 作成方法
+
+## 基本的な PR 作成の流れ
+
+### 1. 事前準備
+
+- 現在のブランチとベースブランチを確認
+- 変更内容を把握するための git 操作を実行
+- プロジェクトの詳細情報を確認
+
+### 2. GitHub MCP ツールの使用
+
+#### 必要な情報収集
+
+```bash
+# ブランチ状況確認
+git status
+
+# 変更ファイル一覧取得
+git diff develop --name-only
+
+# コミット履歴確認
+git log --oneline develop..HEAD
+```
+
+#### PR 作成コマンド
+
+```javascript
+mcp_github -
+  remote_create_pull_request({
+    owner: "NUTFes",
+    repo: "FinanSu",
+    title: "feat: 機能名の説明",
+    head: "現在のブランチ名",
+    base: "develop",
+    body: "PRテンプレートに従った本文",
+  });
+```
+
+### 3. PR テンプレートの活用
+
+PR 作成時は必ず [.github/pull_request_template.md](mdc:.github/pull_request_template.md) の内容に従って以下の項目を埋める：
+
+#### 必須項目
+
+- **対応 Issue**: `resolve #番号` または `resolve #0`
+- **概要**: 開発内容の概要説明
+- **画面スクリーンショット等**: 変更がある場合のみ
+- **テスト項目**: 検証すべき内容
+- **備考**: 追加情報
+
+#### 項目記載例
+
+```markdown
+# 対応 Issue
+
+resolve #123
+
+# 概要
+
+Google Wire を使った依存性注入システムを導入し、従来の手動による依存性注入を自動化しました。
+
+## 主な変更点
+
+- 機能 A の追加
+- 機能 B の修正
+- 設定ファイルの更新
+
+# テスト項目
+
+- 機能 A が正常に動作すること
+- 既存機能に影響がないこと
+- エラーハンドリングが適切に動作すること
+
+# 備考
+
+- 特別な注意点があれば記載
+```
+
+### 4. 動作確認の実行
+
+PR 作成後は必ず以下の手順で動作確認を実施：
+
+```bash
+# Wire生成（新規APIがある場合）
+make wire-gen
+
+# アプリケーション起動確認
+make run
+
+# 基本的な動作確認
+curl -s http://localhost:1323/
+```
+
+### 5. 注意事項
+
+- **ブランチ命名**: `feat/username/feature-name` 形式を推奨
+- **ベースブランチ**: 基本的に `develop` ブランチを使用
+- **コミット履歴**: 意味のある単位でコミットを分割
+- **テンプレート遵守**: 必ず `.github/pull_request_template.md` に従う
+- **動作確認**: PR 作成前に必ず動作確認を実施
+
+## エラー対応
+
+### よくある問題と対処法
+
+1. **ブランチが存在しない**: `git checkout -b ブランチ名` で作成
+2. **merge conflict**: ベースブランチの最新を取得して解決
+3. **API エラー**: repository owner/name が正しいか確認
+
+### 動作確認での注意点
+
+- **Air ホットリロード**: 変更後数秒待ってからテスト
+- **Wire 生成**: 新規 API がある場合のみ `make wire-gen` を実行
+- **Docker**: 基本的に手動での build/restart は不要
