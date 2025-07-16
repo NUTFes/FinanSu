@@ -76,9 +76,13 @@ func prepareTestDatabase(t *testing.T) {
 }
 
 func TestHelloHandler(t *testing.T) {
-	_, router := di.InitializeServer()
+	serverComponents, err := di.InitializeServer()
+	if err != nil {
+		t.Errorf("Error initializing server: %s", err)
+		return
+	}
 
-	testServer := httptest.NewServer(router) // サーバを立てる
+	testServer := httptest.NewServer(serverComponents.Echo) // サーバを立てる
 	t.Cleanup(func() {
 		testServer.Close()
 	})
@@ -108,9 +112,13 @@ func TestHelloHandler(t *testing.T) {
 func TestGetUserHandler(t *testing.T) {
 	prepareTestDatabase(t)
 
-	_, router := di.InitializeServer()
+	serverComponents, err := di.InitializeServer()
+	if err != nil {
+		t.Errorf("Error initializing server: %s", err)
+		return
+	}
 
-	testServer := httptest.NewServer(router) // サーバを立てる
+	testServer := httptest.NewServer(serverComponents.Echo) // サーバを立てる
 	t.Cleanup(func() {
 		testServer.Close()
 	})
@@ -139,9 +147,13 @@ func TestGetUserHandler(t *testing.T) {
 
 func TestAddUserHandler(t *testing.T) {
 	prepareTestDatabase(t)
-	_, router := di.InitializeServer()
+	serverComponents, err := di.InitializeServer()
+	if err != nil {
+		t.Errorf("Error initializing server: %s", err)
+		return
+	}
 
-	testServer := httptest.NewServer(router)
+	testServer := httptest.NewServer(serverComponents.Echo)
 	t.Cleanup(func() {
 		testServer.Close()
 	})
