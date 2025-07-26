@@ -25,6 +25,7 @@ type DivisionRepository interface {
 	Update(context.Context, string, Division) error
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
+	GetDivisionsYears(context.Context, string) (*sql.Rows, error)
 }
 
 func NewDivisionRepository(c db.Client, ac abstract.Crud) DivisionRepository {
@@ -177,6 +178,35 @@ func (dr *divisionRepository) FindLatestRecord(c context.Context) (*sql.Row, err
 	query := makeSelectDivisionsSQL(conditions)
 
 	return dr.client.DB().QueryRowContext(c, query), nil
+}
+
+// 年度一覧取得
+func (dr *divisionRepository) GetDivisionsYears(c context.Context, year string) (*sql.Rows, error) {
+	ds := dialect.From(goqu.I("divisions")).
+		Select(
+			goqu.I("divisions.id").As("divisionId"),
+			goqu.I("divisions.name").As("name"),
+		).
+		Join(
+			goqu.I("financial_records"),
+			goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id"))),
+		).
+		Join(
+			goqu.I("years"),
+			goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id"))),
+		)
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
+	query, args, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	stmt, err := dr.crud.Prepare(c, query)
+	if err != nil {
+		return nil, err
+	}
+	return stmt.QueryContext(c, args...)
 }
 
 type Division = generated.Division

@@ -176,6 +176,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.GET("/divisions", r.divisionController.IndexDivisions)
 	e.GET("/divisions/users", r.divisionController.GetDivisionOptions)
 	e.GET("/divisions/:id", r.divisionController.GetDivision)
+	e.GET("/divisions/years", r.divisionController.GetDivisionsYears)
 	e.POST("/divisions", r.divisionController.CreateDivision)
 	e.PUT("/divisions/:id", r.divisionController.UpdateDivision)
 	e.DELETE("/divisions/:id", r.divisionController.DestroyDivision)
