@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
-
 import { del } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
