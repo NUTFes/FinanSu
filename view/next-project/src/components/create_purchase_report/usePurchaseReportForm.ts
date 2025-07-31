@@ -1,5 +1,5 @@
 import { NextRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   useGetDivisionsUsers,
@@ -7,6 +7,7 @@ import {
   useGetBuyReportsId,
   usePostBuyReports,
   usePutBuyReportsId,
+  useGetDivisionsYears,
 } from '@/generated/hooks';
 import { DivisionOption, FestivalItemOption } from '@/generated/model';
 import type { BuyReport, PostBuyReportsBody, PutBuyReportsIdBody } from '@/generated/model';
@@ -18,7 +19,13 @@ const API_ERROR_MESSAGES = {
   CREATE_SUCCESS: '購入報告を登録しました',
   UPDATE_SUCCESS: '購入報告を更新しました',
   GENERIC_ERROR: '不明なエラーが発生しました',
-};
+} as const;
+
+interface FormState {
+  activeDivisionId: number;
+  festivalItemName: string;
+  divisionName: string;
+}
 
 const useReportFormData = (
   userId: number,
@@ -26,34 +33,47 @@ const useReportFormData = (
   activeDivisionId: number,
   isEditMode: boolean,
 ) => {
-  // 部門データの取得（新規作成時のみ）
+  const shouldFetchDivisions = !!(userId && year && !isEditMode);
+  const shouldFetchItems = !!(activeDivisionId && year);
+  const shouldFetchDivisionsYears = !!(year && isEditMode && activeDivisionId);
+
   const { data: divisionsData } = useGetDivisionsUsers(
     { year, user_id: userId },
-    { swr: { enabled: !!userId && !!year && !isEditMode } },
+    { swr: { enabled: shouldFetchDivisions } },
   );
 
-  // 編集モード時に物品一覧を取得
   const { data: festivalItemsData } = useGetFestivalItemsUsers(
     { year, division_id: activeDivisionId },
-    { swr: { enabled: !!activeDivisionId && !!year } },
+    { swr: { enabled: shouldFetchItems } },
   );
 
-  return { divisionsData, festivalItemsData };
+  const { data: divisionsYearsData } = useGetDivisionsYears(
+    { year },
+    { swr: { enabled: shouldFetchDivisionsYears } },
+  );
+
+  return { divisionsData, festivalItemsData, divisionsYearsData };
 };
 
 export const usePurchaseReportForm = (router: NextRouter) => {
   // URLパラメータの取得
-  const { from, id: reportIdParam } = router.query;
-  const reportId = reportIdParam ? Number(reportIdParam) : undefined;
-  const isEditMode = from === 'purchase_report_list';
+  const { reportId, isEditMode } = useMemo(() => {
+    const { from, id: reportIdParam } = router.query;
+    return {
+      reportId: reportIdParam ? Number(reportIdParam) : undefined,
+      isEditMode: from === 'purchase_report_list',
+    };
+  }, [router.query]);
 
   const user = useRecoilValue(userAtom);
   const [departments, setDepartments] = useState<DivisionOption[]>([]);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [festivalItems, setFestivalItems] = useState<FestivalItemOption[]>([]);
-  const [activeDivisionId, setActiveDivisionId] = useState<number>(0);
-  const [festivalItemName, setFestivalItemName] = useState<string>('');
-  const [divisionName, setDivisionName] = useState<string>('');
+  const [formState, setFormState] = useState<FormState>({
+    activeDivisionId: 0,
+    festivalItemName: '',
+    divisionName: '',
+  });
 
   // 新規作成時の初期値
   const [purchaseReport, setPurchaseReport] = useState<BuyReport>({
@@ -70,21 +90,20 @@ export const usePurchaseReportForm = (router: NextRouter) => {
     reportId || 0,
     {
       swr: {
-        enabled: isEditMode && !!reportId,
+        enabled: !!(isEditMode && reportId),
       },
     },
   );
 
-  const { divisionsData, festivalItemsData } = useReportFormData(
+  const { divisionsData, festivalItemsData, divisionsYearsData } = useReportFormData(
     userId,
     year,
-    activeDivisionId,
+    formState.activeDivisionId,
     isEditMode,
   );
 
-  // 編集モードでデータ取得後の処理
   useEffect(() => {
-    if (isEditMode && buyReportData && buyReportData.data) {
+    if (isEditMode && buyReportData?.data) {
       const buyReportWithDiv = buyReportData.data;
 
       // 購入報告データのセット
@@ -97,14 +116,29 @@ export const usePurchaseReportForm = (router: NextRouter) => {
 
       // 部門IDのセット
       if (buyReportWithDiv.divisionId) {
-        setActiveDivisionId(buyReportWithDiv.divisionId);
+        setFormState((prev) => ({
+          ...prev,
+          activeDivisionId: buyReportWithDiv.divisionId as number,
+        }));
       }
     }
   }, [buyReportData, isEditMode]);
 
+  // 部門名と物品名の取得
+  useEffect(() => {
+    if (isEditMode && formState.activeDivisionId && divisionsYearsData?.data) {
+      const foundDivision = divisionsYearsData.data.find(
+        (division) => division.divisionId === formState.activeDivisionId,
+      );
+      if (foundDivision) {
+        setFormState((prev) => ({ ...prev, divisionName: foundDivision.name }));
+      }
+    }
+  }, [isEditMode, formState.activeDivisionId, divisionsYearsData]);
+
   // 部門データの設定（新規作成時のみ）
   useEffect(() => {
-    if (!isEditMode && divisionsData && divisionsData.data) {
+    if (!isEditMode && divisionsData?.data) {
       const mappedDivisions: DivisionOption[] = divisionsData.data.map((division) => ({
         divisionId: division.divisionId,
         name: division.name,
@@ -114,34 +148,29 @@ export const usePurchaseReportForm = (router: NextRouter) => {
   }, [divisionsData, isEditMode]);
 
   // 物品データの設定（新規作成時のみ）
-  const findFestivalItemName = (items: FestivalItemOption[], itemId: number): string => {
-    const selectedItem = items.find((item) => item.festivalItemId === itemId);
-    return selectedItem?.name || '';
-  };
+  const findFestivalItemName = useCallback(
+    (items: FestivalItemOption[], itemId: number): string => {
+      const selectedItem = items.find((item) => item.festivalItemId === itemId);
+      return selectedItem?.name || '';
+    },
+    [],
+  );
 
   // 物品データの設定
   useEffect(() => {
-    if (festivalItemsData && festivalItemsData.data) {
+    if (festivalItemsData?.data) {
       setFestivalItems(festivalItemsData.data);
 
       // 編集モード時には選択されている物品の名前を取得
       if (isEditMode && purchaseReport.festivalItemID) {
-        setFestivalItemName(
-          findFestivalItemName(festivalItemsData.data, purchaseReport.festivalItemID),
+        const itemName = findFestivalItemName(
+          festivalItemsData.data,
+          purchaseReport.festivalItemID,
         );
-      }
-
-      // 部門名を取得
-      if (isEditMode && activeDivisionId && festivalItemsData.data.length > 0) {
-        const divisionInfo = festivalItemsData.data[0] as FestivalItemOption & {
-          divisionName?: string;
-        };
-        if (divisionInfo.divisionName) {
-          setDivisionName(divisionInfo.divisionName);
-        }
+        setFormState((prev) => ({ ...prev, festivalItemName: itemName }));
       }
     }
-  }, [festivalItemsData, isEditMode, purchaseReport.festivalItemID, activeDivisionId]);
+  }, [festivalItemsData, isEditMode, purchaseReport.festivalItemID, findFestivalItemName]);
 
   // 購入報告の作成（新規作成時）
   const { trigger: submitBuyReport, isMutating: isSubmitting } = usePostBuyReports();
@@ -149,18 +178,26 @@ export const usePurchaseReportForm = (router: NextRouter) => {
   // 購入報告の更新（編集時）
   const { trigger: updateBuyReport, isMutating: isUpdating } = usePutBuyReportsId(reportId || 0);
 
-  const isProcessingUpdate = isUpdating && isEditMode;
-  const isProcessingCreate = isSubmitting && !isEditMode;
-  const isProcessing = isProcessingUpdate || isProcessingCreate || isReportDataLoading;
+  const isProcessing = useMemo(() => {
+    return (isUpdating && isEditMode) || (isSubmitting && !isEditMode) || isReportDataLoading;
+  }, [isUpdating, isEditMode, isSubmitting, isReportDataLoading]);
+
+  // データ読み込み状態
+  const isDataLoading = useMemo(() => {
+    if (isEditMode) {
+      return isReportDataLoading || (!buyReportData && !!reportId);
+    }
+    return false;
+  }, [isEditMode, isReportDataLoading, buyReportData, reportId]);
 
   // エラーハンドリング
-  const handleError = (error: unknown) => {
+  const handleError = useCallback((error: unknown) => {
     const errorMessage = error instanceof Error ? error.message : API_ERROR_MESSAGES.GENERIC_ERROR;
     alert(`購入報告の処理に失敗しました。${errorMessage}`);
-  };
+  }, []);
 
   // 新規作成処理
-  const handleCreate = async () => {
+  const handleCreate = useCallback(async () => {
     if (!uploadedFile) {
       alert(API_ERROR_MESSAGES.MISSING_FILE);
       return;
@@ -180,10 +217,10 @@ export const usePurchaseReportForm = (router: NextRouter) => {
     } catch (error) {
       handleError(error);
     }
-  };
+  }, [uploadedFile, purchaseReport, submitBuyReport, router, handleError]);
 
   // 更新処理
-  const handleUpdate = async () => {
+  const handleUpdate = useCallback(async () => {
     if (!reportId) {
       alert(API_ERROR_MESSAGES.MISSING_ID);
       return;
@@ -208,37 +245,37 @@ export const usePurchaseReportForm = (router: NextRouter) => {
     } catch (error) {
       handleError(error);
     }
-  };
+  }, [reportId, purchaseReport, uploadedFile, updateBuyReport, router, handleError]);
 
   // 金額入力処理
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAmountChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^\d]/g, '');
     const numValue = value === '' ? 0 : Number(value);
     const limitedValue = Math.min(numValue, 999999999);
     setPurchaseReport((prev) => ({ ...prev, amount: limitedValue }));
-  };
+  }, []);
 
   // 部門選択処理
-  const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleDivisionChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = parseInt(e.target.value) || 0;
-    setActiveDivisionId(selectedId);
+    setFormState((prev) => ({ ...prev, activeDivisionId: selectedId }));
     setPurchaseReport((prev) => ({ ...prev, festivalItemID: 0 }));
-  };
+  }, []);
 
   // 物品選択処理
-  const handleItemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleItemChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = parseInt(e.target.value) || 0;
     setPurchaseReport((prev) => ({ ...prev, festivalItemID: selectedId }));
-  };
+  }, []);
 
   // 購入報告の送信処理
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (isEditMode) {
       await handleUpdate();
     } else {
       await handleCreate();
     }
-  };
+  }, [isEditMode, handleUpdate, handleCreate]);
 
   return {
     isEditMode,
@@ -248,12 +285,14 @@ export const usePurchaseReportForm = (router: NextRouter) => {
     setUploadedFile,
     departments,
     festivalItems,
-    activeDivisionId,
-    setActiveDivisionId,
+    activeDivisionId: formState.activeDivisionId,
+    setActiveDivisionId: (id: number) =>
+      setFormState((prev) => ({ ...prev, activeDivisionId: id })),
     handleSubmit,
     isProcessing,
-    festivalItemName,
-    divisionName,
+    isDataLoading,
+    festivalItemName: formState.festivalItemName,
+    divisionName: formState.divisionName,
     isReportDataLoading,
     handleAmountChange,
     handleDivisionChange,
