@@ -3,7 +3,13 @@ import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import { HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
 import { IoIosArrowDropup } from 'react-icons/io';
-import { MdOutlineSavings, MdOutlineWorkOutline, MdFaceUnlock, MdManageAccounts, MdCorporateFare } from 'react-icons/md';
+import {
+  MdOutlineSavings,
+  MdOutlineWorkOutline,
+  MdFaceUnlock,
+  MdManageAccounts,
+  MdCorporateFare,
+} from 'react-icons/md';
 
 interface LinkItemProps {
   name: string;

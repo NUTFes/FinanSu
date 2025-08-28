@@ -15,9 +15,11 @@ import type {
   Activity,
   ActivityInformation,
   ActivityStyle,
+  BulkUpdateUserGroups,
   BuyReport,
   BuyReportDetail,
   BuyReportWithDivisionId,
+  CreateUserGroup,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
   DeleteActivityStylesId200,
@@ -37,6 +39,7 @@ import type {
   DeleteSponsorstylesId200,
   DeleteTeachersDelete200,
   DeleteTeachersId200,
+  DeleteUserGroupsId200,
   DeleteUsersDelete200,
   DeleteUsersId200,
   DeleteYearsId200,
@@ -105,6 +108,7 @@ import type {
   GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
+  GetUserGroupsParams,
   GetUsersId200,
   Income,
   IncomeCategory,
@@ -176,6 +180,8 @@ import type {
   Sponsor,
   SponsorStyle,
   Teacher,
+  UserGroup,
+  UserGroupWithDivision,
   YearPeriods,
 } from './model';
 
@@ -8582,6 +8588,334 @@ export const useDeleteUsersId = <TError = unknown>(
 
   const swrKey = swrOptions?.swrKey ?? getDeleteUsersIdMutationKey(id);
   const swrFn = getDeleteUsersIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * user_groupsの一覧を取得
+ */
+export type getUserGroupsResponse200 = {
+  data: UserGroup[];
+  status: 200;
+};
+
+export type getUserGroupsResponseComposite = getUserGroupsResponse200;
+
+export type getUserGroupsResponse = getUserGroupsResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetUserGroupsUrl = (params?: GetUserGroupsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/user_groups?${stringifiedParams}` : `/user_groups`;
+};
+
+export const getUserGroups = async (
+  params?: GetUserGroupsParams,
+  options?: RequestInit,
+): Promise<getUserGroupsResponse> => {
+  return customFetch<getUserGroupsResponse>(getGetUserGroupsUrl(params), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetUserGroupsKey = (params?: GetUserGroupsParams) =>
+  [`/user_groups`, ...(params ? [params] : [])] as const;
+
+export type GetUserGroupsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserGroups>>>;
+export type GetUserGroupsQueryError = unknown;
+
+export const useGetUserGroups = <TError = unknown>(
+  params?: GetUserGroupsParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUserGroups>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUserGroupsKey(params) : null));
+  const swrFn = () => getUserGroups(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * user_groupsの作成（ユーザーを部門に追加）
+ */
+export type postUserGroupsResponse200 = {
+  data: UserGroup;
+  status: 200;
+};
+
+export type postUserGroupsResponseComposite = postUserGroupsResponse200;
+
+export type postUserGroupsResponse = postUserGroupsResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostUserGroupsUrl = () => {
+  return `/user_groups`;
+};
+
+export const postUserGroups = async (
+  createUserGroup: CreateUserGroup,
+  options?: RequestInit,
+): Promise<postUserGroupsResponse> => {
+  return customFetch<postUserGroupsResponse>(getPostUserGroupsUrl(), {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createUserGroup),
+  });
+};
+
+export const getPostUserGroupsMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+  return (_: Key, { arg }: { arg: CreateUserGroup }): Promise<postUserGroupsResponse> => {
+    return postUserGroups(arg, options);
+  };
+};
+export const getPostUserGroupsMutationKey = () => [`/user_groups`] as const;
+
+export type PostUserGroupsMutationResult = NonNullable<Awaited<ReturnType<typeof postUserGroups>>>;
+export type PostUserGroupsMutationError = unknown;
+
+export const usePostUserGroups = <TError = unknown>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postUserGroups>>,
+    TError,
+    Key,
+    CreateUserGroup,
+    Awaited<ReturnType<typeof postUserGroups>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostUserGroupsMutationKey();
+  const swrFn = getPostUserGroupsMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * IDを指定してuser_groupの削除（ユーザーから部門を削除）
+ */
+export type deleteUserGroupsIdResponse200 = {
+  data: DeleteUserGroupsId200;
+  status: 200;
+};
+
+export type deleteUserGroupsIdResponseComposite = deleteUserGroupsIdResponse200;
+
+export type deleteUserGroupsIdResponse = deleteUserGroupsIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getDeleteUserGroupsIdUrl = (id: number) => {
+  return `/user_groups/${id}`;
+};
+
+export const deleteUserGroupsId = async (
+  id: number,
+  options?: RequestInit,
+): Promise<deleteUserGroupsIdResponse> => {
+  return customFetch<deleteUserGroupsIdResponse>(getDeleteUserGroupsIdUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+};
+
+export const getDeleteUserGroupsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, __: { arg: Arguments }): Promise<deleteUserGroupsIdResponse> => {
+    return deleteUserGroupsId(id, options);
+  };
+};
+export const getDeleteUserGroupsIdMutationKey = (id: number) => [`/user_groups/${id}`] as const;
+
+export type DeleteUserGroupsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteUserGroupsId>>
+>;
+export type DeleteUserGroupsIdMutationError = unknown;
+
+export const useDeleteUserGroupsId = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteUserGroupsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteUserGroupsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getDeleteUserGroupsIdMutationKey(id);
+  const swrFn = getDeleteUserGroupsIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * ユーザーIDで指定されたユーザーの所属部門一覧を取得
+ */
+export type getUserGroupsUserUserIdResponse200 = {
+  data: UserGroupWithDivision[];
+  status: 200;
+};
+
+export type getUserGroupsUserUserIdResponseComposite = getUserGroupsUserUserIdResponse200;
+
+export type getUserGroupsUserUserIdResponse = getUserGroupsUserUserIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetUserGroupsUserUserIdUrl = (userId: number) => {
+  return `/user_groups/user/${userId}`;
+};
+
+export const getUserGroupsUserUserId = async (
+  userId: number,
+  options?: RequestInit,
+): Promise<getUserGroupsUserUserIdResponse> => {
+  return customFetch<getUserGroupsUserUserIdResponse>(getGetUserGroupsUserUserIdUrl(userId), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetUserGroupsUserUserIdKey = (userId: number) =>
+  [`/user_groups/user/${userId}`] as const;
+
+export type GetUserGroupsUserUserIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUserGroupsUserUserId>>
+>;
+export type GetUserGroupsUserUserIdQueryError = unknown;
+
+export const useGetUserGroupsUserUserId = <TError = unknown>(
+  userId: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUserGroupsUserUserId>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!userId;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetUserGroupsUserUserIdKey(userId) : null));
+  const swrFn = () => getUserGroupsUserUserId(userId, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * ユーザーの部門を一括更新
+ */
+export type postUserGroupsBulkResponse200 = {
+  data: UserGroup[];
+  status: 200;
+};
+
+export type postUserGroupsBulkResponseComposite = postUserGroupsBulkResponse200;
+
+export type postUserGroupsBulkResponse = postUserGroupsBulkResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostUserGroupsBulkUrl = () => {
+  return `/user_groups/bulk`;
+};
+
+export const postUserGroupsBulk = async (
+  bulkUpdateUserGroups: BulkUpdateUserGroups,
+  options?: RequestInit,
+): Promise<postUserGroupsBulkResponse> => {
+  return customFetch<postUserGroupsBulkResponse>(getPostUserGroupsBulkUrl(), {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(bulkUpdateUserGroups),
+  });
+};
+
+export const getPostUserGroupsBulkMutationFetcher = (
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, { arg }: { arg: BulkUpdateUserGroups }): Promise<postUserGroupsBulkResponse> => {
+    return postUserGroupsBulk(arg, options);
+  };
+};
+export const getPostUserGroupsBulkMutationKey = () => [`/user_groups/bulk`] as const;
+
+export type PostUserGroupsBulkMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postUserGroupsBulk>>
+>;
+export type PostUserGroupsBulkMutationError = unknown;
+
+export const usePostUserGroupsBulk = <TError = unknown>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postUserGroupsBulk>>,
+    TError,
+    Key,
+    BulkUpdateUserGroups,
+    Awaited<ReturnType<typeof postUserGroupsBulk>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostUserGroupsBulkMutationKey();
+  const swrFn = getPostUserGroupsBulkMutationFetcher(requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 

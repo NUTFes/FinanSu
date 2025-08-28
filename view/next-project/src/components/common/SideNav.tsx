@@ -3,7 +3,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useReducer } from 'react';
 
-import { FinanceLinkItems, RelationLinkItems, MyPageLinkItems, AdminLinkItems } from '@/constants/linkItem';
+import {
+  FinanceLinkItems,
+  RelationLinkItems,
+  MyPageLinkItems,
+  AdminLinkItems,
+} from '@/constants/linkItem';
 
 interface NavItemProps {
   icon: ReactNode;

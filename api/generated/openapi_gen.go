@@ -67,6 +67,12 @@ type ActivityStyle struct {
 	SponsorStyleID int `json:"sponsorStyleID"`
 }
 
+// BulkUpdateUserGroups defines model for bulkUpdateUserGroups.
+type BulkUpdateUserGroups struct {
+	GroupIds []int `json:"group_ids"`
+	UserId   int   `json:"user_id"`
+}
+
 // BuyReport 購入報告の際のパラメータ
 type BuyReport struct {
 	Amount         int    `json:"amount"`
@@ -110,6 +116,12 @@ type BuyReportWithDivisionId struct {
 	FestivalItemID *int    `json:"festivalItemID,omitempty"`
 	Id             *int    `json:"id,omitempty"`
 	PaidBy         *string `json:"paidBy,omitempty"`
+}
+
+// CreateUserGroup defines model for createUserGroup.
+type CreateUserGroup struct {
+	GroupId int `json:"group_id"`
+	UserId  int `json:"user_id"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
@@ -309,6 +321,25 @@ type Total struct {
 	Balance *int `json:"balance,omitempty"`
 	Budget  *int `json:"budget,omitempty"`
 	Expense *int `json:"expense,omitempty"`
+}
+
+// UserGroup defines model for userGroup.
+type UserGroup struct {
+	CreatedAt string `json:"created_at"`
+	GroupId   int    `json:"group_id"`
+	Id        int    `json:"id"`
+	UpdatedAt string `json:"updated_at"`
+	UserId    int    `json:"user_id"`
+}
+
+// UserGroupWithDivision defines model for userGroupWithDivision.
+type UserGroupWithDivision struct {
+	CreatedAt string   `json:"created_at"`
+	Division  Division `json:"division"`
+	GroupId   int      `json:"group_id"`
+	Id        int      `json:"id"`
+	UpdatedAt string   `json:"updated_at"`
+	UserId    int      `json:"user_id"`
 }
 
 // YearPeriods defines model for year_periods.
@@ -642,6 +673,15 @@ type PostUploadFileMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
 }
 
+// GetUserGroupsParams defines parameters for GetUserGroups.
+type GetUserGroupsParams struct {
+	// UserId ユーザーIDで絞り込み
+	UserId *int `form:"user_id,omitempty" json:"user_id,omitempty"`
+
+	// GroupId グループ（部門）IDで絞り込み
+	GroupId *int `form:"group_id,omitempty" json:"group_id,omitempty"`
+}
+
 // PostUsersParams defines parameters for PostUsers.
 type PostUsersParams struct {
 	// Name name
@@ -755,6 +795,12 @@ type PutSponsorstylesIdJSONRequestBody = SponsorStyle
 
 // PostUploadFileMultipartRequestBody defines body for PostUploadFile for multipart/form-data ContentType.
 type PostUploadFileMultipartRequestBody PostUploadFileMultipartBody
+
+// PostUserGroupsJSONRequestBody defines body for PostUserGroups for application/json ContentType.
+type PostUserGroupsJSONRequestBody = CreateUserGroup
+
+// PostUserGroupsBulkJSONRequestBody defines body for PostUserGroupsBulk for application/json ContentType.
+type PostUserGroupsBulkJSONRequestBody = BulkUpdateUserGroups
 
 // DeleteUsersDeleteJSONRequestBody defines body for DeleteUsersDelete for application/json ContentType.
 type DeleteUsersDeleteJSONRequestBody = DestroyUserIDs
@@ -1127,6 +1173,21 @@ type ServerInterface interface {
 
 	// (POST /upload_file)
 	PostUploadFile(ctx echo.Context) error
+
+	// (GET /user_groups)
+	GetUserGroups(ctx echo.Context, params GetUserGroupsParams) error
+
+	// (POST /user_groups)
+	PostUserGroups(ctx echo.Context) error
+
+	// (POST /user_groups/bulk)
+	PostUserGroupsBulk(ctx echo.Context) error
+
+	// (GET /user_groups/user/{user_id})
+	GetUserGroupsUserUserId(ctx echo.Context, userId int) error
+
+	// (DELETE /user_groups/{id})
+	DeleteUserGroupsId(ctx echo.Context, id int) error
 
 	// (GET /users)
 	GetUsers(ctx echo.Context) error
@@ -3274,6 +3335,81 @@ func (w *ServerInterfaceWrapper) PostUploadFile(ctx echo.Context) error {
 	return err
 }
 
+// GetUserGroups converts echo context to params.
+func (w *ServerInterfaceWrapper) GetUserGroups(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUserGroupsParams
+	// ------------- Optional query parameter "user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "user_id", ctx.QueryParams(), &params.UserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "group_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "group_id", ctx.QueryParams(), &params.GroupId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter group_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetUserGroups(ctx, params)
+	return err
+}
+
+// PostUserGroups converts echo context to params.
+func (w *ServerInterfaceWrapper) PostUserGroups(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostUserGroups(ctx)
+	return err
+}
+
+// PostUserGroupsBulk converts echo context to params.
+func (w *ServerInterfaceWrapper) PostUserGroupsBulk(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostUserGroupsBulk(ctx)
+	return err
+}
+
+// GetUserGroupsUserUserId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetUserGroupsUserUserId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "user_id" -------------
+	var userId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "user_id", ctx.Param("user_id"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetUserGroupsUserUserId(ctx, userId)
+	return err
+}
+
+// DeleteUserGroupsId converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteUserGroupsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteUserGroupsId(ctx, id)
+	return err
+}
+
 // GetUsers converts echo context to params.
 func (w *ServerInterfaceWrapper) GetUsers(ctx echo.Context) error {
 	var err error
@@ -3677,6 +3813,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/teachers/:id", wrapper.GetTeachersId)
 	router.PUT(baseURL+"/teachers/:id", wrapper.PutTeachersId)
 	router.POST(baseURL+"/upload_file", wrapper.PostUploadFile)
+	router.GET(baseURL+"/user_groups", wrapper.GetUserGroups)
+	router.POST(baseURL+"/user_groups", wrapper.PostUserGroups)
+	router.POST(baseURL+"/user_groups/bulk", wrapper.PostUserGroupsBulk)
+	router.GET(baseURL+"/user_groups/user/:user_id", wrapper.GetUserGroupsUserUserId)
+	router.DELETE(baseURL+"/user_groups/:id", wrapper.DeleteUserGroupsId)
 	router.GET(baseURL+"/users", wrapper.GetUsers)
 	router.POST(baseURL+"/users", wrapper.PostUsers)
 	router.DELETE(baseURL+"/users/delete", wrapper.DeleteUsersDelete)

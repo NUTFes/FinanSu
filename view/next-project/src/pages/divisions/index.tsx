@@ -79,7 +79,7 @@ export default function Divisions(props: Props) {
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
-          <div className='flex justify-between items-center'>
+          <div className='flex items-center justify-between'>
             <Title title={'部門管理'} />
             <OpenAddModalButton />
           </div>
@@ -137,7 +137,9 @@ export default function Divisions(props: Props) {
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>
-                      {division.createdAt ? new Date(division.createdAt).toLocaleDateString('ja-JP') : '-'}
+                      {division.createdAt
+                        ? new Date(division.createdAt).toLocaleDateString('ja-JP')
+                        : '-'}
                     </p>
                   </td>
                   <td

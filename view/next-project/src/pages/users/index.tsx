@@ -17,8 +17,7 @@ interface Division {
   name: string;
 }
 
-interface UserWithDivisions extends Omit<User, 'bureauID'> {
-  bureauID?: number;
+interface UserWithDivisions extends User {
   divisions?: Division[];
 }
 
@@ -44,17 +43,15 @@ const mockUsersWithDivisions: UserWithDivisions[] = [
     roleID: 1,
     divisions: [
       { id: 1, name: '技術部門' },
-      { id: 2, name: '営業部門' }
-    ]
+      { id: 2, name: '営業部門' },
+    ],
   },
   {
     id: 2,
     name: '佐藤 花子',
     bureauID: 1,
     roleID: 2,
-    divisions: [
-      { id: 3, name: '総務部門' }
-    ]
+    divisions: [{ id: 3, name: '総務部門' }],
   },
   {
     id: 3,
@@ -64,33 +61,67 @@ const mockUsersWithDivisions: UserWithDivisions[] = [
     divisions: [
       { id: 1, name: '技術部門' },
       { id: 3, name: '総務部門' },
-      { id: 4, name: 'マーケティング部門' }
-    ]
-  }
+      { id: 4, name: 'マーケティング部門' },
+    ],
+  },
 ];
 
 export const getServerSideProps = async () => {
-  // 実際の実装では以下を使用
-  // const getUserURL = process.env.SSR_API_URI + '/users';
-  // const getBureausURL = process.env.SSR_API_URI + '/bureaus';
-  // const getDivisionsURL = process.env.SSR_API_URI + '/divisions';
-  // const userRes = await get(getUserURL);
-  // const bureauRes = await get(getBureausURL);
-  // const divisionRes = await get(getDivisionsURL);
+  try {
+    // 実際のAPIを使用してデータを取得
+    const getUserURL = process.env.SSR_API_URI + '/users';
+    const getBureausURL = process.env.SSR_API_URI + '/bureaus';
+    const getDivisionsURL = process.env.SSR_API_URI + '/divisions';
+    
+    const [userRes, bureauRes, divisionRes] = await Promise.all([
+      get(getUserURL),
+      get(getBureausURL),
+      get(getDivisionsURL),
+    ]);
 
-  // モックデータを使用
-  const mockBureaus = [
-    { id: 1, name: '情報工学科' },
-    { id: 2, name: '機械工学科' },
-  ];
+    // ユーザーごとに部門情報を取得
+    const usersWithDivisions = await Promise.all(
+      userRes.data.map(async (user: User) => {
+        try {
+          const userGroupsRes = await get(
+            `${process.env.SSR_API_URI}/user_groups/user/${user.id}`,
+          );
+          const divisions = userGroupsRes.data?.map((userGroup: any) => ({
+            id: userGroup.division?.id || 0,
+            name: userGroup.division?.name || '',
+          })) || [];
+          
+          return { ...user, divisions };
+        } catch (error) {
+          console.error(`Error fetching user groups for user ${user.id}:`, error);
+          return { ...user, divisions: [] };
+        }
+      }),
+    );
 
-  return {
-    props: {
-      users: mockUsersWithDivisions,
-      bureaus: mockBureaus,
-      divisions: mockDivisions,
-    },
-  };
+    return {
+      props: {
+        users: usersWithDivisions,
+        bureaus: bureauRes.data || [],
+        divisions: divisionRes.data || [],
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    // エラー時はモックデータを使用
+    const mockBureaus = [
+      { id: 1, name: '情報工学科' },
+      { id: 2, name: '機械工学科' },
+    ];
+
+    return {
+      props: {
+        users: mockUsersWithDivisions,
+        bureaus: mockBureaus,
+        divisions: mockDivisions,
+      },
+    };
+  }
 };
 
 export default function Users(props: Props) {
@@ -220,7 +251,7 @@ export default function Users(props: Props) {
                           {user.divisions.map((division) => (
                             <span
                               key={division.id}
-                              className='inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full'
+                              className='bg-blue-100 text-blue-800 inline-block rounded-full px-2 py-1 text-xs'
                             >
                               {division.name}
                             </span>
@@ -250,7 +281,12 @@ export default function Users(props: Props) {
                     )}
                   >
                     <div className='flex justify-end'>
-                      <OpenEditModalButton id={user.id} bureaus={bureaus} user={user} divisions={divisions} />
+                      <OpenEditModalButton
+                        id={user.id}
+                        bureaus={bureaus}
+                        user={user}
+                        divisions={divisions}
+                      />
                     </div>
                   </td>
                   <td

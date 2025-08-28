@@ -23,11 +23,7 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
     <>
       <EditButton onClick={() => setShowModal(true)} />
       {showModal && (
-        <EditModal
-          id={props.id}
-          division={props.division}
-          setShowModal={setShowModal}
-        />
+        <EditModal id={props.id} division={props.division} setShowModal={setShowModal} />
       )}
     </>
   );

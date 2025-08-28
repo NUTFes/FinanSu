@@ -24,7 +24,7 @@ const AddModal: React.FC<Props> = (props) => {
     try {
       // モック実装 - 実際はAPI呼び出し
       console.log('Adding division:', { name });
-      
+
       // 成功時の処理
       alert('部門を追加しました');
       props.setShowModal(false);

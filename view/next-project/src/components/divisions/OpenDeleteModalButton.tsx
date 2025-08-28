@@ -26,10 +26,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
     <>
       <DeleteButton onClick={() => setShowModal(true)} isDisabled={props.isDisabled} />
       {showModal && (
-        <DeleteModal
-          deleteDivisions={props.deleteDivisions}
-          setShowModal={setShowModal}
-        />
+        <DeleteModal deleteDivisions={props.deleteDivisions} setShowModal={setShowModal} />
       )}
     </>
   );

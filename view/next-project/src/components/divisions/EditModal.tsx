@@ -33,7 +33,7 @@ const EditModal: React.FC<Props> = (props) => {
     try {
       // モック実装 - 実際はAPI呼び出し
       console.log('Updating division:', { id: props.id, name });
-      
+
       // 成功時の処理
       alert('部門を更新しました');
       props.setShowModal(false);

@@ -2697,6 +2697,112 @@ paths:
               schema:
                 type: object
 
+  /user_groups:
+    get:
+      tags:
+        - user_group
+      description: user_groupsの一覧を取得
+      parameters:
+        - name: user_id
+          in: query
+          description: ユーザーIDで絞り込み
+          schema:
+            type: integer
+        - name: group_id
+          in: query
+          description: グループ（部門）IDで絞り込み
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: user_groupsの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/userGroup"
+    post:
+      tags:
+        - user_group
+      description: user_groupsの作成（ユーザーを部門に追加）
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createUserGroup"
+        required: true
+      responses:
+        "200":
+          description: 作成されたuser_groupが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userGroup"
+
+  /user_groups/{id}:
+    delete:
+      tags:
+        - user_group
+      description: IDを指定してuser_groupの削除（ユーザーから部門を削除）
+      parameters:
+        - name: id
+          in: path
+          description: user_group id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: user_groupの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /user_groups/user/{user_id}:
+    get:
+      tags:
+        - user_group
+      description: ユーザーIDで指定されたユーザーの所属部門一覧を取得
+      parameters:
+        - name: user_id
+          in: path
+          description: user id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ユーザーの所属部門一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/userGroupWithDivision"
+
+  /user_groups/bulk:
+    post:
+      tags:
+        - user_group
+      description: ユーザーの部門を一括更新
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/bulkUpdateUserGroups"
+        required: true
+      responses:
+        "200":
+          description: 一括更新完了
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/userGroup"
+
   /years:
     get:
       tags:
@@ -3495,5 +3601,86 @@ components:
         - room_number
         - is_black
         - remark
+    
+    userGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        group_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          example: "2024-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          example: "2024-01-01T00:00:00Z"
+      required:
+        - id
+        - user_id
+        - group_id
+        - created_at
+        - updated_at
+    
+    createUserGroup:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        group_id:
+          type: integer
+          example: 1
+      required:
+        - user_id
+        - group_id
+    
+    userGroupWithDivision:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        group_id:
+          type: integer
+          example: 1
+        division:
+          $ref: "#/components/schemas/division"
+        created_at:
+          type: string
+          example: "2024-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          example: "2024-01-01T00:00:00Z"
+      required:
+        - id
+        - user_id
+        - group_id
+        - division
+        - created_at
+        - updated_at
+    
+    bulkUpdateUserGroups:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        group_ids:
+          type: array
+          items:
+            type: integer
+          example: [1, 2, 3]
+      required:
+        - user_id
+        - group_ids
 
 x-original-swagger-version: "2.0"

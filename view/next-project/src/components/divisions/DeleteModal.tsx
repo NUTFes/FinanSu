@@ -29,7 +29,7 @@ const DeleteModal: React.FC<Props> = (props) => {
     try {
       // モック実装 - 実際はAPI呼び出し
       console.log('Deleting divisions:', props.deleteDivisions.ids);
-      
+
       // 成功時の処理
       alert(`${props.deleteDivisions.divisions.length}件の部門を削除しました`);
       props.setShowModal(false);
@@ -52,10 +52,10 @@ const DeleteModal: React.FC<Props> = (props) => {
       </div>
       <div className='mx-5'>
         <div className='my-3'>
-          <p className='text-sm text-black-600 mb-4'>
+          <p className='mb-4 text-sm text-black-600'>
             以下の部門を削除しますか？この操作は取り消せません。
           </p>
-          <div className='bg-gray-50 p-4 rounded mb-4'>
+          <div className='bg-gray-50 mb-4 rounded p-4'>
             {props.deleteDivisions.divisions.map((division) => (
               <div key={division.id} className='mb-2'>
                 <span className='font-medium'>ID: {division.id}</span> - {division.name}
@@ -66,7 +66,7 @@ const DeleteModal: React.FC<Props> = (props) => {
         <div className='my-6 flex justify-center space-x-4'>
           <button
             onClick={() => props.setShowModal(false)}
-            className='px-6 py-2 border border-gray-300 rounded hover:bg-gray-50'
+            className='border-gray-300 hover:bg-gray-50 rounded border px-6 py-2'
             disabled={isLoading}
           >
             キャンセル
