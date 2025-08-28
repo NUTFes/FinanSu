@@ -3,7 +3,7 @@ import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import { HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
 import { IoIosArrowDropup } from 'react-icons/io';
-import { MdOutlineSavings, MdOutlineWorkOutline, MdFaceUnlock } from 'react-icons/md';
+import { MdOutlineSavings, MdOutlineWorkOutline, MdFaceUnlock, MdManageAccounts, MdCorporateFare } from 'react-icons/md';
 
 interface LinkItemProps {
   name: string;
@@ -77,5 +77,24 @@ export const MyPageLinkItems: LinkItemProps[] = [
     icon: <MdFaceUnlock className='mx-2 text-xl' />,
     href: '/my_page',
     isParent: false,
+  },
+];
+
+export const AdminLinkItems: LinkItemProps[] = [
+  {
+    name: '管理',
+    icon: <IoIosArrowDropup className='mx-2 text-xl' />,
+    href: '',
+    isParent: true,
+  },
+  {
+    name: 'ユーザー管理',
+    icon: <MdManageAccounts className='mx-2 text-xl' />,
+    href: '/users',
+  },
+  {
+    name: '部門管理',
+    icon: <MdCorporateFare className='mx-2 text-xl' />,
+    href: '/divisions',
   },
 ];

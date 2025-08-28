@@ -2,19 +2,18 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { EditButton } from '../common';
-import EditModal from '@components/users/EditModal';
-import { Bureau, User } from '@type/common';
+import EditModal from '@components/divisions/EditModal';
 
 interface Division {
   id: number;
   name: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface Props {
   id: number;
-  bureaus: Bureau[];
-  user: User;
-  divisions: Division[];
+  division: Division;
 }
 
 const OpenEditModalButton: React.FC<Props> = (props) => {
@@ -26,10 +25,8 @@ const OpenEditModalButton: React.FC<Props> = (props) => {
       {showModal && (
         <EditModal
           id={props.id}
-          bureaus={props.bureaus}
+          division={props.division}
           setShowModal={setShowModal}
-          user={props.user}
-          divisions={props.divisions}
         />
       )}
     </>

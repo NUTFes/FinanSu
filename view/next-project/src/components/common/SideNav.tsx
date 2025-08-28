@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useReducer } from 'react';
 
-import { FinanceLinkItems, RelationLinkItems, MyPageLinkItems } from '@/constants/linkItem';
+import { FinanceLinkItems, RelationLinkItems, MyPageLinkItems, AdminLinkItems } from '@/constants/linkItem';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -19,6 +19,7 @@ export default function SimpleSidebar() {
   const router = useRouter();
   const [isFinanceItemsShow, setIsFinanceItemsShow] = useReducer((state) => !state, false);
   const [isRelationItemsShow, setIsRelationItemsShow] = useReducer((state) => !state, false);
+  const [isAdminItemsShow, setIsAdminItemsShow] = useReducer((state) => !state, false);
 
   return (
     <div className='fixed right-0 z-10 h-full w-52 bg-primary-4 md:left-0'>
@@ -54,6 +55,21 @@ export default function SimpleSidebar() {
             isParent={link.isParent}
             isShow={isRelationItemsShow}
             onClick={link.isParent ? setIsRelationItemsShow : undefined}
+          >
+            {link.name}
+          </NavItem>
+        ))}
+      </div>
+      <div className='border-b-2 border-primary-1'>
+        {AdminLinkItems.map((link) => (
+          <NavItem
+            key={link.name}
+            icon={link.icon}
+            href={link.href}
+            currentPath={router.pathname}
+            isParent={link.isParent}
+            isShow={isAdminItemsShow}
+            onClick={link.isParent ? setIsAdminItemsShow : undefined}
           >
             {link.name}
           </NavItem>
