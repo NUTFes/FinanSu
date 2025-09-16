@@ -74,6 +74,7 @@ export * from './getBudgetsId200';
 export * from './getBudgetsIdDetails200';
 export * from './getBureaus200';
 export * from './getBureausId200';
+export * from './getBuyReportsCsvDownloadParams';
 export * from './getBuyReportsDetailsParams';
 export * from './getBuyReportsListParams';
 export * from './getDepartments200';

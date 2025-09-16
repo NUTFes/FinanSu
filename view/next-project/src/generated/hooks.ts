@@ -74,6 +74,7 @@ import type {
   GetBudgetsIdDetails200,
   GetBureaus200,
   GetBureausId200,
+  GetBuyReportsCsvDownloadParams,
   GetBuyReportsDetailsParams,
   GetDepartments200,
   GetDepartmentsId200,
@@ -2694,6 +2695,79 @@ export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
   const swrFn = getPutBuyReportStatusBuyReportIdMutationFetcher(buyReportId, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 購入報告一覧のCSVダウンロード、財務向けのページ
+ */
+export type getBuyReportsCsvDownloadResponse200 = {
+  data: Blob;
+  status: 200;
+};
+
+export type getBuyReportsCsvDownloadResponseComposite = getBuyReportsCsvDownloadResponse200;
+
+export type getBuyReportsCsvDownloadResponse = getBuyReportsCsvDownloadResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetBuyReportsCsvDownloadUrl = (params?: GetBuyReportsCsvDownloadParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/buy_reports/csv/download?${stringifiedParams}`
+    : `/buy_reports/csv/download`;
+};
+
+export const getBuyReportsCsvDownload = async (
+  params?: GetBuyReportsCsvDownloadParams,
+  options?: RequestInit,
+): Promise<getBuyReportsCsvDownloadResponse> => {
+  return customFetch<getBuyReportsCsvDownloadResponse>(getGetBuyReportsCsvDownloadUrl(params), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetBuyReportsCsvDownloadKey = (params?: GetBuyReportsCsvDownloadParams) =>
+  [`/buy_reports/csv/download`, ...(params ? [params] : [])] as const;
+
+export type GetBuyReportsCsvDownloadQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBuyReportsCsvDownload>>
+>;
+export type GetBuyReportsCsvDownloadQueryError = unknown;
+
+export const useGetBuyReportsCsvDownload = <TError = unknown>(
+  params?: GetBuyReportsCsvDownloadParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsCsvDownload>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsCsvDownloadKey(params) : null));
+  const swrFn = () => getBuyReportsCsvDownload(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
