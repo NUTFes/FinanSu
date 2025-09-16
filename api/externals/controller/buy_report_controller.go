@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
@@ -20,6 +23,7 @@ type BuyReportController interface {
 	IndexBuyReport(echo.Context) error
 	GetBuyReportById(echo.Context) error
 	UpdateBuyReportStatus(echo.Context) error
+	GetBuyReportsCsvDownload(echo.Context) error
 }
 
 func NewBuyReportController(u usecase.BuyReportUseCase) BuyReportController {
@@ -132,6 +136,58 @@ func (s *buyReportController) UpdateBuyReportStatus(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, buyReportDetail)
+}
+
+// GetBuyReportsCsvDownload
+func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to get buy_reports")
+	}
+
+	// CSVヘッダー
+	header := []string{"ID", "金額", "局名", "項目名", "予算名", "支払い者", "報告日", "年度", "梱包済み", "精算済み"}
+
+	// CSVレスポンスの設定
+	c.Response().Header().Set("Content-Type", "text/csv")
+	c.Response().Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"buy_reports_%s.csv\"", year))
+
+	writer := csv.NewWriter(c.Response())
+	defer writer.Flush()
+
+	// ヘッダー書き込み
+	if err := writer.Write(header); err != nil {
+		return c.String(http.StatusInternalServerError, "failed to write CSV header")
+	}
+
+	// データ書き込み
+	for _, detail := range buyReportDetails {
+		yearStr := ""
+		if detail.Year != nil {
+			yearStr = strconv.Itoa(*detail.Year)
+		}
+
+		record := []string{
+			strconv.Itoa(detail.Id),
+			strconv.Itoa(detail.Amount),
+			detail.DivisionName,
+			detail.FestivalItemName,
+			detail.FinancialRecordName,
+			detail.PaidBy,
+			detail.ReportDate,
+			yearStr,
+			strconv.FormatBool(detail.IsPacked),
+			strconv.FormatBool(detail.IsSettled),
+		}
+		if err := writer.Write(record); err != nil {
+			return c.String(http.StatusInternalServerError, "failed to write CSV record")
+		}
+	}
+
+	return nil
 }
 
 type BuyReport = generated.BuyReport
