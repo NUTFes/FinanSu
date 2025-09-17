@@ -142,9 +142,13 @@ export default function PurchaseReports() {
 
   const downloadCSV = async () => {
     const url = `${process.env.CSR_API_URI}/buy_reports/csv/download?year=${selectedYear}`;
-    const response = await fetch(url);
-    const blob = await response.blob();
-    saveAs(blob, `購入報告_${selectedYear}.csv`);
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      saveAs(blob, `購入報告_${selectedYear}.csv`);
+    } catch (error) {
+      console.error('Failed to download CSV:', error);
+    }
   };
 
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
