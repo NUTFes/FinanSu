@@ -140,6 +140,17 @@ export default function PurchaseReports() {
     mutateBuyReportData();
   }, [mutateBuyReportData]);
 
+  const downloadCSV = async () => {
+    const url = `${process.env.CSR_API_URI}/buy_reports/csv/download?year=${selectedYear}`;
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      saveAs(blob, `購入報告_${selectedYear}.csv`);
+    } catch (error) {
+      console.error('Failed to download CSV:', error);
+    }
+  };
+
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
 
@@ -166,7 +177,7 @@ export default function PurchaseReports() {
                     );
                   })}
               </select>
-              <PrimaryButton className='w-fit items-center'>
+              <PrimaryButton className='w-fit items-center' onClick={downloadCSV}>
                 CSVダウンロード
                 <TbDownload className='ml-2' size={20} />
               </PrimaryButton>

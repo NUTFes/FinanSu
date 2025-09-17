@@ -400,6 +400,12 @@ type PostBuyReportsMultipartBody struct {
 	File      openapi_types.File `json:"file"`
 }
 
+// GetBuyReportsCsvDownloadParams defines parameters for GetBuyReportsCsvDownload.
+type GetBuyReportsCsvDownloadParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+}
+
 // GetBuyReportsDetailsParams defines parameters for GetBuyReportsDetails.
 type GetBuyReportsDetailsParams struct {
 	// Year year
@@ -869,6 +875,9 @@ type ServerInterface interface {
 
 	// (POST /buy_reports)
 	PostBuyReports(ctx echo.Context) error
+
+	// (GET /buy_reports/csv/download)
+	GetBuyReportsCsvDownload(ctx echo.Context, params GetBuyReportsCsvDownloadParams) error
 
 	// (GET /buy_reports/details)
 	GetBuyReportsDetails(ctx echo.Context, params GetBuyReportsDetailsParams) error
@@ -1732,6 +1741,24 @@ func (w *ServerInterfaceWrapper) PostBuyReports(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostBuyReports(ctx)
+	return err
+}
+
+// GetBuyReportsCsvDownload converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsCsvDownload(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetBuyReportsCsvDownloadParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetBuyReportsCsvDownload(ctx, params)
 	return err
 }
 
@@ -3591,6 +3618,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/bureaus/:id", wrapper.PutBureausId)
 	router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
 	router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
+	router.GET(baseURL+"/buy_reports/csv/download", wrapper.GetBuyReportsCsvDownload)
 	router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)

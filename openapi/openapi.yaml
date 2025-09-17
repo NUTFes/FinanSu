@@ -815,6 +815,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/buyReportDetail"
+  /buy_reports/csv/download:
+    get:
+      tags:
+        - buy_report
+      description: 購入報告一覧のCSVダウンロード、財務向けのページ
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportのCSVダウンロード
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
 
   /departments:
     get:
