@@ -149,7 +149,7 @@ func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 	}
 
 	// CSVヘッダー
-	header := []string{"ID", "金額", "局名", "項目名", "予算名", "支払い者", "報告日", "年度", "梱包済み", "精算済み"}
+	header := []string{"年度", "日付", "局名", "部門", "物品", "立替者", "金額", "封詰め", "清算完了"}
 
 	// CSVレスポンスの設定
 	c.Response().Header().Set("Content-Type", "text/csv")
@@ -170,17 +170,26 @@ func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 			yearStr = strconv.Itoa(*detail.Year)
 		}
 
+		// 封詰めと清算完了のステータスを「未」「済」で表示
+		packedStatus := "未"
+		if detail.IsPacked {
+			packedStatus = "済"
+		}
+		settledStatus := "未"
+		if detail.IsSettled {
+			settledStatus = "済"
+		}
+
 		record := []string{
-			strconv.Itoa(detail.Id),
-			strconv.Itoa(detail.Amount),
+			yearStr,
+			detail.ReportDate,
+			detail.FinancialRecordName,
 			detail.DivisionName,
 			detail.FestivalItemName,
-			detail.FinancialRecordName,
 			detail.PaidBy,
-			detail.ReportDate,
-			yearStr,
-			strconv.FormatBool(detail.IsPacked),
-			strconv.FormatBool(detail.IsSettled),
+			strconv.Itoa(detail.Amount),
+			packedStatus,
+			settledStatus,
 		}
 		if err := writer.Write(record); err != nil {
 			return c.String(http.StatusInternalServerError, "failed to write CSV record")
