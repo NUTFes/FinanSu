@@ -2,16 +2,16 @@ services:
   db:
     image: mysql:8.0
     container_name: "nutfes-finansu-db"
-    volumes:
-      - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
-      - ./mysql/testdb:/docker-entrypoint-testdb.d # テスト用初期データ
-      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_DATABASE: finansu_db
       MYSQL_USER: finansu
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: root
       TZ: "Asia/Tokyo"
+    volumes:
+      - ./mysql/seed:/seed # 初期データ
+      - ./scripts:/scripts # スクリプト
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "3306:3306"
     restart: always
