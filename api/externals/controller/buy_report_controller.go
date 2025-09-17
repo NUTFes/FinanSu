@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
@@ -180,9 +181,15 @@ func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 			settledStatus = "済"
 		}
 
+		reportDateStr := detail.ReportDate
+		t, err := time.Parse(time.RFC3339, reportDateStr)
+		if err == nil {
+			reportDateStr = t.Format("2006年1月2日")
+		}
+
 		record := []string{
 			yearStr,
-			detail.ReportDate,
+			reportDateStr,
 			detail.FinancialRecordName,
 			detail.DivisionName,
 			detail.FestivalItemName,
