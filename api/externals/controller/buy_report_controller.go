@@ -11,6 +11,8 @@ import (
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/transform"
 )
 
 type buyReportController struct {
@@ -146,25 +148,17 @@ func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 
 	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
 	if err != nil {
-		return c.String(http.StatusBadRequest, "failed to get buy_reports")
+		return err
 	}
 
-	// CSVヘッダー
+	// CSVデータの準備
+	records := make([][]string, 0, len(buyReportDetails)+1)
+
+	// ヘッダー
 	header := []string{"年度", "日付", "局名", "部門", "物品", "立替者", "金額", "封詰め", "清算完了"}
+	records = append(records, header)
 
-	// CSVレスポンスの設定
-	c.Response().Header().Set("Content-Type", "text/csv")
-	c.Response().Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"buy_reports_%s.csv\"", year))
-
-	writer := csv.NewWriter(c.Response())
-	defer writer.Flush()
-
-	// ヘッダー書き込み
-	if err := writer.Write(header); err != nil {
-		return c.String(http.StatusInternalServerError, "failed to write CSV header")
-	}
-
-	// データ書き込み
+	// データ行を追加
 	for _, detail := range buyReportDetails {
 		yearStr := ""
 		if detail.Year != nil {
@@ -198,11 +192,44 @@ func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 			packedStatus,
 			settledStatus,
 		}
-		if err := writer.Write(record); err != nil {
-			return c.String(http.StatusInternalServerError, "failed to write CSV record")
-		}
+		records = append(records, record)
 	}
 
+	// ヘッダーの設定
+	w := c.Response().Writer
+	fileName := fmt.Sprintf("purchase_reports_%s.csv", year)
+	attachment := fmt.Sprintf(`attachment; filename="%s"`, fileName)
+	w.Header().Set("Content-Type", "text/csv")
+	w.Header().Set("Content-Disposition", attachment)
+
+	if err := makeBuyReportCSV(w, records); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
+	// Shift_JISエンコーディング用の変換を設定
+	encoder := japanese.ShiftJIS.NewEncoder()
+
+	// writerに対してエンコーダを設定して変換する
+	shiftJISWriter := transform.NewWriter(writer, encoder)
+
+	// CSVライターを作成
+	csvWriter := csv.NewWriter(shiftJISWriter)
+
+	for _, record := range records {
+		if err := csvWriter.Write(record); err != nil {
+			http.Error(writer, "CSVの書き込み中にエラーが発生しました", http.StatusInternalServerError)
+			return err
+		}
+	}
+	csvWriter.Flush()
+	if err := csvWriter.Error(); err != nil {
+		http.Error(writer, "CSVのフラッシュ中にエラーが発生しました", http.StatusInternalServerError)
+		return err
+	}
 	return nil
 }
 
