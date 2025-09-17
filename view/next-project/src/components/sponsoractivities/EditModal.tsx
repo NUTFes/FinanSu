@@ -298,9 +298,7 @@ export default function EditModal(props: ModalProps) {
             setFormData({ ...formData, isDone: e.target.value === '回収完了' ? true : false });
           }}
         >
-          <option value='未回収' selected={data.isDone === false}>
-            未回収
-          </option>
+          {!data.isDone && <option value={'未回収'}>未回収</option>}
           <option value='回収完了' selected={data.isDone === true}>
             回収完了
           </option>
