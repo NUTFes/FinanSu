@@ -9,8 +9,3 @@ CREATE TABLE
     PRIMARY KEY (id),
     FOREIGN KEY (floor_id) REFERENCES floors (id)
   );
-
-INSERT INTO
-  rooms (floor_id, room_name)
-VALUES
-  (1, 'test部屋')

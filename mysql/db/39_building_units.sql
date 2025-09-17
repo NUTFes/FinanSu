@@ -10,23 +10,3 @@ CREATE TABLE
     FOREIGN KEY (building_id) REFERENCES buildings (id)
   );
 
-INSERT INTO
-  building_units (building_id, unit_number)
-VALUES
-  (1, "1号棟"),
-  (1, "2号棟"),
-  (1, "3号棟"),
-  (2, "1号棟"),
-  (2, "2号棟"),
-  (3, "1号棟"),
-  (4, "1号棟"),
-  (5, "1号棟"),
-  (5, "2号棟"),
-  (6, "1号棟"),
-  (7, "1号棟"),
-  (8, "1号棟"),
-  (9, "1号棟"),
-  (10, "1号棟"),
-  (11, "1号棟"),
-  (12, "1号棟"),
-  (13, "1号棟");
