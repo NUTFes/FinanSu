@@ -17,7 +17,6 @@ type router struct {
 	festivalItemController                controller.FestivalItemController
 	financialRecordController             controller.FinancialRecordController
 	divisionController                    controller.DivisionController
-	fundInformationController             controller.FundInformationController
 	healthcheckController                 controller.HealthcheckController
 	incomeController                      controller.IncomeController
 	incomeExpenditureManagementController controller.IncomeExpenditureManagementController
@@ -52,7 +51,6 @@ func NewRouter(
 	expenseController controller.ExpenseController,
 	festivalItemController controller.FestivalItemController,
 	financialRecordController controller.FinancialRecordController,
-	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
 	incomeController controller.IncomeController,
 	incomeExpenditureManagementController controller.IncomeExpenditureManagementController,
@@ -82,7 +80,6 @@ func NewRouter(
 		festivalItemController,
 		financialRecordController,
 		divisionController,
-		fundInformationController,
 		healthController,
 		incomeController,
 		incomeExpenditureManagementController,
@@ -210,22 +207,6 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	e.PUT("/financial_records/:id", r.financialRecordController.UpdateFinancialRecord)
 	e.DELETE("/financial_records/:id", r.financialRecordController.DestroyFinancialRecord)
 	e.GET("/financial_records/csv/download", r.financialRecordController.DownloadFinancialRecordsCSV)
-
-	// fund informations
-	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)
-	e.GET("/fund_informations/:id", r.fundInformationController.ShowFundInformation)
-	e.POST("/fund_informations", r.fundInformationController.CreateFundInformation)
-	e.PUT("/fund_informations/:id", r.fundInformationController.UpdateFundInformation)
-	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
-	e.GET("/fund_informations/details", r.fundInformationController.IndexFundInformationDetails)
-	e.GET(
-		"/fund_informations/:id/details",
-		r.fundInformationController.ShowFundInformationDetailByID,
-	)
-	e.GET(
-		"/fund_informations/details/:year",
-		r.fundInformationController.IndexFundInformationDetailsByPeriod,
-	)
 
 	// incomes
 	e.GET("/incomes", r.incomeController.IndexIncome)
