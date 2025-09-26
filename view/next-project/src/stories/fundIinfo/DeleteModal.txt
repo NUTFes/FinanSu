@@ -1,5 +1,5 @@
 // todo: 後で移行します
-import { Meta } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 import { DeleteModal } from '@components/fund_information';
 
 const meta: Meta<typeof DeleteModal> = {

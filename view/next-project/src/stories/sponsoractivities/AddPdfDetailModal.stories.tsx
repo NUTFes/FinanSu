@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { AddPdfDetailModal } from '@components/sponsoractivities';
 
 const meta: Meta<typeof AddPdfDetailModal> = {

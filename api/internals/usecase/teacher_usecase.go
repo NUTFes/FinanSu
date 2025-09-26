@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -36,7 +37,12 @@ func (t *teacherUseCase) GetTeachers(c context.Context) ([]domain.Teacher, error
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -67,19 +73,24 @@ func (t *teacherUseCase) GetFundRegisteredByPeriods(c context.Context, year stri
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	ids := []int{}
 	for rows.Next() {
-			var id int
-			if err := rows.Scan(&id); err != nil {
-					return nil, err
-			}
-			ids = append(ids, id)
+		var id int
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
 	}
 
 	if err := rows.Err(); err != nil {
-			return nil, err
+		return nil, err
 	}
 
 	return ids, nil
@@ -89,6 +100,10 @@ func (t *teacherUseCase) GetTeacherByID(c context.Context, id string) (domain.Te
 	var teacher domain.Teacher
 
 	row, err := t.rep.Find(c, id)
+	if err != nil {
+		return teacher, err
+	}
+
 	err = row.Scan(
 		&teacher.ID,
 		&teacher.Name,
@@ -119,8 +134,15 @@ func (t *teacherUseCase) CreateTeacher(
 	remark string) (domain.Teacher, error) {
 	latestTeacher := domain.Teacher{}
 
-	err := t.rep.Create(c, name, position, departmentID, room, isBlack, remark)
+	if err := t.rep.Create(c, name, position, departmentID, room, isBlack, remark); err != nil {
+		return latestTeacher, err
+	}
+
 	row, err := t.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestTeacher, err
+	}
+
 	err = row.Scan(
 		&latestTeacher.ID,
 		&latestTeacher.Name,
@@ -149,11 +171,17 @@ func (t *teacherUseCase) UpdateTeacher(
 	room string,
 	isBlack string,
 	remark string) (domain.Teacher, error) {
-
-	err := t.rep.Update(c, id, name, position, departmentID, room, isBlack, remark)
 	updateTeacher := domain.Teacher{}
 
+	if err := t.rep.Update(c, id, name, position, departmentID, room, isBlack, remark); err != nil {
+		return domain.Teacher{}, err
+	}
+
 	row, err := t.rep.Find(c, id)
+	if err != nil {
+		return domain.Teacher{}, err
+	}
+
 	err = row.Scan(
 		&updateTeacher.ID,
 		&updateTeacher.Name,

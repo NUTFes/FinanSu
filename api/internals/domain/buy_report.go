@@ -13,3 +13,9 @@ type BuyReport struct {
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 }
+
+type BuyReportForIncomeExpenditureManagement struct {
+	ID     int `json:"id"`
+	YearID int `json:"yearId"`
+	Amount int `json:"amount"`
+}

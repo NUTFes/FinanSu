@@ -1,8 +1,9 @@
 import clsx from 'clsx';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useReducer } from 'react';
 
-import { FinanceLinkItems, RelationLinkItems } from '@/constants/linkItem';
+import { FinanceLinkItems, RelationLinkItems, MyPageLinkItems } from '@/constants/linkItem';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -21,6 +22,13 @@ export default function SimpleSidebar() {
 
   return (
     <div className='fixed right-0 z-10 h-full w-52 bg-primary-4 md:left-0'>
+      <div className='border-b-2 border-primary-1'>
+        {MyPageLinkItems.map((link) => (
+          <NavItem key={link.name} icon={link.icon} href={link.href} currentPath={router.pathname}>
+            {link.name}
+          </NavItem>
+        ))}
+      </div>
       <div className='border-b-2 border-primary-1'>
         {FinanceLinkItems.map((link) => (
           <NavItem
@@ -89,12 +97,12 @@ const NavItem = (props: NavItemProps) => {
           {props.children}
         </div>
       ) : (
-        <a href={props.href}>
+        <Link href={props.href}>
           <div className={clsx(className)}>
             {props.icon}
             {props.children}
           </div>
-        </a>
+        </Link>
       )}
     </>
   );

@@ -40,7 +40,8 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	divisionRepository := repository.NewDivisionRepository(client, crud)
 	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
-	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
+	incomeRepository := repository.NewIncomeRepository(client, crud)
+	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
 	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
@@ -60,12 +61,13 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	)
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
-	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository, incomeExpenditureManagementRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
-	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
+	incomeUseCase := usecase.NewIncomeUseCase(incomeRepository, incomeExpenditureManagementRepository, transactionRepository)
+	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
 	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
@@ -90,7 +92,8 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		divisionUseCase,
 		festivalUseCase,
 		financialRecordUseCase,
-		fundInformationUseCase,
+		incomeUseCase,
+		incomeExpenditureManagementUseCase,
 		mailAuthUseCase,
 		objectHandleUseCase,
 		passwordResetTokenUseCase,

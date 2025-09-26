@@ -14,9 +14,12 @@ type divisionController struct {
 
 type DivisionController interface {
 	IndexDivisions(echo.Context) error
+	GetDivisionOptions(echo.Context) error
+	GetDivision(echo.Context) error
 	CreateDivision(echo.Context) error
 	UpdateDivision(echo.Context) error
 	DestroyDivision(echo.Context) error
+	GetDivisionsYears(echo.Context) error
 }
 
 func NewDivisionController(u usecase.DivisionUseCase) DivisionController {
@@ -33,6 +36,29 @@ func (d *divisionController) IndexDivisions(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, divisionDetails)
+}
+
+func (d *divisionController) GetDivisionOptions(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+	userId := c.QueryParam("user_id")
+
+	divisionOptions, err := d.u.GetDivisionOptions(ctx, year, userId)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, divisionOptions)
+}
+
+func (d *divisionController) GetDivision(c echo.Context) error {
+	ctx := c.Request().Context()
+	id := c.Param("id")
+
+	division, err := d.u.GetDivision(ctx, id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, division)
 }
 
 func (d *divisionController) CreateDivision(c echo.Context) error {
@@ -73,6 +99,17 @@ func (d *divisionController) DestroyDivision(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, "Destroy Division")
+}
+
+func (d *divisionController) GetDivisionsYears(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+	// Retrieve division options for each year from the usecase layer.
+	divisions, err := d.u.GetDivisionsYears(ctx, year)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, divisions)
 }
 
 type (

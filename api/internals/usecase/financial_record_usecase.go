@@ -2,9 +2,12 @@ package usecase
 
 import (
 	"context"
+	"log"
+	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 )
 
@@ -15,6 +18,7 @@ type financialRecordUseCase struct {
 type FinancialRecordUseCase interface {
 	GetFinancialRecords(context.Context) (FinancialRecordDetails, error)
 	GetFinancialRecordsByYears(context.Context, string) (FinancialRecordDetails, error)
+	GetFinancialRecord(context.Context, string) (FinancialRecord, error)
 	CreateFinancialRecord(
 		context.Context,
 		FinancialRecord,
@@ -25,6 +29,7 @@ type FinancialRecordUseCase interface {
 		FinancialRecord,
 	) (FinancialRecordWithBalance, error)
 	DestroyFinancialRecord(context.Context, string) error
+	GetFinancialRecordDetailForCSV(context.Context, string) ([][]string, error)
 }
 
 func NewFinancialRecordUseCase(rep rep.FinancialRecordRepository) FinancialRecordUseCase {
@@ -43,7 +48,11 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordWithBalance
@@ -96,7 +105,11 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordWithBalance
@@ -134,6 +147,28 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	financialRecordDetails.FinancialRecords = &financialRecords
 
 	return financialRecordDetails, err
+}
+
+func (fru *financialRecordUseCase) GetFinancialRecord(
+	c context.Context,
+	id string,
+) (FinancialRecord, error) {
+	var financialRecord FinancialRecord
+	row, err := fru.rep.GetFinancialRecordById(c, id)
+	if err != nil {
+		return financialRecord, err
+	}
+
+	err = row.Scan(
+		&financialRecord.Id,
+		&financialRecord.Name,
+		&financialRecord.YearId,
+	)
+	if err != nil {
+		return financialRecord, err
+	}
+
+	return financialRecord, nil
 }
 
 func (fru *financialRecordUseCase) CreateFinancialRecord(
@@ -198,7 +233,57 @@ func (fru *financialRecordUseCase) DestroyFinancialRecord(c context.Context, id 
 	return err
 }
 
+func (fru *financialRecordUseCase) GetFinancialRecordDetailForCSV(
+	c context.Context,
+	year string,
+) ([][]string, error) {
+	header := []string{"局", "部門", "物品", "予算申請金額", "購入金額"}
+	csvData := [][]string{header}
+	var financialRecords []FinancialRecordData
+
+	rows, err := fru.rep.AllForCSV(c, year)
+	if err != nil {
+		return csvData, errors.Wrapf(err, "can not connect SQL")
+	}
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	for rows.Next() {
+		var financialRecord FinancialRecordData
+		err := rows.Scan(
+			&financialRecord.FinancialRecordID,
+			&financialRecord.FinancialRecordName,
+			&financialRecord.DivisionName,
+			&financialRecord.FestivalItemName,
+			&financialRecord.BudgetAmount,
+			&financialRecord.ReportAmount,
+		)
+
+		if err != nil {
+			return csvData, errors.Wrapf(err, "scan error")
+		}
+		financialRecords = append(financialRecords, financialRecord)
+	}
+
+	for _, financialRecord := range financialRecords {
+		csvData = append(csvData, []string{
+			financialRecord.FinancialRecordName,
+			financialRecord.DivisionName,
+			financialRecord.FestivalItemName,
+			strconv.Itoa(financialRecord.BudgetAmount),
+			strconv.Itoa(financialRecord.ReportAmount),
+		})
+	}
+
+	return csvData, err
+}
+
 type FinancialRecordDetails = generated.FinancialRecordDetails
 type FinancialRecord = generated.FinancialRecord
 type FinancialRecordWithBalance = generated.FinancialRecordWithBalance
 type Total = generated.Total
+type FinancialRecordData = domain.FinancialRecordData

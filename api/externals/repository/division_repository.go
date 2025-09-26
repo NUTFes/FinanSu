@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -18,10 +19,13 @@ type divisionRepository struct {
 type DivisionRepository interface {
 	AllByPeriodAndFinancialRecord(context.Context, string, string) (*sql.Rows, error)
 	GetById(context.Context, string) (*sql.Row, error)
+	GetDivisionOptionsByUserId(context.Context, string, string) (*sql.Rows, error)
+	GetDivisionById(context.Context, string) (*sql.Row, error)
 	Create(context.Context, Division) error
 	Update(context.Context, string, Division) error
 	Delete(context.Context, string) error
 	FindLatestRecord(context.Context) (*sql.Row, error)
+	GetDivisionsYears(context.Context, string) (*sql.Rows, error)
 }
 
 func NewDivisionRepository(c db.Client, ac abstract.Crud) DivisionRepository {
@@ -35,21 +39,32 @@ func (dr *divisionRepository) AllByPeriodAndFinancialRecord(
 	financialRecordId string,
 ) (*sql.Rows, error) {
 
-	ds := selectDivisionQuery
+	var conditions []string
+	var args []interface{}
 
 	if year != "" {
-		ds = ds.Where(goqu.Ex{"years.year": year})
+		conditions = append(conditions, "years.year = ?")
+		args = append(args, year)
 	}
 	if financialRecordId != "" {
-		ds = ds.Where(goqu.Ex{"financial_records.id": financialRecordId})
+		conditions = append(conditions, "financial_records.id = ?")
+		args = append(args, financialRecordId)
 	}
 
-	// クエリを構築し、SQLを生成
-	query, _, err := ds.ToSQL()
+	query := makeSelectDivisionsSQL(conditions)
+	stmt, err := dr.crud.Prepare(c, query)
 	if err != nil {
 		return nil, err
 	}
-	return dr.crud.Read(c, query)
+	defer func() {
+		if stmt != nil {
+			if cerr := stmt.Close(); cerr != nil {
+				fmt.Println("stmt.Close() error:", cerr)
+			}
+		}
+	}()
+
+	return stmt.QueryContext(c, args...)
 }
 
 // IDで取得
@@ -57,13 +72,61 @@ func (dr *divisionRepository) GetById(
 	c context.Context,
 	id string,
 ) (*sql.Row, error) {
-	ds, _, err := selectDivisionQuery.
-		Where(goqu.Ex{"divisions.id": id}).
+	conditions := []string{"divisions.id = ?"}
+	query := makeSelectDivisionsSQL(conditions)
+
+	stmt, err := dr.crud.Prepare(c, query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	return stmt.QueryRowContext(c, id), nil
+}
+
+// IDでdivisionのみ取得
+func (dr *divisionRepository) GetDivisionById(
+	c context.Context,
+	id string,
+) (*sql.Row, error) {
+	ds, _, err := dialect.From("divisions").
+		Select("id", "name", "financial_record_id").
+		Where(goqu.Ex{"id": id}).
 		ToSQL()
+
 	if err != nil {
 		return nil, err
 	}
 	return dr.crud.ReadByID(c, ds)
+}
+
+// ユーザーIDで部門オプションを取得
+func (dr *divisionRepository) GetDivisionOptionsByUserId(
+	c context.Context,
+	year string,
+	userId string,
+) (*sql.Rows, error) {
+	ds := selectDivisionOptionsQuery
+
+	if userId != "" {
+		ds = ds.Where(goqu.Ex{"users.id": userId})
+	}
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
+
+	query, args, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	stmt, err := dr.crud.Prepare(c, query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	return stmt.QueryContext(c, args...)
 }
 
 // 部門作成
@@ -111,30 +174,108 @@ func (dr *divisionRepository) Delete(
 
 // 最新の部門を取得する
 func (dr *divisionRepository) FindLatestRecord(c context.Context) (*sql.Row, error) {
-	ds := selectDivisionQuery
-	query, _, err := ds.Limit(1).ToSQL()
+	conditions := []string{"divisions.id = LAST_INSERT_ID()"}
+	query := makeSelectDivisionsSQL(conditions)
 
+	return dr.client.DB().QueryRowContext(c, query), nil
+}
+
+// 年度一覧取得
+func (dr *divisionRepository) GetDivisionsYears(c context.Context, year string) (*sql.Rows, error) {
+	ds := dialect.From(goqu.I("divisions")).
+		Select(
+			goqu.I("divisions.id").As("divisionId"),
+			goqu.I("divisions.name").As("name"),
+		).
+		Join(
+			goqu.I("financial_records"),
+			goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id"))),
+		).
+		Join(
+			goqu.I("years"),
+			goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id"))),
+		)
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
+	query, args, err := ds.ToSQL()
 	if err != nil {
 		return nil, err
 	}
-	return dr.crud.ReadByID(c, query)
+	stmt, err := dr.crud.Prepare(c, query)
+	if err != nil {
+		return nil, err
+	}
+	return stmt.QueryContext(c, args...)
 }
 
 type Division = generated.Division
 
 // NOTE: getの共通部分抜き出し
-var selectDivisionQuery = dialect.From("divisions").
+func makeSelectDivisionsSQL(conditions []string) string {
+	condition := ""
+	if len(conditions) > 0 {
+		for _, c := range conditions {
+			condition += fmt.Sprintf(" AND %s", c)
+		}
+	}
+
+	return fmt.Sprintf(`
+		WITH item_budget_sum AS (
+			SELECT
+				divisions.id AS division_id,
+				SUM(item_budgets.amount) AS total_budget
+			FROM divisions
+			LEFT JOIN festival_items ON divisions.id = festival_items.division_id
+			LEFT JOIN item_budgets ON festival_items.id = item_budgets.festival_item_id
+			GROUP BY divisions.id
+		),
+		buy_report_sum AS (
+			SELECT
+				divisions.id AS division_id,
+				SUM(buy_reports.amount) AS total_expense
+			FROM divisions
+			LEFT JOIN festival_items ON divisions.id = festival_items.division_id
+			LEFT JOIN buy_reports ON festival_items.id = buy_reports.festival_item_id
+			GROUP BY divisions.id
+		)
+		SELECT
+			divisions.id,
+			divisions.name,
+			financial_records.name,
+			COALESCE(item_budget_sum.total_budget, 0) AS budget,
+			COALESCE(buy_report_sum.total_expense, 0) AS expense,
+			COALESCE(item_budget_sum.total_budget, 0) - COALESCE(buy_report_sum.total_expense, 0) AS balance
+		FROM divisions
+		INNER JOIN financial_records ON financial_records.id = divisions.financial_record_id
+		INNER JOIN years ON financial_records.year_id = years.id
+		LEFT JOIN item_budget_sum ON item_budget_sum.division_id = divisions.id
+		LEFT JOIN buy_report_sum ON buy_report_sum.division_id = divisions.id
+		WHERE 1=1
+		%s
+		ORDER BY divisions.id DESC
+	`, condition)
+}
+
+var selectDivisionOptionsQuery = dialect.From("divisions").
 	Select(
-		"divisions.id",
-		"divisions.name",
-		"financial_records.name",
-		goqu.COALESCE(goqu.SUM("item_budgets.amount"), 0).As("budget"),
-		goqu.COALESCE(goqu.SUM("buy_reports.amount"), 0).As("expense"),
-		goqu.L("COALESCE(SUM(item_budgets.amount), 0) - COALESCE(SUM(buy_reports.amount), 0)").As("balance")).
-	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
-	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
-	LeftJoin(goqu.I("festival_items"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
-	LeftJoin(goqu.I("item_budgets"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("item_budgets.festival_item_id")))).
-	LeftJoin(goqu.I("buy_reports"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
-	GroupBy(goqu.I("divisions.id")).
-	Order(goqu.I("divisions.id").Desc())
+		goqu.I("divisions.id").As("divisionId"),
+		goqu.I("divisions.name").As("name"),
+	).
+	Join(
+		goqu.I("financial_records"),
+		goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id"))),
+	).
+	Join(
+		goqu.I("years"),
+		goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id"))),
+	).
+	Join(
+		goqu.I("user_groups"),
+		goqu.On(goqu.I("divisions.id").Eq(goqu.I("user_groups.group_id"))),
+	).
+	Join(
+		goqu.I("users"),
+		goqu.On(goqu.I("users.id").Eq(goqu.I("user_groups.user_id"))),
+	).
+	Order(goqu.I("divisions.id").Asc())

@@ -11,3 +11,12 @@ type FinancialRecord struct {
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
+
+type FinancialRecordData struct {
+	FinancialRecordID   int    `json:"financialRecordId"`
+	FinancialRecordName string `json:"financialRecordName"`
+	DivisionName        string `json:"divisionName"`
+	FestivalItemName    string `json:"festivalItemName"`
+	BudgetAmount        int    `json:"budgetAmount"`
+	ReportAmount        int    `json:"reportAmount"`
+}

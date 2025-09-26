@@ -25,6 +25,12 @@ type BuyReportRepository interface {
 	GetPaymentReceipt(context.Context, *sql.Tx, string) (*sql.Row, error)
 	GetBuyReportById(context.Context, string) (*sql.Row, error)
 	GetYearByBuyReportId(context.Context, *sql.Tx, string) (*sql.Row, error)
+	AllByPeriod(context.Context, string) (*sql.Rows, error)
+	GetByBuyReportId(context.Context, string) (*sql.Row, error)
+	UpdateBuyReportStatus(context.Context, *sql.Tx, string, PutBuyReport) error
+	GetBuyReportWithDivisionIdById(context.Context, string) (*sql.Row, error)
+	GetByReportForCreateIncomeExpenditure(context.Context, *sql.Tx, string) (*sql.Row, error)
+	CreateBuyReportIncomeExpenditureManagement(context.Context, *sql.Tx, string, string) error
 }
 
 func NewBuyReportRepository(c db.Client, ac abstract.Crud) BuyReportRepository {
@@ -166,13 +172,27 @@ func (brr *buyReportRepository) GetPaymentReceipt(
 	return brr.crud.TransactionReadByID(c, tx, query)
 }
 
-// 最新のレコード取得
+// idによるbuyReport取得
 func (brr *buyReportRepository) GetBuyReportById(
 	c context.Context,
 	id string,
 ) (*sql.Row, error) {
 	query, _, err := dialect.From("buy_reports").
 		Select("id", "festival_item_id", "amount", "paid_by").
+		Where(goqu.Ex{"buy_reports.id": id}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return brr.crud.ReadByID(c, query)
+}
+
+// idによるbuyReport取得
+func (brr *buyReportRepository) GetBuyReportWithDivisionIdById(
+	c context.Context,
+	id string,
+) (*sql.Row, error) {
+	query, _, err := selectBuyReportWithDivisionIdDetailsQuery.
 		Where(goqu.Ex{"buy_reports.id": id}).
 		ToSQL()
 	if err != nil {
@@ -202,4 +222,116 @@ func (brr *buyReportRepository) GetYearByBuyReportId(
 	return brr.crud.TransactionReadByID(c, tx, query)
 }
 
+// 年度に紐づいたdetailsの取得
+func (brr *buyReportRepository) AllByPeriod(c context.Context, year string) (*sql.Rows, error) {
+
+	ds := selectBuyReportDetailsQuery
+
+	if year != "" {
+		ds = ds.Where(goqu.Ex{"years.year": year})
+	}
+
+	query, _, err := ds.ToSQL()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return brr.crud.Read(c, query)
+}
+
+func (brr *buyReportRepository) GetByBuyReportId(c context.Context, buyReportId string) (*sql.Row, error) {
+
+	ds := selectBuyReportDetailsQuery.Where(goqu.Ex{"buy_statuses.buy_report_id": buyReportId})
+
+	query, _, err := ds.ToSQL()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return brr.crud.ReadByID(c, query)
+}
+
+func (brr *buyReportRepository) UpdateBuyReportStatus(c context.Context, tx *sql.Tx, buyReportId string, requestBody PutBuyReport) error {
+	updateDs := dialect.Update("buy_statuses").
+		Set(goqu.Record{
+			"is_packed":  requestBody.IsPacked,
+			"is_settled": requestBody.IsSettled,
+			"updated_at": goqu.L("NOW()"),
+		}).
+		Where(goqu.Ex{"buy_report_id": buyReportId})
+
+	query, _, err := updateDs.ToSQL()
+	if err != nil {
+		return err
+	}
+
+	return brr.crud.TransactionExec(c, tx, query)
+}
+
+func (brr *buyReportRepository) GetByReportForCreateIncomeExpenditure(c context.Context, tx *sql.Tx, buyReportId string) (*sql.Row, error) {
+	query, _, err := dialect.From("buy_reports").
+		Select("buy_reports.id", "years.id", "buy_reports.amount").
+		InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("festival_items.id").Eq(goqu.I("buy_reports.festival_item_id")))).
+		InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("divisions.id").Eq(goqu.I("festival_items.division_id")))).
+		InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("financial_records.id").Eq(goqu.I("divisions.financial_record_id")))).
+		InnerJoin(goqu.I("years"), goqu.On(goqu.I("years.id").Eq(goqu.I("financial_records.year_id")))).
+		Where(goqu.Ex{"buy_reports.id": buyReportId}).ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	return brr.crud.TransactionReadByID(c, tx, query)
+}
+
+func (brr *buyReportRepository) CreateBuyReportIncomeExpenditureManagement(
+	c context.Context,
+	tx *sql.Tx,
+	buyReportId, incomeExpenditureManagementId string,
+) error {
+	ds := dialect.Insert("buy_report_income_expenditure_managements").
+		Rows(goqu.Record{
+			"buy_report_id":                    buyReportId,
+			"income_expenditure_management_id": incomeExpenditureManagementId,
+		})
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return err
+	}
+	err = brr.crud.TransactionExec(c, tx, query)
+	return err
+}
+
 type PostBuyReport = generated.BuyReport
+type PutBuyReport = generated.PutBuyReportStatusBuyReportIdJSONRequestBody
+
+var selectBuyReportDetailsQuery = dialect.From("buy_reports").Select(
+	"buy_reports.amount",
+	"divisions.name",
+	"festival_items.name",
+	"financial_records.name",
+	"buy_reports.id",
+	"buy_statuses.is_packed",
+	"buy_statuses.is_settled",
+	"buy_reports.paid_by",
+	goqu.I("buy_reports.created_at").As("reportDate"),
+	"payment_receipts.file_name",
+	"years.year",
+).
+	InnerJoin(goqu.I("buy_statuses"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("buy_statuses.buy_report_id")))).
+	InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("buy_reports.festival_item_id").Eq(goqu.I("festival_items.id")))).
+	InnerJoin(goqu.I("divisions"), goqu.On(goqu.I("festival_items.division_id").Eq(goqu.I("divisions.id")))).
+	InnerJoin(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+	InnerJoin(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+	InnerJoin(goqu.I("payment_receipts"), goqu.On(goqu.I("buy_reports.id").Eq(goqu.I("payment_receipts.buy_report_id")))).
+	Order(goqu.I("reportDate").Desc())
+
+var selectBuyReportWithDivisionIdDetailsQuery = dialect.From("buy_reports").Select(
+	"buy_reports.id",
+	"festival_items.division_id",
+	"buy_reports.festival_item_id",
+	"buy_reports.amount",
+	"buy_reports.paid_by",
+).
+	InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("buy_reports.festival_item_id").Eq(goqu.I("festival_items.id"))))

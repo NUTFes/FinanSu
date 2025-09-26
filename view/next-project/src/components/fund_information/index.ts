@@ -1,6 +1,5 @@
-export { default as AddModal } from './AddModal';
-export { default as DeleteModal } from './DeleteModal';
-export { default as EditModal } from './EditModal';
-export { default as OpenAddModalButton } from './OpenAddModalButton';
-export { default as OpenDeleteModalButton } from './OpenDeleteModalButton';
-export { default as OpenEditModalButton } from './OpenEditModalButton';
+export { default as FundInformationTable } from './FundInformationTable';
+export { default as FundInformationForm } from './FundInformationForm';
+export { default as FundInformationHeader } from './FundInformationHeader';
+export { default as DeleteModal } from './modals/DeleteModal';
+export { default as UncheckConfirmModal } from './modals/UncheckConfirmModal';

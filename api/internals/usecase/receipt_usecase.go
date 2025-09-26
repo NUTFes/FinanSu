@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -34,7 +35,13 @@ func (r *receiptUseCase) GetAllReceipts(c context.Context) ([]domain.Receipt, er
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		err := rows.Scan(
 			&receipt.ID,
@@ -58,6 +65,10 @@ func (r *receiptUseCase) GetAllReceipts(c context.Context) ([]domain.Receipt, er
 func (r *receiptUseCase) GetReceiptByID(c context.Context, id string) (domain.Receipt, error) {
 	var receipt domain.Receipt
 	row, err := r.rep.Find(c, id)
+	if err != nil {
+		return receipt, err
+	}
+
 	err = row.Scan(
 		&receipt.ID,
 		&receipt.PurchaseReportID,
@@ -81,7 +92,12 @@ func (r *receiptUseCase) GetReceiptByPurchaseReportID(c context.Context, Purchas
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		err := rows.Scan(
 			&receipt.ID,
@@ -104,8 +120,14 @@ func (r *receiptUseCase) GetReceiptByPurchaseReportID(c context.Context, Purchas
 
 func (r *receiptUseCase) CreateReceipt(c context.Context, receipt domain.Receipt) (domain.Receipt, error) {
 	var latestReceipt domain.Receipt
-	err := r.rep.Create(c, receipt)
+	if err := r.rep.Create(c, receipt); err != nil {
+		return latestReceipt, err
+	}
+
 	row, err := r.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestReceipt, err
+	}
 
 	err = row.Scan(
 		&latestReceipt.ID,
@@ -125,8 +147,15 @@ func (r *receiptUseCase) CreateReceipt(c context.Context, receipt domain.Receipt
 
 func (r *receiptUseCase) UpdateReceipt(c context.Context, id string, receipt domain.Receipt) (domain.Receipt, error) {
 	updatedReceipt := domain.Receipt{}
-	err := r.rep.Update(c, id, receipt)
-	row, err := r.rep.Find(c,id)
+	if err := r.rep.Update(c, id, receipt); err != nil {
+		return updatedReceipt, err
+	}
+
+	row, err := r.rep.Find(c, id)
+	if err != nil {
+		return updatedReceipt, err
+	}
+
 	err = row.Scan(
 		&updatedReceipt.ID,
 		&updatedReceipt.PurchaseReportID,
