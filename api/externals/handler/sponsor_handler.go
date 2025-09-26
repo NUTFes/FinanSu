@@ -24,7 +24,7 @@ func (h *Handler) PostSponsors(c echo.Context) error {
 		return err
 	}
 
-	latastSponsor, err := h.sponsorUseCase.CreateSponsor(c.Request().Context(),
+	latestSponsor, err := h.sponsorUseCase.CreateSponsor(c.Request().Context(),
 		sponsor.Name,
 		sponsor.Tel,
 		sponsor.Email,
@@ -34,7 +34,7 @@ func (h *Handler) PostSponsors(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastSponsor)
+	return c.JSON(http.StatusOK, latestSponsor)
 }
 
 // router.GET(baseURL+"/sponsors/periods/:year", wrapper.GetSponsorsPeriodsYear)

@@ -33,7 +33,6 @@ func (h *Handler) GetActivitiesId(c echo.Context, id int) error {
 func (h *Handler) PostActivities(c echo.Context) error {
 	activities := new(domain.Activity)
 	if err := c.Bind(activities); err != nil {
-		fmt.Println("err")
 		return err
 	}
 	latastActivity, err := h.activityUseCase.CreateActivity(c.Request().Context(), strconv.Itoa(int(activities.UserID)), strconv.FormatBool(activities.IsDone), strconv.Itoa(int(activities.SponsorID)), activities.Feature, strconv.Itoa(int(activities.Expense)), activities.Remark, strconv.Itoa(int(activities.Design)), activities.Url)

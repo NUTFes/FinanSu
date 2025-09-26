@@ -10,29 +10,29 @@ import (
 
 // router.GET(baseURL+"/sponsorstyles", wrapper.GetSponsorstyles)
 func (h *Handler) GetSponsorstyles(c echo.Context) error {
-	sponsorstyles, err := h.sponsorStyleUseCase.GetSponsorStyles(c.Request().Context())
+	sponsorStyles, err := h.sponsorStyleUseCase.GetSponsorStyles(c.Request().Context())
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, sponsorstyles)
+	return c.JSON(http.StatusOK, sponsorStyles)
 }
 
 // router.POST(baseURL+"/sponsorstyles", wrapper.PostSponsorstyles)
 func (h *Handler) PostSponsorstyles(c echo.Context) error {
-	sponsorstyle := new(domain.SponsorStyle)
-	if err := c.Bind(sponsorstyle); err != nil {
+	sponsorStyle := new(domain.SponsorStyle)
+	if err := c.Bind(sponsorStyle); err != nil {
 		return err
 	}
 
-	latastSponsorstyle, err := h.sponsorStyleUseCase.CreateSponsorStyle(c.Request().Context(),
-		sponsorstyle.Style,
-		sponsorstyle.Feature,
-		sponsorstyle.Price,
+	latestSponsorStyle, err := h.sponsorStyleUseCase.CreateSponsorStyle(c.Request().Context(),
+		sponsorStyle.Style,
+		sponsorStyle.Feature,
+		sponsorStyle.Price,
 	)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastSponsorstyle)
+	return c.JSON(http.StatusOK, latestSponsorStyle)
 }
 
 // router.DELETE(baseURL+"/sponsorstyles/:id", wrapper.DeleteSponsorstylesId)
@@ -48,11 +48,11 @@ func (h *Handler) DeleteSponsorstylesId(c echo.Context, id int) error {
 // router.GET(baseURL+"/sponsorstyles/:id", wrapper.GetSponsorstylesId)
 func (h *Handler) GetSponsorstylesId(c echo.Context, id int) error {
 	idStr := strconv.Itoa(id)
-	sponsorstyle, err := h.sponsorStyleUseCase.GetSponsorStylesByID(c.Request().Context(), idStr)
+	sponsorStyle, err := h.sponsorStyleUseCase.GetSponsorStylesByID(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, sponsorstyle)
+	return c.JSON(http.StatusOK, sponsorStyle)
 }
 
 // router.PUT(baseURL+"/sponsorstyles/:id", wrapper.PutSponsorstylesId)
@@ -63,9 +63,9 @@ func (h *Handler) PutSponsorstylesId(c echo.Context, id int) error {
 		return err
 	}
 
-	updatedSponsorstyle, err := h.sponsorStyleUseCase.UpdateSponsorStyle(c.Request().Context(), idStr, sponsorstyle.Style, sponsorstyle.Feature, sponsorstyle.Price)
+	updatedSponsorStyle, err := h.sponsorStyleUseCase.UpdateSponsorStyle(c.Request().Context(), idStr, sponsorstyle.Style, sponsorstyle.Feature, sponsorstyle.Price)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, updatedSponsorstyle)
+	return c.JSON(http.StatusOK, updatedSponsorStyle)
 }

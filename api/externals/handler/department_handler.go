@@ -19,11 +19,11 @@ func (h *Handler) GetDepartments(c echo.Context) error {
 
 // router.POST(baseURL+"/departments", wrapper.PostDepartments)
 func (h *Handler) PostDepartments(c echo.Context, params generated.PostDepartmentsParams) error {
-	latastDepartment, err := h.departmentUseCase.CreateDepartment(c.Request().Context(), *params.Name)
+	latestDepartment, err := h.departmentUseCase.CreateDepartment(c.Request().Context(), *params.Name)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastDepartment)
+	return c.JSON(http.StatusOK, latestDepartment)
 }
 
 // router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)

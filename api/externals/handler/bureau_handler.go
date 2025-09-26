@@ -20,13 +20,13 @@ func (h *Handler) GetBureaus(c echo.Context) error {
 // router.POST(baseURL+"/bureaus", wrapper.PostBureaus)
 func (h *Handler) PostBureaus(c echo.Context, params generated.PostBureausParams) error {
 	name := params.Name
-	latastBureau, err := h.bureauUseCase.CreateBureau(c.Request().Context(),
+	latestBureau, err := h.bureauUseCase.CreateBureau(c.Request().Context(),
 		name,
 	)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastBureau)
+	return c.JSON(http.StatusOK, latestBureau)
 }
 
 // router.DELETE(baseURL+"/bureaus/:id", wrapper.DeleteBureausId)

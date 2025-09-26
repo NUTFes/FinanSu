@@ -24,14 +24,14 @@ func (h *Handler) PostActivityStyles(c echo.Context) error {
 		return err
 	}
 
-	latastActivityStyle, err := h.activityStyleUseCase.CreateActivityStyle(c.Request().Context(),
+	latestActivityStyle, err := h.activityStyleUseCase.CreateActivityStyle(c.Request().Context(),
 		strconv.Itoa(int(activityStyle.ActivityID)),
 		strconv.Itoa(int(activityStyle.SponsoStyleID)),
 	)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, latastActivityStyle)
+	return c.JSON(http.StatusOK, latestActivityStyle)
 }
 
 // router.DELETE(baseURL+"/activity_styles/:id", wrapper.DeleteActivityStylesId)

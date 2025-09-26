@@ -23,11 +23,11 @@ func (h *Handler) PostUsers(c echo.Context, params generated.PostUsersParams) er
 	name := params.Name
 	bureauID := strconv.Itoa(params.BureauId)
 	roleID := strconv.Itoa(params.RoleId)
-	latastUser, err := h.userUseCase.CreateUser(c.Request().Context(), name, bureauID, roleID)
+	latestUser, err := h.userUseCase.CreateUser(c.Request().Context(), name, bureauID, roleID)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusCreated, latastUser)
+	return c.JSON(http.StatusCreated, latestUser)
 }
 
 // router.DELETE(baseURL+"/users/delete", wrapper.DeleteUsersDelete)
