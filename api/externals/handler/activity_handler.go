@@ -102,12 +102,20 @@ func (h *Handler) GetActivitiesFilteredDetails(c echo.Context, params generated.
 }
 
 func (h *Handler) GetActivitiesFilteredDetailsYear(c echo.Context, year string, params generated.GetActivitiesFilteredDetailsYearParams) error {
-	isDone := string(*params.IsDone)
+	var isDone string
+	if params.IsDone != nil {
+		isDone = string(*params.IsDone)
+	}
+
 	sponsorStyleIDs := []string{}
 	for _, id := range *params.SponsorStyleId {
 		sponsorStyleIDs = append(sponsorStyleIDs, strconv.Itoa(int(id)))
 	}
-	keyword := *params.Keyword
+	var keyword string
+	if params.Keyword != nil {
+		keyword = *params.Keyword
+	}
+
 	activities, err := h.activityUseCase.GetFilteredActivityDetailByPeriod(c.Request().Context(), isDone, sponsorStyleIDs, year, keyword)
 	if err != nil {
 		return err

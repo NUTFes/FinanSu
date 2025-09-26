@@ -138,6 +138,7 @@ import type {
   Sponsor,
   SponsorStyle,
   Teacher,
+  User,
   YearPeriods,
 } from './model';
 
@@ -2268,6 +2269,57 @@ export const useGetBuyReportsCsvDownload = <TError = unknown>(
   const swrKey =
     swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsCsvDownloadKey(params) : null));
   const swrFn = () => getBuyReportsCsvDownload(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 現在ログインしているユーザーの情報を取得
+ */
+export type getCurrentUserResponse200 = {
+  data: User;
+  status: 200;
+};
+
+export type getCurrentUserResponseComposite = getCurrentUserResponse200;
+
+export type getCurrentUserResponse = getCurrentUserResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetCurrentUserUrl = () => {
+  return `/current_user`;
+};
+
+export const getCurrentUser = async (options?: RequestInit): Promise<getCurrentUserResponse> => {
+  return customFetch<getCurrentUserResponse>(getGetCurrentUserUrl(), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetCurrentUserKey = () => [`/current_user`] as const;
+
+export type GetCurrentUserQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
+export type GetCurrentUserQueryError = unknown;
+
+export const useGetCurrentUser = <TError = unknown>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getCurrentUser>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetCurrentUserKey() : null));
+  const swrFn = () => getCurrentUser(requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

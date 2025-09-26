@@ -11,10 +11,16 @@ import (
 // router.GET(baseURL+"/divisions", wrapper.GetDivisions)
 func (h *Handler) GetDivisions(c echo.Context, params generated.GetDivisionsParams) error {
 	ctx := c.Request().Context()
-	year := strconv.Itoa(*params.Year)
-	financialRecordId := strconv.Itoa(*params.FinancialRecordId)
+	var yearStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+	var financialRecordIdStr string
+	if params.FinancialRecordId != nil {
+		financialRecordIdStr = strconv.Itoa(*params.FinancialRecordId)
+	}
 
-	divisionDetails, err := h.divisionUseCase.GetDivisions(ctx, year, financialRecordId)
+	divisionDetails, err := h.divisionUseCase.GetDivisions(ctx, yearStr, financialRecordIdStr)
 	if err != nil {
 		return err
 	}

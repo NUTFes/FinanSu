@@ -302,6 +302,17 @@ type Total struct {
 	Expense *int `json:"expense,omitempty"`
 }
 
+// User defines model for user.
+type User struct {
+	BureauID  int    `json:"bureauID"`
+	CreatedAt string `json:"createdAt"`
+	Id        int    `json:"id"`
+	IsDeleted bool   `json:"isDeleted"`
+	Name      string `json:"name"`
+	RoleID    int    `json:"roleID"`
+	UpdatedAt string `json:"updatedAt"`
+}
+
 // YearPeriods defines model for year_periods.
 type YearPeriods struct {
 	EndedAt   string `json:"endedAt"`
@@ -386,6 +397,11 @@ type PutBuyReportsIdMultipartBody struct {
 
 	// File 購入報告書のファイル、ない場合更新しないようにする
 	File *openapi_types.File `json:"file,omitempty"`
+}
+
+// GetCurrentUserParams defines parameters for GetCurrentUser.
+type GetCurrentUserParams struct {
+	AccessToken *string `json:"Access-Token,omitempty"`
 }
 
 // PostDepartmentsParams defines parameters for PostDepartments.
@@ -783,6 +799,9 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /current_user)
+	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
 
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
@@ -1502,6 +1521,35 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCurrentUser converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCurrentUser(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCurrentUserParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Access-Token" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Access-Token")]; found {
+		var AccessToken string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Access-Token, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Access-Token", valueList[0], &AccessToken, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Access-Token: %s", err))
+		}
+
+		params.AccessToken = &AccessToken
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCurrentUser(ctx, params)
 	return err
 }
 
@@ -2878,6 +2926,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)

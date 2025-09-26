@@ -192,4 +192,5 @@ export * from './sponsor';
 export * from './sponsorStyle';
 export * from './teacher';
 export * from './total';
+export * from './user';
 export * from './yearPeriods';

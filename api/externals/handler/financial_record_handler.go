@@ -14,8 +14,23 @@ import (
 
 // router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
 func (h *Handler) GetFinancialRecords(c echo.Context, params generated.GetFinancialRecordsParams) error {
-	yearStr := strconv.Itoa(*params.Year)
-	financialRecordDetails, err := h.financialRecordUseCase.GetFinancialRecordsByYears(c.Request().Context(), yearStr)
+	var financialRecordDetails FinancialRecordDetails
+	var err error
+	ctx := c.Request().Context()
+	var yearStr string
+	if params.Year == nil {
+		financialRecordDetails, err = h.financialRecordUseCase.GetFinancialRecords(ctx)
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, financialRecordDetails)
+	}
+	yearStr = strconv.Itoa(*params.Year)
+
+	if yearStr != "" {
+	}
+
+	financialRecordDetails, err = h.financialRecordUseCase.GetFinancialRecordsByYears(ctx, yearStr)
 	if err != nil {
 		return err
 	}

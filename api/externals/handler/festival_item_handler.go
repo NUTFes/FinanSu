@@ -11,11 +11,17 @@ import (
 // router.GET(baseURL+"/festival_items", wrapper.GetFestivalItems)
 func (h *Handler) GetFestivalItems(c echo.Context, params generated.GetFestivalItemsParams) error {
 	ctx := c.Request().Context()
-	year := strconv.Itoa(*params.Year)
-	divisionId := strconv.Itoa(*params.DivisionId)
+	var yearStr string
+	var divisionIdStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+	if params.DivisionId != nil {
+		divisionIdStr = strconv.Itoa(*params.DivisionId)
+	}
 	var festivalItemDetails FestivalItemDetails
 
-	festivalItemDetails, err := h.festivalItemUseCase.GetFestivalItems(ctx, year, divisionId)
+	festivalItemDetails, err := h.festivalItemUseCase.GetFestivalItems(ctx, yearStr, divisionIdStr)
 	if err != nil {
 		return err
 	}

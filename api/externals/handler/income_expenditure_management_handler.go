@@ -11,8 +11,11 @@ import (
 // Index
 func (h *Handler) GetIncomeExpenditureManagements(c echo.Context, params generated.GetIncomeExpenditureManagementsParams) error {
 	ctx := c.Request().Context()
-	year := strconv.Itoa(*params.Year)
-	incomeExpenditureManagements, err := h.incomeExpenditureManagementUseCase.IndexIncomeExpenditureManagements(ctx, year)
+	var yearStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+	incomeExpenditureManagements, err := h.incomeExpenditureManagementUseCase.IndexIncomeExpenditureManagements(ctx, yearStr)
 	if err != nil {
 		return err
 	}

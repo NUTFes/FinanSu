@@ -16,8 +16,20 @@ import (
 
 // router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
 func (h *Handler) PutBuyReportStatusBuyReportId(c echo.Context, id int) error {
-	// 未実装
-	return c.String(http.StatusNotImplemented, "PutBuyReportStatusBuyReportId is not implemented")
+	ctx := c.Request().Context()
+	buyReportId := strconv.Itoa(id)
+
+	var requestBody generated.PutBuyReportStatusBuyReportIdJSONRequestBody
+	if err := c.Bind(&requestBody); err != nil {
+		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+
+	buyReportDetail, err := h.buyReportUseCase.UpdateBuyReportStatus(ctx, buyReportId, requestBody)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed update buy_reports")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetail)
 }
 
 // router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
@@ -50,8 +62,18 @@ func (h *Handler) PostBuyReports(c echo.Context) error {
 
 // router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
 func (h *Handler) GetBuyReportsDetails(c echo.Context, params generated.GetBuyReportsDetailsParams) error {
-	//未実装
-	return c.String(http.StatusNotImplemented, "GetBuyReportsDetails is not implemented")
+	ctx := c.Request().Context()
+	var yearStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+
+	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, yearStr)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to buy_reports")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetails)
 }
 
 // router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)

@@ -75,3 +75,14 @@ func (h *Handler) PutUsersId(c echo.Context, id int, params generated.PutUsersId
 	}
 	return c.JSON(http.StatusOK, updatedUser)
 }
+
+// ログインユーザーの取得
+func (h *Handler) GetCurrentUser(c echo.Context, params generated.GetCurrentUserParams) error {
+	// headerからトークンを取得する
+	user, err := h.userUseCase.GetCurrentUser(c.Request().Context(), *params.AccessToken)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, user)
+	} else {
+		return c.JSON(http.StatusOK, user)
+	}
+}
