@@ -5,24 +5,25 @@ import (
 )
 
 type Handler struct {
-	activityUseCase            usecase.ActivityUseCase
-	activityInformationUseCase usecase.ActivityInformationUseCase
-	activityStyleUseCase       usecase.ActivityStyleUseCase
-	bureauUseCase              usecase.BureauUseCase
-	buyReportUseCase           usecase.BuyReportUseCase
-	departmentUseCase          usecase.DepartmentUseCase
-	divisionUseCase            usecase.DivisionUseCase
-	festivalItemUseCase        usecase.FestivalItemUseCase
-	financialRecordUseCase     usecase.FinancialRecordUseCase
-	fundInformationUseCase     usecase.FundInformationUseCase
-	mailAuthUseCase            usecase.MailAuthUseCase
-	objectUploadUseCase        usecase.ObjectUploadUseCase
-	passwordResetTokenUseCase  usecase.PasswordResetTokenUseCase
-	sponsorUseCase             usecase.SponsorUseCase
-	sponsorStyleUseCase        usecase.SponsorStyleUseCase
-	teacherUseCase             usecase.TeacherUseCase
-	userUseCase                usecase.UserUseCase
-	yearUseCase                usecase.YearUseCase
+	activityUseCase                    usecase.ActivityUseCase
+	activityInformationUseCase         usecase.ActivityInformationUseCase
+	activityStyleUseCase               usecase.ActivityStyleUseCase
+	bureauUseCase                      usecase.BureauUseCase
+	buyReportUseCase                   usecase.BuyReportUseCase
+	departmentUseCase                  usecase.DepartmentUseCase
+	divisionUseCase                    usecase.DivisionUseCase
+	festivalItemUseCase                usecase.FestivalItemUseCase
+	financialRecordUseCase             usecase.FinancialRecordUseCase
+	incomeUseCase                      usecase.IncomeUseCase
+	incomeExpenditureManagementUseCase usecase.IncomeExpenditureManagementUseCase
+	mailAuthUseCase                    usecase.MailAuthUseCase
+	objectUploadUseCase                usecase.ObjectUploadUseCase
+	passwordResetTokenUseCase          usecase.PasswordResetTokenUseCase
+	sponsorUseCase                     usecase.SponsorUseCase
+	sponsorStyleUseCase                usecase.SponsorStyleUseCase
+	teacherUseCase                     usecase.TeacherUseCase
+	userUseCase                        usecase.UserUseCase
+	yearUseCase                        usecase.YearUseCase
 }
 
 func NewHandler(
@@ -35,7 +36,8 @@ func NewHandler(
 	divisionUseCase usecase.DivisionUseCase,
 	festivalItemUseCase usecase.FestivalItemUseCase,
 	financialRecordUseCase usecase.FinancialRecordUseCase,
-	fundInformationUseCase usecase.FundInformationUseCase,
+	incomeUseCase usecase.IncomeUseCase,
+	incomeExpenditureManagementUseCase usecase.IncomeExpenditureManagementUseCase,
 	mailAuthUseCase usecase.MailAuthUseCase,
 	objectUploadUseCase usecase.ObjectUploadUseCase,
 	passwordResetTokenUseCase usecase.PasswordResetTokenUseCase,
@@ -46,23 +48,24 @@ func NewHandler(
 	yearUseCase usecase.YearUseCase,
 ) *Handler {
 	return &Handler{
-		activityUseCase:            activityUseCase,
-		activityInformationUseCase: activityInformationUseCase,
-		activityStyleUseCase:       activityStyleUseCase,
-		bureauUseCase:              bureauUseCase,
-		buyReportUseCase:           buyReportUseCase,
-		departmentUseCase:          departmentUseCase,
-		divisionUseCase:            divisionUseCase,
-		festivalItemUseCase:        festivalItemUseCase,
-		financialRecordUseCase:     financialRecordUseCase,
-		fundInformationUseCase:     fundInformationUseCase,
-		mailAuthUseCase:            mailAuthUseCase,
-		objectUploadUseCase:        objectUploadUseCase,
-		passwordResetTokenUseCase:  passwordResetTokenUseCase,
-		sponsorUseCase:             sponsorUseCase,
-		sponsorStyleUseCase:        sponsorStyleUseCase,
-		teacherUseCase:             teacherUseCase,
-		userUseCase:                userUseCase,
-		yearUseCase:                yearUseCase,
+		activityUseCase:                    activityUseCase,
+		activityInformationUseCase:         activityInformationUseCase,
+		activityStyleUseCase:               activityStyleUseCase,
+		bureauUseCase:                      bureauUseCase,
+		buyReportUseCase:                   buyReportUseCase,
+		departmentUseCase:                  departmentUseCase,
+		divisionUseCase:                    divisionUseCase,
+		festivalItemUseCase:                festivalItemUseCase,
+		financialRecordUseCase:             financialRecordUseCase,
+		incomeUseCase:                      incomeUseCase,
+		incomeExpenditureManagementUseCase: incomeExpenditureManagementUseCase,
+		mailAuthUseCase:                    mailAuthUseCase,
+		objectUploadUseCase:                objectUploadUseCase,
+		passwordResetTokenUseCase:          passwordResetTokenUseCase,
+		sponsorUseCase:                     sponsorUseCase,
+		sponsorStyleUseCase:                sponsorStyleUseCase,
+		teacherUseCase:                     teacherUseCase,
+		userUseCase:                        userUseCase,
+		yearUseCase:                        yearUseCase,
 	}
 }
