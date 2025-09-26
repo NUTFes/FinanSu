@@ -1,12 +1,17 @@
 package handler
 
 import (
+	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/transform"
 )
 
 // router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
@@ -84,6 +89,110 @@ func (h *Handler) PutBuyReportsId(c echo.Context, id int) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, buyReportInfo)
+}
+
+// router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
+func (h *Handler) GetBuyReportsId(c echo.Context, id int) error {
+	ctx := c.Request().Context()
+
+	buyReportDetail, err := h.buyReportUseCase.GetBuyReportById(ctx, strconv.Itoa(id))
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to buy_report")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetail)
+}
+
+// router.GET(baseURL+"/buy_reports/csv", wrapper.GetBuyReportsCsvDownload)
+func (h *Handler) GetBuyReportsCsvDownload(c echo.Context, params generated.GetBuyReportsCsvDownloadParams) error {
+	ctx := c.Request().Context()
+	year := strconv.Itoa(*params.Year)
+
+	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, year)
+	if err != nil {
+		return err
+	}
+
+	// CSVデータの準備
+	records := make([][]string, 0, len(buyReportDetails)+1)
+
+	// ヘッダー
+	header := []string{"年度", "日付", "局名", "部門", "物品", "立替者", "金額", "封詰め", "清算完了"}
+	records = append(records, header)
+
+	// データ行を追加
+	for _, detail := range buyReportDetails {
+		yearStr := ""
+		if detail.Year != nil {
+			yearStr = strconv.Itoa(*detail.Year)
+		}
+
+		// 封詰めと清算完了のステータスを「未」「済」で表示
+		packedStatus := "未"
+		if detail.IsPacked {
+			packedStatus = "済"
+		}
+		settledStatus := "未"
+		if detail.IsSettled {
+			settledStatus = "済"
+		}
+
+		reportDateStr := detail.ReportDate
+		t, err := time.Parse(time.RFC3339, reportDateStr)
+		if err == nil {
+			reportDateStr = t.Format("2006年1月2日")
+		}
+
+		record := []string{
+			yearStr,
+			reportDateStr,
+			detail.FinancialRecordName,
+			detail.DivisionName,
+			detail.FestivalItemName,
+			detail.PaidBy,
+			strconv.Itoa(detail.Amount),
+			packedStatus,
+			settledStatus,
+		}
+		records = append(records, record)
+	}
+
+	// ヘッダーの設定
+	w := c.Response().Writer
+	fileName := fmt.Sprintf("purchase_reports_%s.csv", year)
+	attachment := fmt.Sprintf(`attachment; filename="%s"`, fileName)
+	w.Header().Set("Content-Type", "text/csv")
+	w.Header().Set("Content-Disposition", attachment)
+
+	if err := makeBuyReportCSV(w, records); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
+	// Shift_JISエンコーディング用の変換を設定
+	encoder := japanese.ShiftJIS.NewEncoder()
+
+	// writerに対してエンコーダを設定して変換する
+	shiftJISWriter := transform.NewWriter(writer, encoder)
+
+	// CSVライターを作成
+	csvWriter := csv.NewWriter(shiftJISWriter)
+
+	for _, record := range records {
+		if err := csvWriter.Write(record); err != nil {
+			http.Error(writer, "CSVの書き込み中にエラーが発生しました", http.StatusInternalServerError)
+			return err
+		}
+	}
+	csvWriter.Flush()
+	if err := csvWriter.Error(); err != nil {
+		http.Error(writer, "CSVのフラッシュ中にエラーが発生しました", http.StatusInternalServerError)
+		return err
+	}
+	return nil
 }
 
 type BuyReport = generated.BuyReport

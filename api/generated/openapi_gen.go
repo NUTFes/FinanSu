@@ -424,24 +424,6 @@ type GetDivisionsYearsParams struct {
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
-// PostExpensesParams defines parameters for PostExpenses.
-type PostExpensesParams struct {
-	// Name name
-	Name *string `form:"name,omitempty" json:"name,omitempty"`
-
-	// YearId year_id
-	YearId *string `form:"year_id,omitempty" json:"year_id,omitempty"`
-}
-
-// PutExpensesIdParams defines parameters for PutExpensesId.
-type PutExpensesIdParams struct {
-	// Name name
-	Name *string `form:"name,omitempty" json:"name,omitempty"`
-
-	// YearId year_id
-	YearId *string `form:"year_id,omitempty" json:"year_id,omitempty"`
-}
-
 // GetFestivalItemsParams defines parameters for GetFestivalItems.
 type GetFestivalItemsParams struct {
 	// Year year
@@ -837,33 +819,6 @@ type ServerInterface interface {
 
 	// (PUT /divisions/{id})
 	PutDivisionsId(ctx echo.Context, id int) error
-
-	// (GET /expenses)
-	GetExpenses(ctx echo.Context) error
-
-	// (POST /expenses)
-	PostExpenses(ctx echo.Context, params PostExpensesParams) error
-
-	// (GET /expenses/details)
-	GetExpensesDetails(ctx echo.Context) error
-
-	// (GET /expenses/details/{year})
-	GetExpensesDetailsYear(ctx echo.Context, year int) error
-
-	// (GET /expenses/fiscalyear/{year})
-	GetExpensesFiscalyearYear(ctx echo.Context, year int) error
-
-	// (DELETE /expenses/{id})
-	DeleteExpensesId(ctx echo.Context, id int) error
-
-	// (GET /expenses/{id})
-	GetExpensesId(ctx echo.Context, id int) error
-
-	// (PUT /expenses/{id})
-	PutExpensesId(ctx echo.Context, id int, params PutExpensesIdParams) error
-
-	// (GET /expenses/{id}/details)
-	GetExpensesIdDetails(ctx echo.Context, id int) error
 
 	// (GET /festival_items)
 	GetFestivalItems(ctx echo.Context, params GetFestivalItemsParams) error
@@ -1756,161 +1711,6 @@ func (w *ServerInterfaceWrapper) PutDivisionsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutDivisionsId(ctx, id)
-	return err
-}
-
-// GetExpenses converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpenses(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpenses(ctx)
-	return err
-}
-
-// PostExpenses converts echo context to params.
-func (w *ServerInterfaceWrapper) PostExpenses(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostExpensesParams
-	// ------------- Optional query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// ------------- Optional query parameter "year_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "year_id", ctx.QueryParams(), &params.YearId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostExpenses(ctx, params)
-	return err
-}
-
-// GetExpensesDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesDetails(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesDetails(ctx)
-	return err
-}
-
-// GetExpensesDetailsYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesDetailsYear(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "year" -------------
-	var year int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesDetailsYear(ctx, year)
-	return err
-}
-
-// GetExpensesFiscalyearYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesFiscalyearYear(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "year" -------------
-	var year int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesFiscalyearYear(ctx, year)
-	return err
-}
-
-// DeleteExpensesId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteExpensesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteExpensesId(ctx, id)
-	return err
-}
-
-// GetExpensesId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesId(ctx, id)
-	return err
-}
-
-// PutExpensesId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutExpensesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PutExpensesIdParams
-	// ------------- Optional query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// ------------- Optional query parameter "year_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "year_id", ctx.QueryParams(), &params.YearId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutExpensesId(ctx, id, params)
-	return err
-}
-
-// GetExpensesIdDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesIdDetails(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesIdDetails(ctx, id)
 	return err
 }
 
@@ -3090,15 +2890,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/divisions/:id", wrapper.DeleteDivisionsId)
 	router.GET(baseURL+"/divisions/:id", wrapper.GetDivisionsId)
 	router.PUT(baseURL+"/divisions/:id", wrapper.PutDivisionsId)
-	router.GET(baseURL+"/expenses", wrapper.GetExpenses)
-	router.POST(baseURL+"/expenses", wrapper.PostExpenses)
-	router.GET(baseURL+"/expenses/details", wrapper.GetExpensesDetails)
-	router.GET(baseURL+"/expenses/details/:year", wrapper.GetExpensesDetailsYear)
-	router.GET(baseURL+"/expenses/fiscalyear/:year", wrapper.GetExpensesFiscalyearYear)
-	router.DELETE(baseURL+"/expenses/:id", wrapper.DeleteExpensesId)
-	router.GET(baseURL+"/expenses/:id", wrapper.GetExpensesId)
-	router.PUT(baseURL+"/expenses/:id", wrapper.PutExpensesId)
-	router.GET(baseURL+"/expenses/:id/details", wrapper.GetExpensesIdDetails)
 	router.GET(baseURL+"/festival_items", wrapper.GetFestivalItems)
 	router.POST(baseURL+"/festival_items", wrapper.PostFestivalItems)
 	router.GET(baseURL+"/festival_items/details/:user_id", wrapper.GetFestivalItemsDetailsUserId)

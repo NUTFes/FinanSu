@@ -81,6 +81,30 @@ func (h *Handler) PutFestivalItemsId(c echo.Context, id int) error {
 	return c.JSON(http.StatusOK, updatedFestivalItem)
 }
 
+// GetFestivalItemsId
+func (h *Handler) GetFestivalItemsId(c echo.Context, id int) error {
+	ctx := c.Request().Context()
+	idStr := strconv.Itoa(id)
+	festivalItem, err := h.festivalItemUseCase.GetFestivalItem(ctx, idStr)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, festivalItem)
+}
+
+// GetFestivalItemsUsers
+func (h *Handler) GetFestivalItemsUsers(c echo.Context, params generated.GetFestivalItemsUsersParams) error {
+	ctx := c.Request().Context()
+	year := strconv.Itoa(*params.Year)
+	divisionId := strconv.Itoa(params.DivisionId)
+
+	festivalItemOptions, err := h.festivalItemUseCase.GetFestivalItemOptions(ctx, year, divisionId)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, festivalItemOptions)
+}
+
 type FestivalItemDetails = generated.FestivalItemDetails
 type FestivalItem = generated.FestivalItem
 type FestivalItemsForMyPage = generated.FestivalItemsForMyPage
