@@ -5,7 +5,7 @@ import { EditButton } from '@components/common';
 import EditModal from '@components/sponsorstyles/EditModal';
 import { SponsorStyle } from '@type/common';
 
-interface Props {
+export interface Props {
   children?: React.ReactNode;
   id: number;
   sponsorStyle: SponsorStyle;
