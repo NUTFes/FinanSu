@@ -1,4 +1,5 @@
 # アプリコンテナ=view,api、DBコンテナ=db,minio
+include finansu.env
 
 # アプリコンテナのイメージのビルド
 build:
@@ -22,12 +23,20 @@ down:
 run-db:
 	docker compose -f compose.db.yml up -d
 
+# dbコンテナの起動 + マイグレーション + シードデータ投入
+run-db-init:
+	docker compose -f compose.db.yml up -d
+	./scripts/wait-for-mysql.sh
+	make migrate
+	make seed-db
+	@echo "Database initialization completed!"
+
 # dbコンテナの停止(ずっと起動したくない時はこっちで停止)
 stop-db:
 	docker compose -f compose.db.yml down
 
-# ビルドと起動
 build-run:
+# ビルドと起動
 	docker compose -f compose.db.yml up -d
 	docker compose up --build
 
@@ -37,7 +46,7 @@ del-vol:
 
 # 生成したコンテナ、イメージ、ボリューム、ネットワークを一括削除
 del-all:
-	compose down --rmi all --volumes --remove-orphans
+	docker compose down --rmi all --volumes --remove-orphans
 
 # ボリューム削除→ビルド→起動
 run-rebuild:
@@ -46,7 +55,7 @@ run-rebuild:
 
 # dbとminioの停止とボリューム削除(dbを初期化したい時)
 del-db:
-	compose -f compose.db.yml down --volumes
+	docker compose -f compose.db.yml down --volumes
 
 # apiの起動(db起動後)
 run-api:
@@ -97,7 +106,7 @@ run-swagger:
 	docker compose -f compose.swagger.yml up -d
 
 run-all:
-	make run-db
+	make run-db-init
 	make run
 	make run-swagger
 
@@ -106,3 +115,26 @@ gen-er:
 
 format:
 	docker compose run --rm view npm run format
+
+# マイグレーションの実行
+migrate:
+	docker compose -f compose.migrate.yml run --rm migrate \
+		--path /migrations \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
+		up
+
+# マイグレーションの実行(ダウングレード)
+migrate-down:
+	docker compose -f compose.migrate.yml run --rm migrate \
+		--path /migrations \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
+		down
+
+# マイグレーションファイルの作成
+create-migration:
+	./scripts/create_migration.sh
+
+# シードデータの投入
+seed-db:
+	docker compose -f compose.db.yml run --rm db bash ./scripts/seed.sh
+

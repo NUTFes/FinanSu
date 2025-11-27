@@ -1,4 +1,195 @@
+-- TODO: シードを整理する
 use finansu_db;
+
+INSERT INTO
+    years (year)
+VALUES
+    (2025);
+
+-- ユーザーを一括で挿入
+INSERT INTO
+    users (name, bureau_id, role_id)
+VALUES
+    -- 一般ユーザー
+    ('技大太郎1', 1, 1),
+    -- 管理者ユーザー
+    ('技大太郎2', 6, 2),
+    -- 財務局長
+    ('技大太郎3', 3, 3),
+    -- 財務局員
+    ('技大太郎4', 3, 4);
+
+INSERT INTO
+    financial_records (name, year_id)
+VALUES
+    ('総務局', 1),
+    ('渉外局', 1);
+
+INSERT INTO
+    divisions (name, financial_record_id)
+VALUES
+    ('衛生管理部門', 1),
+    ('国際部門', 1),
+    ('広報部門', 2),
+    ('ゲスト部門', 2);
+
+INSERT INTO
+    festival_items (name, memo, division_id)
+VALUES
+    ('農ポリ', '', 1),
+    ('養生テープ', '', 1),
+    ('ラミ', '', 2),
+    ('広報物郵送費', '', 3),
+    ('折込チラシ用費', '', 3),
+    ('ゲストブッキング費', '', 4),
+    ('ゲスト用菓子折り費', '', 4);
+
+INSERT INTO
+    item_budgets (amount, festival_item_id)
+VALUES
+    (10000, 1),
+    (10000, 2),
+    (10000, 3),
+    (20000, 4),
+    (50000, 5),
+    (1500000, 6),
+    (10000, 7);
+
+INSERT INTO
+    user_groups (user_id, group_id)
+VALUES
+    (1, 1),
+    (1, 2),
+    (2, 3);
+
+INSERT INTO
+    buy_reports (festival_item_id, amount, memo, paid_by)
+VALUES
+    (1, 5000, '', 'テスト太郎'),
+    (1, 4000, '', 'テスト太郎'),
+    (2, 5000, '', 'テスト太郎'),
+    (3, 2000, '', 'テスト2太郎'),
+    (3, 2000, '', 'テスト2太郎'),
+    (3, 2000, '', 'テスト2太郎'),
+    (4, 10000, '', 'テスト3太郎');
+
+INSERT INTO
+    payment_receipts (buy_report_id, bucket_name, file_name, file_type, remark)
+VALUES
+    (1, 'payment-receipts', 'receipt-1.jpg', 'image/jpeg', ''),
+    (2, 'payment-receipts', 'receipt-2.jpg', 'image/jpeg', ''),
+    (3, 'payment-receipts', 'receipt-3.jpg', 'image/jpeg', '');
+
+INSERT INTO
+    buy_statuses (buy_report_id, is_packed, is_settled)
+VALUES
+    (1, TRUE, TRUE),
+    (2, TRUE, FALSE),
+    (3, TRUE, FALSE),
+    (4, FALSE, FALSE),
+    (5, FALSE, FALSE),
+    (6, TRUE, FALSE),
+    (7, FALSE, FALSE);
+
+INSERT INTO
+    income_expenditure_managements (amount, log_category, year_id, receive_option, is_checked, created_at, updated_at)
+VALUES
+    (50000, "income", 1, "hand", FALSE, NOW(), NOW()),
+    (100000, "sponsor's income", 1, "transfer", FALSE, NOW(), NOW()),
+    (5000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
+    (4000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
+    (5000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
+    (2000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
+    (2000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
+    (2000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
+    (10000, "expenditure", 1, NULL, FALSE, NOW(), NOW());
+
+INSERT INTO
+    buy_report_income_expenditure_managements (buy_report_id, income_expenditure_management_id, created_at, updated_at)
+VALUES
+    (1, 3, NOW(), NOW()), -- buy_reports.id: 1 と income_expenditure_managements.id: 3 の対応
+    (2, 4, NOW(), NOW()), -- buy_reports.id: 2 と income_expenditure_managements.id: 4 の対応
+    (3, 5, NOW(), NOW()), -- buy_reports.id: 3 と income_expenditure_managements.id: 5 の対応
+    (4, 6, NOW(), NOW()), -- buy_reports.id: 4 と income_expenditure_managements.id: 6 の対応
+    (5, 7, NOW(), NOW()), -- buy_reports.id: 5 と income_expenditure_managements.id: 7 の対応
+    (6, 8, NOW(), NOW()), -- buy_reports.id: 6 と income_expenditure_managements.id: 8 の対応
+    (7, 9, NOW(), NOW());
+
+INSERT INTO
+    activities (user_id, is_done, sponsor_id, feature, expense, remark, design, url)
+VALUES
+    (1, false, 1, "なし", 11, "", 1, ""),
+    (2, false, 2, "クーポン", 22, "味玉or大盛無料", 1, "");
+
+INSERT INTO
+    activity_styles (activity_id, sponsor_style_id)
+VALUES
+    (1, 1),
+    (2, 2),
+    (1, 2),
+    (2, 1);
+
+INSERT INTO
+    bureaus (name)
+VALUES
+    ('総務局'),
+    ('渉外局'),
+    ('財務局'),
+    ('企画局'),
+    ('制作局'),
+    ('情報局');
+
+INSERT INTO
+    departments (name)
+VALUES
+    ('電気電子情報'),
+    ('物質生物'),
+    ('機械創造'),
+    ('環境社会基盤'),
+    ('情報・経営システム'),
+    ('基盤共通教育'),
+    ('原子力システム安全'),
+    ('技術科学イノベーション'),
+    ('システム安全'),
+    ('技術支援'),
+    ('その他'),
+    ('学長・事務'),
+    ('FL');
+
+INSERT INTO
+    mail_auth (email, password, user_id)
+VALUES
+    ("test1@example.com", "$2a$10$vtmStGYxc8/HdhBYJWyztOMrdpw1QaKxsuGdi72i8iqeyp.1997ke", 1),
+    ("test2@example.com", "$2a$10$vtmStGYxc8/HdhBYJWyztOMrdpw1QaKxsuGdi72i8iqeyp.1997ke", 2),
+    ("test3@example.com", "$2a$10$vtmStGYxc8/HdhBYJWyztOMrdpw1QaKxsuGdi72i8iqeyp.1997ke", 3),
+    ("test4@example.com", "$2a$10$vtmStGYxc8/HdhBYJWyztOMrdpw1QaKxsuGdi72i8iqeyp.1997ke", 4);
+
+INSERT INTO
+    roles (name)
+VALUES
+    ('user'),
+    ('admin'),
+    ('Finance Director'),
+    ('Finance Staff');
+
+INSERT INTO
+    sponsor_styles (style, feature, price)
+VALUES
+    ('8分の1', 'モノクロ', 3000),
+    ('8分の1', 'カラー', 5000),
+    ('4分の1', 'モノクロ', 8000),
+    ('4分の1', 'カラー', 10000),
+    ('2分の1', 'モノクロ', 12000),
+    ('2分の1', 'カラー', 15000),
+    ('1ページ', 'モノクロ', 20000),
+    ('2ページ', 'カラー', 30000),
+    ('企業ブース', 'なし', 30000);
+
+INSERT INTO
+    teachers (name, position, department_id, room, is_black, remark)
+VALUES
+    ('test-name', 'test-position', 1, '605', false, 'test-remark'),
+    ('test-teacher', 'test-position2', 1, '605', false, 'test-remark');
 
 INSERT INTO
     teachers (name, position, department_id, room, is_black, remark)
@@ -242,3 +433,62 @@ VALUES
     ('生物系', '系事務室', 12, '', false, ''),
     ('環境事務室', '系事務室', 12, '', false, ''),
     ('芳賀 仁', '助教', 12, '電気2号棟-364', false, '同窓会代表。局長が挨拶へ。学内募金は毎回断っている');
+
+INSERT INTO
+    year_periods (year_id, started_at, ended_at)
+VALUES
+    (1, '2024-11-15 00:00:00', '2025-11-15 00:00:00');
+
+INSERT INTO
+    incomes (name, created_at, updated_at)
+VALUES
+    ("教育振興会費", NOW(), NOW()),
+    ("学内募金", NOW(), NOW()),
+    ("同窓会費", NOW(), NOW()),
+    ("雑収入", NOW(), NOW()),
+    ("繰越金", NOW(), NOW()),
+    ("企業協賛金", NOW(), NOW());
+
+INSERT INTO
+    buildings (name)
+VALUES
+    ('機械・建設棟'),
+    ('電気棟'),
+    ('生物棟'),
+    ('環境・システム棟'),
+    ('物質・材料経営情報棟'),
+    ('総合研究棟'),
+    ('原子力・システム安全棟'),
+    ('事務局棟'),
+    ('極限エネルギ密度工学研究センター'),
+    ('工作センター'),
+    ('大型実験棟'),
+    ('分析計測センター'),
+    ('その他');
+
+INSERT INTO
+    building_units (building_id, unit_number)
+VALUES
+    (1, "1号棟"),
+    (1, "2号棟"),
+    (1, "3号棟"),
+    (2, "1号棟"),
+    (2, "2号棟"),
+    (3, "1号棟"),
+    (4, "1号棟"),
+    (5, "1号棟"),
+    (5, "2号棟"),
+    (6, "1号棟"),
+    (7, "1号棟"),
+    (8, "1号棟"),
+    (9, "1号棟"),
+    (10, "1号棟"),
+    (11, "1号棟"),
+    (12, "1号棟"),
+    (13, "1号棟");
+
+INSERT INTO
+    campus_donations (user_id, teacher_id, year_id, price, remark, is_first_check, is_last_check, received_at)
+VALUES
+    (1, 1, 1, 2000, "nothing", false, false, '2023-02-22'),
+    (2, 2, 1, 2000, "nothing", false, false, '2022-02-22');
