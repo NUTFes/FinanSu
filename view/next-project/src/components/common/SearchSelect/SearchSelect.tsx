@@ -1,5 +1,5 @@
 import { Dispatch, useEffect, useState, SetStateAction } from 'react';
-import Select from 'react-select';
+import Select, { type ActionMeta } from 'react-select';
 
 interface Option {
   value: string;
@@ -35,7 +35,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
       value={selected}
       noOptionsMessage={() => noOptionMessage}
       placeholder={placeholder}
-      onChange={(option, actionMeta) => {
+      onChange={(option: Option | null, actionMeta: ActionMeta<Option>) => {
         switch (actionMeta.action) {
           case 'select-option':
             if (option) {

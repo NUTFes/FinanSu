@@ -10,7 +10,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function Checkbox(props: Props): JSX.Element {
+function Checkbox(props: Props): React.ReactElement {
   const className = '' + (props.className || '');
   return (
     <input

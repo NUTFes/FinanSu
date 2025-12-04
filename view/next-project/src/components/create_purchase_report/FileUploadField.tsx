@@ -6,7 +6,7 @@ import { GoPlus } from 'react-icons/go';
 interface FileUploadFieldProps {
   isEditMode: boolean;
   uploadedFile: File | null;
-  fileInputRef: RefObject<HTMLInputElement>;
+  fileInputRef: RefObject<HTMLInputElement | null>;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   validationError?: string;
 }

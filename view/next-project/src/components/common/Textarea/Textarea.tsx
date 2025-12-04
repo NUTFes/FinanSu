@@ -14,7 +14,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function Textarea(props: Props): JSX.Element {
+function Textarea(props: Props): React.ReactElement {
   const className =
     'rounded-3xl h-32 border border-primary-1 py-2 px-4' +
     (props.className ? ` ${props.className}` : '');

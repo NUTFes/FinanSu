@@ -5,7 +5,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function Tooltip(props: Props): JSX.Element {
+function Tooltip(props: Props): React.ReactElement {
   return (
     <div className='group relative flex flex-col items-center'>
       {props.children}

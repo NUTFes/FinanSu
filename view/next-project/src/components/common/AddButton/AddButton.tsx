@@ -11,7 +11,7 @@ interface Props {
   disabled?: boolean;
 }
 
-function AddButton(props: Props): JSX.Element {
+function AddButton(props: Props): React.ReactElement {
   return (
     <PrimaryButton
       className={clsx(props.className)}

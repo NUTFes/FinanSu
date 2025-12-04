@@ -7,7 +7,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function Button(props: Props): JSX.Element {
+function Button(props: Props): React.ReactElement {
   const className =
     'px-4 py-2 text-white-0 font-bold text-md rounded-lg' +
     (props.className ? ` ${props.className}` : '');

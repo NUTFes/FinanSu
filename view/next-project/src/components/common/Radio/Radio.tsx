@@ -10,7 +10,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function Radio(props: Props): JSX.Element {
+function Radio(props: Props): React.ReactElement {
   const className = '' + (props.className ? ` ${props.className}` : '');
   return (
     <input

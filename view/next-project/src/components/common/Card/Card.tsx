@@ -7,7 +7,7 @@ interface Props {
   onClick?: () => void;
 }
 
-function Card(props: Props): JSX.Element {
+function Card(props: Props): React.ReactElement {
   return (
     <div className={clsx('mx-auto', props.w ? props.w : 'md:w-4/5')} onClick={props.onClick}>
       <div

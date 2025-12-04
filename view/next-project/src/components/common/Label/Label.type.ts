@@ -6,4 +6,4 @@ export type LabelProps = {
   color?: string;
   padding?: 'default' | 'none' | 'small' | 'large';
   corner?: 'square' | 'round';
-} & Omit<JSX.IntrinsicElements['div'], 'color'>;
+} & Omit<React.JSX.IntrinsicElements['div'], 'color'>;

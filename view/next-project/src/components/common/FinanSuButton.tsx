@@ -12,7 +12,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function FinanSuButton(props: Props): JSX.Element {
+function FinanSuButton(props: Props): React.ReactElement {
   let sizeClass = '';
   let colorClass = '';
   let shapeClass = '';

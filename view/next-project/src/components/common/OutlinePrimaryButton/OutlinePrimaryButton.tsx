@@ -7,7 +7,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function PrimaryButton(props: Props): JSX.Element {
+function PrimaryButton(props: Props): React.ReactElement {
   const className =
     'flex justify-center px-4 py-2 text-primary-1 font-bold text-md rounded-lg bg-white-0 border border-primary-1 hover:bg-white-100 hover:text-primary-2 hover:border-primary-2' +
     (props.className ? ` ${props.className}` : '');

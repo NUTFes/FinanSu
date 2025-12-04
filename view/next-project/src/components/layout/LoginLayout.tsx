@@ -5,7 +5,7 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
-function LoginLayout({ children }: LayoutProps): JSX.Element {
+function LoginLayout({ children }: LayoutProps): React.ReactElement {
   return (
     <>
       <div className='flex h-16 w-full items-center justify-center bg-primary-4'>

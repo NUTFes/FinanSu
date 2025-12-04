@@ -44,7 +44,7 @@ const DeActiveContent = React.memo(function activeContent(props: ContentProps) {
   );
 });
 
-function Stepper(props: Props): JSX.Element {
+function Stepper(props: Props): React.ReactElement {
   const stepNum = Number(props.stepNum);
   const stepNumArray = [];
   for (let i = 1; i <= stepNum; i++) {

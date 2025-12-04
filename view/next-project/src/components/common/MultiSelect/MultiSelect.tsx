@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Select from 'react-select';
+import Select, { type ActionMeta } from 'react-select';
 
 interface Option {
   value: string;
@@ -27,7 +27,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       options={options}
       value={selected}
       placeholder={placeholder}
-      onChange={(_, actionMeta) => {
+      onChange={(_: unknown, actionMeta: ActionMeta<Option>) => {
         switch (actionMeta.action) {
           case 'select-option':
             if (actionMeta.option) {

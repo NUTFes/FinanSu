@@ -7,7 +7,7 @@ interface Props {
   href?: string;
 }
 
-function Link(props: Props): JSX.Element {
+function Link(props: Props): React.ReactElement {
   const className =
     'mt-7 underline hover:text-grey-300' + (props.className ? ` ${props.className}` : '');
   return (

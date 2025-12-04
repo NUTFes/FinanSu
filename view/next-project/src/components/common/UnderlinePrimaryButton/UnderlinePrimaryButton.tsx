@@ -7,7 +7,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-function UnderlinePrimaryButton(props: Props): JSX.Element {
+function UnderlinePrimaryButton(props: Props): React.ReactElement {
   const className =
     'px-3 py-1 text-primary-1 font-bold text-md bg-white-0 border border-t-white-0 border-x-white-0 border-b-primary-1 hover:bg-white-100 hover:text-primary-2 hover:border-b-primary-2' +
     (props.className ? ` ${props.className}` : '');
