@@ -158,6 +158,28 @@
             <column ascending="true" name="buy_report_id"/>
          </index>
       </table>
+      <table catalog="finansu_db" name="campus_donations" numRows="2" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="teacher_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="year_id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
+            <parent catalog="finansu_db" column="id" foreignKey="campus_donations_ibfk_1" implied="false" onDeleteCascade="true" table="years"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="price" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="remark" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="is_first_check" nullable="true" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="is_last_check" nullable="true" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="received_at" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="9" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="10" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="year_id" unique="false">
+            <column ascending="true" name="year_id"/>
+         </index>
+      </table>
       <table catalog="finansu_db" name="departments" numRows="13" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
@@ -241,22 +263,6 @@
          </index>
          <index name="building_unit_id" unique="false">
             <column ascending="true" name="building_unit_id"/>
-         </index>
-      </table>
-      <table catalog="finansu_db" name="fund_informations" numRows="2" remarks="" type="TABLE">
-         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="teacher_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="price" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="remark" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="is_first_check" nullable="true" remarks="" size="1" type="BIT" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="is_last_check" nullable="true" remarks="" size="1" type="BIT" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="received_at" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="8" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="9" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
-         <primaryKey column="id" sequenceNumberInPK="1"/>
-         <index name="PRIMARY" unique="true">
-            <column ascending="true" name="id"/>
          </index>
       </table>
       <table catalog="finansu_db" name="income_expenditure_managements" numRows="9" remarks="" type="TABLE">
@@ -550,7 +556,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="sponsors" numRows="3" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="sponsors" numRows="0" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="tel" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
@@ -648,6 +654,7 @@
       </table>
       <table catalog="finansu_db" name="years" numRows="3" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
+            <child catalog="finansu_db" column="year_id" foreignKey="campus_donations_ibfk_1" implied="false" onDeleteCascade="true" table="campus_donations"/>
             <child catalog="finansu_db" column="year_id" foreignKey="financial_records_ibfk_1" implied="false" onDeleteCascade="true" table="financial_records"/>
             <child catalog="finansu_db" column="year_id" foreignKey="income_expenditure_managements_ibfk_1" implied="false" onDeleteCascade="true" table="income_expenditure_managements"/>
          </column>
