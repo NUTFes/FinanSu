@@ -103,6 +103,12 @@ type BuyReportInformation struct {
 // BuyReportInformationStatus defines model for BuyReportInformation.Status.
 type BuyReportInformationStatus string
 
+// BuyReportSummary 購入報告の合計情報
+type BuyReportSummary struct {
+	UnpackedAmountTotal  int `json:"unpackedAmountTotal"`
+	UnsettledAmountTotal int `json:"unsettledAmountTotal"`
+}
+
 // BuyReportWithDivisionId 購入報告の際のパラメータ、部門と物品IDを含む
 type BuyReportWithDivisionId struct {
 	Amount         *int    `json:"amount,omitempty"`
@@ -410,6 +416,24 @@ type GetBuyReportsCsvDownloadParams struct {
 type GetBuyReportsDetailsParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordName financial_record_name
+	FinancialRecordName *string `form:"financial_record_name,omitempty" json:"financial_record_name,omitempty"`
+
+	// PaidBy paid_by
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+}
+
+// GetBuyReportsSummaryParams defines parameters for GetBuyReportsSummary.
+type GetBuyReportsSummaryParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordName financial_record_name
+	FinancialRecordName *string `form:"financial_record_name,omitempty" json:"financial_record_name,omitempty"`
+
+	// PaidBy paid_by
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
 }
 
 // PutBuyReportsIdMultipartBody defines parameters for PutBuyReportsId.
@@ -839,6 +863,9 @@ type ServerInterface interface {
 
 	// (GET /buy_reports/details)
 	GetBuyReportsDetails(ctx echo.Context, params GetBuyReportsDetailsParams) error
+
+	// (GET /buy_reports/summary)
+	GetBuyReportsSummary(ctx echo.Context, params GetBuyReportsSummaryParams) error
 
 	// (DELETE /buy_reports/{id})
 	DeleteBuyReportsId(ctx echo.Context, id int) error
@@ -1712,8 +1739,54 @@ func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
+	// ------------- Optional query parameter "financial_record_name" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_name", ctx.QueryParams(), &params.FinancialRecordName)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_name: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetBuyReportsDetails(ctx, params)
+	return err
+}
+
+// GetBuyReportsSummary converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsSummary(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetBuyReportsSummaryParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Optional query parameter "financial_record_name" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_name", ctx.QueryParams(), &params.FinancialRecordName)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_name: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetBuyReportsSummary(ctx, params)
 	return err
 }
 
@@ -3366,6 +3439,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
 	router.GET(baseURL+"/buy_reports/csv/download", wrapper.GetBuyReportsCsvDownload)
 	router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
+	router.GET(baseURL+"/buy_reports/summary", wrapper.GetBuyReportsSummary)
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)

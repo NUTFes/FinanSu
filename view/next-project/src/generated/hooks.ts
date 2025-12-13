@@ -17,6 +17,7 @@ import type {
   ActivityStyle,
   BuyReport,
   BuyReportDetail,
+  BuyReportSummary,
   BuyReportWithDivisionId,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
@@ -75,6 +76,7 @@ import type {
   GetBureausId200,
   GetBuyReportsCsvDownloadParams,
   GetBuyReportsDetailsParams,
+  GetBuyReportsSummaryParams,
   GetDepartments200,
   GetDepartmentsId200,
   GetDivisionsParams,
@@ -2603,6 +2605,79 @@ export const useGetBuyReportsDetails = <TError = unknown>(
   const swrKey =
     swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsDetailsKey(params) : null));
   const swrFn = () => getBuyReportsDetails(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 購入報告の未精算・未封詰め合計の取得
+ */
+export type getBuyReportsSummaryResponse200 = {
+  data: BuyReportSummary;
+  status: 200;
+};
+
+export type getBuyReportsSummaryResponseComposite = getBuyReportsSummaryResponse200;
+
+export type getBuyReportsSummaryResponse = getBuyReportsSummaryResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetBuyReportsSummaryUrl = (params?: GetBuyReportsSummaryParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/buy_reports/summary?${stringifiedParams}`
+    : `/buy_reports/summary`;
+};
+
+export const getBuyReportsSummary = async (
+  params?: GetBuyReportsSummaryParams,
+  options?: RequestInit,
+): Promise<getBuyReportsSummaryResponse> => {
+  return customFetch<getBuyReportsSummaryResponse>(getGetBuyReportsSummaryUrl(params), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetBuyReportsSummaryKey = (params?: GetBuyReportsSummaryParams) =>
+  [`/buy_reports/summary`, ...(params ? [params] : [])] as const;
+
+export type GetBuyReportsSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBuyReportsSummary>>
+>;
+export type GetBuyReportsSummaryQueryError = unknown;
+
+export const useGetBuyReportsSummary = <TError = unknown>(
+  params?: GetBuyReportsSummaryParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsSummary>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsSummaryKey(params) : null));
+  const swrFn = () => getBuyReportsSummary(params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

@@ -8,6 +8,7 @@ import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrima
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
+  useGetBuyReportsSummary,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
@@ -15,6 +16,7 @@ import type {
   GetBuyReportsDetailsParams,
   BuyReportDetail,
   PutBuyReportStatusBuyReportIdBody,
+  BuyReportSummary,
 } from '@/generated/model';
 import { userAtom } from '@/store/atoms';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
@@ -37,21 +39,37 @@ export default function PurchaseReports() {
     if (yearPeriods && yearPeriods.length > 0) {
       const latestYear = Math.max(...yearPeriods.map((period) => period.year));
       setSelectedYear(latestYear);
+      setAppliedParams({ year: latestYear });
     }
   }, [yearPeriods]);
 
   const [selectedYear, setSelectedYear] = useState<number>(
     yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
   );
-  const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = { year: selectedYear };
+  const [selectedFinancialRecord, setSelectedFinancialRecord] = useState<string>('');
+  const [selectedPaidBy, setSelectedPaidBy] = useState<string>('');
+  const [appliedParams, setAppliedParams] = useState<GetBuyReportsDetailsParams>({});
 
   const {
     data: buyReportsData,
     isLoading: isBuyReportsLoading,
     error: buyReportsError,
     mutate: mutateBuyReportData,
-  } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
+  } = useGetBuyReportsDetails(appliedParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+
+  const {
+    data: summaryData,
+    isLoading: isSummaryLoading,
+    error: summaryError,
+    mutate: mutateSummary,
+  } = useGetBuyReportsSummary(appliedParams, {
+    swr: { enabled: Boolean(appliedParams.year) },
+  });
+  const buyReportsSummary: BuyReportSummary = summaryData?.data ?? {
+    unsettledAmountTotal: 0,
+    unpackedAmountTotal: 0,
+  };
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
@@ -127,10 +145,20 @@ export default function PurchaseReports() {
 
     try {
       await trigger(putBuyReportStatusBuyReportIdBody);
+      mutateBuyReportData();
+      mutateSummary();
     } catch {
       console.error('Failed to update buy_reports:', statusError);
     }
-  }, [buyReportId, sealChecks, settlementChecks, trigger, statusError]);
+  }, [
+    buyReportId,
+    sealChecks,
+    settlementChecks,
+    trigger,
+    statusError,
+    mutateBuyReportData,
+    mutateSummary,
+  ]);
 
   useEffect(() => {
     updateStatus();
@@ -138,10 +166,23 @@ export default function PurchaseReports() {
 
   const onSuccess = useCallback(() => {
     mutateBuyReportData();
-  }, [mutateBuyReportData]);
+    mutateSummary();
+  }, [mutateBuyReportData, mutateSummary]);
+
+  const buildQueryString = (params: GetBuyReportsDetailsParams) => {
+    const searchParams = new URLSearchParams();
+    if (params.year) searchParams.append('year', String(params.year));
+    if (params.financial_record_name)
+      searchParams.append('financial_record_name', params.financial_record_name);
+    if (params.paid_by) searchParams.append('paid_by', params.paid_by);
+    const query = searchParams.toString();
+    return query ? `?${query}` : '';
+  };
 
   const downloadCSV = async () => {
-    const url = `${process.env.CSR_API_URI}/buy_reports/csv/download?year=${selectedYear}`;
+    const url = `${process.env.CSR_API_URI}/buy_reports/csv/download${buildQueryString(
+      appliedParams,
+    )}`;
     try {
       const response = await fetch(url);
       const blob = await response.blob();
@@ -151,8 +192,29 @@ export default function PurchaseReports() {
     }
   };
 
-  if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
-  if (yearPeriodsError || buyReportsError) return router.push('/500');
+  const applyFilters = () => {
+    setAppliedParams({
+      year: selectedYear,
+      financial_record_name: selectedFinancialRecord || undefined,
+      paid_by: selectedPaidBy || undefined,
+    });
+  };
+
+  const financialRecordOptions = useMemo(() => {
+    const names = buyReports.map((report) => report.financialRecordName).filter(Boolean);
+    return Array.from(new Set(names));
+  }, [buyReports]);
+
+  const paidByOptions = useMemo(() => {
+    const filtered = buyReports.filter((report) =>
+      selectedFinancialRecord ? report.financialRecordName === selectedFinancialRecord : true,
+    );
+    const names = filtered.map((report) => report.paidBy).filter(Boolean);
+    return Array.from(new Set(names));
+  }, [buyReports, selectedFinancialRecord]);
+
+  if (isYearPeriodsLoading || isBuyReportsLoading || isSummaryLoading) return <Loading />;
+  if (yearPeriodsError || buyReportsError || summaryError) return router.push('/500');
 
   return (
     <MainLayout>
@@ -163,9 +225,11 @@ export default function PurchaseReports() {
               <Title title={'購入報告一覧'} />
               <select
                 className='border-b border-black-0'
-                defaultValue={selectedYear}
+                value={selectedYear}
                 onChange={async (e) => {
                   setSelectedYear(Number(e.target.value));
+                  setSelectedFinancialRecord('');
+                  setSelectedPaidBy('');
                 }}
               >
                 {yearPeriods &&
@@ -181,6 +245,53 @@ export default function PurchaseReports() {
                 CSVダウンロード
                 <TbDownload className='ml-2' size={20} />
               </PrimaryButton>
+            </div>
+            <div className='mt-4 flex flex-col items-start gap-4 md:flex-row md:items-center'>
+              <div className='flex items-center gap-2'>
+                <span className='text-sm text-black-600'>局名</span>
+                <select
+                  className='border-b border-black-0'
+                  value={selectedFinancialRecord}
+                  onChange={(e) => {
+                    setSelectedFinancialRecord(e.target.value);
+                    setSelectedPaidBy('');
+                  }}
+                >
+                  <option value=''>全て</option>
+                  {financialRecordOptions.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='flex items-center gap-2'>
+                <span className='text-sm text-black-600'>氏名</span>
+                <select
+                  className='border-b border-black-0'
+                  value={selectedPaidBy}
+                  onChange={(e) => setSelectedPaidBy(e.target.value)}
+                  disabled={!selectedFinancialRecord}
+                >
+                  <option value=''>全て</option>
+                  {paidByOptions.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <PrimaryButton className='w-fit items-center' onClick={applyFilters}>
+                ソート/絞り込み
+              </PrimaryButton>
+            </div>
+            <div className='mt-4 flex flex-col gap-2 md:flex-row md:items-center md:gap-6'>
+              <div className='text-sm text-black-600'>
+                未精算金額: {buyReportsSummary.unsettledAmountTotal.toLocaleString()}円
+              </div>
+              <div className='text-sm text-black-600'>
+                未封詰め金額: {buyReportsSummary.unpackedAmountTotal.toLocaleString()}円
+              </div>
             </div>
           </div>
           <div className='mt-2 flex-1 overflow-auto p-4 md:p-8'>

@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type GetBuyReportsDetailsParams = {
+export type GetBuyReportsSummaryParams = {
   /**
    * year
    */

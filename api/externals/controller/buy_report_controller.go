@@ -24,6 +24,7 @@ type BuyReportController interface {
 	UpdateBuyReport(echo.Context) error
 	DeleteBuyReport(echo.Context) error
 	IndexBuyReport(echo.Context) error
+	GetBuyReportSummary(echo.Context) error
 	GetBuyReportById(echo.Context) error
 	UpdateBuyReportStatus(echo.Context) error
 	GetBuyReportsCsvDownload(echo.Context) error
@@ -102,8 +103,10 @@ func (s *buyReportController) DeleteBuyReport(c echo.Context) error {
 func (s *buyReportController) IndexBuyReport(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
+	financialRecordName := c.QueryParam("financial_record_name")
+	paidBy := c.QueryParam("paid_by")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordName, paidBy)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "failed to buy_reports")
 	}
@@ -145,8 +148,10 @@ func (s *buyReportController) UpdateBuyReportStatus(c echo.Context) error {
 func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
+	financialRecordName := c.QueryParam("financial_record_name")
+	paidBy := c.QueryParam("paid_by")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordName, paidBy)
 	if err != nil {
 		return err
 	}
@@ -209,6 +214,20 @@ func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 	return nil
 }
 
+func (s *buyReportController) GetBuyReportSummary(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+	financialRecordName := c.QueryParam("financial_record_name")
+	paidBy := c.QueryParam("paid_by")
+
+	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordName, paidBy)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to buy_report summary")
+	}
+
+	return c.JSON(http.StatusOK, summary)
+}
+
 func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
 	// Shift_JISエンコーディング用の変換を設定
 	encoder := japanese.ShiftJIS.NewEncoder()
@@ -235,4 +254,5 @@ func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
 
 type BuyReport = generated.BuyReport
 type BuyReportDetails = []generated.BuyReportDetail
+type BuyReportSummary = generated.BuyReportSummary
 type BuyReportStatusRequestBody = generated.PutBuyReportStatusBuyReportIdJSONRequestBody

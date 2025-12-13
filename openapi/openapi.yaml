@@ -773,6 +773,16 @@ paths:
           description: year
           schema:
             type: integer
+        - name: financial_record_name
+          in: query
+          description: financial_record_name
+          schema:
+            type: string
+        - name: paid_by
+          in: query
+          description: paid_by
+          schema:
+            type: string
       responses:
         "200":
           description: buy_reportの一覧を取得
@@ -782,6 +792,34 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/buyReportDetail"
+  /buy_reports/summary:
+    get:
+      tags:
+        - buy_report
+      description: 購入報告の未精算・未封詰め合計の取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: financial_record_name
+          in: query
+          description: financial_record_name
+          schema:
+            type: string
+        - name: paid_by
+          in: query
+          description: paid_by
+          schema:
+            type: string
+      responses:
+        "200":
+          description: buy_reportの合計を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReportSummary"
   /buy_report/status/{buy_report_id}:
     put:
       tags:
@@ -2885,6 +2923,19 @@ components:
         - paidBy
         - reportDate
         - filePath
+    buyReportSummary:
+      description: 購入報告の合計情報
+      type: object
+      properties:
+        unsettledAmountTotal:
+          type: integer
+          example: 12000
+        unpackedAmountTotal:
+          type: integer
+          example: 8000
+      required:
+        - unsettledAmountTotal
+        - unpackedAmountTotal
     division:
       required:
         - name
