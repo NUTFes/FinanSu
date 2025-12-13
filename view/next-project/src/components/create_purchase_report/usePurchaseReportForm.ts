@@ -7,10 +7,12 @@ import {
   useGetBuyReportsId,
   usePostBuyReports,
   usePutBuyReportsId,
+  useGetUsers,
 } from '@/generated/hooks';
 import { DivisionOption, FestivalItemOption } from '@/generated/model';
 import type { BuyReport, PostBuyReportsBody, PutBuyReportsIdBody } from '@/generated/model';
 import { userAtom } from '@/store/atoms';
+import { User } from '@/type/common';
 
 const API_ERROR_MESSAGES = {
   MISSING_ID: '更新対象のIDがありません',
@@ -54,6 +56,7 @@ export const usePurchaseReportForm = (router: NextRouter) => {
   const [activeDivisionId, setActiveDivisionId] = useState<number>(0);
   const [festivalItemName, setFestivalItemName] = useState<string>('');
   const [divisionName, setDivisionName] = useState<string>('');
+  const [users, setUsers] = useState<User[]>([]);
 
   // 新規作成時の初期値
   const [purchaseReport, setPurchaseReport] = useState<BuyReport>({
@@ -64,6 +67,17 @@ export const usePurchaseReportForm = (router: NextRouter) => {
 
   const year = new Date().getFullYear();
   const userId = user?.id || 0;
+
+  // ユーザー一覧の取得
+  const { data: usersData } = useGetUsers();
+
+  useEffect(() => {
+    if (usersData) {
+      // API定義の型がvoidになっているため、強制的にキャスト
+      // responseオブジェクトのdataプロパティにアクセスする
+      setUsers((usersData?.data as unknown as User[]) || []);
+    }
+  }, [usersData]);
 
   // 編集モードの場合、購入報告データを取得
   const { data: buyReportData, isLoading: isReportDataLoading } = useGetBuyReportsId(
@@ -258,5 +272,6 @@ export const usePurchaseReportForm = (router: NextRouter) => {
     handleAmountChange,
     handleDivisionChange,
     handleItemChange,
+    users, // Added users to return
   };
 };

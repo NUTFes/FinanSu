@@ -13,6 +13,7 @@ import {
 import { Noto_Sans_JP } from 'next/font/google';
 import { useRouter } from 'next/router';
 import React, { useRef, useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import { PrimaryButton, Title } from '@/components/common';
 import FileUploadField from '@/components/create_purchase_report/FileUploadField';
 import FormField from '@/components/create_purchase_report/FormField';
@@ -23,6 +24,7 @@ import {
   ERROR_MESSAGES,
 } from '@/components/create_purchase_report/validators';
 import MainLayout from '@/components/layout/MainLayout';
+import { userAtom } from '@/store/atoms';
 
 // スタイリング用定数
 const CONTAINER_HEIGHT_CLASS = 'h-[calc(100vh-4rem)]';
@@ -35,6 +37,7 @@ const notoSansJP = Noto_Sans_JP({
 
 const PurchaseReportPage = () => {
   const router = useRouter();
+  const user = useRecoilValue(userAtom);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formErrors, setFormErrors] = useState({
     fileError: '',
@@ -58,6 +61,7 @@ const PurchaseReportPage = () => {
     handleAmountChange,
     handleDivisionChange,
     handleItemChange,
+    users,
   } = usePurchaseReportForm(router);
 
   useEffect(() => {
@@ -179,17 +183,31 @@ const PurchaseReportPage = () => {
                 )}
               </FormField>
 
-              {/* 立替者入力フォーム */}
+              {/* 立替者入力フォーム - Selectに変更 */}
               <FormField id='proposer' label='立替者' isRequired isDisabled={isEditMode}>
-                <Input
-                  type='text'
+                <Select
                   value={purchaseReport.paidBy}
                   onChange={(e) =>
                     setPurchaseReport((prev) => ({ ...prev, paidBy: e.target.value }))
                   }
-                  placeholder='立替者を入力してください'
-                  required
-                />
+                  placeholder='選択してください'
+                >
+                  <option value=''>立替者なし</option>
+                  {user && (
+                    <option value={user.name}>
+                      {user.name} (自分)
+                    </option>
+                  )}
+                  {users.map((u) => {
+                    // 自分自身は既に上で追加しているのでスキップ
+                    if (user && u.id === user.id) return null;
+                    return (
+                      <option key={u.id} value={u.name}>
+                        {u.name}
+                      </option>
+                    );
+                  })}
+                </Select>
               </FormField>
 
               {/* 金額入力フォーム */}

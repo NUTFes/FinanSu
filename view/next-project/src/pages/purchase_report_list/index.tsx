@@ -1,6 +1,18 @@
+import {
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  Portal,
+  Text,
+  Select,
+} from '@chakra-ui/react';
 import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
 import { useCallback, useState, useEffect, useMemo } from 'react';
+import { BsFilter } from 'react-icons/bs';
 import { TbDownload } from 'react-icons/tb';
 import { useRecoilValue } from 'recoil';
 import DownloadButton from '@/components/common/DownloadButton';
@@ -10,6 +22,8 @@ import {
   useGetBuyReportsDetails,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
+  useGetUsers,
+  useGetBureaus,
 } from '@/generated/hooks';
 import type {
   GetBuyReportsDetailsParams,
@@ -17,6 +31,7 @@ import type {
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
 import { userAtom } from '@/store/atoms';
+import { User, Bureau } from '@/type/common';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -51,22 +66,92 @@ export default function PurchaseReports() {
     error: buyReportsError,
     mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
-  const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+
+  // ユーザーと局の情報を取得
+  const { data: usersData } = useGetUsers();
+  const { data: bureausData } = useGetBureaus();
+
+  const users = useMemo(() => (usersData?.data as unknown as User[]) || [], [usersData]);
+  const bureaus = useMemo(() => (bureausData?.data as unknown as Bureau[]) || [], [bureausData]);
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
 
+  // フィルタとソートの状態
+  const [filterPayer, setFilterPayer] = useState<string>('');
+  const [sortConfig, setSortConfig] = useState<{
+    key: 'name' | 'bureau' | null;
+    direction: 'asc' | 'desc';
+  }>({ key: null, direction: 'asc' });
+
+  // フィルタリングとソート済みのデータ
+  const processedBuyReports = useMemo(() => {
+    let reports = buyReportsData?.data ?? [];
+
+    // フィルタリング
+    if (filterPayer) {
+      reports = reports.filter((report) => report.paidBy === filterPayer);
+    }
+
+    // ソート
+    if (sortConfig.key) {
+      reports = [...reports].sort((a, b) => {
+        let valA = '';
+        let valB = '';
+
+        if (sortConfig.key === 'name') {
+          valA = a.paidBy || '';
+          valB = b.paidBy || '';
+        } else if (sortConfig.key === 'bureau') {
+          // 立替者の局名を取得
+          const userA = users.find((u) => u.name === a.paidBy);
+          const userB = users.find((u) => u.name === b.paidBy);
+          const bureauA = bureaus.find((bu) => bu.id === userA?.bureauID)?.name || '';
+          const bureauB = bureaus.find((bu) => bu.id === userB?.bureauID)?.name || '';
+          valA = bureauA;
+          valB = bureauB;
+        }
+
+        if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return reports;
+  }, [buyReportsData, filterPayer, sortConfig, users, bureaus]);
+
+  // 合計金額の計算
+  const totals = useMemo(() => {
+    return processedBuyReports.reduce(
+      (acc, report) => {
+        if (!report.isSettled) {
+          acc.unsettled += report.amount;
+        }
+        if (!report.isPacked) {
+          acc.unsealed += report.amount;
+        }
+        return acc;
+      },
+      { unsettled: 0, unsealed: 0 },
+    );
+  }, [processedBuyReports]);
+
   // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
   useEffect(() => {
-    if (buyReports.length > 0) {
+    if (processedBuyReports.length > 0) {
       setSealChecks(
-        Object.fromEntries(buyReports.map((report) => [report.id, report.isPacked ?? false])),
+        Object.fromEntries(
+          processedBuyReports.map((report) => [report.id, report.isPacked ?? false]),
+        ),
       );
       setSettlementChecks(
-        Object.fromEntries(buyReports.map((report) => [report.id, report.isSettled ?? false])),
+        Object.fromEntries(
+          processedBuyReports.map((report) => [report.id, report.isSettled ?? false]),
+        ),
       );
     }
-  }, [buyReports]);
+  }, [processedBuyReports]);
 
   const updateSealCheck = (id: number) => {
     if (settlementChecks[id]) {
@@ -151,6 +236,12 @@ export default function PurchaseReports() {
     }
   };
 
+  // 立替者一覧の取得（重複排除）
+  const payers = useMemo(() => {
+    const allPayers = (buyReportsData?.data ?? []).map((r) => r.paidBy).filter(Boolean);
+    return Array.from(new Set(allPayers));
+  }, [buyReportsData]);
+
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
 
@@ -177,10 +268,81 @@ export default function PurchaseReports() {
                     );
                   })}
               </select>
+              <Menu closeOnSelect={false}>
+                <MenuButton as={Button} className='w-fit items-center' variant='outline'>
+                  表示設定
+                  <BsFilter className='ml-2' />
+                </MenuButton>
+                <Portal>
+                  <MenuList zIndex={100} className='p-2'>
+                    <Text fontWeight='bold' mb={2} px={3} fontSize='sm'>
+                      並び替え
+                    </Text>
+                    <MenuItem
+                      onClick={() => setSortConfig({ key: 'name', direction: 'asc' })}
+                      className='text-sm'
+                    >
+                      氏名 (昇順) {sortConfig.key === 'name' && sortConfig.direction === 'asc' && '✓'}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => setSortConfig({ key: 'name', direction: 'desc' })}
+                      className='text-sm'
+                    >
+                      氏名 (降順) {sortConfig.key === 'name' && sortConfig.direction === 'desc' && '✓'}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => setSortConfig({ key: 'bureau', direction: 'asc' })}
+                      className='text-sm'
+                    >
+                      局名 (昇順) {sortConfig.key === 'bureau' && sortConfig.direction === 'asc' && '✓'}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => setSortConfig({ key: 'bureau', direction: 'desc' })}
+                      className='text-sm'
+                    >
+                      局名 (降順) {sortConfig.key === 'bureau' && sortConfig.direction === 'desc' && '✓'}
+                    </MenuItem>
+                    <MenuDivider />
+                    <div className='px-3 py-2'>
+                      <Text fontWeight='bold' mb={2} fontSize='sm'>
+                        立替者で絞り込み
+                      </Text>
+                      <Select
+                        size='sm'
+                        value={filterPayer}
+                        onChange={(e) => setFilterPayer(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <option value=''>全員</option>
+                        {payers.map((payer) => (
+                          <option key={payer} value={payer}>
+                            {payer}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
+                  </MenuList>
+                </Portal>
+              </Menu>
               <PrimaryButton className='w-fit items-center' onClick={downloadCSV}>
                 CSVダウンロード
                 <TbDownload className='ml-2' size={20} />
               </PrimaryButton>
+            </div>
+            {/* 合計金額表示エリア */}
+            <div className='mt-4 flex flex-col gap-4 rounded-md bg-gray-50 p-4 md:flex-row md:gap-8'>
+              <div className='flex flex-col'>
+                <span className='text-sm text-gray-500'>未精算金額合計</span>
+                <span className='text-xl font-bold text-red-500'>
+                  {totals.unsettled.toLocaleString()}円
+                </span>
+              </div>
+              <div className='flex flex-col'>
+                <span className='text-sm text-gray-500'>未封詰め金額合計</span>
+                <span className='text-xl font-bold text-red-500'>
+                  {totals.unsealed.toLocaleString()}円
+                </span>
+              </div>
             </div>
           </div>
           <div className='mt-2 flex-1 overflow-auto p-4 md:p-8'>
@@ -216,8 +378,8 @@ export default function PurchaseReports() {
                   </tr>
                 </thead>
                 <tbody>
-                  {buyReports && buyReports.length > 0 ? (
-                    buyReports.map((report) => (
+                  {processedBuyReports && processedBuyReports.length > 0 ? (
+                    processedBuyReports.map((report) => (
                       <tr key={report.id}>
                         <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
                           {formatDate(report.reportDate ?? '')}
