@@ -193,11 +193,7 @@ const PurchaseReportPage = () => {
                   placeholder='選択してください'
                 >
                   <option value=''>立替者なし</option>
-                  {user && (
-                    <option value={user.name}>
-                      {user.name} (自分)
-                    </option>
-                  )}
+                  {user && <option value={user.name}>{user.name} (自分)</option>}
                   {users.map((u) => {
                     // 自分自身は既に上で追加しているのでスキップ
                     if (user && u.id === user.id) return null;

@@ -282,25 +282,29 @@ export default function PurchaseReports() {
                       onClick={() => setSortConfig({ key: 'name', direction: 'asc' })}
                       className='text-sm'
                     >
-                      氏名 (昇順) {sortConfig.key === 'name' && sortConfig.direction === 'asc' && '✓'}
+                      氏名 (昇順){' '}
+                      {sortConfig.key === 'name' && sortConfig.direction === 'asc' && '✓'}
                     </MenuItem>
                     <MenuItem
                       onClick={() => setSortConfig({ key: 'name', direction: 'desc' })}
                       className='text-sm'
                     >
-                      氏名 (降順) {sortConfig.key === 'name' && sortConfig.direction === 'desc' && '✓'}
+                      氏名 (降順){' '}
+                      {sortConfig.key === 'name' && sortConfig.direction === 'desc' && '✓'}
                     </MenuItem>
                     <MenuItem
                       onClick={() => setSortConfig({ key: 'bureau', direction: 'asc' })}
                       className='text-sm'
                     >
-                      局名 (昇順) {sortConfig.key === 'bureau' && sortConfig.direction === 'asc' && '✓'}
+                      局名 (昇順){' '}
+                      {sortConfig.key === 'bureau' && sortConfig.direction === 'asc' && '✓'}
                     </MenuItem>
                     <MenuItem
                       onClick={() => setSortConfig({ key: 'bureau', direction: 'desc' })}
                       className='text-sm'
                     >
-                      局名 (降順) {sortConfig.key === 'bureau' && sortConfig.direction === 'desc' && '✓'}
+                      局名 (降順){' '}
+                      {sortConfig.key === 'bureau' && sortConfig.direction === 'desc' && '✓'}
                     </MenuItem>
                     <MenuDivider />
                     <div className='px-3 py-2'>
@@ -330,15 +334,15 @@ export default function PurchaseReports() {
               </PrimaryButton>
             </div>
             {/* 合計金額表示エリア */}
-            <div className='mt-4 flex flex-col gap-4 rounded-md bg-gray-50 p-4 md:flex-row md:gap-8'>
+            <div className='bg-gray-50 mt-4 flex flex-col gap-4 rounded-md p-4 md:flex-row md:gap-8'>
               <div className='flex flex-col'>
-                <span className='text-sm text-gray-500'>未精算金額合計</span>
+                <span className='text-gray-500 text-sm'>未精算金額合計</span>
                 <span className='text-xl font-bold text-red-500'>
                   {totals.unsettled.toLocaleString()}円
                 </span>
               </div>
               <div className='flex flex-col'>
-                <span className='text-sm text-gray-500'>未封詰め金額合計</span>
+                <span className='text-gray-500 text-sm'>未封詰め金額合計</span>
                 <span className='text-xl font-bold text-red-500'>
                   {totals.unsealed.toLocaleString()}円
                 </span>
