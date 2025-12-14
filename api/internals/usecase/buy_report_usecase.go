@@ -25,9 +25,10 @@ type BuyReportUseCase interface {
 	CreateBuyReport(context.Context, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	UpdateBuyReport(context.Context, string, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	DeleteBuyReport(context.Context, string) error
-	GetBuyReports(context.Context, string) ([]BuyReportDetail, error)
+	GetBuyReports(context.Context, string, string, string) ([]BuyReportDetail, error)
 	GetBuyReportById(context.Context, string) (BuyReportWithDivisionId, error)
 	UpdateBuyReportStatus(context.Context, string, PutBuyReport) (BuyReportDetail, error)
+	GetBuyReportsSummary(context.Context, string, string, string) (BuyReportSummary, error)
 }
 
 func NewBuyReportUseCase(
@@ -291,10 +292,10 @@ func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId stri
 	return nil
 }
 
-func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]BuyReportDetail, error) {
+func (bru *buyReportUseCase) GetBuyReports(c context.Context, year, financialRecordName, paidBy string) ([]BuyReportDetail, error) {
 	var buyReportDetails []BuyReportDetail
 
-	rows, err := bru.bRep.AllByPeriod(c, year)
+	rows, err := bru.bRep.AllByFilters(c, year, financialRecordName, paidBy)
 	if err != nil {
 		return []BuyReportDetail{}, err
 	}
@@ -331,6 +332,21 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year string) ([]Bu
 	}
 
 	return buyReportDetails, nil
+}
+
+func (bru *buyReportUseCase) GetBuyReportsSummary(c context.Context, year, financialRecordName, paidBy string) (BuyReportSummary, error) {
+	summary := BuyReportSummary{}
+
+	row, err := bru.bRep.SummaryByFilters(c, year, financialRecordName, paidBy)
+	if err != nil {
+		return summary, err
+	}
+
+	if err := row.Scan(&summary.UnsettledAmount, &summary.UnpackedAmount); err != nil {
+		return summary, errors.Wrap(err, "failed to scan buy report summary")
+	}
+
+	return summary, nil
 }
 
 func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportId string, requestBody PutBuyReport) (BuyReportDetail, error) {
@@ -471,6 +487,7 @@ func (bru *buyReportUseCase) GetBuyReportById(c context.Context, buyReportId str
 type PostBuyReport = generated.BuyReport
 type PaymentReceiptWithYear = domain.PaymentReceiptWithYear
 type BuyReportDetail = generated.BuyReportDetail
+type BuyReportSummary = generated.BuyReportSummary
 type PutBuyReport = generated.PutBuyReportStatusBuyReportIdJSONRequestBody
 type BuyReportWithDivisionId = generated.BuyReportWithDivisionId
 

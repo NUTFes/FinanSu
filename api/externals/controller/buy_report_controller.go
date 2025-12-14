@@ -27,6 +27,7 @@ type BuyReportController interface {
 	GetBuyReportById(echo.Context) error
 	UpdateBuyReportStatus(echo.Context) error
 	GetBuyReportsCsvDownload(echo.Context) error
+	GetBuyReportsSummary(echo.Context) error
 }
 
 func NewBuyReportController(u usecase.BuyReportUseCase) BuyReportController {
@@ -102,8 +103,10 @@ func (s *buyReportController) DeleteBuyReport(c echo.Context) error {
 func (s *buyReportController) IndexBuyReport(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
+	financialRecordName := c.QueryParam("financial_record_name")
+	paidBy := c.QueryParam("paid_by")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordName, paidBy)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "failed to buy_reports")
 	}
@@ -145,8 +148,10 @@ func (s *buyReportController) UpdateBuyReportStatus(c echo.Context) error {
 func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
+	financialRecordName := c.QueryParam("financial_record_name")
+	paidBy := c.QueryParam("paid_by")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordName, paidBy)
 	if err != nil {
 		return err
 	}
@@ -231,6 +236,24 @@ func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
 		return err
 	}
 	return nil
+}
+
+func (s *buyReportController) GetBuyReportsSummary(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+	if year == "" {
+		return c.String(http.StatusBadRequest, "year is required")
+	}
+
+	financialRecordName := c.QueryParam("financial_record_name")
+	paidBy := c.QueryParam("paid_by")
+
+	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordName, paidBy)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to get buy_reports summary")
+	}
+
+	return c.JSON(http.StatusOK, summary)
 }
 
 type BuyReport = generated.BuyReport
