@@ -6,11 +6,11 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type GetBuyReportsDetailsParams = {
+export type GetBuyReportsSummaryParams = {
   /**
    * year
    */
-  year?: number;
+  year: number;
   /**
    * financial_records.name での完全一致フィルタ
    */
