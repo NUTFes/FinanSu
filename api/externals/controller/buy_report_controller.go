@@ -253,8 +253,8 @@ func (s *buyReportController) GetBuyReportsSummary(c echo.Context) error {
 
 	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordName, paidBy)
 	if err != nil {
-		fmt.Printf("failed to get buy_reports summary: %v\n", err)
-		return c.String(http.StatusBadRequest, "failed to get buy_reports summary")
+		c.Logger().Errorf("failed to get buy_reports summary: %v", err)
+		return c.String(http.StatusInternalServerError, "failed to get buy_reports summary")
 	}
 
 	return c.JSON(http.StatusOK, summary)
