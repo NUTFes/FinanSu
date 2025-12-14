@@ -244,12 +244,16 @@ func (s *buyReportController) GetBuyReportsSummary(c echo.Context) error {
 	if year == "" {
 		return c.String(http.StatusBadRequest, "year is required")
 	}
+	if _, err := strconv.Atoi(year); err != nil {
+		return c.String(http.StatusBadRequest, "year must be an integer")
+	}
 
 	financialRecordName := c.QueryParam("financial_record_name")
 	paidBy := c.QueryParam("paid_by")
 
 	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordName, paidBy)
 	if err != nil {
+		fmt.Printf("failed to get buy_reports summary: %v\n", err)
 		return c.String(http.StatusBadRequest, "failed to get buy_reports summary")
 	}
 
