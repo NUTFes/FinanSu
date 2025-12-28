@@ -773,18 +773,24 @@ paths:
           description: year
           schema:
             type: integer
-        - name: financial_record_name
+        - name: financial_record_id
           in: query
-          description: financial_records.name での完全一致フィルタ
+          description: financial_records.id での完全一致フィルタ
           required: false
           schema:
-            type: string
+            type: integer
         - name: paid_by
           in: query
           description: buy_reports.paid_by での完全一致フィルタ
           required: false
           schema:
             type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: buy_reportの一覧を取得
@@ -806,18 +812,24 @@ paths:
           required: true
           schema:
             type: integer
-        - name: financial_record_name
+        - name: financial_record_id
           in: query
-          description: financial_records.name での完全一致フィルタ
+          description: financial_records.id での完全一致フィルタ
           required: false
           schema:
-            type: string
+            type: integer
         - name: paid_by
           in: query
           description: buy_reports.paid_by での完全一致フィルタ
           required: false
           schema:
             type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: 条件に一致する購入報告のサマリ
@@ -2832,6 +2844,9 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
       required:
         - festivalItemID
         - amount

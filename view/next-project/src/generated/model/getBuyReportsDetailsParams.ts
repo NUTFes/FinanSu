@@ -12,11 +12,15 @@ export type GetBuyReportsDetailsParams = {
    */
   year?: number;
   /**
-   * financial_records.name での完全一致フィルタ
+   * financial_records.id での完全一致フィルタ
    */
-  financial_record_name?: string;
+  financial_record_id?: number;
   /**
    * buy_reports.paid_by での完全一致フィルタ
    */
   paid_by?: string;
+  /**
+   * buy_reports.paid_by_user_id での完全一致フィルタ
+   */
+  paid_by_user_id?: number;
 };

@@ -73,6 +73,7 @@ type BuyReport struct {
 	FestivalItemID int    `json:"festivalItemID"`
 	Id             *int   `json:"id,omitempty"`
 	PaidBy         string `json:"paidBy"`
+	PaidByUserId   *int   `json:"paidByUserId,omitempty"`
 }
 
 // BuyReportDetail 購入報告ページで表示する詳細情報
@@ -413,6 +414,15 @@ type PostBuyReportsMultipartBody struct {
 type GetBuyReportsCsvDownloadParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
+
+	// PaidBy buy_reports.paid_by での完全一致フィルタ
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
 }
 
 // GetBuyReportsDetailsParams defines parameters for GetBuyReportsDetails.
@@ -420,11 +430,14 @@ type GetBuyReportsDetailsParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
 
-	// FinancialRecordName financial_records.name での完全一致フィルタ
-	FinancialRecordName *string `form:"financial_record_name,omitempty" json:"financial_record_name,omitempty"`
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
 
 	// PaidBy buy_reports.paid_by での完全一致フィルタ
 	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
 }
 
 // GetBuyReportsSummaryParams defines parameters for GetBuyReportsSummary.
@@ -432,11 +445,14 @@ type GetBuyReportsSummaryParams struct {
 	// Year year
 	Year int `form:"year" json:"year"`
 
-	// FinancialRecordName financial_records.name での完全一致フィルタ
-	FinancialRecordName *string `form:"financial_record_name,omitempty" json:"financial_record_name,omitempty"`
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
 
 	// PaidBy buy_reports.paid_by での完全一致フィルタ
 	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
 }
 
 // PutBuyReportsIdMultipartBody defines parameters for PutBuyReportsId.
@@ -1724,6 +1740,27 @@ func (w *ServerInterfaceWrapper) GetBuyReportsCsvDownload(ctx echo.Context) erro
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
+	// ------------- Optional query parameter "financial_record_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetBuyReportsCsvDownload(ctx, params)
 	return err
@@ -1742,11 +1779,11 @@ func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
-	// ------------- Optional query parameter "financial_record_name" -------------
+	// ------------- Optional query parameter "financial_record_id" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "financial_record_name", ctx.QueryParams(), &params.FinancialRecordName)
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_name: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
 	}
 
 	// ------------- Optional query parameter "paid_by" -------------
@@ -1754,6 +1791,13 @@ func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
 	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
@@ -1774,11 +1818,11 @@ func (w *ServerInterfaceWrapper) GetBuyReportsSummary(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
-	// ------------- Optional query parameter "financial_record_name" -------------
+	// ------------- Optional query parameter "financial_record_id" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "financial_record_name", ctx.QueryParams(), &params.FinancialRecordName)
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_name: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
 	}
 
 	// ------------- Optional query parameter "paid_by" -------------
@@ -1786,6 +1830,13 @@ func (w *ServerInterfaceWrapper) GetBuyReportsSummary(ctx echo.Context) error {
 	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
