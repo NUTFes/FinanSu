@@ -6,13 +6,16 @@ import { useRecoilValue } from 'recoil';
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
+import PurchaseReportSummaryAmounts from '@/components/purchasereports/PurchaseReportSummaryAmounts';
 import {
   useGetBuyReportsDetails,
+  useGetBuyReportsSummary,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
 import type {
   GetBuyReportsDetailsParams,
+  GetBuyReportsSummaryParams,
   BuyReportDetail,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
@@ -52,6 +55,14 @@ export default function PurchaseReports() {
     mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+  const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = { year: selectedYear };
+  const {
+    data: buyReportsSummaryData,
+    isLoading: isBuyReportsSummaryLoading,
+    error: buyReportsSummaryError,
+  } = useGetBuyReportsSummary(getBuyReportsSummaryParams, {
+    swr: { enabled: selectedYear > 0 },
+  });
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
@@ -106,6 +117,15 @@ export default function PurchaseReports() {
   const formatAmount = useCallback((amount: number) => {
     return amount.toLocaleString();
   }, []);
+  const buyReportsSummary = buyReportsSummaryData?.data;
+  const summaryUnsettledAmount =
+    isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
+      ? '-'
+      : formatAmount(buyReportsSummary.unsettledAmount ?? 0);
+  const summaryUnpackedAmount =
+    isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
+      ? '-'
+      : formatAmount(buyReportsSummary.unpackedAmount ?? 0);
 
   const download = async (url: string, fileName: string) => {
     const downloadPath = `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/finansu/${url}`;
@@ -181,6 +201,10 @@ export default function PurchaseReports() {
                 CSVダウンロード
                 <TbDownload className='ml-2' size={20} />
               </PrimaryButton>
+              <PurchaseReportSummaryAmounts
+                unsettledAmountText={summaryUnsettledAmount}
+                unpackedAmountText={summaryUnpackedAmount}
+              />
             </div>
           </div>
           <div className='mt-2 flex-1 overflow-auto p-4 md:p-8'>
