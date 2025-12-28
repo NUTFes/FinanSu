@@ -881,6 +881,24 @@ paths:
           description: year
           schema:
             type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_records.id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+        - name: paid_by
+          in: query
+          description: buy_reports.paid_by での完全一致フィルタ
+          required: false
+          schema:
+            type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: buy_reportのCSVダウンロード
