@@ -25,8 +25,8 @@ type BuyReportRepository interface {
 	GetPaymentReceipt(context.Context, *sql.Tx, string) (*sql.Row, error)
 	GetBuyReportById(context.Context, string) (*sql.Row, error)
 	GetYearByBuyReportId(context.Context, *sql.Tx, string) (*sql.Row, error)
-	AllByFilters(context.Context, string, string, string) (*sql.Rows, error)
-	SummaryByFilters(context.Context, string, string, string) (*sql.Row, error)
+	AllByFilters(context.Context, string, string, string, string) (*sql.Rows, error)
+	SummaryByFilters(context.Context, string, string, string, string) (*sql.Row, error)
 	GetByBuyReportId(context.Context, string) (*sql.Row, error)
 	UpdateBuyReportStatus(context.Context, *sql.Tx, string, PutBuyReport) error
 	GetBuyReportWithDivisionIdById(context.Context, string) (*sql.Row, error)
@@ -45,8 +45,16 @@ func (brr *buyReportRepository) CreateBuyReport(
 	buyReportInfo PostBuyReport,
 ) (int64, error) {
 	var id int64
-	ds := dialect.Insert("buy_reports").
-		Rows(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy})
+	record := goqu.Record{
+		"festival_item_id": buyReportInfo.FestivalItemID,
+		"amount":           buyReportInfo.Amount,
+		"memo":             "",
+		"paid_by":          buyReportInfo.PaidBy,
+	}
+	if buyReportInfo.PaidByUserId != nil {
+		record["paid_by_user_id"] = *buyReportInfo.PaidByUserId
+	}
+	ds := dialect.Insert("buy_reports").Rows(record)
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return id, err
@@ -76,8 +84,17 @@ func (brr *buyReportRepository) UpdateBuyReport(
 	id string,
 	buyReportInfo PostBuyReport,
 ) error {
+	record := goqu.Record{
+		"festival_item_id": buyReportInfo.FestivalItemID,
+		"amount":           buyReportInfo.Amount,
+		"memo":             "",
+		"paid_by":          buyReportInfo.PaidBy,
+	}
+	if buyReportInfo.PaidByUserId != nil {
+		record["paid_by_user_id"] = *buyReportInfo.PaidByUserId
+	}
 	ds := dialect.Update("buy_reports").
-		Set(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy}).
+		Set(record).
 		Where(goqu.Ex{"id": id})
 
 	query, _, err := ds.ToSQL()
@@ -223,9 +240,9 @@ func (brr *buyReportRepository) GetYearByBuyReportId(
 	return brr.crud.TransactionReadByID(c, tx, query)
 }
 
-// details の取得（年度/局名/立替者で絞り込み）
-func (brr *buyReportRepository) AllByFilters(c context.Context, year, financialRecordName, paidBy string) (*sql.Rows, error) {
-	ds := applyBuyReportFilters(selectBuyReportDetailsQuery, year, financialRecordName, paidBy)
+// details の取得（年度/局ID/立替者/立替者IDで絞り込み）
+func (brr *buyReportRepository) AllByFilters(c context.Context, year, financialRecordID, paidBy, paidByUserID string) (*sql.Rows, error) {
+	ds := applyBuyReportFilters(selectBuyReportDetailsQuery, year, financialRecordID, paidBy, paidByUserID)
 
 	query, _, err := ds.ToSQL()
 	if err != nil {
@@ -235,9 +252,9 @@ func (brr *buyReportRepository) AllByFilters(c context.Context, year, financialR
 	return brr.crud.Read(c, query)
 }
 
-// summary の取得（年度/局名/立替者で絞り込み）
-func (brr *buyReportRepository) SummaryByFilters(c context.Context, year, financialRecordName, paidBy string) (*sql.Row, error) {
-	ds := applyBuyReportFilters(selectBuyReportSummaryQuery, year, financialRecordName, paidBy)
+// summary の取得（年度/局ID/立替者/立替者IDで絞り込み）
+func (brr *buyReportRepository) SummaryByFilters(c context.Context, year, financialRecordID, paidBy, paidByUserID string) (*sql.Row, error) {
+	ds := applyBuyReportFilters(selectBuyReportSummaryQuery, year, financialRecordID, paidBy, paidByUserID)
 
 	query, _, err := ds.ToSQL()
 	if err != nil {
@@ -310,18 +327,22 @@ func (brr *buyReportRepository) CreateBuyReportIncomeExpenditureManagement(
 	return err
 }
 
-func applyBuyReportFilters(ds *goqu.SelectDataset, year, financialRecordName, paidBy string) *goqu.SelectDataset {
+func applyBuyReportFilters(ds *goqu.SelectDataset, year, financialRecordID, paidBy, paidByUserID string) *goqu.SelectDataset {
 	conditions := goqu.Ex{}
 
 	if year != "" {
 		conditions["years.year"] = year
 	}
 
-	if financialRecordName != "" {
-		conditions["financial_records.name"] = financialRecordName
+	if financialRecordID != "" {
+		conditions["financial_records.id"] = financialRecordID
 	}
 
-	if paidBy != "" {
+	// paid_by_user_idを優先
+	if paidByUserID != "" {
+		conditions["buy_reports.paid_by_user_id"] = paidByUserID
+	} else if paidBy != "" {
+		// フォールバック: 文字列で絞り込み
 		conditions["buy_reports.paid_by"] = paidBy
 	}
 

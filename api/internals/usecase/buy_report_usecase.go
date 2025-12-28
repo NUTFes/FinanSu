@@ -25,10 +25,10 @@ type BuyReportUseCase interface {
 	CreateBuyReport(context.Context, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	UpdateBuyReport(context.Context, string, PostBuyReport, *multipart.FileHeader) (PostBuyReport, error)
 	DeleteBuyReport(context.Context, string) error
-	GetBuyReports(context.Context, string, string, string) ([]BuyReportDetail, error)
+	GetBuyReports(context.Context, string, string, string, string) ([]BuyReportDetail, error)
 	GetBuyReportById(context.Context, string) (BuyReportWithDivisionId, error)
 	UpdateBuyReportStatus(context.Context, string, PutBuyReport) (BuyReportDetail, error)
-	GetBuyReportsSummary(context.Context, string, string, string) (BuyReportSummary, error)
+	GetBuyReportsSummary(context.Context, string, string, string, string) (BuyReportSummary, error)
 }
 
 func NewBuyReportUseCase(
@@ -292,10 +292,10 @@ func (bru *buyReportUseCase) DeleteBuyReport(c context.Context, buyReportId stri
 	return nil
 }
 
-func (bru *buyReportUseCase) GetBuyReports(c context.Context, year, financialRecordName, paidBy string) ([]BuyReportDetail, error) {
+func (bru *buyReportUseCase) GetBuyReports(c context.Context, year, financialRecordID, paidBy, paidByUserID string) ([]BuyReportDetail, error) {
 	var buyReportDetails []BuyReportDetail
 
-	rows, err := bru.bRep.AllByFilters(c, year, financialRecordName, paidBy)
+	rows, err := bru.bRep.AllByFilters(c, year, financialRecordID, paidBy, paidByUserID)
 	if err != nil {
 		return []BuyReportDetail{}, err
 	}
@@ -334,10 +334,10 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year, financialRec
 	return buyReportDetails, nil
 }
 
-func (bru *buyReportUseCase) GetBuyReportsSummary(c context.Context, year, financialRecordName, paidBy string) (BuyReportSummary, error) {
+func (bru *buyReportUseCase) GetBuyReportsSummary(c context.Context, year, financialRecordID, paidBy, paidByUserID string) (BuyReportSummary, error) {
 	summary := BuyReportSummary{}
 
-	row, err := bru.bRep.SummaryByFilters(c, year, financialRecordName, paidBy)
+	row, err := bru.bRep.SummaryByFilters(c, year, financialRecordID, paidBy, paidByUserID)
 	if err != nil {
 		return summary, err
 	}

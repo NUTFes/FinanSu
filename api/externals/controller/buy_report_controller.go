@@ -103,10 +103,11 @@ func (s *buyReportController) DeleteBuyReport(c echo.Context) error {
 func (s *buyReportController) IndexBuyReport(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
-	financialRecordName := c.QueryParam("financial_record_name")
+	financialRecordID := c.QueryParam("financial_record_id")
 	paidBy := c.QueryParam("paid_by")
+	paidByUserID := c.QueryParam("paid_by_user_id")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordName, paidBy)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordID, paidBy, paidByUserID)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "failed to buy_reports")
 	}
@@ -148,10 +149,11 @@ func (s *buyReportController) UpdateBuyReportStatus(c echo.Context) error {
 func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
-	financialRecordName := c.QueryParam("financial_record_name")
+	financialRecordID := c.QueryParam("financial_record_id")
 	paidBy := c.QueryParam("paid_by")
+	paidByUserID := c.QueryParam("paid_by_user_id")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordName, paidBy)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordID, paidBy, paidByUserID)
 	if err != nil {
 		return err
 	}
@@ -248,10 +250,11 @@ func (s *buyReportController) GetBuyReportsSummary(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "year must be an integer")
 	}
 
-	financialRecordName := c.QueryParam("financial_record_name")
+	financialRecordID := c.QueryParam("financial_record_id")
 	paidBy := c.QueryParam("paid_by")
+	paidByUserID := c.QueryParam("paid_by_user_id")
 
-	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordName, paidBy)
+	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordID, paidBy, paidByUserID)
 	if err != nil {
 		c.Logger().Errorf("failed to get buy_reports summary: %v", err)
 		return c.String(http.StatusInternalServerError, "failed to get buy_reports summary")
