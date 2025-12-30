@@ -13,5 +13,7 @@ export interface BuyReport {
   id?: number;
   festivalItemID: number;
   amount: number;
-  paidBy: string;
+  paidBy?: string;
+  /** @nullable */
+  paidByUserId?: number | null;
 }

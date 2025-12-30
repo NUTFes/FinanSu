@@ -15,4 +15,6 @@ export interface BuyReportWithDivisionId {
   festivalItemID?: number;
   amount?: number;
   paidBy?: string;
+  /** @nullable */
+  paidByUserId?: number | null;
 }
