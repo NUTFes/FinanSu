@@ -107,7 +107,7 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
         </div>
       </div>
       <div className='mt-6 flex justify-center'>
-        <OutlinePrimaryButton onClick={handleApply}>設定</OutlinePrimaryButton>
+        <OutlinePrimaryButton onClick={handleApply}>絞り込み</OutlinePrimaryButton>
       </div>
     </Modal>
   );
