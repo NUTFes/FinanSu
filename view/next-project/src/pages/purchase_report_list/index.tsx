@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
+import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
   useGetYearsPeriods,
@@ -70,27 +71,23 @@ export default function PurchaseReports() {
   }, [buyReports]);
 
   const updateSealCheck = (id: number) => {
-    if (sealChecks[id]) {
-      setSettlementChecks((prevSettlement) => ({
-        ...prevSettlement,
-        [id]: false,
-      }));
+    if (settlementChecks[id]) {
+      return;
     }
-    setSealChecks((prev) => {
-      return {
-        ...prev,
-        [id]: !prev[id],
-      };
-    });
+    setSealChecks((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   const updateSettlementCheck = (id: number) => {
-    setSettlementChecks((prev) => {
-      return {
-        ...prev,
-        [id]: !prev[id],
-      };
-    });
+    if (settlementChecks[id]) {
+      return;
+    }
+    setSettlementChecks((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   const handleEdit = (report: BuyReportDetail) => {
@@ -145,6 +142,17 @@ export default function PurchaseReports() {
     mutateBuyReportData();
   }, [mutateBuyReportData]);
 
+  const downloadCSV = async () => {
+    const url = `${process.env.CSR_API_URI}/buy_reports/csv/download?year=${selectedYear}`;
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      saveAs(blob, `購入報告_${selectedYear}.csv`);
+    } catch (error) {
+      console.error('Failed to download CSV:', error);
+    }
+  };
+
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
 
@@ -171,7 +179,7 @@ export default function PurchaseReports() {
                     );
                   })}
               </select>
-              <PrimaryButton className='w-fit items-center'>
+              <PrimaryButton className='w-fit items-center' onClick={downloadCSV}>
                 CSVダウンロード
                 <TbDownload className='ml-2' size={20} />
               </PrimaryButton>
@@ -242,12 +250,12 @@ export default function PurchaseReports() {
                           />
                         </td>
                         <td className='px-4 py-2 text-center'>
-                          <Checkbox
-                            className='accent-primary-5'
-                            checked={settlementChecks[report.id ?? 0] || false}
-                            onChange={() => {
-                              setBuyReportId(report.id ?? 0);
-                              updateSettlementCheck(report.id ?? 0);
+                          <OpenCheckSettlementModalButton
+                            id={report.id ?? 0}
+                            isChecked={settlementChecks[report.id ?? 0]}
+                            onConfirm={(id) => {
+                              setBuyReportId(id);
+                              updateSettlementCheck(id);
                             }}
                             disabled={!sealChecks[report.id ?? 0]}
                           />
