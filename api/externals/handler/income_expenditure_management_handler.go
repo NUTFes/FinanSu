@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"encoding/csv"
@@ -7,48 +7,36 @@ import (
 	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
-	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
 
-type incomeExpenditureManagementController struct {
-	u usecase.IncomeExpenditureManagementUseCase
-}
-
-type IncomeExpenditureManagementController interface {
-	IndexIncomeExpenditureManagements(echo.Context) error
-	PutIncomeExpenditureManagementCheck(echo.Context) error
-	DownloadIncomeExpenditureManagementCSV(echo.Context) error
-}
-
-func NewIncomeExpenditureManagementController(u usecase.IncomeExpenditureManagementUseCase) IncomeExpenditureManagementController {
-	return &incomeExpenditureManagementController{u}
-}
-
 // Index
-func (i *incomeExpenditureManagementController) IndexIncomeExpenditureManagements(c echo.Context) error {
+func (h *Handler) GetIncomeExpenditureManagements(c echo.Context, params generated.GetIncomeExpenditureManagementsParams) error {
 	ctx := c.Request().Context()
-	year := c.QueryParam("year")
-
-	incomeExpenditureManagements, err := i.u.IndexIncomeExpenditureManagements(ctx, year)
+	var yearStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+	incomeExpenditureManagements, err := h.incomeExpenditureManagementUseCase.IndexIncomeExpenditureManagements(ctx, yearStr)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, incomeExpenditureManagements)
 }
 
-// Put
-func (i *incomeExpenditureManagementController) PutIncomeExpenditureManagementCheck(c echo.Context) error {
+// PutIncomeExpenditureManagementsCheckId
+func (h *Handler) PutIncomeExpenditureManagementsCheckId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
+
 	var body generated.PutIncomeExpenditureManagementsCheckIdJSONBody
 	if err := c.Bind(&body); err != nil {
 		return err
 	}
+	idStr := strconv.Itoa(id)
 
-	if err := i.u.PutIncomeExpenditureManagementCheck(ctx, id, body.IsChecked); err != nil {
+	if err := h.incomeExpenditureManagementUseCase.PutIncomeExpenditureManagementCheck(ctx, idStr, body.IsChecked); err != nil {
 		return err
 	}
 
@@ -59,11 +47,14 @@ type (
 	PutIncomeExpenditureManagementsCheckIdJSONBody = generated.PutIncomeExpenditureManagementsCheckIdJSONBody
 )
 
-func (i *incomeExpenditureManagementController) DownloadIncomeExpenditureManagementCSV(c echo.Context) error {
+func (h *Handler) GetIncomeExpenditureManagementCsvDownload(c echo.Context, params generated.GetIncomeExpenditureManagementCsvDownloadParams) error {
 	ctx := c.Request().Context()
-	year := c.QueryParam("year")
+	year := strconv.Itoa(*params.Year)
+	if year == "" {
+		return c.String(http.StatusBadRequest, "year is required")
+	}
 
-	details, err := i.u.IndexIncomeExpenditureManagements(ctx, year)
+	details, err := h.incomeExpenditureManagementUseCase.IndexIncomeExpenditureManagements(ctx, year)
 	if err != nil {
 		return err
 	}

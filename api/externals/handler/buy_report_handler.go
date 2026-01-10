@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"encoding/csv"
@@ -9,33 +9,31 @@ import (
 	"time"
 
 	"github.com/NUTFes/FinanSu/api/generated"
-	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
 
-type buyReportController struct {
-	u usecase.BuyReportUseCase
+// router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
+func (h *Handler) PutBuyReportStatusBuyReportId(c echo.Context, id int) error {
+	ctx := c.Request().Context()
+	buyReportId := strconv.Itoa(id)
+
+	var requestBody generated.PutBuyReportStatusBuyReportIdJSONRequestBody
+	if err := c.Bind(&requestBody); err != nil {
+		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+
+	buyReportDetail, err := h.buyReportUseCase.UpdateBuyReportStatus(ctx, buyReportId, requestBody)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed update buy_reports")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetail)
 }
 
-type BuyReportController interface {
-	CreateBuyReport(echo.Context) error
-	UpdateBuyReport(echo.Context) error
-	DeleteBuyReport(echo.Context) error
-	IndexBuyReport(echo.Context) error
-	GetBuyReportById(echo.Context) error
-	UpdateBuyReportStatus(echo.Context) error
-	GetBuyReportsCsvDownload(echo.Context) error
-	GetBuyReportsSummary(echo.Context) error
-}
-
-func NewBuyReportController(u usecase.BuyReportUseCase) BuyReportController {
-	return &buyReportController{u}
-}
-
-// Create
-func (s *buyReportController) CreateBuyReport(c echo.Context) error {
+// router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
+func (h *Handler) PostBuyReports(c echo.Context) error {
 	ctx := c.Request().Context()
 	// ファイル取得
 	file, err := c.FormFile("file")
@@ -55,17 +53,56 @@ func (s *buyReportController) CreateBuyReport(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "buy_report is not valid")
 	}
 
-	buyReport, err := s.u.CreateBuyReport(ctx, buyReportInfo, file)
+	buyReport, err := h.buyReportUseCase.CreateBuyReport(ctx, buyReportInfo, file)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, buyReport)
 }
 
-// Update
-func (s *buyReportController) UpdateBuyReport(c echo.Context) error {
+// router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
+func (h *Handler) GetBuyReportsDetails(c echo.Context, params generated.GetBuyReportsDetailsParams) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
+	var yearStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+	var financialRecordId string
+	if params.FinancialRecordId != nil {
+		financialRecordId = strconv.Itoa(*params.FinancialRecordId)
+	}
+	var PaidBy string
+	if params.PaidBy != nil {
+		PaidBy = *params.PaidBy
+	}
+	var PaidByUserId string
+	if params.PaidByUserId != nil {
+		PaidByUserId = strconv.Itoa(*params.PaidByUserId)
+	}
+
+	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, yearStr, financialRecordId, PaidBy, PaidByUserId)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "failed to buy_reports")
+	}
+
+	return c.JSON(http.StatusOK, buyReportDetails)
+}
+
+// router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
+func (h *Handler) DeleteBuyReportsId(c echo.Context, id int) error {
+	ctx := c.Request().Context()
+	idStr := strconv.Itoa(id)
+	err := h.buyReportUseCase.DeleteBuyReport(ctx, idStr)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "buy_report delete failed")
+	}
+	return c.String(http.StatusOK, "buy_report delete success")
+}
+
+// router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+func (h *Handler) PutBuyReportsId(c echo.Context, id int) error {
+	ctx := c.Request().Context()
+	idStr := strconv.Itoa(id)
 	// ファイル取得
 	file, _ := c.FormFile("file")
 	// JSON データを取得
@@ -81,46 +118,18 @@ func (s *buyReportController) UpdateBuyReport(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "buy_report is not valid")
 	}
 
-	buyReportInfo, err = s.u.UpdateBuyReport(ctx, id, buyReportInfo, file)
+	buyReportInfo, err = h.buyReportUseCase.UpdateBuyReport(ctx, idStr, buyReportInfo, file)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, buyReportInfo)
 }
 
-// Delete
-func (s *buyReportController) DeleteBuyReport(c echo.Context) error {
+// router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
+func (h *Handler) GetBuyReportsId(c echo.Context, id int) error {
 	ctx := c.Request().Context()
-	id := c.Param("id")
-	err := s.u.DeleteBuyReport(ctx, id)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "buy_report delete failed")
-	}
-	return c.String(http.StatusOK, "buy_report delete success")
-}
 
-// Index
-func (s *buyReportController) IndexBuyReport(c echo.Context) error {
-	ctx := c.Request().Context()
-	year := c.QueryParam("year")
-	financialRecordID := c.QueryParam("financial_record_id")
-	paidBy := c.QueryParam("paid_by")
-	paidByUserID := c.QueryParam("paid_by_user_id")
-
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordID, paidBy, paidByUserID)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "failed to buy_reports")
-	}
-
-	return c.JSON(http.StatusOK, buyReportDetails)
-}
-
-// Get
-func (s *buyReportController) GetBuyReportById(c echo.Context) error {
-	ctx := c.Request().Context()
-	id := c.Param("id")
-
-	buyReportDetail, err := s.u.GetBuyReportById(ctx, id)
+	buyReportDetail, err := h.buyReportUseCase.GetBuyReportById(ctx, strconv.Itoa(id))
 	if err != nil {
 		return c.String(http.StatusBadRequest, "failed to buy_report")
 	}
@@ -128,32 +137,27 @@ func (s *buyReportController) GetBuyReportById(c echo.Context) error {
 	return c.JSON(http.StatusOK, buyReportDetail)
 }
 
-// UpdateStatus
-func (s *buyReportController) UpdateBuyReportStatus(c echo.Context) error {
+// router.GET(baseURL+"/buy_reports/csv", wrapper.GetBuyReportsCsvDownload)
+func (h *Handler) GetBuyReportsCsvDownload(c echo.Context, params generated.GetBuyReportsCsvDownloadParams) error {
 	ctx := c.Request().Context()
-	buyReportId := c.Param("buy_report_id")
-	var requestBody BuyReportStatusRequestBody
-	if err := c.Bind(&requestBody); err != nil {
-		return c.String(http.StatusBadRequest, "Bad Request")
+	var yearStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+	var financialRecordId string
+	if params.FinancialRecordId != nil {
+		financialRecordId = strconv.Itoa(*params.FinancialRecordId)
+	}
+	var PaidBy string
+	if params.PaidBy != nil {
+		PaidBy = *params.PaidBy
+	}
+	var PaidByUserId string
+	if params.PaidByUserId != nil {
+		PaidByUserId = strconv.Itoa(*params.PaidByUserId)
 	}
 
-	buyReportDetail, err := s.u.UpdateBuyReportStatus(ctx, buyReportId, requestBody)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "failed update buy_reports")
-	}
-
-	return c.JSON(http.StatusOK, buyReportDetail)
-}
-
-// GetBuyReportsCsvDownload
-func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
-	ctx := c.Request().Context()
-	year := c.QueryParam("year")
-	financialRecordID := c.QueryParam("financial_record_id")
-	paidBy := c.QueryParam("paid_by")
-	paidByUserID := c.QueryParam("paid_by_user_id")
-
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordID, paidBy, paidByUserID)
+	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, yearStr, financialRecordId, PaidBy, PaidByUserId)
 	if err != nil {
 		return err
 	}
@@ -204,7 +208,7 @@ func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 
 	// ヘッダーの設定
 	w := c.Response().Writer
-	fileName := fmt.Sprintf("purchase_reports_%s.csv", year)
+	fileName := fmt.Sprintf("purchase_reports_%s.csv", yearStr)
 	attachment := fmt.Sprintf(`attachment; filename="%s"`, fileName)
 	w.Header().Set("Content-Type", "text/csv")
 	w.Header().Set("Content-Disposition", attachment)
@@ -240,21 +244,27 @@ func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
 	return nil
 }
 
-func (s *buyReportController) GetBuyReportsSummary(c echo.Context) error {
+// router.GET(baseURL+"/buy_reports/summary", wrapper.GetBuyReportsSummary)
+func (h *Handler) GetBuyReportsSummary(c echo.Context, params generated.GetBuyReportsSummaryParams) error {
 	ctx := c.Request().Context()
-	year := c.QueryParam("year")
+	year := strconv.Itoa(params.Year)
 	if year == "" {
 		return c.String(http.StatusBadRequest, "year is required")
 	}
-	if _, err := strconv.Atoi(year); err != nil {
-		return c.String(http.StatusBadRequest, "year must be an integer")
+	var financialRecordId string
+	if params.FinancialRecordId != nil {
+		financialRecordId = strconv.Itoa(*params.FinancialRecordId)
+	}
+	var PaidBy string
+	if params.PaidBy != nil {
+		PaidBy = *params.PaidBy
+	}
+	var PaidByUserId string
+	if params.PaidByUserId != nil {
+		PaidByUserId = strconv.Itoa(*params.PaidByUserId)
 	}
 
-	financialRecordID := c.QueryParam("financial_record_id")
-	paidBy := c.QueryParam("paid_by")
-	paidByUserID := c.QueryParam("paid_by_user_id")
-
-	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordID, paidBy, paidByUserID)
+	summary, err := h.buyReportUseCase.GetBuyReportsSummary(ctx, year, financialRecordId, PaidBy, PaidByUserId)
 	if err != nil {
 		c.Logger().Errorf("failed to get buy_reports summary: %v", err)
 		return c.String(http.StatusInternalServerError, "failed to get buy_reports summary")
@@ -264,5 +274,3 @@ func (s *buyReportController) GetBuyReportsSummary(c echo.Context) error {
 }
 
 type BuyReport = generated.BuyReport
-type BuyReportDetails = []generated.BuyReportDetail
-type BuyReportStatusRequestBody = generated.PutBuyReportStatusBuyReportIdJSONRequestBody

@@ -1,85 +1,76 @@
-package controller
+package handler
 
 import (
 	"encoding/csv"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
-	"github.com/NUTFes/FinanSu/api/internals/usecase"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
 
-type financialRecordController struct {
-	u usecase.FinancialRecordUseCase
-}
-
-type FinancialRecordController interface {
-	IndexFinancialRecords(echo.Context) error
-	GetFinancialRecord(echo.Context) error
-	CreateFinancialRecord(echo.Context) error
-	UpdateFinancialRecord(echo.Context) error
-	DestroyFinancialRecord(echo.Context) error
-	DownloadFinancialRecordsCSV(echo.Context) error
-}
-
-func NewFinancialRecordController(u usecase.FinancialRecordUseCase) FinancialRecordController {
-	return &financialRecordController{u}
-}
-
-func (f *financialRecordController) IndexFinancialRecords(c echo.Context) error {
-	year := c.QueryParam("year")
+// router.GET(baseURL+"/financial_records", wrapper.GetFinancialRecords)
+func (h *Handler) GetFinancialRecords(c echo.Context, params generated.GetFinancialRecordsParams) error {
 	var financialRecordDetails FinancialRecordDetails
 	var err error
 	ctx := c.Request().Context()
-
-	if year != "" {
-		financialRecordDetails, err = f.u.GetFinancialRecordsByYears(ctx, year)
+	var yearStr string
+	if params.Year == nil {
+		financialRecordDetails, err = h.financialRecordUseCase.GetFinancialRecords(ctx)
 		if err != nil {
 			return err
 		}
 		return c.JSON(http.StatusOK, financialRecordDetails)
 	}
+	yearStr = strconv.Itoa(*params.Year)
 
-	financialRecordDetails, err = f.u.GetFinancialRecords(ctx)
+	if yearStr != "" {
+	}
+
+	financialRecordDetails, err = h.financialRecordUseCase.GetFinancialRecordsByYears(ctx, yearStr)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, financialRecordDetails)
 }
 
-func (f *financialRecordController) GetFinancialRecord(c echo.Context) error {
-	id := c.Param("id")
-	financialRecord, err := f.u.GetFinancialRecord(c.Request().Context(), id)
-	if err != nil {
-		return err
-	}
-	return c.JSON(http.StatusOK, financialRecord)
-}
-
-func (f *financialRecordController) CreateFinancialRecord(c echo.Context) error {
+// router.POST(baseURL+"/financial_records", wrapper.PostFinancialRecords)
+func (h *Handler) PostFinancialRecords(c echo.Context) error {
 	financialRecord := new(FinancialRecord)
 	if err := c.Bind(financialRecord); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
-	latestFinancialRecord, err := f.u.CreateFinancialRecord(c.Request().Context(), *financialRecord)
+
+	latestFinancialRecord, err := h.financialRecordUseCase.CreateFinancialRecord(c.Request().Context(), *financialRecord)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, latestFinancialRecord)
 }
 
-func (f *financialRecordController) UpdateFinancialRecord(c echo.Context) error {
-	id := c.Param("id")
+// router.DELETE(baseURL+"/financial_records/:id", wrapper.DeleteFinancialRecordsId)
+func (h *Handler) DeleteFinancialRecordsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	err := h.financialRecordUseCase.DestroyFinancialRecord(c.Request().Context(), idStr)
+	if err != nil {
+		return err
+	}
+	return c.String(http.StatusOK, "Destroy FinancialRecord")
+}
+
+// router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
+func (h *Handler) PutFinancialRecordsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
 	financialRecord := new(FinancialRecord)
 	if err := c.Bind(financialRecord); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
-	updatedFinancialRecord, err := f.u.UpdateFinancialRecord(
+	updatedFinancialRecord, err := h.financialRecordUseCase.UpdateFinancialRecord(
 		c.Request().Context(),
-		id,
+		idStr,
 		*financialRecord,
 	)
 	if err != nil {
@@ -88,20 +79,21 @@ func (f *financialRecordController) UpdateFinancialRecord(c echo.Context) error 
 	return c.JSON(http.StatusOK, updatedFinancialRecord)
 }
 
-func (f *financialRecordController) DestroyFinancialRecord(c echo.Context) error {
-	id := c.Param("id")
-	err := f.u.DestroyFinancialRecord(c.Request().Context(), id)
+// GetFinancialRecordsId
+func (h *Handler) GetFinancialRecordsId(c echo.Context, id int) error {
+	idStr := strconv.Itoa(id)
+	financialRecord, err := h.financialRecordUseCase.GetFinancialRecord(c.Request().Context(), idStr)
 	if err != nil {
 		return err
 	}
-	return c.String(http.StatusOK, "Destroy FinancialRecord")
+	return c.JSON(http.StatusOK, financialRecord)
 }
 
-func (f *financialRecordController) DownloadFinancialRecordsCSV(c echo.Context) error {
-	year := c.QueryParam("year")
+// GetFinancialRecordsCsvDownload(ctx echo.Context, params GetFinancialRecordsCsvDownloadParams) error
+func (h *Handler) GetFinancialRecordsCsvDownload(c echo.Context, params generated.GetFinancialRecordsCsvDownloadParams) error {
 	var err error
-
-	records, err := f.u.GetFinancialRecordDetailForCSV(c.Request().Context(), year)
+	year := strconv.Itoa(params.Year)
+	records, err := h.financialRecordUseCase.GetFinancialRecordDetailForCSV(c.Request().Context(), year)
 	if err != nil {
 		return err
 	}
