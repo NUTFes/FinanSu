@@ -303,4 +303,6 @@ export interface Invoice {
 export interface InvoiceSponsorStyle {
   styleName: string;
   price: number;
+  quantity: number;
+  unitPrice: number;
 }
