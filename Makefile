@@ -173,6 +173,14 @@ gen-er: ## ER図生成
 format: ## コード整形
 	docker compose run --rm view npm run format
 
+# Go依存関係を整理
+go-mod-tidy:
+	docker compose run --rm api go mod tidy
+
+# Wireコードを生成
+wire-gen:
+	docker compose run --rm api sh -c "cd /app/internals/di && go run github.com/google/wire/cmd/wire gen"
+
 ##@ デバッグ・ログ
 logs: ## 全コンテナのログを表示
 	docker compose logs -f
