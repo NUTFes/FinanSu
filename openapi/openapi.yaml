@@ -1523,6 +1523,30 @@ paths:
               schema:
                 type: string
                 format: binary
+  /income_expenditure_management/csv/download:
+    get:
+      tags:
+        - income_expenditure_management
+      description: 収支管理一覧のCSVダウンロード、財務向けのページ
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: income_expenditure_managementのCSVダウンロード
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=income_expenditure_management.csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
   /incomes:
     get:
       tags:

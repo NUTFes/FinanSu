@@ -218,6 +218,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// income_expenditure_managements
 	e.GET("income_expenditure_managements", r.incomeExpenditureManagementController.IndexIncomeExpenditureManagements)
 	e.PUT("/income_expenditure_managements/check/:id", r.incomeExpenditureManagementController.PutIncomeExpenditureManagementCheck)
+	e.GET("/income_expenditure_management/csv/download", r.incomeExpenditureManagementController.DownloadIncomeExpenditureManagementCSV)
 
 	// mail auth
 	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)

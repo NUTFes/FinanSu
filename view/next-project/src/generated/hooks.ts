@@ -91,6 +91,7 @@ import type {
   GetFestivalItemsUsersParams,
   GetFinancialRecordsCsvDownloadParams,
   GetFinancialRecordsParams,
+  GetIncomeExpenditureManagementCsvDownloadParams,
   GetIncomeExpenditureManagementsParams,
   GetReceipts200,
   GetReceiptsId200,
@@ -5059,6 +5060,88 @@ export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
   const swrKey =
     swrOptions?.swrKey ?? (() => (isEnabled ? getGetFinancialRecordsCsvDownloadKey(params) : null));
   const swrFn = () => getFinancialRecordsCsvDownload(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 収支管理一覧のCSVダウンロード、財務向けのページ
+ */
+export type getIncomeExpenditureManagementCsvDownloadResponse200 = {
+  data: Blob;
+  status: 200;
+};
+
+export type getIncomeExpenditureManagementCsvDownloadResponseComposite =
+  getIncomeExpenditureManagementCsvDownloadResponse200;
+
+export type getIncomeExpenditureManagementCsvDownloadResponse =
+  getIncomeExpenditureManagementCsvDownloadResponseComposite & {
+    headers: Headers;
+  };
+
+export const getGetIncomeExpenditureManagementCsvDownloadUrl = (
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/income_expenditure_management/csv/download?${stringifiedParams}`
+    : `/income_expenditure_management/csv/download`;
+};
+
+export const getIncomeExpenditureManagementCsvDownload = async (
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+  options?: RequestInit,
+): Promise<getIncomeExpenditureManagementCsvDownloadResponse> => {
+  return customFetch<getIncomeExpenditureManagementCsvDownloadResponse>(
+    getGetIncomeExpenditureManagementCsvDownloadUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetIncomeExpenditureManagementCsvDownloadKey = (
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+) => [`/income_expenditure_management/csv/download`, ...(params ? [params] : [])] as const;
+
+export type GetIncomeExpenditureManagementCsvDownloadQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>
+>;
+export type GetIncomeExpenditureManagementCsvDownloadQueryError = unknown;
+
+export const useGetIncomeExpenditureManagementCsvDownload = <TError = unknown>(
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetIncomeExpenditureManagementCsvDownloadKey(params) : null));
+  const swrFn = () => getIncomeExpenditureManagementCsvDownload(params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
