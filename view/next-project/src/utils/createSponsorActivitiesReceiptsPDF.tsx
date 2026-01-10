@@ -1,19 +1,20 @@
 // 下記のeslint-disableは、@react-pdfのImageコンポーネントがalt属性をサポートしていないため、警告を無視するために追加しています。
 /* eslint-disable jsx-a11y/alt-text */
 import {
-    Document,
-    Font,
-    Image,
-    Page,
-    pdf,
-    PDFViewer,
-    StyleSheet,
-    Text,
-    View,
+  Document,
+  Font,
+  Image,
+  Page,
+  pdf,
+  PDFViewer,
+  StyleSheet,
+  Text,
+  View,
 } from '@react-pdf/renderer';
 import React from 'react';
 
 import { SponsorActivityView } from '@type/common';
+
 import { calculateYearInfo, formatDateToJapanese } from './dateConverter';
 
 Font.register({
