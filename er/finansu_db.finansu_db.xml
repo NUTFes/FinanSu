@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database name="finansu_db" schema="finansu_db" type="MySQL - 8.0.44">
    <tables>
-      <table catalog="finansu_db" name="activities" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="activities" numRows="2" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="sponsor_activity_id" foreignKey="sponsor_activity_balance_managements_ibfk_1" implied="false" onDeleteCascade="true" table="sponsor_activity_balance_managements"/>
          </column>
@@ -35,7 +35,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="activity_styles" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="activity_styles" numRows="4" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="activity_id" nullable="true" remarks="" size="10" type="INT" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="sponsor_style_id" nullable="true" remarks="" size="10" type="INT" typeCode="4"/>
@@ -46,7 +46,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="building_units" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="building_units" numRows="17" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="building_unit_id" foreignKey="floors_ibfk_1" implied="false" onDeleteCascade="false" table="floors"/>
          </column>
@@ -64,7 +64,7 @@
             <column ascending="true" name="building_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="buildings" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="buildings" numRows="13" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="building_id" foreignKey="building_units_ibfk_1" implied="false" onDeleteCascade="false" table="building_units"/>
          </column>
@@ -76,7 +76,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="bureaus" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="bureaus" numRows="6" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
          <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="2" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
@@ -86,7 +86,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="buy_report_income_expenditure_managements" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="buy_report_income_expenditure_managements" numRows="7" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="buy_report_id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <parent catalog="finansu_db" column="id" foreignKey="buy_report_income_expenditure_managements_ibfk_1" implied="false" onDeleteCascade="true" table="buy_reports"/>
@@ -107,7 +107,7 @@
             <column ascending="true" name="income_expenditure_management_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="buy_reports" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="buy_reports" numRows="7" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="buy_report_id" foreignKey="buy_report_income_expenditure_managements_ibfk_1" implied="false" onDeleteCascade="true" table="buy_report_income_expenditure_managements"/>
             <child catalog="finansu_db" column="buy_report_id" foreignKey="buy_statuses_ibfk_1" implied="false" onDeleteCascade="true" table="buy_statuses"/>
@@ -129,7 +129,7 @@
             <column ascending="true" name="festival_item_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="buy_statuses" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="buy_statuses" numRows="7" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="buy_report_id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <parent catalog="finansu_db" column="id" foreignKey="buy_statuses_ibfk_1" implied="false" onDeleteCascade="true" table="buy_reports"/>
@@ -146,7 +146,7 @@
             <column ascending="true" name="buy_report_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="campus_donations" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="campus_donations" numRows="2" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <parent catalog="finansu_db" column="id" foreignKey="campus_donations_ibfk_2" implied="false" onDeleteCascade="true" table="users"/>
@@ -178,7 +178,7 @@
             <column ascending="true" name="year_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="departments" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="departments" numRows="13" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
          <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="2" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
@@ -188,7 +188,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="divisions" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="divisions" numRows="4" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="division_id" foreignKey="festival_items_ibfk_1" implied="false" onDeleteCascade="true" table="festival_items"/>
             <child catalog="finansu_db" column="group_id" foreignKey="user_groups_ibfk_2" implied="false" onDeleteCascade="true" table="user_groups"/>
@@ -207,7 +207,7 @@
             <column ascending="true" name="financial_record_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="festival_items" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="festival_items" numRows="7" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="festival_item_id" foreignKey="buy_reports_ibfk_1" implied="false" onDeleteCascade="true" table="buy_reports"/>
             <child catalog="finansu_db" column="festival_item_id" foreignKey="item_budgets_ibfk_1" implied="false" onDeleteCascade="true" table="item_budgets"/>
@@ -227,7 +227,7 @@
             <column ascending="true" name="division_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="financial_records" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="financial_records" numRows="2" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="financial_record_id" foreignKey="divisions_ibfk_1" implied="false" onDeleteCascade="true" table="divisions"/>
          </column>
@@ -263,7 +263,7 @@
             <column ascending="true" name="building_unit_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="income_expenditure_managements" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="income_expenditure_managements" numRows="9" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="income_expenditure_management_id" foreignKey="buy_report_income_expenditure_managements_ibfk_2" implied="false" onDeleteCascade="true" table="buy_report_income_expenditure_managements"/>
             <child catalog="finansu_db" column="income_expenditure_id" foreignKey="income_income_expenditure_managements_ibfk_1" implied="false" onDeleteCascade="true" table="income_income_expenditure_managements"/>
@@ -308,7 +308,7 @@
             <column ascending="true" name="income_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="incomes" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="incomes" numRows="6" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="income_id" foreignKey="income_income_expenditure_managements_ibfk_2" implied="false" onDeleteCascade="true" table="income_income_expenditure_managements"/>
          </column>
@@ -320,7 +320,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="item_budgets" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="item_budgets" numRows="7" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="amount" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="festival_item_id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
@@ -336,7 +336,7 @@
             <column ascending="true" name="festival_item_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="mail_auth" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="mail_auth" numRows="4" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="email" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="password" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
@@ -368,7 +368,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="payment_receipts" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="payment_receipts" numRows="3" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="buy_report_id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <parent catalog="finansu_db" column="id" foreignKey="payment_receipts_ibfk_1" implied="false" onDeleteCascade="true" table="buy_reports"/>
@@ -387,7 +387,7 @@
             <column ascending="true" name="buy_report_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="roles" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="roles" numRows="4" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
          <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="2" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
@@ -480,7 +480,7 @@
             <column ascending="true" name="sponsor_activity_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="sponsor_styles" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="sponsor_styles" numRows="9" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="style" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="feature" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
@@ -523,7 +523,7 @@
             <column ascending="true" name="income_expenditure_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="teachers" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="teachers" numRows="241" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="teacher_id" foreignKey="campus_donations_ibfk_3" implied="false" onDeleteCascade="true" table="campus_donations"/>
             <child catalog="finansu_db" column="teacher_id" foreignKey="room_teachers_ibfk_2" implied="false" onDeleteCascade="true" table="room_teachers"/>
@@ -542,7 +542,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="user_groups" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="user_groups" numRows="3" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <parent catalog="finansu_db" column="id" foreignKey="user_groups_ibfk_1" implied="false" onDeleteCascade="true" table="users"/>
@@ -563,7 +563,7 @@
             <column ascending="true" name="user_id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="users" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="users" numRows="4" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="user_id" foreignKey="campus_donations_ibfk_2" implied="false" onDeleteCascade="true" table="campus_donations"/>
             <child catalog="finansu_db" column="user_id" foreignKey="user_groups_ibfk_1" implied="false" onDeleteCascade="true" table="user_groups"/>
@@ -579,7 +579,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="year_periods" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="year_periods" numRows="1" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="year_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="started_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
@@ -591,7 +591,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table catalog="finansu_db" name="years" numRows="0" remarks="" type="TABLE">
+      <table catalog="finansu_db" name="years" numRows="1" remarks="" type="TABLE">
          <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT UNSIGNED" typeCode="4">
             <child catalog="finansu_db" column="year_id" foreignKey="campus_donations_ibfk_1" implied="false" onDeleteCascade="true" table="campus_donations"/>
             <child catalog="finansu_db" column="year_id" foreignKey="financial_records_ibfk_1" implied="false" onDeleteCascade="true" table="financial_records"/>
