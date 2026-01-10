@@ -1,4 +1,5 @@
 import { Context } from 'vm';
+
 import Image from 'next/image';
 import Router from 'next/router';
 import React, { useState } from 'react';
@@ -98,7 +99,7 @@ export default function ResetPassword(props: Props) {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className='my-20 flex w-full flex-col items-center'>
                   <div className='mb-10 flex flex-col gap-3'>
-                    <div className='grid grid-cols-3 items-center justify-items-center gap-5'>
+                    <div className='grid grid-cols-3 place-items-center gap-5'>
                       <p className='md:text-md whitespace-nowrap text-sm text-black-300'>
                         パスワード
                       </p>

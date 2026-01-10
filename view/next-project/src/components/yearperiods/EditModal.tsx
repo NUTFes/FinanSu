@@ -2,9 +2,10 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { Modal, Input, CloseButton, PrimaryButton } from '../common';
 import { put } from '@api/api_methods';
 import { YearPeriod } from '@type/common';
+
+import { Modal, Input, CloseButton, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -70,7 +71,7 @@ export default function EditModal(props: ModalProps) {
         </div>
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>年度の編集</h1>
-      <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+      <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
         <p className='col-span-1 text-black-600'>年度</p>
         <div className='col-span-4 h-12 w-full'>
           <Input

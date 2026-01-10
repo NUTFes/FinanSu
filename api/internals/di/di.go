@@ -43,7 +43,8 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	expenseRepository := repository.NewExpenseRepository(client, crud)
 	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
-	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
+	incomeRepository := repository.NewIncomeRepository(client, crud)
+	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
 	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
@@ -69,13 +70,14 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
 	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
-	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository, incomeExpenditureManagementRepository)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
 	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
 	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
-	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
+	incomeUseCase := usecase.NewIncomeUseCase(incomeRepository, incomeExpenditureManagementRepository, transactionRepository)
+	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
 	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
@@ -113,8 +115,9 @@ func InitializeServer() (db.Client, *echo.Echo) {
 	expenseController := controller.NewExpenseController(expenseUseCase)
 	festivalItemController := controller.NewFestivalItemController(festivalUseCase)
 	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
-	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
 	healthcheckController := controller.NewHealthCheckController()
+	incomeController := controller.NewIncomeController(incomeUseCase)
+	incomeExpenditureManagementController := controller.NewIncomeExpenditureManagementController(incomeExpenditureManagementUseCase)
 	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
 	objectUploadController := controller.NewObjectUploadController(objectHandleUseCase)
 	passwordResetTokenController := controller.NewPasswordResetTokenController(
@@ -145,8 +148,9 @@ func InitializeServer() (db.Client, *echo.Echo) {
 		expenseController,
 		festivalItemController,
 		financialRecordController,
-		fundInformationController,
 		healthcheckController,
+		incomeController,
+		incomeExpenditureManagementController,
 		mailAuthController,
 		objectUploadController,
 		passwordResetTokenController,

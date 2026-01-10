@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useEffect, useMemo } from 'react';
-
 import { MdFilterList, MdCircle } from 'react-icons/md';
 import { RiExternalLinkLine } from 'react-icons/ri';
+
 import { Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
@@ -13,6 +13,8 @@ import {
   OpenEditModalButton,
   FilterModal,
 } from '@/components/sponsoractivities';
+import AddBlankInvoiceModal from '@/components/sponsoractivities/AddBlankInvoiceModal';
+import AddBlankReceiptModal from '@/components/sponsoractivities/AddBlankReceiptModal';
 import { createPresentationCsv } from '@/utils/createActivityCsv';
 import { downloadFile } from '@/utils/downloadFile';
 import { get } from '@api/api_methods';
@@ -85,6 +87,8 @@ export default function SponsorActivities(props: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFilerOpen, setIsFilerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isOpenBlankReceipt, setIsOpenBlankReceipt] = useState(false);
+  const [isOpenBlankInvoice, setIsOpenBlankInvoice] = useState(false);
   const [filterData, setFilterData] = useState<SponsorFilterType>({
     styleIds: sponsorStyles.map((style) => style?.id || 0),
     isDone: 'all',
@@ -272,7 +276,7 @@ export default function SponsorActivities(props: Props) {
               </select>
               <div className='flex items-center justify-center'>
                 <button
-                  className='rounded-md px-1 py-1 hover:bg-white-100 hover:outline-base-1'
+                  className='rounded-md p-1 hover:bg-white-100 hover:outline-base-1'
                   onClick={() => {
                     setIsFilerOpen(!isFilerOpen);
                   }}
@@ -308,6 +312,18 @@ export default function SponsorActivities(props: Props) {
               >
                 CSVダウンロード
               </PrimaryButton>
+              <PrimaryButton
+                className='hidden md:block'
+                onClick={() => setIsOpenBlankReceipt(true)}
+              >
+                手入力で領収書発行
+              </PrimaryButton>
+              <PrimaryButton
+                className='hidden md:block'
+                onClick={() => setIsOpenBlankInvoice(true)}
+              >
+                手入力で請求書発行
+              </PrimaryButton>
             </div>
           </div>
         </div>
@@ -320,6 +336,14 @@ export default function SponsorActivities(props: Props) {
           >
             協賛活動登録
           </OpenAddModalButton>
+        </div>
+        <div className='my-2 flex flex-col gap-2 md:hidden'>
+          <PrimaryButton onClick={() => setIsOpenBlankReceipt(true)}>
+            手入力で領収書発行
+          </PrimaryButton>
+          <PrimaryButton onClick={() => setIsOpenBlankInvoice(true)}>
+            手入力で請求書発行
+          </PrimaryButton>
         </div>
         <div className='md:hidden'>
           <OpenAddModalButton
@@ -337,13 +361,13 @@ export default function SponsorActivities(props: Props) {
                   <div>
                     {sponsorActivitiesItem.sponsorActivity.isDone && (
                       <div className='flex items-center gap-1'>
-                        <div className='h-4 w-4 rounded-full bg-[#7087FF]' />
+                        <div className='size-4 rounded-full bg-[#7087FF]' />
                         <p>回収完了</p>
                       </div>
                     )}
                     {!sponsorActivitiesItem.sponsorActivity.isDone && (
                       <div className='flex items-center gap-1'>
-                        <div className='h-4 w-4 rounded-full bg-[#FFA53C]' />
+                        <div className='size-4 rounded-full bg-[#FFA53C]' />
                         <p>未回収</p>
                       </div>
                     )}
@@ -620,6 +644,10 @@ export default function SponsorActivities(props: Props) {
             </tbody>
           </table>
         </div>
+        {isOpenBlankReceipt && <AddBlankReceiptModal setIsOpen={setIsOpenBlankReceipt} />}
+        {isOpenBlankInvoice && (
+          <AddBlankInvoiceModal setIsOpen={setIsOpenBlankInvoice} sponsorStyles={sponsorStyles} />
+        )}
       </Card>
       {isOpen && sponsorActivitiesItem && (
         <DetailModal

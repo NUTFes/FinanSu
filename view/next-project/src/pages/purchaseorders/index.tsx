@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { userAtom } from '@/store/atoms';
 import { put } from '@/utils/api/purchaseOrder';
@@ -301,7 +302,7 @@ export default function PurchaseOrders(props: Props) {
                         onOpen(purchaseOrderViewItem.purchaseOrder.id || 0, purchaseOrderViewItem);
                       }}
                     >
-                      <div className='flex justify-center overflow-hidden text-ellipsis  whitespace-nowrap text-sm text-black-600'>
+                      <div className='flex justify-center truncate text-sm  text-black-600'>
                         {purchaseOrderViewItem.purchaseItem &&
                           purchaseOrderViewItem.purchaseItem.map(
                             (purchaseItem: PurchaseItem, index: number) => (

@@ -7,6 +7,7 @@ interface Props {
   children?: React.ReactNode;
   id: number;
   isDisabled: boolean;
+  onDeleteSuccess: () => void;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -17,7 +18,14 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {isOpen && <DeleteModal id={props.id} openModal={isOpen} setShowModal={setIsOpen} />}
+      {isOpen && (
+        <DeleteModal
+          id={props.id}
+          openModal={isOpen}
+          setShowModal={setIsOpen}
+          onDeleteSuccess={() => props.onDeleteSuccess()}
+        />
+      )}
     </>
   );
 };

@@ -16,6 +16,7 @@ type abstractRepository struct {
 
 type Crud interface {
 	Read(context.Context, string) (*sql.Rows, error)
+	Prepare(context.Context, string) (*sql.Stmt, error)
 	ReadByID(context.Context, string) (*sql.Row, error)
 	UpdateDB(context.Context, string) error
 	UpdateAndReturnRows(context.Context, string) (string, error)
@@ -38,6 +39,11 @@ func (a abstractRepository) Read(ctx context.Context, query string) (*sql.Rows, 
 	}
 	fmt.Printf("\x1b[36m%s\n", query)
 	return rows, nil
+}
+
+func (a abstractRepository) Prepare(ctx context.Context, query string) (*sql.Stmt, error) {
+	fmt.Printf("\x1b[36m%s\n", query)
+	return a.client.DB().Prepare(query)
 }
 
 func (a abstractRepository) ReadByID(ctx context.Context, query string) (*sql.Row, error) {

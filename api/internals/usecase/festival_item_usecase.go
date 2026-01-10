@@ -3,6 +3,9 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
+	"sort"
+	"strings"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -18,6 +21,7 @@ type FestivalItemUseCase interface {
 	GetFestivalItems(context.Context, string, string) (FestivalItemDetails, error)
 	GetFestivalItemsForMypage(context.Context, string, string) ([]FestivalItemDetailsForMypage, error)
 	GetFestivalItemOptions(context.Context, string, string) ([]FestivalItemOption, error)
+	GetFestivalItem(context.Context, string) (FestivalItem, error)
 	CreateFestivalItem(
 		context.Context,
 		FestivalItem,
@@ -47,7 +51,12 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 		return festivalItemDetails, err
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		var festivalItem FestivalItemWithBalance
 		err := rows.Scan(
@@ -88,6 +97,29 @@ func (fiu *festivalItemUseCase) GetFestivalItems(
 	return festivalItemDetails, nil
 }
 
+func (fiu *festivalItemUseCase) GetFestivalItem(c context.Context, id string) (FestivalItem, error) {
+	var festivalItem FestivalItem
+
+	row, err := fiu.fRep.GetFestivalItemById(c, id)
+	if err != nil {
+		return festivalItem, err
+	}
+
+	err = row.Scan(
+		&festivalItem.Id,
+		&festivalItem.Name,
+		&festivalItem.DivisionId,
+		&festivalItem.Memo,
+		&festivalItem.Amount,
+	)
+
+	if err != nil {
+		return festivalItem, err
+	}
+
+	return festivalItem, nil
+}
+
 func (fiu *festivalItemUseCase) CreateFestivalItem(
 	c context.Context,
 	festivalItem FestivalItem,
@@ -99,13 +131,17 @@ func (fiu *festivalItemUseCase) CreateFestivalItem(
 
 	if err := fiu.fRep.CreateFestivalItem(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return latestFestivalItemWithBalance, err
+		}
 		return latestFestivalItemWithBalance, err
 	}
 
 	if err := fiu.fRep.CreateItemBudget(c, tx, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return latestFestivalItemWithBalance, err
+		}
 		return latestFestivalItemWithBalance, err
 	}
 
@@ -147,13 +183,17 @@ func (fiu *festivalItemUseCase) UpdateFestivalItem(
 
 	if err := fiu.fRep.UpdateFestivalItem(c, tx, id, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return updateFestivalItemWithBalance, err
+		}
 		return updateFestivalItemWithBalance, err
 	}
 
 	if err := fiu.fRep.UpdateItemBudget(c, tx, id, festivalItem); err != nil {
 		// エラーが発生時はロールバック
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return updateFestivalItemWithBalance, err
+		}
 		return updateFestivalItemWithBalance, err
 	}
 
@@ -190,13 +230,17 @@ func (fiu *festivalItemUseCase) DestroyFestivalItem(c context.Context, id string
 	// 先に紐づく予算を削除
 	err := fiu.fRep.DeleteItemBudget(c, tx, id)
 	if err != nil {
-		fiu.tRep.RollBack(c, tx)
+		if err := fiu.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 	}
 
 	// 購入物品を削除
 	err = fiu.fRep.DeleteFestivalItem(c, tx, id)
 	if err != nil {
-		fiu.tRep.RollBack(c, tx)
+		if err = fiu.tRep.RollBack(c, tx); err != nil {
+			return err
+		}
 		return err
 	}
 
@@ -222,7 +266,12 @@ func (fiu *festivalItemUseCase) GetFestivalItemsForMypage(
 		return festivalItemDetailsList, err
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		var festivalItemForMyPageColumn domain.FestivalItemForMyPageColumn
 		err := rows.Scan(
@@ -265,7 +314,12 @@ func (fiu *festivalItemUseCase) GetFestivalItemOptions(
 		return festivalItemOptions, err
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		var festivalItemOption FestivalItemOption
 		err := rows.Scan(
@@ -295,7 +349,7 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 	// NOTE ColumnsをDetailsListの型に合わせてマッピングする。値が無い場合は初期化する。
 	var festivalItemDetailsForMypageMap = make(map[string]FestivalItemDetailsForMypage)
 	var festivalItemMaps = make(map[string]map[string]FestivalItemWithReport)
-
+	var budgetMap = make(map[int]int, 0)
 	for _, festivalItemForMyPageColumn := range festivalItemForMyPageColumns {
 		festivalItemDetailsForMypage := festivalItemDetailsForMypageMap[festivalItemForMyPageColumn.DivisionName]
 		// 局と部門名前定義
@@ -331,15 +385,18 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 			Amount:        &festivalItemForMyPageColumn.ReportAmount,
 			ReportDate:    &festivalItemForMyPageColumn.ReportDate,
 		}
+		_, ok = budgetMap[festivalItemForMyPageColumn.FestivalItemId]
+		if !ok {
+			budgetMap[festivalItemForMyPageColumn.FestivalItemId] = festivalItemForMyPageColumn.BudgetAmount
+			*festivalItemWithReport.FestivalItemTotal.Budget += festivalItemForMyPageColumn.BudgetAmount
+			*festivalItemWithReport.FestivalItemTotal.Balance += festivalItemForMyPageColumn.BudgetAmount
+		}
 
-		*festivalItemWithReport.FestivalItemTotal.Budget += festivalItemForMyPageColumn.BudgetAmount
-		*festivalItemWithReport.FestivalItemTotal.Balance += festivalItemForMyPageColumn.BudgetAmount
+		*festivalItemWithReport.FestivalItemTotal.Expense += festivalItemForMyPageColumn.ReportAmount
+		*festivalItemWithReport.FestivalItemTotal.Balance -= festivalItemForMyPageColumn.ReportAmount
 		switch {
 		case festivalItemForMyPageColumn.IsSettled:
 			buyReport.Status = &isSettled
-			// 清算済みの場合、支出と残高に反映
-			*festivalItemWithReport.FestivalItemTotal.Expense += festivalItemForMyPageColumn.ReportAmount
-			*festivalItemWithReport.FestivalItemTotal.Balance -= festivalItemForMyPageColumn.ReportAmount
 		case festivalItemForMyPageColumn.IsPacked:
 			buyReport.Status = &isPacked
 		default:
@@ -382,6 +439,10 @@ func convertColumnToGenerated(festivalItemForMyPageColumns []domain.FestivalItem
 		newFestivalItemDetails.FestivalItems = &festivalItemWithReports
 		festivalItemDetailsList = append(festivalItemDetailsList, newFestivalItemDetails)
 	}
+
+	sort.Slice(festivalItemDetailsList, func(i, j int) bool {
+		return strings.Compare(*festivalItemDetailsList[i].DivisionName, *festivalItemDetailsList[j].DivisionName) < 0
+	})
 	return festivalItemDetailsList
 }
 

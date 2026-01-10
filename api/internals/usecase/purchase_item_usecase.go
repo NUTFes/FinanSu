@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -59,6 +60,10 @@ func (p *purchaseItemUseCase) GetPurchaseItem(c context.Context) ([]domain.Purch
 func (p *purchaseItemUseCase) GetPurchaseItemByID(c context.Context, id string) (domain.PurchaseItem, error) {
 	purchaseItem := domain.PurchaseItem{}
 	row, err := p.rep.Find(c, id)
+	if err != nil {
+		return purchaseItem, err
+	}
+
 	err = row.Scan(
 		&purchaseItem.ID,
 		&purchaseItem.Item,
@@ -88,26 +93,33 @@ func (p *purchaseItemUseCase) CreatePurchaseItem(
 	PurchaseOrderID string,
 	FinanceCheck string,
 ) (domain.PurchaseItem, error) {
-	latastPurchaseItem := domain.PurchaseItem{}
+	latestPurchaseItem := domain.PurchaseItem{}
 
-	err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
-	row, err := p.rep.FindNewRecord(c)
-	err = row.Scan(
-		&latastPurchaseItem.ID,
-		&latastPurchaseItem.Item,
-		&latastPurchaseItem.Price,
-		&latastPurchaseItem.Quantity,
-		&latastPurchaseItem.Detail,
-		&latastPurchaseItem.Url,
-		&latastPurchaseItem.PurchaseOrderID,
-		&latastPurchaseItem.FinanceCheck,
-		&latastPurchaseItem.CreatedAt,
-		&latastPurchaseItem.UpdatedAt,
-	)
-	if err != nil {
-		return latastPurchaseItem, err
+	if err := p.rep.Create(c, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck); err != nil {
+		return latestPurchaseItem, err
 	}
-	return latastPurchaseItem, err
+
+	row, err := p.rep.FindNewRecord(c)
+	if err != nil {
+		return latestPurchaseItem, err
+	}
+
+	if err = row.Scan(
+		&latestPurchaseItem.ID,
+		&latestPurchaseItem.Item,
+		&latestPurchaseItem.Price,
+		&latestPurchaseItem.Quantity,
+		&latestPurchaseItem.Detail,
+		&latestPurchaseItem.Url,
+		&latestPurchaseItem.PurchaseOrderID,
+		&latestPurchaseItem.FinanceCheck,
+		&latestPurchaseItem.CreatedAt,
+		&latestPurchaseItem.UpdatedAt,
+	); err != nil {
+		return latestPurchaseItem, err
+	}
+
+	return latestPurchaseItem, err
 }
 
 // purchaseItemの修正(Update)
@@ -123,9 +135,16 @@ func (p *purchaseItemUseCase) UpdatePurchaseItem(
 	FinanceCheck string,
 ) (domain.PurchaseItem, error) {
 	updatedPurchaseItem := domain.PurchaseItem{}
-	err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck)
+	if err := p.rep.Update(c, id, Item, Price, Quantity, Detail, Url, PurchaseOrderID, FinanceCheck); err != nil {
+		return updatedPurchaseItem, err
+	}
+
 	row, err := p.rep.Find(c, id)
-	err = row.Scan(
+	if err != nil {
+		return updatedPurchaseItem, err
+	}
+
+	if err = row.Scan(
 		&updatedPurchaseItem.ID,
 		&updatedPurchaseItem.Item,
 		&updatedPurchaseItem.Price,
@@ -136,10 +155,10 @@ func (p *purchaseItemUseCase) UpdatePurchaseItem(
 		&updatedPurchaseItem.FinanceCheck,
 		&updatedPurchaseItem.CreatedAt,
 		&updatedPurchaseItem.UpdatedAt,
-	)
-	if err != nil {
+	); err != nil {
 		return updatedPurchaseItem, err
 	}
+
 	return updatedPurchaseItem, err
 }
 
@@ -163,7 +182,11 @@ func (p *purchaseItemUseCase) GetPurchaseItemDetails(c context.Context) ([]domai
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -200,6 +223,10 @@ func (p *purchaseItemUseCase) GetPurchaseItemDetailsByID(c context.Context, id s
 	purchaseItemDetail := domain.PurchaseItemDetails{}
 
 	row, err := p.rep.FindDetails(c, id)
+	if err != nil {
+		return purchaseItemDetail, err
+	}
+
 	err = row.Scan(
 		&purchaseItemDetail.PurchaseItem.ID,
 		&purchaseItemDetail.PurchaseItem.Item,

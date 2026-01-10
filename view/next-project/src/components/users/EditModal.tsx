@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
-import { Modal, PrimaryButton, CloseButton, Input, Select } from '../common';
 import { ROLES } from '@/constants/role';
 import { put } from '@api/user';
 import { Bureau, User } from '@type/common';
+
+import { Modal, PrimaryButton, CloseButton, Input, Select } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -45,7 +46,7 @@ export default function FundInformationEditModal(props: ModalProps) {
         />
       </div>
       <div className='mx-auto mb-10 w-fit text-xl text-black-600'>ユーザの編集</div>
-      <div className='grid grid-cols-5 items-center justify-items-center gap-4 text-black-600'>
+      <div className='grid grid-cols-5 place-items-center gap-4 text-black-600'>
         <p>氏名</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.name} onChange={handler('name')} />

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
-import AddButton from '../common/AddButton';
-import SponsorActivitiesAddModal from './SponsorActivitiesAddModal';
 import { User, Sponsor, SponsorStyle, YearPeriod } from '@type/common';
+
+import SponsorActivitiesAddModal from './SponsorActivitiesAddModal';
+import AddButton from '../common/AddButton';
 
 interface Props {
   users: User[];

@@ -10,8 +10,8 @@ import (
 )
 
 type userRepository struct {
-	client   db.Client
-	crud abstract.Crud
+	client db.Client
+	crud   abstract.Crud
 }
 
 type UserRepository interface {
@@ -68,9 +68,12 @@ func (ur *userRepository) Destroy(c context.Context, id string) error {
 	query := "UPDATE users SET is_deleted = TRUE WHERE id =" + id
 
 	err := ur.crud.UpdateDB(c, query)
+	if err != nil {
+		return err
+	}
 
 	query = "UPDATE mail_auth SET email = NULL WHERE user_id =" + id
-	ur.crud.UpdateDB(c, query)
+	err = ur.crud.UpdateDB(c, query)
 
 	return err
 }
@@ -83,13 +86,13 @@ func (ur *userRepository) MultiDestroy(c context.Context, ids []int) error {
 		query += "id = " + strconv.Itoa(id)
 		query2 += "user_id = " + strconv.Itoa(id)
 
-		if(index != len(ids)-1){
+		if index != len(ids)-1 {
 			query += " OR "
 			query2 += " OR "
 		}
 
 	}
-	
+
 	err := ur.crud.UpdateDB(c, query)
 	if err != nil {
 		return err
@@ -99,7 +102,6 @@ func (ur *userRepository) MultiDestroy(c context.Context, ids []int) error {
 
 	return err
 }
-
 
 func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
 	query := "SELECT * FROM users WHERE is_deleted IS FALSE ORDER BY id DESC LIMIT 1"

@@ -1,10 +1,15 @@
 import { clsx } from 'clsx';
 import { saveAs } from 'file-saver';
 import React, { FC, useEffect, useState } from 'react';
-
 import { FaChevronCircleLeft, FaCheckCircle } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 import { RiCloseCircleLine } from 'react-icons/ri';
+
+import { post, del, put } from '@/utils/api/api_methods';
+import { DESIGN_PROGRESSES } from '@constants/designProgresses';
+import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
+
+import UplaodFileModal from './UploadFileModal';
 import {
   DeleteButton,
   EditButton,
@@ -14,10 +19,6 @@ import {
   Select,
   Loading,
 } from '../common';
-import UplaodFileModal from './UploadFileModal';
-import { post, del, put } from '@/utils/api/api_methods';
-import { DESIGN_PROGRESSES } from '@constants/designProgresses';
-import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;

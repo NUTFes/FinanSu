@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
-import ExpenseDeleteModal from './ExpenseDeleteModal';
 import { DeleteButton } from '@components/common';
+
+import ExpenseDeleteModal from './ExpenseDeleteModal';
 
 export interface Props {
   children?: React.ReactNode;

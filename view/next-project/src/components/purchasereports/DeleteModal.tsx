@@ -1,14 +1,16 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 
+import { useDeleteBuyReportsId } from '@/generated/hooks';
+
 import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '../common';
-import { del } from '@api/api_methods';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   openModal: boolean;
   children?: React.ReactNode;
-  id: number | string;
+  id: number;
+  onDeleteSuccess: () => void;
 }
 
 const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
@@ -18,10 +20,16 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
 
   const router = useRouter();
 
-  const deletePurchaseReport = async (id: number | string) => {
-    const deletePurchaseReportUrl = process.env.CSR_API_URI + '/purchasereports/' + id;
-    await del(deletePurchaseReportUrl);
+  const { trigger, error: delTrigger } = useDeleteBuyReportsId(props.id);
+
+  const deletePurchaseReport = async () => {
+    await trigger();
+    props.onDeleteSuccess();
   };
+
+  if (delTrigger) {
+    alert(delTrigger);
+  }
 
   return (
     <Modal className='md:w-1/2'>
@@ -37,9 +45,8 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
           <OutlinePrimaryButton onClick={closeModal}>戻る</OutlinePrimaryButton>
           <PrimaryButton
             onClick={() => {
-              deletePurchaseReport(props.id);
+              deletePurchaseReport();
               closeModal();
-              router.reload();
             }}
           >
             削除

@@ -6,32 +6,33 @@ import (
 )
 
 type router struct {
-	activityController            controller.ActivityController
-	activityInformationController controller.ActivityInformationController
-	activityStyleController       controller.ActivityStyleController
-	budgetController              controller.BudgetController
-	bureauController              controller.BureauController
-	buyReportController           controller.BuyReportController
-	departmentController          controller.DepartmentController
-	expenseController             controller.ExpenseController
-	festivalItemController        controller.FestivalItemController
-	financialRecordController     controller.FinancialRecordController
-	divisionController            controller.DivisionController
-	fundInformationController     controller.FundInformationController
-	healthcheckController         controller.HealthcheckController
-	mailAuthController            controller.MailAuthController
-	objectUploadController        controller.ObjectUploadController
-	passwordResetTokenController  controller.PasswordResetTokenController
-	purchaseItemController        controller.PurchaseItemController
-	purchaseOrderController       controller.PurchaseOrderController
-	purchaseReportController      controller.PurchaseReportController
-	receiptController             controller.ReceiptController
-	sourceController              controller.SourceController
-	sponsorController             controller.SponsorController
-	sponsorStyleController        controller.SponsorStyleController
-	teacherController             controller.TeacherController
-	userController                controller.UserController
-	yearController                controller.YearController
+	activityController                    controller.ActivityController
+	activityInformationController         controller.ActivityInformationController
+	activityStyleController               controller.ActivityStyleController
+	budgetController                      controller.BudgetController
+	bureauController                      controller.BureauController
+	buyReportController                   controller.BuyReportController
+	departmentController                  controller.DepartmentController
+	expenseController                     controller.ExpenseController
+	festivalItemController                controller.FestivalItemController
+	financialRecordController             controller.FinancialRecordController
+	divisionController                    controller.DivisionController
+	healthcheckController                 controller.HealthcheckController
+	incomeController                      controller.IncomeController
+	incomeExpenditureManagementController controller.IncomeExpenditureManagementController
+	mailAuthController                    controller.MailAuthController
+	objectUploadController                controller.ObjectUploadController
+	passwordResetTokenController          controller.PasswordResetTokenController
+	purchaseItemController                controller.PurchaseItemController
+	purchaseOrderController               controller.PurchaseOrderController
+	purchaseReportController              controller.PurchaseReportController
+	receiptController                     controller.ReceiptController
+	sourceController                      controller.SourceController
+	sponsorController                     controller.SponsorController
+	sponsorStyleController                controller.SponsorStyleController
+	teacherController                     controller.TeacherController
+	userController                        controller.UserController
+	yearController                        controller.YearController
 }
 
 type Router interface {
@@ -50,8 +51,9 @@ func NewRouter(
 	expenseController controller.ExpenseController,
 	festivalItemController controller.FestivalItemController,
 	financialRecordController controller.FinancialRecordController,
-	fundInformationController controller.FundInformationController,
 	healthController controller.HealthcheckController,
+	incomeController controller.IncomeController,
+	incomeExpenditureManagementController controller.IncomeExpenditureManagementController,
 	mailAuthController controller.MailAuthController,
 	objectUploadController controller.ObjectUploadController,
 	passwordResetTokenController controller.PasswordResetTokenController,
@@ -78,8 +80,9 @@ func NewRouter(
 		festivalItemController,
 		financialRecordController,
 		divisionController,
-		fundInformationController,
 		healthController,
+		incomeController,
+		incomeExpenditureManagementController,
 		mailAuthController,
 		objectUploadController,
 		passwordResetTokenController,
@@ -150,8 +153,13 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// buyReportsのRoute
 	e.POST("/buy_reports", r.buyReportController.CreateBuyReport)
+	e.GET("/buy_reports/:id", r.buyReportController.GetBuyReportById)
 	e.PUT("/buy_reports/:id", r.buyReportController.UpdateBuyReport)
 	e.DELETE("/buy_reports/:id", r.buyReportController.DeleteBuyReport)
+	e.GET("/buy_reports/details", r.buyReportController.IndexBuyReport)
+	e.GET("/buy_reports/summary", r.buyReportController.GetBuyReportsSummary)
+	e.GET("/buy_reports/csv/download", r.buyReportController.GetBuyReportsCsvDownload)
+	e.PUT("/buy_report/status/:buy_report_id", r.buyReportController.UpdateBuyReportStatus)
 
 	// current_user
 	e.GET("/current_user", r.userController.GetCurrentUser)
@@ -166,6 +174,8 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// divisions
 	e.GET("/divisions", r.divisionController.IndexDivisions)
 	e.GET("/divisions/users", r.divisionController.GetDivisionOptions)
+	e.GET("/divisions/:id", r.divisionController.GetDivision)
+	e.GET("/divisions/years", r.divisionController.GetDivisionsYears)
 	e.POST("/divisions", r.divisionController.CreateDivision)
 	e.PUT("/divisions/:id", r.divisionController.UpdateDivision)
 	e.DELETE("/divisions/:id", r.divisionController.DestroyDivision)
@@ -185,6 +195,7 @@ func (r router) ProvideRouter(e *echo.Echo) {
 	// festival items
 	e.GET("/festival_items", r.festivalItemController.IndexFestivalItems)
 	e.GET("/festival_items/details/:user_id", r.festivalItemController.IndexFestivalItemsForMypage)
+	e.GET("/festival_items/:id", r.festivalItemController.GetFestivalItem)
 	e.GET("/festival_items/users", r.festivalItemController.IndexFestivalItemOption)
 	e.POST("/festival_items", r.festivalItemController.CreateFestivalItem)
 	e.PUT("/festival_items/:id", r.festivalItemController.UpdateFestivalItem)
@@ -192,26 +203,23 @@ func (r router) ProvideRouter(e *echo.Echo) {
 
 	// financial_records
 	e.GET("/financial_records", r.financialRecordController.IndexFinancialRecords)
+	e.GET("/financial_records/:id", r.financialRecordController.GetFinancialRecord)
 	e.POST("/financial_records", r.financialRecordController.CreateFinancialRecord)
 	e.PUT("/financial_records/:id", r.financialRecordController.UpdateFinancialRecord)
 	e.DELETE("/financial_records/:id", r.financialRecordController.DestroyFinancialRecord)
 	e.GET("/financial_records/csv/download", r.financialRecordController.DownloadFinancialRecordsCSV)
 
-	// fund informations
-	e.GET("/fund_informations", r.fundInformationController.IndexFundInformation)
-	e.GET("/fund_informations/:id", r.fundInformationController.ShowFundInformation)
-	e.POST("/fund_informations", r.fundInformationController.CreateFundInformation)
-	e.PUT("/fund_informations/:id", r.fundInformationController.UpdateFundInformation)
-	e.DELETE("/fund_informations/:id", r.fundInformationController.DestroyFundInformation)
-	e.GET("/fund_informations/details", r.fundInformationController.IndexFundInformationDetails)
-	e.GET(
-		"/fund_informations/:id/details",
-		r.fundInformationController.ShowFundInformationDetailByID,
-	)
-	e.GET(
-		"/fund_informations/details/:year",
-		r.fundInformationController.IndexFundInformationDetailsByPeriod,
-	)
+	// incomes
+	e.GET("/incomes", r.incomeController.IndexIncome)
+	e.POST("/incomes", r.incomeController.PostIncome)
+	e.GET("/incomes/:id", r.incomeController.GetIncome)
+	e.PUT("/incomes/:id", r.incomeController.PutIncome)
+	e.DELETE("/incomes/:id", r.incomeController.DeleteIncome)
+
+	// income_expenditure_managements
+	e.GET("income_expenditure_managements", r.incomeExpenditureManagementController.IndexIncomeExpenditureManagements)
+	e.PUT("/income_expenditure_managements/check/:id", r.incomeExpenditureManagementController.PutIncomeExpenditureManagementCheck)
+	e.GET("/income_expenditure_management/csv/download", r.incomeExpenditureManagementController.DownloadIncomeExpenditureManagementCSV)
 
 	// mail auth
 	e.POST("/mail_auth/signup", r.mailAuthController.SignUp)

@@ -692,6 +692,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/buyReport"
   /buy_reports/{id}:
+    get:
+      tags:
+        - buy_report
+      description: IDで指定されたbuy_reportの取得（購入報告編集用）
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReportWithDivisionId"
     put:
       tags:
         - buy_report
@@ -755,6 +773,24 @@ paths:
           description: year
           schema:
             type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_records.id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+        - name: paid_by
+          in: query
+          description: buy_reports.paid_by での完全一致フィルタ
+          required: false
+          schema:
+            type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: buy_reportの一覧を取得
@@ -764,6 +800,43 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/buyReportDetail"
+  /buy_reports/summary:
+    get:
+      tags:
+        - buy_report
+      description: 購入報告一覧の未精算/未封詰め合計を返す
+      parameters:
+        - name: year
+          in: query
+          description: year
+          required: true
+          schema:
+            type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_records.id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+        - name: paid_by
+          in: query
+          description: buy_reports.paid_by での完全一致フィルタ
+          required: false
+          schema:
+            type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 条件に一致する購入報告のサマリ
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReportSummary"
   /buy_report/status/{buy_report_id}:
     put:
       tags:
@@ -797,6 +870,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/buyReportDetail"
+  /buy_reports/csv/download:
+    get:
+      tags:
+        - buy_report
+      description: 購入報告一覧のCSVダウンロード、財務向けのページ
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_records.id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+        - name: paid_by
+          in: query
+          description: buy_reports.paid_by での完全一致フィルタ
+          required: false
+          schema:
+            type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: buy_reportのCSVダウンロード
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
 
   /departments:
     get:
@@ -930,6 +1040,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/divisionWithBalance"
   /divisions/{id}:
+    get:
+      tags:
+        - division
+      description: IDで指定されたdivisionの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/division"
     put:
       tags:
         - division
@@ -993,6 +1121,26 @@ paths:
       responses:
         "200":
           description: ユーザー所属の部門の一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/divisionOption"
+  /divisions/years:
+    get:
+      tags:
+        - division
+      description: 年度ごとのdivisionの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度ごとのdivisionの一覧を取得
           content:
             application/json:
               schema:
@@ -1213,6 +1361,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/festivalItemWithBalance"
   /festival_items/{id}:
+    get:
+      tags:
+        - festival_item
+      description: IDで指定されたfestival_itemの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/festivalItem"
     put:
       tags:
         - festival_item
@@ -1344,6 +1510,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/financialRecordWithBalance"
   /financial_records/{id}:
+    get:
+      tags:
+        - financial_record
+      description: IDで指定されたfinancial_recordの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/financialRecord"
     put:
       tags:
         - financial_record
@@ -1412,216 +1596,170 @@ paths:
               schema:
                 type: string
                 format: binary
-  /fund_informations:
+  /income_expenditure_management/csv/download:
     get:
       tags:
-        - fund_information
-      description: fund_informationの一覧を取得
-      responses:
-        "200":
-          description: fund_informationの一覧の取得
-          content:
-            application/json:
-              schema:
-                type: object
-    post:
-      tags:
-        - fund_information
-      description: fund_informationの作成
-      parameters:
-        - name: user_id
-          in: query
-          description: user_id
-          required: true
-          schema:
-            type: integer
-        - name: teacher_id
-          in: query
-          description: teacher_id
-          required: true
-          schema:
-            type: integer
-        - name: price
-          in: query
-          description: price
-          required: true
-          schema:
-            type: integer
-        - name: remark
-          in: query
-          description: remark
-          schema:
-            type: string
-        - name: is_first_check
-          in: query
-          description: is_first_check
-          schema:
-            type: boolean
-        - name: is_last_check
-          in: query
-          description: is_last_check
-          schema:
-            type: boolean
-        - name: received_at
-          in: query
-          description: received_at
-          schema:
-            type: string
-      responses:
-        "200":
-          description: create されたfund_informationが返ってくる
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /fund_informations/details:
-    get:
-      tags:
-        - fund_information
-      description: fund_informationに紐づくteacherとuserの一覧を取得
-      responses:
-        "200":
-          description: fund_informationに紐づくteacherとuserの一覧を取得
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /fund_informations/{id}:
-    get:
-      tags:
-        - fund_information
-      description: IDで指定されたfund_informationの取得
-      parameters:
-        - name: id
-          in: path
-          description: id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: fund_informationの取得
-          content:
-            application/json:
-              schema:
-                type: object
-    put:
-      tags:
-        - fund_information
-      description: fund_informationの更新
-      parameters:
-        - name: id
-          in: path
-          description: id
-          required: true
-          schema:
-            type: integer
-        - name: user_id
-          in: query
-          description: user_id
-          required: true
-          schema:
-            type: integer
-        - name: teacher_id
-          in: query
-          description: teacher_id
-          required: true
-          schema:
-            type: integer
-        - name: price
-          in: query
-          description: price
-          required: true
-          schema:
-            type: integer
-        - name: remark
-          in: query
-          description: remark
-          schema:
-            type: string
-        - name: is_first_check
-          in: query
-          description: is_first_check
-          schema:
-            type: boolean
-        - name: is_last_check
-          in: query
-          description: is_last_check
-          schema:
-            type: boolean
-        - name: received_at
-          in: query
-          description: received_at
-          schema:
-            type: string
-      responses:
-        "200":
-          description: 更新されたfund_informationが返ってくる
-          content:
-            application/json:
-              schema:
-                type: object
-    delete:
-      tags:
-        - fund_information
-      description: IDを指定してfund_informationの削除
-      parameters:
-        - name: id
-          in: path
-          description: id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: fund_informationの削除完了
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /fund_informations/{id}/details:
-    get:
-      tags:
-        - fund_information
-      description: IDで指定されたfund_informatinに紐づくteacherとuserを取得
-      parameters:
-        - name: id
-          in: path
-          description: id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: fund_informatinに紐づくteacherとuserを取得
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /fund_informations/details/{year}:
-    get:
-      tags:
-        - fund_information
-      description: 年度で指定されたfund_informationsに紐づくデータを取得
+        - income_expenditure_management
+      description: 収支管理一覧のCSVダウンロード、財務向けのページ
       parameters:
         - name: year
-          in: path
+          in: query
           description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: income_expenditure_managementのCSVダウンロード
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=income_expenditure_management.csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+  /incomes:
+    get:
+      tags:
+        - income
+      description: 収支管理で収入の項目を取得（教育振興会費、雑収入など）
+      responses:
+        "200":
+          description: incomeの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/incomeCategory"
+    post:
+      tags:
+        - income
+      description: incomeの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/income"
+        required: true
+      responses:
+        "200":
+          description: create されたincomeが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/income"
+  /incomes/{id}:
+    get:
+      tags:
+        - income
+      description: IDで指定されたincomeの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
           required: true
           schema:
             type: integer
       responses:
         "200":
-          description: 年度で指定されたfund_informationsに紐づくデータを取得
+          description: incomeの取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/income"
+    put:
+      tags:
+        - income
+      description: incomeの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/income"
+        required: true
+      responses:
+        "200":
+          description: 更新されたincomeが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/income"
+    delete:
+      tags:
+        - income
+      description: IDを指定してincomeの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: incomeの削除完了
           content:
             application/json:
               schema:
                 type: object
-
+  /income_expenditure_managements:
+    get:
+      tags:
+        - income_expenditure_management
+      description: income_expenditure_managementの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ユーザー所属の物品予算の一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/incomeExpenditureManagementDetails"
+  /income_expenditure_managements/check/{id}:
+    put:
+      tags:
+        - income_expenditure_management
+      description: income_expenditure_managementのチェック
+      parameters:
+        - name: id
+          in: path
+          description: income_expenditure_management_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - isChecked
+              properties:
+                isChecked:
+                  type: boolean
+                  description: チェック済みかどうか
+      responses:
+        "200":
+          description: チェック済みのincome_expenditure_managementが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
   /password_reset/{id}:
     post:
       tags:
@@ -2119,11 +2257,11 @@ paths:
       responses:
         "200":
           description: teacherの一覧を取得
-          # NOTE 型が定義されておらず、generateできないためコメントアウト
-          # content:
-          #   "*/*":
-          #     schema:
-          #       type: array
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#/components/schemas/teacher"
     post:
       tags:
         - teacher
@@ -2146,6 +2284,11 @@ paths:
           description: 学科ID
           schema:
             type: integer
+        - name: building
+          in: query
+          description: 棟
+          schema:
+            type: string
         - name: room
           in: query
           description: 部屋番号
@@ -2207,7 +2350,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/teacher"
     put:
       tags:
         - teacher
@@ -2236,6 +2379,11 @@ paths:
           description: 学科ID
           schema:
             type: integer
+        - name: building
+          in: query
+          description: 棟
+          schema:
+            type: string
         - name: room
           in: query
           description: 部屋番号
@@ -2714,6 +2862,9 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
       required:
         - festivalItemID
         - amount
@@ -2740,6 +2891,25 @@ components:
             - 確認中
             - 封詰め
             - 清算完了
+    buyReportWithDivisionId:
+      description: 購入報告の際のパラメータ、部門と物品IDを含む
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        divisionId:
+          type: integer
+          example: 1
+        festivalItemID:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 1000
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
     buyReportDetail:
       description: 購入報告ページで表示する詳細情報
       type: object
@@ -2771,12 +2941,50 @@ components:
         isSettled:
           type: boolean
           example: false
+        fileName:
+          type: string
+          example: test.png
+        year:
+          type: integer
+          example: 2025
+        filePath:
+          type: string
+          example: /2025/receipts/FileName
+      required:
+        - amount
+        - divisionName
+        - festivalItemName
+        - financialRecordName
+        - id
+        - isPacked
+        - isSettled
+        - paidBy
+        - reportDate
+        - filePath
+    buyReportSummary:
+      description: 購入報告の未精算/未封詰め合計
+      type: object
+      properties:
+        unsettledAmount:
+          type: integer
+          example: 12000
+          description: isSettled=falseのamount合計
+        unpackedAmount:
+          type: integer
+          example: 8000
+          description: isPacked=falseのamount合計
+      required:
+        - unsettledAmount
+        - unpackedAmount
     division:
       required:
         - name
         - financialRecordID
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
           example: 衛生管理部門
@@ -2832,6 +3040,9 @@ components:
         - amount
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
           example: 農ポリ
@@ -2925,6 +3136,9 @@ components:
         - year_id
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
           example: 総務局
@@ -2961,6 +3175,92 @@ components:
         balance:
           type: integer
           example: 90000
+    income:
+      type: object
+      required:
+        - name
+        - amount
+        - yearId
+        - incomeId
+      properties:
+        id:
+          type: integer
+          example: 1
+        incomeId:
+          type: integer
+          example: 1
+        sponsorName:
+          type: string
+          example: 企業1
+        amount:
+          type: integer
+          example: 10000
+        yearId:
+          type: integer
+          example: 1
+        receiveOption:
+          type: string
+          enum:
+            - hand
+            - transfer
+    incomeCategory:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 教育振興会費
+    incomeExpenditureManagement:
+      type: object
+      required:
+        - id
+        - content
+        - amount
+        - currentBalance
+        - date
+        - isChecked
+      properties:
+        id:
+          type: integer
+          example: 1
+        content:
+          type: string
+          example: 情報局
+        detail:
+          type: string
+          example: ビール
+        amount:
+          type: integer
+          example: 100000
+        currentBalance:
+          type: integer
+          example: 100000
+        receiveOption:
+          type: string
+          example: ""
+        date:
+          type: string
+          example: 2024-01-01
+        isChecked:
+          type: boolean
+          example: false
+    incomeExpenditureManagementDetails:
+      type: object
+      required:
+        - total
+        - incomeExpenditureManagements
+      properties:
+        total:
+          type: integer
+          example: 100000
+        incomeExpenditureManagements:
+          type: array
+          items:
+            $ref: "#/components/schemas/incomeExpenditureManagement"
     sponsorStyle:
       required:
         - feature
@@ -3084,5 +3384,41 @@ components:
         endedAt:
           type: string
           example: 0000-00-00T00:00:00Z
+    teacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: test-name
+        position:
+          type: string
+          example: 准教授
+        department_id:
+          type: integer
+          example: 1
+        building:
+          type: string
+          example: 研究棟
+        room:
+          type: string
+          example: 101
+        is_black:
+          type: boolean
+          example: false
+        remark:
+          type: string
+          example: 備考
+      required:
+        - id
+        - name
+        - position
+        - department_id
+        - building
+        - room_number
+        - is_black
+        - remark
 
 x-original-swagger-version: "2.0"

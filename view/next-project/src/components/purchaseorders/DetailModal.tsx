@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { FC, useMemo } from 'react';
 import { RiCloseCircleLine, RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
+
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { userAtom } from '@/store/atoms';
 import { downloadFile } from '@/utils/downloadFile';
@@ -141,7 +142,7 @@ const DetailModal: FC<ModalProps> = (props) => {
       <div className={clsx('mb-5 mt-2 grid w-full justify-items-center text-base text-black-600')}>
         購入物品
       </div>
-      <div className={clsx('grid h-[20rem] w-full justify-items-center')}>
+      <div className={clsx('grid h-80 w-full justify-items-center')}>
         <div
           className={clsx('w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1')}
         >

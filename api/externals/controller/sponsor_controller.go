@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
@@ -114,7 +115,12 @@ func (s *sponsorController) CreateSponsorsByCsv(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	defer csv.Close()
+	defer func() {
+		if err := csv.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	csvSponsor, err := s.u.CreateSponsorsByCsv(c.Request().Context(), csv)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})

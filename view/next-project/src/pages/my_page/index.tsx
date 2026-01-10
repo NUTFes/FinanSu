@@ -1,7 +1,9 @@
 import { Noto_Sans_JP } from 'next/font/google';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
 import { useRecoilValue } from 'recoil';
+
 import { Card, Loading, PrimaryButton } from '@/components/common';
 import MainLayout from '@/components/layout/MainLayout';
 import TableSection from '@/components/mypage/TableSection';
@@ -15,6 +17,7 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 const MyPage = () => {
+  const router = useRouter();
   const user = useRecoilValue(userAtom);
   const [currentUser, setCurrentUser] = useState<User>();
 
@@ -27,6 +30,11 @@ const MyPage = () => {
   const { data, error, isLoading } = useGetFestivalItemsDetailsUserId(userId, {
     year,
   });
+
+  const handleCreatePurchaseReport = () => {
+    router.push('/create_purchase_report');
+  };
+
   if (isLoading) return <Loading />;
   if (error) return <div>エラーが発生しました</div>;
   const resData = data?.data;
@@ -35,9 +43,9 @@ const MyPage = () => {
       <Card>
         <div className={`mx-5 mt-10 min-h-[calc(100vh-12rem)] ${notoSansJP.className}`}>
           <div className='mb-8 flex items-center justify-between'>
-            <h2 className='text-2xl font-thin text-[#333]'>マイページ</h2>
+            <h2 className='text-2xl font-thin text-black-300'>My Page</h2>
             {resData && (
-              <PrimaryButton>
+              <PrimaryButton onClick={handleCreatePurchaseReport}>
                 <div className='flex items-center gap-2'>
                   購入報告
                   <RiAddCircleLine size={20} />

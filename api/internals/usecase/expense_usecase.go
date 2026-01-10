@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
@@ -39,7 +40,11 @@ func (e *expenseUseCase) GetExpenses(c context.Context) ([]domain.Expense, error
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -63,6 +68,10 @@ func (e *expenseUseCase) GetExpenses(c context.Context) ([]domain.Expense, error
 func (e *expenseUseCase) GetExpenseByID(c context.Context, id string) (domain.Expense, error) {
 	expense := domain.Expense{}
 	row, err := e.rep.Find(c, id)
+	if err != nil {
+		return expense, err
+	}
+
 	err = row.Scan(
 		&expense.ID,
 		&expense.Name,
@@ -78,27 +87,42 @@ func (e *expenseUseCase) GetExpenseByID(c context.Context, id string) (domain.Ex
 }
 
 func (e *expenseUseCase) CreateExpense(c context.Context, name string, yearID string) (domain.Expense, error) {
-	latastExpense := domain.Expense{}
+	latestExpense := domain.Expense{}
 	err := e.rep.Create(c, name, yearID)
+	if err != nil {
+		return latestExpense, err
+	}
+
 	row, err := e.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestExpense, err
+	}
+
 	err = row.Scan(
-		&latastExpense.ID,
-		&latastExpense.Name,
-		&latastExpense.TotalPrice,
-		&latastExpense.YearID,
-		&latastExpense.CreatedAt,
-		&latastExpense.UpdatedAt,
+		&latestExpense.ID,
+		&latestExpense.Name,
+		&latestExpense.TotalPrice,
+		&latestExpense.YearID,
+		&latestExpense.CreatedAt,
+		&latestExpense.UpdatedAt,
 	)
 	if err != nil {
-		return latastExpense, err
+		return latestExpense, err
 	}
-	return latastExpense, err
+	return latestExpense, err
 }
 
 func (e *expenseUseCase) UpdateExpense(c context.Context, id string, name string, yearID string) (domain.Expense, error) {
 	updatedExpense := domain.Expense{}
-	err := e.rep.Update(c, id, name, yearID)
+	if err := e.rep.Update(c, id, name, yearID); err != nil {
+		return updatedExpense, err
+	}
+
 	row, err := e.rep.Find(c, id)
+	if err != nil {
+		return updatedExpense, err
+	}
+
 	err = row.Scan(
 		&updatedExpense.ID,
 		&updatedExpense.Name,
@@ -148,6 +172,10 @@ func (e *expenseUseCase) GetExpenseDetails(c context.Context) ([]domain.ExpenseD
 			return nil, err
 		}
 		rows, err := e.rep.AllOrderAndReportInfo(c, strconv.Itoa(int(expenseDetail.Expense.ID)))
+		if err != nil {
+			return nil, err
+		}
+
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseDetail.PurchaseReport.ID,
@@ -172,6 +200,10 @@ func (e *expenseUseCase) GetExpenseDetails(c context.Context) ([]domain.ExpenseD
 				return nil, err
 			}
 			rows, err := e.rep.AllItemInfo(c, strconv.Itoa(int(purchaseDetail.PurchaseOrder.ID)))
+			if err != nil {
+				return nil, err
+			}
+
 			for rows.Next() {
 				err := rows.Scan(
 					&purchaseItem.ID,
@@ -208,6 +240,10 @@ func (e *expenseUseCase) GetExpenseDetailByID(c context.Context, id string) (dom
 	purchaseItem := domain.PurchaseItem{}
 	var purchaseItems []domain.PurchaseItem
 	row, err := e.rep.Find(c, id)
+	if err != nil {
+		return expenseDetail, err
+	}
+
 	err = row.Scan(
 		&expenseDetail.Expense.ID,
 		&expenseDetail.Expense.Name,
@@ -220,6 +256,10 @@ func (e *expenseUseCase) GetExpenseDetailByID(c context.Context, id string) (dom
 		return expenseDetail, err
 	}
 	rows, err := e.rep.AllOrderAndReportInfo(c, strconv.Itoa(int(expenseDetail.Expense.ID)))
+	if err != nil {
+		return expenseDetail, err
+	}
+
 	for rows.Next() {
 		err := rows.Scan(
 			&purchaseDetail.PurchaseReport.ID,
@@ -244,6 +284,10 @@ func (e *expenseUseCase) GetExpenseDetailByID(c context.Context, id string) (dom
 			return expenseDetail, err
 		}
 		rows, err := e.rep.AllItemInfo(c, strconv.Itoa(int(purchaseDetail.PurchaseOrder.ID)))
+		if err != nil {
+			return expenseDetail, err
+		}
+
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseItem.ID,
@@ -299,6 +343,10 @@ func (e *expenseUseCase) GetExpenseDetailsByPeriod(c context.Context, year strin
 			return nil, err
 		}
 		rows, err := e.rep.AllOrderAndReportInfo(c, strconv.Itoa(int(expenseDetail.Expense.ID)))
+		if err != nil {
+			return nil, err
+		}
+
 		for rows.Next() {
 			err := rows.Scan(
 				&purchaseDetail.PurchaseReport.ID,
@@ -323,6 +371,10 @@ func (e *expenseUseCase) GetExpenseDetailsByPeriod(c context.Context, year strin
 				return nil, err
 			}
 			rows, err := e.rep.AllItemInfo(c, strconv.Itoa(int(purchaseDetail.PurchaseOrder.ID)))
+			if err != nil {
+				return nil, err
+			}
+
 			for rows.Next() {
 				err := rows.Scan(
 					&purchaseItem.ID,
@@ -353,28 +405,28 @@ func (e *expenseUseCase) GetExpenseDetailsByPeriod(c context.Context, year strin
 }
 
 func (e *expenseUseCase) GetExpensesByPeriod(c context.Context, year string) ([]domain.Expense, error) {
-	ExpenseByperiod := domain.Expense{}
-	var expenseByperiods []domain.Expense
+	ExpenseByPeriod := domain.Expense{}
+	var expenseByPeriods []domain.Expense
 	rows, err := e.rep.OnlyExpensesByPeriod(c, year)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
-			err := rows.Scan(
-					&ExpenseByperiod.ID,
-					&ExpenseByperiod.Name,
-					&ExpenseByperiod.TotalPrice,
-					&ExpenseByperiod.YearID,
-					&ExpenseByperiod.CreatedAt,
-					&ExpenseByperiod.UpdatedAt,
-			)
-			if err != nil {
-					return nil, err
-			}
-			expenseByperiods = append(expenseByperiods, ExpenseByperiod)
+		err := rows.Scan(
+			&ExpenseByPeriod.ID,
+			&ExpenseByPeriod.Name,
+			&ExpenseByPeriod.TotalPrice,
+			&ExpenseByPeriod.YearID,
+			&ExpenseByPeriod.CreatedAt,
+			&ExpenseByPeriod.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		expenseByPeriods = append(expenseByPeriods, ExpenseByPeriod)
 	}
 	if err := rows.Err(); err != nil {
-			return nil, err
+		return nil, err
 	}
-	return expenseByperiods, nil
+	return expenseByPeriods, nil
 }

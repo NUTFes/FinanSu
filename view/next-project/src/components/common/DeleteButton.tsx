@@ -20,7 +20,7 @@ const DeleteButton = (props: Props) => {
   return (
     <button
       disabled={isDisabled}
-      className={`${buttonClass} flex h-6 w-6 min-w-0 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 p-0`}
+      className={`${buttonClass} flex size-6 min-w-0 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 p-0`}
       onClick={onClick}
       suppressHydrationWarning
     >

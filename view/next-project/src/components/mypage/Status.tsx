@@ -1,4 +1,5 @@
 import { GrStatusGoodSmall } from 'react-icons/gr';
+
 import type { BuyReportInformationStatus } from '@/generated/model';
 
 interface StatusProps {

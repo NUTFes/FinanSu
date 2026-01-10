@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -38,7 +39,12 @@ func (y *yearUseCase) GetYears(c context.Context) ([]domain.Year, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		err := rows.Scan(
@@ -61,6 +67,10 @@ func (y *yearUseCase) GetYearByID(c context.Context, id string) (domain.Year, er
 	var year domain.Year
 
 	row, err := y.rep.Find(c, id)
+	if err != nil {
+		return year, err
+	}
+
 	err = row.Scan(
 		&year.ID,
 		&year.Year,
@@ -77,8 +87,15 @@ func (y *yearUseCase) GetYearByID(c context.Context, id string) (domain.Year, er
 
 func (y *yearUseCase) CreateYear(c context.Context, year string) (domain.Year, error) {
 	latestYear := domain.Year{}
-	err := y.rep.Create(c, year)
+	if err := y.rep.Create(c, year); err != nil {
+		return latestYear, err
+	}
+
 	row, err := y.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestYear, err
+	}
+
 	err = row.Scan(
 		&latestYear.ID,
 		&latestYear.Year,
@@ -93,8 +110,15 @@ func (y *yearUseCase) CreateYear(c context.Context, year string) (domain.Year, e
 
 func (y *yearUseCase) UpdateYear(c context.Context, id string, year string) (domain.Year, error) {
 	updatedYear := domain.Year{}
-	err := y.rep.Update(c, id, year)
+	if err := y.rep.Update(c, id, year); err != nil {
+		return updatedYear, err
+	}
+
 	row, err := y.rep.Find(c, id)
+	if err != nil {
+		return updatedYear, err
+	}
+
 	err = row.Scan(
 		&updatedYear.ID,
 		&updatedYear.Year,
@@ -112,7 +136,6 @@ func (y *yearUseCase) DestroyYear(c context.Context, id string) error {
 	return err
 }
 
-
 func (y *yearUseCase) GetYearPeriods(c context.Context) ([]domain.YearPeriod, error) {
 	yearPeriod := domain.YearPeriod{}
 	var yearPeriods []domain.YearPeriod
@@ -120,13 +143,19 @@ func (y *yearUseCase) GetYearPeriods(c context.Context) ([]domain.YearPeriod, er
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	for rows.Next() {
 		err := rows.Scan(
 			&yearPeriod.ID,
 			&yearPeriod.Year,
 			&yearPeriod.StartedAt,
-			&yearPeriod.EndedAt,			
+			&yearPeriod.EndedAt,
 			&yearPeriod.CreatedAt,
 			&yearPeriod.UpdatedAt,
 		)
@@ -141,13 +170,20 @@ func (y *yearUseCase) GetYearPeriods(c context.Context) ([]domain.YearPeriod, er
 
 func (y *yearUseCase) CreateYearPeriod(c context.Context, year string, startAt string, endedAt string) (domain.YearPeriod, error) {
 	latestYearPeriod := domain.YearPeriod{}
-	err := y.rep.CreateYearPeriod(c, year, startAt, endedAt)
+	if err := y.rep.CreateYearPeriod(c, year, startAt, endedAt); err != nil {
+		return latestYearPeriod, err
+	}
+
 	row, err := y.rep.FindPeriodLatestRecord(c)
+	if err != nil {
+		return latestYearPeriod, err
+	}
+
 	err = row.Scan(
 		&latestYearPeriod.ID,
 		&latestYearPeriod.Year,
 		&latestYearPeriod.StartedAt,
-		&latestYearPeriod.EndedAt,			
+		&latestYearPeriod.EndedAt,
 		&latestYearPeriod.CreatedAt,
 		&latestYearPeriod.UpdatedAt,
 	)
@@ -159,13 +195,20 @@ func (y *yearUseCase) CreateYearPeriod(c context.Context, year string, startAt s
 
 func (y *yearUseCase) UpdateYearPeriod(c context.Context, id string, year string, startAt string, endedAt string) (domain.YearPeriod, error) {
 	updateYearPeriod := domain.YearPeriod{}
-	err := y.rep.UpdateYearPeriod(c, id, year, startAt, endedAt)
+	if err := y.rep.UpdateYearPeriod(c, id, year, startAt, endedAt); err != nil {
+		return updateYearPeriod, err
+	}
+
 	row, err := y.rep.FindYearPeriodByID(c, id)
+	if err != nil {
+		return updateYearPeriod, err
+	}
+
 	err = row.Scan(
 		&updateYearPeriod.ID,
 		&updateYearPeriod.Year,
 		&updateYearPeriod.StartedAt,
-		&updateYearPeriod.EndedAt,			
+		&updateYearPeriod.EndedAt,
 		&updateYearPeriod.CreatedAt,
 		&updateYearPeriod.UpdatedAt,
 	)

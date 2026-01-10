@@ -53,6 +53,10 @@ func (s *sponsorStyleUseCase) GetSponsorStyles(c context.Context) ([]domain.Spon
 func (s *sponsorStyleUseCase) GetSponsorStylesByID(c context.Context, id string) (domain.SponsorStyle, error) {
 	sponsorStyle := domain.SponsorStyle{}
 	row, err := s.rep.Find(c, id)
+	if err != nil {
+		return sponsorStyle, err
+	}
+
 	err = row.Scan(
 		&sponsorStyle.ID,
 		&sponsorStyle.Style,
@@ -75,22 +79,27 @@ func (s *sponsorStyleUseCase) CreateSponsorStyle(
 	Feature string,
 	Price int,
 ) (domain.SponsorStyle, error) {
-	latastSponsorStyle := domain.SponsorStyle{}
-	err := s.rep.Create(c, Style, Feature, Price)
+	latestSponsorStyle := domain.SponsorStyle{}
+	if err := s.rep.Create(c, Style, Feature, Price); err != nil {
+		return latestSponsorStyle, err
+	}
 	row, err := s.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestSponsorStyle, err
+	}
 	err = row.Scan(
-		&latastSponsorStyle.ID,
-		&latastSponsorStyle.Style,
-		&latastSponsorStyle.Feature,
-		&latastSponsorStyle.Price,
-		&latastSponsorStyle.IsDeleted,
-		&latastSponsorStyle.CreatedAt,
-		&latastSponsorStyle.UpdatedAt,
+		&latestSponsorStyle.ID,
+		&latestSponsorStyle.Style,
+		&latestSponsorStyle.Feature,
+		&latestSponsorStyle.Price,
+		&latestSponsorStyle.IsDeleted,
+		&latestSponsorStyle.CreatedAt,
+		&latestSponsorStyle.UpdatedAt,
 	)
 	if err != nil {
-		return latastSponsorStyle, err
+		return latestSponsorStyle, err
 	}
-	return latastSponsorStyle, err
+	return latestSponsorStyle, err
 }
 
 // SponsorStyleの編集(Update)
@@ -102,8 +111,15 @@ func (s *sponsorStyleUseCase) UpdateSponsorStyle(
 	Price int,
 ) (domain.SponsorStyle, error) {
 	updatedSponsorStyle := domain.SponsorStyle{}
-	err := s.rep.Update(c, id, Style, Feature, Price)
+	if err := s.rep.Update(c, id, Style, Feature, Price); err != nil {
+		return updatedSponsorStyle, err
+	}
+
 	row, err := s.rep.Find(c, id)
+	if err != nil {
+		return updatedSponsorStyle, err
+	}
+
 	err = row.Scan(
 		&updatedSponsorStyle.ID,
 		&updatedSponsorStyle.Style,

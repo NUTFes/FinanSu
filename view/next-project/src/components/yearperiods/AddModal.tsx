@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { Modal, CloseButton, Input, PrimaryButton } from '../common';
 import { userAtom } from '@/store/atoms';
 import { YearPeriod } from '@/type/common';
 import { post } from '@/utils/api/api_methods';
+
+import { Modal, CloseButton, Input, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -64,7 +65,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
         </div>
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>年度の登録</h1>
-      <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+      <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
         <p className='col-span-2 text-black-600'>年度</p>
         <div className='col-span-3 h-12 w-full'>
           <Input className='w-full' onChange={handler('year')} placeholder='20XX' type='number' />

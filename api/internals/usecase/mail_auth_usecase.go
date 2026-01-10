@@ -32,6 +32,10 @@ func (u *mailAuthUseCase) SignUp(c context.Context, email string, password strin
 	// パスワードをハッシュ化
 	hashed, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
 	mailAuthID, err := u.mailAuthRep.CreateMailAuth(c, email, string(hashed), userID)
+	if err != nil {
+		return token, err
+	}
+
 	// トークン発行
 	accessToken, err := _makeRandomStr(10)
 	if err != nil {
@@ -59,14 +63,22 @@ func (u *mailAuthUseCase) SignIn(c context.Context, email string, password strin
 		&mailAuth.CreatedAt,
 		&mailAuth.UpdatedAt,
 	)
-	u.sessionRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID)))
+	if err != nil {
+		return token, errors.New("メールアドレスが存在しません")
+	}
+	if err = u.sessionRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID))); err != nil {
+		return token, err
+	}
 	// パスワードがあっているか確認
-	err = bcrypt.CompareHashAndPassword([]byte(mailAuth.Password), []byte(password))
+	if err = bcrypt.CompareHashAndPassword([]byte(mailAuth.Password), []byte(password)); err != nil {
+		return token, err
+	}
+
+	// トークン発行
+	accessToken, err := _makeRandomStr(10)
 	if err != nil {
 		return token, err
 	}
-	// トークン発行
-	accessToken, err := _makeRandomStr(10)
 
 	// ログイン (セッション開始)
 	err = u.sessionRep.Create(c, strconv.FormatInt(int64(mailAuth.ID), 10), strconv.Itoa(int(mailAuth.UserID)), accessToken)

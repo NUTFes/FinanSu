@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { OpenEditInvoiceModalButton } from './index';
 import { createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
+import { getToday } from '@/utils/dateConverter';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import {
   SponsorActivityView,
@@ -11,48 +11,16 @@ import {
   InvoiceSponsorStyle,
 } from '@type/common';
 
+import { OpenEditInvoiceModalButton } from './index';
+
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   sponsorActivitiesViewItem: SponsorActivityView;
   children?: React.ReactNode;
 }
 
-interface FormDateFormat {
-  receivedAt: string;
-  billIssuedAt: string;
-}
-
 export default function AddPdfDetailModal(props: ModalProps) {
   const { sponsorActivitiesViewItem } = props;
-  const today = new Date();
-  const yyyy = String(today.getFullYear());
-  const mm = '08';
-  const dd = '30';
-  const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-  const toReiwaYear = (year: number) => {
-    const reiwaStartYear = 2019;
-    const reiwaYear = year - reiwaStartYear + 1;
-    return reiwaYear === 1 ? '元' : `${reiwaYear}`;
-  };
-  const getWeekday = (date: Date) => {
-    return weekdays[date.getDay()];
-  };
-  const ymd = `${yyyy}-${mm}-${dd}`;
-
-  const formatDate = (date: string, showWeekday = true) => {
-    const [year, month, day] = date.split('-').map(Number);
-    const dateObj = new Date(year, month - 1, day);
-    const reiwaYear = toReiwaYear(year);
-    const weekday = getWeekday(dateObj);
-    return `令和${reiwaYear}年${month}月${day}日${showWeekday ? `(${weekday})` : ''}`;
-  };
-
-  const todayFormatted = () => {
-    const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(
-      today.getDate(),
-    ).padStart(2, '0')}`;
-  };
 
   const sponsorStyleFormatted = (): InvoiceSponsorStyle[] => {
     return sponsorActivitiesViewItem.styleDetail.map((sponsorStyleDetail) => {
@@ -60,6 +28,8 @@ export default function AddPdfDetailModal(props: ModalProps) {
       const res: InvoiceSponsorStyle = {
         styleName: `${sponsorStyle.style}(${sponsorStyle.feature})`,
         price: sponsorStyle.price,
+        quantity: 1,
+        unitPrice: sponsorStyle.price,
       };
       return res;
     });
@@ -80,9 +50,10 @@ export default function AddPdfDetailModal(props: ModalProps) {
     totalPrice: CalculateTotalPrice(),
     fesStuffName: sponsorActivitiesViewItem.user.name,
     invoiceSponsorStyle: sponsorStyleFormatted(),
-    issuedDate: todayFormatted(),
-    deadline: ymd,
+    issuedDate: getToday(),
+    deadline: getToday(),
     remark: '',
+    subject: '',
   });
 
   const handler =
@@ -130,11 +101,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
         <div className='mb-3 flex w-full justify-center gap-4'>
           <PrimaryButton
             onClick={async () => {
-              createSponsorActivitiesPDF(
-                invoiceData,
-                formatDate(invoiceData.deadline),
-                formatDate(invoiceData.issuedDate, false),
-              );
+              createSponsorActivitiesPDF(invoiceData, invoiceData.deadline, invoiceData.issuedDate);
               onClose();
             }}
           >
@@ -146,8 +113,8 @@ export default function AddPdfDetailModal(props: ModalProps) {
       <div className='h-[30rem] justify-center overflow-x-auto md:flex'>
         <PreviewPDF
           invoiceItem={invoiceData}
-          deadline={formatDate(invoiceData.deadline)}
-          issuedDate={formatDate(invoiceData.issuedDate, false)}
+          deadline={invoiceData.deadline}
+          issuedDate={invoiceData.issuedDate}
         />
       </div>
     </Modal>

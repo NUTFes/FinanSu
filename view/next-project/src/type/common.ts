@@ -297,9 +297,12 @@ export interface Invoice {
   issuedDate: string;
   deadline: string;
   remark: string;
+  subject: string;
 }
 
 export interface InvoiceSponsorStyle {
   styleName: string;
   price: number;
+  quantity: number;
+  unitPrice: number;
 }

@@ -62,6 +62,9 @@ func (s *sponsorUseCase) GetSponsor(c context.Context) ([]domain.Sponsor, error)
 func (s *sponsorUseCase) GetSponsorByID(c context.Context, id string) (domain.Sponsor, error) {
 	sponsor := domain.Sponsor{}
 	row, err := s.rep.Find(c, id)
+	if err != nil {
+		return sponsor, err
+	}
 	err = row.Scan(
 		&sponsor.ID,
 		&sponsor.Name,
@@ -87,23 +90,30 @@ func (s *sponsorUseCase) CreateSponsor(
 	Address string,
 	Representative string,
 ) (domain.Sponsor, error) {
-	latastSponsor := domain.Sponsor{}
-	err := s.rep.Create(c, Name, Tel, Email, Address, Representative)
+	latestSponsor := domain.Sponsor{}
+	if err := s.rep.Create(c, Name, Tel, Email, Address, Representative); err != nil {
+		return latestSponsor, err
+	}
+
 	row, err := s.rep.FindLatestRecord(c)
+	if err != nil {
+		return latestSponsor, err
+	}
+
 	err = row.Scan(
-		&latastSponsor.ID,
-		&latastSponsor.Name,
-		&latastSponsor.Tel,
-		&latastSponsor.Email,
-		&latastSponsor.Address,
-		&latastSponsor.Representative,
-		&latastSponsor.CreatedAt,
-		&latastSponsor.UpdatedAt,
+		&latestSponsor.ID,
+		&latestSponsor.Name,
+		&latestSponsor.Tel,
+		&latestSponsor.Email,
+		&latestSponsor.Address,
+		&latestSponsor.Representative,
+		&latestSponsor.CreatedAt,
+		&latestSponsor.UpdatedAt,
 	)
 	if err != nil {
-		return latastSponsor, err
+		return latestSponsor, err
 	}
-	return latastSponsor, err
+	return latestSponsor, err
 }
 
 // sponsorの編集(Update)
@@ -117,8 +127,15 @@ func (s *sponsorUseCase) UpdateSponsor(
 	Representative string,
 ) (domain.Sponsor, error) {
 	updatedSponsor := domain.Sponsor{}
-	err := s.rep.Update(c, id, Name, Tel, Email, Address, Representative)
+	if err := s.rep.Update(c, id, Name, Tel, Email, Address, Representative); err != nil {
+		return updatedSponsor, err
+	}
+
 	row, err := s.rep.Find(c, id)
+	if err != nil {
+		return updatedSponsor, err
+	}
+
 	err = row.Scan(
 		&updatedSponsor.ID,
 		&updatedSponsor.Name,

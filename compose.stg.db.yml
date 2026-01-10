@@ -1,0 +1,26 @@
+services:
+  finansu-stg-db:
+    image: mysql:8.0
+    container_name: "nutfes-finansu-db"
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./mysql/db:/docker-entrypoint-initdb.d # 初期データ
+      - ./mysql/testdb:/docker-entrypoint-testdb.d # テスト用初期データ
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./db:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  finansu-stg-minio:
+    image: minio/minio:latest
+    container_name: "minio"
+    env_file:
+      - .env
+    volumes:
+      - ./minio/data:/data
+    command: "server /data --console-address :9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"

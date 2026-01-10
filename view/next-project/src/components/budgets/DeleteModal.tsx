@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
 import { FC, Dispatch, SetStateAction } from 'react';
-import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '../common';
+
 import { del } from '@api/api_methods';
+
+import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '../common';
 
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;

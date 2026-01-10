@@ -10,9 +10,12 @@ import (
 func main() {
 	// JSTに設定
 	time.Local = time.FixedZone("JST", 9*60*60)
-	time.LoadLocation("JST")
 
 	client, echo := di.InitializeServer()
-	echo.Start(":1323")
+
+	if err := echo.Start(":1323"); err != nil {
+		panic(err)
+	}
+
 	defer client.CloseDB()
 }

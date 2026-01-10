@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
@@ -17,6 +18,7 @@ type financialRecordUseCase struct {
 type FinancialRecordUseCase interface {
 	GetFinancialRecords(context.Context) (FinancialRecordDetails, error)
 	GetFinancialRecordsByYears(context.Context, string) (FinancialRecordDetails, error)
+	GetFinancialRecord(context.Context, string) (FinancialRecord, error)
 	CreateFinancialRecord(
 		context.Context,
 		FinancialRecord,
@@ -46,7 +48,11 @@ func (fru *financialRecordUseCase) GetFinancialRecords(
 		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordWithBalance
@@ -99,7 +105,11 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 		return financialRecordDetails, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordWithBalance
@@ -137,6 +147,28 @@ func (fru *financialRecordUseCase) GetFinancialRecordsByYears(
 	financialRecordDetails.FinancialRecords = &financialRecords
 
 	return financialRecordDetails, err
+}
+
+func (fru *financialRecordUseCase) GetFinancialRecord(
+	c context.Context,
+	id string,
+) (FinancialRecord, error) {
+	var financialRecord FinancialRecord
+	row, err := fru.rep.GetFinancialRecordById(c, id)
+	if err != nil {
+		return financialRecord, err
+	}
+
+	err = row.Scan(
+		&financialRecord.Id,
+		&financialRecord.Name,
+		&financialRecord.YearId,
+	)
+	if err != nil {
+		return financialRecord, err
+	}
+
+	return financialRecord, nil
 }
 
 func (fru *financialRecordUseCase) CreateFinancialRecord(
@@ -214,7 +246,11 @@ func (fru *financialRecordUseCase) GetFinancialRecordDetailForCSV(
 		return csvData, errors.Wrapf(err, "can not connect SQL")
 	}
 
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for rows.Next() {
 		var financialRecord FinancialRecordData

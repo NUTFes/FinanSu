@@ -35,7 +35,11 @@ func (or *objectHandleRepository) UploadFile(c context.Context, file *multipart.
 		log.Println(err)
 		return fileInfo, err
 	}
-	defer openFile.Close()
+	defer func() {
+		if err := openFile.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	info, err := or.client.PutObject(c, BUCKET_NAME, registerFilePath, openFile, size, minio.PutObjectOptions{})
 	if err != nil {

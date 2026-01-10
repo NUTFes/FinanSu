@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
+
 import { put } from '@api/purchaseItem';
 import {
   PrimaryButton,
@@ -91,7 +91,7 @@ export default function EditModal(props: ModalProps) {
 
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
-    <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+    <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
       <p className='text-black-600'>物品名</p>
       <div className='col-span-4 w-full'>
         <Input

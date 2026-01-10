@@ -2,10 +2,11 @@ import Image from 'next/image';
 import React, { FC, useRef, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { PrimaryButton, Loading } from '../common';
 import { put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
 import { SponsorActivityInformation } from '@type/common';
+
+import { PrimaryButton, Loading } from '../common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;

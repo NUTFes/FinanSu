@@ -1,0 +1,27 @@
+services:
+  cloudflare:
+    image: "cloudflare/cloudflared:latest"
+    container_name: "nutfes-finansu-web"
+    volumes: ["./web/stg:/home/nonroot/.cloudflared"]
+    command: tunnel run
+
+  view:
+    build:
+      context: ./
+      dockerfile: prod.view.Dockerfile
+      args:
+        NEXT_PUBLIC_APP_ENV: "stg"
+    container_name: "nutfes-finansu-view"
+    ports: ["3000:3000"]
+    depends_on: ["api"]
+
+  api:
+    build:
+      context: ./
+      dockerfile: prod.api.Dockerfile
+    container_name: "nutfes-finansu-api"
+    env_file: ["./finansu.env"]
+    ports: ["1323:1323"]
+    environment:
+      ENV: "production"
+      RESET_PASSWORD_URL: "https://finansu.nutfes.net/reset_password"

@@ -2,8 +2,16 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "eslint.workingDirectories": ["./view/next-project"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.fixAll.prettier": "always",
+    "source.organizeImports": "always"
+  },
   "[go]": {
     "editor.defaultFormatter": "golang.go"
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
   },
   "emeraldwalk.runonsave": {
     "commands": [
@@ -12,5 +20,11 @@
         "cmd": "golines ${file} -w"
       }
     ]
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "html"
   }
 }
