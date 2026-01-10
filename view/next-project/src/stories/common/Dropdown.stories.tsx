@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Dropdown } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Dropdown> = {
   title: 'FinanSu/common/Dropdown',

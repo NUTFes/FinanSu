@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { TbDownload } from 'react-icons/tb';
 import { useRecoilValue } from 'recoil';
+
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
@@ -11,15 +12,16 @@ import {
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
+import { userAtom } from '@/store/atoms';
+import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
+import MainLayout from '@components/layout/MainLayout';
+import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
+
 import type {
   GetBuyReportsDetailsParams,
   BuyReportDetail,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
-import { userAtom } from '@/store/atoms';
-import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
-import MainLayout from '@components/layout/MainLayout';
-import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 
 export default function PurchaseReports() {
   const router = useRouter();
@@ -140,6 +142,17 @@ export default function PurchaseReports() {
     mutateBuyReportData();
   }, [mutateBuyReportData]);
 
+  const downloadCSV = async () => {
+    const url = `${process.env.CSR_API_URI}/buy_reports/csv/download?year=${selectedYear}`;
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      saveAs(blob, `購入報告_${selectedYear}.csv`);
+    } catch (error) {
+      console.error('Failed to download CSV:', error);
+    }
+  };
+
   if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
 
@@ -166,7 +179,7 @@ export default function PurchaseReports() {
                     );
                   })}
               </select>
-              <PrimaryButton className='w-fit items-center'>
+              <PrimaryButton className='w-fit items-center' onClick={downloadCSV}>
                 CSVダウンロード
                 <TbDownload className='ml-2' size={20} />
               </PrimaryButton>

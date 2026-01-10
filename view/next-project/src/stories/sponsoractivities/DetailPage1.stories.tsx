@@ -1,5 +1,6 @@
-import type { Meta, StoryFn } from '@storybook/react';
 import { DetailPage1 } from '@components/sponsoractivities';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof DetailPage1> = {
   title: 'FinanSu/sponsoractivities/DetailPage1',

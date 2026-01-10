@@ -14,4 +14,5 @@ export interface BuyReport {
   festivalItemID: number;
   amount: number;
   paidBy: string;
+  paidByUserId?: number;
 }

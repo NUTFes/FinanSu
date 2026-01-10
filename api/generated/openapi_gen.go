@@ -73,6 +73,7 @@ type BuyReport struct {
 	FestivalItemID int    `json:"festivalItemID"`
 	Id             *int   `json:"id,omitempty"`
 	PaidBy         string `json:"paidBy"`
+	PaidByUserId   *int   `json:"paidByUserId,omitempty"`
 }
 
 // BuyReportDetail 購入報告ページで表示する詳細情報
@@ -102,6 +103,15 @@ type BuyReportInformation struct {
 
 // BuyReportInformationStatus defines model for BuyReportInformation.Status.
 type BuyReportInformationStatus string
+
+// BuyReportSummary 購入報告の未精算/未封詰め合計
+type BuyReportSummary struct {
+	// UnpackedAmount isPacked=falseのamount合計
+	UnpackedAmount int `json:"unpackedAmount"`
+
+	// UnsettledAmount isSettled=falseのamount合計
+	UnsettledAmount int `json:"unsettledAmount"`
+}
 
 // BuyReportWithDivisionId 購入報告の際のパラメータ、部門と物品IDを含む
 type BuyReportWithDivisionId struct {
@@ -266,15 +276,6 @@ type PasswordResetData struct {
 	Token           *string `json:"token,omitempty"`
 }
 
-// Receipt defines model for receipt.
-type Receipt struct {
-	BucketName       *string `json:"bucketName,omitempty"`
-	FileName         *string `json:"fileName,omitempty"`
-	FileType         *string `json:"fileType,omitempty"`
-	PurchaseReportID int     `json:"purchaseReportID"`
-	Remark           *string `json:"remark,omitempty"`
-}
-
 // Sponsor defines model for sponsor.
 type Sponsor struct {
 	Address        string `json:"address"`
@@ -309,6 +310,17 @@ type Total struct {
 	Balance *int `json:"balance,omitempty"`
 	Budget  *int `json:"budget,omitempty"`
 	Expense *int `json:"expense,omitempty"`
+}
+
+// User defines model for user.
+type User struct {
+	BureauID  int    `json:"bureauID"`
+	CreatedAt string `json:"createdAt"`
+	Id        int    `json:"id"`
+	IsDeleted bool   `json:"isDeleted"`
+	Name      string `json:"name"`
+	RoleID    int    `json:"roleID"`
+	UpdatedAt string `json:"updatedAt"`
 }
 
 // YearPeriods defines model for year_periods.
@@ -348,30 +360,6 @@ type GetActivitiesFilteredDetailsYearParams struct {
 // GetActivitiesFilteredDetailsYearParamsIsDone defines parameters for GetActivitiesFilteredDetailsYear.
 type GetActivitiesFilteredDetailsYearParamsIsDone string
 
-// PostBudgetsParams defines parameters for PostBudgets.
-type PostBudgetsParams struct {
-	// Price price
-	Price int `form:"price" json:"price"`
-
-	// YearId year_id
-	YearId *int `form:"year_id,omitempty" json:"year_id,omitempty"`
-
-	// SourceId source_id
-	SourceId *int `form:"source_id,omitempty" json:"source_id,omitempty"`
-}
-
-// PutBudgetsIdParams defines parameters for PutBudgetsId.
-type PutBudgetsIdParams struct {
-	// Price price
-	Price *int `form:"price,omitempty" json:"price,omitempty"`
-
-	// YearId year_id
-	YearId *int `form:"year_id,omitempty" json:"year_id,omitempty"`
-
-	// SourceId source_id
-	SourceId *int `form:"source_id,omitempty" json:"source_id,omitempty"`
-}
-
 // PostBureausParams defines parameters for PostBureaus.
 type PostBureausParams struct {
 	// Name name
@@ -400,10 +388,49 @@ type PostBuyReportsMultipartBody struct {
 	File      openapi_types.File `json:"file"`
 }
 
+// GetBuyReportsCsvDownloadParams defines parameters for GetBuyReportsCsvDownload.
+type GetBuyReportsCsvDownloadParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
+
+	// PaidBy buy_reports.paid_by での完全一致フィルタ
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
+}
+
 // GetBuyReportsDetailsParams defines parameters for GetBuyReportsDetails.
 type GetBuyReportsDetailsParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
+
+	// PaidBy buy_reports.paid_by での完全一致フィルタ
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
+}
+
+// GetBuyReportsSummaryParams defines parameters for GetBuyReportsSummary.
+type GetBuyReportsSummaryParams struct {
+	// Year year
+	Year int `form:"year" json:"year"`
+
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
+
+	// PaidBy buy_reports.paid_by での完全一致フィルタ
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
 }
 
 // PutBuyReportsIdMultipartBody defines parameters for PutBuyReportsId.
@@ -413,6 +440,11 @@ type PutBuyReportsIdMultipartBody struct {
 
 	// File 購入報告書のファイル、ない場合更新しないようにする
 	File *openapi_types.File `json:"file,omitempty"`
+}
+
+// GetCurrentUserParams defines parameters for GetCurrentUser.
+type GetCurrentUserParams struct {
+	AccessToken *string `json:"Access-Token,omitempty"`
 }
 
 // PostDepartmentsParams defines parameters for PostDepartments.
@@ -451,24 +483,6 @@ type GetDivisionsYearsParams struct {
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
-// PostExpensesParams defines parameters for PostExpenses.
-type PostExpensesParams struct {
-	// Name name
-	Name *string `form:"name,omitempty" json:"name,omitempty"`
-
-	// YearId year_id
-	YearId *string `form:"year_id,omitempty" json:"year_id,omitempty"`
-}
-
-// PutExpensesIdParams defines parameters for PutExpensesId.
-type PutExpensesIdParams struct {
-	// Name name
-	Name *string `form:"name,omitempty" json:"name,omitempty"`
-
-	// YearId year_id
-	YearId *string `form:"year_id,omitempty" json:"year_id,omitempty"`
-}
-
 // GetFestivalItemsParams defines parameters for GetFestivalItems.
 type GetFestivalItemsParams struct {
 	// Year year
@@ -505,52 +519,10 @@ type GetFinancialRecordsCsvDownloadParams struct {
 	Year int `form:"year" json:"year"`
 }
 
-// PostFundInformationsParams defines parameters for PostFundInformations.
-type PostFundInformationsParams struct {
-	// UserId user_id
-	UserId int `form:"user_id" json:"user_id"`
-
-	// TeacherId teacher_id
-	TeacherId int `form:"teacher_id" json:"teacher_id"`
-
-	// Price price
-	Price int `form:"price" json:"price"`
-
-	// Remark remark
-	Remark *string `form:"remark,omitempty" json:"remark,omitempty"`
-
-	// IsFirstCheck is_first_check
-	IsFirstCheck *bool `form:"is_first_check,omitempty" json:"is_first_check,omitempty"`
-
-	// IsLastCheck is_last_check
-	IsLastCheck *bool `form:"is_last_check,omitempty" json:"is_last_check,omitempty"`
-
-	// ReceivedAt received_at
-	ReceivedAt *string `form:"received_at,omitempty" json:"received_at,omitempty"`
-}
-
-// PutFundInformationsIdParams defines parameters for PutFundInformationsId.
-type PutFundInformationsIdParams struct {
-	// UserId user_id
-	UserId int `form:"user_id" json:"user_id"`
-
-	// TeacherId teacher_id
-	TeacherId int `form:"teacher_id" json:"teacher_id"`
-
-	// Price price
-	Price int `form:"price" json:"price"`
-
-	// Remark remark
-	Remark *string `form:"remark,omitempty" json:"remark,omitempty"`
-
-	// IsFirstCheck is_first_check
-	IsFirstCheck *bool `form:"is_first_check,omitempty" json:"is_first_check,omitempty"`
-
-	// IsLastCheck is_last_check
-	IsLastCheck *bool `form:"is_last_check,omitempty" json:"is_last_check,omitempty"`
-
-	// ReceivedAt received_at
-	ReceivedAt *string `form:"received_at,omitempty" json:"received_at,omitempty"`
+// GetIncomeExpenditureManagementCsvDownloadParams defines parameters for GetIncomeExpenditureManagementCsvDownload.
+type GetIncomeExpenditureManagementCsvDownloadParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
 // GetIncomeExpenditureManagementsParams defines parameters for GetIncomeExpenditureManagements.
@@ -565,6 +537,37 @@ type PutIncomeExpenditureManagementsCheckIdJSONBody struct {
 	IsChecked bool `json:"isChecked"`
 }
 
+// GetMailAuthIsSigninParams defines parameters for GetMailAuthIsSignin.
+type GetMailAuthIsSigninParams struct {
+	AccessToken *string `json:"Access-Token,omitempty"`
+}
+
+// PostMailAuthSigninParams defines parameters for PostMailAuthSignin.
+type PostMailAuthSigninParams struct {
+	// Email email
+	Email string `form:"email" json:"email"`
+
+	// Password password
+	Password string `form:"password" json:"password"`
+}
+
+// DeleteMailAuthSignoutParams defines parameters for DeleteMailAuthSignout.
+type DeleteMailAuthSignoutParams struct {
+	AccessToken *string `json:"Access-Token,omitempty"`
+}
+
+// PostMailAuthSignupParams defines parameters for PostMailAuthSignup.
+type PostMailAuthSignupParams struct {
+	// Email email
+	Email string `form:"email" json:"email"`
+
+	// Password password
+	Password string `form:"password" json:"password"`
+
+	// UserId user_id
+	UserId int `form:"user_id" json:"user_id"`
+}
+
 // PostPasswordResetRequestParams defines parameters for PostPasswordResetRequest.
 type PostPasswordResetRequestParams struct {
 	// Email email
@@ -575,18 +578,6 @@ type PostPasswordResetRequestParams struct {
 type PostPasswordResetIdValidParams struct {
 	// Token token
 	Token *string `form:"token,omitempty" json:"token,omitempty"`
-}
-
-// PostSourcesParams defines parameters for PostSources.
-type PostSourcesParams struct {
-	// Name name
-	Name string `form:"name" json:"name"`
-}
-
-// PutSourcesIdParams defines parameters for PutSourcesId.
-type PutSourcesIdParams struct {
-	// Name name
-	Name string `form:"name" json:"name"`
 }
 
 // PostTeachersParams defines parameters for PostTeachers.
@@ -735,12 +726,6 @@ type PutIncomesIdJSONRequestBody = Income
 // PostPasswordResetIdJSONRequestBody defines body for PostPasswordResetId for application/json ContentType.
 type PostPasswordResetIdJSONRequestBody = PasswordResetData
 
-// PostReceiptsJSONRequestBody defines body for PostReceipts for application/json ContentType.
-type PostReceiptsJSONRequestBody = Receipt
-
-// PutReceiptsIdJSONRequestBody defines body for PutReceiptsId for application/json ContentType.
-type PutReceiptsIdJSONRequestBody = Receipt
-
 // PostSponsorsJSONRequestBody defines body for PostSponsors for application/json ContentType.
 type PostSponsorsJSONRequestBody = Sponsor
 
@@ -767,6 +752,9 @@ type PutYearsPeriodsIdJSONRequestBody = YearPeriods
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
+	// (GET /)
+	Get(ctx echo.Context) error
 
 	// (GET /activities)
 	GetActivities(ctx echo.Context) error
@@ -825,30 +813,6 @@ type ServerInterface interface {
 	// (PUT /activity_styles/{id})
 	PutActivityStylesId(ctx echo.Context, id int) error
 
-	// (GET /budgets)
-	GetBudgets(ctx echo.Context) error
-
-	// (POST /budgets)
-	PostBudgets(ctx echo.Context, params PostBudgetsParams) error
-
-	// (GET /budgets/details)
-	GetBudgetsDetails(ctx echo.Context) error
-
-	// (GET /budgets/details/{year})
-	GetBudgetsDetailsYear(ctx echo.Context, year int) error
-
-	// (DELETE /budgets/{id})
-	DeleteBudgetsId(ctx echo.Context, id int) error
-
-	// (GET /budgets/{id})
-	GetBudgetsId(ctx echo.Context, id int) error
-
-	// (PUT /budgets/{id})
-	PutBudgetsId(ctx echo.Context, id int, params PutBudgetsIdParams) error
-
-	// (GET /budgets/{id}/details)
-	GetBudgetsIdDetails(ctx echo.Context, id int) error
-
 	// (GET /bureaus)
 	GetBureaus(ctx echo.Context) error
 
@@ -870,8 +834,14 @@ type ServerInterface interface {
 	// (POST /buy_reports)
 	PostBuyReports(ctx echo.Context) error
 
+	// (GET /buy_reports/csv/download)
+	GetBuyReportsCsvDownload(ctx echo.Context, params GetBuyReportsCsvDownloadParams) error
+
 	// (GET /buy_reports/details)
 	GetBuyReportsDetails(ctx echo.Context, params GetBuyReportsDetailsParams) error
+
+	// (GET /buy_reports/summary)
+	GetBuyReportsSummary(ctx echo.Context, params GetBuyReportsSummaryParams) error
 
 	// (DELETE /buy_reports/{id})
 	DeleteBuyReportsId(ctx echo.Context, id int) error
@@ -881,6 +851,9 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /current_user)
+	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
 
 	// (GET /departments)
 	GetDepartments(ctx echo.Context) error
@@ -917,33 +890,6 @@ type ServerInterface interface {
 
 	// (PUT /divisions/{id})
 	PutDivisionsId(ctx echo.Context, id int) error
-
-	// (GET /expenses)
-	GetExpenses(ctx echo.Context) error
-
-	// (POST /expenses)
-	PostExpenses(ctx echo.Context, params PostExpensesParams) error
-
-	// (GET /expenses/details)
-	GetExpensesDetails(ctx echo.Context) error
-
-	// (GET /expenses/details/{year})
-	GetExpensesDetailsYear(ctx echo.Context, year int) error
-
-	// (GET /expenses/fiscalyear/{year})
-	GetExpensesFiscalyearYear(ctx echo.Context, year int) error
-
-	// (DELETE /expenses/{id})
-	DeleteExpensesId(ctx echo.Context, id int) error
-
-	// (GET /expenses/{id})
-	GetExpensesId(ctx echo.Context, id int) error
-
-	// (PUT /expenses/{id})
-	PutExpensesId(ctx echo.Context, id int, params PutExpensesIdParams) error
-
-	// (GET /expenses/{id}/details)
-	GetExpensesIdDetails(ctx echo.Context, id int) error
 
 	// (GET /festival_items)
 	GetFestivalItems(ctx echo.Context, params GetFestivalItemsParams) error
@@ -984,29 +930,8 @@ type ServerInterface interface {
 	// (PUT /financial_records/{id})
 	PutFinancialRecordsId(ctx echo.Context, id int) error
 
-	// (GET /fund_informations)
-	GetFundInformations(ctx echo.Context) error
-
-	// (POST /fund_informations)
-	PostFundInformations(ctx echo.Context, params PostFundInformationsParams) error
-
-	// (GET /fund_informations/details)
-	GetFundInformationsDetails(ctx echo.Context) error
-
-	// (GET /fund_informations/details/{year})
-	GetFundInformationsDetailsYear(ctx echo.Context, year int) error
-
-	// (DELETE /fund_informations/{id})
-	DeleteFundInformationsId(ctx echo.Context, id int) error
-
-	// (GET /fund_informations/{id})
-	GetFundInformationsId(ctx echo.Context, id int) error
-
-	// (PUT /fund_informations/{id})
-	PutFundInformationsId(ctx echo.Context, id int, params PutFundInformationsIdParams) error
-
-	// (GET /fund_informations/{id}/details)
-	GetFundInformationsIdDetails(ctx echo.Context, id int) error
+	// (GET /income_expenditure_management/csv/download)
+	GetIncomeExpenditureManagementCsvDownload(ctx echo.Context, params GetIncomeExpenditureManagementCsvDownloadParams) error
 
 	// (GET /income_expenditure_managements)
 	GetIncomeExpenditureManagements(ctx echo.Context, params GetIncomeExpenditureManagementsParams) error
@@ -1029,6 +954,18 @@ type ServerInterface interface {
 	// (PUT /incomes/{id})
 	PutIncomesId(ctx echo.Context, id int) error
 
+	// (GET /mail_auth/is_signin)
+	GetMailAuthIsSignin(ctx echo.Context, params GetMailAuthIsSigninParams) error
+
+	// (POST /mail_auth/signin)
+	PostMailAuthSignin(ctx echo.Context, params PostMailAuthSigninParams) error
+
+	// (DELETE /mail_auth/signout)
+	DeleteMailAuthSignout(ctx echo.Context, params DeleteMailAuthSignoutParams) error
+
+	// (POST /mail_auth/signup)
+	PostMailAuthSignup(ctx echo.Context, params PostMailAuthSignupParams) error
+
 	// (POST /password_reset/request)
 	PostPasswordResetRequest(ctx echo.Context, params PostPasswordResetRequestParams) error
 
@@ -1037,39 +974,6 @@ type ServerInterface interface {
 
 	// (POST /password_reset/{id}/valid)
 	PostPasswordResetIdValid(ctx echo.Context, id int, params PostPasswordResetIdValidParams) error
-
-	// (GET /receipts)
-	GetReceipts(ctx echo.Context) error
-
-	// (POST /receipts)
-	PostReceipts(ctx echo.Context) error
-
-	// (GET /receipts/reports/{id})
-	GetReceiptsReportsId(ctx echo.Context, id int) error
-
-	// (DELETE /receipts/{id})
-	DeleteReceiptsId(ctx echo.Context, id int) error
-
-	// (GET /receipts/{id})
-	GetReceiptsId(ctx echo.Context, id int) error
-
-	// (PUT /receipts/{id})
-	PutReceiptsId(ctx echo.Context, id int) error
-
-	// (GET /sources)
-	GetSources(ctx echo.Context) error
-
-	// (POST /sources)
-	PostSources(ctx echo.Context, params PostSourcesParams) error
-
-	// (DELETE /sources/{id})
-	DeleteSourcesId(ctx echo.Context, id int) error
-
-	// (GET /sources/{id})
-	GetSourcesId(ctx echo.Context, id int) error
-
-	// (PUT /sources/{id})
-	PutSourcesId(ctx echo.Context, id int, params PutSourcesIdParams) error
 
 	// (GET /sponsors)
 	GetSponsors(ctx echo.Context) error
@@ -1177,6 +1081,15 @@ type ServerInterface interface {
 // ServerInterfaceWrapper converts echo contexts to parameters.
 type ServerInterfaceWrapper struct {
 	Handler ServerInterface
+}
+
+// Get converts echo context to params.
+func (w *ServerInterfaceWrapper) Get(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.Get(ctx)
+	return err
 }
 
 // GetActivities converts echo context to params.
@@ -1473,159 +1386,6 @@ func (w *ServerInterfaceWrapper) PutActivityStylesId(ctx echo.Context) error {
 	return err
 }
 
-// GetBudgets converts echo context to params.
-func (w *ServerInterfaceWrapper) GetBudgets(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetBudgets(ctx)
-	return err
-}
-
-// PostBudgets converts echo context to params.
-func (w *ServerInterfaceWrapper) PostBudgets(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostBudgetsParams
-	// ------------- Required query parameter "price" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "price", ctx.QueryParams(), &params.Price)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter price: %s", err))
-	}
-
-	// ------------- Optional query parameter "year_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "year_id", ctx.QueryParams(), &params.YearId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
-	}
-
-	// ------------- Optional query parameter "source_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "source_id", ctx.QueryParams(), &params.SourceId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter source_id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostBudgets(ctx, params)
-	return err
-}
-
-// GetBudgetsDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetBudgetsDetails(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetBudgetsDetails(ctx)
-	return err
-}
-
-// GetBudgetsDetailsYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetBudgetsDetailsYear(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "year" -------------
-	var year int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetBudgetsDetailsYear(ctx, year)
-	return err
-}
-
-// DeleteBudgetsId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteBudgetsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteBudgetsId(ctx, id)
-	return err
-}
-
-// GetBudgetsId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetBudgetsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetBudgetsId(ctx, id)
-	return err
-}
-
-// PutBudgetsId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutBudgetsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PutBudgetsIdParams
-	// ------------- Optional query parameter "price" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "price", ctx.QueryParams(), &params.Price)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter price: %s", err))
-	}
-
-	// ------------- Optional query parameter "year_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "year_id", ctx.QueryParams(), &params.YearId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
-	}
-
-	// ------------- Optional query parameter "source_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "source_id", ctx.QueryParams(), &params.SourceId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter source_id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutBudgetsId(ctx, id, params)
-	return err
-}
-
-// GetBudgetsIdDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetBudgetsIdDetails(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetBudgetsIdDetails(ctx, id)
-	return err
-}
-
 // GetBureaus converts echo context to params.
 func (w *ServerInterfaceWrapper) GetBureaus(ctx echo.Context) error {
 	var err error
@@ -1735,6 +1495,45 @@ func (w *ServerInterfaceWrapper) PostBuyReports(ctx echo.Context) error {
 	return err
 }
 
+// GetBuyReportsCsvDownload converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsCsvDownload(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetBuyReportsCsvDownloadParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Optional query parameter "financial_record_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetBuyReportsCsvDownload(ctx, params)
+	return err
+}
+
 // GetBuyReportsDetails converts echo context to params.
 func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
 	var err error
@@ -1748,8 +1547,68 @@ func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
+	// ------------- Optional query parameter "financial_record_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetBuyReportsDetails(ctx, params)
+	return err
+}
+
+// GetBuyReportsSummary converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsSummary(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetBuyReportsSummaryParams
+	// ------------- Required query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Optional query parameter "financial_record_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetBuyReportsSummary(ctx, params)
 	return err
 }
 
@@ -1798,6 +1657,35 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCurrentUser converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCurrentUser(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCurrentUserParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Access-Token" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Access-Token")]; found {
+		var AccessToken string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Access-Token, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Access-Token", valueList[0], &AccessToken, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Access-Token: %s", err))
+		}
+
+		params.AccessToken = &AccessToken
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCurrentUser(ctx, params)
 	return err
 }
 
@@ -2007,161 +1895,6 @@ func (w *ServerInterfaceWrapper) PutDivisionsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutDivisionsId(ctx, id)
-	return err
-}
-
-// GetExpenses converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpenses(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpenses(ctx)
-	return err
-}
-
-// PostExpenses converts echo context to params.
-func (w *ServerInterfaceWrapper) PostExpenses(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostExpensesParams
-	// ------------- Optional query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// ------------- Optional query parameter "year_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "year_id", ctx.QueryParams(), &params.YearId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostExpenses(ctx, params)
-	return err
-}
-
-// GetExpensesDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesDetails(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesDetails(ctx)
-	return err
-}
-
-// GetExpensesDetailsYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesDetailsYear(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "year" -------------
-	var year int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesDetailsYear(ctx, year)
-	return err
-}
-
-// GetExpensesFiscalyearYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesFiscalyearYear(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "year" -------------
-	var year int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesFiscalyearYear(ctx, year)
-	return err
-}
-
-// DeleteExpensesId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteExpensesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteExpensesId(ctx, id)
-	return err
-}
-
-// GetExpensesId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesId(ctx, id)
-	return err
-}
-
-// PutExpensesId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutExpensesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PutExpensesIdParams
-	// ------------- Optional query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// ------------- Optional query parameter "year_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "year_id", ctx.QueryParams(), &params.YearId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutExpensesId(ctx, id, params)
-	return err
-}
-
-// GetExpensesIdDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetExpensesIdDetails(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetExpensesIdDetails(ctx, id)
 	return err
 }
 
@@ -2390,212 +2123,21 @@ func (w *ServerInterfaceWrapper) PutFinancialRecordsId(ctx echo.Context) error {
 	return err
 }
 
-// GetFundInformations converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFundInformations(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFundInformations(ctx)
-	return err
-}
-
-// PostFundInformations converts echo context to params.
-func (w *ServerInterfaceWrapper) PostFundInformations(ctx echo.Context) error {
+// GetIncomeExpenditureManagementCsvDownload converts echo context to params.
+func (w *ServerInterfaceWrapper) GetIncomeExpenditureManagementCsvDownload(ctx echo.Context) error {
 	var err error
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params PostFundInformationsParams
-	// ------------- Required query parameter "user_id" -------------
+	var params GetIncomeExpenditureManagementCsvDownloadParams
+	// ------------- Optional query parameter "year" -------------
 
-	err = runtime.BindQueryParameter("form", true, true, "user_id", ctx.QueryParams(), &params.UserId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
-	}
-
-	// ------------- Required query parameter "teacher_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "teacher_id", ctx.QueryParams(), &params.TeacherId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter teacher_id: %s", err))
-	}
-
-	// ------------- Required query parameter "price" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "price", ctx.QueryParams(), &params.Price)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter price: %s", err))
-	}
-
-	// ------------- Optional query parameter "remark" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "remark", ctx.QueryParams(), &params.Remark)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter remark: %s", err))
-	}
-
-	// ------------- Optional query parameter "is_first_check" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_first_check", ctx.QueryParams(), &params.IsFirstCheck)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter is_first_check: %s", err))
-	}
-
-	// ------------- Optional query parameter "is_last_check" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_last_check", ctx.QueryParams(), &params.IsLastCheck)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter is_last_check: %s", err))
-	}
-
-	// ------------- Optional query parameter "received_at" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "received_at", ctx.QueryParams(), &params.ReceivedAt)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter received_at: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostFundInformations(ctx, params)
-	return err
-}
-
-// GetFundInformationsDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFundInformationsDetails(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFundInformationsDetails(ctx)
-	return err
-}
-
-// GetFundInformationsDetailsYear converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFundInformationsDetailsYear(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "year" -------------
-	var year int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFundInformationsDetailsYear(ctx, year)
-	return err
-}
-
-// DeleteFundInformationsId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteFundInformationsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteFundInformationsId(ctx, id)
-	return err
-}
-
-// GetFundInformationsId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFundInformationsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFundInformationsId(ctx, id)
-	return err
-}
-
-// PutFundInformationsId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutFundInformationsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PutFundInformationsIdParams
-	// ------------- Required query parameter "user_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "user_id", ctx.QueryParams(), &params.UserId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
-	}
-
-	// ------------- Required query parameter "teacher_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "teacher_id", ctx.QueryParams(), &params.TeacherId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter teacher_id: %s", err))
-	}
-
-	// ------------- Required query parameter "price" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "price", ctx.QueryParams(), &params.Price)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter price: %s", err))
-	}
-
-	// ------------- Optional query parameter "remark" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "remark", ctx.QueryParams(), &params.Remark)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter remark: %s", err))
-	}
-
-	// ------------- Optional query parameter "is_first_check" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_first_check", ctx.QueryParams(), &params.IsFirstCheck)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter is_first_check: %s", err))
-	}
-
-	// ------------- Optional query parameter "is_last_check" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_last_check", ctx.QueryParams(), &params.IsLastCheck)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter is_last_check: %s", err))
-	}
-
-	// ------------- Optional query parameter "received_at" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "received_at", ctx.QueryParams(), &params.ReceivedAt)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter received_at: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutFundInformationsId(ctx, id, params)
-	return err
-}
-
-// GetFundInformationsIdDetails converts echo context to params.
-func (w *ServerInterfaceWrapper) GetFundInformationsIdDetails(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetFundInformationsIdDetails(ctx, id)
+	err = w.Handler.GetIncomeExpenditureManagementCsvDownload(ctx, params)
 	return err
 }
 
@@ -2699,6 +2241,121 @@ func (w *ServerInterfaceWrapper) PutIncomesId(ctx echo.Context) error {
 	return err
 }
 
+// GetMailAuthIsSignin converts echo context to params.
+func (w *ServerInterfaceWrapper) GetMailAuthIsSignin(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetMailAuthIsSigninParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Access-Token" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Access-Token")]; found {
+		var AccessToken string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Access-Token, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Access-Token", valueList[0], &AccessToken, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Access-Token: %s", err))
+		}
+
+		params.AccessToken = &AccessToken
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetMailAuthIsSignin(ctx, params)
+	return err
+}
+
+// PostMailAuthSignin converts echo context to params.
+func (w *ServerInterfaceWrapper) PostMailAuthSignin(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params PostMailAuthSigninParams
+	// ------------- Required query parameter "email" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "email", ctx.QueryParams(), &params.Email)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter email: %s", err))
+	}
+
+	// ------------- Required query parameter "password" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "password", ctx.QueryParams(), &params.Password)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter password: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostMailAuthSignin(ctx, params)
+	return err
+}
+
+// DeleteMailAuthSignout converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteMailAuthSignout(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteMailAuthSignoutParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Access-Token" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Access-Token")]; found {
+		var AccessToken string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Access-Token, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Access-Token", valueList[0], &AccessToken, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Access-Token: %s", err))
+		}
+
+		params.AccessToken = &AccessToken
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteMailAuthSignout(ctx, params)
+	return err
+}
+
+// PostMailAuthSignup converts echo context to params.
+func (w *ServerInterfaceWrapper) PostMailAuthSignup(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params PostMailAuthSignupParams
+	// ------------- Required query parameter "email" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "email", ctx.QueryParams(), &params.Email)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter email: %s", err))
+	}
+
+	// ------------- Required query parameter "password" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "password", ctx.QueryParams(), &params.Password)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter password: %s", err))
+	}
+
+	// ------------- Required query parameter "user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "user_id", ctx.QueryParams(), &params.UserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostMailAuthSignup(ctx, params)
+	return err
+}
+
 // PostPasswordResetRequest converts echo context to params.
 func (w *ServerInterfaceWrapper) PostPasswordResetRequest(ctx echo.Context) error {
 	var err error
@@ -2755,172 +2412,6 @@ func (w *ServerInterfaceWrapper) PostPasswordResetIdValid(ctx echo.Context) erro
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostPasswordResetIdValid(ctx, id, params)
-	return err
-}
-
-// GetReceipts converts echo context to params.
-func (w *ServerInterfaceWrapper) GetReceipts(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetReceipts(ctx)
-	return err
-}
-
-// PostReceipts converts echo context to params.
-func (w *ServerInterfaceWrapper) PostReceipts(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostReceipts(ctx)
-	return err
-}
-
-// GetReceiptsReportsId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetReceiptsReportsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetReceiptsReportsId(ctx, id)
-	return err
-}
-
-// DeleteReceiptsId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteReceiptsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteReceiptsId(ctx, id)
-	return err
-}
-
-// GetReceiptsId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetReceiptsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetReceiptsId(ctx, id)
-	return err
-}
-
-// PutReceiptsId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutReceiptsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutReceiptsId(ctx, id)
-	return err
-}
-
-// GetSources converts echo context to params.
-func (w *ServerInterfaceWrapper) GetSources(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetSources(ctx)
-	return err
-}
-
-// PostSources converts echo context to params.
-func (w *ServerInterfaceWrapper) PostSources(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostSourcesParams
-	// ------------- Required query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostSources(ctx, params)
-	return err
-}
-
-// DeleteSourcesId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteSourcesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteSourcesId(ctx, id)
-	return err
-}
-
-// GetSourcesId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetSourcesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetSourcesId(ctx, id)
-	return err
-}
-
-// PutSourcesId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutSourcesId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PutSourcesIdParams
-	// ------------- Required query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutSourcesId(ctx, id, params)
 	return err
 }
 
@@ -3557,6 +3048,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
+	router.GET(baseURL+"/", wrapper.Get)
 	router.GET(baseURL+"/activities", wrapper.GetActivities)
 	router.POST(baseURL+"/activities", wrapper.PostActivities)
 	router.GET(baseURL+"/activities/details", wrapper.GetActivitiesDetails)
@@ -3576,14 +3068,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/activity_styles/:id", wrapper.DeleteActivityStylesId)
 	router.GET(baseURL+"/activity_styles/:id", wrapper.GetActivityStylesId)
 	router.PUT(baseURL+"/activity_styles/:id", wrapper.PutActivityStylesId)
-	router.GET(baseURL+"/budgets", wrapper.GetBudgets)
-	router.POST(baseURL+"/budgets", wrapper.PostBudgets)
-	router.GET(baseURL+"/budgets/details", wrapper.GetBudgetsDetails)
-	router.GET(baseURL+"/budgets/details/:year", wrapper.GetBudgetsDetailsYear)
-	router.DELETE(baseURL+"/budgets/:id", wrapper.DeleteBudgetsId)
-	router.GET(baseURL+"/budgets/:id", wrapper.GetBudgetsId)
-	router.PUT(baseURL+"/budgets/:id", wrapper.PutBudgetsId)
-	router.GET(baseURL+"/budgets/:id/details", wrapper.GetBudgetsIdDetails)
 	router.GET(baseURL+"/bureaus", wrapper.GetBureaus)
 	router.POST(baseURL+"/bureaus", wrapper.PostBureaus)
 	router.DELETE(baseURL+"/bureaus/:id", wrapper.DeleteBureausId)
@@ -3591,10 +3075,13 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/bureaus/:id", wrapper.PutBureausId)
 	router.PUT(baseURL+"/buy_report/status/:buy_report_id", wrapper.PutBuyReportStatusBuyReportId)
 	router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
+	router.GET(baseURL+"/buy_reports/csv/download", wrapper.GetBuyReportsCsvDownload)
 	router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
+	router.GET(baseURL+"/buy_reports/summary", wrapper.GetBuyReportsSummary)
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
 	router.DELETE(baseURL+"/departments/:id", wrapper.DeleteDepartmentsId)
@@ -3607,15 +3094,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/divisions/:id", wrapper.DeleteDivisionsId)
 	router.GET(baseURL+"/divisions/:id", wrapper.GetDivisionsId)
 	router.PUT(baseURL+"/divisions/:id", wrapper.PutDivisionsId)
-	router.GET(baseURL+"/expenses", wrapper.GetExpenses)
-	router.POST(baseURL+"/expenses", wrapper.PostExpenses)
-	router.GET(baseURL+"/expenses/details", wrapper.GetExpensesDetails)
-	router.GET(baseURL+"/expenses/details/:year", wrapper.GetExpensesDetailsYear)
-	router.GET(baseURL+"/expenses/fiscalyear/:year", wrapper.GetExpensesFiscalyearYear)
-	router.DELETE(baseURL+"/expenses/:id", wrapper.DeleteExpensesId)
-	router.GET(baseURL+"/expenses/:id", wrapper.GetExpensesId)
-	router.PUT(baseURL+"/expenses/:id", wrapper.PutExpensesId)
-	router.GET(baseURL+"/expenses/:id/details", wrapper.GetExpensesIdDetails)
 	router.GET(baseURL+"/festival_items", wrapper.GetFestivalItems)
 	router.POST(baseURL+"/festival_items", wrapper.PostFestivalItems)
 	router.GET(baseURL+"/festival_items/details/:user_id", wrapper.GetFestivalItemsDetailsUserId)
@@ -3629,14 +3107,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/financial_records/:id", wrapper.DeleteFinancialRecordsId)
 	router.GET(baseURL+"/financial_records/:id", wrapper.GetFinancialRecordsId)
 	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
-	router.GET(baseURL+"/fund_informations", wrapper.GetFundInformations)
-	router.POST(baseURL+"/fund_informations", wrapper.PostFundInformations)
-	router.GET(baseURL+"/fund_informations/details", wrapper.GetFundInformationsDetails)
-	router.GET(baseURL+"/fund_informations/details/:year", wrapper.GetFundInformationsDetailsYear)
-	router.DELETE(baseURL+"/fund_informations/:id", wrapper.DeleteFundInformationsId)
-	router.GET(baseURL+"/fund_informations/:id", wrapper.GetFundInformationsId)
-	router.PUT(baseURL+"/fund_informations/:id", wrapper.PutFundInformationsId)
-	router.GET(baseURL+"/fund_informations/:id/details", wrapper.GetFundInformationsIdDetails)
+	router.GET(baseURL+"/income_expenditure_management/csv/download", wrapper.GetIncomeExpenditureManagementCsvDownload)
 	router.GET(baseURL+"/income_expenditure_managements", wrapper.GetIncomeExpenditureManagements)
 	router.PUT(baseURL+"/income_expenditure_managements/check/:id", wrapper.PutIncomeExpenditureManagementsCheckId)
 	router.GET(baseURL+"/incomes", wrapper.GetIncomes)
@@ -3644,20 +3115,13 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/incomes/:id", wrapper.DeleteIncomesId)
 	router.GET(baseURL+"/incomes/:id", wrapper.GetIncomesId)
 	router.PUT(baseURL+"/incomes/:id", wrapper.PutIncomesId)
+	router.GET(baseURL+"/mail_auth/is_signin", wrapper.GetMailAuthIsSignin)
+	router.POST(baseURL+"/mail_auth/signin", wrapper.PostMailAuthSignin)
+	router.DELETE(baseURL+"/mail_auth/signout", wrapper.DeleteMailAuthSignout)
+	router.POST(baseURL+"/mail_auth/signup", wrapper.PostMailAuthSignup)
 	router.POST(baseURL+"/password_reset/request", wrapper.PostPasswordResetRequest)
 	router.POST(baseURL+"/password_reset/:id", wrapper.PostPasswordResetId)
 	router.POST(baseURL+"/password_reset/:id/valid", wrapper.PostPasswordResetIdValid)
-	router.GET(baseURL+"/receipts", wrapper.GetReceipts)
-	router.POST(baseURL+"/receipts", wrapper.PostReceipts)
-	router.GET(baseURL+"/receipts/reports/:id", wrapper.GetReceiptsReportsId)
-	router.DELETE(baseURL+"/receipts/:id", wrapper.DeleteReceiptsId)
-	router.GET(baseURL+"/receipts/:id", wrapper.GetReceiptsId)
-	router.PUT(baseURL+"/receipts/:id", wrapper.PutReceiptsId)
-	router.GET(baseURL+"/sources", wrapper.GetSources)
-	router.POST(baseURL+"/sources", wrapper.PostSources)
-	router.DELETE(baseURL+"/sources/:id", wrapper.DeleteSourcesId)
-	router.GET(baseURL+"/sources/:id", wrapper.GetSourcesId)
-	router.PUT(baseURL+"/sources/:id", wrapper.PutSourcesId)
 	router.GET(baseURL+"/sponsors", wrapper.GetSponsors)
 	router.POST(baseURL+"/sponsors", wrapper.PostSponsors)
 	router.GET(baseURL+"/sponsors/periods/:year", wrapper.GetSponsorsPeriodsYear)

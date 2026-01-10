@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Link } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Link> = {
   title: 'FinanSu/common/Link',

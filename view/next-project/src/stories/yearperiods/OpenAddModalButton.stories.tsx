@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { OpenAddModalButton } from '@components/yearperiods';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof OpenAddModalButton> = {
   title: 'FinanSu/yearperiods/OpenAddModalButton',

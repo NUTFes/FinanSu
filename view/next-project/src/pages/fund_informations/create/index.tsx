@@ -2,6 +2,7 @@ import { Box, useToast } from '@chakra-ui/react';
 import { Noto_Sans_JP } from 'next/font/google';
 import Head from 'next/head';
 import { useState } from 'react';
+
 import { Title } from '@/components/common';
 import { FundInformationForm } from '@/components/fund_information';
 import {

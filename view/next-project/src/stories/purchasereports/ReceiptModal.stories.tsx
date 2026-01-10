@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { ReceiptModal } from '@components/purchasereports';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof ReceiptModal> = {
   title: 'FinanSu/purchasereports/ReceiptModal',

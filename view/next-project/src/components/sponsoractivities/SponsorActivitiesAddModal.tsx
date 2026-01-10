@@ -2,9 +2,9 @@ import { clsx } from 'clsx';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect, useMemo } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
+
 import { get, post } from '@/utils/api/api_methods';
 import { MultiSelect, SearchSelect } from '@components/common';
-
 import {
   CloseButton,
   Modal,
@@ -205,7 +205,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
-    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-2'>
+    <div className='mx-auto my-10 grid grid-cols-5 place-items-center gap-2'>
       <p className='text-black-600'>年度</p>
       <div className='col-span-4 w-full'>
         <Select

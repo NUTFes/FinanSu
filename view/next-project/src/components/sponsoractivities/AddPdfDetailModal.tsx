@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import { OpenEditInvoiceModalButton } from './index';
 import { createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
@@ -11,6 +10,8 @@ import {
   SponsorStyleDetail,
   InvoiceSponsorStyle,
 } from '@type/common';
+
+import { OpenEditInvoiceModalButton } from './index';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -27,6 +28,8 @@ export default function AddPdfDetailModal(props: ModalProps) {
       const res: InvoiceSponsorStyle = {
         styleName: `${sponsorStyle.style}(${sponsorStyle.feature})`,
         price: sponsorStyle.price,
+        quantity: 1,
+        unitPrice: sponsorStyle.price,
       };
       return res;
     });

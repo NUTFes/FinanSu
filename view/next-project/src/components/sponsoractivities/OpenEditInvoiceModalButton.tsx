@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 
+import { Invoice } from '@/type/common';
+
 import { EditButton } from '../common';
 import EditInvoiceModal from './EditInvoiceModal';
-import { Invoice } from '@/type/common';
 
 interface Props {
   children?: React.ReactNode;

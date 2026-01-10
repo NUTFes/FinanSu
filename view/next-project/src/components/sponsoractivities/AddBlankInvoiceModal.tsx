@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
+
 import { Invoice } from '@/type/common';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
@@ -115,6 +116,8 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
       invoiceSponsorStyle: items.map((item) => ({
         styleName: getDisplayStyleName(item.styleName),
         price: item.price * item.quantity,
+        quantity: item.quantity,
+        unitPrice: item.price,
       })),
       issuedDate: form.issuedDate,
       deadline: form.deadline,

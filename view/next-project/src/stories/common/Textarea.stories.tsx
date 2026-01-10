@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Textarea } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Textarea> = {
   title: 'FinanSu/common/Textarea',

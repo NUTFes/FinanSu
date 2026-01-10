@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+
 import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
 import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';

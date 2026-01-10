@@ -10,7 +10,7 @@ import (
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
-	"github.com/NUTFes/FinanSu/api/externals/controller"
+	"github.com/NUTFes/FinanSu/api/externals/handler"
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
@@ -144,69 +144,6 @@ func ProvideCrud(client db.Client) abstract.Crud {
 	return abstract.NewCrud(client)
 }
 
-// ProvideRouter - Router構築のProvider
-func ProvideRouter(
-	activityController controller.ActivityController,
-	activityInformationController controller.ActivityInformationController,
-	activityStyleController controller.ActivityStyleController,
-	budgetController controller.BudgetController,
-	bureauController controller.BureauController,
-	buyReportController controller.BuyReportController,
-	departmentController controller.DepartmentController,
-	divisionController controller.DivisionController,
-	expenseController controller.ExpenseController,
-	festivalItemController controller.FestivalItemController,
-	financialRecordController controller.FinancialRecordController,
-	fundInformationController controller.FundInformationController,
-	healthcheckController controller.HealthcheckController,
-	incomeController controller.IncomeController,
-	incomeExpenditureManagementController controller.IncomeExpenditureManagementController,
-	mailAuthController controller.MailAuthController,
-	objectUploadController controller.ObjectUploadController,
-	passwordResetTokenController controller.PasswordResetTokenController,
-	purchaseItemController controller.PurchaseItemController,
-	purchaseOrderController controller.PurchaseOrderController,
-	purchaseReportController controller.PurchaseReportController,
-	receiptController controller.ReceiptController,
-	sourceController controller.SourceController,
-	sponsorController controller.SponsorController,
-	sponsorStyleController controller.SponsorStyleController,
-	teacherController controller.TeacherController,
-	userController controller.UserController,
-	yearController controller.YearController,
-) router.Router {
-	return router.NewRouter(
-		activityController,
-		activityInformationController,
-		activityStyleController,
-		budgetController,
-		bureauController,
-		buyReportController,
-		departmentController,
-		divisionController,
-		expenseController,
-		festivalItemController,
-		financialRecordController,
-		fundInformationController,
-		healthcheckController,
-		incomeController,
-		incomeExpenditureManagementController,
-		mailAuthController,
-		objectUploadController,
-		passwordResetTokenController,
-		purchaseItemController,
-		purchaseOrderController,
-		purchaseReportController,
-		receiptController,
-		sourceController,
-		sponsorController,
-		sponsorStyleController,
-		teacherController,
-		userController,
-		yearController,
-	)
-}
-
 // ProvideServer - ServerのProvider
 func ProvideServer(router2 router.Router) *echo.Echo {
 	return server.RunServer(router2)
@@ -218,4 +155,81 @@ func ProvideServerComponents(client db.Client, echo2 *echo.Echo) *ServerComponen
 		Client: client,
 		Echo:   echo2,
 	}
+
+	activityInformationRepository := repository.NewActivityInformationsRepository(client, crud)
+	activityStyleRepository := repository.NewActivityStyleRepository(client, crud)
+	bureauRepository := repository.NewBureauRepository(client, crud)
+	buyReportRepository := repository.NewBuyReportRepository(client, crud)
+	departmentRepository := repository.NewDepartmentRepository(client, crud)
+	divisionRepository := repository.NewDivisionRepository(client, crud)
+	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
+	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
+	incomeRepository := repository.NewIncomeRepository(client, crud)
+	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
+	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
+	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
+	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
+	sessionRepository := repository.NewSessionRepository(client)
+	sponsorRepository := repository.NewSponsorRepository(client, crud)
+	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
+	teacherRepository := repository.NewTeacherRepository(client, crud)
+	transactionRepository := repository.NewTransactionRepository(client, crud)
+	userRepository := repository.NewUserRepository(client, crud)
+	yearRepository := repository.NewYearRepository(client, crud)
+	// ↓
+
+	// UseCase
+	activityUseCase := usecase.NewActivityUseCase(activityRepository)
+	activityInformationUseCase := usecase.NewActivityInformationUseCase(
+		activityInformationRepository,
+	)
+	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
+	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
+	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository, incomeExpenditureManagementRepository)
+	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
+	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
+	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
+	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
+	incomeUseCase := usecase.NewIncomeUseCase(incomeRepository, incomeExpenditureManagementRepository, transactionRepository)
+	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
+	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
+	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
+	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
+		passwordResetTokenRepository,
+		userRepository,
+		mailAuthRepository,
+	)
+	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
+	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
+	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
+	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
+	yearUseCase := usecase.NewYearUseCase(yearRepository)
+	// ↓
+
+	handler := handler.NewHandler(
+		activityUseCase,
+		activityInformationUseCase,
+		activityStyleUseCase,
+		bureauUseCase,
+		buyReportUseCase,
+		departmentUseCase,
+		divisionUseCase,
+		festivalUseCase,
+		financialRecordUseCase,
+		incomeUseCase,
+		incomeExpenditureManagementUseCase,
+		mailAuthUseCase,
+		objectHandleUseCase,
+		passwordResetTokenUseCase,
+		sponsorUseCase,
+		sponsorStyleUseCase,
+		teacherUseCase,
+		userUseCase,
+		yearUseCase,
+	)
+
+	// Server
+	e := server.RunServer(handler)
+
+	return client, e
 }
