@@ -27,6 +27,7 @@ type BuyReportController interface {
 	GetBuyReportById(echo.Context) error
 	UpdateBuyReportStatus(echo.Context) error
 	GetBuyReportsCsvDownload(echo.Context) error
+	GetBuyReportsSummary(echo.Context) error
 }
 
 func NewBuyReportController(u usecase.BuyReportUseCase) BuyReportController {
@@ -102,8 +103,11 @@ func (s *buyReportController) DeleteBuyReport(c echo.Context) error {
 func (s *buyReportController) IndexBuyReport(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
+	financialRecordID := c.QueryParam("financial_record_id")
+	paidBy := c.QueryParam("paid_by")
+	paidByUserID := c.QueryParam("paid_by_user_id")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordID, paidBy, paidByUserID)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "failed to buy_reports")
 	}
@@ -145,8 +149,11 @@ func (s *buyReportController) UpdateBuyReportStatus(c echo.Context) error {
 func (s *buyReportController) GetBuyReportsCsvDownload(c echo.Context) error {
 	ctx := c.Request().Context()
 	year := c.QueryParam("year")
+	financialRecordID := c.QueryParam("financial_record_id")
+	paidBy := c.QueryParam("paid_by")
+	paidByUserID := c.QueryParam("paid_by_user_id")
 
-	buyReportDetails, err := s.u.GetBuyReports(ctx, year)
+	buyReportDetails, err := s.u.GetBuyReports(ctx, year, financialRecordID, paidBy, paidByUserID)
 	if err != nil {
 		return err
 	}
@@ -231,6 +238,29 @@ func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
 		return err
 	}
 	return nil
+}
+
+func (s *buyReportController) GetBuyReportsSummary(c echo.Context) error {
+	ctx := c.Request().Context()
+	year := c.QueryParam("year")
+	if year == "" {
+		return c.String(http.StatusBadRequest, "year is required")
+	}
+	if _, err := strconv.Atoi(year); err != nil {
+		return c.String(http.StatusBadRequest, "year must be an integer")
+	}
+
+	financialRecordID := c.QueryParam("financial_record_id")
+	paidBy := c.QueryParam("paid_by")
+	paidByUserID := c.QueryParam("paid_by_user_id")
+
+	summary, err := s.u.GetBuyReportsSummary(ctx, year, financialRecordID, paidBy, paidByUserID)
+	if err != nil {
+		c.Logger().Errorf("failed to get buy_reports summary: %v", err)
+		return c.String(http.StatusInternalServerError, "failed to get buy_reports summary")
+	}
+
+	return c.JSON(http.StatusOK, summary)
 }
 
 type BuyReport = generated.BuyReport

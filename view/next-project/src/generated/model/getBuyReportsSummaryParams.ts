@@ -6,11 +6,11 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type GetBuyReportsCsvDownloadParams = {
+export type GetBuyReportsSummaryParams = {
   /**
    * year
    */
-  year?: number;
+  year: number;
   /**
    * financial_records.id での完全一致フィルタ
    */
