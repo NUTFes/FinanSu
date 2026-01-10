@@ -18,7 +18,7 @@ const ActiveContent = React.memo(function activeContent(props: ContentProps) {
     <div className={clsx('relative flex items-center text-white-0')}>
       <div
         className={clsx(
-          'h-12 w-12 rounded-full border-2 border-primary-1 bg-primary-1 py-3 transition duration-500 ease-in-out',
+          'size-12 rounded-full border-2 border-primary-1 bg-primary-1 py-3 transition duration-500 ease-in-out',
         )}
       >
         <div className={clsx('relative grid justify-items-center')}>{props.stepNum}</div>
@@ -33,7 +33,7 @@ const DeActiveContent = React.memo(function activeContent(props: ContentProps) {
     <div className={clsx('relative flex items-center text-white-0')}>
       <div
         className={clsx(
-          'h-12 w-12 rounded-full border-2 border-primary-1 py-3 transition duration-500 ease-in-out',
+          'size-12 rounded-full border-2 border-primary-1 py-3 transition duration-500 ease-in-out',
         )}
       >
         <div className={clsx('relative grid justify-items-center text-primary-1')}>

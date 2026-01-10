@@ -46,7 +46,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           onClick={handleFileUploadClick}
         >
           <span className='flex w-full items-center justify-center gap-1 font-normal sm:gap-2'>
-            <GoPlus className='pt-[1px] text-sm sm:text-base' />
+            <GoPlus className='pt-px text-sm sm:text-base' />
             <Text className='text-xs sm:text-sm md:text-base'>
               {isEditMode ? '領収書（レシート）を変更' : '領収書（レシート）をアップロード'}
             </Text>
@@ -55,7 +55,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       )}
       {validationError && !isEditMode ? (
         <Box className='mt-6 flex items-center justify-center gap-2'>
-          <FaExclamationCircle color='#B91C1C' className='pt-[1px]' />
+          <FaExclamationCircle color='#B91C1C' className='pt-px' />
           <Text className='text-sm text-[#B91C1C]'>{validationError}</Text>
         </Box>
       ) : (

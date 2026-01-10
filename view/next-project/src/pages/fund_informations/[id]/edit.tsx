@@ -17,6 +17,7 @@ import {
 import { Noto_Sans_JP } from 'next/font/google';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
+
 import { PrimaryButton, Title } from '@/components/common';
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
 import MainLayout from '@/components/layout/MainLayout';

@@ -1,7 +1,9 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
-import { PurchaseReportView } from '../type/common';
+
 import { BUREAUS } from '@/constants/bureaus';
+
+import { PurchaseReportView } from '../type/common';
 
 export const createPurchaseReportFormPdf = async (
   purchaseReportViews: PurchaseReportView,

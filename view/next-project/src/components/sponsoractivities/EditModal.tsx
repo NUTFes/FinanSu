@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect, useMemo } from 'react';
 
 import { get, put, post, del } from '@/utils/api/api_methods';
-
 import {
   PrimaryButton,
   OutlinePrimaryButton,
@@ -217,7 +216,7 @@ export default function EditModal(props: ModalProps) {
 
   // 協賛企業の情報
   const content = (data: SponsorActivity) => (
-    <div className='my-4 grid grid-cols-5 items-center justify-items-center gap-2'>
+    <div className='my-4 grid grid-cols-5 place-items-center gap-2'>
       <p className='text-black-600'>年度</p>
       <div className='col-span-4 w-full'>
         <Select

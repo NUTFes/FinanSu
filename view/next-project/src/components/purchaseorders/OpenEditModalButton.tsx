@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 
-import { DetailEditModal } from './DetailEditModal';
 import { CloseButton, EditButton, Modal, PrimaryButton } from '@components/common';
 import EditModal from '@components/purchaseorders/EditModal';
 import { Expense, PurchaseOrderView } from '@type/common';
+
+import { DetailEditModal } from './DetailEditModal';
 
 interface Props {
   children?: React.ReactNode;

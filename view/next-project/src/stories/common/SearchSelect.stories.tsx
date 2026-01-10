@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { SearchSelect } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof SearchSelect> = {
   title: 'FinanSu/common/SearchSelect',

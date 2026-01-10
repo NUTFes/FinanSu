@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { Radio } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof Radio> = {
   title: 'FinanSu/common/Radio',

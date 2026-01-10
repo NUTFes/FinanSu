@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Title, AddButton, OutlinePrimaryButton } from '@components/common';
+
+import { AddButton, OutlinePrimaryButton, Title } from '@components/common';
 
 interface FundInformationHeaderProps {
   totalBalance: number;

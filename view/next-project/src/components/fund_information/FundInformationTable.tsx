@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import DeleteConfirmModal from './modals/DeleteModal';
-import UncheckConfirmModal from './modals/UncheckConfirmModal';
+
 import { IncomeExpenditureManagement } from '@/generated/model/incomeExpenditureManagement';
 import { Checkbox, DeleteButton, EditButton } from '@components/common';
+
+import DeleteConfirmModal from './modals/DeleteModal';
+import UncheckConfirmModal from './modals/UncheckConfirmModal';
 
 interface FundInformationTableProps {
   fundInformations: IncomeExpenditureManagement[];
