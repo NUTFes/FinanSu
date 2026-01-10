@@ -216,7 +216,7 @@ graph TB
 
 ### 依存性注入 (DI) ワークフロー
 
-- **Wire による自動依存解決**: `api/internals/di/wire.go` で全ての依存関係を定義
+- **Wire による自動依存解決**: `api/internals/di/wire.go` で各層の依存関係を統合
 - 各層に `wire.go` を配置し、ProviderSet を定義
 - `main.go` で `di.InitializeServer()` を呼び出すだけで全ての依存関係が解決
 - テスタビリティとメンテナンス性の向上
