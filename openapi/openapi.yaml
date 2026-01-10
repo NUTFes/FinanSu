@@ -620,6 +620,24 @@ paths:
           description: year
           schema:
             type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_records.id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+        - name: paid_by
+          in: query
+          description: buy_reports.paid_by での完全一致フィルタ
+          required: false
+          schema:
+            type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: buy_reportの一覧を取得
@@ -629,6 +647,43 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/buyReportDetail"
+  /buy_reports/summary:
+    get:
+      tags:
+        - buy_report
+      description: 購入報告一覧の未精算/未封詰め合計を返す
+      parameters:
+        - name: year
+          in: query
+          description: year
+          required: true
+          schema:
+            type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_records.id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+        - name: paid_by
+          in: query
+          description: buy_reports.paid_by での完全一致フィルタ
+          required: false
+          schema:
+            type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 条件に一致する購入報告のサマリ
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/buyReportSummary"
   /buy_report/status/{buy_report_id}:
     put:
       tags:
@@ -671,6 +726,24 @@ paths:
         - name: year
           in: query
           description: year
+          schema:
+            type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_records.id での完全一致フィルタ
+          required: false
+          schema:
+            type: integer
+        - name: paid_by
+          in: query
+          description: buy_reports.paid_by での完全一致フィルタ
+          required: false
+          schema:
+            type: string
+        - name: paid_by_user_id
+          in: query
+          description: buy_reports.paid_by_user_id での完全一致フィルタ
+          required: false
           schema:
             type: integer
       responses:
@@ -1208,6 +1281,30 @@ paths:
               schema:
                 type: string
                 example: attachment; filename=financial_record.csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+  /income_expenditure_management/csv/download:
+    get:
+      tags:
+        - income_expenditure_management
+      description: 収支管理一覧のCSVダウンロード、財務向けのページ
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: income_expenditure_managementのCSVダウンロード
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=income_expenditure_management.csv
           content:
             text/csv:
               schema:
@@ -2340,6 +2437,9 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
       required:
         - festivalItemID
         - amount
@@ -2436,6 +2536,21 @@ components:
         - paidBy
         - reportDate
         - filePath
+    buyReportSummary:
+      description: 購入報告の未精算/未封詰め合計
+      type: object
+      properties:
+        unsettledAmount:
+          type: integer
+          example: 12000
+          description: isSettled=falseのamount合計
+        unpackedAmount:
+          type: integer
+          example: 8000
+          description: isPacked=falseのamount合計
+      required:
+        - unsettledAmount
+        - unpackedAmount
     division:
       required:
         - name

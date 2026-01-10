@@ -3,10 +3,11 @@ import { useDropzone } from 'react-dropzone';
 import { MdFileUpload } from 'react-icons/md';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { PrimaryButton, Loading } from '../common';
 import { post, put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
 import { Receipt } from '@type/common';
+
+import { PrimaryButton, Loading } from '../common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;

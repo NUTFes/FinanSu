@@ -67,8 +67,11 @@ func (h *Handler) GetBuyReportsDetails(c echo.Context, params generated.GetBuyRe
 	if params.Year != nil {
 		yearStr = strconv.Itoa(*params.Year)
 	}
+	financialRecordId := strconv.Itoa(*params.FinancialRecordId)
+	PaidBy := *params.PaidBy
+	PaidByUserId := strconv.Itoa(*params.PaidByUserId)
 
-	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, yearStr)
+	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, yearStr, financialRecordId, PaidBy, PaidByUserId)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "failed to buy_reports")
 	}
@@ -129,8 +132,11 @@ func (h *Handler) GetBuyReportsId(c echo.Context, id int) error {
 func (h *Handler) GetBuyReportsCsvDownload(c echo.Context, params generated.GetBuyReportsCsvDownloadParams) error {
 	ctx := c.Request().Context()
 	year := strconv.Itoa(*params.Year)
+	financialRecordID := strconv.Itoa(*params.FinancialRecordId)
+	paidBy := params.PaidBy
+	paidByUserID := strconv.Itoa(*params.PaidByUserId)
 
-	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, year)
+	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, year, financialRecordID, *paidBy, paidByUserID)
 	if err != nil {
 		return err
 	}
@@ -215,6 +221,27 @@ func makeBuyReportCSV(writer http.ResponseWriter, records [][]string) error {
 		return err
 	}
 	return nil
+}
+
+// router.GET(baseURL+"/buy_reports/summary", wrapper.GetBuyReportsSummary)
+func (h *Handler) GetBuyReportsSummary(c echo.Context, params generated.GetBuyReportsSummaryParams) error {
+	ctx := c.Request().Context()
+	year := strconv.Itoa(params.Year)
+	if year == "" {
+		return c.String(http.StatusBadRequest, "year is required")
+	}
+
+	financialRecordID := strconv.Itoa(*params.FinancialRecordId)
+	paidBy := *params.PaidBy
+	paidByUserID := strconv.Itoa(*params.PaidByUserId)
+
+	summary, err := h.buyReportUseCase.GetBuyReportsSummary(ctx, year, financialRecordID, paidBy, paidByUserID)
+	if err != nil {
+		c.Logger().Errorf("failed to get buy_reports summary: %v", err)
+		return c.String(http.StatusInternalServerError, "failed to get buy_reports summary")
+	}
+
+	return c.JSON(http.StatusOK, summary)
 }
 
 type BuyReport = generated.BuyReport

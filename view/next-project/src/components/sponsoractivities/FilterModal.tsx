@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+
 import { Modal, Select, CloseButton, Input, PrimaryButton } from '@components/common';
 import { SponsorStyle, SponsorFilterType } from '@type/common';
 
@@ -83,7 +84,7 @@ const FilterModal: FC<ModalProps> = (props) => {
             </div>
           </div>
           <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛フィルター</div>
-          <div className='m-2 grid  grid-cols-4 items-center justify-items-center gap-x-2 gap-y-5'>
+          <div className='m-2 grid  grid-cols-4 place-items-center gap-x-2 gap-y-5'>
             <p className='col-span-2 text-black-600'>協賛スタイル</p>
             <div className='col-span-2 w-full'>
               <div className=''>

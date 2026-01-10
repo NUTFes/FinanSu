@@ -73,6 +73,7 @@ type BuyReport struct {
 	FestivalItemID int    `json:"festivalItemID"`
 	Id             *int   `json:"id,omitempty"`
 	PaidBy         string `json:"paidBy"`
+	PaidByUserId   *int   `json:"paidByUserId,omitempty"`
 }
 
 // BuyReportDetail 購入報告ページで表示する詳細情報
@@ -102,6 +103,15 @@ type BuyReportInformation struct {
 
 // BuyReportInformationStatus defines model for BuyReportInformation.Status.
 type BuyReportInformationStatus string
+
+// BuyReportSummary 購入報告の未精算/未封詰め合計
+type BuyReportSummary struct {
+	// UnpackedAmount isPacked=falseのamount合計
+	UnpackedAmount int `json:"unpackedAmount"`
+
+	// UnsettledAmount isSettled=falseのamount合計
+	UnsettledAmount int `json:"unsettledAmount"`
+}
 
 // BuyReportWithDivisionId 購入報告の際のパラメータ、部門と物品IDを含む
 type BuyReportWithDivisionId struct {
@@ -382,12 +392,45 @@ type PostBuyReportsMultipartBody struct {
 type GetBuyReportsCsvDownloadParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
+
+	// PaidBy buy_reports.paid_by での完全一致フィルタ
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
 }
 
 // GetBuyReportsDetailsParams defines parameters for GetBuyReportsDetails.
 type GetBuyReportsDetailsParams struct {
 	// Year year
 	Year *int `form:"year,omitempty" json:"year,omitempty"`
+
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
+
+	// PaidBy buy_reports.paid_by での完全一致フィルタ
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
+}
+
+// GetBuyReportsSummaryParams defines parameters for GetBuyReportsSummary.
+type GetBuyReportsSummaryParams struct {
+	// Year year
+	Year int `form:"year" json:"year"`
+
+	// FinancialRecordId financial_records.id での完全一致フィルタ
+	FinancialRecordId *int `form:"financial_record_id,omitempty" json:"financial_record_id,omitempty"`
+
+	// PaidBy buy_reports.paid_by での完全一致フィルタ
+	PaidBy *string `form:"paid_by,omitempty" json:"paid_by,omitempty"`
+
+	// PaidByUserId buy_reports.paid_by_user_id での完全一致フィルタ
+	PaidByUserId *int `form:"paid_by_user_id,omitempty" json:"paid_by_user_id,omitempty"`
 }
 
 // PutBuyReportsIdMultipartBody defines parameters for PutBuyReportsId.
@@ -474,6 +517,12 @@ type GetFinancialRecordsParams struct {
 type GetFinancialRecordsCsvDownloadParams struct {
 	// Year year
 	Year int `form:"year" json:"year"`
+}
+
+// GetIncomeExpenditureManagementCsvDownloadParams defines parameters for GetIncomeExpenditureManagementCsvDownload.
+type GetIncomeExpenditureManagementCsvDownloadParams struct {
+	// Year year
+	Year *int `form:"year,omitempty" json:"year,omitempty"`
 }
 
 // GetIncomeExpenditureManagementsParams defines parameters for GetIncomeExpenditureManagements.
@@ -791,6 +840,9 @@ type ServerInterface interface {
 	// (GET /buy_reports/details)
 	GetBuyReportsDetails(ctx echo.Context, params GetBuyReportsDetailsParams) error
 
+	// (GET /buy_reports/summary)
+	GetBuyReportsSummary(ctx echo.Context, params GetBuyReportsSummaryParams) error
+
 	// (DELETE /buy_reports/{id})
 	DeleteBuyReportsId(ctx echo.Context, id int) error
 
@@ -877,6 +929,9 @@ type ServerInterface interface {
 
 	// (PUT /financial_records/{id})
 	PutFinancialRecordsId(ctx echo.Context, id int) error
+
+	// (GET /income_expenditure_management/csv/download)
+	GetIncomeExpenditureManagementCsvDownload(ctx echo.Context, params GetIncomeExpenditureManagementCsvDownloadParams) error
 
 	// (GET /income_expenditure_managements)
 	GetIncomeExpenditureManagements(ctx echo.Context, params GetIncomeExpenditureManagementsParams) error
@@ -1453,6 +1508,27 @@ func (w *ServerInterfaceWrapper) GetBuyReportsCsvDownload(ctx echo.Context) erro
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
+	// ------------- Optional query parameter "financial_record_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetBuyReportsCsvDownload(ctx, params)
 	return err
@@ -1471,8 +1547,68 @@ func (w *ServerInterfaceWrapper) GetBuyReportsDetails(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
+	// ------------- Optional query parameter "financial_record_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetBuyReportsDetails(ctx, params)
+	return err
+}
+
+// GetBuyReportsSummary converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBuyReportsSummary(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetBuyReportsSummaryParams
+	// ------------- Required query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Optional query parameter "financial_record_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "financial_record_id", ctx.QueryParams(), &params.FinancialRecordId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter financial_record_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by", ctx.QueryParams(), &params.PaidBy)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by: %s", err))
+	}
+
+	// ------------- Optional query parameter "paid_by_user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "paid_by_user_id", ctx.QueryParams(), &params.PaidByUserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paid_by_user_id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetBuyReportsSummary(ctx, params)
 	return err
 }
 
@@ -1984,6 +2120,24 @@ func (w *ServerInterfaceWrapper) PutFinancialRecordsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutFinancialRecordsId(ctx, id)
+	return err
+}
+
+// GetIncomeExpenditureManagementCsvDownload converts echo context to params.
+func (w *ServerInterfaceWrapper) GetIncomeExpenditureManagementCsvDownload(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetIncomeExpenditureManagementCsvDownloadParams
+	// ------------- Optional query parameter "year" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year", ctx.QueryParams(), &params.Year)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetIncomeExpenditureManagementCsvDownload(ctx, params)
 	return err
 }
 
@@ -2923,6 +3077,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/buy_reports", wrapper.PostBuyReports)
 	router.GET(baseURL+"/buy_reports/csv/download", wrapper.GetBuyReportsCsvDownload)
 	router.GET(baseURL+"/buy_reports/details", wrapper.GetBuyReportsDetails)
+	router.GET(baseURL+"/buy_reports/summary", wrapper.GetBuyReportsSummary)
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
@@ -2952,6 +3107,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/financial_records/:id", wrapper.DeleteFinancialRecordsId)
 	router.GET(baseURL+"/financial_records/:id", wrapper.GetFinancialRecordsId)
 	router.PUT(baseURL+"/financial_records/:id", wrapper.PutFinancialRecordsId)
+	router.GET(baseURL+"/income_expenditure_management/csv/download", wrapper.GetIncomeExpenditureManagementCsvDownload)
 	router.GET(baseURL+"/income_expenditure_managements", wrapper.GetIncomeExpenditureManagements)
 	router.PUT(baseURL+"/income_expenditure_managements/check/:id", wrapper.PutIncomeExpenditureManagementsCheckId)
 	router.GET(baseURL+"/incomes", wrapper.GetIncomes)

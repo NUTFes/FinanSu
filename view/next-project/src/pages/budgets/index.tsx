@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
-
 import { useRecoilValue } from 'recoil';
+
 import OpenExpenditureAddModalButton from '@/components/budgets/OpenExpenditureAddModalButton';
 import OpenExpenseAddModalButton from '@/components/budgets/OpenExpenseAddModalButton';
 import OpenExpenseDeleteModalButton from '@/components/budgets/OpenExpenseDeleteModalButton';
@@ -232,8 +232,8 @@ export default function BudgetList(props: Props) {
                       >
                         <tr>
                           <th />
-                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
-                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>
+                          <th className='py-3 pt-4 text-center text-black-600'>合計金額</th>
+                          <th className='py-3 pt-4 text-center text-black-600'>
                             {budgetsTotalFee}
                           </th>
                           <th />
@@ -361,8 +361,8 @@ export default function BudgetList(props: Props) {
                         )}
                       >
                         <tr>
-                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>合計金額</th>
-                          <th className='py-3 pb-3 pt-4 text-center text-black-600'>
+                          <th className='py-3 pt-4 text-center text-black-600'>合計金額</th>
+                          <th className='py-3 pt-4 text-center text-black-600'>
                             {expensesTotalFee}
                           </th>
                           <th />

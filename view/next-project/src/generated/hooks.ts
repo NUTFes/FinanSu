@@ -17,6 +17,7 @@ import type {
   ActivityStyle,
   BuyReport,
   BuyReportDetail,
+  BuyReportSummary,
   BuyReportWithDivisionId,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
@@ -67,6 +68,7 @@ import type {
   GetBureausId200,
   GetBuyReportsCsvDownloadParams,
   GetBuyReportsDetailsParams,
+  GetBuyReportsSummaryParams,
   GetDepartments200,
   GetDepartmentsId200,
   GetDivisionsParams,
@@ -77,6 +79,7 @@ import type {
   GetFestivalItemsUsersParams,
   GetFinancialRecordsCsvDownloadParams,
   GetFinancialRecordsParams,
+  GetIncomeExpenditureManagementCsvDownloadParams,
   GetIncomeExpenditureManagementsParams,
   GetMailAuthIsSignin200,
   GetSponsorstyles200,
@@ -2125,6 +2128,79 @@ export const useGetBuyReportsDetails = <TError = unknown>(
 };
 
 /**
+ * 購入報告一覧の未精算/未封詰め合計を返す
+ */
+export type getBuyReportsSummaryResponse200 = {
+  data: BuyReportSummary;
+  status: 200;
+};
+
+export type getBuyReportsSummaryResponseComposite = getBuyReportsSummaryResponse200;
+
+export type getBuyReportsSummaryResponse = getBuyReportsSummaryResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetBuyReportsSummaryUrl = (params: GetBuyReportsSummaryParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/buy_reports/summary?${stringifiedParams}`
+    : `/buy_reports/summary`;
+};
+
+export const getBuyReportsSummary = async (
+  params: GetBuyReportsSummaryParams,
+  options?: RequestInit,
+): Promise<getBuyReportsSummaryResponse> => {
+  return customFetch<getBuyReportsSummaryResponse>(getGetBuyReportsSummaryUrl(params), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetBuyReportsSummaryKey = (params: GetBuyReportsSummaryParams) =>
+  [`/buy_reports/summary`, ...(params ? [params] : [])] as const;
+
+export type GetBuyReportsSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBuyReportsSummary>>
+>;
+export type GetBuyReportsSummaryQueryError = unknown;
+
+export const useGetBuyReportsSummary = <TError = unknown>(
+  params: GetBuyReportsSummaryParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsSummary>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsSummaryKey(params) : null));
+  const swrFn = () => getBuyReportsSummary(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * buy_reportのステータス更新、財務が封詰め、精算済みにするAPI
  */
 export type putBuyReportStatusBuyReportIdResponse200 = {
@@ -4051,6 +4127,88 @@ export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
   const swrKey =
     swrOptions?.swrKey ?? (() => (isEnabled ? getGetFinancialRecordsCsvDownloadKey(params) : null));
   const swrFn = () => getFinancialRecordsCsvDownload(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 収支管理一覧のCSVダウンロード、財務向けのページ
+ */
+export type getIncomeExpenditureManagementCsvDownloadResponse200 = {
+  data: Blob;
+  status: 200;
+};
+
+export type getIncomeExpenditureManagementCsvDownloadResponseComposite =
+  getIncomeExpenditureManagementCsvDownloadResponse200;
+
+export type getIncomeExpenditureManagementCsvDownloadResponse =
+  getIncomeExpenditureManagementCsvDownloadResponseComposite & {
+    headers: Headers;
+  };
+
+export const getGetIncomeExpenditureManagementCsvDownloadUrl = (
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/income_expenditure_management/csv/download?${stringifiedParams}`
+    : `/income_expenditure_management/csv/download`;
+};
+
+export const getIncomeExpenditureManagementCsvDownload = async (
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+  options?: RequestInit,
+): Promise<getIncomeExpenditureManagementCsvDownloadResponse> => {
+  return customFetch<getIncomeExpenditureManagementCsvDownloadResponse>(
+    getGetIncomeExpenditureManagementCsvDownloadUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetIncomeExpenditureManagementCsvDownloadKey = (
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+) => [`/income_expenditure_management/csv/download`, ...(params ? [params] : [])] as const;
+
+export type GetIncomeExpenditureManagementCsvDownloadQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>
+>;
+export type GetIncomeExpenditureManagementCsvDownloadQueryError = unknown;
+
+export const useGetIncomeExpenditureManagementCsvDownload = <TError = unknown>(
+  params?: GetIncomeExpenditureManagementCsvDownloadParams,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetIncomeExpenditureManagementCsvDownloadKey(params) : null));
+  const swrFn = () => getIncomeExpenditureManagementCsvDownload(params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

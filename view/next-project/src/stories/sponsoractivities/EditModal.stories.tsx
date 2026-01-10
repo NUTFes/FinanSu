@@ -1,4 +1,5 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import { EditModal } from '@components/sponsoractivities';
+
 import {
   USER,
   SPONSOR_ACTIVITY,
@@ -7,7 +8,8 @@ import {
   ACTIVITY_STYLE,
   YEAEPERIOD,
 } from '../constants';
-import { EditModal } from '@components/sponsoractivities';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof EditModal> = {
   title: 'FinanSu/sponsoractivities/EditModal',

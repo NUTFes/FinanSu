@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { FC } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
+
 import { postExpenses } from '@api/budget';
 import { PrimaryButton, Input, Modal, Select } from '@components/common';
 import { Expense, Year } from '@type/common';
@@ -46,7 +47,7 @@ const ExpenseAddModal: FC<ModalProps> = (props) => {
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
       </div>
       <div className='mx-auto w-fit text-xl'>支出元の登録</div>
-      <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+      <div className='my-10 grid grid-cols-5 place-items-center gap-5 text-black-600'>
         <p>年度</p>
         <div className='col-span-4 w-full'>
           <Select className='w-full' value={formData.yearID} onChange={handler('yearID')}>
