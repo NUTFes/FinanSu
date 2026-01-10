@@ -45,15 +45,7 @@ func (brr *buyReportRepository) CreateBuyReport(
 	buyReportInfo PostBuyReport,
 ) (int64, error) {
 	var id int64
-	record := goqu.Record{
-		"festival_item_id": buyReportInfo.FestivalItemID,
-		"amount":           buyReportInfo.Amount,
-		"memo":             "",
-		"paid_by":          buyReportInfo.PaidBy,
-	}
-	if buyReportInfo.PaidByUserId != nil {
-		record["paid_by_user_id"] = *buyReportInfo.PaidByUserId
-	}
+	record := buildBuyReportRecord(buyReportInfo)
 	ds := dialect.Insert("buy_reports").Rows(record)
 	query, _, err := ds.ToSQL()
 	if err != nil {
@@ -84,15 +76,7 @@ func (brr *buyReportRepository) UpdateBuyReport(
 	id string,
 	buyReportInfo PostBuyReport,
 ) error {
-	record := goqu.Record{
-		"festival_item_id": buyReportInfo.FestivalItemID,
-		"amount":           buyReportInfo.Amount,
-		"memo":             "",
-		"paid_by":          buyReportInfo.PaidBy,
-	}
-	if buyReportInfo.PaidByUserId != nil {
-		record["paid_by_user_id"] = *buyReportInfo.PaidByUserId
-	}
+	record := buildBuyReportRecord(buyReportInfo)
 	ds := dialect.Update("buy_reports").
 		Set(record).
 		Where(goqu.Ex{"id": id})
@@ -355,6 +339,19 @@ func applyBuyReportFilters(ds *goqu.SelectDataset, year, financialRecordID, paid
 
 type PostBuyReport = generated.BuyReport
 type PutBuyReport = generated.PutBuyReportStatusBuyReportIdJSONRequestBody
+
+func buildBuyReportRecord(buyReportInfo PostBuyReport) goqu.Record {
+	record := goqu.Record{
+		"festival_item_id": buyReportInfo.FestivalItemID,
+		"amount":           buyReportInfo.Amount,
+		"memo":             "",
+		"paid_by":          buyReportInfo.PaidBy,
+	}
+	if buyReportInfo.PaidByUserId != nil {
+		record["paid_by_user_id"] = *buyReportInfo.PaidByUserId
+	}
+	return record
+}
 
 var selectBuyReportDetailsQuery = dialect.From("buy_reports").Select(
 	"buy_reports.amount",
