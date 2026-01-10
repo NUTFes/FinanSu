@@ -67,9 +67,18 @@ func (h *Handler) GetBuyReportsDetails(c echo.Context, params generated.GetBuyRe
 	if params.Year != nil {
 		yearStr = strconv.Itoa(*params.Year)
 	}
-	financialRecordId := strconv.Itoa(*params.FinancialRecordId)
-	PaidBy := *params.PaidBy
-	PaidByUserId := strconv.Itoa(*params.PaidByUserId)
+	var financialRecordId string
+	if params.FinancialRecordId != nil {
+		financialRecordId = strconv.Itoa(*params.FinancialRecordId)
+	}
+	var PaidBy string
+	if params.PaidBy != nil {
+		PaidBy = *params.PaidBy
+	}
+	var PaidByUserId string
+	if params.PaidByUserId != nil {
+		PaidByUserId = strconv.Itoa(*params.PaidByUserId)
+	}
 
 	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, yearStr, financialRecordId, PaidBy, PaidByUserId)
 	if err != nil {
@@ -131,12 +140,24 @@ func (h *Handler) GetBuyReportsId(c echo.Context, id int) error {
 // router.GET(baseURL+"/buy_reports/csv", wrapper.GetBuyReportsCsvDownload)
 func (h *Handler) GetBuyReportsCsvDownload(c echo.Context, params generated.GetBuyReportsCsvDownloadParams) error {
 	ctx := c.Request().Context()
-	year := strconv.Itoa(*params.Year)
-	financialRecordID := strconv.Itoa(*params.FinancialRecordId)
-	paidBy := params.PaidBy
-	paidByUserID := strconv.Itoa(*params.PaidByUserId)
+	var yearStr string
+	if params.Year != nil {
+		yearStr = strconv.Itoa(*params.Year)
+	}
+	var financialRecordId string
+	if params.FinancialRecordId != nil {
+		financialRecordId = strconv.Itoa(*params.FinancialRecordId)
+	}
+	var PaidBy string
+	if params.PaidBy != nil {
+		PaidBy = *params.PaidBy
+	}
+	var PaidByUserId string
+	if params.PaidByUserId != nil {
+		PaidByUserId = strconv.Itoa(*params.PaidByUserId)
+	}
 
-	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, year, financialRecordID, *paidBy, paidByUserID)
+	buyReportDetails, err := h.buyReportUseCase.GetBuyReports(ctx, yearStr, financialRecordId, PaidBy, PaidByUserId)
 	if err != nil {
 		return err
 	}
@@ -187,7 +208,7 @@ func (h *Handler) GetBuyReportsCsvDownload(c echo.Context, params generated.GetB
 
 	// ヘッダーの設定
 	w := c.Response().Writer
-	fileName := fmt.Sprintf("purchase_reports_%s.csv", year)
+	fileName := fmt.Sprintf("purchase_reports_%s.csv", yearStr)
 	attachment := fmt.Sprintf(`attachment; filename="%s"`, fileName)
 	w.Header().Set("Content-Type", "text/csv")
 	w.Header().Set("Content-Disposition", attachment)
@@ -230,12 +251,20 @@ func (h *Handler) GetBuyReportsSummary(c echo.Context, params generated.GetBuyRe
 	if year == "" {
 		return c.String(http.StatusBadRequest, "year is required")
 	}
+	var financialRecordId string
+	if params.FinancialRecordId != nil {
+		financialRecordId = strconv.Itoa(*params.FinancialRecordId)
+	}
+	var PaidBy string
+	if params.PaidBy != nil {
+		PaidBy = *params.PaidBy
+	}
+	var PaidByUserId string
+	if params.PaidByUserId != nil {
+		PaidByUserId = strconv.Itoa(*params.PaidByUserId)
+	}
 
-	financialRecordID := strconv.Itoa(*params.FinancialRecordId)
-	paidBy := *params.PaidBy
-	paidByUserID := strconv.Itoa(*params.PaidByUserId)
-
-	summary, err := h.buyReportUseCase.GetBuyReportsSummary(ctx, year, financialRecordID, paidBy, paidByUserID)
+	summary, err := h.buyReportUseCase.GetBuyReportsSummary(ctx, year, financialRecordId, PaidBy, PaidByUserId)
 	if err != nil {
 		c.Logger().Errorf("failed to get buy_reports summary: %v", err)
 		return c.String(http.StatusInternalServerError, "failed to get buy_reports summary")

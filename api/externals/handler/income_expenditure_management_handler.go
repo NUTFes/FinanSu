@@ -47,9 +47,12 @@ type (
 	PutIncomeExpenditureManagementsCheckIdJSONBody = generated.PutIncomeExpenditureManagementsCheckIdJSONBody
 )
 
-func (h *Handler) DownloadIncomeExpenditureManagementCSV(c echo.Context) error {
+func (h *Handler) GetIncomeExpenditureManagementCsvDownload(c echo.Context, params generated.GetIncomeExpenditureManagementCsvDownloadParams) error {
 	ctx := c.Request().Context()
-	year := c.QueryParam("year")
+	year := strconv.Itoa(*params.Year)
+	if year == "" {
+		return c.String(http.StatusBadRequest, "year is required")
+	}
 
 	details, err := h.incomeExpenditureManagementUseCase.IndexIncomeExpenditureManagements(ctx, year)
 	if err != nil {
