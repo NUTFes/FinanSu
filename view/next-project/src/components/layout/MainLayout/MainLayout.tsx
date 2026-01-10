@@ -5,10 +5,10 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { authAtom, userAtom } from '@/store/atoms';
-import 'tailwindcss/tailwind.css';
 import { Header, SideNav } from '@components/common';
 import { User } from '@type/common';
 import { get_with_token_valid } from '@utils/api/api_methods';
+import 'tailwindcss/tailwind.css';
 
 import s from './MainLayout.module.css';
 
@@ -40,7 +40,7 @@ export default function MainLayout(props: LayoutProps) {
             router.push('/');
             localStorage.clear();
           } else if (auth.isSignIn === true && router.pathname == '/') {
-            router.push('/purchaseorders');
+            router.push('/my_page');
           }
         }
       }

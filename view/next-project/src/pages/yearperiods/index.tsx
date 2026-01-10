@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
@@ -11,7 +11,7 @@ import { userAtom } from '@/store/atoms';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
-import { YearPeriod, User } from '@type/common';
+import { User, YearPeriod } from '@type/common';
 
 interface Props {
   yearPeriods: YearPeriod[];
@@ -61,7 +61,7 @@ export default function Periods(props: Props) {
   useEffect(() => {
     if (!currentUser?.roleID) return;
     if (!isDeveloperOrAdimin) {
-      router.push('/purchaseorders');
+      router.push('/my_page');
     }
   }, [isDeveloperOrAdimin, currentUser?.roleID]);
 

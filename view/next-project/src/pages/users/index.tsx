@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
@@ -67,7 +67,7 @@ export default function Users(props: Props) {
   useEffect(() => {
     if (!currentUser?.roleID) return;
     if (!isAdmin) {
-      router.push('/purchaseorders');
+      router.push('/my_page');
     }
   }, [isAdmin, currentUser?.roleID, router]);
 
