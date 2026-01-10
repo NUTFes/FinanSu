@@ -1,13 +1,13 @@
 # FinanSu
 
-FinanSu は、NUTFes/NUTMeg の財務管理システムです。OpenAPI 駆動開発により、Go + Next.js で構築されています。
+FinanSu は、NUTFes/NUTMEG の財務管理システムです。OpenAPI 駆動開発により、Go + Next.js で構築されています。
 
 ## 技術スタック (Tech Stack)
 
 ### Backend (API)
 
 - **Language**: Go 1.23+ with Echo framework
-- **Database**: MySQL 8.0 + GORM
+- **Database**: MySQL 8.0 + Goqu
 - **Storage**: MinIO (S3-compatible)
 - **Code Generation**: oapi-codegen (OpenAPI)
 - **Dependency Injection**: google/wire
