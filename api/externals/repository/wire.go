@@ -20,7 +20,6 @@ var RepositoryProviderSet = wire.NewSet(
 	NewExpenseRepository,
 	NewFestivalItemRepository,
 	NewFinancialRecordRepository,
-	NewFundInformationRepository,
 	NewIncomeRepository,
 	NewIncomeExpenditureManagementRepository,
 	NewMailAuthRepository,

@@ -11,7 +11,6 @@ import (
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
-	"github.com/NUTFes/FinanSu/api/router"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 )
@@ -39,18 +38,9 @@ func ProvideCrud(client db.Client) abstract.Crud {
 	return abstract.NewCrud(client)
 }
 
-// ProvideRouter - Router構築のProvider
-func ProvideRouter(
-	handler handler.Handler,
-) router.Router {
-	return router.NewRouter(
-		handler
-	)
-}
-
 // ProvideServer - ServerのProvider
-func ProvideServer(router router.Router) *echo.Echo {
-	return server.RunServer(router)
+func ProvideServer(h *handler.Handler) *echo.Echo {
+	return server.RunServer(h)
 }
 
 // ProvideServerComponents - ServerComponentsのProvider
@@ -74,8 +64,7 @@ func InitializeServer() (*ServerComponents, error) {
 		usecase.UseCaseProviderSet,
 		handler.HandlerProviderSet,
 
-		// Router/Server
-		ProvideRouter,
+		// Server
 		ProvideServer,
 		ProvideServerComponents,
 	)

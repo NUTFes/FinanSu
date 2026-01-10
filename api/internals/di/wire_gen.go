@@ -14,7 +14,6 @@ import (
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/usecase"
-	"github.com/NUTFes/FinanSu/api/router"
 	"github.com/labstack/echo/v4"
 )
 
@@ -29,19 +28,12 @@ func InitializeServer() (*ServerComponents, error) {
 	crud := ProvideCrud(client)
 	activityRepository := repository.NewActivityRepository(client, crud)
 	activityUseCase := usecase.NewActivityUseCase(activityRepository)
-	activityController := controller.NewActivityController(activityUseCase)
 	activityInformationRepository := repository.NewActivityInformationsRepository(client, crud)
 	activityInformationUseCase := usecase.NewActivityInformationUseCase(activityInformationRepository)
-	activityInformationController := controller.NewActivityInformationController(activityInformationUseCase)
 	activityStyleRepository := repository.NewActivityStyleRepository(client, crud)
 	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
-	activityStyleController := controller.NewActivityStyleController(activityStyleUseCase)
-	budgetRepository := repository.NewBudgetRepository(client, crud)
-	budgetUseCase := usecase.NewBudgetUseCase(budgetRepository)
-	budgetController := controller.NewBudgetController(budgetUseCase)
 	bureauRepository := repository.NewBureauRepository(client, crud)
 	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
-	bureauController := controller.NewBureauController(bureauUseCase)
 	buyReportRepository := repository.NewBuyReportRepository(client, crud)
 	transactionRepository := repository.NewTransactionRepository(client, crud)
 	mcClient, err := ProvideMinioClient()
@@ -51,72 +43,35 @@ func InitializeServer() (*ServerComponents, error) {
 	objectHandleRepository := repository.NewObjectHandleRepository(mcClient)
 	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository, incomeExpenditureManagementRepository)
-	buyReportController := controller.NewBuyReportController(buyReportUseCase)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
-	departmentController := controller.NewDepartmentController(departmentUseCase)
 	divisionRepository := repository.NewDivisionRepository(client, crud)
 	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
-	divisionController := controller.NewDivisionController(divisionUseCase)
-	expenseRepository := repository.NewExpenseRepository(client, crud)
-	expenseUseCase := usecase.NewExpenseUseCase(expenseRepository)
-	expenseController := controller.NewExpenseController(expenseUseCase)
 	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
 	festivalItemUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
-	festivalItemController := controller.NewFestivalItemController(festivalItemUseCase)
 	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
 	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
-	financialRecordController := controller.NewFinancialRecordController(financialRecordUseCase)
-	fundInformationRepository := repository.NewFundInformationRepository(client, crud)
-	fundInformationUseCase := usecase.NewFundInformationUseCase(fundInformationRepository)
-	fundInformationController := controller.NewFundInformationController(fundInformationUseCase)
-	healthcheckController := controller.NewHealthCheckController()
 	incomeRepository := repository.NewIncomeRepository(client, crud)
 	incomeUseCase := usecase.NewIncomeUseCase(incomeRepository, incomeExpenditureManagementRepository, transactionRepository)
-	incomeController := controller.NewIncomeController(incomeUseCase)
 	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
-	incomeExpenditureManagementController := controller.NewIncomeExpenditureManagementController(incomeExpenditureManagementUseCase)
 	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
 	sessionRepository := repository.NewSessionRepository(client)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
-	mailAuthController := controller.NewMailAuthController(mailAuthUseCase)
 	objectUploadUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
-	objectUploadController := controller.NewObjectUploadController(objectUploadUseCase)
 	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
 	userRepository := repository.NewUserRepository(client, crud)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(passwordResetTokenRepository, userRepository, mailAuthRepository)
-	passwordResetTokenController := controller.NewPasswordResetTokenController(passwordResetTokenUseCase)
-	purchaseItemRepository := repository.NewPurchaseItemRepository(client, crud)
-	purchaseItemUseCase := usecase.NewPurchaseItemUseCase(purchaseItemRepository)
-	purchaseItemController := controller.NewPurchaseItemController(purchaseItemUseCase)
-	purchaseOrderRepository := repository.NewPurchaseOrderRepository(client, crud)
-	purchaseOrderUseCase := usecase.NewPurchaseOrderUseCase(purchaseOrderRepository, bureauRepository, expenseRepository)
-	purchaseOrderController := controller.NewPurchaseOrderController(purchaseOrderUseCase)
-	purchaseReportRepository := repository.NewPurchaseReportRepository(client, crud)
-	purchaseReportUseCase := usecase.NewPurchaseReportUseCase(purchaseReportRepository)
-	purchaseReportController := controller.NewPurchaseReportController(purchaseReportUseCase)
-	receiptRepository := repository.NewReceiptRepository(client, crud)
-	receiptUseCase := usecase.NewReceiptUseCase(receiptRepository)
-	receiptController := controller.NewReceiptController(receiptUseCase)
-	sourceRepository := repository.NewSourceRepository(client, crud)
-	sourceUseCase := usecase.NewSourceUseCase(sourceRepository)
-	sourceController := controller.NewSourceController(sourceUseCase)
 	sponsorRepository := repository.NewSponsorRepository(client, crud)
 	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
-	sponsorController := controller.NewSponsorController(sponsorUseCase)
 	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
 	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
-	sponsorStyleController := controller.NewSponsorStyleController(sponsorStyleUseCase)
 	teacherRepository := repository.NewTeacherRepository(client, crud)
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
-	teacherController := controller.NewTeacherController(teacherUseCase)
 	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
-	userController := controller.NewUserController(userUseCase)
 	yearRepository := repository.NewYearRepository(client, crud)
 	yearUseCase := usecase.NewYearUseCase(yearRepository)
-	yearController := controller.NewYearController(yearUseCase)
-	router := ProvideRouter(activityController, activityInformationController, activityStyleController, budgetController, bureauController, buyReportController, departmentController, divisionController, expenseController, festivalItemController, financialRecordController, fundInformationController, healthcheckController, incomeController, incomeExpenditureManagementController, mailAuthController, objectUploadController, passwordResetTokenController, purchaseItemController, purchaseOrderController, purchaseReportController, receiptController, sourceController, sponsorController, sponsorStyleController, teacherController, userController, yearController)
-	echo := ProvideServer(router)
+	handlerHandler := handler.NewHandler(activityUseCase, activityInformationUseCase, activityStyleUseCase, bureauUseCase, buyReportUseCase, departmentUseCase, divisionUseCase, festivalItemUseCase, financialRecordUseCase, incomeUseCase, incomeExpenditureManagementUseCase, mailAuthUseCase, objectUploadUseCase, passwordResetTokenUseCase, sponsorUseCase, sponsorStyleUseCase, teacherUseCase, userUseCase, yearUseCase)
+	echo := ProvideServer(handlerHandler)
 	serverComponents := ProvideServerComponents(client, echo)
 	return serverComponents, nil
 }
@@ -145,8 +100,8 @@ func ProvideCrud(client db.Client) abstract.Crud {
 }
 
 // ProvideServer - ServerのProvider
-func ProvideServer(router2 router.Router) *echo.Echo {
-	return server.RunServer(router2)
+func ProvideServer(h *handler.Handler) *echo.Echo {
+	return server.RunServer(h)
 }
 
 // ProvideServerComponents - ServerComponentsのProvider
@@ -155,81 +110,4 @@ func ProvideServerComponents(client db.Client, echo2 *echo.Echo) *ServerComponen
 		Client: client,
 		Echo:   echo2,
 	}
-
-	activityInformationRepository := repository.NewActivityInformationsRepository(client, crud)
-	activityStyleRepository := repository.NewActivityStyleRepository(client, crud)
-	bureauRepository := repository.NewBureauRepository(client, crud)
-	buyReportRepository := repository.NewBuyReportRepository(client, crud)
-	departmentRepository := repository.NewDepartmentRepository(client, crud)
-	divisionRepository := repository.NewDivisionRepository(client, crud)
-	festivalItemRepository := repository.NewFestivalItemRepository(client, crud)
-	financialRecordRepository := repository.NewFinancialRecordRepository(client, crud)
-	incomeRepository := repository.NewIncomeRepository(client, crud)
-	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
-	mailAuthRepository := repository.NewMailAuthRepository(client, crud)
-	objectHandleRepository := repository.NewObjectHandleRepository(minioClient)
-	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
-	sessionRepository := repository.NewSessionRepository(client)
-	sponsorRepository := repository.NewSponsorRepository(client, crud)
-	sponsorStyleRepository := repository.NewSponsorStyleRepository(client, crud)
-	teacherRepository := repository.NewTeacherRepository(client, crud)
-	transactionRepository := repository.NewTransactionRepository(client, crud)
-	userRepository := repository.NewUserRepository(client, crud)
-	yearRepository := repository.NewYearRepository(client, crud)
-	// ↓
-
-	// UseCase
-	activityUseCase := usecase.NewActivityUseCase(activityRepository)
-	activityInformationUseCase := usecase.NewActivityInformationUseCase(
-		activityInformationRepository,
-	)
-	activityStyleUseCase := usecase.NewActivityStyleUseCase(activityStyleRepository)
-	bureauUseCase := usecase.NewBureauUseCase(bureauRepository)
-	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository, incomeExpenditureManagementRepository)
-	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
-	divisionUseCase := usecase.NewDivisionUseCase(divisionRepository)
-	festivalUseCase := usecase.NewFestivalItemUseCase(festivalItemRepository, transactionRepository)
-	financialRecordUseCase := usecase.NewFinancialRecordUseCase(financialRecordRepository)
-	incomeUseCase := usecase.NewIncomeUseCase(incomeRepository, incomeExpenditureManagementRepository, transactionRepository)
-	incomeExpenditureManagementUseCase := usecase.NewIncomeExpenditureManagementUseCase(incomeExpenditureManagementRepository)
-	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository)
-	objectHandleUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
-	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(
-		passwordResetTokenRepository,
-		userRepository,
-		mailAuthRepository,
-	)
-	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
-	sponsorStyleUseCase := usecase.NewSponsorStyleUseCase(sponsorStyleRepository)
-	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
-	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
-	yearUseCase := usecase.NewYearUseCase(yearRepository)
-	// ↓
-
-	handler := handler.NewHandler(
-		activityUseCase,
-		activityInformationUseCase,
-		activityStyleUseCase,
-		bureauUseCase,
-		buyReportUseCase,
-		departmentUseCase,
-		divisionUseCase,
-		festivalUseCase,
-		financialRecordUseCase,
-		incomeUseCase,
-		incomeExpenditureManagementUseCase,
-		mailAuthUseCase,
-		objectHandleUseCase,
-		passwordResetTokenUseCase,
-		sponsorUseCase,
-		sponsorStyleUseCase,
-		teacherUseCase,
-		userUseCase,
-		yearUseCase,
-	)
-
-	// Server
-	e := server.RunServer(handler)
-
-	return client, e
 }
