@@ -8,10 +8,10 @@
     "plugin:import/typescript",
     "plugin:react-hooks/recommended",
     "plugin:storybook/recommended",
-    "plugin:tailwindcss/recommended",
+
     "prettier"
   ],
-  "plugins": ["@typescript-eslint", "unused-imports", "import", "react-hooks", "tailwindcss"],
+  "plugins": ["@typescript-eslint", "unused-imports", "import", "react-hooks"],
   "parser": "@typescript-eslint/parser",
   "env": {
     "node": true,
@@ -65,8 +65,7 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": "off",
-    "tailwindcss/classnames-order": "off"
+    "@typescript-eslint/no-unused-vars": "off"
   },
   "ignorePatterns": ["src/generated", "*.config.js", "*.config.ts"]
 }
