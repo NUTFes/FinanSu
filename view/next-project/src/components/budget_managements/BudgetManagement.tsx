@@ -262,7 +262,7 @@ export default function BudgetManagement(props: Props) {
         <div className='mt-5 overflow-x-auto'>
           <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+              <tr className='border-b border-b-primary-1 py-3'>
                 <th className='w-1/4 pb-2 text-center font-medium text-black-600'>{title}</th>
                 {showBudgetColumns && (
                   <>
@@ -313,7 +313,7 @@ export default function BudgetManagement(props: Props) {
                   </tr>
                 ))}
               {showBudgetColumns && displayItems && displayItems.length > 0 && (
-                <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
+                <tr className='border-t border-t-primary-1'>
                   <td className='py-3 text-center font-bold'>合計</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalBudget)}</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalExpense)}</td>

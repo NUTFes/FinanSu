@@ -8,7 +8,7 @@ interface Props {
 }
 
 const EditButton: React.FC<Props> = (props) => {
-  const { onClick, isDisabled = false, size } = props;
+  const { onClick, isDisabled = false, size = 'M' } = props;
 
   const buttonClass = useMemo(() => {
     if (isDisabled) {
@@ -18,32 +18,30 @@ const EditButton: React.FC<Props> = (props) => {
     }
   }, [isDisabled]);
 
-  const iconSize = (): { button: string; icon: string } => {
+  const sizeConfig = useMemo(() => {
     switch (size) {
       case 'S':
-        return { button: '6', icon: '12' };
+        return { buttonClass: 'size-4', iconSize: 12 };
       case 'M':
-        return { button: '12', icon: '20' };
+        return { buttonClass: 'size-6', iconSize: 15 };
       case 'L':
-        return { button: '24', icon: '30' };
+        return { buttonClass: 'size-8', iconSize: 20 };
       default:
-        return { button: '6', icon: '12' };
+        return { buttonClass: 'size-6', iconSize: 15 };
     }
-  };
+  }, [size]);
 
   return (
     <button
       suppressHydrationWarning
-      className={`${buttonClass}  flex h-${iconSize().button} w-${
-        iconSize().button
-      } min-w-0  items-center justify-center rounded-full p-0`}
+      className={`${buttonClass} flex ${sizeConfig.buttonClass} min-w-0 items-center justify-center rounded-full p-0`}
       disabled={isDisabled}
       onClick={(e) => {
         if (onClick) onClick();
         e.stopPropagation();
       }}
     >
-      <RiPencilFill size={`${iconSize().icon}px`} color={'white'} />
+      <RiPencilFill size={`${sizeConfig.iconSize}px`} color={'white'} />
     </button>
   );
 };

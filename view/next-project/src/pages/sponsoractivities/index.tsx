@@ -1,17 +1,17 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useEffect, useMemo } from 'react';
-import { MdFilterList, MdCircle } from 'react-icons/md';
+import { useEffect, useMemo, useState } from 'react';
+import { MdCircle, MdFilterList } from 'react-icons/md';
 import { RiExternalLinkLine } from 'react-icons/ri';
 
 import { Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
-  OpenAddModalButton,
   DetailModal,
+  FilterModal,
+  OpenAddModalButton,
   OpenDeleteModalButton,
   OpenEditModalButton,
-  FilterModal,
 } from '@/components/sponsoractivities';
 import AddBlankInvoiceModal from '@/components/sponsoractivities/AddBlankInvoiceModal';
 import AddBlankReceiptModal from '@/components/sponsoractivities/AddBlankReceiptModal';
@@ -23,14 +23,14 @@ import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import { DESIGNERS } from '@constants/designers';
 import {
+  ActivityStyle,
+  Sponsor,
   SponsorActivity,
   SponsorActivityView,
-  Sponsor,
+  SponsorFilterType,
   SponsorStyle,
   User,
-  ActivityStyle,
   YearPeriod,
-  SponsorFilterType,
 } from '@type/common';
 
 interface Props {
@@ -121,25 +121,13 @@ export default function SponsorActivities(props: Props) {
         sponsorStyles.length,
       );
       setSponsorActivities(getFilterSponsorActivitiesByYears);
-      setIsLoading(false);
     } else {
       const getSponsorActivitiesViewUrlByYear =
         process.env.CSR_API_URI + '/activities/details/' + selectedYear;
       const getSponsorActivitiesByYears = await get(getSponsorActivitiesViewUrlByYear);
       setSponsorActivities(getSponsorActivitiesByYears);
-      setIsLoading(false);
     }
-
-    const getSponsorActivitiesViewUrlByYear =
-      process.env.CSR_API_URI + '/activities/filtered_details/' + selectedYear;
-    const getFilterSponsorActivitiesByYears = await getByFiler(
-      getSponsorActivitiesViewUrlByYear,
-      filterData.isDone,
-      filterData.styleIds,
-      filterData.keyword,
-      sponsorStyles.length,
-    );
-    setSponsorActivities(getFilterSponsorActivitiesByYears);
+    setIsLoading(false);
   };
 
   const sortedSponsorActivitiesViews = useMemo(() => {
@@ -201,14 +189,17 @@ export default function SponsorActivities(props: Props) {
               : 1,
         );
       default:
+        if (!Array.isArray(filteredActivities)) {
+          return [];
+        }
         return filteredActivities;
     }
   }, [filterData, sponsorActivities]);
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
-    if (sortedSponsorActivitiesViews) {
-      sortedSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (Array.isArray(sortedSponsorActivitiesViews)) {
+      sortedSponsorActivitiesViews.forEach((sponsorActivityItem) => {
         totalFee += sponsorActivityItem.sponsorActivity.expense;
       });
     }
@@ -217,8 +208,8 @@ export default function SponsorActivities(props: Props) {
 
   const TotalActivityStyleFee = useMemo(() => {
     let totalFee = 0;
-    if (sortedSponsorActivitiesViews) {
-      sortedSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (Array.isArray(sortedSponsorActivitiesViews)) {
+      sortedSponsorActivitiesViews.forEach((sponsorActivityItem) => {
         const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail
           ? sponsorActivityItem.styleDetail.map((styleDetail) => {
               return styleDetail.sponsorStyle.price;
@@ -253,15 +244,13 @@ export default function SponsorActivities(props: Props) {
         <meta name='viewpoinst' content='initial-scale=1.0, width=device-width' />
       </Head>
       {isLoading && <Loading />}
-      <Card w='w-full'>
-        <div className='mx-6 mt-10 md:mx-5'>
-          <div className='gap-4 md:flex'>
-            <div className='flex'>
+      <Card w='w-fit'>
+        <div className='mx-4 mt-8 md:mx-8'>
+          <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+            <div className='flex flex-col items-center gap-4 md:flex-row md:gap-6'>
               <Title title={'協賛活動一覧'} />
-            </div>
-            <div className='my-2 flex gap-4 md:my-0'>
               <select
-                className={'w-100'}
+                className='border-b border-black-0'
                 defaultValue={currentYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
               >
@@ -274,9 +263,9 @@ export default function SponsorActivities(props: Props) {
                     );
                   })}
               </select>
-              <div className='flex items-center justify-center'>
+              <div className='relative flex items-center'>
                 <button
-                  className='rounded-md p-1 hover:bg-white-100 hover:outline-base-1'
+                  className='rounded-md p-1.5 hover:bg-white-100'
                   onClick={() => {
                     setIsFilerOpen(!isFilerOpen);
                   }}
@@ -284,8 +273,8 @@ export default function SponsorActivities(props: Props) {
                   <MdFilterList size='22' color='#666666' />
                 </button>
                 {isFiltered && (
-                  <div className='absolute -mt-5 ml-6'>
-                    <MdCircle color='rgb(4 102 140)' size={6} />
+                  <div className='absolute -right-0.5 -top-0.5'>
+                    <MdCircle color='rgb(4 102 140)' size={8} />
                   </div>
                 )}
               </div>
@@ -299,7 +288,7 @@ export default function SponsorActivities(props: Props) {
                 />
               )}
               <PrimaryButton
-                className='hidden md:block'
+                className='hidden w-fit whitespace-nowrap md:flex'
                 onClick={async () => {
                   downloadFile({
                     downloadContent: await createPresentationCsv(
@@ -313,31 +302,31 @@ export default function SponsorActivities(props: Props) {
                 CSVダウンロード
               </PrimaryButton>
               <PrimaryButton
-                className='hidden md:block'
+                className='hidden w-fit whitespace-nowrap md:flex'
                 onClick={() => setIsOpenBlankReceipt(true)}
               >
                 手入力で領収書発行
               </PrimaryButton>
               <PrimaryButton
-                className='hidden md:block'
+                className='hidden w-fit whitespace-nowrap md:flex'
                 onClick={() => setIsOpenBlankInvoice(true)}
               >
                 手入力で請求書発行
               </PrimaryButton>
             </div>
+            <div className='hidden md:block'>
+              <OpenAddModalButton
+                users={users}
+                sponsors={sponsors}
+                sponsorStyles={props.sponsorStyles}
+                yearPeriods={yearPeriods}
+              >
+                協賛活動登録
+              </OpenAddModalButton>
+            </div>
           </div>
         </div>
-        <div className='hidden justify-end md:flex'>
-          <OpenAddModalButton
-            users={users}
-            sponsors={sponsors}
-            sponsorStyles={props.sponsorStyles}
-            yearPeriods={yearPeriods}
-          >
-            協賛活動登録
-          </OpenAddModalButton>
-        </div>
-        <div className='my-2 flex flex-col gap-2 md:hidden'>
+        <div className='mx-6 my-4 flex flex-col gap-2 md:hidden'>
           <PrimaryButton onClick={() => setIsOpenBlankReceipt(true)}>
             手入力で領収書発行
           </PrimaryButton>
@@ -345,7 +334,7 @@ export default function SponsorActivities(props: Props) {
             手入力で請求書発行
           </PrimaryButton>
         </div>
-        <div className='md:hidden'>
+        <div className='mx-6 md:hidden'>
           <OpenAddModalButton
             users={users}
             sponsors={props.sponsors}
@@ -353,71 +342,76 @@ export default function SponsorActivities(props: Props) {
             yearPeriods={yearPeriods}
           />
         </div>
-        <div className='mb-7 md:hidden'>
+        <div className='mx-6 mb-7 md:hidden'>
           {sortedSponsorActivitiesViews &&
             sortedSponsorActivitiesViews.map((sponsorActivitiesItem) => (
               <Card key={sponsorActivitiesItem.sponsorActivity.id}>
-                <div className='flex flex-col gap-2 p-4'>
-                  <div>
-                    {sponsorActivitiesItem.sponsorActivity.isDone && (
-                      <div className='flex items-center gap-1'>
-                        <div className='size-4 rounded-full bg-[#7087FF]' />
-                        <p>回収完了</p>
-                      </div>
+                <div className='flex flex-col gap-3 p-4'>
+                  <div className='flex items-center gap-2'>
+                    {sponsorActivitiesItem.sponsorActivity.isDone ? (
+                      <>
+                        <div className='size-3 shrink-0 rounded-full bg-[#7087FF]' />
+                        <span className='text-sm font-medium'>回収完了</span>
+                      </>
+                    ) : (
+                      <>
+                        <div className='size-3 shrink-0 rounded-full bg-[#FFA53C]' />
+                        <span className='text-sm font-medium'>未回収</span>
+                      </>
                     )}
-                    {!sponsorActivitiesItem.sponsorActivity.isDone && (
-                      <div className='flex items-center gap-1'>
-                        <div className='size-4 rounded-full bg-[#FFA53C]' />
-                        <p>未回収</p>
+                  </div>
+                  <div className='text-lg font-medium text-black-300'>
+                    {sponsorActivitiesItem.sponsor.name}
+                  </div>
+                  <div className='text-sm text-black-600'>
+                    <p className='mb-1 font-medium'>協賛スタイル</p>
+                    <table className='my-1 w-full table-auto border-collapse'>
+                      <tbody>
+                        <tr className='border-b border-primary-1'></tr>
+                        {sponsorActivitiesItem.styleDetail &&
+                          sponsorActivitiesItem.styleDetail.map((styleDetail) => (
+                            <tr key={styleDetail.sponsorStyle.id}>
+                              <td className='whitespace-nowrap py-1 pr-2 text-left'>
+                                {styleDetail.sponsorStyle.style}
+                              </td>
+                              <td className='whitespace-nowrap py-1 pr-2 text-left'>
+                                {styleDetail.sponsorStyle.feature}
+                              </td>
+                              <td className='whitespace-nowrap py-1 text-right'>
+                                {styleDetail.sponsorStyle.price.toLocaleString()}円
+                              </td>
+                            </tr>
+                          ))}
+                        <tr className='border-b border-primary-1'></tr>
+                      </tbody>
+                    </table>
+                    <div className='mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2'>
+                      <span className='text-black-600'>担当者</span>
+                      <span className='border-b border-primary-1'>
+                        {sponsorActivitiesItem.user.name}
+                      </span>
+                      <span className='text-black-600'>オプション</span>
+                      <span className='border-b border-primary-1'>
+                        {sponsorActivitiesItem.sponsorActivity.feature || '-'}
+                      </span>
+                      <span className='text-black-600'>デザイン</span>
+                      <div className='flex items-center border-b border-primary-1'>
+                        {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design] || '-'}
+                        {sponsorActivitiesItem.sponsorActivity.url !== '' && (
+                          <a
+                            className='ml-1'
+                            href={sponsorActivitiesItem.sponsorActivity.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <RiExternalLinkLine size={'16px'} />
+                          </a>
+                        )}
                       </div>
-                    )}
-                    <div className='ml-4 text-sm text-black-600'>
-                      <div className='text-lg font-medium'>
-                        {sponsorActivitiesItem.sponsor.name}
-                      </div>
-                      <p>協賛スタイル</p>
-                      <table className='my-1 w-full table-fixed border-collapse'>
-                        <tbody>
-                          <tr className='border border-b-primary-1'></tr>
-                          {sponsorActivitiesItem.styleDetail &&
-                            sponsorActivitiesItem.styleDetail.map((styleDetail) => (
-                              <tr key={styleDetail.sponsorStyle.id}>
-                                <td className='text-center'>{styleDetail.sponsorStyle.style}</td>
-                                <td className='text-center'>{styleDetail.sponsorStyle.feature}</td>
-                                <td className='text-center'>{styleDetail.sponsorStyle.price}円</td>
-                              </tr>
-                            ))}
-                          <tr className='border border-b-primary-1'></tr>
-                        </tbody>
-                      </table>
-                      <div className='grid grid-cols-2'>
-                        <p>担当者</p>
-                        <p className='w-fit border-b border-primary-1'>
-                          {sponsorActivitiesItem.user.name}
-                        </p>
-                        <p>オプション</p>
-                        <p className='w-fit border-b border-primary-1'>
-                          {sponsorActivitiesItem.sponsorActivity.feature}
-                        </p>
-                        <p>デザイン</p>
-                        <div className='flex w-fit justify-center border-b border-primary-1'>
-                          {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
-                          {sponsorActivitiesItem.sponsorActivity.url !== '' && (
-                            <a
-                              className={clsx('mx-1')}
-                              href={sponsorActivitiesItem.sponsorActivity.url}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                            >
-                              <RiExternalLinkLine size={'16px'} />
-                            </a>
-                          )}
-                        </div>
-                        <p>交通費</p>
-                        <p className='w-fit border-b border-primary-1'>
-                          {sponsorActivitiesItem.sponsorActivity.expense}円
-                        </p>
-                      </div>
+                      <span className='text-black-600'>交通費</span>
+                      <span className='border-b border-primary-1'>
+                        {sponsorActivitiesItem.sponsorActivity.expense.toLocaleString()}円
+                      </span>
                     </div>
                   </div>
                   <div className='ml-auto flex flex-row gap-4'>
@@ -441,208 +435,198 @@ export default function SponsorActivities(props: Props) {
             <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
           )}
         </div>
-        <div className='w-100 mb-2 hidden p-5 md:block'>
-          <table className='mb-5 w-full table-fixed border-collapse'>
-            <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>企業名</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>協賛スタイル</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>担当者名</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>回収状況</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>オプション</div>
-                </th>
-                <th className='w-1/10 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>デザイン</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>交通費</div>
-                </th>
-                <th className='w-1/11 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'></div>
-                </th>
-              </tr>
-            </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-              {sortedSponsorActivitiesViews &&
-                sortedSponsorActivitiesViews.map((sponsorActivitiesItem) => (
-                  <tr
-                    className={clsx('border-b', 'hover:bg-grey-100')}
-                    key={sponsorActivitiesItem.sponsorActivity.id}
-                  >
-                    <td
-                      onClick={() => {
-                        onModalOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
+        <div className='mb-2 hidden overflow-auto px-8 py-5 md:block'>
+          <div className='flex justify-center'>
+            <table className='mb-5 table-auto border-collapse'>
+              <thead>
+                <tr className='border-b border-b-primary-1 py-3'>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    企業名
+                  </th>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    協賛スタイル
+                  </th>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    担当者名
+                  </th>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    回収状況
+                  </th>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    オプション
+                  </th>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    デザイン
+                  </th>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    交通費
+                  </th>
+                  <th className='whitespace-nowrap px-4 pb-2 text-sm text-black-600'></th>
+                </tr>
+              </thead>
+              <tbody className='border-x-white-0 border-b-primary-1 border-t-white-0'>
+                {sortedSponsorActivitiesViews &&
+                  sortedSponsorActivitiesViews.map((sponsorActivitiesItem) => (
+                    <tr
+                      className={clsx('border-b', 'hover:bg-grey-100')}
+                      key={sponsorActivitiesItem.sponsorActivity.id}
                     >
-                      <div className='text-center text-sm text-black-600'>
+                      <td
+                        className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'
+                        onClick={() => {
+                          onModalOpen(
+                            sponsorActivitiesItem.sponsorActivity.id || 0,
+                            sponsorActivitiesItem,
+                          );
+                        }}
+                      >
                         {sponsorActivitiesItem.sponsor.name}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onModalOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                      className='py-3'
-                    >
-                      <div className='text-center text-sm text-black-600'>
+                      </td>
+                      <td
+                        className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'
+                        onClick={() => {
+                          onModalOpen(
+                            sponsorActivitiesItem.sponsorActivity.id || 0,
+                            sponsorActivitiesItem,
+                          );
+                        }}
+                      >
                         {sponsorActivitiesItem.styleDetail ? (
                           sponsorActivitiesItem.styleDetail.map((styleDetail) => (
                             <div key={styleDetail.sponsorStyle.id}>
-                              <p>{`${styleDetail.sponsorStyle.style} / ${styleDetail.sponsorStyle.feature} / ${styleDetail.sponsorStyle.price} 円`}</p>
-                              <p></p>
+                              {`${styleDetail.sponsorStyle.style} / ${styleDetail.sponsorStyle.feature} / ${styleDetail.sponsorStyle.price} 円`}
                             </div>
                           ))
                         ) : (
                           <div className='text-red-500'>協賛スタイルを登録してください</div>
                         )}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onModalOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='text-center text-sm text-black-600'>
+                      </td>
+                      <td
+                        className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'
+                        onClick={() => {
+                          onModalOpen(
+                            sponsorActivitiesItem.sponsorActivity.id || 0,
+                            sponsorActivitiesItem,
+                          );
+                        }}
+                      >
                         {sponsorActivitiesItem.user.name}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onModalOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      {sponsorActivitiesItem.sponsorActivity.isDone && (
-                        <div className='text-center text-sm text-black-600'>回収完了</div>
-                      )}
-                      {!sponsorActivitiesItem.sponsorActivity.isDone && (
-                        <div className='text-center text-sm text-black-600'>未回収</div>
-                      )}
-                    </td>
-                    <td
-                      onClick={() => {
-                        onModalOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='text-center text-sm text-black-600'>
+                      </td>
+                      <td
+                        className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'
+                        onClick={() => {
+                          onModalOpen(
+                            sponsorActivitiesItem.sponsorActivity.id || 0,
+                            sponsorActivitiesItem,
+                          );
+                        }}
+                      >
+                        {sponsorActivitiesItem.sponsorActivity.isDone ? '回収完了' : '未回収'}
+                      </td>
+                      <td
+                        className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'
+                        onClick={() => {
+                          onModalOpen(
+                            sponsorActivitiesItem.sponsorActivity.id || 0,
+                            sponsorActivitiesItem,
+                          );
+                        }}
+                      >
                         {sponsorActivitiesItem.sponsorActivity.feature}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onModalOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='flex justify-center text-sm text-black-600'>
-                        {sponsorActivitiesItem.sponsorActivity.design !== 0 &&
-                          DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
-                        {sponsorActivitiesItem.sponsorActivity.url !== '' && (
-                          <a
-                            className={clsx('mx-1')}
-                            href={sponsorActivitiesItem.sponsorActivity.url}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                          >
-                            <RiExternalLinkLine size={'16px'} />
-                          </a>
-                        )}
-                      </div>
-                    </td>
-                    <td
-                      onClick={() => {
-                        onModalOpen(
-                          sponsorActivitiesItem.sponsorActivity.id || 0,
-                          sponsorActivitiesItem,
-                        );
-                      }}
-                    >
-                      <div className='text-center text-sm text-black-600'>
+                      </td>
+                      <td
+                        className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'
+                        onClick={() => {
+                          onModalOpen(
+                            sponsorActivitiesItem.sponsorActivity.id || 0,
+                            sponsorActivitiesItem,
+                          );
+                        }}
+                      >
+                        <div className='flex justify-center'>
+                          {sponsorActivitiesItem.sponsorActivity.design !== 0 &&
+                            DESIGNERS[sponsorActivitiesItem.sponsorActivity.design]}
+                          {sponsorActivitiesItem.sponsorActivity.url !== '' && (
+                            <a
+                              className='mx-1'
+                              href={sponsorActivitiesItem.sponsorActivity.url}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                            >
+                              <RiExternalLinkLine size={'16px'} />
+                            </a>
+                          )}
+                        </div>
+                      </td>
+                      <td
+                        className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'
+                        onClick={() => {
+                          onModalOpen(
+                            sponsorActivitiesItem.sponsorActivity.id || 0,
+                            sponsorActivitiesItem,
+                          );
+                        }}
+                      >
                         {sponsorActivitiesItem.sponsorActivity.expense}
+                      </td>
+                      <td>
+                        <div className='flex'>
+                          <div className='mx-1'>
+                            <OpenEditModalButton
+                              id={sponsorActivitiesItem.sponsorActivity.id || '0'}
+                              sponsorActivity={sponsorActivitiesItem.sponsorActivity}
+                              sponsors={sponsors}
+                              sponsorStyles={sponsorStyles}
+                              users={users}
+                              sponsorStyleDetails={sponsorActivitiesItem.styleDetail}
+                              activityStyles={activityStyles}
+                              year={selectedYear}
+                              yearPeriods={yearPeriods}
+                            />
+                          </div>
+                          <div className='mx-1'>
+                            <OpenDeleteModalButton
+                              id={sponsorActivitiesItem.sponsorActivity.id || 0}
+                            />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                {sortedSponsorActivitiesViews && sortedSponsorActivitiesViews.length > 0 && (
+                  <tr className='border-b border-primary-1'>
+                    <td className='px-1 py-3' colSpan={1}>
+                      <div className='flex justify-end'>
+                        <div className='text-sm text-black-600'>合計</div>
                       </div>
                     </td>
-                    <td>
-                      <div className='flex'>
-                        <div className='mx-1'>
-                          <OpenEditModalButton
-                            id={sponsorActivitiesItem.sponsorActivity.id || '0'}
-                            sponsorActivity={sponsorActivitiesItem.sponsorActivity}
-                            sponsors={sponsors}
-                            sponsorStyles={sponsorStyles}
-                            users={users}
-                            sponsorStyleDetails={sponsorActivitiesItem.styleDetail}
-                            activityStyles={activityStyles}
-                            year={selectedYear}
-                            yearPeriods={yearPeriods}
-                          />
-                        </div>
-                        <div className='mx-1'>
-                          <OpenDeleteModalButton
-                            id={sponsorActivitiesItem.sponsorActivity.id || 0}
-                          />
-                        </div>
+                    <td className='px-1 py-3'>
+                      <div className='text-center text-sm text-black-600'>
+                        {TotalActivityStyleFee}
+                      </div>
+                    </td>
+                    <td className='px-1 py-3' colSpan={4}>
+                      <div className='flex justify-end'>
+                        <div className='text-sm text-black-600'>合計</div>
+                      </div>
+                    </td>
+                    <td className='px-1 py-3'>
+                      <div className='text-center text-sm text-black-600'>
+                        {TotalTransportationFee}
                       </div>
                     </td>
                   </tr>
-                ))}
-              {sortedSponsorActivitiesViews && sortedSponsorActivitiesViews.length > 0 && (
-                <tr className='border-b border-primary-1'>
-                  <td className='px-1 py-3' colSpan={1}>
-                    <div className='flex justify-end'>
-                      <div className='text-sm text-black-600'>合計</div>
-                    </div>
-                  </td>
-                  <td className='px-1 py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {TotalActivityStyleFee}
-                    </div>
-                  </td>
-                  <td className='px-1 py-3' colSpan={4}>
-                    <div className='flex justify-end'>
-                      <div className='text-sm text-black-600'>合計</div>
-                    </div>
-                  </td>
-                  <td className='px-1 py-3'>
-                    <div className='text-center text-sm text-black-600'>
-                      {TotalTransportationFee}
-                    </div>
-                  </td>
-                </tr>
-              )}
-              {(!sortedSponsorActivitiesViews || sortedSponsorActivitiesViews.length === 0) && (
-                <tr>
-                  <td colSpan={9} className='py-3'>
-                    <div className='text-center text-sm text-black-600'>データがありません</div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+                {(!sortedSponsorActivitiesViews || sortedSponsorActivitiesViews.length === 0) && (
+                  <tr>
+                    <td colSpan={9} className='py-3'>
+                      <div className='text-center text-sm text-black-600'>データがありません</div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
         {isOpenBlankReceipt && <AddBlankReceiptModal setIsOpen={setIsOpenBlankReceipt} />}
         {isOpenBlankInvoice && (

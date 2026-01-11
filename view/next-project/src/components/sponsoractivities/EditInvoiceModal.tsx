@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-import { PrimaryButton, OutlinePrimaryButton, CloseButton, Modal, Input } from '@components/common';
+import { CloseButton, Input, Modal, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 import { Invoice, InvoiceSponsorStyle } from '@type/common';
 
 interface ModalProps {
@@ -83,7 +83,7 @@ export default function EditInvoiceModal(props: ModalProps) {
         <div className='max-h-48 overflow-y-auto'>
           <table className='mb-4 w-full table-fixed border-collapse'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+              <tr className='border-b border-b-primary-1 py-3'>
                 <th className='w-3/4 px-6 pb-2'>
                   <div className='text-center text-sm text-black-600'>協賛内容(オプション）</div>
                 </th>
@@ -97,8 +97,9 @@ export default function EditInvoiceModal(props: ModalProps) {
                 editInvoice.invoiceSponsorStyle.map((invoiceSponsorStyle, index) => (
                   <tr
                     key={index}
-                    className={clsx('border border-x-white-0 border-t-white-0', {
-                      'border-b-primary-1': index === editInvoice.invoiceSponsorStyle.length - 1,
+                    className={clsx({
+                      'border-b border-b-primary-1':
+                        index === editInvoice.invoiceSponsorStyle.length - 1,
                     })}
                   >
                     <td className='py-3'>

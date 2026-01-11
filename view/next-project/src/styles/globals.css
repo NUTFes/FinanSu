@@ -61,6 +61,12 @@
   --width-5\/8: 62.5%;
   --width-6\/8: 75%;
   --width-7\/8: 87.5%;
+  --width-1\/10: 10%;
+  --width-2\/10: 20%;
+  --width-3\/10: 30%;
+  --width-4\/10: 40%;
+  --width-1\/11: 9.0909091%;
+  --width-2\/11: 18.1818182%;
 
   /* Font family */
   --font-sans: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo,

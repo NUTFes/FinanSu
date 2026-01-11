@@ -126,7 +126,7 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
         <div className='w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1'>
           <table className='w-full table-fixed border-collapse'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+              <tr className='border-b border-b-primary-1 py-3'>
                 {user.roleID === 1 ? (
                   <th className='w-3/12 pb-2'>
                     <div className='text-center text-sm text-black-600'>品名</div>
@@ -153,7 +153,7 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
                 </th>
               </tr>
             </thead>
-            <tbody className='w-full border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody className='w-full'>
               {/* <div className='flex items-start'> */}
               {props.purchaseReportViewItem?.purchaseItems?.map((purchaseItem) => (
                 <tr key={purchaseItem.id} className='w-full'>

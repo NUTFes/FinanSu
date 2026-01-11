@@ -12,7 +12,7 @@ import {
   Select,
 } from '@components/common';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, User, PurchaseItem, Expense, YearPeriod } from '@type/common';
+import { Expense, PurchaseItem, PurchaseOrder, User, YearPeriod } from '@type/common';
 
 import PurchaseReportAddModal from './PurchaseReportAddModal';
 
@@ -135,11 +135,7 @@ export default function PurchaseItemNumModal() {
           <div className={clsx('mb-2 w-full p-5')}>
             <table className={clsx('w-max table-fixed border-collapse md:w-full')}>
               <thead>
-                <tr
-                  className={clsx(
-                    'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
-                  )}
-                >
+                <tr className={clsx('border-b border-b-primary-1 py-3')}>
                   <th className={clsx('px-6 pb-2')}>
                     <div className={clsx('text-center text-sm text-black-600')}>選択</div>
                   </th>
@@ -160,9 +156,7 @@ export default function PurchaseItemNumModal() {
                   </th>
                 </tr>
               </thead>
-              <tbody
-                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}
-              >
+              <tbody className={clsx('border-b border-b-primary-1')}>
                 {purchaseOrderView &&
                   purchaseOrderView.map((purchaseOrderItem, index) => (
                     <tr key={purchaseOrderItem.purchaseOrder?.id}>

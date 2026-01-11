@@ -67,28 +67,28 @@ const Sponsorship: NextPage = () => {
         <div className='mb-2 overflow-scroll p-5'>
           <table className='mb-5 w-max table-auto border-collapse md:w-full md:table-fixed'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-1/8 border-b-primary-1 pb-2'>
+              <tr className='border-b border-b-primary-1 py-3'>
+                <th className='w-1/8 border-b border-b-primary-1 pb-2'>
                   <div className='mr-1 text-center text-sm text-black-600'>企業名</div>
                 </th>
-                <th className='w-1/8 border-b-primary-1 pb-2'>
+                <th className='w-1/8 border-b border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>電話番号</div>
                 </th>
-                <th className='w-1/6 border-b-primary-1 pb-2'>
+                <th className='w-1/6 border-b border-b-primary-1 pb-2'>
                   <div className='text-center text-sm text-black-600'>メール</div>
                 </th>
-                <th className='w-1/6 border-b-primary-1 pb-2'>
+                <th className='w-1/6 border-b border-b-primary-1 pb-2'>
                   <div className='text-center'>住所</div>
                 </th>
-                <th className='w-1/8 border-b-primary-1 pb-2'>
+                <th className='w-1/8 border-b border-b-primary-1 pb-2'>
                   <div className='text-center text-black-600'>代表者</div>
                 </th>
-                <th className='w-1/12 border-b-primary-1 pb-2'>
+                <th className='w-1/12 border-b border-b-primary-1 pb-2'>
                   <div className='text-center text-black-600'></div>
                 </th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {sponsors && sponsors.length > 0 ? (
                 sponsors.map((sponsor, index) => (
                   <tr
