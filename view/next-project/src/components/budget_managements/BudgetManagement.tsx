@@ -1,15 +1,15 @@
-import { useQueryStates, parseAsInteger } from 'nuqs';
+import { parseAsInteger, useQueryStates } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
-import { Card, Title, Loading } from '@/components/common';
+import { Card, Loading, Title } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import { Year } from '@/type/common';
 
+import formatNumber from '../common/Formatter';
 import OpenDeleteModalButton from './OpenDeleteModalButton';
 import OpenEditModalButton from './OpenEditModalButton';
-import formatNumber from '../common/Formatter';
 
 import type {
   Division,
@@ -213,7 +213,7 @@ export default function BudgetManagement(props: Props) {
               <select
                 value={financialRecordId ?? ''}
                 onChange={handleFinancialRecordChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='border-b border-black-300 focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {financialRecords &&
@@ -229,7 +229,7 @@ export default function BudgetManagement(props: Props) {
               <select
                 value={divisionId ?? ''}
                 onChange={handleDivisionChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='border-b border-black-300 focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {divisions &&

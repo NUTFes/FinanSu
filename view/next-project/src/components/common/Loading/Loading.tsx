@@ -21,7 +21,7 @@ function Loading(props: Props) {
 
   return (
     <>
-      <div className='fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black-300/50 outline-none focus:outline-none'>
+      <div className='fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black-300/50 outline-hidden focus:outline-hidden'>
         <div className='relative mx-auto flex  items-center gap-2'>
           <CircularProgress
             isIndeterminate={!props.isProgress}

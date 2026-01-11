@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { SponsorActivityView } from '@/type/common';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesReceiptsPDF';
 import { getToday } from '@/utils/dateConverter';
-import { Modal, Input, PrimaryButton, CloseButton } from '@components/common';
+import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;

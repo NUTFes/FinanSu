@@ -1,17 +1,17 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { Invoice } from '@/type/common';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
 import {
-  Modal,
-  Input,
-  PrimaryButton,
-  CloseButton,
-  Textarea,
-  DeleteButton,
   AddButton,
+  CloseButton,
+  DeleteButton,
+  Input,
+  Modal,
+  PrimaryButton,
   Select,
+  Textarea,
 } from '@components/common';
 import { SponsorStyle } from '@type/common';
 
@@ -249,7 +249,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className='bg-gray-50 grid grid-cols-12 items-center gap-2 rounded p-2'
+                      className='bg-gray-50 grid grid-cols-12 items-center gap-2 rounded-sm p-2'
                     >
                       <div className='col-span-5'>
                         <Select value={item.styleName} onChange={onItemStyleChange(item.id)}>

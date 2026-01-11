@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 
-import { createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
-import { PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
+import { createSponsorActivitiesPDF, PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import {
-  SponsorActivityView,
   Invoice,
-  SponsorStyleDetail,
   InvoiceSponsorStyle,
+  SponsorActivityView,
+  SponsorStyleDetail,
 } from '@type/common';
 
 import { OpenEditInvoiceModalButton } from './index';
@@ -110,7 +109,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
           <OpenEditInvoiceModalButton invoice={invoiceData} setInvoice={setInvoiceDate} />
         </div>
       </div>
-      <div className='h-[30rem] justify-center overflow-x-auto md:flex'>
+      <div className='h-120 justify-center overflow-x-auto md:flex'>
         <PreviewPDF
           invoiceItem={invoiceData}
           deadline={invoiceData.deadline}

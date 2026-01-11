@@ -22,7 +22,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   //   if (props.isDisabled) {
   //     return 'cursor-default opacity-25';
   //   } else {
-  //     return 'cursor-pointer hover:bg-gradient-to-br hover:from-red-600 hover:to-red-500';
+  //     return 'cursor-pointer hover:bg-linear-to-br hover:from-red-600 hover:to-red-500';
   //   }
   // }, [props.isDisabled]);
 

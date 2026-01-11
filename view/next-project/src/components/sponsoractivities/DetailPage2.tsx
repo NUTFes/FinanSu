@@ -383,7 +383,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
             </>
           ))}
         <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
-          <button className='rounded hover:bg-grey-300'>
+          <button className='rounded-sm hover:bg-grey-300'>
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
           </button>
         </div>

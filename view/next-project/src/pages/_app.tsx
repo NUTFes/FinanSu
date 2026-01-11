@@ -11,7 +11,7 @@ import '@/styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider>
+    <ChakraProvider resetCSS={false}>
       <Head>
         <link rel='icon' href='/favicon.ico' />
       </Head>

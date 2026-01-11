@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Text, Box } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Text } from '@chakra-ui/react';
 import React, { RefObject } from 'react';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { GoPlus } from 'react-icons/go';

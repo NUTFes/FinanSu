@@ -21,7 +21,7 @@ const meta: Meta<typeof FinanSuButton> = {
     shape: {
       control: {
         type: 'select',
-        options: ['rounded', 'pill'],
+        options: ['rounded-sm', 'pill'],
       },
     },
     textAlign: {
@@ -45,7 +45,7 @@ export const Primary = {
   args: {
     size: 'small',
     color: 'primary',
-    shape: 'rounded',
+    shape: 'rounded-sm',
     textAlign: 'center',
     children: <p>test</p>,
     hover: true,
@@ -56,7 +56,7 @@ export const Secondary = {
   args: {
     size: 'medium',
     color: 'secondary',
-    shape: 'rounded',
+    shape: 'rounded-sm',
     textAlign: 'center',
     hover: true,
     children: 'test',
@@ -67,7 +67,7 @@ export const Thirdry = {
   args: {
     size: 'large',
     color: 'thirdry',
-    shape: 'rounded',
+    shape: 'rounded-sm',
     textAlign: 'center',
     hover: true,
     children: 'test',
