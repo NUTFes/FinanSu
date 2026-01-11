@@ -15,30 +15,45 @@ interface LayoutProps {
 
 export default function MainLayout(props: LayoutProps) {
   const router = useRouter();
-  const { isSignIn, accessToken, resetAuth } = useAuthStore();
+  const isSignIn = useAuthStore((state) => state.isSignIn);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const resetAuth = useAuthStore((state) => state.resetAuth);
   const resetUser = useUserStore((state) => state.resetUser);
   const [isSideNavOpen, setIsSideNavOpen] = useState(true);
 
   useEffect(() => {
+    if (!router.isReady) return;
+    if (!hasHydrated) return;
+
+    if (!isSignIn) {
+      if (router.pathname !== '/') {
+        router.replace('/');
+      }
+      return;
+    }
+
+    if (!accessToken) {
+      resetAuth();
+      resetUser();
+      router.replace('/');
+      return;
+    }
+
     const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
-    get_with_token_valid(getCurrentUserUrl, accessToken).then((result) => {
-      if (!result) {
-        localStorage.clear();
+    get_with_token_valid(getCurrentUserUrl, accessToken).then((isValid) => {
+      if (!isValid) {
         resetAuth();
         resetUser();
-        router.push('/');
-      } else {
-        if (router.isReady) {
-          if (!isSignIn) {
-            router.push('/');
-            localStorage.clear();
-          } else if (isSignIn === true && router.pathname == '/') {
-            router.push('/purchaseorders');
-          }
-        }
+        router.replace('/');
+        return;
+      }
+
+      if (router.pathname === '/') {
+        router.replace('/my_page');
       }
     });
-  }, [router]);
+  }, [router.isReady, router.pathname, hasHydrated, isSignIn, accessToken, resetAuth, resetUser]);
 
   return (
     <>
