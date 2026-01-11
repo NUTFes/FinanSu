@@ -24,7 +24,7 @@ const ModalUI: React.FC = () => {
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className='mx-auto h-full max-w-[2460px] bg-white-0 transition-colors duration-150'>
+    <div className='mx-auto h-full max-w-615 bg-white-0 transition-colors duration-150'>
       <main>{children}</main>
       <ModalUI />
     </div>
