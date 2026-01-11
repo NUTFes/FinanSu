@@ -1,18 +1,17 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import { useRecoilValue } from 'recoil';
 
 import { Card, Loading, PrimaryButton } from '@/components/common';
 import MainLayout from '@/components/layout/MainLayout';
 import TableSection from '@/components/mypage/TableSection';
 import { useGetFestivalItemsDetailsUserId } from '@/generated/hooks';
-import { userAtom } from '@/store/atoms';
+import { useUserStore } from '@/store';
 import { User } from '@/type/common';
 
 const MyPage = () => {
   const router = useRouter();
-  const user = useRecoilValue(userAtom);
+  const user = useUserStore((state) => state.user);
   const [currentUser, setCurrentUser] = useState<User>();
 
   useEffect(() => {

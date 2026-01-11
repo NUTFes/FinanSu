@@ -2,30 +2,24 @@ import Image from 'next/image';
 import Router from 'next/router';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { RiAccountCircleFill } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
-import { authAtom, userAtom } from '@/store/atoms';
+import { useAuthStore, useUserStore } from '@/store';
 import { del } from '@api/signOut';
 import { ChakraUIDropdown } from '@components/common';
-import { User } from '@type/common';
 
 import { HeaderProps } from './Header.type';
 
 const Header = (props: HeaderProps) => {
   const { onSideNavOpen } = props;
-  const [auth, setAuth] = useRecoilState(authAtom);
-  const [user, setUser] = useRecoilState(userAtom);
+  const { accessToken, resetAuth } = useAuthStore();
+  const { user, resetUser } = useUserStore();
 
   const signOut = async () => {
     const signOutUrl: string = process.env.CSR_API_URI + '/mail_auth/signout';
-    const req = await del(signOutUrl, auth.accessToken);
-    const authData = {
-      isSignIn: false,
-      accessToken: '',
-    };
+    const req = await del(signOutUrl, accessToken);
     if (req.status === 200) {
-      setAuth(authData);
-      setUser({} as User);
+      resetAuth();
+      resetUser();
       Router.push('/');
     }
   };

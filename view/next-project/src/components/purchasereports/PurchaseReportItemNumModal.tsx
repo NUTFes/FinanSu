@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
 
-import { userAtom } from '@/store/atoms';
+import { useUserStore } from '@/store';
 import {
   CloseButton,
   Modal,
@@ -12,7 +11,7 @@ import {
 } from '@components/common';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, Expense, YearPeriod } from '@type/common';
+import { Expense, PurchaseOrder, YearPeriod } from '@type/common';
 import { get } from '@utils/api/api_methods';
 
 export default function PurchaseReportItemNumModal() {
@@ -30,7 +29,7 @@ export default function PurchaseReportItemNumModal() {
     getPeriods();
   }, []);
 
-  const [user] = useRecoilState(userAtom);
+  const user = useUserStore((state) => state.user);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [expenseID, setExpenseID] = useState(0);
 
