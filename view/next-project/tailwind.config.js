@@ -33,6 +33,16 @@ module.exports = {
       production: '#B2AC0F',
     },
     extend: {
+      fontFamily: {
+        sans: [
+          '"Helvetica Neue"',
+          'Arial',
+          '"Hiragino Kaku Gothic ProN"',
+          '"Hiragino Sans"',
+          'Meiryo',
+          'sans-serif',
+        ],
+      },
       width: {
         '1/2': '50%',
         '3/4': '75%',

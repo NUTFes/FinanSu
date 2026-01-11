@@ -1,33 +1,28 @@
 import {
   Box,
   Button,
+  Center,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
-  Select,
-  VStack,
-  Spinner,
-  FormErrorMessage,
-  Center,
-  RadioGroup,
   Radio,
+  RadioGroup,
+  Select,
+  Spinner,
   Stack,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
-import { Noto_Sans_JP } from 'next/font/google';
+
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PrimaryButton, Title } from '@/components/common';
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
 import MainLayout from '@/components/layout/MainLayout';
 import { Income } from '@/generated/model/income';
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  weight: ['100', '400', '700'],
-});
 
 interface FormFieldProps {
   id: string;
@@ -247,9 +242,7 @@ const EditFundInformation = () => {
 
   return (
     <MainLayout>
-      <Box
-        className={`flex h-[calc(100vh-4rem)] items-center justify-center ${notoSansJP.className}`}
-      >
+      <Box className='flex h-[calc(100vh-4rem)] items-center justify-center'>
         <Box className='w-full min-w-[300px] max-w-[60%] px-4 py-8 sm:px-6 lg:px-8'>
           <Title className='mb-6 text-center' title='収入データ修正' />
 

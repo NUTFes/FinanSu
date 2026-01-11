@@ -1,4 +1,3 @@
-import { Noto_Sans_JP } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
@@ -10,11 +9,6 @@ import TableSection from '@/components/mypage/TableSection';
 import { useGetFestivalItemsDetailsUserId } from '@/generated/hooks';
 import { userAtom } from '@/store/atoms';
 import { User } from '@/type/common';
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  weight: ['100', '400', '700'],
-});
 
 const MyPage = () => {
   const router = useRouter();
@@ -41,7 +35,7 @@ const MyPage = () => {
   return (
     <MainLayout>
       <Card>
-        <div className={`mx-5 mt-10 min-h-[calc(100vh-12rem)] ${notoSansJP.className}`}>
+        <div className='mx-5 mt-10 min-h-[calc(100vh-12rem)]'>
           <div className='mb-8 flex items-center justify-between'>
             <h2 className='text-2xl font-thin text-black-300'>My Page</h2>
             {resData && (
