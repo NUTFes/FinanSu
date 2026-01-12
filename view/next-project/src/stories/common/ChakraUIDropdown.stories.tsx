@@ -1,5 +1,3 @@
-import { RecoilRoot } from 'recoil';
-
 import { ChakraUIDropdown } from '@components/common';
 
 import type { Meta, StoryFn } from '@storybook/react';
@@ -7,13 +5,6 @@ import type { Meta, StoryFn } from '@storybook/react';
 const meta: Meta<typeof ChakraUIDropdown> = {
   title: 'FinanSu/common/ChakraUIDropdown',
   component: ChakraUIDropdown,
-  decorators: [
-    (Story) => (
-      <RecoilRoot>
-        <Story />
-      </RecoilRoot>
-    ),
-  ],
   tags: ['autodocs'],
   argTypes: {},
 };
