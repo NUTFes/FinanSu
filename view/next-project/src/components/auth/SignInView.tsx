@@ -1,9 +1,8 @@
 import Router from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 
-import { authAtom, userAtom } from '@/store/atoms';
+import { useAuthStore, useUserStore } from '@/store';
 import { get_with_token } from '@api/api_methods';
 import { signIn } from '@api/signIn';
 import LoadingButton from '@components/common/LoadingButton';
@@ -14,8 +13,8 @@ import { PrimaryButton } from '../common';
 export default function SignInView() {
   // ログイン中フラグ
   const [isSignInNow, setIsSignInNow] = useState<boolean>(false);
-  const [, setAuth] = useRecoilState(authAtom);
-  const [, setUser] = useRecoilState(userAtom);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const setUser = useUserStore((state) => state.setUser);
 
   const {
     register,

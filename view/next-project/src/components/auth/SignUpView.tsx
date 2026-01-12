@@ -1,10 +1,9 @@
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 
 import { BUREAUS } from '@/constants/bureaus';
-import { authAtom, userAtom } from '@/store/atoms';
+import { useAuthStore, useUserStore } from '@/store';
 import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
@@ -14,8 +13,8 @@ import { SignUp, User } from '@type/common';
 import { PrimaryButton } from '../common';
 
 export default function SignUpView() {
-  const [, setAuth] = useRecoilState(authAtom);
-  const [, setUser] = useRecoilState(userAtom);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const setUser = useUserStore((state) => state.setUser);
 
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
