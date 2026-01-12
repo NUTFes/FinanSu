@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { formidable, Files } from 'formidable';
+import { Files, formidable } from 'formidable';
 import { Client } from 'minio';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             };
 
             try {
-              const fileStat = fs.statSync(finalFilePath);
+              const fileStat = await fs.promises.stat(finalFilePath);
               await minioClient.putObject(
                 bucketName,
                 filePath,

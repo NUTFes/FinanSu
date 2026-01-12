@@ -1,17 +1,17 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useEffect, useMemo } from 'react';
-import { MdFilterList, MdCircle } from 'react-icons/md';
+import { useEffect, useMemo, useState } from 'react';
+import { MdCircle, MdFilterList } from 'react-icons/md';
 import { RiExternalLinkLine } from 'react-icons/ri';
 
 import { Loading } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import {
-  OpenAddModalButton,
   DetailModal,
+  FilterModal,
+  OpenAddModalButton,
   OpenDeleteModalButton,
   OpenEditModalButton,
-  FilterModal,
 } from '@/components/sponsoractivities';
 import AddBlankInvoiceModal from '@/components/sponsoractivities/AddBlankInvoiceModal';
 import AddBlankReceiptModal from '@/components/sponsoractivities/AddBlankReceiptModal';
@@ -23,14 +23,14 @@ import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import { DESIGNERS } from '@constants/designers';
 import {
+  ActivityStyle,
+  Sponsor,
   SponsorActivity,
   SponsorActivityView,
-  Sponsor,
+  SponsorFilterType,
   SponsorStyle,
   User,
-  ActivityStyle,
   YearPeriod,
-  SponsorFilterType,
 } from '@type/common';
 
 interface Props {
@@ -81,7 +81,7 @@ const formatYYYYMMDD = (date: Date) => {
 
 export default function SponsorActivities(props: Props) {
   const { sponsorStyles, sponsors, users, activityStyles, yearPeriods } = props;
-  const [sponsorActivities, setSponsorActivities] = useState<SponsorActivityView[]>();
+  const [sponsorActivities, setSponsorActivities] = useState<SponsorActivityView[]>([]);
   const [sponsorActivitiesID, setSponsorActivitiesID] = useState<number>(1);
   const [sponsorActivitiesItem, setSponsorActivitiesViewItem] = useState<SponsorActivityView>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -144,11 +144,13 @@ export default function SponsorActivities(props: Props) {
 
   const sortedSponsorActivitiesViews = useMemo(() => {
     const filteredActivities = sponsorActivities;
+
+    if (!Array.isArray(filteredActivities)) {
+      return [];
+    }
+
     switch (filterData.selectedSort) {
       case 'updateSort':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             new Date(firstObject.sponsorActivity.updatedAt || 0).getTime() >
@@ -157,9 +159,6 @@ export default function SponsorActivities(props: Props) {
               : -1,
         );
       case 'createSort':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             new Date(firstObject.sponsorActivity.createdAt || 0).getTime() <
@@ -168,9 +167,6 @@ export default function SponsorActivities(props: Props) {
               : 1,
         );
       case 'createDesSort':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             new Date(firstObject.sponsorActivity.createdAt || 0).getTime() >
@@ -179,9 +175,6 @@ export default function SponsorActivities(props: Props) {
               : 1,
         );
       case 'priceSort':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
@@ -190,9 +183,6 @@ export default function SponsorActivities(props: Props) {
               : -1,
         );
       case 'priceDesSort':
-        if (!Array.isArray(filteredActivities)) {
-          return [];
-        }
         return [...filteredActivities].sort(
           (firstObject: SponsorActivityView, secondObject: SponsorActivityView) =>
             firstObject.styleDetail.reduce((sum, style) => sum + style.sponsorStyle.price, 0) >
@@ -207,8 +197,8 @@ export default function SponsorActivities(props: Props) {
 
   const TotalTransportationFee = useMemo(() => {
     let totalFee = 0;
-    if (sortedSponsorActivitiesViews) {
-      sortedSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (Array.isArray(sortedSponsorActivitiesViews)) {
+      sortedSponsorActivitiesViews.forEach((sponsorActivityItem) => {
         totalFee += sponsorActivityItem.sponsorActivity.expense;
       });
     }
@@ -217,8 +207,8 @@ export default function SponsorActivities(props: Props) {
 
   const TotalActivityStyleFee = useMemo(() => {
     let totalFee = 0;
-    if (sortedSponsorActivitiesViews) {
-      sortedSponsorActivitiesViews?.map((sponsorActivityItem) => {
+    if (Array.isArray(sortedSponsorActivitiesViews)) {
+      sortedSponsorActivitiesViews.forEach((sponsorActivityItem) => {
         const sponsorActivitiesStylesPrice = sponsorActivityItem.styleDetail
           ? sponsorActivityItem.styleDetail.map((styleDetail) => {
               return styleDetail.sponsorStyle.price;

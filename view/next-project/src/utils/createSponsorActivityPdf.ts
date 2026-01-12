@@ -198,7 +198,6 @@ export const createSponsorActivityFormPdf = async (
   // 生成されたPDFデータを取得
   const pdfBytes = await pdfDoc.save();
   // Blobを作成
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
+  const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
   return blob;
 };

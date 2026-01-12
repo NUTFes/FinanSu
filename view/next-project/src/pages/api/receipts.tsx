@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       };
 
       try {
-        const fileStat = fs.statSync(files.file[0].filepath);
+        const fileStat = await fs.promises.stat(files.file[0].filepath);
         const response = await minioClient.putObject(
           bucketName,
           fileName,

@@ -110,13 +110,13 @@ ent-db: ## DB接続コマンド
 migrate: ## マイグレーションの実行
 	docker compose -f compose.migrate.yml run --rm migrate \
 		--path /migrations \
-		--database "mysql://$${NUTMEG_DB_USER}:$${NUTMEG_DB_PASSWORD}@tcp($${NUTMEG_DB_HOST}:$${NUTMEG_DB_PORT})/$${NUTMEG_DB_NAME}" \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
 		up
 
 migrate-down: ## マイグレーションのダウングレード
 	docker compose -f compose.migrate.yml run --rm migrate \
 		--path /migrations \
-		--database "mysql://$${NUTMEG_DB_USER}:$${NUTMEG_DB_PASSWORD}@tcp($${NUTMEG_DB_HOST}:$${NUTMEG_DB_PORT})/$${NUTMEG_DB_NAME}" \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
 		down
 
 create-migration: ## マイグレーションファイルの作成
