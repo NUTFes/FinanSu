@@ -198,6 +198,6 @@ export const createSponsorActivityFormPdf = async (
   // 生成されたPDFデータを取得
   const pdfBytes = await pdfDoc.save();
   // Blobを作成
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
   return blob;
 };

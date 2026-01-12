@@ -35,7 +35,7 @@ export const createPresentationCsv = async (activityViews: SponsorActivityView[]
         label: '所属局',
       },
       {
-        getCustomValue: (row) => (row.sponsorActivity.isDone ? '回収済み' : '未回収' || ''),
+        getCustomValue: (row) => (row.sponsorActivity.isDone ? '回収済み' : '未回収'),
         label: '回収状況',
       },
       {

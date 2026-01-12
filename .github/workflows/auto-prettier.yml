@@ -11,28 +11,32 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           # Make sure the actual branch is checked out when running on pull requests
           ref: ${{ github.head_ref }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: view/next-project/package-lock.json
-      - name: npm install
+          cache: pnpm
+          cache-dependency-path: view/next-project/pnpm-lock.yaml
+      - name: Install dependencies
         working-directory: view/next-project
-        run: npm install
+        run: pnpm install
       - name: Prettier
         working-directory: view/next-project
-        run: npm run format
+        run: pnpm run format
       - name: Lint
         working-directory: view/next-project
-        run: npm run lint:fix
+        run: pnpm run lint:fix
       - name: Check types with TypeScript
         working-directory: view/next-project
-        run: npm run type-check
+        run: pnpm run type-check
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
           commit_message: formatted by workflow

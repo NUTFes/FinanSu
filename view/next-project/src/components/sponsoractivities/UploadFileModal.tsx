@@ -6,7 +6,7 @@ import { put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
 import { SponsorActivityInformation } from '@type/common';
 
-import { PrimaryButton, Loading } from '../common';
+import { Loading, PrimaryButton } from '../common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -130,7 +130,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
 
     // ファイルをチャンクに分割してアップロード
     const SPLIT_NUMBER = 10;
-    const chunkSize = imageFile.size / SPLIT_NUMBER;
+    const chunkSize = Math.max(1, Math.ceil(imageFile.size / SPLIT_NUMBER));
     const chunks = splitFile(imageFile, chunkSize);
 
     for (let i = 0; i < chunks.length; i++) {

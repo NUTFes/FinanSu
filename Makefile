@@ -54,7 +54,7 @@ setup: ## 開発環境をセットアップ (build > run-db > run)
 ##@ 基本操作
 build: ## アプリコンテナのイメージをビルド
 	docker compose build
-	docker compose run --rm view npm install
+	docker compose run --rm view pnpm install
 
 build-stg: ## ステージング環境ビルド
 	docker compose -f compose.stg.yml build
@@ -110,13 +110,13 @@ ent-db: ## DB接続コマンド
 migrate: ## マイグレーションの実行
 	docker compose -f compose.migrate.yml run --rm migrate \
 		--path /migrations \
-		--database "mysql://$${NUTMEG_DB_USER}:$${NUTMEG_DB_PASSWORD}@tcp($${NUTMEG_DB_HOST}:$${NUTMEG_DB_PORT})/$${NUTMEG_DB_NAME}" \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
 		up
 
 migrate-down: ## マイグレーションのダウングレード
 	docker compose -f compose.migrate.yml run --rm migrate \
 		--path /migrations \
-		--database "mysql://$${NUTMEG_DB_USER}:$${NUTMEG_DB_PASSWORD}@tcp($${NUTMEG_DB_HOST}:$${NUTMEG_DB_PORT})/$${NUTMEG_DB_NAME}" \
+		--database "mysql://${NUTMEG_DB_USER}:${NUTMEG_DB_PASSWORD}@tcp(${NUTMEG_DB_HOST}:${NUTMEG_DB_PORT})/${NUTMEG_DB_NAME}" \
 		down
 
 create-migration: ## マイグレーションファイルの作成
@@ -144,7 +144,7 @@ run-api: ## API単体起動 (DB起動後)
 	docker compose up api
 
 run-sb: ## StoryBook起動
-	docker compose run --rm -p6006:6006 view npm run storybook
+	docker compose run --rm -p6006:6006 view pnpm run storybook
 
 run-swagger: ## Swagger起動
 	docker compose -f compose.swagger.yml up -d
@@ -164,14 +164,14 @@ gen-api: ## API側コード生成
 	docker compose run --rm api oapi-codegen -config /openapi/config.yaml /openapi/openapi.yaml
 
 gen-front-api: ## フロント側API生成
-	docker compose run --rm view npx orval
-	docker compose run --rm view npm run format
+	docker compose run --rm view pnpm exec orval
+	docker compose run --rm view pnpm run format
 
 gen-er: ## ER図生成
 	docker run -v "./er:/output" --net="host" schemaspy/schemaspy:snapshot -t mysql -host localhost:3306 -db finansu_db -u root -p root -connprops  allowPublicKeyRetrieval\\=false  -s finansu_db
 
 format: ## コード整形
-	docker compose run --rm view npm run format
+	docker compose run --rm view pnpm run format
 
 # Go依存関係を整理
 go-mod-tidy:
@@ -202,7 +202,7 @@ run-test: ## APIテスト実行
 	docker compose exec api go test ./test -v
 
 run-eslint: ## ESLint実行
-	docker compose exec view npm run lint
+	docker compose exec view pnpm run lint
 
 ##@ クリーンアップ
 del-vol: ## アプリコンテナボリューム削除

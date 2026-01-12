@@ -4,7 +4,7 @@ services:
       context: ./view
       dockerfile: local-prod.Dockerfile
     container_name: "nutfes-finansu-view"
-    command: "npm run start"
+    command: "pnpm run start"
     ports: ["3000:3000"]
     depends_on: ["api"]
 

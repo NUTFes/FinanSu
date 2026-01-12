@@ -19,7 +19,6 @@ function Select(props: Props): JSX.Element {
   return (
     <div className={clsx(s.customSelect)}>
       <select
-        placeholder={props.placeholder}
         className={clsx(s.select, className)}
         value={props.value}
         defaultValue={props.defaultValue}

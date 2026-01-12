@@ -12,11 +12,12 @@ ENV NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV} \
 
 WORKDIR /app
 
-COPY ./view/next-project/package*.json ./
-RUN npm ci
+COPY ./view/next-project/package.json ./view/next-project/pnpm-lock.yaml ./
+RUN npm install -g pnpm@10.28.0
+RUN pnpm install --frozen-lockfile
 
 COPY ./view/next-project/ ./
-RUN npm run build
+RUN pnpm run build
 
 # Create runner image
 FROM gcr.io/distroless/nodejs20-debian12:nonroot AS runner

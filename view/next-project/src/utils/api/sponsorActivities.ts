@@ -35,7 +35,7 @@ export const getByFiler = async (
   // TODO APIのリファクタリング NOTE 0件選択のとき全件取得するため存在しないidを指定している
   const postStyleIds = styleIds.length > 0 ? styleIds : [allSponsorStyleLen + 1];
   const isDoneURL = `is_done=${isDone}`;
-  const styleIdsURL = `sponsor_style_id=${postStyleIds}`;
+  const styleIdsURL = postStyleIds.map((id) => `sponsor_style_id=${id}`).join('&');
   const keywordURL = `keyword=${keyword}`;
   const getURL = `${url}?${isDoneURL}&${styleIdsURL}&${keywordURL}`;
   const res = await fetch(getURL, {
