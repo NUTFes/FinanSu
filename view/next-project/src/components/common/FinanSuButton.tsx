@@ -4,7 +4,7 @@ import React from 'react';
 interface Props {
   size?: 'small' | 'medium' | 'large';
   color?: 'primary' | 'secondary' | 'thirdry' | 'Red';
-  shape?: 'rounded-sm' | 'pill';
+  shape?: 'rounded-lg' | 'pill';
   textAlign?: 'left' | 'center' | 'right';
   hover?: boolean;
   className?: string;
@@ -47,7 +47,7 @@ function FinanSuButton(props: Props): JSX.Element {
   }
 
   switch (props.shape) {
-    case 'rounded-sm':
+    case 'rounded-lg':
       shapeClass = 'rounded-lg';
       break;
     case 'pill':
