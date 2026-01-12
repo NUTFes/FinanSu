@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
+import { useUserStore } from '@/store';
 import { get, put as putPurchaseReport } from '@api/api_methods';
 import { put as putPurchaseItem } from '@api/purchaseItem';
 import {
@@ -26,7 +25,7 @@ interface ModalProps {
 }
 
 export default function EditModal(props: ModalProps) {
-  const [user] = useRecoilState(userAtom);
+  const user = useUserStore((state) => state.user);
 
   const router = useRouter();
 
