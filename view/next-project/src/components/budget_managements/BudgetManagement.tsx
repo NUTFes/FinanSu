@@ -213,7 +213,7 @@ export default function BudgetManagement(props: Props) {
               <select
                 value={financialRecordId ?? ''}
                 onChange={handleFinancialRecordChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='border-b border-black-300 focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {financialRecords &&
@@ -229,7 +229,7 @@ export default function BudgetManagement(props: Props) {
               <select
                 value={divisionId ?? ''}
                 onChange={handleDivisionChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='border-b border-black-300 focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {divisions &&

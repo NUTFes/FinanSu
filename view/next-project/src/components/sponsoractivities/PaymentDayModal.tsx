@@ -62,7 +62,7 @@ export default function PaymentDayModal(props: ModalProps) {
             領収書ダウンロード
           </PrimaryButton>
         </div>
-        <div className='h-[21rem] justify-center overflow-x-auto md:flex'>
+        <div className='h-84 justify-center overflow-x-auto md:flex'>
           <PreviewPDF
             sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
             date={today}

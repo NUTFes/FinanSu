@@ -15,7 +15,7 @@ const DownloadButton = (props: Props) => {
     if (isDisabled) {
       return 'cursor-default bg-primary-1 opacity-25';
     } else {
-      return 'cursor-pointer bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1';
+      return 'cursor-pointer bg-linear-to-br from-primary-1 to-primary-2 hover:bg-linear-to-br hover:from-primary-2 hover:to-primary-1';
     }
   }, [isDisabled]);
 

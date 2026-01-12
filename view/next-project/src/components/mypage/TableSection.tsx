@@ -115,7 +115,7 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateI
         <div className='flex w-full justify-start px-2 md:w-9/10'>
           <div className='mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3'>
             <table
-              className='w-full table-auto whitespace-normal break-words text-sm text-black-300'
+              className='w-full table-auto whitespace-normal wrap-break-word text-sm text-black-300'
               onClick={(e) => e.stopPropagation()}
             >
               <tbody>

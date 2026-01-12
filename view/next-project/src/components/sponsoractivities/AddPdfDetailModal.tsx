@@ -110,7 +110,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
           <OpenEditInvoiceModalButton invoice={invoiceData} setInvoice={setInvoiceDate} />
         </div>
       </div>
-      <div className='h-[30rem] justify-center overflow-x-auto md:flex'>
+      <div className='h-120 justify-center overflow-x-auto md:flex'>
         <PreviewPDF
           invoiceItem={invoiceData}
           deadline={invoiceData.deadline}
