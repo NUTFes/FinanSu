@@ -8,7 +8,7 @@ import { ManagedUIContext } from '@components/ui/context';
 
 import type { AppProps } from 'next/app';
 
-import 'tailwindcss/tailwind.css';
+import '@/styles/globals.css';
 
 export const notoSansJP = localFont({
   src: '../../public/fonts/NotoSansJP-Regular.ttf',
@@ -17,7 +17,7 @@ export const notoSansJP = localFont({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider>
+    <ChakraProvider resetCSS={false}>
       <Head>
         <link rel='icon' href='/favicon.ico' />
       </Head>

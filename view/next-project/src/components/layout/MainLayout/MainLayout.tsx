@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { useAuthStore, useUserStore } from '@/store';
 import { Header, Loading, SideNav } from '@components/common';
 import { get_with_token_valid } from '@utils/api/api_methods';
-import 'tailwindcss/tailwind.css';
 
 import s from './MainLayout.module.css';
 

@@ -1,22 +1,23 @@
 import { clsx } from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
 import { get, post } from '@/utils/api/api_methods';
-import { MultiSelect, SearchSelect } from '@components/common';
 import {
   CloseButton,
+  Input,
   Modal,
+  MultiSelect,
   OutlinePrimaryButton,
   PrimaryButton,
+  SearchSelect,
   Select,
-  Input,
   Textarea,
 } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { DESIGNERS, DESIGNER_VALUES } from '@constants/designers';
-import { SponsorActivity, Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
+import { Sponsor, SponsorActivity, SponsorStyle, User, YearPeriod } from '@type/common';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
 
@@ -339,7 +340,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <div>
         <table className='my-5 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               {TABLE_COLUMNS.map((tableColumn: string) => (
                 <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
                   <div className='text-center text-sm text-black-600'>{tableColumn}</div>
@@ -347,8 +348,8 @@ export default function SponsorActivitiesAddModal(props: Props) {
               ))}
             </tr>
           </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tbody>
+            <tr className='border-b border-b-primary-1'>
               <td className='py-3'>
                 <p className='text-center text-sm text-black-600'>{sponsorView?.name}</p>
               </td>
@@ -372,7 +373,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         </table>
         <table className='mb-7 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               {TABLE_COLUMNS2.map((tableColumn: string) => (
                 <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
                   <div className='text-center text-sm text-black-600'>{tableColumn}</div>
@@ -380,8 +381,8 @@ export default function SponsorActivitiesAddModal(props: Props) {
               ))}
             </tr>
           </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tbody>
+            <tr className='border-b border-b-primary-1'>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>
                   {sponsorActivities.feature}
@@ -402,13 +403,13 @@ export default function SponsorActivitiesAddModal(props: Props) {
         </table>
         <table className='mb-10 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               <th className='border-b-primary-1 px-6 pb-2'>
                 <div className='text-center text-sm text-black-600'>備考</div>
               </th>
             </tr>
           </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tbody>
             <tr>
               <td>
                 <div className='py-3 text-sm text-black-600'>

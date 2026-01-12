@@ -19,6 +19,9 @@ const Dropdown = (props: Props) => {
         variant='outline'
         as={Button}
         rightIcon={<RiArrowDropDownLine />}
+        color='white'
+        borderColor='white'
+        bg='transparent'
         _hover={{ color: '#023859', bgColor: '#fff' }}
         _active={{ color: '#023859', bgColor: '#fff' }}
       >

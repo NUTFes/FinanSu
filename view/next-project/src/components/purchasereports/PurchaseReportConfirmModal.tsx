@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
-import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
+import { CloseButton, Modal, PrimaryButton, Tooltip } from '@components/common';
 import ReceiptModal from '@components/purchasereports/ReceiptModal';
 import { PurchaseItem } from '@type/common';
 
@@ -41,7 +41,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
     return (
       <table className='table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+          <tr className='border-b border-b-primary-1 py-3'>
             {tableColumns.map((tableColumn: string) => (
               <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
                 <div className='text-center text-sm text-black-600'>{tableColumn}</div>
@@ -49,7 +49,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
             ))}
           </tr>
         </thead>
-        <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+        <tbody>
           {purchaseItems.map((purchaseItem, index) => (
             <tr key={purchaseItem.id}>
               <td
