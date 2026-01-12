@@ -1,23 +1,33 @@
-FROM golang:latest
+FROM golang:1.25.5-alpine
 
+# Install git (required for go mod) and bash
+RUN apk add --no-cache git bash
+
+# Create a non-root user with UID 1000
+RUN adduser -D -u 1000 appuser
+
+# Set environment variables
+ENV CGO_ENABLED=0 \
+    GOOS=linux \
+    GOCACHE=/go/pkg/build-cache \
+    GOMODCACHE=/go/pkg/mod
+
+# Create cache directories and set permissions
+RUN mkdir -p /go/pkg/build-cache /go/pkg/mod && \
+    chown -R appuser:appuser /go
+
+# Set working directory
 WORKDIR /app
-COPY . /app
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y locales \
-  && locale-gen ja_JP.UTF-8 \
-  && echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc
+# Switch to non-root user
+USER appuser
 
-RUN export LANG=C.UTF-8
-RUN export LANGUAGE=en_US:
+# Install development tools
+RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.2.0 && \
+    go install github.com/air-verse/air@latest
 
-ENV CGO_ENABLED=0
-ENV GOOS=linux
-#ENV GOARCH=amd64
+# The source code will be mounted via volume in docker-compose
+# but we can copy it here for completeness/fallback
+COPY --chown=appuser:appuser . /app
 
-RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.2.0
-
-# Airをインストール
-RUN go install github.com/air-verse/air@latest
 CMD ["air", "-c", ".air.toml"]

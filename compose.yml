@@ -2,10 +2,12 @@ services:
   view:
     build: ./view
     container_name: "nutfes-finansu-view"
+    user: "1000:1000"
     volumes:
       - ./view:/app
       - ./openapi:/openapi
-    command: sh -c "npm install && npm run dev"
+      - pnpm-store:/pnpm/store
+    command: sh -c "pnpm install && pnpm run dev"
     ports:
       - "3000:3000"
       - "6006:6006"
@@ -26,9 +28,12 @@ services:
       context: ./api
       dockerfile: dev.Dockerfile
     container_name: "nutfes-finansu-api"
+    user: "1000:1000"
     volumes:
       - ./api:/app
       - ./openapi:/openapi
+      - go-build-cache:/go/pkg/build-cache
+      - go-mod-cache:/go/pkg/mod
     environment:
       RESET_PASSWORD_URL: "http://localhost:3000/reset_password"
     #シェルスクリプトを実行するコマンド
@@ -38,3 +43,8 @@ services:
       - "1323:1323"
     stdin_open: true
     tty: true
+
+volumes:
+  go-build-cache:
+  go-mod-cache:
+  pnpm-store:
