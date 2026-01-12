@@ -1,5 +1,5 @@
 # Build用 コンテナ
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 
 FROM base AS builder
 
@@ -20,7 +20,7 @@ COPY ./view/next-project/ ./
 RUN pnpm run build
 
 # Create runner image
-FROM gcr.io/distroless/nodejs20-debian12:nonroot AS runner
+FROM gcr.io/distroless/nodejs24-debian13:nonroot AS runner
 
 WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/FinanSu"

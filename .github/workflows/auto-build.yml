@@ -27,7 +27,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
           cache-dependency-path: view/next-project/pnpm-lock.yaml
       - name: Install dependencies
@@ -42,6 +42,6 @@ jobs:
       - name: Lint
         working-directory: view/next-project
         run: pnpm run lint:fix
-      - uses: stefanzweifel/git-auto-commit-action@v3.0.0
+      - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: formatted by workflow

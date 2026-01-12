@@ -1,20 +1,15 @@
 import { Box, useToast } from '@chakra-ui/react';
-import { Noto_Sans_JP } from 'next/font/google';
 import Head from 'next/head';
 import { useState } from 'react';
 
 import { Title } from '@/components/common';
 import { FundInformationForm } from '@/components/fund_information';
 import {
-  useFundInformations,
   FundInformationFormData,
+  useFundInformations,
 } from '@/components/fund_information/useFundInformations';
 import MainLayout from '@/components/layout/MainLayout';
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  weight: ['100', '400', '700'],
-});
+import { notoSansJP } from '@/pages/_app';
 
 const CreateFundInformation = () => {
   const toast = useToast();

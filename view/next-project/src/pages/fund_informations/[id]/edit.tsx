@@ -1,33 +1,28 @@
 import {
   Box,
   Button,
+  Center,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
-  Select,
-  VStack,
-  Spinner,
-  FormErrorMessage,
-  Center,
-  RadioGroup,
   Radio,
+  RadioGroup,
+  Select,
+  Spinner,
   Stack,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
-import { Noto_Sans_JP } from 'next/font/google';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { PrimaryButton, Title } from '@/components/common';
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
 import MainLayout from '@/components/layout/MainLayout';
 import { Income } from '@/generated/model/income';
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  weight: ['100', '400', '700'],
-});
+import { notoSansJP } from '@/pages/_app';
 
 interface FormFieldProps {
   id: string;

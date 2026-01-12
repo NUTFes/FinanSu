@@ -1,4 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import localFont from 'next/font/local';
 import Head from 'next/head';
 import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 import { RecoilRoot } from 'recoil';
@@ -9,6 +10,11 @@ import { ManagedUIContext } from '@components/ui/context';
 import type { AppProps } from 'next/app';
 
 import 'tailwindcss/tailwind.css';
+
+export const notoSansJP = localFont({
+  src: '../../public/fonts/NotoSansJP-Regular.ttf',
+  display: 'swap',
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

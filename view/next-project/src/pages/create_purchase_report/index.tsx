@@ -1,38 +1,34 @@
 import {
   Box,
   Button,
+  Center,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
   Select,
-  VStack,
   Spinner,
-  FormErrorMessage,
-  Center,
+  VStack,
 } from '@chakra-ui/react';
-import { Noto_Sans_JP } from 'next/font/google';
 import { useRouter } from 'next/router';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { PrimaryButton, Title } from '@/components/common';
 import FileUploadField from '@/components/create_purchase_report/FileUploadField';
 import FormField from '@/components/create_purchase_report/FormField';
 import { usePurchaseReportForm } from '@/components/create_purchase_report/usePurchaseReportForm';
 import {
-  validateFile,
-  validateAmount,
   ERROR_MESSAGES,
+  validateAmount,
+  validateFile,
 } from '@/components/create_purchase_report/validators';
 import MainLayout from '@/components/layout/MainLayout';
+
+import { notoSansJP } from '../_app';
 
 // スタイリング用定数
 const CONTAINER_HEIGHT_CLASS = 'h-[calc(100vh-4rem)]';
 const FORM_CONTAINER_CLASS = 'w-full min-w-[300px] max-w-[60%] px-4 py-8 sm:px-6 lg:px-8';
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  weight: ['100', '400', '700'],
-});
 
 const PurchaseReportPage = () => {
   const router = useRouter();
