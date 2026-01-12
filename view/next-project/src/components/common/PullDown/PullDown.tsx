@@ -18,7 +18,6 @@ function PullDown(props: Props): JSX.Element {
   return (
     <div className={clsx(s.customSelect, 'w-75')}>
       <select
-        placeholder={props.placeholder}
         className={clsx(s.select, className)}
         value={props.value}
         onChange={props.onChange}

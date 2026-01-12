@@ -591,6 +591,7 @@ export const createPurchaseReportFormPdf = async (
   // 生成されたPDFデータを取得
   const pdfBytes = await pdfDoc.save();
   // Blobを作成
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
   return blob;
 };

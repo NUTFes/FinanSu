@@ -48,10 +48,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       };
 
       try {
+        const fileStat = fs.statSync(files.file[0].filepath);
         const response = await minioClient.putObject(
           bucketName,
           fileName,
           fs.createReadStream(files.file[0].filepath),
+          fileStat.size,
           metaData,
         );
       } catch (err) {

@@ -5,3 +5,5 @@ WORKDIR /app/next-project
 COPY ./ /app
 
 ENV API_URL='http://localhost:1323'
+
+RUN npm install -g pnpm@10.28.0

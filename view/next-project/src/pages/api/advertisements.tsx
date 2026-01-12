@@ -82,10 +82,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             };
 
             try {
+              const fileStat = fs.statSync(finalFilePath);
               await minioClient.putObject(
                 bucketName,
                 filePath,
                 fs.createReadStream(finalFilePath),
+                fileStat.size,
                 metaData,
               );
               fs.unlinkSync(finalFilePath);

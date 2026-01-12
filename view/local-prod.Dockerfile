@@ -12,5 +12,6 @@ ENV NEXT_PUBLIC_ACCESS_KEY user
 ENV NEXT_PUBLIC_SECRET_KEY password
 
 
-RUN npm install --production
-RUN npm run build
+RUN npm install -g pnpm@10.28.0
+RUN pnpm install --prod
+RUN pnpm run build

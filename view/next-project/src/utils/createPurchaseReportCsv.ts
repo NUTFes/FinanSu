@@ -39,7 +39,7 @@ export const createPurchaseReportCsv = async (
         label: '購入者',
       },
       {
-        getCustomValue: (row) => (row.purchaseReport.financeCheck ? '○' : '' || ''),
+        getCustomValue: (row) => (row.purchaseReport.financeCheck ? '○' : ''),
         label: '財務局長チェック',
       },
       {
