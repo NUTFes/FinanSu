@@ -5,8 +5,6 @@ RUN apk add --no-cache bash tzdata
 RUN addgroup -g 1000 gouser && \
     adduser -u 1000 -G gouser -s /bin/bash -D gouser
 
-WORKDIR /app
-
 ENV GOCACHE=/go/cache
 ENV GOMODCACHE=/go/pkg/mod
 ENV CGO_ENABLED=0
