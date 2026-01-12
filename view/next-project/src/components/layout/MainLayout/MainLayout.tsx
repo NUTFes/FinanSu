@@ -58,7 +58,7 @@ export default function MainLayout(props: LayoutProps) {
 
     validateSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasHydrated, router.pathname]);
+  }, [hasHydrated, router.pathname, isSignIn, accessToken, resetAuth, resetUser]);
 
   if (!hasHydrated || isChecking) {
     return (
