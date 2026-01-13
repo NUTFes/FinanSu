@@ -17,7 +17,6 @@ import MainLayout from '@/components/layout/MainLayout';
 import { Income } from '@/generated/model/income';
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
 import { useToast } from '@/hooks/useToast';
-import { notoSansJP } from '@/utils/fonts';
 
 interface FormFieldProps {
   id: string;
@@ -237,9 +236,7 @@ const EditFundInformation = () => {
 
   return (
     <MainLayout>
-      <div
-        className={`flex h-[calc(100vh-4rem)] items-center justify-center ${notoSansJP.className}`}
-      >
+      <div className={`flex h-[calc(100vh-4rem)] items-center justify-center`}>
         <div className='w-full max-w-[60%] min-w-75 px-4 py-8 sm:px-6 lg:px-8'>
           <Title className='mb-6 text-center' title='収入データ修正' />
 

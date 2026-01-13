@@ -20,8 +20,6 @@ import {
 } from '@/components/create_purchase_report/validators';
 import MainLayout from '@/components/layout/MainLayout';
 
-import { notoSansJP } from '@/utils/fonts';
-
 // スタイリング用定数
 const CONTAINER_HEIGHT_CLASS = 'h-[calc(100vh-4rem)]';
 const FORM_CONTAINER_CLASS = 'w-full min-w-[300px] max-w-[60%] px-4 py-8 sm:px-6 lg:px-8';
@@ -106,9 +104,7 @@ const PurchaseReportPage = () => {
   if (isEditMode && isReportDataLoading) {
     return (
       <MainLayout>
-        <div
-          className={`flex ${CONTAINER_HEIGHT_CLASS} items-center justify-center ${notoSansJP.className}`}
-        >
+        <div className={`flex ${CONTAINER_HEIGHT_CLASS} items-center justify-center`}>
           <div className='flex items-center justify-center'>
             <Spinner size='xl' />
             <p className='ml-3'>データを読み込み中...</p>
@@ -122,9 +118,7 @@ const PurchaseReportPage = () => {
 
   return (
     <MainLayout>
-      <div
-        className={`flex ${CONTAINER_HEIGHT_CLASS} items-center justify-center ${notoSansJP.className}`}
-      >
+      <div className={`flex ${CONTAINER_HEIGHT_CLASS} items-center justify-center`}>
         <div className={FORM_CONTAINER_CLASS}>
           <Title
             className='mb-6 text-center'
