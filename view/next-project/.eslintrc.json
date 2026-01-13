@@ -8,10 +8,9 @@
     "plugin:import/typescript",
     "plugin:react-hooks/recommended",
     "plugin:storybook/recommended",
-    "plugin:tailwindcss/recommended",
     "prettier"
   ],
-  "plugins": ["@typescript-eslint", "unused-imports", "import", "react-hooks", "tailwindcss"],
+  "plugins": ["@typescript-eslint", "unused-imports", "import", "react-hooks"],
   "parser": "@typescript-eslint/parser",
   "env": {
     "node": true,
