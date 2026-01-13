@@ -137,7 +137,7 @@ const PurchaseReportPage = () => {
               <FormField id='department' label='部門' isRequired isDisabled={isEditMode}>
                 {isEditMode && divisionName ? (
                   <input
-                    value={divisionName || ''}
+                    value={divisionName}
                     disabled
                     className='border-primary-1 w-full rounded-md border bg-gray-50 px-4 py-2 opacity-50'
                   />
@@ -160,7 +160,7 @@ const PurchaseReportPage = () => {
               <FormField id='product' label='物品' isRequired isDisabled={isEditMode}>
                 {isEditMode && festivalItemName ? (
                   <input
-                    value={festivalItemName || ''}
+                    value={festivalItemName}
                     disabled
                     className='border-primary-1 w-full rounded-md border bg-gray-50 px-4 py-2 opacity-50'
                   />
