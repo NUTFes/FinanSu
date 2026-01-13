@@ -1,4 +1,3 @@
-import { Box, useToast } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useState } from 'react';
 
@@ -9,6 +8,7 @@ import {
   useFundInformations,
 } from '@/components/fund_information/useFundInformations';
 import MainLayout from '@/components/layout/MainLayout';
+import { useToast } from '@/hooks/useToast';
 import { notoSansJP } from '@/pages/_app';
 
 const CreateFundInformation = () => {
@@ -64,10 +64,10 @@ const CreateFundInformation = () => {
         <title>収入報告作成</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-      <Box
+      <div
         className={`flex h-[calc(100vh-4rem)] items-center justify-center ${notoSansJP.className}`}
       >
-        <Box className='w-full min-w-[300px] max-w-[60%] px-4 py-8 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-[60%] min-w-75 px-4 py-8 sm:px-6 lg:px-8'>
           <Title className='mb-6 text-center' title='収入報告作成' />
           {error && <p className='mb-4 text-center text-red-500'>{error}</p>}
 
@@ -78,8 +78,8 @@ const CreateFundInformation = () => {
             incomeTypes={incomeTypes}
             isIncomeTypesLoading={isLoading}
           />
-        </Box>
-      </Box>
+        </div>
+      </div>
     </MainLayout>
   );
 };

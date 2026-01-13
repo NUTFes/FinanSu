@@ -1,20 +1,14 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  VStack,
-  Spinner,
-  FormErrorMessage,
-  RadioGroup,
-  Radio,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Select,
+  Spinner,
+} from '@/components/common';
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
 import { PrimaryButton } from '@components/common';
 
@@ -150,23 +144,23 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
 
   if (isLoading) {
     return (
-      <Box className='flex h-40 items-center justify-center'>
+      <div className='flex h-40 items-center justify-center'>
         <Spinner size='xl' />
         <p className='ml-3'>データを読み込み中...</p>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box>
+    <div>
       <form className='space-y-6'>
-        <VStack spacing={4} align='stretch'>
+        <div className='flex flex-col gap-4'>
           {/* 収入タイプ選択フォーム */}
           <FormField id='incomeType' label='収入の種類' isRequired>
             {isIncomeTypesLoading ? (
               <div className='flex items-center'>
-                <Spinner size='sm' mr={2} />
-                <Text>収入の種類を読み込み中...</Text>
+                <Spinner size='sm' className='mr-2' />
+                <span>収入の種類を読み込み中...</span>
               </div>
             ) : (
               <Select
@@ -187,11 +181,12 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
           {/* 企業名入力フォーム 企業協賛金の場合のみ表示する */}
           {isCompanySponsor && (
             <FormField id='sponsorName' label='企業名' isRequired>
-              <Input
+              <input
                 type='text'
                 value={formData.sponsorName || ''}
                 onChange={(e) => setFormData((prev) => ({ ...prev, sponsorName: e.target.value }))}
                 placeholder='企業名を入力してください'
+                className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
               />
             </FormField>
           )}
@@ -199,12 +194,13 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
           {/* 金額入力フォーム */}
           <FormControl id='amount' isRequired isInvalid={!!formErrors.amountError}>
             <FormLabel>金額</FormLabel>
-            <Input
+            <input
               type='text'
               value={formData.amount.toLocaleString()}
               onChange={handleAmountChange}
               placeholder='金額を入力してください'
               required
+              className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
             />
             {formErrors.amountError && (
               <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
@@ -222,34 +218,31 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
                 }))
               }
             >
-              <Stack direction='row'>
-                <Radio value='transfer'>振込</Radio>
-                <Radio value='hand'>手渡し</Radio>
-              </Stack>
+              <Radio value='transfer'>振込</Radio>
+              <Radio value='hand'>手渡し</Radio>
             </RadioGroup>
           </FormField>
-        </VStack>
+        </div>
       </form>
 
       {/* フォームアクション */}
-      <Box className='mt-6 flex justify-center space-x-4'>
+      <div className='mt-6 flex justify-center space-x-4'>
         <div className='flex flex-col gap-2'>
           <PrimaryButton disabled={!isFormValid} className='mx-auto' onClick={handleSubmit}>
-            {isProcessing ? <Spinner size='sm' color='white' mr={2} /> : null}
+            {isProcessing ? <Spinner size='sm' color='white' className='mr-2' /> : null}
             {submitButtonText}
           </PrimaryButton>
-          <Button
-            className='underline underline-offset-[5px]'
-            colorScheme='red'
-            variant='ghost'
+          <button
+            type='button'
+            className='text-accent-1 hover:text-accent-2 underline underline-offset-[5px] transition-colors disabled:opacity-50'
             onClick={onCancel}
-            isDisabled={isProcessing}
+            disabled={isProcessing}
           >
             キャンセル
-          </Button>
+          </button>
         </div>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

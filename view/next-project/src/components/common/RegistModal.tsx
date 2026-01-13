@@ -1,27 +1,14 @@
-import {
-  Box,
-  Center,
-  ChakraProvider,
-  Flex,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Select,
-  Spacer,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { post } from '@api/budget';
-import theme from '@assets/theme';
 import RegistButton from '@components/common/RegistButton';
 import { Budget, Source, Year } from '@type/common';
+
+import Input from './Input/Input';
+import Modal from './Modal';
+import Select from './Select/Select';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -95,90 +82,64 @@ const RegistModal: FC<ModalProps> = (props) => {
     await post(registBudgetUrl, data);
   };
 
+  if (!props.openModal) {
+    return null;
+  }
+
   return (
-    <ChakraProvider theme={theme}>
-      <Modal isOpen={props.openModal} onClose={closeModal} isCentered>
-        <ModalOverlay />
-        <ModalContent pb='5' borderRadius='3xl'>
-          <ModalBody p='3'>
-            <Flex mt='5'>
-              <Spacer />
-              <Box mr='5' _hover={{ background: '#E2E8F0', cursor: 'pointer' }}>
-                <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
-              </Box>
-            </Flex>
-            <VStack spacing='30px'>
-              <Text fontSize='xl' color='black.600'>
-                予算の登録
-              </Text>
-              <VStack spacing='15px'>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    年度
-                  </Center>
-                  <Select
-                    value={formData.yearID}
-                    onChange={handler('yearID')}
-                    borderRadius='full'
-                    borderColor='primary.1'
-                    w='224px'
-                  >
-                    {yearList.map((data) => (
-                      <option key={data.id} value={data.id}>
-                        {data.year}
-                      </option>
-                    ))}
-                  </Select>
-                </Flex>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    項目
-                  </Center>
-                  <Select
-                    value={formData.sourceID}
-                    onChange={handler('sourceID')}
-                    borderRadius='full'
-                    borderColor='primary.1'
-                    w='224px'
-                  >
-                    {sourceList.map((source) => (
-                      <option key={source.id} value={source.id}>
-                        {source.name}
-                      </option>
-                    ))}
-                  </Select>
-                </Flex>
-                <Flex>
-                  <Center color='black.600' mr='3'>
-                    金額
-                  </Center>
-                  <Input
-                    w='100'
-                    borderRadius='full'
-                    borderColor='primary.1'
-                    value={formData.price}
-                    onChange={handler('price')}
-                  />
-                </Flex>
-              </VStack>
-            </VStack>
-          </ModalBody>
-          <Center>
-            <ModalFooter mt='5' mb='10'>
-              <RegistButton
-                width='220px'
-                onClick={() => {
-                  registBudget(formData);
-                  router.reload();
-                }}
-              >
-                登録する
-              </RegistButton>
-            </ModalFooter>
-          </Center>
-        </ModalContent>
-      </Modal>
-    </ChakraProvider>
+    <Modal onClick={closeModal} className='w-full max-w-md'>
+      <div className='p-3'>
+        <div className='mt-5 flex justify-end'>
+          <div className='hover:bg-primary-3 mr-5 cursor-pointer rounded' onClick={closeModal}>
+            <RiCloseCircleLine size={'23px'} color={'gray'} />
+          </div>
+        </div>
+        <div className='flex flex-col items-center gap-8'>
+          <p className='text-black-600 text-xl'>予算の登録</p>
+          <div className='flex flex-col gap-4'>
+            <div className='flex items-center'>
+              <span className='text-black-600 mr-3'>年度</span>
+              <Select value={formData.yearID} onChange={handler('yearID')} className='w-56'>
+                {yearList.map((data) => (
+                  <option key={data.id} value={data.id}>
+                    {data.year}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className='flex items-center'>
+              <span className='text-black-600 mr-3'>項目</span>
+              <Select value={formData.sourceID} onChange={handler('sourceID')} className='w-56'>
+                {sourceList.map((source) => (
+                  <option key={source.id} value={source.id}>
+                    {source.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className='flex items-center'>
+              <span className='text-black-600 mr-3'>金額</span>
+              <Input
+                className='w-24 px-4 py-2'
+                value={formData.price}
+                onChange={handler('price')}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='mt-5 mb-10 flex justify-center'>
+        <RegistButton
+          width='220px'
+          onClick={() => {
+            registBudget(formData);
+            router.reload();
+          }}
+        >
+          登録する
+        </RegistButton>
+      </div>
+    </Modal>
   );
 };
 

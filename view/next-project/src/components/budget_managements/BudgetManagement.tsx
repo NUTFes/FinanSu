@@ -7,9 +7,9 @@ import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrima
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import { Year } from '@/type/common';
 
-import formatNumber from '../common/Formatter';
 import OpenDeleteModalButton from './OpenDeleteModalButton';
 import OpenEditModalButton from './OpenEditModalButton';
+import formatNumber from '../common/Formatter';
 
 import type {
   Division,

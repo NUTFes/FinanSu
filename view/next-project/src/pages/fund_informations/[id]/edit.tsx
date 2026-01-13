@@ -1,27 +1,22 @@
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+
 import {
-  Box,
-  Button,
-  Center,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
+  PrimaryButton,
   Radio,
   RadioGroup,
   Select,
   Spinner,
-  Stack,
-  useToast,
-  VStack,
-} from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-
-import { PrimaryButton, Title } from '@/components/common';
+  Title,
+} from '@/components/common';
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
 import MainLayout from '@/components/layout/MainLayout';
 import { Income } from '@/generated/model/income';
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
+import { useToast } from '@/hooks/useToast';
 import { notoSansJP } from '@/pages/_app';
 
 interface FormFieldProps {
@@ -216,12 +211,12 @@ const EditFundInformation = () => {
   if (isLoading) {
     return (
       <MainLayout>
-        <Box className='flex h-[calc(100vh-4rem)] items-center justify-center'>
-          <Center>
+        <div className='flex h-[calc(100vh-4rem)] items-center justify-center'>
+          <div className='flex items-center justify-center'>
             <Spinner size='xl' />
             <p className='ml-3'>データを読み込み中...</p>
-          </Center>
-        </Box>
+          </div>
+        </div>
       </MainLayout>
     );
   }
@@ -229,27 +224,27 @@ const EditFundInformation = () => {
   if (hookError) {
     return (
       <MainLayout>
-        <Box className='flex h-[calc(100vh-4rem)] items-center justify-center'>
-          <Center>
+        <div className='flex h-[calc(100vh-4rem)] items-center justify-center'>
+          <div className='flex items-center justify-center'>
             <p className='text-red-500'>
               収入データの取得中にエラーが発生しました。ページを更新してください。
             </p>
-          </Center>
-        </Box>
+          </div>
+        </div>
       </MainLayout>
     );
   }
 
   return (
     <MainLayout>
-      <Box
+      <div
         className={`flex h-[calc(100vh-4rem)] items-center justify-center ${notoSansJP.className}`}
       >
-        <Box className='w-full min-w-[300px] max-w-[60%] px-4 py-8 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-[60%] min-w-75 px-4 py-8 sm:px-6 lg:px-8'>
           <Title className='mb-6 text-center' title='収入データ修正' />
 
           <form className='space-y-6'>
-            <VStack spacing={4} align='stretch'>
+            <div className='flex flex-col gap-4'>
               <FormField id='incomeId' label='収入の種類' isRequired>
                 <Select
                   placeholder='選択してください'
@@ -267,7 +262,7 @@ const EditFundInformation = () => {
               {isCompanySponsor && (
                 <FormControl id='sponsorName' isRequired isInvalid={!!formErrors.sponsorNameError}>
                   <FormLabel>企業名</FormLabel>
-                  <Input
+                  <input
                     type='text'
                     value={incomeReport.sponsorName || ''}
                     onChange={(e) =>
@@ -275,6 +270,7 @@ const EditFundInformation = () => {
                     }
                     placeholder='企業名を入力してください'
                     required
+                    className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
                   />
                   {formErrors.sponsorNameError && (
                     <FormErrorMessage>{formErrors.sponsorNameError}</FormErrorMessage>
@@ -284,12 +280,13 @@ const EditFundInformation = () => {
 
               <FormControl id='amount' isRequired isInvalid={!!formErrors.amountError}>
                 <FormLabel>金額</FormLabel>
-                <Input
+                <input
                   type='text'
                   value={incomeReport.amount.toLocaleString()}
                   onChange={handleAmountChange}
                   placeholder='金額を入力してください'
                   required
+                  className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
                 />
                 {formErrors.amountError && (
                   <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
@@ -298,34 +295,31 @@ const EditFundInformation = () => {
 
               <FormField id='paymentMethod' label='支払い方法' isRequired>
                 <RadioGroup value={currentPaymentMethod} onChange={handlePaymentMethodChange}>
-                  <Stack direction='row'>
-                    <Radio value='bank-transfer'>振込</Radio>
-                    <Radio value='hand-delivery'>手渡し</Radio>
-                  </Stack>
+                  <Radio value='bank-transfer'>振込</Radio>
+                  <Radio value='hand-delivery'>手渡し</Radio>
                 </RadioGroup>
               </FormField>
-            </VStack>
+            </div>
           </form>
 
-          <Box className='mt-6 flex justify-center space-x-4'>
+          <div className='mt-6 flex justify-center space-x-4'>
             <div className='flex flex-col gap-2'>
               <PrimaryButton disabled={!isFormValid} className='mx-auto' onClick={handleSubmit}>
-                {isLoading ? <Spinner size='sm' color='white' mr={2} /> : null}
+                {isLoading ? <Spinner size='sm' color='white' className='mr-2' /> : null}
                 更新する
               </PrimaryButton>
-              <Button
-                className='underline underline-offset-[5px]'
-                colorScheme='red'
-                variant='ghost'
+              <button
+                type='button'
+                className='text-accent-1 hover:text-accent-2 underline underline-offset-[5px] transition-colors disabled:opacity-50'
                 onClick={() => router.back()}
-                isDisabled={isLoading}
+                disabled={isLoading}
               >
                 キャンセル
-              </Button>
+              </button>
             </div>
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+      </div>
     </MainLayout>
   );
 };

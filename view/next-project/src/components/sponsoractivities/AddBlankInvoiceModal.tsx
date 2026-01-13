@@ -245,7 +245,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   <div className='col-span-1'></div>
                 </div>
 
-                <div className='mb-4 max-h-[300px] space-y-2 overflow-y-auto'>
+                <div className='mb-4 max-h-75 space-y-2 overflow-y-auto'>
                   {items.map((item) => (
                     <div
                       key={item.id}
