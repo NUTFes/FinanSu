@@ -20,7 +20,7 @@ import {
 } from '@/components/create_purchase_report/validators';
 import MainLayout from '@/components/layout/MainLayout';
 
-import { notoSansJP } from '../_app';
+import { notoSansJP } from '@/utils/fonts';
 
 // スタイリング用定数
 const CONTAINER_HEIGHT_CLASS = 'h-[calc(100vh-4rem)]';

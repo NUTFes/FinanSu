@@ -1,4 +1,3 @@
-import localFont from 'next/font/local';
 import Head from 'next/head';
 import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 
@@ -9,11 +8,6 @@ import { ManagedUIContext } from '@components/ui/context';
 import type { AppProps } from 'next/app';
 
 import '@/styles/globals.css';
-
-export const notoSansJP = localFont({
-  src: '../../public/fonts/NotoSansJP-Regular.ttf',
-  display: 'swap',
-});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

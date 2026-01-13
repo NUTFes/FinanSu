@@ -15,7 +15,7 @@ function RadioGroup({ value, onChange, children, className, name }: RadioGroupPr
   return (
     <div className={clsx('flex flex-wrap gap-4', className)} role='radiogroup'>
       {Children.map(children, (child) => {
-        if (isValidElement(child) && child.props.value !== undefined) {
+        if (isValidElement(child) && (child as React.ReactElement<any>).props.value !== undefined) {
           return cloneElement(
             child as React.ReactElement<{
               name?: string;
@@ -25,7 +25,7 @@ function RadioGroup({ value, onChange, children, className, name }: RadioGroupPr
             }>,
             {
               name: groupName,
-              checked: child.props.value === value,
+              checked: (child as React.ReactElement<any>).props.value === value,
               onChange,
             },
           );

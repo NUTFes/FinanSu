@@ -9,7 +9,7 @@ import {
 } from '@/components/fund_information/useFundInformations';
 import MainLayout from '@/components/layout/MainLayout';
 import { useToast } from '@/hooks/useToast';
-import { notoSansJP } from '@/pages/_app';
+import { notoSansJP } from '@/utils/fonts';
 
 const CreateFundInformation = () => {
   const toast = useToast();

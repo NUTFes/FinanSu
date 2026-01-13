@@ -17,7 +17,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import { Income } from '@/generated/model/income';
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
 import { useToast } from '@/hooks/useToast';
-import { notoSansJP } from '@/pages/_app';
+import { notoSansJP } from '@/utils/fonts';
 
 interface FormFieldProps {
   id: string;
