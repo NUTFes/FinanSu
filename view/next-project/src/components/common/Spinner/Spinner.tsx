@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import type { JSX } from "react";
+
 type SpinnerSize = 'sm' | 'md' | 'lg' | 'xl';
 
 interface SpinnerProps {

@@ -1,4 +1,8 @@
 import clsx from 'clsx';
+
+import type React from 'react';
+import type { JSX } from 'react';
+
 interface Props {
   className?: string;
   value: string;

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 type LayoutProps = {
   children: React.ReactNode;

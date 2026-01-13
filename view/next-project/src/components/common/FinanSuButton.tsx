@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface Props {
   size?: 'small' | 'medium' | 'large';

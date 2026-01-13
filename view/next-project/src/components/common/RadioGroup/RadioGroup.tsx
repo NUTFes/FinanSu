@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { Children, cloneElement, isValidElement } from 'react';
+import React, { Children, cloneElement, isValidElement, type JSX } from 'react';
 
 interface RadioGroupProps {
   value?: string;

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, type JSX } from 'react';
 
 interface FormControlContextValue {
   id?: string;

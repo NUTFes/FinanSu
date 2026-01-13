@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import { useFormControlContext } from '../FormControl/FormControl';
 
