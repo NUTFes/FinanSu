@@ -31,49 +31,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     const form = formidable();
 
-    form.parse(req, async (err, fields, files: any) => {
-      if (err) {
-        throw new Error('Error parsing form');
-      }
+    form.parse(
+      req,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async (err, fields, files: any) => {
+        if (err) {
+          throw new Error('Error parsing form');
+        }
 
-      const bucketName = 'finansu';
-      const year = fields.year && fields.year[0];
-      const fileName = fields.fileName
-        ? `${year}/receipts/${fields.fileName}`
-        : `${year}/receipts/${files.file[0].originalFilename}`;
-      const file = files.file[0];
-      const mimetype = file.mimetype;
-      const metaData = {
-        'Content-Type': mimetype,
-      };
+        const bucketName = 'finansu';
+        const year = fields.year && fields.year[0];
+        const fileName = fields.fileName
+          ? `${year}/receipts/${fields.fileName}`
+          : `${year}/receipts/${files.file[0].originalFilename}`;
+        const file = files.file[0];
+        const mimetype = file.mimetype;
+        const metaData = {
+          'Content-Type': mimetype,
+        };
 
-      try {
-        const fileStat = await fs.promises.stat(files.file[0].filepath);
-        const response = await minioClient.putObject(
-          bucketName,
-          fileName,
-          fs.createReadStream(files.file[0].filepath),
-          fileStat.size,
-          metaData,
-        );
-      } catch (err) {
-        res.status(400).json({ message: '失敗' });
-        throw new Error('Error uploading file (' + err + ')');
-      }
-      return res.status(200).json({ message: '成功' });
-    });
+        try {
+          const fileStat = await fs.promises.stat(files.file[0].filepath);
+          await minioClient.putObject(
+            bucketName,
+            fileName,
+            fs.createReadStream(files.file[0].filepath),
+            fileStat.size,
+            metaData,
+          );
+        } catch (err) {
+          res.status(400).json({ message: '失敗' });
+          throw new Error('Error uploading file (' + err + ')');
+        }
+        return res.status(200).json({ message: '成功' });
+      },
+    );
   }
 
   // 変更の場合の画像を削除する
   if (req.method === 'DELETE') {
     const form = formidable();
 
-    form.parse(req, async (err, fields, files: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    form.parse(req, async (err, fields, _files: any) => {
       if (err) {
         throw new Error('Error parsing form');
       }
 
-      const bucketName = BUCKET_NAME;
+      const _bucketName = BUCKET_NAME;
       const year = fields.year && fields.year[0];
       const fileName = fields.fileName && fields.fileName;
       const filePath = `${year}/receipts/${fileName}`;

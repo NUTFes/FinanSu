@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
@@ -15,8 +14,6 @@ interface ModalProps {
 }
 
 export default function PurchaseItemNumModal(props: ModalProps) {
-  const router = useRouter();
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = () => {
     setIsOpen(true);

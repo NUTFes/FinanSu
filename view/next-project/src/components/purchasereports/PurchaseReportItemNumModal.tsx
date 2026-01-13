@@ -27,6 +27,7 @@ export default function PurchaseReportItemNumModal() {
       setYearPeriods(res);
     };
     getPeriods();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const user = useUserStore((state) => state.user);

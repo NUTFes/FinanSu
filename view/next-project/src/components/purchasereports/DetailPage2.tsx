@@ -1,12 +1,13 @@
 import { saveAs } from 'file-saver';
-import React, { FC, useEffect, useState } from 'react';
+import Image from 'next/image';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 
 import { del, get } from '@api/api_methods';
 import { Receipt } from '@type/common';
 
-import { DeleteButton, OutlinePrimaryButton, PrimaryButton, Loading } from '../common';
+import { DeleteButton, Loading, OutlinePrimaryButton, PrimaryButton } from '../common';
 import UploadFileModal from './UploadFileModal';
 
 interface ModalProps {
@@ -26,11 +27,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
   const [receiptsData, setReceiptsData] = useState<Receipt[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const getReceipts = async () => {
+  const getReceipts = useCallback(async () => {
     const getReceiptURL = `${process.env.CSR_API_URI}/receipts/reports/${id}`;
     const res: Receipt[] = await get(getReceiptURL);
     setReceiptsData(res);
-  };
+  }, [id]);
 
   const createURL = (receipt: Receipt) => {
     const url = `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/${receipt.bucketName}/${year}/receipts/${receipt.fileName}`;
@@ -96,7 +97,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
   useEffect(() => {
     getReceipts();
     setIsLoading(false);
-  }, []);
+  }, [getReceipts]);
 
   return (
     <div className='w-96 md:w-full'>
@@ -117,7 +118,13 @@ const DetailPage2: FC<ModalProps> = (props) => {
                   <embed src={createURL(receipt)} type='application/pdf' width='200' />
                 )}
                 {receipt.fileType !== 'application/pdf' && receipt.fileName && (
-                  <img src={createURL(receipt)} alt='Picture of the author' width='200' />
+                  <Image
+                    src={createURL(receipt)}
+                    alt='Picture of the author'
+                    width={200}
+                    height={200}
+                    style={{ width: 'auto', height: 'auto' }}
+                  />
                 )}
               </div>
               <div className='my-1 flex flex-wrap justify-center gap-7 '>

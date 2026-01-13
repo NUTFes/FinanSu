@@ -100,6 +100,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       });
     if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
     return res;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bureauId]);
 
   const formDataHandler =
@@ -168,6 +169,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         remark: '',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSelectSponsorBooth]);
 
   const currentYear = yearPeriods
@@ -193,10 +195,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   useEffect(() => {
     getSponsors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
   useEffect(() => {
     setFormData({ ...formData, sponsorID: Number(formDataSponsorID) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formDataSponsorID]);
 
   const NO_SPONSORS_MESSAGE = '企業が登録されていません';

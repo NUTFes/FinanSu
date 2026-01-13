@@ -3,7 +3,7 @@ import { FormEvent, useState } from 'react';
 
 import LoginLayout from '@/components/layout/LoginLayout';
 import { reserPasswordRequest } from '@/utils/api/resetPassword';
-import { PrimaryButton, Link, Loading, PrimaryLink } from '@components/common';
+import { Link, Loading, PrimaryButton, PrimaryLink } from '@components/common';
 
 export default function Periods() {
   const [email, setEmail] = useState<string>('');
@@ -15,7 +15,7 @@ export default function Periods() {
     setIsLoading(true);
     const requestUrl = process.env.CSR_API_URI + '/password_reset/request';
 
-    const req = await reserPasswordRequest(requestUrl, email);
+    const _req = await reserPasswordRequest(requestUrl, email);
     setIsLoading(false);
 
     setIsSubmitted(true);

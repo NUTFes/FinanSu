@@ -44,7 +44,7 @@ export default function BudgetManagement(props: Props) {
     division_id: divisionId ?? undefined,
   };
 
-  const [selectedYear, setSelectedYear] = useState<Year>(
+  const [selectedYear, _setSelectedYear] = useState<Year>(
     // 本番環境では、2025のyear_idを1にします
     years ? years[years.length - 1] : { id: 1, year: 2025 },
   );
@@ -148,7 +148,7 @@ export default function BudgetManagement(props: Props) {
     }
   }, [financialRecordId, divisionId, selectedYear.id, financialRecords, divisions]);
 
-  const handleRowClick = (item: any) => {
+  const handleRowClick = (item: { id?: number }) => {
     if (financialRecordId === null) {
       setQueryState({ financialRecordId: item.id, divisionId: null, festivalItemId: null });
       return;

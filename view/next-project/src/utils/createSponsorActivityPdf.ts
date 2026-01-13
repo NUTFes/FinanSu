@@ -20,24 +20,9 @@ export const createSponsorActivityFormPdf = async (
     { subset: true },
   );
   // 日本語フォント以外を判定する関数
-  const isNonJapaneseFont = (str: string): boolean => {
+  const _isNonJapaneseFont = (str: string): boolean => {
     const nonJapaneseRegex = /^[A-Za-z0-9!-~\s]*$/;
     return nonJapaneseRegex.test(str);
-  };
-  //文字列を省略する関数
-  const truncateString = (str: string, maxLength: number, maxLength2: number) => {
-    if (isNonJapaneseFont(str)) {
-      return str.length > maxLength2 ? `${str.slice(0, maxLength2)}...` : str;
-    } else {
-      return str.length > maxLength ? `${str.slice(0, maxLength - 1)}…` : str;
-    }
-  };
-  const fontSizeFunc = (str: string) => {
-    if (isNonJapaneseFont(str)) {
-      return 8;
-    } else {
-      return fontSizes[2];
-    }
   };
   //フォントのサイズ
   const fontSizes = [12, 24, 8, 14, 16];

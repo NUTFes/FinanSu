@@ -2,13 +2,13 @@ import { Context } from 'vm';
 
 import Image from 'next/image';
 import Router from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoginLayout from '@/components/layout/LoginLayout';
 import { PasswordResetData } from '@/type/common';
 import { resetPassword, resetPasswordTokenValid } from '@/utils/api/resetPassword';
-import { PrimaryButton, Link, Loading, PrimaryLink } from '@components/common';
+import { Link, Loading, PrimaryButton, PrimaryLink } from '@components/common';
 
 interface Props {
   isTokenValid: boolean;
@@ -57,7 +57,7 @@ export default function ResetPassword(props: Props) {
     mode: 'all',
   });
 
-  const onSubmit = async (data: { password: string; confirmPassword: string }) => {
+  const onSubmit = async (_data: { password: string; confirmPassword: string }) => {
     setIsLoading(true);
     const postData: PasswordResetData = {
       ...postPasswordData,

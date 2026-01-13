@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 
 import { Expense, PurchaseReportView } from '@/type/common';
@@ -15,7 +14,7 @@ interface Props {
   isDisabled: boolean;
 }
 
-const InitialModal: React.FC<{ setStep: (step: string) => void; closeModal: () => void }> = ({
+const InitialModal: React.FC<{ setStep: (_step: string) => void; closeModal: () => void }> = ({
   setStep,
   closeModal,
 }) => (

@@ -1,12 +1,9 @@
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { usePostFestivalItems, usePostFinancialRecords, usePostDivisions } from '@/generated/hooks';
+import { usePostDivisions, usePostFestivalItems, usePostFinancialRecords } from '@/generated/hooks';
 import { Year } from '@/type/common';
-import { PrimaryButton, Input, Modal } from '@components/common';
+import { Input, Modal, PrimaryButton } from '@components/common';
 
 import formatNumber from '../common/Formatter';
 
@@ -35,8 +32,6 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const [divisionName, setDivisionName] = useState(div?.name ?? '');
   const [festivalItemName, setFestivalItemName] = useState('');
   const [amount, setAmount] = useState<number | null>(null);
-
-  const router = useRouter();
 
   const closeModal = () => {
     props.setShowModal(false);
@@ -97,9 +92,10 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error: any) {
-      console.error('登録エラー:', error.message);
-      alert(`登録エラー: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      console.error('登録エラー:', errorMessage);
+      alert(`登録エラー: ${errorMessage}`);
     }
   };
 

@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Select from 'react-select';
 
 interface Option {
@@ -18,7 +18,7 @@ interface SearchSelectProps {
 const SearchSelect: React.FC<SearchSelectProps> = ({
   options,
   value,
-  onChange,
+  onChange: _onChange,
   setID,
   noOptionMessage,
   placeholder,
@@ -27,7 +27,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 
   useEffect(() => {
     setSelected(value || (options && options[0]) || null);
-  }, [options]);
+  }, [options, value]);
 
   return (
     <Select

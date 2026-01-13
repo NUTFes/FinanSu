@@ -75,6 +75,7 @@ export default function EditModal(props: ModalProps) {
 
   useEffect(() => {
     getSponsors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
   const styleOotions = useMemo(() => {
@@ -120,6 +121,7 @@ export default function EditModal(props: ModalProps) {
         remark: '',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSelectSponsorBooth]);
 
   const handler =
@@ -194,6 +196,7 @@ export default function EditModal(props: ModalProps) {
       setFormData({ ...formData, userID: res[0].id });
     }
     return res;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bureauId]);
 
   const sponsorOptions = useMemo(() => {
@@ -208,6 +211,7 @@ export default function EditModal(props: ModalProps) {
 
   useEffect(() => {
     setFormData({ ...formData, sponsorID: Number(formDataSponsorID) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formDataSponsorID]);
 
   const NO_SPONSORS_MESSAGE = '企業が登録されていません';

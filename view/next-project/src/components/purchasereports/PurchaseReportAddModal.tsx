@@ -133,6 +133,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
       // 購入申請を新しく作成したかどうかで判断
       props.purchaseOrder ? createNonePurchaseItems() : getPurchaseItems();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, getPurchaseItems]);
 
   // 購入報告用のhandler

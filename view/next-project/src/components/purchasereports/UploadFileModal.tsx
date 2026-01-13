@@ -1,4 +1,5 @@
-import React, { FC, useState, useCallback } from 'react';
+import Image from 'next/image';
+import { FC, useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { MdFileUpload } from 'react-icons/md';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -7,7 +8,7 @@ import { post, put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
 import { Receipt } from '@type/common';
 
-import { PrimaryButton, Loading } from '../common';
+import { Loading, PrimaryButton } from '../common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -38,7 +39,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     const formData = new FormData();
     formData.append('fileName', `${receipt?.fileName}`);
     formData.append('year', year);
-    const response = await fetch('/api/receipts', {
+    const _response = await fetch('/api/receipts', {
       method: 'DELETE',
       body: formData,
     })
@@ -180,7 +181,14 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
             />
           ) : (
             preview.type !== '' && (
-              <img src={preview.uploadImageURL} className='mx-auto object-scale-down ' />
+              <Image
+                src={preview.uploadImageURL}
+                alt='Preview image'
+                width={200}
+                height={200}
+                className='mx-auto object-scale-down'
+                style={{ width: 'auto', height: 'auto' }}
+              />
             )
           )}
           {preview.uploadImageURL === '' && (

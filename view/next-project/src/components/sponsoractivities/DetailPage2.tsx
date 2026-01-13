@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { saveAs } from 'file-saver';
-import React, { FC, useEffect, useState } from 'react';
+import Image from 'next/image';
+import { FC, useEffect, useState } from 'react';
 import { FaCheckCircle, FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -56,6 +57,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
       sponsorActivityInformations: sponsorActivityInformations,
     };
     props.setSponsorActivitiesView(newSponsorActivitiesView);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sponsorActivityInformations]);
 
   const designProgresses =
@@ -95,11 +97,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
       (sponsorActivityInformation) => sponsorActivityInformation.id !== id,
     );
     if (activityInformation.fileName === '') {
-      const res = await del(deleteSponsorActivityInformationUrl);
+      await del(deleteSponsorActivityInformationUrl);
     } else {
       const confirm = window.confirm('本当に削除してよろしいですか？');
       if (confirm) {
-        const response = await fetch('/api/advertisements', {
+        await fetch('/api/advertisements', {
           method: 'DELETE',
           body: formData,
         })
@@ -114,7 +116,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
           .catch((error) => {
             console.error('Error:', error);
           });
-        const res = await del(deleteSponsorActivityInformationUrl);
+        await del(deleteSponsorActivityInformationUrl);
       } else {
         window.alert('キャンセルしました');
         return;
@@ -134,8 +136,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
       designProgress: 1,
       fileInformation: '',
     };
-    const res = await post(sponsorActivitiesUrl, nullData);
-    const newSponsorActivityInformations = [...sponsorActivityInformations, res];
+    const createdInfo = await post(sponsorActivitiesUrl, nullData);
+    const newSponsorActivityInformations = [...sponsorActivityInformations, createdInfo];
     setSponsorActivityInformations(newSponsorActivityInformations);
     setIsEditInformations([...isEditInformations, false]);
     props.setIsChange(true);
@@ -151,7 +153,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
       ...activityInformation,
       designProgress: Number(e.target.value),
     };
-    const res = await put(sponsorActivitiesUrl, updateActivityInformation);
+    await put(sponsorActivitiesUrl, updateActivityInformation);
     const newSponsorActivityInformations = sponsorActivityInformations.map(
       (sponsorActivityInformation) => {
         if (sponsorActivityInformation.id === activityInformation.id) {
@@ -171,7 +173,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
       ...activityInformation,
       fileInformation: activityInformationData,
     };
-    const res = await put(sponsorActivitiesUrl, updateActivityInformation);
+    await put(sponsorActivitiesUrl, updateActivityInformation);
     const newSponsorActivityInformations = sponsorActivityInformations.map(
       (sponsorActivityInformation) => {
         if (sponsorActivityInformation.id === activityInformation.id) {
@@ -336,10 +338,12 @@ const DetailPage2: FC<ModalProps> = (props) => {
                   )}
                 {activityInformation.fileType !== 'application/pdf' &&
                   activityInformation.fileName && (
-                    <img
+                    <Image
                       src={fileURLs && fileURLs[index]}
                       alt='Picture of the author'
-                      width='160'
+                      width={160}
+                      height={160}
+                      style={{ width: 'auto', height: 'auto' }}
                     />
                   )}
               </div>

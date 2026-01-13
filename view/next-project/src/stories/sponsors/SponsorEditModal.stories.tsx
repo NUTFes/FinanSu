@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import SponsorEditModal from '@components/sponsors/SponsorEditModal';
 import { Sponsor } from '@type/common';
@@ -12,7 +12,7 @@ export default {
 } as Meta<typeof SponsorEditModal>;
 
 const Template: StoryFn<typeof SponsorEditModal> = (args) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [_isOpen, setIsOpen] = useState(true);
   return <SponsorEditModal {...args} setIsOpen={setIsOpen} />;
 };
 
