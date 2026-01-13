@@ -1,13 +1,11 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuthStore, useUserStore } from '@/store';
 import { Header, Loading, SideNav } from '@components/common';
 import { get_with_token_valid } from '@utils/api/api_methods';
-
-import s from './MainLayout.module.css';
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -74,33 +72,29 @@ export default function MainLayout(props: LayoutProps) {
         <meta name='' content='' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div className={clsx('h-screen w-full')}>
-        <div className={clsx('h-16 w-full')}>
-          {router.pathname !== '/' && (
+      <div className='flex h-screen w-full flex-col overflow-hidden bg-gray-50'>
+        {router.pathname !== '/' && (
+          <div className='h-16 w-full shrink-0'>
             <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
-          )}
-        </div>
-        <div className={clsx(s.parent)}>
+          </div>
+        )}
+        <div className='flex flex-1 overflow-hidden relative'>
           {router.pathname !== '/' && (
-            <div
+            <aside
               className={clsx(
-                { 'invisible opacity-0 md:visible md:opacity-100': isSideNavOpen },
-                { 'visible opacity-100 md:invisible md:opacity-0': !isSideNavOpen },
-                'transition-all',
+                'z-20 bg-primary-4 transition-all duration-300 ease-in-out',
+                'md:static md:block md:h-full',
+                isSideNavOpen
+                  ? 'md:w-52 md:translate-x-0 md:opacity-100'
+                  : 'md:w-0 md:-translate-x-full md:opacity-0 md:overflow-hidden',
+                'fixed top-16 bottom-0 right-0',
+                !isSideNavOpen ? 'w-52 translate-x-0 shadow-xl' : 'w-0 translate-x-full',
               )}
             >
               <SideNav />
-            </div>
+            </aside>
           )}
-          <div
-            className={clsx(
-              'size-full',
-              { 'md:w-7/8': isSideNavOpen && router.pathname !== '/' },
-              s.content,
-            )}
-          >
-            {props.children}
-          </div>
+          <main className={clsx('flex-1 overflow-y-auto w-full relative')}>{props.children}</main>
         </div>
       </div>
     </>
