@@ -10,6 +10,8 @@ import 'tailwindcss/tailwind.css';
 
 import s from './MainLayout.module.css';
 
+const CURRENT_USER_URL = process.env.CSR_API_URI + '/current_user';
+
 interface LayoutProps {
   children?: React.ReactNode;
 }
@@ -22,6 +24,8 @@ export default function MainLayout(props: LayoutProps) {
 
   const [isChecking, setIsChecking] = useState(true);
 
+  const isLoginPage = router.pathname === '/';
+
   const hasHydrated = authHasHydrated && userHasHydrated;
 
   useEffect(() => {
@@ -33,15 +37,14 @@ export default function MainLayout(props: LayoutProps) {
         return;
       }
 
-      const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
-      const isValid = await get_with_token_valid(getCurrentUserUrl, accessToken);
+      const isValid = await get_with_token_valid(CURRENT_USER_URL, accessToken);
 
       if (!isValid) {
         await handleLogout();
+      } else if (router.pathname === '/') {
+        await router.push('/my_page');
+        setIsChecking(false);
       } else {
-        if (router.pathname === '/') {
-          await router.push('/my_page');
-        }
         setIsChecking(false);
       }
     };
@@ -50,7 +53,7 @@ export default function MainLayout(props: LayoutProps) {
       resetAuth();
       resetUser();
 
-      if (router.pathname !== '/') {
+      if (!isLoginPage) {
         await router.push('/');
       }
       setIsChecking(false);
@@ -77,12 +80,10 @@ export default function MainLayout(props: LayoutProps) {
       </Head>
       <div className={clsx('h-screen w-full')}>
         <div className={clsx('h-16 w-full')}>
-          {router.pathname !== '/' && (
-            <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
-          )}
+          {!isLoginPage && <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />}
         </div>
         <div className={clsx(s.parent)}>
-          {router.pathname !== '/' && (
+          {!isLoginPage && (
             <div
               className={clsx(
                 { 'invisible opacity-0 md:visible md:opacity-100': isSideNavOpen },
@@ -94,11 +95,7 @@ export default function MainLayout(props: LayoutProps) {
             </div>
           )}
           <div
-            className={clsx(
-              'size-full',
-              { 'md:w-7/8': isSideNavOpen && router.pathname !== '/' },
-              s.content,
-            )}
+            className={clsx('size-full', { 'md:w-7/8': isSideNavOpen && !isLoginPage }, s.content)}
           >
             {props.children}
           </div>
