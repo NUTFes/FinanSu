@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { get, post } from '@api/api_methods';
 import { post as postItem, put } from '@api/purchaseItem';
 import { post as postOrder } from '@api/purchaseOrder';
@@ -35,7 +35,7 @@ interface ModalProps {
 }
 
 export default function PurchaseReportAddModal(props: ModalProps) {
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
 
   const router = useRouter();
 

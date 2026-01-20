@@ -6,14 +6,14 @@ import { Card, Loading, PrimaryButton } from '@/components/common';
 import MainLayout from '@/components/layout/MainLayout';
 import TableSection from '@/components/mypage/TableSection';
 import { useGetFestivalItemsDetailsUserId } from '@/generated/hooks';
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { User } from '@/type/common';
 
 import { notoSansJP } from '../_app';
 
 const MyPage = () => {
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
 
   useEffect(() => {

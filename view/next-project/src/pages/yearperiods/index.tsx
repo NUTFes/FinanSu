@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
 import OpenDeleteModalButton from '@/components/yearperiods/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/yearperiods/OpenEditModalButton';
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
@@ -31,7 +31,7 @@ export default function Periods(props: Props) {
   const { yearPeriods } = props;
   const router = useRouter();
 
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
 
   const formatYearPeriods =

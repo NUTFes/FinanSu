@@ -3,12 +3,12 @@ import router from 'next/router';
 
 import { FundInformationHeader, FundInformationTable } from '@/components/fund_information';
 import { useFundInformations } from '@/components/fund_information/useFundInformations';
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { Card } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 
 export default function FundInformations() {
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
 
   user?.roleID === 1 && router.push('/my_page');
 

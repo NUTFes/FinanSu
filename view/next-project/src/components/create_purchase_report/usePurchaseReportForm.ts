@@ -9,7 +9,7 @@ import {
   usePutBuyReportsId,
 } from '@/generated/hooks';
 import { DivisionOption, FestivalItemOption } from '@/generated/model';
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 
 import type { BuyReport, PostBuyReportsBody, PutBuyReportsIdBody } from '@/generated/model';
 
@@ -48,7 +48,7 @@ export const usePurchaseReportForm = (router: NextRouter) => {
   const reportId = reportIdParam ? Number(reportIdParam) : undefined;
   const isEditMode = from === 'purchase_report_list';
 
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
   const [departments, setDepartments] = useState<DivisionOption[]>([]);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [festivalItems, setFestivalItems] = useState<FestivalItemOption[]>([]);

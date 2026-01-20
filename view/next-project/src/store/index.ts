@@ -1,2 +1,2 @@
 export { useAuthStore } from './authStore';
-export { useUserStore } from './userStore';
+export { useCurrentUser, useUserStore } from './userStore';

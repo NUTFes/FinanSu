@@ -11,7 +11,7 @@ import {
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -30,7 +30,7 @@ export default function PurchaseReports() {
     error: yearPeriodsError,
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
 
   user?.roleID === 1 && router.push('/my_page');
 

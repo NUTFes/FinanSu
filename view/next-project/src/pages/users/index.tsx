@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
 import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
@@ -35,7 +35,7 @@ export default function Users(props: Props) {
   const { users, bureaus } = props;
   const router = useRouter();
 
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
   const [selectedBureau, setSelectedBureau] = useState(0);
   const [filterUsers, setFilterUsers] = useState<User[]>(users);
