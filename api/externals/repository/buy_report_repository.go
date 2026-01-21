@@ -45,7 +45,7 @@ func (brr *buyReportRepository) CreateBuyReport(
 ) (int64, error) {
 	var id int64
 	ds := dialect.Insert("buy_reports").
-		Rows(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy})
+		Rows(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy, "paid_by_user_id": buyReportInfo.PaidByUserId})
 	query, _, err := ds.ToSQL()
 	if err != nil {
 		return id, err
@@ -76,7 +76,7 @@ func (brr *buyReportRepository) UpdateBuyReport(
 	buyReportInfo PostBuyReport,
 ) error {
 	ds := dialect.Update("buy_reports").
-		Set(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy}).
+		Set(goqu.Record{"festival_item_id": buyReportInfo.FestivalItemID, "amount": buyReportInfo.Amount, "memo": "", "paid_by": buyReportInfo.PaidBy, "paid_by_user_id": buyReportInfo.PaidByUserId}).
 		Where(goqu.Ex{"id": id})
 
 	query, _, err := ds.ToSQL()
@@ -178,7 +178,7 @@ func (brr *buyReportRepository) GetBuyReportById(
 	id string,
 ) (*sql.Row, error) {
 	query, _, err := dialect.From("buy_reports").
-		Select("id", "festival_item_id", "amount", "paid_by").
+		Select("id", "festival_item_id", "amount", "paid_by", "paid_by_user_id").
 		Where(goqu.Ex{"buy_reports.id": id}).
 		ToSQL()
 	if err != nil {
@@ -333,5 +333,6 @@ var selectBuyReportWithDivisionIdDetailsQuery = dialect.From("buy_reports").Sele
 	"buy_reports.festival_item_id",
 	"buy_reports.amount",
 	"buy_reports.paid_by",
+	"buy_reports.paid_by_user_id",
 ).
 	InnerJoin(goqu.I("festival_items"), goqu.On(goqu.I("buy_reports.festival_item_id").Eq(goqu.I("festival_items.id"))))

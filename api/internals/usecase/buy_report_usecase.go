@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"database/sql"
 	"log"
 	"mime/multipart"
 	"strconv"
@@ -19,6 +20,7 @@ type buyReportUseCase struct {
 	tRep rep.TransactionRepository
 	oRep rep.ObjectHandleRepository
 	iRep rep.IncomeExpenditureManagementRepository
+	uRep rep.UserRepository
 }
 
 type BuyReportUseCase interface {
@@ -35,14 +37,50 @@ func NewBuyReportUseCase(
 	tRep rep.TransactionRepository,
 	oRep rep.ObjectHandleRepository,
 	iRep rep.IncomeExpenditureManagementRepository,
+	uRep rep.UserRepository,
 ) BuyReportUseCase {
-	return &buyReportUseCase{bRep, tRep, oRep, iRep}
+	return &buyReportUseCase{bRep, tRep, oRep, iRep, uRep}
 }
 
 func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo PostBuyReport, file *multipart.FileHeader) (PostBuyReport, error) {
 	var resBuyReport PostBuyReport
 	// トランザクションスタート
-	tx, _ := bru.tRep.StartTransaction(c)
+	tx, err := bru.tRep.StartTransaction(c)
+	if err != nil {
+		return buyReportInfo, err
+	}
+
+	// paidByUserIdから支払者名を取得
+	if buyReportInfo.PaidByUserId != nil {
+		row, err := bru.uRep.Find(c, strconv.Itoa(*buyReportInfo.PaidByUserId))
+		if err != nil {
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
+			return buyReportInfo, err
+		}
+
+		user := domain.User{}
+		if err := row.Scan(
+			&user.ID,
+			&user.Name,
+			&user.BureauID,
+			&user.RoleID,
+			&user.IsDeleted,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		); err != nil {
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
+			return buyReportInfo, err
+		}
+
+		buyReportInfo.PaidBy = &user.Name
+	} else if buyReportInfo.PaidBy == nil {
+		_ = bru.tRep.RollBack(c, tx)
+		return buyReportInfo, errors.New("paidByUserId or paidBy is required")
+	}
 
 	// buy_report の作成
 	buyReportId, err := bru.bRep.CreateBuyReport(c, tx, buyReportInfo)
@@ -113,14 +151,26 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 		return buyReportInfo, err
 	}
 
+	var id int
+	var paidBy string
+	var paidByUserID sql.NullInt64
+
 	err = row.Scan(
-		&resBuyReport.Id,
+		&id,
 		&resBuyReport.FestivalItemID,
 		&resBuyReport.Amount,
-		&resBuyReport.PaidBy,
+		&paidBy,
+		&paidByUserID,
 	)
 	if err != nil {
 		return buyReportInfo, err
+	}
+
+	resBuyReport.Id = &id
+	resBuyReport.PaidBy = &paidBy
+	if paidByUserID.Valid {
+		v := int(paidByUserID.Int64)
+		resBuyReport.PaidByUserId = &v
 	}
 
 	return resBuyReport, nil
@@ -132,6 +182,38 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 	tx, err := bru.tRep.StartTransaction(c)
 	if err != nil {
 		return resBuyReport, err
+	}
+
+	// paidByUserIdから支払者名を取得
+	if buyReportInfo.PaidByUserId != nil {
+		row, err := bru.uRep.Find(c, strconv.Itoa(*buyReportInfo.PaidByUserId))
+		if err != nil {
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
+			return buyReportInfo, err
+		}
+
+		user := domain.User{}
+		if err := row.Scan(
+			&user.ID,
+			&user.Name,
+			&user.BureauID,
+			&user.RoleID,
+			&user.IsDeleted,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		); err != nil {
+			if err = bru.tRep.RollBack(c, tx); err != nil {
+				return buyReportInfo, err
+			}
+			return buyReportInfo, err
+		}
+
+		buyReportInfo.PaidBy = &user.Name
+	} else if buyReportInfo.PaidBy == nil {
+		_ = bru.tRep.RollBack(c, tx)
+		return buyReportInfo, errors.New("paidByUserId or paidBy is required")
 	}
 
 	// buy_report の更新
@@ -217,14 +299,26 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 		return resBuyReport, err
 	}
 
+	var id int
+	var paidBy string
+	var paidByUserID sql.NullInt64
+
 	err = row.Scan(
-		&resBuyReport.Id,
+		&id,
 		&resBuyReport.FestivalItemID,
 		&resBuyReport.Amount,
-		&resBuyReport.PaidBy,
+		&paidBy,
+		&paidByUserID,
 	)
 	if err != nil {
 		return resBuyReport, err
+	}
+
+	resBuyReport.Id = &id
+	resBuyReport.PaidBy = &paidBy
+	if paidByUserID.Valid {
+		v := int(paidByUserID.Int64)
+		resBuyReport.PaidByUserId = &v
 	}
 
 	return resBuyReport, nil
@@ -453,18 +547,25 @@ func (bru *buyReportUseCase) GetBuyReportById(c context.Context, buyReportId str
 		return buyReport, err
 	}
 
+	var paidByUserID sql.NullInt64
+
 	err = row.Scan(
 		&buyReport.Id,
 		&buyReport.DivisionId,
 		&buyReport.FestivalItemID,
 		&buyReport.Amount,
 		&buyReport.PaidBy,
+		&paidByUserID,
 	)
 
 	if err != nil {
 		return buyReport, errors.Wrapf(err, "failed to scan SQL row for buy report id %s", buyReportId)
 	}
 
+	if paidByUserID.Valid {
+		v := int(paidByUserID.Int64)
+		buyReport.PaidByUserId = &v
+	}
 	return buyReport, nil
 }
 
