@@ -18,16 +18,17 @@ import {
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
+import { userAtom } from '@/store/atoms';
+import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
+import MainLayout from '@components/layout/MainLayout';
+import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
+
 import type {
   BuyReportDetail,
   GetBuyReportsDetailsParams,
   GetBuyReportsSummaryParams,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
-import { userAtom } from '@/store/atoms';
-import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
-import MainLayout from '@components/layout/MainLayout';
-import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 import type { User } from '@type/common';
 
 export default function PurchaseReports() {

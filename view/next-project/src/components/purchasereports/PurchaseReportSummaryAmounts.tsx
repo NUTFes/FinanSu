@@ -13,7 +13,7 @@ export default function PurchaseReportSummaryAmounts({
 }: PurchaseReportSummaryAmountsProps) {
   return (
     <div className={className}>
-      <div className='inline-grid grid-cols-[auto_auto_auto] gap-x-1 gap-y-1'>
+      <div className='inline-grid grid-cols-[auto_auto_auto] gap-1'>
         <span className='whitespace-nowrap'>未清算金額</span>
         <span className='whitespace-nowrap'>：</span>
         <span className='min-w-[12ch] whitespace-nowrap text-right'>{unsettledAmountText} 円</span>
