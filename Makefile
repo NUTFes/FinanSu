@@ -55,6 +55,7 @@ setup: ## 開発環境をセットアップ (build > run-db > run)
 fix-perms: ## ボリュームの所有権を一般ユーザー(1000)に変更
 	@echo "$(GREEN)--- Fixing volume permissions... ---$(RESET)"
 	docker compose run --rm --user root view chown -R 1000:1000 /app/.pnpm-store
+	docker compose run --rm --user root api chown -R 1000:1000 /app/tmp
 	docker compose run --rm --user root api chown -R 1000:1000 /go/cache /go/pkg/mod
 
 build: ## アプリコンテナのイメージをビルド
