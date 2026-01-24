@@ -82,6 +82,7 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
         <div>
           <p className='mb-2 text-sm text-black-600'>局名</p>
           <Select value={draftBureauId ?? ''} onChange={handleBureauChange}>
+            <option value=''>絞り込みなし</option>
             {bureaus.map((bureau) => (
               <option key={bureau.id ?? 0} value={bureau.id ?? 0}>
                 {bureau.name}

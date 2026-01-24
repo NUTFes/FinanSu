@@ -29,6 +29,7 @@ import type {
   GetBuyReportsSummaryParams,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
+import type { User } from '@type/common';
 
 export default function PurchaseReports() {
   const router = useRouter();
@@ -65,6 +66,7 @@ export default function PurchaseReports() {
   );
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
+    ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
     ...(selectedPaidByUserId != null ? { paid_by_user_id: selectedPaidByUserId } : {}),
   };
 
@@ -77,6 +79,7 @@ export default function PurchaseReports() {
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
+    ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
     ...(selectedPaidByUserId != null ? { paid_by_user_id: selectedPaidByUserId } : {}),
   };
   const {
