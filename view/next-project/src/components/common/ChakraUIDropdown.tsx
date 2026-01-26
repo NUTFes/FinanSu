@@ -1,9 +1,8 @@
 import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import React from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import { useRecoilValue } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
+import { useUserStore } from '@/store';
 
 interface Props {
   title: string;
@@ -12,7 +11,7 @@ interface Props {
 }
 
 const Dropdown = (props: Props) => {
-  const user = useRecoilValue(userAtom);
+  const user = useUserStore((state) => state.user);
 
   return (
     <Menu>

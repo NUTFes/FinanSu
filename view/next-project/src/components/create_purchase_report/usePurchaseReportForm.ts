@@ -1,16 +1,15 @@
 import { NextRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
 
 import {
+  useGetBuyReportsId,
   useGetDivisionsUsers,
   useGetFestivalItemsUsers,
-  useGetBuyReportsId,
   usePostBuyReports,
   usePutBuyReportsId,
 } from '@/generated/hooks';
 import { DivisionOption, FestivalItemOption } from '@/generated/model';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 
 import type { BuyReport, PostBuyReportsBody, PutBuyReportsIdBody } from '@/generated/model';
 
@@ -49,7 +48,7 @@ export const usePurchaseReportForm = (router: NextRouter) => {
   const reportId = reportIdParam ? Number(reportIdParam) : undefined;
   const isEditMode = from === 'purchase_report_list';
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
   const [departments, setDepartments] = useState<DivisionOption[]>([]);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [festivalItems, setFestivalItems] = useState<FestivalItemOption[]>([]);

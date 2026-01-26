@@ -1,17 +1,16 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useMemo, useState } from 'react';
 
 import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
 import OpenDeleteModalButton from '@/components/yearperiods/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/yearperiods/OpenEditModalButton';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
-import { YearPeriod, User } from '@type/common';
+import { User, YearPeriod } from '@type/common';
 
 interface Props {
   yearPeriods: YearPeriod[];
@@ -32,7 +31,7 @@ export default function Periods(props: Props) {
   const { yearPeriods } = props;
   const router = useRouter();
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
 
   const formatYearPeriods =

@@ -2,14 +2,13 @@ import { useRouter } from 'next/router';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { FaChevronCircleRight } from 'react-icons/fa';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { downloadFile } from '@/utils/downloadFile';
 import { del } from '@api/api_methods';
 import { Checkbox, RedButton, Tooltip } from '@components/common';
-import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
+import { Expense, PurchaseItem, PurchaseReport, PurchaseReportView } from '@type/common';
 import { createPurchaseReportFormPdf } from '@utils/createPurchaseReportPdf';
 
 interface DetailModalProps {
@@ -22,7 +21,7 @@ interface DetailModalProps {
 }
 
 const DetailPage1: FC<DetailModalProps> = (props) => {
-  const [user] = useRecoilState(userAtom);
+  const user = useCurrentUser();
 
   const [date, setDate] = useState(String);
   const [japaneseDate, setJapaneseDate] = useState(String);

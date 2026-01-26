@@ -52,8 +52,15 @@ setup: ## 開発環境をセットアップ (build > run-db > run)
 	@echo "$(GREEN)--- Setup completed! ---$(RESET)"
 
 ##@ 基本操作
+fix-perms: ## ボリュームの所有権を一般ユーザー(1000)に変更
+	@echo "$(GREEN)--- Fixing volume permissions... ---$(RESET)"
+	docker compose run --rm --user root view chown -R 1000:1000 /app/.pnpm-store
+	docker compose run --rm --user root api chown -R 1000:1000 /app/tmp
+	docker compose run --rm --user root api chown -R 1000:1000 /go/cache /go/pkg/mod
+
 build: ## アプリコンテナのイメージをビルド
 	docker compose build
+	make fix-perms
 	docker compose run --rm view pnpm install
 
 build-stg: ## ステージング環境ビルド
@@ -71,7 +78,9 @@ build-run: ## ビルドと起動を同時実行
 
 run-rebuild: ## ボリューム削除→ビルド→起動
 	docker compose down -v
-	docker compose up --build
+	docker compose build
+	make fix-perms
+	docker compose up -d
 
 restart: ## アプリコンテナの再起動 (DBは維持)
 	@echo "$(GREEN)--- Restarting App Containers ---$(RESET)"

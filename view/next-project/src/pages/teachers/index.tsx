@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
 
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -42,7 +41,7 @@ export default function TeachersList(props: Props) {
     departments[0],
   );
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
   const isDisabled = !(
     currentUser?.roleID === 2 ||

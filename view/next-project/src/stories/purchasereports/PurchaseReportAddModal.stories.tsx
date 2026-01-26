@@ -1,5 +1,3 @@
-import { RecoilRoot } from 'recoil';
-
 import { PurchaseReportAddModal } from '@components/purchasereports';
 
 import type { Meta, StoryFn } from '@storybook/react';
@@ -7,13 +5,6 @@ import type { Meta, StoryFn } from '@storybook/react';
 const meta: Meta<typeof PurchaseReportAddModal> = {
   title: 'FinanSu/purchasereports/PurchaseReportAddModal',
   component: PurchaseReportAddModal,
-  decorators: [
-    (Story) => (
-      <RecoilRoot>
-        <Story />
-      </RecoilRoot>
-    ),
-  ],
   tags: ['autodocs'],
   argTypes: {},
 };

@@ -1,8 +1,7 @@
 import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
-import { useCallback, useState, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TbDownload } from 'react-icons/tb';
-import { useRecoilValue } from 'recoil';
 
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
@@ -12,14 +11,14 @@ import {
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
 
 import type {
-  GetBuyReportsDetailsParams,
   BuyReportDetail,
+  GetBuyReportsDetailsParams,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
 
@@ -31,7 +30,7 @@ export default function PurchaseReports() {
     error: yearPeriodsError,
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
 
   user?.roleID === 1 && router.push('/my_page');
 
