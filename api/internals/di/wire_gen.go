@@ -70,7 +70,9 @@ func InitializeServer() (*ServerComponents, error) {
 	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository)
 	yearRepository := repository.NewYearRepository(client, crud)
 	yearUseCase := usecase.NewYearUseCase(yearRepository)
-	handlerHandler := handler.NewHandler(activityUseCase, activityInformationUseCase, activityStyleUseCase, bureauUseCase, buyReportUseCase, departmentUseCase, divisionUseCase, festivalItemUseCase, financialRecordUseCase, incomeUseCase, incomeExpenditureManagementUseCase, mailAuthUseCase, objectUploadUseCase, passwordResetTokenUseCase, sponsorUseCase, sponsorStyleUseCase, teacherUseCase, userUseCase, yearUseCase)
+	sponsorshipActivityRepository := repository.NewSponsorshipActivityRepository(client, crud)
+	sponsorshipActivityUseCase := usecase.NewSponsorshipActivityUseCase(sponsorshipActivityRepository)
+	handlerHandler := handler.NewHandler(activityUseCase, activityInformationUseCase, activityStyleUseCase, bureauUseCase, buyReportUseCase, departmentUseCase, divisionUseCase, festivalItemUseCase, financialRecordUseCase, incomeUseCase, incomeExpenditureManagementUseCase, mailAuthUseCase, objectUploadUseCase, passwordResetTokenUseCase, sponsorUseCase, sponsorStyleUseCase, teacherUseCase, userUseCase, yearUseCase, sponsorshipActivityUseCase)
 	echo := ProvideServer(handlerHandler)
 	serverComponents := ProvideServerComponents(client, echo)
 	return serverComponents, nil

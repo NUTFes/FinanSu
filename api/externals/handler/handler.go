@@ -24,6 +24,7 @@ type Handler struct {
 	teacherUseCase                     usecase.TeacherUseCase
 	userUseCase                        usecase.UserUseCase
 	yearUseCase                        usecase.YearUseCase
+	sponsorshipActivityUseCase         usecase.SponsorshipActivityUseCase
 }
 
 func NewHandler(
@@ -46,6 +47,7 @@ func NewHandler(
 	teacherUseCase usecase.TeacherUseCase,
 	userUseCase usecase.UserUseCase,
 	yearUseCase usecase.YearUseCase,
+	sponsorshipActivityUseCase usecase.SponsorshipActivityUseCase,
 ) *Handler {
 	return &Handler{
 		activityUseCase:                    activityUseCase,
@@ -67,5 +69,6 @@ func NewHandler(
 		teacherUseCase:                     teacherUseCase,
 		userUseCase:                        userUseCase,
 		yearUseCase:                        yearUseCase,
+		sponsorshipActivityUseCase:         sponsorshipActivityUseCase,
 	}
 }

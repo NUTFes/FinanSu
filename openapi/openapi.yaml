@@ -2351,6 +2351,210 @@ paths:
             application/json:
               schema:
                 type: object
+  
+  /sponsorship-activities:
+    get:
+      tags:
+        - sponsorship-activity
+      summary: 協賛活動一覧取得
+      description: |
+        年度、キーワード、ステータス、担当者、協賛プランなどで絞り込み、指定順序でソートして一覧を取得。
+        合計金額（totalAmount）も返却。
+      parameters:
+        - name: year_period_id
+          in: query
+          description: 年度期間ID (指定なし時は最新年度)
+          required: false
+          schema:
+            type: integer
+        - name: keyword
+          in: query
+          description: 検索キーワード（企業名、担当者名など）
+          required: false
+          schema:
+            type: string
+        - name: activity_status
+          in: query
+          description: 活動ステータス (ActivityStatusの値を指定)
+          required: false
+          schema:
+            type: string
+        - name: feasibility_status
+          in: query
+          description: 協賛可否ステータス (FeasibilityStatusの値を指定)
+          required: false
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: 担当者ID
+          required: false
+          schema:
+            type: integer
+        - name: sponsor_style_ids
+          in: query
+          description: "協賛プランID（複数指定可 例:sponsor_style_ids[]=1&sponsor_style_ids[]=2）"
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: sort
+          in: query
+          description: "ソート対象カラム (例: updated_at, created_at, sponsor_id)"
+          required: false
+          schema:
+            type: string
+            default: updated_at
+        - name: order
+          in: query
+          description: ソート順序 (asc または desc)
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalAmount:
+                    type: integer
+                    description: 該当データの協賛金額合計
+                  activities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SponsorshipActivity'
+    post:
+      tags:
+        - sponsorship-activity
+      summary: 協賛活動の新規作成
+      description: 新しい協賛活動データを作成。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSponsorshipActivityRequest'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipActivity'
+
+  /sponsorship-activities/{id}:
+    get:
+      tags:
+        - sponsorship-activity
+      summary: 協賛活動詳細取得
+      description: 指定IDの協賛活動データを取得。
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipActivity'
+    put:
+      tags:
+        - sponsorship-activity
+      summary: 協賛活動の更新
+      description: 指定IDの協賛活動データを更新。
+      parameters:
+        - name: id
+          in: path
+          description: 協賛活動ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSponsorshipActivityRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipActivity'
+    delete:
+      tags:
+        - sponsorship-activity
+      summary: 協賛活動の削除
+      description: 指定IDの協賛活動データを物理削除。
+      parameters:
+        - name: id
+          in: path
+          description: 協賛活動ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /sponsorship-activities/export:
+    get:
+      tags:
+        - sponsorship-activity
+      summary: CSVエクスポート
+      description: 検索条件に一致するデータをCSV形式でダウンロード。
+      parameters:
+        - name: year_period_id
+          in: query
+          schema:
+            type: integer
+        - name: keyword
+          in: query
+          schema:
+            type: string
+        - name: activity_status
+          in: query
+          schema:
+            type: string
+        - name: feasibility_status
+          in: query
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          schema:
+            type: integer
+        - name: sponsor_style_ids
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+      responses:
+        '200':
+          description: OK (CSV Data)
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
 
 components:
   schemas:
@@ -3007,5 +3211,135 @@ components:
         - isDeleted
         - createdAt
         - updatedAt
+
+    ActivityStatus:
+      type: string
+      description: 活動ステータス
+      enum: ['未着手', '資料送付済み', 'Forms送付済み', '協賛内容確定', '請求書送付済み', '協賛金入金済み', '領収書送付済み', '協賛不可']
+    
+    FeasibilityStatus:
+      type: string
+      description: 協賛可否
+      enum: ['未着手', '可', '不可']
+
+    DesignProgress:
+      type: string
+      description: デザイン進捗
+      enum: ['未着手', '学生が作成', '企業が作成', '完成']
+
+    SponsorshipActivity:
+      type: object
+      description: 協賛活動データの詳細情報
+      properties:
+        id:
+          type: integer
+        yearPeriodId:
+          type: integer
+        sponsorId:
+          type: integer
+        userId:
+          type: integer
+        activityStatus:
+          $ref: '#/components/schemas/ActivityStatus'
+        feasibilityStatus:
+          $ref: '#/components/schemas/FeasibilityStatus'
+        designProgress:
+          $ref: '#/components/schemas/DesignProgress'
+        remarks:
+          type: string
+        sponsor:
+          $ref: '#/components/schemas/sponsor'       
+        user:
+          $ref: '#/components/schemas/user'           
+        sponsorStyles:
+          type: array
+          description: 紐づく協賛プランの内訳リスト
+          items:
+            $ref: '#/components/schemas/ActivitySponsorStyleLink'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateSponsorshipActivityRequest:
+      type: object
+      description: 新規作成時のリクエストボディ
+      required:
+        - yearPeriodId
+        - sponsorId
+        - userId
+        - activityStatus
+      properties:
+        yearPeriodId:
+          type: integer
+        sponsorId:
+          type: integer
+        userId:
+          type: integer
+        activityStatus:
+          $ref: '#/components/schemas/ActivityStatus'
+        feasibilityStatus:
+          $ref: '#/components/schemas/FeasibilityStatus'
+        designProgress:
+          $ref: '#/components/schemas/DesignProgress'
+        remarks:
+          type: string
+        sponsorStyleDetails:
+          type: array
+          description: 登録したい協賛プラン情報のリスト
+          items:
+            type: object
+            properties:
+              sponsorStyleId:
+                type: integer
+              category:
+                type: string
+                enum: ['金銭', '物品']
+
+    UpdateSponsorshipActivityRequest:
+      type: object
+      description: 更新時のリクエストボディ
+      properties:
+        yearPeriodId:
+          type: integer
+        sponsorId:
+          type: integer
+        userId:
+          type: integer
+        activityStatus:
+          $ref: '#/components/schemas/ActivityStatus'
+        feasibilityStatus:
+          $ref: '#/components/schemas/FeasibilityStatus'
+        designProgress:
+          $ref: '#/components/schemas/DesignProgress'
+        remarks:
+          type: string
+        sponsorStyleDetails:
+          type: array
+          description: 更新したい協賛プラン情報のリスト（全置換）
+          items:
+            type: object
+            properties:
+              sponsorStyleId:
+                type: integer
+              category:
+                type: string
+                enum: ['金銭', '物品']
+
+    ActivitySponsorStyleLink:
+      type: object
+      description: 協賛活動とプランの紐付け情報
+      properties:
+        id:
+          type: integer
+        sponsorStyleId:
+          type: integer
+        category:
+          type: string
+          enum: ['金銭', '物品']
+        style:
+          $ref: '#/components/schemas/sponsorStyle'  
 
 x-original-swagger-version: "2.0"
