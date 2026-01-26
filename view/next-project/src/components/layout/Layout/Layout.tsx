@@ -6,8 +6,6 @@ import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderLis
 import PurchaseReportItemNumModal from '@components/purchasereports/PurchaseReportItemNumModal';
 import { useUI } from '@components/ui/context';
 
-import s from './Layout.module.css';
-
 const ModalView: React.FC<{ modalView: string }> = ({ modalView }) => {
   return (
     <>
@@ -26,7 +24,7 @@ const ModalUI: React.FC = () => {
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className={s.root}>
+    <div className='mx-auto h-full max-w-[2460px] bg-white-0 transition-colors duration-150'>
       <main>{children}</main>
       <ModalUI />
     </div>

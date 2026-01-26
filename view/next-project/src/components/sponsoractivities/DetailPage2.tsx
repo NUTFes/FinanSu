@@ -1,24 +1,24 @@
 import { clsx } from 'clsx';
 import { saveAs } from 'file-saver';
 import React, { FC, useEffect, useState } from 'react';
-import { FaChevronCircleLeft, FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { post, del, put } from '@/utils/api/api_methods';
+import { del, post, put } from '@/utils/api/api_methods';
 import { DESIGN_PROGRESSES } from '@constants/designProgresses';
-import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
+import { SponsorActivityInformation, SponsorActivityView } from '@type/common';
 
-import UplaodFileModal from './UploadFileModal';
 import {
   DeleteButton,
   EditButton,
   Input,
+  Loading,
   OutlinePrimaryButton,
   PrimaryButton,
   Select,
-  Loading,
 } from '../common';
+import UplaodFileModal from './UploadFileModal';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;
@@ -194,7 +194,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
       <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>協賛スタイル</p>
       <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+          <tr className='border-b border-b-primary-1 py-3'>
             <th className='w-1/4 px-6 pb-2'>
               <div className='text-center text-sm text-black-600'>協賛内容</div>
             </th>
@@ -211,8 +211,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
             props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
               <tr
                 key={index}
-                className={clsx('border border-x-white-0 border-t-white-0', {
-                  'border-b-primary-1':
+                className={clsx({
+                  'border-b border-b-primary-1':
                     index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
                 })}
               >
@@ -228,7 +228,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
               </tr>
             ))
           ) : (
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tr className='border-b border-b-primary-1'>
               <td colSpan={3} className='py-3'>
                 <div className='text-center text-sm text-red-500'>
                   協賛スタイルを登録してください
@@ -383,7 +383,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
             </>
           ))}
         <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
-          <button className='rounded hover:bg-grey-300'>
+          <button className='rounded-sm hover:bg-grey-300'>
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
           </button>
         </div>

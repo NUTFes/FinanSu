@@ -16,7 +16,7 @@ interface FundInformationTableProps {
 
 const TableHeader = () => (
   <thead>
-    <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+    <tr className='border-b border-b-primary-1'>
       <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>日付</div>
       </th>

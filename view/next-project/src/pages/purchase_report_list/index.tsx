@@ -188,7 +188,7 @@ export default function PurchaseReports() {
             <div className='min-w-max'>
               <table className='mb-5 table-auto border-collapse'>
                 <thead>
-                  <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                  <tr className='border-b border-b-primary-1 py-3'>
                     <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
                       日付
                     </th>

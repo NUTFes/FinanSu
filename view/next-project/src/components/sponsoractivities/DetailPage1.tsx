@@ -73,10 +73,10 @@ const DetailPage1: FC<ModalProps> = (props) => {
       <p className='mx-auto my-3 w-fit text-xl text-black-600'>広告データurl</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></tr>
+          <tr className='border-b border-b-primary-1 py-3'></tr>
         </thead>
         <tbody>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tr className='border-b border-b-primary-1'>
             <td className='py-3'>
               <div>
                 <div className='border-primary-1 text-center text-black-600 '>
@@ -98,10 +98,10 @@ const DetailPage1: FC<ModalProps> = (props) => {
       <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></tr>
+          <tr className='border-b border-b-primary-1 py-3'></tr>
         </thead>
         <tbody>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tr className='border-b border-b-primary-1'>
             <td className='py-3'>
               <div>
                 <p
@@ -121,7 +121,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
       <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+          <tr className='border-b border-b-primary-1 py-3'>
             <th className='w-1/4 px-6 pb-2'>
               <div className='text-center text-sm text-black-600'>企業名</div>
             </th>
@@ -140,7 +140,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tr className='border-b border-b-primary-1'>
             <td className='py-3'>
               <div className='text-center text-sm'>
                 {props.sponsorActivitiesViewItem.sponsor.name}

@@ -99,17 +99,17 @@ export default function Users(props: Props) {
           <table className='mb-5 w-full table-auto border-collapse'>
             <thead>
               <tr>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>氏名</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>学科</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>権限</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3' />
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3' />
+                <th className='border-b border-b-primary-1 py-3'>
                   <div className='flex justify-center'>
                     <OpenDeleteModalButton
                       isDisabled={deleteUsers.ids.length == 0}
@@ -119,7 +119,7 @@ export default function Users(props: Props) {
                 </th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {filterUsers.map((user: User, index) => (
                 <tr key={user.id}>
                   <td

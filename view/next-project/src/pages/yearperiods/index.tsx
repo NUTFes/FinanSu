@@ -84,22 +84,22 @@ export default function Periods(props: Props) {
           <table className='mb-5 w-full table-auto border-collapse'>
             <thead>
               <tr>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>ID</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>年度</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>開始日</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>終了日</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></th>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'></th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {formatYearPeriods &&
                 formatYearPeriods.map((yearPeriod: YearPeriod, index) => (
                   <tr key={yearPeriod.id}>
