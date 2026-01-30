@@ -78,7 +78,11 @@ INSERT INTO
 VALUES
     (1, 'payment-receipts', 'receipt-1.jpg', 'image/jpeg', ''),
     (2, 'payment-receipts', 'receipt-2.jpg', 'image/jpeg', ''),
-    (3, 'payment-receipts', 'receipt-3.jpg', 'image/jpeg', '');
+    (3, 'payment-receipts', 'receipt-3.jpg', 'image/jpeg', ''),
+    (4, 'payment-receipts', 'receipt-4.jpg', 'image/jpeg', ''),
+    (5, 'payment-receipts', 'receipt-5.jpg', 'image/jpeg', ''),
+    (6, 'payment-receipts', 'receipt-6.jpg', 'image/jpeg', ''),
+    (7, 'payment-receipts', 'receipt-7.jpg', 'image/jpeg', '');
 
 INSERT INTO
     buy_statuses (buy_report_id, is_packed, is_settled)
