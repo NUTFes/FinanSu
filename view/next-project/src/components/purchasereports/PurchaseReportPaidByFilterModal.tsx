@@ -31,6 +31,10 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     setDraftPaidByUserId(selectedPaidByUserId);
   }, [isOpen, selectedBureauId, selectedPaidByUserId]);
 
+  const labelClassName = 'mb-2 text-sm text-black-600 [font-family:"Noto_Sans_JP"]';
+  const selectTextClassName = 'text-black-600 [font-family:"Noto_Sans_JP"]';
+  const optionClassName = 'text-black-600 [font-family:"Noto_Sans_JP"]';
+
   const bureauNameMap = useMemo(
     () =>
       new Map(
@@ -80,25 +84,37 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
       </div>
       <div className='mt-2 space-y-5'>
         <div>
-          <p className='mb-2 text-sm text-black-600'>局名</p>
-          <Select value={draftBureauId ?? ''} onChange={handleBureauChange}>
-            <option value=''>絞り込みなし</option>
+          <p className={labelClassName}>局名</p>
+          <Select
+            className={selectTextClassName}
+            value={draftBureauId ?? ''}
+            onChange={handleBureauChange}
+          >
+            <option className={optionClassName} value=''>
+              絞り込みなし
+            </option>
             {bureaus.map((bureau) => (
-              <option key={bureau.id ?? 0} value={bureau.id ?? 0}>
+              <option className={optionClassName} key={bureau.id ?? 0} value={bureau.id ?? 0}>
                 {bureau.name}
               </option>
             ))}
           </Select>
         </div>
         <div>
-          <p className='mb-2 text-sm text-black-600'>氏名</p>
-          <Select value={paidBySelectValue} onChange={handlePaidByChange}>
-            <option value='none'>絞り込みなし</option>
+          <p className={labelClassName}>氏名</p>
+          <Select
+            className={selectTextClassName}
+            value={paidBySelectValue}
+            onChange={handlePaidByChange}
+          >
+            <option className={optionClassName} value='none'>
+              絞り込みなし
+            </option>
             {filteredUsers.map((user) => {
               const bureauName = bureauNameMap.get(user.bureauID);
               const label = draftBureauId || !bureauName ? user.name : `${bureauName} ${user.name}`;
               return (
-                <option key={user.id} value={user.id}>
+                <option className={optionClassName} key={user.id} value={user.id}>
                   {label}
                 </option>
               );
