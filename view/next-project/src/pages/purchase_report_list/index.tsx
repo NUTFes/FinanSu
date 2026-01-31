@@ -43,17 +43,24 @@ export default function PurchaseReports() {
   const user = useRecoilValue(userAtom);
 
   const { data: usersResponse } = useGetUsers();
+  const isUser = (value: unknown): value is User => {
+    if (!value || typeof value !== 'object') return false;
+    const candidate = value as Partial<User>;
+    return typeof candidate.id === 'number' && typeof candidate.name === 'string';
+  };
   const users = useMemo(() => {
-    const responseData = usersResponse?.data as User[] | { data?: User[] } | undefined;
-    if (Array.isArray(responseData)) return responseData;
-    return responseData?.data ?? [];
+    const responseData: unknown = usersResponse?.data;
+    if (Array.isArray(responseData)) return responseData.filter(isUser);
+    if (responseData && typeof responseData === 'object') {
+      const nested = (responseData as { data?: unknown }).data;
+      if (Array.isArray(nested)) return nested.filter(isUser);
+    }
+    return [];
   }, [usersResponse]);
 
   user?.roleID === 1 && router.push('/my_page');
 
-  const [selectedYear, setSelectedYear] = useState<number>(
-    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
-  );
+  const [selectedYear, setSelectedYear] = useState<number>(0);
 
   useEffect(() => {
     if (yearPeriods && yearPeriods.length > 0) {

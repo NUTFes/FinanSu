@@ -21,14 +21,14 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     props;
 
   const [draftBureauId, setDraftBureauId] = useState<number | null>(selectedBureauId);
-  const [draftPaidByUserId, setDraftPaidByUserId] = useState<number | null | undefined>(
-    selectedPaidByUserId,
+  const [draftPaidByUserId, setDraftPaidByUserId] = useState<number | null>(
+    selectedPaidByUserId ?? null,
   );
 
   useEffect(() => {
     if (!isOpen) return;
     setDraftBureauId(selectedBureauId);
-    setDraftPaidByUserId(selectedPaidByUserId);
+    setDraftPaidByUserId(selectedPaidByUserId ?? null);
   }, [isOpen, selectedBureauId, selectedPaidByUserId]);
 
   const labelClassName = 'mb-2 text-sm text-black-600 [font-family:"Noto_Sans_JP"]';
@@ -48,26 +48,18 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     return users.filter((user) => user.bureauID === draftBureauId);
   }, [draftBureauId, users]);
 
-  const paidBySelectValue = draftPaidByUserId === null ? 'none' : draftPaidByUserId ?? '';
+  const paidBySelectValue = draftPaidByUserId ?? '';
 
   const handleBureauChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const nextBureauId = value === '' ? null : Number(value);
     setDraftBureauId(nextBureauId);
-    setDraftPaidByUserId(undefined);
+    setDraftPaidByUserId(null);
   };
 
   const handlePaidByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    if (value === '') {
-      setDraftPaidByUserId(undefined);
-      return;
-    }
-    if (value === 'none') {
-      setDraftPaidByUserId(null);
-      return;
-    }
-    setDraftPaidByUserId(Number(value));
+    setDraftPaidByUserId(value === '' ? null : Number(value));
   };
 
   const handleApply = () => {
@@ -107,7 +99,7 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
             value={paidBySelectValue}
             onChange={handlePaidByChange}
           >
-            <option className={optionClassName} value='none'>
+            <option className={optionClassName} value=''>
               絞り込みなし
             </option>
             {filteredUsers.map((user) => {
