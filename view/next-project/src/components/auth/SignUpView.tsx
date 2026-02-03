@@ -10,7 +10,7 @@ import { post } from '@api/user';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignUp, User } from '@type/common';
 
-import { PrimaryButton } from '../common';
+import { PrimaryButton } from '@components/common';
 
 export default function SignUpView() {
   const setAuth = useAuthStore((state) => state.setAuth);

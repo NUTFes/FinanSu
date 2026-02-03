@@ -7,7 +7,7 @@ import { FiPlusSquare } from 'react-icons/fi';
 import { del, get } from '@api/api_methods';
 import { Receipt } from '@type/common';
 
-import { DeleteButton, Loading, OutlinePrimaryButton, PrimaryButton } from '../common';
+import { DeleteButton, Loading, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 import UploadFileModal from './UploadFileModal';
 
 interface ModalProps {

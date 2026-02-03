@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Invoice } from '@/type/common';
 
-import { EditButton } from '../common';
+import { EditButton } from '@components/common';
 import EditInvoiceModal from './EditInvoiceModal';
 
 interface Props {

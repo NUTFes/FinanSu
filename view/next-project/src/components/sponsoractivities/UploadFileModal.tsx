@@ -6,7 +6,7 @@ import { put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
 import { SponsorActivityInformation } from '@type/common';
 
-import { Loading, PrimaryButton } from '../common';
+import { Loading, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;

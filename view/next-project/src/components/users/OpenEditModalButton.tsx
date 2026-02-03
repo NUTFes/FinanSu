@@ -4,7 +4,7 @@ import { useState } from 'react';
 import EditModal from '@components/users/EditModal';
 import { Bureau, User } from '@type/common';
 
-import { EditButton } from '../common';
+import { EditButton } from '@components/common';
 
 interface Props {
   id: number;

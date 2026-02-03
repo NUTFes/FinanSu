@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { put } from '@api/api_methods';
 import { YearPeriod } from '@type/common';
 
-import { Modal, Input, CloseButton, PrimaryButton } from '../common';
+import { Modal, Input, CloseButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;

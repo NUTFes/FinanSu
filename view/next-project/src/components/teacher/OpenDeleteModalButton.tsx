@@ -4,7 +4,7 @@ import { useState } from 'react';
 import DeleteModal from '@components/teacher/DeleteModal';
 import { Teacher } from '@type/common';
 
-import { DeleteButton } from '../common';
+import { DeleteButton } from '@components/common';
 
 interface Props {
   deleteTeachers?: { teachers: Teacher[]; ids: number[] };

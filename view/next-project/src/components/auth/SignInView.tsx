@@ -8,7 +8,7 @@ import { signIn } from '@api/signIn';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignIn } from '@type/common';
 
-import { PrimaryButton } from '../common';
+import { PrimaryButton } from '@components/common';
 
 export default function SignInView() {
   // ログイン中フラグ

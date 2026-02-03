@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction } from 'react';
 
 import { useDeleteBuyReportsId } from '@/generated/hooks';
 
-import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '../common';
+import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
