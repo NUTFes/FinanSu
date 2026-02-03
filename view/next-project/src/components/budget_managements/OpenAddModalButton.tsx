@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Division, FinancialRecord } from '@/generated/model';
 import { Year } from '@/type/common';
 import AddModal from '@components/budget_managements/AddBudgetManagementModal';
-
 import { AddButton } from '@components/common';
 
 interface FinancialRecordWithId extends FinancialRecord {

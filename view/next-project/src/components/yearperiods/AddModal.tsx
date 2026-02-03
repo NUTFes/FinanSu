@@ -4,7 +4,6 @@ import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 
 import { YearPeriod } from '@/type/common';
 import { post } from '@/utils/api/api_methods';
-
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 
 interface ModalProps {

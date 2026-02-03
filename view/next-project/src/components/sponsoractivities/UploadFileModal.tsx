@@ -4,9 +4,9 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
+import { Loading, PrimaryButton } from '@components/common';
 import { SponsorActivityInformation } from '@type/common';
 
-import { Loading, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;

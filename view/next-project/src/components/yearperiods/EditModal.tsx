@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { put } from '@api/api_methods';
+import { Modal, Input, CloseButton, PrimaryButton } from '@components/common';
 import { YearPeriod } from '@type/common';
 
-import { Modal, Input, CloseButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;

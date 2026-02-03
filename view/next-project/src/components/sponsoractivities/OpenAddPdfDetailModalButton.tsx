@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { SponsorActivityView } from '@/type/common';
-
 import { PrimaryButton } from '@components/common';
+
 import AddPdfDetailModal from './AddPdfDetailModal';
 
 interface Props {
