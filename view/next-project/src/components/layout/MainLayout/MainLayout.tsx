@@ -17,6 +17,8 @@ export default function MainLayout(props: LayoutProps) {
   const { resetUser, _hasHydrated: userHasHydrated } = useUserStore();
   const [isSideNavOpen, setIsSideNavOpen] = useState(true);
 
+  const isLoginPage = router.pathname === '/';
+
   const [isChecking, setIsChecking] = useState(true);
 
   const hasHydrated = authHasHydrated && userHasHydrated;
@@ -36,7 +38,7 @@ export default function MainLayout(props: LayoutProps) {
       if (!isValid) {
         await handleLogout();
       } else {
-        if (router.pathname === '/') {
+        if (isLoginPage) {
           await router.push('/my_page');
         }
         setIsChecking(false);
@@ -47,7 +49,7 @@ export default function MainLayout(props: LayoutProps) {
       resetAuth();
       resetUser();
 
-      if (router.pathname !== '/') {
+      if (!isLoginPage) {
         await router.push('/');
       }
       setIsChecking(false);
@@ -55,7 +57,7 @@ export default function MainLayout(props: LayoutProps) {
 
     validateSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasHydrated, router.pathname, isSignIn, accessToken, resetAuth, resetUser]);
+  }, [hasHydrated, isLoginPage, isSignIn, accessToken, resetAuth, resetUser]);
 
   if (!hasHydrated || isChecking) {
     return (
@@ -73,13 +75,13 @@ export default function MainLayout(props: LayoutProps) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div className='flex h-screen w-full flex-col overflow-hidden bg-gray-50'>
-        {router.pathname !== '/' && (
+        {!isLoginPage && (
           <div className='h-16 w-full shrink-0'>
             <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
           </div>
         )}
         <div className='flex flex-1 overflow-hidden relative'>
-          {router.pathname !== '/' && (
+          {!isLoginPage && (
             <aside
               className={clsx(
                 'z-20 bg-primary-4 transition-all duration-300 ease-in-out',
