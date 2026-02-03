@@ -2,7 +2,7 @@ export { default as AddButton } from './AddButton';
 export { default as BureauLabel } from './BureauLabel';
 export { default as Button } from './Button';
 export { default as Card } from './Card';
-export { default as ChakraUIDropdown } from './ChakraUIDropdown';
+export { default as UserDropdown } from './UserDropdown';
 export { default as Checkbox } from './Checkbox';
 export { default as CloseButton } from './CloseButton';
 export { default as DeleteButton } from './DeleteButton';
