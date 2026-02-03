@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import {
   CloseButton,
   Modal,
@@ -30,7 +30,7 @@ export default function PurchaseReportItemNumModal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [expenseID, setExpenseID] = useState(0);
 

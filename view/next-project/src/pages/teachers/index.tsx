@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -41,7 +41,7 @@ export default function TeachersList(props: Props) {
     departments[0],
   );
 
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
   const isDisabled = !(
     currentUser?.roleID === 2 ||
