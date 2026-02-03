@@ -5,6 +5,7 @@ interface Props {
   className?: string;
   onClick?: () => void;
   children?: React.ReactNode;
+  disabled?: boolean;
 }
 
 function PrimaryButton(props: Props): JSX.Element {
@@ -12,7 +13,11 @@ function PrimaryButton(props: Props): JSX.Element {
     'flex justify-center px-4 py-2 text-primary-1 font-bold text-md rounded-lg bg-white-0 border border-primary-1 hover:bg-white-100 hover:text-primary-2 hover:border-primary-2' +
     (props.className ? ` ${props.className}` : '');
   return (
-    <button className={clsx(className)} onClick={props.onClick}>
+    <button
+      className={clsx(className)}
+      onClick={props.onClick}
+      disabled={props.disabled}
+    >
       <div className={clsx('flex items-center')}>{props.children}</div>
     </button>
   );

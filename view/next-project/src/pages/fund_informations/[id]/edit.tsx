@@ -5,6 +5,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Input,
+  OutlinePrimaryButton,
   PrimaryButton,
   Radio,
   RadioGroup,
@@ -262,15 +264,13 @@ const EditFundInformation = () => {
               {isCompanySponsor && (
                 <FormControl id='sponsorName' isRequired isInvalid={!!formErrors.sponsorNameError}>
                   <FormLabel>企業名</FormLabel>
-                  <input
+                  <Input
                     type='text'
                     value={incomeReport.sponsorName || ''}
                     onChange={(e) =>
                       setIncomeReport((prev) => ({ ...prev, sponsorName: e.target.value }))
                     }
                     placeholder='企業名を入力してください'
-                    required
-                    className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
                   />
                   {formErrors.sponsorNameError && (
                     <FormErrorMessage>{formErrors.sponsorNameError}</FormErrorMessage>
@@ -280,13 +280,11 @@ const EditFundInformation = () => {
 
               <FormControl id='amount' isRequired isInvalid={!!formErrors.amountError}>
                 <FormLabel>金額</FormLabel>
-                <input
+                <Input
                   type='text'
                   value={incomeReport.amount.toLocaleString()}
                   onChange={handleAmountChange}
                   placeholder='金額を入力してください'
-                  required
-                  className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
                 />
                 {formErrors.amountError && (
                   <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
@@ -308,14 +306,9 @@ const EditFundInformation = () => {
                 {isLoading ? <Spinner size='sm' color='white' className='mr-2' /> : null}
                 更新する
               </PrimaryButton>
-              <button
-                type='button'
-                className='text-accent-1 hover:text-accent-2 underline underline-offset-[5px] transition-colors disabled:opacity-50'
-                onClick={() => router.back()}
-                disabled={isLoading}
-              >
+              <OutlinePrimaryButton onClick={() => router.back()} disabled={isLoading}>
                 キャンセル
-              </button>
+              </OutlinePrimaryButton>
             </div>
           </div>
         </div>
