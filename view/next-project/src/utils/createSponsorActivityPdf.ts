@@ -19,11 +19,7 @@ export const createSponsorActivityFormPdf = async (
     await (await fetch('./fonts/Nasu-Regular.ttf')).arrayBuffer(),
     { subset: true },
   );
-  // 日本語フォント以外を判定する関数
-  const _isNonJapaneseFont = (str: string): boolean => {
-    const nonJapaneseRegex = /^[A-Za-z0-9!-~\s]*$/;
-    return nonJapaneseRegex.test(str);
-  };
+
   //フォントのサイズ
   const fontSizes = [12, 24, 8, 14, 16];
 
