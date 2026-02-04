@@ -71,14 +71,12 @@ export default function PurchaseReports() {
 
   const [isPaidByFilterOpen, setIsPaidByFilterOpen] = useState(false);
   const [selectedBureauId, setSelectedBureauId] = useState<number | null>(null);
-  const [selectedPaidByUserId, setSelectedPaidByUserId] = useState<number | null | undefined>(
-    undefined,
-  );
+  const [selectedPaidBy, setSelectedPaidBy] = useState<string | null | undefined>(undefined);
 
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
     ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
-    ...(selectedPaidByUserId != null ? { paid_by_user_id: selectedPaidByUserId } : {}),
+    ...(selectedPaidBy != null ? { paid_by: selectedPaidBy } : {}),
   };
 
   const {
@@ -93,7 +91,7 @@ export default function PurchaseReports() {
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
     ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
-    ...(selectedPaidByUserId != null ? { paid_by_user_id: selectedPaidByUserId } : {}),
+    ...(selectedPaidBy != null ? { paid_by: selectedPaidBy } : {}),
   };
 
   const {
@@ -255,15 +253,15 @@ export default function PurchaseReports() {
             <PurchaseReportPaidByFilterModal
               isOpen={isPaidByFilterOpen}
               onClose={() => setIsPaidByFilterOpen(false)}
-              onApply={({ bureauId, paidByUserId }) => {
+              onApply={({ bureauId, paidBy }) => {
                 setSelectedBureauId(bureauId);
-                setSelectedPaidByUserId(paidByUserId);
+                setSelectedPaidBy(paidBy);
                 setIsPaidByFilterOpen(false);
               }}
               bureaus={BUREAUS}
               users={users}
               selectedBureauId={selectedBureauId}
-              selectedPaidByUserId={selectedPaidByUserId}
+              selectedPaidBy={selectedPaidBy}
             />
           )}
 

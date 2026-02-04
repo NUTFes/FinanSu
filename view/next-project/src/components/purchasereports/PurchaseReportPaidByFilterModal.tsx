@@ -8,28 +8,25 @@ interface PurchaseReportPaidByFilterModalProps {
   onClose: () => void;
   onApply: (selection: {
     bureauId: number | null;
-    paidByUserId: number | null | undefined;
+    paidBy: string | null | undefined;
   }) => void;
   bureaus: Bureau[];
   users: User[];
   selectedBureauId: number | null;
-  selectedPaidByUserId: number | null | undefined;
+  selectedPaidBy: string | null | undefined;
 }
 
 const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> = (props) => {
-  const { isOpen, onClose, onApply, bureaus, users, selectedBureauId, selectedPaidByUserId } =
-    props;
+  const { isOpen, onClose, onApply, bureaus, users, selectedBureauId, selectedPaidBy } = props;
 
   const [draftBureauId, setDraftBureauId] = useState<number | null>(selectedBureauId);
-  const [draftPaidByUserId, setDraftPaidByUserId] = useState<number | null>(
-    selectedPaidByUserId ?? null,
-  );
+  const [draftPaidBy, setDraftPaidBy] = useState<string | null>(selectedPaidBy ?? null);
 
   useEffect(() => {
     if (!isOpen) return;
     setDraftBureauId(selectedBureauId);
-    setDraftPaidByUserId(selectedPaidByUserId ?? null);
-  }, [isOpen, selectedBureauId, selectedPaidByUserId]);
+    setDraftPaidBy(selectedPaidBy ?? null);
+  }, [isOpen, selectedBureauId, selectedPaidBy]);
 
   const labelClassName = 'mb-2 text-sm text-black-600 [font-family:"Noto_Sans_JP"]';
   const selectTextClassName = 'text-black-600 [font-family:"Noto_Sans_JP"]';
@@ -48,24 +45,24 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     return users.filter((user) => user.bureauID === draftBureauId);
   }, [draftBureauId, users]);
 
-  const paidBySelectValue = draftPaidByUserId ?? '';
+  const paidBySelectValue = draftPaidBy ?? '';
 
   const handleBureauChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const nextBureauId = value === '' ? null : Number(value);
     setDraftBureauId(nextBureauId);
-    setDraftPaidByUserId(null);
+    setDraftPaidBy(null);
   };
 
   const handlePaidByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    setDraftPaidByUserId(value === '' ? null : Number(value));
+    setDraftPaidBy(value === '' ? null : value);
   };
 
   const handleApply = () => {
     onApply({
       bureauId: draftBureauId ?? null,
-      paidByUserId: draftPaidByUserId,
+      paidBy: draftPaidBy,
     });
   };
 
@@ -106,13 +103,12 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
               const bureauName = bureauNameMap.get(user.bureauID);
               const label = draftBureauId || !bureauName ? user.name : `${bureauName} ${user.name}`;
               return (
-                <option className={optionClassName} key={user.id} value={user.id}>
+                <option className={optionClassName} key={user.id} value={user.name}>
                   {label}
                 </option>
               );
             })}
           </Select>
-          {/* NOTE: paid_by_user_id の NULL を絞り込む仕様が未定義のため「立替者なし」は未実装。 */}
         </div>
       </div>
       <div className='mt-6 flex justify-center'>
