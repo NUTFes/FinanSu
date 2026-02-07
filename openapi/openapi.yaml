@@ -2443,7 +2443,6 @@ components:
       required:
         - festivalItemID
         - amount
-        - paidBy
     buyReportInformation:
       description: マイページで表示する購入報告の情報
       type: object
@@ -2485,6 +2484,9 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
     buyReportDetail:
       description: 購入報告ページで表示する詳細情報
       type: object
@@ -2510,6 +2512,9 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
         isPacked:
           type: boolean
           example: false
