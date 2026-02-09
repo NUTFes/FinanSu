@@ -5,6 +5,8 @@
  * FinanSu APIドキュメント
  * OpenAPI spec version: 2.0.0
  */
+import type { ActivityStatus } from './activityStatus';
+import type { FeasibilityStatus } from './feasibilityStatus';
 import type { GetSponsorshipActivitiesOrder } from './getSponsorshipActivitiesOrder';
 
 export type GetSponsorshipActivitiesParams = {
@@ -19,11 +21,11 @@ export type GetSponsorshipActivitiesParams = {
   /**
    * 活動ステータス (ActivityStatusの値を指定)
    */
-  activity_status?: string;
+  activity_status?: ActivityStatus;
   /**
    * 協賛可否ステータス (FeasibilityStatusの値を指定)
    */
-  feasibility_status?: string;
+  feasibility_status?: FeasibilityStatus;
   /**
    * 担当者ID
    */

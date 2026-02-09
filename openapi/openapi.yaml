@@ -2351,7 +2351,7 @@ paths:
             application/json:
               schema:
                 type: object
-  
+
   /sponsorship-activities:
     get:
       tags:
@@ -2378,13 +2378,13 @@ paths:
           description: 活動ステータス (ActivityStatusの値を指定)
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/ActivityStatus"
         - name: feasibility_status
           in: query
           description: 協賛可否ステータス (FeasibilityStatusの値を指定)
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/FeasibilityStatus"
         - name: user_id
           in: query
           description: 担当者ID
@@ -2417,7 +2417,7 @@ paths:
               - desc
             default: desc
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -2430,7 +2430,7 @@ paths:
                   activities:
                     type: array
                     items:
-                      $ref: '#/components/schemas/SponsorshipActivity'
+                      $ref: "#/components/schemas/SponsorshipActivity"
     post:
       tags:
         - sponsorship-activity
@@ -2441,14 +2441,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateSponsorshipActivityRequest'
+              $ref: "#/components/schemas/CreateSponsorshipActivityRequest"
       responses:
-        '200':
+        "200":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SponsorshipActivity'
+                $ref: "#/components/schemas/SponsorshipActivity"
 
   /sponsorship-activities/{id}:
     get:
@@ -2463,12 +2463,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SponsorshipActivity'
+                $ref: "#/components/schemas/SponsorshipActivity"
     put:
       tags:
         - sponsorship-activity
@@ -2486,14 +2486,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateSponsorshipActivityRequest'
+              $ref: "#/components/schemas/UpdateSponsorshipActivityRequest"
       responses:
-        '200':
+        "200":
           description: Updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SponsorshipActivity'
+                $ref: "#/components/schemas/SponsorshipActivity"
     delete:
       tags:
         - sponsorship-activity
@@ -2507,7 +2507,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Deleted
           content:
             application/json:
@@ -2532,11 +2532,11 @@ paths:
         - name: activity_status
           in: query
           schema:
-            type: string
+            $ref: "#/components/schemas/ActivityStatus"
         - name: feasibility_status
           in: query
           schema:
-            type: string
+            $ref: "#/components/schemas/FeasibilityStatus"
         - name: user_id
           in: query
           schema:
@@ -2548,7 +2548,7 @@ paths:
             items:
               type: integer
       responses:
-        '200':
+        "200":
           description: OK (CSV Data)
           content:
             text/csv:
@@ -3215,17 +3215,27 @@ components:
     ActivityStatus:
       type: string
       description: 活動ステータス
-      enum: ['未着手', '資料送付済み', 'Forms送付済み', '協賛内容確定', '請求書送付済み', '協賛金入金済み', '領収書送付済み', '協賛不可']
-    
+      enum:
+        [
+          "未着手",
+          "資料送付済み",
+          "Forms送付済み",
+          "協賛内容確定",
+          "請求書送付済み",
+          "協賛金入金済み",
+          "領収書送付済み",
+          "協賛不可",
+        ]
+
     FeasibilityStatus:
       type: string
       description: 協賛可否
-      enum: ['未着手', '可', '不可']
+      enum: ["未着手", "可", "不可"]
 
     DesignProgress:
       type: string
       description: デザイン進捗
-      enum: ['未着手', '学生が作成', '企業が作成', '完成']
+      enum: ["未着手", "学生が作成", "企業が作成", "完成"]
 
     SponsorshipActivity:
       type: object
@@ -3240,22 +3250,22 @@ components:
         userId:
           type: integer
         activityStatus:
-          $ref: '#/components/schemas/ActivityStatus'
+          $ref: "#/components/schemas/ActivityStatus"
         feasibilityStatus:
-          $ref: '#/components/schemas/FeasibilityStatus'
+          $ref: "#/components/schemas/FeasibilityStatus"
         designProgress:
-          $ref: '#/components/schemas/DesignProgress'
+          $ref: "#/components/schemas/DesignProgress"
         remarks:
           type: string
         sponsor:
-          $ref: '#/components/schemas/sponsor'       
+          $ref: "#/components/schemas/sponsor"
         user:
-          $ref: '#/components/schemas/user'           
+          $ref: "#/components/schemas/user"
         sponsorStyles:
           type: array
           description: 紐づく協賛プランの内訳リスト
           items:
-            $ref: '#/components/schemas/ActivitySponsorStyleLink'
+            $ref: "#/components/schemas/ActivitySponsorStyleLink"
         createdAt:
           type: string
           format: date-time
@@ -3279,11 +3289,11 @@ components:
         userId:
           type: integer
         activityStatus:
-          $ref: '#/components/schemas/ActivityStatus'
+          $ref: "#/components/schemas/ActivityStatus"
         feasibilityStatus:
-          $ref: '#/components/schemas/FeasibilityStatus'
+          $ref: "#/components/schemas/FeasibilityStatus"
         designProgress:
-          $ref: '#/components/schemas/DesignProgress'
+          $ref: "#/components/schemas/DesignProgress"
         remarks:
           type: string
         sponsorStyleDetails:
@@ -3296,7 +3306,7 @@ components:
                 type: integer
               category:
                 type: string
-                enum: ['金銭', '物品']
+                enum: ["金銭", "物品"]
 
     UpdateSponsorshipActivityRequest:
       type: object
@@ -3309,11 +3319,11 @@ components:
         userId:
           type: integer
         activityStatus:
-          $ref: '#/components/schemas/ActivityStatus'
+          $ref: "#/components/schemas/ActivityStatus"
         feasibilityStatus:
-          $ref: '#/components/schemas/FeasibilityStatus'
+          $ref: "#/components/schemas/FeasibilityStatus"
         designProgress:
-          $ref: '#/components/schemas/DesignProgress'
+          $ref: "#/components/schemas/DesignProgress"
         remarks:
           type: string
         sponsorStyleDetails:
@@ -3326,7 +3336,7 @@ components:
                 type: integer
               category:
                 type: string
-                enum: ['金銭', '物品']
+                enum: ["金銭", "物品"]
 
     ActivitySponsorStyleLink:
       type: object
@@ -3338,8 +3348,8 @@ components:
           type: integer
         category:
           type: string
-          enum: ['金銭', '物品']
+          enum: ["金銭", "物品"]
         style:
-          $ref: '#/components/schemas/sponsorStyle'  
+          $ref: "#/components/schemas/sponsorStyle"
 
 x-original-swagger-version: "2.0"

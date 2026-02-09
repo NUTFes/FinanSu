@@ -735,10 +735,10 @@ type GetSponsorshipActivitiesParams struct {
 	Keyword *string `form:"keyword,omitempty" json:"keyword,omitempty"`
 
 	// ActivityStatus 活動ステータス (ActivityStatusの値を指定)
-	ActivityStatus *string `form:"activity_status,omitempty" json:"activity_status,omitempty"`
+	ActivityStatus *ActivityStatus `form:"activity_status,omitempty" json:"activity_status,omitempty"`
 
 	// FeasibilityStatus 協賛可否ステータス (FeasibilityStatusの値を指定)
-	FeasibilityStatus *string `form:"feasibility_status,omitempty" json:"feasibility_status,omitempty"`
+	FeasibilityStatus *FeasibilityStatus `form:"feasibility_status,omitempty" json:"feasibility_status,omitempty"`
 
 	// UserId 担当者ID
 	UserId *int `form:"user_id,omitempty" json:"user_id,omitempty"`
@@ -758,12 +758,12 @@ type GetSponsorshipActivitiesParamsOrder string
 
 // GetSponsorshipActivitiesExportParams defines parameters for GetSponsorshipActivitiesExport.
 type GetSponsorshipActivitiesExportParams struct {
-	YearPeriodId      *int    `form:"year_period_id,omitempty" json:"year_period_id,omitempty"`
-	Keyword           *string `form:"keyword,omitempty" json:"keyword,omitempty"`
-	ActivityStatus    *string `form:"activity_status,omitempty" json:"activity_status,omitempty"`
-	FeasibilityStatus *string `form:"feasibility_status,omitempty" json:"feasibility_status,omitempty"`
-	UserId            *int    `form:"user_id,omitempty" json:"user_id,omitempty"`
-	SponsorStyleIds   *[]int  `form:"sponsor_style_ids,omitempty" json:"sponsor_style_ids,omitempty"`
+	YearPeriodId      *int               `form:"year_period_id,omitempty" json:"year_period_id,omitempty"`
+	Keyword           *string            `form:"keyword,omitempty" json:"keyword,omitempty"`
+	ActivityStatus    *ActivityStatus    `form:"activity_status,omitempty" json:"activity_status,omitempty"`
+	FeasibilityStatus *FeasibilityStatus `form:"feasibility_status,omitempty" json:"feasibility_status,omitempty"`
+	UserId            *int               `form:"user_id,omitempty" json:"user_id,omitempty"`
+	SponsorStyleIds   *[]int             `form:"sponsor_style_ids,omitempty" json:"sponsor_style_ids,omitempty"`
 }
 
 // PostTeachersParams defines parameters for PostTeachers.

@@ -5,12 +5,14 @@
  * FinanSu APIドキュメント
  * OpenAPI spec version: 2.0.0
  */
+import type { ActivityStatus } from './activityStatus';
+import type { FeasibilityStatus } from './feasibilityStatus';
 
 export type GetSponsorshipActivitiesExportParams = {
   year_period_id?: number;
   keyword?: string;
-  activity_status?: string;
-  feasibility_status?: string;
+  activity_status?: ActivityStatus;
+  feasibility_status?: FeasibilityStatus;
   user_id?: number;
   sponsor_style_ids?: number[];
 };
