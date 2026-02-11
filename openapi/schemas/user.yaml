@@ -1,0 +1,45 @@
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: test-user
+        bureauID:
+          type: integer
+          example: 1
+        roleID:
+          type: integer
+          example: 1
+        isDeleted:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          example: 0000-00-00T00:00:00Z
+        updatedAt:
+          type: string
+          example: 0000-00-00T00:00:00Z
+      required:
+        - id
+        - name
+        - bureauID
+        - roleID
+        - isDeleted
+        - createdAt
+        - updatedAt
+
+    destroyUserIDs:
+      required:
+        - deleteIDs
+      type: object
+      properties:
+        deleteIDs:
+          type: array
+          example: []
+          items:
+            type: number

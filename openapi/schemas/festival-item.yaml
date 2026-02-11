@@ -1,0 +1,104 @@
+components:
+  schemas:
+    festivalItem:
+      required:
+        - name
+        - divisionId
+        - amount
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 農ポリ
+        divisionId:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 10000
+        memo:
+          type: string
+          example: ""
+
+    festivalItemOption:
+      required:
+        - festivalItemId
+        - name
+      type: object
+      properties:
+        festivalItemId:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 農ポリ
+
+    festivalItemDetails:
+      type: object
+      properties:
+        total:
+          $ref: "./_shared.yaml#/components/schemas/total"
+        festivalItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/festivalItemWithBalance"
+
+    festivalItemsForMyPage:
+      type: object
+      properties:
+        divisionTotal:
+          $ref: "./_shared.yaml#/components/schemas/total"
+        financialRecordName:
+          type: string
+          example: 企画局
+        divisionName:
+          type: string
+          example: ビンゴ部門
+        festivalItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/festivalItemWithReport"
+
+    festivalItemWithReport:
+      type: object
+      properties:
+        festivalItemTotal:
+          $ref: "./_shared.yaml#/components/schemas/total"
+        festivalItemName:
+          type: string
+          example: ビンゴ景品
+        buyReports:
+          type: array
+          items:
+            $ref: "./buy-report.yaml#/components/schemas/buyReportInformation"
+
+    festivalItemWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 農ポリ
+        division:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000
+        memo:
+          type: string
+          example: ""

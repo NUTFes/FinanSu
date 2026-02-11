@@ -1,0 +1,31 @@
+components:
+  schemas:
+    total:
+      type: object
+      properties:
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
+
+    year_periods:
+      required:
+        - endedAt
+        - startedAt
+        - year
+      type: object
+      properties:
+        year:
+          type: integer
+          example: 2024
+        startedAt:
+          type: string
+          example: 0000-00-00T00:00:00Z
+        endedAt:
+          type: string
+          example: 0000-00-00T00:00:00Z

@@ -1,0 +1,136 @@
+components:
+  schemas:
+    buyReport:
+      description: 購入報告の際のパラメータ
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        festivalItemID:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 1000
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
+      required:
+        - festivalItemID
+        - amount
+        - paidBy
+
+    buyReportInformation:
+      description: マイページで表示する購入報告の情報
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        buyReportName:
+          type: string
+          example: 段ボール
+        amount:
+          type: integer
+          example: 1000
+        reportDate:
+          type: string
+          example: 2024-01-01
+        status:
+          type: string
+          enum:
+            - 確認中
+            - 封詰め
+            - 清算完了
+
+    buyReportWithDivisionId:
+      description: 購入報告の際のパラメータ、部門と物品IDを含む
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        divisionId:
+          type: integer
+          example: 1
+        festivalItemID:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 1000
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
+
+    buyReportDetail:
+      description: 購入報告ページで表示する詳細情報
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        financialRecordName:
+          type: string
+          example: 企画局
+        divisionName:
+          type: string
+          example: ビンゴ部門
+        festivalItemName:
+          type: string
+          example: 段ボール
+        amount:
+          type: integer
+          example: 1000
+        reportDate:
+          type: string
+          example: 2024-01-01
+        paidBy:
+          type: string
+          example: 企画局_技大太郎
+        isPacked:
+          type: boolean
+          example: false
+        isSettled:
+          type: boolean
+          example: false
+        fileName:
+          type: string
+          example: test.png
+        year:
+          type: integer
+          example: 2025
+        filePath:
+          type: string
+          example: /2025/receipts/FileName
+      required:
+        - amount
+        - divisionName
+        - festivalItemName
+        - financialRecordName
+        - id
+        - isPacked
+        - isSettled
+        - paidBy
+        - reportDate
+        - filePath
+
+    buyReportSummary:
+      description: 購入報告の未精算/未封詰め合計
+      type: object
+      properties:
+        unsettledAmount:
+          type: integer
+          example: 12000
+          description: isSettled=falseのamount合計
+        unpackedAmount:
+          type: integer
+          example: 8000
+          description: isPacked=falseのamount合計
+      required:
+        - unsettledAmount
+        - unpackedAmount

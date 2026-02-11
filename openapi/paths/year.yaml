@@ -1,0 +1,173 @@
+paths:
+  /years:
+    get:
+      tags:
+        - year
+      description: yearの一覧の取得
+      responses:
+        "200":
+          description: yearの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "../schemas/_shared.yaml#/components/schemas/year_periods"
+    post:
+      tags:
+        - year
+      description: yearの作成
+      parameters:
+        - name: year
+          in: query
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 作成されたyearが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /years/{id}:
+    get:
+      tags:
+        - year
+      description: IDで指定されたyearの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: yearの取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/_shared.yaml#/components/schemas/year_periods"
+    put:
+      tags:
+        - year
+      description: yearの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: year
+          in: query
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 更新されたyearが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - year
+      description: IDを指定してyearの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: yearの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /years/periods:
+    get:
+      tags:
+        - year_periods
+      description: 年度一覧の取得
+      responses:
+        "200":
+          description: year_periodsの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "../schemas/_shared.yaml#/components/schemas/year_periods"
+    post:
+      tags:
+        - year_periods
+      description: year_periodsの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/_shared.yaml#/components/schemas/year_periods"
+        required: false
+      responses:
+        "200":
+          description: 作成されたyear_periodsが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: year_periods
+
+  /years/periods/{id}:
+    put:
+      tags:
+        - year_periods
+      description: year_periodsの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/_shared.yaml#/components/schemas/year_periods"
+        required: false
+      responses:
+        "200":
+          description: 更新されたyear_periodsが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: year_periods
+    delete:
+      tags:
+        - year_periods
+      description: IDを指定してyear_periodsの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: year_periodsの削除完了
+          content:
+            application/json:
+              schema:
+                type: object

@@ -117,7 +117,7 @@ graph TB
     end
 
     subgraph "Development"
-        OpenAPI[OpenAPI Spec<br/>openapi.yaml]
+        OpenAPI[OpenAPI Spec<br/>openapi.yaml + paths/ + schemas/]
         Docker[Docker Compose]
         Storybook[Storybook]
     end
@@ -205,8 +205,15 @@ graph TB
 
 ### OpenAPI 駆動開発
 
-1. `/openapi/openapi.yaml` を編集して API 変更
+**OpenAPI仕様はドメイン別に分割管理されています:**
+- メインファイル: `/openapi/openapi.yaml`
+- パス定義: `/openapi/paths/*.yaml`（12ファイル）
+- スキーマ定義: `/openapi/schemas/*.yaml`（10ファイル）
+
+**開発フロー:**
+1. `/openapi/paths/` または `/openapi/schemas/` を編集して API 変更
 2. `make gen` で Go server コードと TypeScript hooks を再生成
+   - 自動的にバンドル（`bundled.gen.yaml`）→ コード生成が実行されます
    - `api/generated/openapi_gen.go`: サーバーコード・型定義・ルーティング
    - `view/next-project/src/generated/`: TypeScript hooks
 3. サーバーサイドロジックを handlers/use cases で実装

@@ -1,0 +1,71 @@
+components:
+  schemas:
+    activity:
+      required:
+        - expense
+        - feature
+        - isDone
+        - remark
+        - sponsorID
+        - userID
+      type: object
+      properties:
+        sponsorID:
+          type: integer
+          example: 1
+        userID:
+          type: integer
+          example: 1
+        isDone:
+          type: boolean
+          example: false
+        feature:
+          type: string
+          example: なし
+        expense:
+          type: integer
+          example: 0
+        remark:
+          type: string
+          example: なし
+        design:
+          type: integer
+          example: 0
+        url:
+          type: string
+          example: ""
+
+    activity_information:
+      type: object
+      properties:
+        activityID:
+          type: integer
+          example: 1
+        bucketName:
+          type: string
+          example: なし
+        fileName:
+          type: string
+          example: なし
+        fileType:
+          type: string
+          example: なし
+        designProgress:
+          type: integer
+          example: 1
+        fileInformation:
+          type: string
+          example: ""
+
+    activity_style:
+      required:
+        - activityID
+        - sponsorStyleID
+      type: object
+      properties:
+        activityID:
+          type: integer
+          example: 1
+        sponsorStyleID:
+          type: integer
+          example: 1

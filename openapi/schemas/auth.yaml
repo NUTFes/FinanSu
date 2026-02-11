@@ -1,0 +1,14 @@
+components:
+  schemas:
+    passwordResetData:
+      type: object
+      properties:
+        token:
+          type: string
+          example: ""
+        password:
+          type: string
+          example: ""
+        confirmPassword:
+          type: string
+          example: ""

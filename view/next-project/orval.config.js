@@ -1,6 +1,6 @@
 module.exports = {
   file: {
-    input: '../../openapi/openapi.yaml',
+    input: '../../openapi/bundled.gen.yaml',
     output: {
       target: './src/generated/hooks.ts',
       schemas: './src/generated/model',

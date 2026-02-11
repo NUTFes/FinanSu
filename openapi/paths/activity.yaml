@@ -1,0 +1,400 @@
+paths:
+  /activities:
+    get:
+      tags:
+        - activity
+      description: activitiesの一覧を取得
+      responses:
+        "200":
+          description: activitiesの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - activity
+      description: activitiesの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/activity.yaml#/components/schemas/activity"
+        required: true
+      responses:
+        "200":
+          description: create されたactivityが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity
+
+  /activities/details:
+    get:
+      tags:
+        - activity
+      description: "activitiesとsponsor,sponsorStyle,userの一覧を取得"
+      responses:
+        "200":
+          description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activities/details/{year}:
+    get:
+      tags:
+        - activity
+      description: "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得"
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activities/filtered_details:
+    get:
+      tags:
+        - activity
+      description: "activitiesとsponsor,sponsorStyle,userの一覧を取得"
+      parameters:
+        - name: is_done
+          in: query
+          description: 完了状態を表すフラグ
+          required: false
+          schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+        - name: sponsor_style_id
+          in: query
+          description: スポンサースタイルIDの配列
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 1
+        - name: keyword
+          in: query
+          description: キーワード検索用の文字列
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: keyword
+
+  /activities/filtered_details/{year}:
+    get:
+      tags:
+        - activity
+      description: "activitiesとsponsor,sponsorStyle,userの一覧を取得"
+      parameters:
+        - name: year
+          in: path
+          description: Filter by year.
+          required: true
+          schema:
+            type: string
+        - name: is_done
+          in: query
+          description: 完了状態を表すフラグ
+          required: false
+          schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+        - name: sponsor_style_id
+          in: query
+          description: スポンサースタイルIDの配列
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 1
+        - name: keyword
+          in: query
+          description: キーワード検索用の文字列
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "activitiesとsponsor,sponsorStyle,userの一覧の取得"
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: keyword
+
+  /activities/{id}:
+    get:
+      tags:
+        - activity
+      description: IDで指定されたactivitiesの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activitiesの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - activity
+      description: activitiesの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/activity.yaml#/components/schemas/activity"
+        required: false
+      responses:
+        "200":
+          description: 更新されたactivitiesが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity
+    delete:
+      tags:
+        - activity
+      description: IDを指定してactivitiesの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activitiesの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activity_informations:
+    get:
+      tags:
+        - activity_information
+      description: activity_informationの一覧を取得
+      responses:
+        "200":
+          description: activity_informationの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - activity_information
+      description: activity_informationの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/activity.yaml#/components/schemas/activity_information"
+        required: false
+      responses:
+        "200":
+          description: create されたactivity_informationが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_information
+
+  /activity_informations/{id}:
+    get:
+      tags:
+        - activity_information
+      description: IDで指定されたactivity_informationsの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_informationの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - activity_information
+      description: activity_informationの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/activity.yaml#/components/schemas/activity_information"
+        required: false
+      responses:
+        "200":
+          description: 更新されたactivity_informationが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_information
+    delete:
+      tags:
+        - activity_information
+      description: IDを指定してactivity_informationの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_informationの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /activity_styles:
+    get:
+      tags:
+        - activity_style
+      description: activity_styleの一覧を取得
+      responses:
+        "200":
+          description: activity_styleの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - activity_style
+      description: activity_styleの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/activity.yaml#/components/schemas/activity_style"
+        required: false
+      responses:
+        "200":
+          description: createされたactivity_styleが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_style
+
+  /activity_styles/{id}:
+    get:
+      tags:
+        - activity_style
+      description: IDで指定されたactivity_styleの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_styleの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - activity_style
+      description: activity_styleの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/activity.yaml#/components/schemas/activity_style"
+        required: false
+      responses:
+        "200":
+          description: 更新されたactivity_styleが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: activity_style
+    delete:
+      tags:
+        - activity_style
+      description: IDを指定してactivity_styleの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: activity_styleの削除完了
+          content:
+            application/json:
+              schema:
+                type: object

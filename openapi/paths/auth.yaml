@@ -1,0 +1,164 @@
+paths:
+  /mail_auth/signup:
+    post:
+      tags:
+        - mail_auth
+      description: ユーザー登録
+      parameters:
+        - name: email
+          in: query
+          description: email
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: password
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ユーザー登録完了
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: mailAuthSignUp
+  /mail_auth/signin:
+    post:
+      tags:
+        - mail_auth
+      description: ログイン
+      parameters:
+        - name: email
+          in: query
+          description: email
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: password
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ログイン完了
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: mailAuthSignIn
+  /mail_auth/signout:
+    delete:
+      tags:
+        - mail_auth
+      description: ログアウト
+      parameters:
+        - in: header
+          name: Access-Token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ログアウト完了
+          content:
+            application/json:
+              schema:
+                type: object
+  /mail_auth/is_signin:
+    get:
+      tags:
+        - mail_auth
+      description: ログイン状態の確認
+      parameters:
+        - in: header
+          name: Access-Token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ログイン状態の確認
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /password_reset/{id}:
+    post:
+      tags:
+        - password_reset
+      description: password_変更
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/auth.yaml#/components/schemas/passwordResetData"
+        required: false
+      responses:
+        "200":
+          description: passwordを変更する
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: passwordResetData
+
+  /password_reset/request:
+    post:
+      tags:
+        - password_reset
+      description: password_reset_token発行リクエスト
+      parameters:
+        - name: email
+          in: query
+          description: email
+          schema:
+            type: string
+      responses:
+        "200":
+          description: password_reset_tokenをメールアドレスに送信する
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /password_reset/{id}/valid:
+    post:
+      tags:
+        - password_reset
+      description: トークンの称号
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: query
+          description: token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: password_reset_tokenが正しい確認する
+          content:
+            application/json:
+              schema:
+                type: object

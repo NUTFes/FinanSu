@@ -1,0 +1,62 @@
+components:
+  schemas:
+    division:
+      required:
+        - name
+        - financialRecordID
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecordID:
+          type: integer
+          example: 1
+
+    divisionOption:
+      required:
+        - name
+        - divisionId
+      type: object
+      properties:
+        name:
+          type: string
+          example: 衛生管理部門
+        divisionId:
+          type: integer
+          example: 1
+
+    divisionDetails:
+      type: object
+      properties:
+        total:
+          $ref: "./_shared.yaml#/components/schemas/total"
+        divisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/divisionWithBalance"
+
+    divisionWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 衛生管理部門
+        financialRecord:
+          type: string
+          example: 総務局
+        budget:
+          type: integer
+          example: 10000
+        expense:
+          type: integer
+          example: 1000
+        balance:
+          type: integer
+          example: 9000

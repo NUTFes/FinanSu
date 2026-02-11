@@ -1,0 +1,294 @@
+paths:
+  /financial_records:
+    get:
+      tags:
+        - financial_record
+      description: financial_recordの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの一覧の取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/financialRecordDetails"
+    post:
+      tags:
+        - financial_record
+      description: financial_recordの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/financial.yaml#/components/schemas/financialRecord"
+        required: true
+      responses:
+        "200":
+          description: create されたfinancial_recordが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/financialRecordWithBalance"
+
+  /financial_records/{id}:
+    get:
+      tags:
+        - financial_record
+      description: IDで指定されたfinancial_recordの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/financialRecord"
+    put:
+      tags:
+        - financial_record
+      description: financial_recordの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/financial.yaml#/components/schemas/financialRecord"
+        required: true
+      responses:
+        "200":
+          description: 更新されたfinancial_recordが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/financialRecordWithBalance"
+      x-codegen-request-body-name: financial_record
+    delete:
+      tags:
+        - financial_record
+      description: IDを指定してfinancial_recordの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: financial_recordの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /financial_records/csv/download:
+    get:
+      tags:
+        - financial_record
+      description: financial_recordの年度予算のCSVをダウンロード
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: financial_recordの年度予算のCSV取得
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=financial_record.csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+
+  /incomes:
+    get:
+      tags:
+        - income
+      description: 収支管理で収入の項目を取得（教育振興会費、雑収入など）
+      responses:
+        "200":
+          description: incomeの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "../schemas/financial.yaml#/components/schemas/incomeCategory"
+    post:
+      tags:
+        - income
+      description: incomeの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/financial.yaml#/components/schemas/income"
+        required: true
+      responses:
+        "200":
+          description: create されたincomeが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/income"
+
+  /incomes/{id}:
+    get:
+      tags:
+        - income
+      description: IDで指定されたincomeの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: incomeの取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/income"
+    put:
+      tags:
+        - income
+      description: incomeの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/financial.yaml#/components/schemas/income"
+        required: true
+      responses:
+        "200":
+          description: 更新されたincomeが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/income"
+    delete:
+      tags:
+        - income
+      description: IDを指定してincomeの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: incomeの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /income_expenditure_managements:
+    get:
+      tags:
+        - income_expenditure_management
+      description: income_expenditure_managementの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ユーザー所属の物品予算の一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/financial.yaml#/components/schemas/incomeExpenditureManagementDetails"
+
+  /income_expenditure_managements/check/{id}:
+    put:
+      tags:
+        - income_expenditure_management
+      description: income_expenditure_managementのチェック
+      parameters:
+        - name: id
+          in: path
+          description: income_expenditure_management_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - isChecked
+              properties:
+                isChecked:
+                  type: boolean
+                  description: チェック済みかどうか
+      responses:
+        "200":
+          description: チェック済みのincome_expenditure_managementが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /income_expenditure_management/csv/download:
+    get:
+      tags:
+        - income_expenditure_management
+      description: 収支管理一覧のCSVダウンロード、財務向けのページ
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: income_expenditure_managementのCSVダウンロード
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=income_expenditure_management.csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary

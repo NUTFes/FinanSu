@@ -1,0 +1,139 @@
+components:
+  schemas:
+    financialRecord:
+      required:
+        - name
+        - year_id
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 総務局
+        year_id:
+          type: integer
+          example: 1
+
+    financialRecordDetails:
+      type: object
+      properties:
+        total:
+          $ref: "./_shared.yaml#/components/schemas/total"
+        financialRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/financialRecordWithBalance"
+
+    financialRecordWithBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 総務局
+        year:
+          type: integer
+          example: 2024
+        budget:
+          type: integer
+          example: 100000
+        expense:
+          type: integer
+          example: 10000
+        balance:
+          type: integer
+          example: 90000
+
+    income:
+      type: object
+      required:
+        - name
+        - amount
+        - yearId
+        - incomeId
+      properties:
+        id:
+          type: integer
+          example: 1
+        incomeId:
+          type: integer
+          example: 1
+        sponsorName:
+          type: string
+          example: 企業1
+        amount:
+          type: integer
+          example: 10000
+        yearId:
+          type: integer
+          example: 1
+        receiveOption:
+          type: string
+          enum:
+            - hand
+            - transfer
+
+    incomeCategory:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 教育振興会費
+
+    incomeExpenditureManagement:
+      type: object
+      required:
+        - id
+        - content
+        - amount
+        - currentBalance
+        - date
+        - isChecked
+      properties:
+        id:
+          type: integer
+          example: 1
+        content:
+          type: string
+          example: 情報局
+        detail:
+          type: string
+          example: ビール
+        amount:
+          type: integer
+          example: 100000
+        currentBalance:
+          type: integer
+          example: 100000
+        receiveOption:
+          type: string
+          example: ""
+        date:
+          type: string
+          example: 2024-01-01
+        isChecked:
+          type: boolean
+          example: false
+
+    incomeExpenditureManagementDetails:
+      type: object
+      required:
+        - total
+        - incomeExpenditureManagements
+      properties:
+        total:
+          type: integer
+          example: 100000
+        incomeExpenditureManagements:
+          type: array
+          items:
+            $ref: "#/components/schemas/incomeExpenditureManagement"

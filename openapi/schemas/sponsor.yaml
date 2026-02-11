@@ -1,0 +1,46 @@
+components:
+  schemas:
+    sponsorStyle:
+      required:
+        - feature
+        - price
+        - style
+      type: object
+      properties:
+        style:
+          type: string
+          example: 1分の1
+        feature:
+          type: string
+          example: カラー
+        price:
+          type: integer
+          example: 30000
+
+    sponsor:
+      required:
+        - address
+        - email
+        - name
+        - representative
+        - tel
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 0
+        name:
+          type: string
+          example: 企業1
+        tel:
+          type: string
+          example: "09000000000"
+        email:
+          type: string
+          example: test@example.com
+        address:
+          type: string
+          example: ○○1-1
+        representative:
+          type: string
+          example: 長岡太郎(社長)

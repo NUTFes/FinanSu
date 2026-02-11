@@ -1,0 +1,336 @@
+paths:
+  /bureaus:
+    get:
+      tags:
+        - bureau
+      description: bureauの一覧を取得
+      responses:
+        "200":
+          description: bureauの一覧の取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - bureau
+      description: bureauの作成
+      parameters:
+        - name: name
+          in: query
+          description: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: create されたbureauが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /bureaus/{id}:
+    get:
+      tags:
+        - bureau
+      description: IDで指定されたbureauの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: bureauの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - bureau
+      description: bureauの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたbureauが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - bureau
+      description: IDを指定してbureauの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: bureauの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /departments:
+    get:
+      tags:
+        - department
+      description: departmentの一覧の取得
+      responses:
+        "200":
+          description: departmentの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - department
+      description: departmentの作成
+      parameters:
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 作成されたdepartmentが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /departments/{id}:
+    get:
+      tags:
+        - department
+      description: IDで指定されたdepartmentの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: departmentの取得
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - department
+      description: departmentの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 更新されたdepartmentが返ってくる
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - department
+      description: IDを指定してdepartmentの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: departmentの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /divisions:
+    get:
+      tags:
+        - division
+      description: division一覧の取得
+        クエリでyearを指定することで年度ごとのdivisionを取得可能
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: financial_record_id
+          in: query
+          description: financial_record_id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/organization.yaml#/components/schemas/divisionDetails"
+    post:
+      tags:
+        - division
+      description: divisionの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/organization.yaml#/components/schemas/division"
+        required: true
+      responses:
+        "200":
+          description: 作成されたdivisionが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/organization.yaml#/components/schemas/divisionWithBalance"
+
+  /divisions/{id}:
+    get:
+      tags:
+        - division
+      description: IDで指定されたdivisionの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/organization.yaml#/components/schemas/division"
+    put:
+      tags:
+        - division
+      description: divisionの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/organization.yaml#/components/schemas/division"
+        required: true
+      responses:
+        "200":
+          description: 更新されたdivisionが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/organization.yaml#/components/schemas/divisionWithBalance"
+      x-codegen-request-body-name: division
+    delete:
+      tags:
+        - division
+      description: IDを指定してdivisionの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /divisions/users:
+    get:
+      tags:
+        - division
+      description: 購入報告ページの部門一覧の取得
+      parameters:
+        - name: year
+          in: query
+          description: 年度
+          schema:
+            type: integer
+        - name: user_id
+          in: query
+          description: ユーザーid
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: ユーザー所属の部門の一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "../schemas/organization.yaml#/components/schemas/divisionOption"
+
+  /divisions/years:
+    get:
+      tags:
+        - division
+      description: 年度ごとのdivisionの一覧を取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度ごとのdivisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "../schemas/organization.yaml#/components/schemas/divisionOption"

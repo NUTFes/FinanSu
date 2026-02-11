@@ -39,6 +39,57 @@ make ent-db         # Enter MySQL database shell
 make run-swagger    # Start Swagger UI documentation
 ```
 
+## OpenAPI Structure
+
+**OpenAPI仕様は保守性向上のため、複数ファイルに分割されています:**
+
+### ディレクトリ構成
+```
+/openapi/
+├── openapi.yaml              # メインエントリーポイント
+├── bundled.gen.yaml          # バンドル済みファイル（自動生成、編集禁止）
+├── paths/                    # ドメイン別エンドポイント定義
+│   ├── health.yaml          # ヘルスチェック
+│   ├── activity.yaml        # 活動管理
+│   ├── organization.yaml    # 組織管理
+│   ├── festival-item.yaml   # 物品管理
+│   ├── buy-report.yaml      # 購入報告
+│   ├── financial.yaml       # 財務管理
+│   ├── sponsor.yaml         # スポンサー管理
+│   ├── user.yaml            # ユーザー管理
+│   ├── teacher.yaml         # 教員管理
+│   ├── auth.yaml            # 認証
+│   ├── year.yaml            # 年度管理
+│   └── upload.yaml          # ファイルアップロード
+└── schemas/                  # ドメイン別スキーマ定義
+    ├── _shared.yaml         # 共通スキーマ
+    ├── activity.yaml
+    ├── organization.yaml
+    ├── festival-item.yaml
+    ├── buy-report.yaml
+    ├── financial.yaml
+    ├── sponsor.yaml
+    ├── user.yaml
+    ├── teacher.yaml
+    └── auth.yaml
+```
+
+### 新規エンドポイント追加時の手順
+1. 適切なドメインファイルを `/openapi/paths/` から選択
+2. スキーマは `/openapi/schemas/` の対応ファイルに追加
+3. 相対参照を使用: `../schemas/{domain}.yaml#/components/schemas/{SchemaName}`
+4. `make gen` でコード再生成（自動的にバンドル→コード生成が実行されます）
+
+### 重要な注意事項
+- **`bundled.gen.yaml` は自動生成ファイルです。直接編集しないでください。**
+- 変更は常に `openapi.yaml`, `paths/`, `schemas/` 内のソースファイルに対して行ってください
+- `bundled.gen.yaml` は `.gitignore` に追加されており、Git管理対象外です
+
+### ファイルサイズ
+- 各ファイル: 13-400行
+- メインファイル: 約160行
+- 合計23ファイル（メイン1 + パス12 + スキーマ10）
+
 ## Architecture Overview
 
 **FinanSu** is a financial management system built with:
@@ -81,8 +132,17 @@ make run-swagger    # Start Swagger UI documentation
 ## Key Development Patterns
 
 ### Code Generation Workflow
-1. Edit `/openapi/openapi.yaml` for API changes
+
+**OpenAPI specs are split into domain-based files for better maintainability:**
+- Main entry: `/openapi/openapi.yaml`
+- Path definitions: `/openapi/paths/*.yaml` (12 files)
+- Schema definitions: `/openapi/schemas/*.yaml` (10 files)
+- Auto-generated bundle: `/openapi/bundled.gen.yaml` (DO NOT EDIT)
+
+**Development workflow:**
+1. Edit `/openapi/paths/` or `/openapi/schemas/` for API changes
 2. Run `make gen` to regenerate Go server code and TypeScript hooks
+   - Automatically bundles split files → generates code
    - Generates `api/generated/openapi_gen.go` with:
      - Server interface that handlers must implement
      - Request/response types

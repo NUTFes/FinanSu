@@ -1,0 +1,158 @@
+paths:
+  /festival_items:
+    get:
+      tags:
+        - festival_item
+      description: festival_itemの一覧の取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: division_id
+          in: query
+          description: division_id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの一覧を取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItemDetails"
+    post:
+      tags:
+        - festival_item
+      description: festival_itemの作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItem"
+        required: true
+      responses:
+        "200":
+          description: 作成されたfestival_itemが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItemWithBalance"
+
+  /festival_items/{id}:
+    get:
+      tags:
+        - festival_item
+      description: IDで指定されたfestival_itemの取得
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの取得
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItem"
+    put:
+      tags:
+        - festival_item
+      description: festival_itemの更新
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItem"
+        required: true
+      responses:
+        "200":
+          description: 更新されたfestival_itemが返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItemWithBalance"
+      x-codegen-request-body-name: festivalItem
+    delete:
+      tags:
+        - festival_item
+      description: IDを指定してfestival_itemの削除
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: festival_itemの削除完了
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /festival_items/details/{user_id}:
+    get:
+      tags:
+        - festival_item
+      description: ユーザーのマイページの予算一覧の取得
+      parameters:
+        - name: user_id
+          in: path
+          description: user_id
+          required: true
+          schema:
+            type: integer
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: divisionの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItemsForMyPage"
+
+  /festival_items/users:
+    get:
+      tags:
+        - festival_item
+      description: 購入報告ページの物品一覧の取得
+      parameters:
+        - name: year
+          in: query
+          description: year
+          schema:
+            type: integer
+        - name: division_id
+          in: query
+          description: 部門id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: ユーザー所属の物品予算の一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "../schemas/festival-item.yaml#/components/schemas/festivalItemOption"

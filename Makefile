@@ -165,16 +165,28 @@ run-all: ## DB・アプリ・Swaggerを一括起動
 	make run-swagger
 
 ##@ コード生成・整形
-gen: ## API・フロント両方のコード生成
-	make gen-api
-	make gen-front-api
+gen: gen-api gen-front-api ## API・フロント両方のコード生成
 
 gen-api: ## API側コード生成
-	docker compose run --rm api oapi-codegen -config /openapi/config.yaml /openapi/openapi.yaml
+	@echo "Bundling OpenAPI specification..."
+	@docker run --rm -v "$(PWD)/openapi:/spec" redocly/cli bundle /spec/openapi.yaml -o /spec/bundled.gen.yaml > /dev/null 2>&1
+	@echo "# DO NOT EDIT" > /tmp/header.txt
+	@echo "# This file is auto-generated from /openapi/openapi.yaml and related files." >> /tmp/header.txt
+	@echo "# To make changes, edit the source files in /openapi/paths/ and /openapi/schemas/" >> /tmp/header.txt
+	@echo "# and run 'make gen-api' to regenerate this file." >> /tmp/header.txt
+	@echo "" >> /tmp/header.txt
+	@cat openapi/bundled.gen.yaml >> /tmp/header.txt
+	@mv /tmp/header.txt openapi/bundled.gen.yaml
+	@echo "Generating Go server code..."
+	@docker compose run --rm api oapi-codegen -config /openapi/config.yaml /openapi/bundled.gen.yaml
 
 gen-front-api: ## フロント側API生成
 	docker compose run --rm view pnpm exec orval
 	docker compose run --rm view pnpm run format
+
+lint-api: ## OpenAPI仕様のLint
+	@echo "Linting OpenAPI specification..."
+	@docker run --rm -v "$(PWD)/openapi:/spec" redocly/cli lint /spec/openapi.yaml
 
 gen-er: ## ER図生成
 	docker run -v "./er:/output" --net="host" schemaspy/schemaspy:snapshot -t mysql -host localhost:3306 -db finansu_db -u root -p root -connprops  allowPublicKeyRetrieval\\=false  -s finansu_db
