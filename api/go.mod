@@ -1,8 +1,6 @@
 module github.com/NUTFes/FinanSu/api
 
-go 1.23.0
-
-toolchain go1.24.1
+go 1.26.0
 
 require (
 	github.com/doug-martin/goqu/v9 v9.19.0
