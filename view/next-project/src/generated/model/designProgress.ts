@@ -13,8 +13,8 @@ export type DesignProgress = (typeof DesignProgress)[keyof typeof DesignProgress
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DesignProgress = {
-  未着手: '未着手',
-  学生が作成: '学生が作成',
-  企業が作成: '企業が作成',
-  完成: '完成',
+  unstarted: 'unstarted',
+  created_by_student: 'created_by_student',
+  created_by_company: 'created_by_company',
+  completed: 'completed',
 } as const;

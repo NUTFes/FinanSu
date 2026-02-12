@@ -13,7 +13,7 @@ export type GetSponsorshipActivitiesParams = {
   /**
    * 年度期間ID (指定なし時は最新年度)
    */
-  year_period_id?: number;
+  year_periods_id?: number;
   /**
    * 検索キーワード（企業名、担当者名など）
    */
@@ -31,7 +31,7 @@ export type GetSponsorshipActivitiesParams = {
    */
   user_id?: number;
   /**
-   * 協賛プランID（複数指定可 例:sponsor_style_ids[]=1&sponsor_style_ids[]=2）
+   * 協賛プランID（複数指定可）
    */
   sponsor_style_ids?: number[];
   /**

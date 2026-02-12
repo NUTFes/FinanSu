@@ -17,7 +17,7 @@ import type { ActivitySponsorStyleLink } from './activitySponsorStyleLink';
  */
 export interface SponsorshipActivity {
   id?: number;
-  yearPeriodId?: number;
+  yearPeriodsId?: number;
   sponsorId?: number;
   userId?: number;
   activityStatus?: ActivityStatus;

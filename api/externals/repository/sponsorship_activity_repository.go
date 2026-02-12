@@ -13,6 +13,7 @@ type SponsorshipActivityRepository interface {
 	Find(ctx context.Context, id int) (domain.SponsorshipActivity, error)
 	Create(ctx context.Context, activity domain.SponsorshipActivity) (int, error)
 	Update(ctx context.Context, activity domain.SponsorshipActivity) error
+	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error // ★追加
 	Delete(ctx context.Context, id int) error
 }
 
@@ -28,7 +29,7 @@ func NewSponsorshipActivityRepository(client db.Client, crud abstract.Crud) Spon
 	}
 }
 
-//以下、ハリボテ
+// 以下、ハリボテ実装
 
 func (r *sponsorshipActivityRepository) All(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
 	return []domain.SponsorshipActivity{}, nil
@@ -43,6 +44,10 @@ func (r *sponsorshipActivityRepository) Create(ctx context.Context, activity dom
 }
 
 func (r *sponsorshipActivityRepository) Update(ctx context.Context, activity domain.SponsorshipActivity) error {
+	return nil
+}
+
+func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error {
 	return nil
 }
 

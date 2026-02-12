@@ -197,6 +197,7 @@ export * from './putReceiptsId200';
 export * from './putSourcesId200';
 export * from './putSourcesIdParams';
 export * from './putSponsorsId200';
+export * from './putSponsorshipActivitiesIdStatusBody';
 export * from './putSponsorstylesId200';
 export * from './putTeachersId200';
 export * from './putTeachersIdParams';

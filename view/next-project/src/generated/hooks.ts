@@ -135,6 +135,7 @@ import type {
   PutIncomeExpenditureManagementsCheckId200,
   PutIncomeExpenditureManagementsCheckIdBody,
   PutSponsorsId200,
+  PutSponsorshipActivitiesIdStatusBody,
   PutSponsorstylesId200,
   PutTeachersId200,
   PutTeachersIdParams,
@@ -7376,8 +7377,8 @@ export const getGetSponsorshipActivitiesUrl = (params?: GetSponsorshipActivities
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/sponsorship-activities?${stringifiedParams}`
-    : `/sponsorship-activities`;
+    ? `/sponsorship_activities?${stringifiedParams}`
+    : `/sponsorship_activities`;
 };
 
 export const getSponsorshipActivities = async (
@@ -7391,7 +7392,7 @@ export const getSponsorshipActivities = async (
 };
 
 export const getGetSponsorshipActivitiesKey = (params?: GetSponsorshipActivitiesParams) =>
-  [`/sponsorship-activities`, ...(params ? [params] : [])] as const;
+  [`/sponsorship_activities`, ...(params ? [params] : [])] as const;
 
 export type GetSponsorshipActivitiesQueryResult = NonNullable<
   Awaited<ReturnType<typeof getSponsorshipActivities>>
@@ -7441,7 +7442,7 @@ export type postSponsorshipActivitiesResponseSuccess = postSponsorshipActivities
 export type postSponsorshipActivitiesResponse = postSponsorshipActivitiesResponseSuccess;
 
 export const getPostSponsorshipActivitiesUrl = () => {
-  return `/sponsorship-activities`;
+  return `/sponsorship_activities`;
 };
 
 export const postSponsorshipActivities = async (
@@ -7463,7 +7464,7 @@ export const getPostSponsorshipActivitiesMutationFetcher = (
     return postSponsorshipActivities(arg, options);
   };
 };
-export const getPostSponsorshipActivitiesMutationKey = () => [`/sponsorship-activities`] as const;
+export const getPostSponsorshipActivitiesMutationKey = () => [`/sponsorship_activities`] as const;
 
 export type PostSponsorshipActivitiesMutationResult = NonNullable<
   Awaited<ReturnType<typeof postSponsorshipActivities>>
@@ -7511,7 +7512,7 @@ export type getSponsorshipActivitiesIdResponseSuccess = getSponsorshipActivities
 export type getSponsorshipActivitiesIdResponse = getSponsorshipActivitiesIdResponseSuccess;
 
 export const getGetSponsorshipActivitiesIdUrl = (id: number) => {
-  return `/sponsorship-activities/${id}`;
+  return `/sponsorship_activities/${id}`;
 };
 
 export const getSponsorshipActivitiesId = async (
@@ -7525,7 +7526,7 @@ export const getSponsorshipActivitiesId = async (
 };
 
 export const getGetSponsorshipActivitiesIdKey = (id: number) =>
-  [`/sponsorship-activities/${id}`] as const;
+  [`/sponsorship_activities/${id}`] as const;
 
 export type GetSponsorshipActivitiesIdQueryResult = NonNullable<
   Awaited<ReturnType<typeof getSponsorshipActivitiesId>>
@@ -7561,8 +7562,8 @@ export const useGetSponsorshipActivitiesId = <TError = unknown>(
 };
 
 /**
- * 指定IDの協賛活動データを更新。
- * @summary 協賛活動の更新
+ * 指定IDの協賛活動データを更新（基本情報・プランなど）。
+ * @summary 協賛活動の更新（全項目）
  */
 export type putSponsorshipActivitiesIdResponse200 = {
   data: SponsorshipActivity;
@@ -7575,7 +7576,7 @@ export type putSponsorshipActivitiesIdResponseSuccess = putSponsorshipActivities
 export type putSponsorshipActivitiesIdResponse = putSponsorshipActivitiesIdResponseSuccess;
 
 export const getPutSponsorshipActivitiesIdUrl = (id: number) => {
-  return `/sponsorship-activities/${id}`;
+  return `/sponsorship_activities/${id}`;
 };
 
 export const putSponsorshipActivitiesId = async (
@@ -7600,7 +7601,7 @@ export const getPutSponsorshipActivitiesIdMutationFetcher = (
   };
 };
 export const getPutSponsorshipActivitiesIdMutationKey = (id: number) =>
-  [`/sponsorship-activities/${id}`] as const;
+  [`/sponsorship_activities/${id}`] as const;
 
 export type PutSponsorshipActivitiesIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof putSponsorshipActivitiesId>>
@@ -7608,7 +7609,7 @@ export type PutSponsorshipActivitiesIdMutationResult = NonNullable<
 export type PutSponsorshipActivitiesIdMutationError = unknown;
 
 /**
- * @summary 協賛活動の更新
+ * @summary 協賛活動の更新（全項目）
  */
 export const usePutSponsorshipActivitiesId = <TError = unknown>(
   id: number,
@@ -7652,7 +7653,7 @@ export type deleteSponsorshipActivitiesIdResponseSuccess =
 export type deleteSponsorshipActivitiesIdResponse = deleteSponsorshipActivitiesIdResponseSuccess;
 
 export const getDeleteSponsorshipActivitiesIdUrl = (id: number) => {
-  return `/sponsorship-activities/${id}`;
+  return `/sponsorship_activities/${id}`;
 };
 
 export const deleteSponsorshipActivitiesId = async (
@@ -7677,7 +7678,7 @@ export const getDeleteSponsorshipActivitiesIdMutationFetcher = (
   };
 };
 export const getDeleteSponsorshipActivitiesIdMutationKey = (id: number) =>
-  [`/sponsorship-activities/${id}`] as const;
+  [`/sponsorship_activities/${id}`] as const;
 
 export type DeleteSponsorshipActivitiesIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteSponsorshipActivitiesId>>
@@ -7704,6 +7705,87 @@ export const useDeleteSponsorshipActivitiesId = <TError = unknown>(
 
   const swrKey = swrOptions?.swrKey ?? getDeleteSponsorshipActivitiesIdMutationKey(id);
   const swrFn = getDeleteSponsorshipActivitiesIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * ステータス、可否、デザイン進捗、備考のみを更新。
+ * @summary 協賛活動ステータスの更新
+ */
+export type putSponsorshipActivitiesIdStatusResponse200 = {
+  data: SponsorshipActivity;
+  status: 200;
+};
+
+export type putSponsorshipActivitiesIdStatusResponseSuccess =
+  putSponsorshipActivitiesIdStatusResponse200 & {
+    headers: Headers;
+  };
+export type putSponsorshipActivitiesIdStatusResponse =
+  putSponsorshipActivitiesIdStatusResponseSuccess;
+
+export const getPutSponsorshipActivitiesIdStatusUrl = (id: number) => {
+  return `/sponsorship_activities/${id}/status`;
+};
+
+export const putSponsorshipActivitiesIdStatus = async (
+  id: number,
+  putSponsorshipActivitiesIdStatusBody: PutSponsorshipActivitiesIdStatusBody,
+  options?: RequestInit,
+): Promise<putSponsorshipActivitiesIdStatusResponse> => {
+  return customFetch<putSponsorshipActivitiesIdStatusResponse>(
+    getPutSponsorshipActivitiesIdStatusUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(putSponsorshipActivitiesIdStatusBody),
+    },
+  );
+};
+
+export const getPutSponsorshipActivitiesIdStatusMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, { arg }: { arg: PutSponsorshipActivitiesIdStatusBody }) => {
+    return putSponsorshipActivitiesIdStatus(id, arg, options);
+  };
+};
+export const getPutSponsorshipActivitiesIdStatusMutationKey = (id: number) =>
+  [`/sponsorship_activities/${id}/status`] as const;
+
+export type PutSponsorshipActivitiesIdStatusMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>
+>;
+export type PutSponsorshipActivitiesIdStatusMutationError = unknown;
+
+/**
+ * @summary 協賛活動ステータスの更新
+ */
+export const usePutSponsorshipActivitiesIdStatus = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>,
+      TError,
+      Key,
+      PutSponsorshipActivitiesIdStatusBody,
+      Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPutSponsorshipActivitiesIdStatusMutationKey(id);
+  const swrFn = getPutSponsorshipActivitiesIdStatusMutationFetcher(id, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
@@ -7751,8 +7833,8 @@ export const getGetSponsorshipActivitiesExportUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/sponsorship-activities/export?${stringifiedParams}`
-    : `/sponsorship-activities/export`;
+    ? `/sponsorship_activities/export?${stringifiedParams}`
+    : `/sponsorship_activities/export`;
 };
 
 export const getSponsorshipActivitiesExport = async (
@@ -7770,7 +7852,7 @@ export const getSponsorshipActivitiesExport = async (
 
 export const getGetSponsorshipActivitiesExportKey = (
   params?: GetSponsorshipActivitiesExportParams,
-) => [`/sponsorship-activities/export`, ...(params ? [params] : [])] as const;
+) => [`/sponsorship_activities/export`, ...(params ? [params] : [])] as const;
 
 export type GetSponsorshipActivitiesExportQueryResult = NonNullable<
   Awaited<ReturnType<typeof getSponsorshipActivitiesExport>>

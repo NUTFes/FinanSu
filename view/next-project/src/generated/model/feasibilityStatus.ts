@@ -13,7 +13,7 @@ export type FeasibilityStatus = (typeof FeasibilityStatus)[keyof typeof Feasibil
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeasibilityStatus = {
-  未着手: '未着手',
-  可: '可',
-  不可: '不可',
+  unstarted: 'unstarted',
+  possible: 'possible',
+  impossible: 'impossible',
 } as const;

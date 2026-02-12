@@ -13,12 +13,12 @@ export type ActivityStatus = (typeof ActivityStatus)[keyof typeof ActivityStatus
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ActivityStatus = {
-  未着手: '未着手',
-  資料送付済み: '資料送付済み',
-  Forms送付済み: 'Forms送付済み',
-  協賛内容確定: '協賛内容確定',
-  請求書送付済み: '請求書送付済み',
-  協賛金入金済み: '協賛金入金済み',
-  領収書送付済み: '領収書送付済み',
-  協賛不可: '協賛不可',
+  unstarted: 'unstarted',
+  material_sent: 'material_sent',
+  forms_sent: 'forms_sent',
+  confirmed: 'confirmed',
+  invoice_sent: 'invoice_sent',
+  payment_confirmed: 'payment_confirmed',
+  receipt_sent: 'receipt_sent',
+  rejected: 'rejected',
 } as const;

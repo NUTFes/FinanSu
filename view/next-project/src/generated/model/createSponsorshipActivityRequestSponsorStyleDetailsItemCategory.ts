@@ -11,6 +11,6 @@ export type CreateSponsorshipActivityRequestSponsorStyleDetailsItemCategory =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateSponsorshipActivityRequestSponsorStyleDetailsItemCategory = {
-  金銭: '金銭',
-  物品: '物品',
+  money: 'money',
+  goods: 'goods',
 } as const;

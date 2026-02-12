@@ -14,12 +14,12 @@ import type { UpdateSponsorshipActivityRequestSponsorStyleDetailsItem } from './
  * 更新時のリクエストボディ
  */
 export interface UpdateSponsorshipActivityRequest {
-  yearPeriodId?: number;
-  sponsorId?: number;
-  userId?: number;
-  activityStatus?: ActivityStatus;
-  feasibilityStatus?: FeasibilityStatus;
-  designProgress?: DesignProgress;
+  yearPeriodsId: number;
+  sponsorId: number;
+  userId: number;
+  activityStatus: ActivityStatus;
+  feasibilityStatus: FeasibilityStatus;
+  designProgress: DesignProgress;
   remarks?: string;
   /** 更新したい協賛プラン情報のリスト（全置換） */
   sponsorStyleDetails?: UpdateSponsorshipActivityRequestSponsorStyleDetailsItem[];

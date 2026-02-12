@@ -22,9 +22,14 @@ func (h *Handler) GetSponsorshipActivitiesId(c echo.Context, id int) error {
 	return c.String(http.StatusOK, "GetSponsorshipActivitiesId: Mock Response")
 }
 
-// 更新 (Put)
+// 更新 (Put: 全項目更新)
 func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
 	return c.String(http.StatusOK, "PutSponsorshipActivitiesId: Mock Response")
+}
+
+// ステータス更新 (Put: Status)
+func (h *Handler) PutSponsorshipActivitiesIdStatus(c echo.Context, id int) error {
+	return c.String(http.StatusOK, "PutSponsorshipActivitiesIdStatus: Mock Response")
 }
 
 // 削除 (Delete)

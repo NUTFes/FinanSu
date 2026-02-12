@@ -8,19 +8,10 @@
 import type { ActivityStatus } from './activityStatus';
 import type { FeasibilityStatus } from './feasibilityStatus';
 import type { DesignProgress } from './designProgress';
-import type { CreateSponsorshipActivityRequestSponsorStyleDetailsItem } from './createSponsorshipActivityRequestSponsorStyleDetailsItem';
 
-/**
- * 新規作成時のリクエストボディ
- */
-export interface CreateSponsorshipActivityRequest {
-  yearPeriodsId: number;
-  sponsorId: number;
-  userId: number;
+export type PutSponsorshipActivitiesIdStatusBody = {
   activityStatus: ActivityStatus;
   feasibilityStatus: FeasibilityStatus;
   designProgress: DesignProgress;
   remarks?: string;
-  /** 登録したい協賛プラン情報のリスト */
-  sponsorStyleDetails?: CreateSponsorshipActivityRequestSponsorStyleDetailsItem[];
-}
+};

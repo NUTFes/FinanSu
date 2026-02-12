@@ -12,6 +12,7 @@ type SponsorshipActivityUseCase interface {
 	GetSponsorshipActivityByID(ctx context.Context, id int) (domain.SponsorshipActivity, error)
 	CreateSponsorshipActivity(ctx context.Context, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
 	UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
+	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) // ★追加
 	DeleteSponsorshipActivity(ctx context.Context, id int) error
 }
 
@@ -23,7 +24,7 @@ func NewSponsorshipActivityUseCase(repo repository.SponsorshipActivityRepository
 	return &sponsorshipActivityUseCase{repo: repo}
 }
 
-// 以下、ハリボテ
+// 以下、ハリボテ実装
 
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
 	return u.repo.All(ctx, params)
@@ -40,6 +41,11 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 
 func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
 	u.repo.Update(ctx, activity)
+	return activity, nil
+}
+
+func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
+	u.repo.UpdateStatus(ctx, id, activity)
 	return activity, nil
 }
 

@@ -2352,16 +2352,16 @@ paths:
               schema:
                 type: object
 
-  /sponsorship-activities:
+  /sponsorship_activities:
     get:
       tags:
-        - sponsorship-activity
+        - sponsorship_activity
       summary: 協賛活動一覧取得
       description: |
         年度、キーワード、ステータス、担当者、協賛プランなどで絞り込み、指定順序でソートして一覧を取得。
         合計金額（totalAmount）も返却。
       parameters:
-        - name: year_period_id
+        - name: year_periods_id
           in: query
           description: 年度期間ID (指定なし時は最新年度)
           required: false
@@ -2393,7 +2393,7 @@ paths:
             type: integer
         - name: sponsor_style_ids
           in: query
-          description: "協賛プランID（複数指定可 例:sponsor_style_ids[]=1&sponsor_style_ids[]=2）"
+          description: "協賛プランID（複数指定可）"
           required: false
           schema:
             type: array
@@ -2427,13 +2427,14 @@ paths:
                   totalAmount:
                     type: integer
                     description: 該当データの協賛金額合計
+                    example: 350000
                   activities:
                     type: array
                     items:
                       $ref: "#/components/schemas/SponsorshipActivity"
     post:
       tags:
-        - sponsorship-activity
+        - sponsorship_activity
       summary: 協賛活動の新規作成
       description: 新しい協賛活動データを作成。
       requestBody:
@@ -2450,10 +2451,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/SponsorshipActivity"
 
-  /sponsorship-activities/{id}:
+  /sponsorship_activities/{id}:
     get:
       tags:
-        - sponsorship-activity
+        - sponsorship_activity
       summary: 協賛活動詳細取得
       description: 指定IDの協賛活動データを取得。
       parameters:
@@ -2471,9 +2472,9 @@ paths:
                 $ref: "#/components/schemas/SponsorshipActivity"
     put:
       tags:
-        - sponsorship-activity
-      summary: 協賛活動の更新
-      description: 指定IDの協賛活動データを更新。
+        - sponsorship_activity
+      summary: 協賛活動の更新（全項目）
+      description: 指定IDの協賛活動データを更新（基本情報・プランなど）。
       parameters:
         - name: id
           in: path
@@ -2496,7 +2497,7 @@ paths:
                 $ref: "#/components/schemas/SponsorshipActivity"
     delete:
       tags:
-        - sponsorship-activity
+        - sponsorship_activity
       summary: 協賛活動の削除
       description: 指定IDの協賛活動データを物理削除。
       parameters:
@@ -2514,14 +2515,55 @@ paths:
               schema:
                 type: object
 
-  /sponsorship-activities/export:
+  /sponsorship_activities/{id}/status:
+    put:
+      tags:
+        - sponsorship_activity
+      summary: 協賛活動ステータスの更新
+      description: ステータス、可否、デザイン進捗、備考のみを更新。
+      parameters:
+        - name: id
+          in: path
+          description: 協賛活動ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - activityStatus
+                - feasibilityStatus
+                - designProgress
+              properties:
+                activityStatus:
+                  $ref: "#/components/schemas/ActivityStatus"
+                feasibilityStatus:
+                  $ref: "#/components/schemas/FeasibilityStatus"
+                designProgress:
+                  $ref: "#/components/schemas/DesignProgress"
+                remarks:
+                  type: string
+                  example: "電話にて確認済み"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SponsorshipActivity"
+
+  /sponsorship_activities/export:
     get:
       tags:
-        - sponsorship-activity
+        - sponsorship_activity
       summary: CSVエクスポート
       description: 検索条件に一致するデータをCSV形式でダウンロード。
       parameters:
-        - name: year_period_id
+        - name: year_periods_id
           in: query
           schema:
             type: integer
@@ -3216,26 +3258,31 @@ components:
       type: string
       description: 活動ステータス
       enum:
-        [
-          "未着手",
-          "資料送付済み",
-          "Forms送付済み",
-          "協賛内容確定",
-          "請求書送付済み",
-          "協賛金入金済み",
-          "領収書送付済み",
-          "協賛不可",
-        ]
+        - unstarted
+        - material_sent
+        - forms_sent
+        - confirmed
+        - invoice_sent
+        - payment_confirmed
+        - receipt_sent
+        - rejected
 
     FeasibilityStatus:
       type: string
       description: 協賛可否
-      enum: ["未着手", "可", "不可"]
+      enum:
+        - unstarted
+        - possible
+        - impossible
 
     DesignProgress:
       type: string
       description: デザイン進捗
-      enum: ["未着手", "学生が作成", "企業が作成", "完成"]
+      enum:
+        - unstarted
+        - created_by_student
+        - created_by_company
+        - completed
 
     SponsorshipActivity:
       type: object
@@ -3243,12 +3290,16 @@ components:
       properties:
         id:
           type: integer
-        yearPeriodId:
+          example: 1
+        yearPeriodsId:
           type: integer
+          example: 5
         sponsorId:
           type: integer
+          example: 101
         userId:
           type: integer
+          example: 5
         activityStatus:
           $ref: "#/components/schemas/ActivityStatus"
         feasibilityStatus:
@@ -3257,6 +3308,7 @@ components:
           $ref: "#/components/schemas/DesignProgress"
         remarks:
           type: string
+          example: "パンフレットと物品の併用プランです"
         sponsor:
           $ref: "#/components/schemas/sponsor"
         user:
@@ -3269,25 +3321,32 @@ components:
         createdAt:
           type: string
           format: date-time
+          example: "2026-05-01T09:00:00Z"
         updatedAt:
           type: string
           format: date-time
+          example: "2026-05-20T10:00:00Z"
 
     CreateSponsorshipActivityRequest:
       type: object
       description: 新規作成時のリクエストボディ
       required:
-        - yearPeriodId
+        - yearPeriodsId
         - sponsorId
         - userId
         - activityStatus
+        - feasibilityStatus
+        - designProgress
       properties:
-        yearPeriodId:
+        yearPeriodsId:
           type: integer
+          example: 5
         sponsorId:
           type: integer
+          example: 101
         userId:
           type: integer
+          example: 5
         activityStatus:
           $ref: "#/components/schemas/ActivityStatus"
         feasibilityStatus:
@@ -3296,6 +3355,7 @@ components:
           $ref: "#/components/schemas/DesignProgress"
         remarks:
           type: string
+          example: "特になし"
         sponsorStyleDetails:
           type: array
           description: 登録したい協賛プラン情報のリスト
@@ -3304,20 +3364,32 @@ components:
             properties:
               sponsorStyleId:
                 type: integer
+                example: 1
               category:
                 type: string
-                enum: ["金銭", "物品"]
+                enum: ["money", "goods"]
+                example: "money"
 
     UpdateSponsorshipActivityRequest:
       type: object
       description: 更新時のリクエストボディ
+      required:
+        - yearPeriodsId
+        - sponsorId
+        - userId
+        - activityStatus
+        - feasibilityStatus
+        - designProgress
       properties:
-        yearPeriodId:
+        yearPeriodsId:
           type: integer
+          example: 5
         sponsorId:
           type: integer
+          example: 101
         userId:
           type: integer
+          example: 5
         activityStatus:
           $ref: "#/components/schemas/ActivityStatus"
         feasibilityStatus:
@@ -3326,6 +3398,7 @@ components:
           $ref: "#/components/schemas/DesignProgress"
         remarks:
           type: string
+          example: "更新しました"
         sponsorStyleDetails:
           type: array
           description: 更新したい協賛プラン情報のリスト（全置換）
@@ -3334,9 +3407,11 @@ components:
             properties:
               sponsorStyleId:
                 type: integer
+                example: 1
               category:
                 type: string
-                enum: ["金銭", "物品"]
+                enum: ["money", "goods"]
+                example: "money"
 
     ActivitySponsorStyleLink:
       type: object
@@ -3344,11 +3419,14 @@ components:
       properties:
         id:
           type: integer
+          example: 10
         sponsorStyleId:
           type: integer
+          example: 2
         category:
           type: string
-          enum: ["金銭", "物品"]
+          enum: ["money", "goods"]
+          example: "money"
         style:
           $ref: "#/components/schemas/sponsorStyle"
 

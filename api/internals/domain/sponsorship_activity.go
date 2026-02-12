@@ -4,7 +4,7 @@ import "time"
 
 type SponsorshipActivity struct {
 	ID                int       `json:"id"`
-	YearPeriodID      int       `json:"yearPeriodId"`
+	YearPeriodsID     int       `json:"yearPeriodsId"`
 	SponsorID         int       `json:"sponsorId"`
 	UserID            int       `json:"userId"`
 	ActivityStatus    string    `json:"activityStatus"`
@@ -26,8 +26,9 @@ type SponsorStyleDetail struct {
 	Style          SponsorStyle `json:"style"`
 }
 
+// 検索パラメータ用
 type SponsorshipActivityParams struct {
-	YearPeriodID      *int
+	YearPeriodsID     *int
 	Keyword           *string
 	ActivityStatus    *string
 	FeasibilityStatus *string
