@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"strconv"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -80,25 +81,27 @@ func (ur *userRepository) Destroy(c context.Context, id string) error {
 
 // 複数削除
 func (ur *userRepository) MultiDestroy(c context.Context, ids []int) error {
-	query := "UPDATE users SET is_deleted = TRUE WHERE "
-	query2 := "UPDATE mail_auth SET email = NULL WHERE "
+	var query strings.Builder
+	query.WriteString("UPDATE users SET is_deleted = TRUE WHERE ")
+	var query2 strings.Builder
+	query2.WriteString("UPDATE mail_auth SET email = NULL WHERE ")
 	for index, id := range ids {
-		query += "id = " + strconv.Itoa(id)
-		query2 += "user_id = " + strconv.Itoa(id)
+		query.WriteString("id = " + strconv.Itoa(id))
+		query2.WriteString("user_id = " + strconv.Itoa(id))
 
 		if index != len(ids)-1 {
-			query += " OR "
-			query2 += " OR "
+			query.WriteString(" OR ")
+			query2.WriteString(" OR ")
 		}
 
 	}
 
-	err := ur.crud.UpdateDB(c, query)
+	err := ur.crud.UpdateDB(c, query.String())
 	if err != nil {
 		return err
 	}
 
-	err = ur.crud.UpdateDB(c, query2)
+	err = ur.crud.UpdateDB(c, query2.String())
 
 	return err
 }
