@@ -19,6 +19,7 @@ import {
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
 import { userAtom } from '@/store/atoms';
+import { buildPaidByFilterParams } from '@/utils/purchaseReportFilters';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -72,11 +73,17 @@ export default function PurchaseReports() {
   const [isPaidByFilterOpen, setIsPaidByFilterOpen] = useState(false);
   const [selectedBureauId, setSelectedBureauId] = useState<number | null>(null);
   const [selectedPaidBy, setSelectedPaidBy] = useState<string | null | undefined>(undefined);
+  const [selectedPaidByUserId, setSelectedPaidByUserId] = useState<number | null>(null);
+
+  const paidByFilterParams = buildPaidByFilterParams({
+    paidByUserId: selectedPaidByUserId,
+    paidBy: selectedPaidBy,
+  });
 
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
     ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
-    ...(selectedPaidBy != null ? { paid_by: selectedPaidBy } : {}),
+    ...paidByFilterParams,
   };
 
   const {
@@ -91,7 +98,7 @@ export default function PurchaseReports() {
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
     ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
-    ...(selectedPaidBy != null ? { paid_by: selectedPaidBy } : {}),
+    ...paidByFilterParams,
   };
 
   const {
@@ -253,14 +260,16 @@ export default function PurchaseReports() {
             <PurchaseReportPaidByFilterModal
               isOpen={isPaidByFilterOpen}
               onClose={() => setIsPaidByFilterOpen(false)}
-              onApply={({ bureauId, paidBy }) => {
+              onApply={({ bureauId, paidByUserId, paidBy }) => {
                 setSelectedBureauId(bureauId);
+                setSelectedPaidByUserId(paidByUserId ?? null);
                 setSelectedPaidBy(paidBy);
                 setIsPaidByFilterOpen(false);
               }}
               bureaus={BUREAUS}
               users={users}
               selectedBureauId={selectedBureauId}
+              selectedPaidByUserId={selectedPaidByUserId}
               selectedPaidBy={selectedPaidBy}
             />
           )}
