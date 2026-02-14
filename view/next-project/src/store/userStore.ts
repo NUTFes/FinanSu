@@ -42,3 +42,5 @@ export const useUserStore = create<UserState & UserActions>()(
     },
   ),
 );
+
+export const useCurrentUser = () => useUserStore((state) => state.user);

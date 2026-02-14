@@ -18,7 +18,6 @@ interface SearchSelectProps {
 const SearchSelect: React.FC<SearchSelectProps> = ({
   options,
   value,
-  onChange: _onChange,
   setID,
   noOptionMessage,
   placeholder,

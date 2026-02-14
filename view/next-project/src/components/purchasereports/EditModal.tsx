@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { get, put as putPurchaseReport } from '@api/api_methods';
 import { put as putPurchaseItem } from '@api/purchaseItem';
 import {
@@ -25,7 +25,7 @@ interface ModalProps {
 }
 
 export default function EditModal(props: ModalProps) {
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
 
   const router = useRouter();
 

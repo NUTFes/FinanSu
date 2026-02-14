@@ -4,7 +4,7 @@ import { FaChevronCircleRight } from 'react-icons/fa';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import { useUserStore } from '@/store';
+import { useCurrentUser } from '@/store';
 import { downloadFile } from '@/utils/downloadFile';
 import { del } from '@api/api_methods';
 import { Checkbox, RedButton, Tooltip } from '@components/common';
@@ -21,7 +21,7 @@ interface DetailModalProps {
 }
 
 const DetailPage1: FC<DetailModalProps> = (props) => {
-  const user = useUserStore((state) => state.user);
+  const user = useCurrentUser();
 
   const [date, setDate] = useState(String);
   const [japaneseDate, setJapaneseDate] = useState(String);

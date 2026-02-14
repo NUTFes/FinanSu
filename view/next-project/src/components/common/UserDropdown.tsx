@@ -7,7 +7,7 @@ interface Props {
   children: ReactNode;
 }
 
-const Dropdown = (props: Props) => {
+const UserDropdown = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -62,4 +62,4 @@ const Dropdown = (props: Props) => {
   );
 };
 
-export default Dropdown;
+export default UserDropdown;

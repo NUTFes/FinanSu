@@ -5,7 +5,7 @@ import { RiAccountCircleFill } from 'react-icons/ri';
 
 import { useAuthStore, useUserStore } from '@/store';
 import { del } from '@api/signOut';
-import { ChakraUIDropdown } from '@components/common';
+import { UserDropdown } from '@components/common';
 
 import { HeaderProps } from './Header.type';
 
@@ -43,14 +43,14 @@ const Header = (props: HeaderProps) => {
           <Image src='/logo.svg' alt='logo' width={150} height={40} className='size-fit' />
         </div>
         <div className='ml-auto flex flex-row items-center gap-5 text-lg text-white-0'>
-          <ChakraUIDropdown
+          <UserDropdown
             title={user.name}
             onClick={async () => {
               signOut();
             }}
           >
             <RiAccountCircleFill size={'20px'} />
-          </ChakraUIDropdown>
+          </UserDropdown>
           <button
             onClick={() => {
               if (onSideNavOpen) onSideNavOpen();

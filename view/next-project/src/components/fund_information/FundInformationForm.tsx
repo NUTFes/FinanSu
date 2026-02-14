@@ -4,6 +4,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Input,
+  OutlinePrimaryButton,
   Radio,
   RadioGroup,
   Select,
@@ -181,12 +183,11 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
           {/* 企業名入力フォーム 企業協賛金の場合のみ表示する */}
           {isCompanySponsor && (
             <FormField id='sponsorName' label='企業名' isRequired>
-              <input
+              <Input
                 type='text'
                 value={formData.sponsorName || ''}
                 onChange={(e) => setFormData((prev) => ({ ...prev, sponsorName: e.target.value }))}
                 placeholder='企業名を入力してください'
-                className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
               />
             </FormField>
           )}
@@ -194,13 +195,11 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
           {/* 金額入力フォーム */}
           <FormControl id='amount' isRequired isInvalid={!!formErrors.amountError}>
             <FormLabel>金額</FormLabel>
-            <input
+            <Input
               type='text'
               value={formData.amount.toLocaleString()}
               onChange={handleAmountChange}
               placeholder='金額を入力してください'
-              required
-              className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
             />
             {formErrors.amountError && (
               <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
@@ -232,14 +231,9 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
             {isProcessing ? <Spinner size='sm' color='white' className='mr-2' /> : null}
             {submitButtonText}
           </PrimaryButton>
-          <button
-            type='button'
-            className='text-accent-1 hover:text-accent-2 underline underline-offset-[5px] transition-colors disabled:opacity-50'
-            onClick={onCancel}
-            disabled={isProcessing}
-          >
+          <OutlinePrimaryButton onClick={onCancel} disabled={isProcessing}>
             キャンセル
-          </button>
+          </OutlinePrimaryButton>
         </div>
       </div>
     </div>

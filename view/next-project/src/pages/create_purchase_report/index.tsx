@@ -5,6 +5,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Input,
+  OutlinePrimaryButton,
   PrimaryButton,
   Select,
   Spinner,
@@ -130,11 +132,7 @@ const PurchaseReportPage = () => {
               {/* 部門選択フォーム */}
               <FormField id='department' label='部門' isRequired isDisabled={isEditMode}>
                 {isEditMode && divisionName ? (
-                  <input
-                    value={divisionName}
-                    disabled
-                    className='border-primary-1 w-full rounded-md border bg-gray-50 px-4 py-2 opacity-50'
-                  />
+                  <Input value={divisionName} readOnly className='bg-gray-50 opacity-50' />
                 ) : (
                   <Select
                     placeholder='選択してください'
@@ -153,11 +151,7 @@ const PurchaseReportPage = () => {
               {/* 物品選択フォーム */}
               <FormField id='product' label='物品' isRequired isDisabled={isEditMode}>
                 {isEditMode && festivalItemName ? (
-                  <input
-                    value={festivalItemName}
-                    disabled
-                    className='border-primary-1 w-full rounded-md border bg-gray-50 px-4 py-2 opacity-50'
-                  />
+                  <Input value={festivalItemName} readOnly className='bg-gray-50 opacity-50' />
                 ) : (
                   <Select
                     placeholder='選択してください'
@@ -176,29 +170,26 @@ const PurchaseReportPage = () => {
 
               {/* 立替者入力フォーム */}
               <FormField id='proposer' label='立替者' isRequired isDisabled={isEditMode}>
-                <input
+                <Input
                   type='text'
                   value={purchaseReport.paidBy}
                   onChange={(e) =>
                     setPurchaseReport((prev) => ({ ...prev, paidBy: e.target.value }))
                   }
                   placeholder='立替者を入力してください'
-                  required
-                  disabled={isEditMode}
-                  className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none disabled:bg-gray-50 disabled:opacity-50'
+                  readOnly={isEditMode}
+                  className='disabled:bg-gray-50 disabled:opacity-50'
                 />
               </FormField>
 
               {/* 金額入力フォーム */}
               <FormControl id='amount' isRequired isInvalid={!!formErrors.amountError}>
                 <FormLabel>金額</FormLabel>
-                <input
+                <Input
                   type='text'
                   value={purchaseReport.amount.toLocaleString()}
                   onChange={handleAmountChange}
                   placeholder='金額を入力してください'
-                  required
-                  className='border-primary-1 focus:ring-primary-1 w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none'
                 />
                 {formErrors.amountError && (
                   <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
@@ -223,14 +214,9 @@ const PurchaseReportPage = () => {
                 {isProcessing ? <Spinner size='sm' color='white' className='mr-2' /> : null}
                 {isEditMode ? '更新する' : '登録する'}
               </PrimaryButton>
-              <button
-                type='button'
-                className='text-accent-1 hover:text-accent-2 underline underline-offset-[5px] transition-colors disabled:opacity-50'
-                onClick={router.back}
-                disabled={isProcessing}
-              >
+              <OutlinePrimaryButton onClick={router.back} disabled={isProcessing}>
                 キャンセル
-              </button>
+              </OutlinePrimaryButton>
             </div>
           </div>
         </div>
