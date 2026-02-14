@@ -8,7 +8,7 @@ interface FormErrorMessageProps {
 
 function FormErrorMessage({ children, className }: FormErrorMessageProps): JSX.Element {
   return (
-    <p className={clsx('text-accent-1 mt-1 text-sm', className)} role='alert'>
+    <p className={clsx('mt-1 text-sm text-accent-1', className)} role='alert'>
       {children}
     </p>
   );

@@ -22,7 +22,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <main className={`${notoSansJP.className} ${notoSansJP.variable} h-full`}>
+      <main className={`
+        ${notoSansJP.className}
+        ${notoSansJP.variable}
+        h-full
+      `}>
         <ManagedUIContext>
           <Layout>
             <NuqsAdapter>

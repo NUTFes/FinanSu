@@ -5,7 +5,6 @@ import { DeleteButton } from '@components/common';
 import DeleteModal from '@components/teacher/DeleteModal';
 import { Teacher } from '@type/common';
 
-
 interface Props {
   deleteTeachers?: { teachers: Teacher[]; ids: number[] };
   isDisabled: boolean;

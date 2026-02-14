@@ -60,12 +60,18 @@ const Sponsorship: NextPage = () => {
                 })}
             </select>
           </div>
-          <div className='hidden justify-end md:flex'>
+          <div className='
+            hidden justify-end
+            md:flex
+          '>
             <OpenAddModalButton>協賛企業登録</OpenAddModalButton>
           </div>
         </div>
         <div className='mb-2 overflow-scroll p-5'>
-          <table className='mb-5 w-max table-auto border-collapse md:w-full md:table-fixed'>
+          <table className='
+            mb-5 w-max table-auto border-collapse
+            md:w-full md:table-fixed
+          '>
             <thead>
               <tr className='border-b border-b-primary-1 py-3'>
                 <th className='w-1/8 border-b-primary-1 pb-2'>
@@ -129,7 +135,10 @@ const Sponsorship: NextPage = () => {
           </table>
         </div>
       </Card>
-      <div className='fixed bottom-4 right-4 md:hidden'>
+      <div className='
+        fixed right-4 bottom-4
+        md:hidden
+      '>
         <OpenAddModalButton />
       </div>
     </MainLayout>

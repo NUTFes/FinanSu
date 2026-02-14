@@ -40,7 +40,7 @@ export default function SponsorAddModal() {
   return (
     <Modal className='md:w-1/2' onClick={closeModal}>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <CloseButton onClick={closeModal} />
         </div>
       </div>
@@ -72,11 +72,11 @@ export default function SponsorAddModal() {
         </div>
       </div>
       <label>
-        <div className='my-6 flex w-full justify-center '>
+        <div className='my-6 flex w-full justify-center'>
           <div>
             <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
           </div>
-          <p className='ml-4 text-black-600 '>
+          <p className='ml-4 text-black-600'>
             企業名が正確である。※株式会社などがついている正しいものか
           </p>
         </div>

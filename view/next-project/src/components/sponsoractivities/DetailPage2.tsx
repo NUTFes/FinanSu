@@ -193,7 +193,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
 
   return (
     <>
-      <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>協賛スタイル</p>
+      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛スタイル</p>
       <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
           <tr className='border-b border-b-primary-1 py-3'>
@@ -240,12 +240,14 @@ const DetailPage2: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
-      <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>広告デザイン</p>
+      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>広告デザイン</p>
       <div className='max-h-60 overflow-auto'>
         {sponsorActivityInformations &&
           sponsorActivityInformations.map((activityInformation, index) => (
             <>
-              <div className='m-0 flex flex-row-reverse border-t border-primary-1 p-0'>
+              <div className='
+                m-0 flex flex-row-reverse border-t border-primary-1 p-0
+              '>
                 <div className='mt-2 w-1/12'>
                   <button className=''>
                     <DeleteButton
@@ -276,7 +278,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     </Select>
                   </div>
                 </div>
-                <div className='my-1 ml-4 flex flex-wrap justify-center gap-7 '>
+                <div className='my-1 ml-4 flex flex-wrap justify-center gap-7'>
                   <div className='flex items-center justify-center gap-3'>
                     <p className='text-black-600'>情報</p>
                     {isEditInformations[index] ? (
@@ -347,7 +349,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     />
                   )}
               </div>
-              <div className='my-1 flex flex-wrap justify-center gap-7 '>
+              <div className='my-1 flex flex-wrap justify-center gap-7'>
                 {activityInformation.fileName !== '' && (
                   <div className='my-2 flex flex-wrap justify-center gap-2'>
                     <OutlinePrimaryButton
@@ -386,14 +388,22 @@ const DetailPage2: FC<ModalProps> = (props) => {
               {isLoading && <Loading />}
             </>
           ))}
-        <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
-          <button className='rounded-sm hover:bg-grey-300'>
+        <div className='
+          my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2
+        '>
+          <button className='
+            rounded-sm
+            hover:bg-grey-300
+          '>
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
           </button>
         </div>
       </div>
       <div className='mt-2'>
-        <button onClick={() => toPage1()} className='rounded-full hover:bg-grey-300'>
+        <button onClick={() => toPage1()} className='
+          rounded-full
+          hover:bg-grey-300
+        '>
           <FaChevronCircleLeft size={30} />
         </button>
       </div>

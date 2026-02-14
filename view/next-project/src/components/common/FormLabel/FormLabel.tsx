@@ -15,10 +15,10 @@ function FormLabel({ children, className, htmlFor }: FormLabelProps): JSX.Elemen
   return (
     <label
       htmlFor={htmlFor || id}
-      className={clsx('text-black-300 mb-2 block text-sm font-medium', className)}
+      className={clsx('mb-2 block text-sm font-medium text-black-300', className)}
     >
       {children}
-      {isRequired && <span className='text-accent-1 ml-1'>*</span>}
+      {isRequired && <span className='ml-1 text-accent-1'>*</span>}
     </label>
   );
 }

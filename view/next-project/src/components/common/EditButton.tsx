@@ -47,7 +47,11 @@ const EditButton: React.FC<Props> = (props) => {
   return (
     <button
       suppressHydrationWarning
-      className={`${buttonClass} ${buttonSizeClass} flex items-center justify-center rounded-full p-0`}
+      className={`
+        ${buttonClass}
+        ${buttonSizeClass}
+        flex items-center justify-center rounded-full p-0
+      `}
       disabled={isDisabled}
       onClick={(e) => {
         if (onClick) onClick();

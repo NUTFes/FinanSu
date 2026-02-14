@@ -46,7 +46,10 @@ function Select(props: Props): JSX.Element {
         )}
         {children}
       </select>
-      <div className='pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-gray-500'>
+      <div className='
+        pointer-events-none absolute top-1/2 right-3 -translate-y-1/2
+        text-gray-500
+      '>
         <RiArrowDropDownLine size={24} />
       </div>
     </div>

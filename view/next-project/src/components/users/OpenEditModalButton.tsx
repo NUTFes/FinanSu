@@ -5,7 +5,6 @@ import { EditButton } from '@components/common';
 import EditModal from '@components/users/EditModal';
 import { Bureau, User } from '@type/common';
 
-
 interface Props {
   id: number;
   bureaus: Bureau[];

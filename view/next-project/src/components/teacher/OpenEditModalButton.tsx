@@ -5,7 +5,6 @@ import { EditButton } from '@components/common';
 import EditModal from '@components/teacher/EditModal';
 import { Department, Teacher } from '@type/common';
 
-
 interface Props {
   id: number;
   teacher: Teacher;

@@ -76,7 +76,13 @@ function FinanSuButton(props: Props): JSX.Element {
       break;
   }
 
-  const className = `${sizeClass} ${colorClass} ${shapeClass} ${textAlignClass} ${hoverClass}`;
+  const className = `
+    ${sizeClass}
+    ${colorClass}
+    ${shapeClass}
+    ${textAlignClass}
+    ${hoverClass}
+  `;
 
   return (
     <button className={clsx(className)} onClick={props.onClick}>

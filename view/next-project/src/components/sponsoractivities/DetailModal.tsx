@@ -33,7 +33,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   const [pageNum, setPageNum] = useState<number>(1);
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-6/12' onClick={onClose}>
+    <Modal className='md:mt-5 md:size-6/12' onClick={onClose}>
       <div className='ml-auto w-fit'>
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
       </div>

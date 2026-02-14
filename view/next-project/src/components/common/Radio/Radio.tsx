@@ -26,12 +26,26 @@ function Radio(props: Props): JSX.Element {
           checked={checked}
           onChange={(e) => onChange?.(e.target.value)}
           onClick={onClick}
-          className='peer border-primary-1 bg-white-0 checked:border-primary-1 focus-visible:ring-primary-1 group-hover:border-primary-2 size-full cursor-pointer appearance-none rounded-full border-2 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
+          className='
+            peer size-full cursor-pointer appearance-none rounded-full border-2
+            border-primary-1 bg-white-0 transition-all
+            group-hover:border-primary-2
+            checked:border-primary-1
+            focus-visible:ring-2 focus-visible:ring-primary-1
+            focus-visible:ring-offset-2 focus-visible:outline-none
+          '
         />
-        <div className='bg-primary-1 pointer-events-none absolute size-2 scale-0 rounded-full opacity-0 transition-all peer-checked:scale-100 peer-checked:opacity-100' />
+        <div className='
+          pointer-events-none absolute size-2 scale-0 rounded-full bg-primary-1
+          opacity-0 transition-all
+          peer-checked:scale-100 peer-checked:opacity-100
+        ' />
       </div>
       {children && (
-        <span className='text-black-600 group-hover:text-black-300 text-sm transition-colors select-none'>
+        <span className='
+          text-sm text-black-600 transition-colors select-none
+          group-hover:text-black-300
+        '>
           {children}
         </span>
       )}

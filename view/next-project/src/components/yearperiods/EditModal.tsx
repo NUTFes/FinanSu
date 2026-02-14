@@ -6,7 +6,6 @@ import { put } from '@api/api_methods';
 import { Modal, Input, CloseButton, PrimaryButton } from '@components/common';
 import { YearPeriod } from '@type/common';
 
-
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   yearPeriod: YearPeriod;
@@ -66,7 +65,7 @@ export default function EditModal(props: ModalProps) {
   return (
     <Modal className='md:w-1/2'>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>

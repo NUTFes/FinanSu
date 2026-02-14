@@ -367,7 +367,7 @@ export default function EditModal(props: ModalProps) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>協賛企業の修正</div>
+      <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛企業の修正</div>
       <div className=''>
         {content(formData)}
         {isStyleError && (
