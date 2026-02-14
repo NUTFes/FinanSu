@@ -49,6 +49,7 @@ export default function PurchaseItemNumModal() {
       setYearPeriods(res);
     };
     getPeriods();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -171,7 +172,7 @@ export default function PurchaseItemNumModal() {
                         <div className={clsx('text-center text-sm text-black-600')}>
                           {purchaseOrderItem.purchaseItem && (
                             <Radio
-                              value={purchaseOrderItem.purchaseOrder?.id}
+                              value={String(purchaseOrderItem.purchaseOrder?.id ?? '')}
                               onClick={handler(purchaseOrderItem.purchaseItem.length)}
                             />
                           )}

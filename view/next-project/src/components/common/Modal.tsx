@@ -18,7 +18,7 @@ export default function Modal(props: Props) {
 
   useEffect(stopScrollingBackContent, []);
 
-  const preventCloseModalEvent = (event: any) => {
+  const preventCloseModalEvent = (event: React.MouseEvent) => {
     event.stopPropagation();
   };
 

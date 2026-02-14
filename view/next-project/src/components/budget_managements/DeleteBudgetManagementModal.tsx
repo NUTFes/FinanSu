@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { Dispatch, SetStateAction } from 'react';
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import {
-  useDeleteFinancialRecordsId,
   useDeleteDivisionsId,
   useDeleteFestivalItemsId,
+  useDeleteFinancialRecordsId,
 } from '@/generated/hooks';
-import { PrimaryButton, Modal } from '@components/common';
+import { Modal, PrimaryButton } from '@components/common';
 
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -54,8 +53,9 @@ const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error: any) {
-      alert(`削除エラー: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      alert(`削除エラー: ${errorMessage}`);
     }
   };
 

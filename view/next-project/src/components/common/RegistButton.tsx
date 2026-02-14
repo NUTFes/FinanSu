@@ -1,8 +1,3 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
-import * as React from 'react';
-
-import theme from '@assets/theme';
-
 interface Props {
   width?: string;
   height?: string;
@@ -12,16 +7,13 @@ interface Props {
 
 const RegistButton: React.FC<Props> = ({ children, width, height, onClick }) => {
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        color='white'
-        bgGradient='linear(to-br, primary.1, primary.2)'
-        style={{ height, width }}
-        onClick={onClick}
-      >
-        {children}
-      </Button>
-    </ChakraProvider>
+    <button
+      className='from-primary-1 to-primary-2 text-white-0 hover:from-primary-2 hover:to-primary-1 rounded-md bg-linear-to-br px-4 py-2 transition-all'
+      style={{ height, width }}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 };
 

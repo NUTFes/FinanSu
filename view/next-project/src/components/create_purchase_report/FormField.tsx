@@ -1,5 +1,4 @@
-import { FormControl, FormLabel } from '@chakra-ui/react';
-import React from 'react';
+import { FormControl, FormLabel } from '@/components/common';
 
 interface FormFieldProps {
   id: string;

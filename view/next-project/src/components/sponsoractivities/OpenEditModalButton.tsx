@@ -10,8 +10,8 @@ import {
   ActivityStyle,
   YearPeriod,
 } from '@/type/common';
+import { EditButton } from '@components/common';
 
-import { EditButton } from '../common';
 import EditModal from './EditModal';
 
 interface Props {

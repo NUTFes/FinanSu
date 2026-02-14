@@ -2,11 +2,9 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 
-import { useUserStore } from '@/store';
 import { YearPeriod } from '@/type/common';
 import { post } from '@/utils/api/api_methods';
-
-import { CloseButton, Input, Modal, PrimaryButton } from '../common';
+import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -14,7 +12,6 @@ interface ModalProps {
 }
 
 const OpenAddModal: FC<ModalProps> = (props) => {
-  const user = useUserStore((state) => state.user);
   const [flashMessage, setFlashMessage] = useState<string>('');
 
   const router = useRouter();

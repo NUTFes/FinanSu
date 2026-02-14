@@ -1,19 +1,17 @@
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
+
 import {
-  Box,
-  Button,
-  Center,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
+  OutlinePrimaryButton,
+  PrimaryButton,
   Select,
   Spinner,
-  VStack,
-} from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
-
-import { PrimaryButton, Title } from '@/components/common';
+  Title,
+} from '@/components/common';
 import FileUploadField from '@/components/create_purchase_report/FileUploadField';
 import FormField from '@/components/create_purchase_report/FormField';
 import { usePurchaseReportForm } from '@/components/create_purchase_report/usePurchaseReportForm';
@@ -110,14 +108,14 @@ const PurchaseReportPage = () => {
   if (isEditMode && isReportDataLoading) {
     return (
       <MainLayout>
-        <Box
+        <div
           className={`flex ${CONTAINER_HEIGHT_CLASS} items-center justify-center ${notoSansJP.className}`}
         >
-          <Center>
+          <div className='flex items-center justify-center'>
             <Spinner size='xl' />
             <p className='ml-3'>データを読み込み中...</p>
-          </Center>
-        </Box>
+          </div>
+        </div>
       </MainLayout>
     );
   }
@@ -126,21 +124,21 @@ const PurchaseReportPage = () => {
 
   return (
     <MainLayout>
-      <Box
+      <div
         className={`flex ${CONTAINER_HEIGHT_CLASS} items-center justify-center ${notoSansJP.className}`}
       >
-        <Box className={FORM_CONTAINER_CLASS}>
+        <div className={FORM_CONTAINER_CLASS}>
           <Title
             className='mb-6 text-center'
             title={isEditMode ? '購入報告編集' : '購入報告作成'}
           />
 
           <form className='space-y-6'>
-            <VStack spacing={4} align='stretch'>
+            <div className='flex flex-col gap-4'>
               {/* 部門選択フォーム */}
               <FormField id='department' label='部門' isRequired isDisabled={isEditMode}>
                 {isEditMode && divisionName ? (
-                  <Input value={divisionName || ''} disabled />
+                  <Input value={divisionName} readOnly className='bg-gray-50 opacity-50' />
                 ) : (
                   <Select
                     placeholder='選択してください'
@@ -159,7 +157,7 @@ const PurchaseReportPage = () => {
               {/* 物品選択フォーム */}
               <FormField id='product' label='物品' isRequired isDisabled={isEditMode}>
                 {isEditMode && festivalItemName ? (
-                  <Input value={festivalItemName || ''} disabled />
+                  <Input value={festivalItemName} readOnly className='bg-gray-50 opacity-50' />
                 ) : (
                   <Select
                     placeholder='選択してください'
@@ -185,7 +183,8 @@ const PurchaseReportPage = () => {
                     setPurchaseReport((prev) => ({ ...prev, paidBy: e.target.value }))
                   }
                   placeholder='立替者を入力してください'
-                  required
+                  readOnly={isEditMode}
+                  className='disabled:bg-gray-50 disabled:opacity-50'
                 />
               </FormField>
 
@@ -197,7 +196,6 @@ const PurchaseReportPage = () => {
                   value={purchaseReport.amount.toLocaleString()}
                   onChange={handleAmountChange}
                   placeholder='金額を入力してください'
-                  required
                 />
                 {formErrors.amountError && (
                   <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
@@ -212,29 +210,23 @@ const PurchaseReportPage = () => {
                 handleFileChange={handleFileChange}
                 validationError={formErrors.fileError}
               />
-            </VStack>
+            </div>
           </form>
 
           {/* フォームアクション */}
-          <Box className='mt-6 flex justify-center space-x-4'>
+          <div className='mt-6 flex justify-center space-x-4'>
             <div className='flex flex-col gap-2'>
               <PrimaryButton disabled={!isFormValid} className='mx-auto' onClick={handleSubmit}>
-                {isProcessing ? <Spinner size='sm' color='white' mr={2} /> : null}
+                {isProcessing ? <Spinner size='sm' color='white' className='mr-2' /> : null}
                 {isEditMode ? '更新する' : '登録する'}
               </PrimaryButton>
-              <Button
-                className='underline underline-offset-[5px]'
-                colorScheme='red'
-                variant='ghost'
-                onClick={router.back}
-                isDisabled={isProcessing}
-              >
+              <OutlinePrimaryButton onClick={router.back} disabled={isProcessing}>
                 キャンセル
-              </Button>
+              </OutlinePrimaryButton>
             </div>
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+      </div>
     </MainLayout>
   );
 };

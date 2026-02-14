@@ -1,25 +1,27 @@
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { get, put, post, del } from '@/utils/api/api_methods';
+import { del, get, post, put } from '@/utils/api/api_methods';
 import {
-  PrimaryButton,
-  OutlinePrimaryButton,
   CloseButton,
-  Modal,
-  Select,
   Input,
+  Modal,
+  MultiSelect,
+  OutlinePrimaryButton,
+  PrimaryButton,
+  Radio,
+  SearchSelect,
+  Select,
   Textarea,
 } from '@components/common';
-import { MultiSelect, SearchSelect } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { DESIGNER_VALUES } from '@constants/designers';
 import {
-  SponsorActivity,
+  ActivityStyle,
   Sponsor,
+  SponsorActivity,
   SponsorStyle,
   User,
-  ActivityStyle,
   YearPeriod,
 } from '@type/common';
 
@@ -73,6 +75,7 @@ export default function EditModal(props: ModalProps) {
 
   useEffect(() => {
     getSponsors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
   const styleOotions = useMemo(() => {
@@ -118,6 +121,7 @@ export default function EditModal(props: ModalProps) {
         remark: '',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSelectSponsorBooth]);
 
   const handler =
@@ -192,6 +196,7 @@ export default function EditModal(props: ModalProps) {
       setFormData({ ...formData, userID: res[0].id });
     }
     return res;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bureauId]);
 
   const sponsorOptions = useMemo(() => {
@@ -206,6 +211,7 @@ export default function EditModal(props: ModalProps) {
 
   useEffect(() => {
     setFormData({ ...formData, sponsorID: Number(formDataSponsorID) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formDataSponsorID]);
 
   const NO_SPONSORS_MESSAGE = '企業が登録されていません';
@@ -317,17 +323,19 @@ export default function EditModal(props: ModalProps) {
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
         {DESIGNER_VALUES.map((designer) => (
-          <div className='flex gap-3' key={designer.value}>
-            <input
-              type='radio'
-              id={designer.id}
-              name='design'
-              value={designer.value}
-              checked={data.design === designer.value}
-              onChange={setDesign}
-            />
-            <label htmlFor={designer.id}>{designer.label}</label>
-          </div>
+          <Radio
+            key={designer.value}
+            name='design'
+            value={String(designer.value)}
+            checked={data.design === designer.value}
+            onChange={(val) => {
+              setDesign({
+                target: { value: val },
+              } as React.ChangeEvent<HTMLInputElement>);
+            }}
+          >
+            {designer.label}
+          </Radio>
         ))}
       </div>
       <p className='text-black-600'>交通費</p>
@@ -359,7 +367,7 @@ export default function EditModal(props: ModalProps) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛企業の修正</div>
+      <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>協賛企業の修正</div>
       <div className=''>
         {content(formData)}
         {isStyleError && (

@@ -9,8 +9,6 @@ import { useGetFestivalItemsDetailsUserId } from '@/generated/hooks';
 import { useCurrentUser } from '@/store';
 import { User } from '@/type/common';
 
-import { notoSansJP } from '../_app';
-
 const MyPage = () => {
   const router = useRouter();
   const user = useCurrentUser();
@@ -36,7 +34,7 @@ const MyPage = () => {
   return (
     <MainLayout>
       <Card>
-        <div className={`mx-5 mt-10 min-h-[calc(100vh-12rem)] ${notoSansJP.className}`}>
+        <div className='mx-5 mt-10 min-h-[calc(100vh-12rem)]'>
           <div className='mb-8 flex items-center justify-between'>
             <h2 className='text-2xl font-thin text-black-300'>My Page</h2>
             {resData && (

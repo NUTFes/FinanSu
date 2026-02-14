@@ -57,6 +57,7 @@ export default function TeachersList(props: Props) {
 
   useEffect(() => {
     setCurrentUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function TeachersList(props: Props) {
             return teacher.departmentID === selectedDepartment?.id;
           });
     setFilterTeachers(newFilterTeachers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDepartment]);
 
   return (
@@ -181,7 +183,7 @@ export default function TeachersList(props: Props) {
                         <input
                           checked={deleteTeachers.ids.includes(teacher.id || 0)}
                           type='checkbox'
-                          onChange={(e) => {
+                          onChange={(_e) => {
                             deleteTeachers.ids.includes(teacher.id || 0)
                               ? setDeleteTeachers({
                                   teachers: deleteTeachers.teachers.filter((selectedTeacher) => {

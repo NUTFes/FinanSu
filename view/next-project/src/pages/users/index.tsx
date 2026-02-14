@@ -174,7 +174,7 @@ export default function Users(props: Props) {
                     <input
                       checked={deleteUsers.ids.includes(user.id)}
                       type='checkbox'
-                      onChange={(e) => {
+                      onChange={(_e) => {
                         deleteUsers.ids.includes(user.id)
                           ? setDeleteUsers({
                               users: deleteUsers?.users.filter((selectedUser) => {

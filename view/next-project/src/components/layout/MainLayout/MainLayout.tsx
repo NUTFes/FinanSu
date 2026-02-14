@@ -1,15 +1,11 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuthStore, useUserStore } from '@/store';
 import { Header, Loading, SideNav } from '@components/common';
 import { get_with_token_valid } from '@utils/api/api_methods';
-
-import s from './MainLayout.module.css';
-
-const CURRENT_USER_URL = process.env.CSR_API_URI + '/current_user';
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -21,9 +17,9 @@ export default function MainLayout(props: LayoutProps) {
   const { resetUser, _hasHydrated: userHasHydrated } = useUserStore();
   const [isSideNavOpen, setIsSideNavOpen] = useState(true);
 
-  const [isChecking, setIsChecking] = useState(true);
-
   const isLoginPage = router.pathname === '/';
+
+  const [isChecking, setIsChecking] = useState(true);
 
   const hasHydrated = authHasHydrated && userHasHydrated;
 
@@ -36,14 +32,15 @@ export default function MainLayout(props: LayoutProps) {
         return;
       }
 
-      const isValid = await get_with_token_valid(CURRENT_USER_URL, accessToken);
+      const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
+      const isValid = await get_with_token_valid(getCurrentUserUrl, accessToken);
 
       if (!isValid) {
         await handleLogout();
-      } else if (router.pathname === '/') {
-        await router.push('/my_page');
-        setIsChecking(false);
       } else {
+        if (isLoginPage) {
+          await router.push('/my_page');
+        }
         setIsChecking(false);
       }
     };
@@ -60,7 +57,7 @@ export default function MainLayout(props: LayoutProps) {
 
     validateSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasHydrated, router.pathname, isSignIn, accessToken, resetAuth, resetUser]);
+  }, [hasHydrated, isLoginPage, isSignIn, accessToken, resetAuth, resetUser]);
 
   if (!hasHydrated || isChecking) {
     return (
@@ -77,27 +74,29 @@ export default function MainLayout(props: LayoutProps) {
         <meta name='' content='' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div className={clsx('h-screen w-full')}>
-        <div className={clsx('h-16 w-full')}>
-          {!isLoginPage && <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />}
-        </div>
-        <div className={clsx(s.parent)}>
+      <div className='flex h-screen w-full flex-col overflow-hidden bg-gray-50'>
+        {!isLoginPage && (
+          <div className='h-16 w-full shrink-0'>
+            <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
+          </div>
+        )}
+        <div className='flex flex-1 overflow-hidden relative'>
           {!isLoginPage && (
-            <div
+            <aside
               className={clsx(
-                { 'invisible opacity-0 md:visible md:opacity-100': isSideNavOpen },
-                { 'visible opacity-100 md:invisible md:opacity-0': !isSideNavOpen },
-                'transition-all',
+                'z-20 bg-primary-4 transition-all duration-300 ease-in-out',
+                'md:static md:block md:h-full',
+                isSideNavOpen
+                  ? 'md:w-52 md:translate-x-0 md:opacity-100'
+                  : 'md:w-0 md:-translate-x-full md:opacity-0 md:overflow-hidden',
+                'fixed top-16 bottom-0 right-0',
+                !isSideNavOpen ? 'w-52 translate-x-0 shadow-xl' : 'w-0 translate-x-full',
               )}
             >
               <SideNav />
-            </div>
+            </aside>
           )}
-          <div
-            className={clsx('size-full', { 'md:w-7/8': isSideNavOpen && !isLoginPage }, s.content)}
-          >
-            {props.children}
-          </div>
+          <main className={clsx('flex-1 overflow-y-auto w-full relative')}>{props.children}</main>
         </div>
       </div>
     </>

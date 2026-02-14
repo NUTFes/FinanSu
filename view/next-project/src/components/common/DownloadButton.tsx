@@ -1,6 +1,7 @@
-import { Tooltip } from '@chakra-ui/react';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { IoMdDownload } from 'react-icons/io';
+
+import { Tooltip } from '@/components/common';
 
 interface Props {
   onClick?: () => void;
@@ -20,7 +21,7 @@ const DownloadButton = (props: Props) => {
   }, [isDisabled]);
 
   return (
-    <Tooltip label={tooltip} hasArrow>
+    <Tooltip text={tooltip}>
       <button
         disabled={isDisabled}
         className={`${buttonClass} flex size-6 min-w-0 items-center justify-center rounded-full`}

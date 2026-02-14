@@ -229,10 +229,12 @@ export default function SponsorActivities(props: Props) {
     const isKeywordFilter = filterData.keyword.length !== 0;
     const isSorted = filterData.selectedSort !== 'default';
     return isStyleFilter || isDonefilter || isKeywordFilter || isSorted;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterData]);
 
   useEffect(() => {
     getSponsorActivities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterData, selectedYear]);
 
   return (

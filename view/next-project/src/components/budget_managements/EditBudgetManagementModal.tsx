@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import {
-  useGetFinancialRecordsId,
   useGetDivisionsId,
   useGetFestivalItemsId,
-  usePutFinancialRecordsId,
+  useGetFinancialRecordsId,
   usePutDivisionsId,
   usePutFestivalItemsId,
+  usePutFinancialRecordsId,
 } from '@/generated/hooks';
-import { PrimaryButton, Input, Modal } from '@components/common';
+import { Input, Modal, PrimaryButton } from '@components/common';
 
 import formatNumber from '../common/Formatter';
 
@@ -91,8 +90,9 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error: any) {
-      alert(`登録エラー: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      alert(`登録エラー: ${errorMessage}`);
     }
   };
 

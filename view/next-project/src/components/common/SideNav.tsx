@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useReducer } from 'react';
 
-import { FinanceLinkItems, RelationLinkItems, MyPageLinkItems } from '@/constants/linkItem';
+import { FinanceLinkItems, MyPageLinkItems, RelationLinkItems } from '@/constants/linkItem';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -21,7 +21,7 @@ export default function SimpleSidebar() {
   const [isRelationItemsShow, setIsRelationItemsShow] = useReducer((state) => !state, false);
 
   return (
-    <div className='fixed right-0 z-10 h-full w-52 bg-primary-4 md:left-0'>
+    <div className='h-full w-52 bg-primary-4'>
       <div className='border-b-2 border-primary-1'>
         {MyPageLinkItems.map((link) => (
           <NavItem key={link.name} icon={link.icon} href={link.href} currentPath={router.pathname}>

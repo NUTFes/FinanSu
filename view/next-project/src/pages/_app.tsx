@@ -1,8 +1,8 @@
-import { ChakraProvider } from '@chakra-ui/react';
 import localFont from 'next/font/local';
 import Head from 'next/head';
 import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 
+import { ToastProvider } from '@/hooks/useToast';
 import Layout from '@components/layout/Layout';
 import { ManagedUIContext } from '@components/ui/context';
 
@@ -17,7 +17,7 @@ export const notoSansJP = localFont({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider resetCSS={false}>
+    <ToastProvider>
       <Head>
         <link rel='icon' href='/favicon.ico' />
       </Head>
@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </NuqsAdapter>
         </Layout>
       </ManagedUIContext>
-    </ChakraProvider>
+    </ToastProvider>
   );
 }
 

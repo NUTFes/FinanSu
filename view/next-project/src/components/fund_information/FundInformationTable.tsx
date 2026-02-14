@@ -216,7 +216,7 @@ const FundInformationTable = ({
   onCheckChange,
 }: FundInformationTableProps) => {
   return (
-    <div className='min-w-[768px]'>
+    <div className='min-w-3xl'>
       <table className='w-full table-fixed border-collapse'>
         <TableHeader />
         <tbody className='text-nowrap'>

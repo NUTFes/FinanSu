@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import DeleteModal from '@components/budget_managements/DeleteBudgetManagementModal';
-
-import { DeleteButton } from '../common';
+import { DeleteButton } from '@components/common';
 
 interface Props {
   phase: number;

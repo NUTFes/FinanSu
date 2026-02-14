@@ -46,6 +46,7 @@ export default function Periods(props: Props) {
 
   useEffect(() => {
     setCurrentUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ログイン中のユーザの権限
@@ -62,6 +63,7 @@ export default function Periods(props: Props) {
     if (!isDeveloperOrAdimin) {
       router.push('/purchaseorders');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDeveloperOrAdimin, currentUser?.roleID]);
 
   return (

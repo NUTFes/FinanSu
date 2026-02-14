@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
-import { Modal, Select, CloseButton, Input, PrimaryButton } from '@components/common';
-import { SponsorStyle, SponsorFilterType } from '@type/common';
+import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
+import { SponsorFilterType, SponsorStyle } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -29,7 +29,7 @@ const FilterModal: FC<ModalProps> = (props) => {
     return draftFilterData.styleIds.includes(id);
   }
 
-  function filterHandler(event: any) {
+  function filterHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFilterData(draftFilterData);
     setIsAllStyleCheck(isAllStyleCheck);
@@ -51,11 +51,11 @@ const FilterModal: FC<ModalProps> = (props) => {
           setIsAllStyleCheck(true));
   }
 
-  const topCheckboxEvent = (event: any) => {
+  const topCheckboxEvent = (_event: React.ChangeEvent<HTMLInputElement>) => {
     isAllStyleCheck ? deleteAllStyleIds() : addAllStyleIds();
   };
 
-  const preventCloseModalEvent = (event: any) => {
+  const preventCloseModalEvent = (event: React.MouseEvent) => {
     event.stopPropagation();
   };
 

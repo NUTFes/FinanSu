@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import EditModal from '@components/budget_managements/EditBudgetManagementModal';
-
-import { EditButton } from '../common';
+import { EditButton } from '@components/common';
 
 interface Props {
   phase: number;
