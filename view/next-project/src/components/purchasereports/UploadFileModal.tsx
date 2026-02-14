@@ -9,7 +9,6 @@ import { Modal } from '@components/common';
 import { Loading, PrimaryButton } from '@components/common';
 import { Receipt } from '@type/common';
 
-
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
@@ -164,20 +163,22 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-4/12'>
+    <Modal className='md:mt-5 md:h-6/12 md:w-4/12'>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
-      <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
+      <div className='
+        my-2 flex h-60 w-full flex-wrap justify-center overflow-auto
+      '>
         <div {...getRootProps()} className='h-56 w-full'>
           <input {...getInputProps()} />
           {preview.type === 'application/pdf' ? (
             <embed
               src={preview.uploadImageURL}
               type='application/pdf'
-              className='mx-auto object-scale-down '
+              className='mx-auto object-scale-down'
             />
           ) : (
             preview.type !== '' && (

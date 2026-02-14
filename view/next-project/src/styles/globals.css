@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
+  --font-sans: var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
+    'Hiragino Sans', sans-serif;
+
   --color-primary-1: #56daff;
   --color-primary-2: #1dbcc5;
   --color-primary-3: #e2e8f0;
@@ -83,5 +86,10 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+
+  body {
+    font-family: var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
+      'Hiragino Sans', sans-serif;
   }
 }

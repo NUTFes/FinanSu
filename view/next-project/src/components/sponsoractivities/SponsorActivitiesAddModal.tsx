@@ -347,31 +347,33 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <div>
         <table className='my-5 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border-b-primary-1 border-b py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               {TABLE_COLUMNS.map((tableColumn: string) => (
                 <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
-                  <div className='text-black-600 text-center text-sm'>{tableColumn}</div>
+                  <div className='text-center text-sm text-black-600'>{tableColumn}</div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            <tr className='border-b-primary-1 border-b'>
+            <tr className='border-b border-b-primary-1'>
               <td className='py-3'>
-                <p className='text-black-600 text-center text-sm'>{sponsorView?.name}</p>
+                <p className='text-center text-sm text-black-600'>{sponsorView?.name}</p>
               </td>
               <td className='flex flex-col gap-2 py-3'>
                 {sponsorStyleView.map((style) => (
-                  <div key={style.id} className='text-black-600 text-center text-sm'>
+                  <div key={style.id} className='
+                    text-center text-sm text-black-600
+                  '>
                     {style.style} / {style.feature} / {style.price} 円
                   </div>
                 ))}
               </td>
               <td className='py-3'>
-                <div className='text-black-600 text-center text-sm'>{userView?.name}</div>
+                <div className='text-center text-sm text-black-600'>{userView?.name}</div>
               </td>
               <td className='py-3'>
-                <div className='text-black-600 text-center text-sm'>
+                <div className='text-center text-sm text-black-600'>
                   {sponsorActivities.isDone ? '回収済み' : '未回収'}
                 </div>
               </td>
@@ -380,28 +382,28 @@ export default function SponsorActivitiesAddModal(props: Props) {
         </table>
         <table className='mb-7 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border-b-primary-1 border-b py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               {TABLE_COLUMNS2.map((tableColumn: string) => (
                 <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
-                  <div className='text-black-600 text-center text-sm'>{tableColumn}</div>
+                  <div className='text-center text-sm text-black-600'>{tableColumn}</div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            <tr className='border-b-primary-1 border-b'>
+            <tr className='border-b border-b-primary-1'>
               <td className='py-3'>
-                <div className='text-black-600 text-center text-sm'>
+                <div className='text-center text-sm text-black-600'>
                   {sponsorActivities.feature}
                 </div>
               </td>
               <td className='py-3'>
-                <div className='text-black-600 text-center text-sm'>
+                <div className='text-center text-sm text-black-600'>
                   {DESIGNERS[sponsorActivities.design]}
                 </div>
               </td>
               <td className='py-3'>
-                <div className='text-black-600 text-center text-sm'>
+                <div className='text-center text-sm text-black-600'>
                   {sponsorActivities.expense}円
                 </div>
               </td>
@@ -410,16 +412,16 @@ export default function SponsorActivitiesAddModal(props: Props) {
         </table>
         <table className='mb-10 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border-b-primary-1 border-b py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               <th className='border-b-primary-1 px-6 pb-2'>
-                <div className='text-black-600 text-center text-sm'>備考</div>
+                <div className='text-center text-sm text-black-600'>備考</div>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>
-                <div className='text-black-600 py-3 text-sm'>
+                <div className='py-3 text-sm text-black-600'>
                   <p
                     className={clsx('border-primary-1', {
                       'text-center': sponsorActivities.remark.length < 36,
@@ -444,7 +446,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>協賛活動の登録</div>
+      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛活動の登録</div>
       {!isDone && <>{content(formData)}</>}
       {isDone ? (
         <>

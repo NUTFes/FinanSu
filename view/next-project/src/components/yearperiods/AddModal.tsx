@@ -56,7 +56,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
   return (
     <Modal className='md:w-1/2'>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
@@ -68,7 +68,7 @@ const OpenAddModal: FC<ModalProps> = (props) => {
           <p className='text-xs text-red-500'>{flashMessage}</p>
         </div>
         <p className='col-span-2 text-black-600'>開始日</p>
-        <div className='col-span-3  w-full'>
+        <div className='col-span-3 w-full'>
           <Input type='date' onChange={handler('startedAt')} className='w-full' />
         </div>
         <p className='col-span-2 text-black-600'>終了日</p>

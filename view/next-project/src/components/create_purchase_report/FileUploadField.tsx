@@ -7,7 +7,7 @@ import { FormControl, FormLabel } from '@/components/common';
 interface FileUploadFieldProps {
   isEditMode: boolean;
   uploadedFile: File | null;
-  fileInputRef: RefObject<HTMLInputElement>;
+  fileInputRef: RefObject<HTMLInputElement | null>;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   validationError?: string;
 }
@@ -33,7 +33,11 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       />
       {uploadedFile ? (
         <div
-          className='flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-gray-200 bg-[#E7E7E7] p-2 transition-colors hover:bg-gray-300'
+          className='
+            flex min-h-10 cursor-pointer items-center gap-2 rounded-md border
+            border-gray-200 bg-[#E7E7E7] p-2 transition-colors
+            hover:bg-gray-300
+          '
           onClick={handleFileUploadClick}
         >
           <span className='ml-2 min-w-0 flex-1 truncate'>{uploadedFile.name}</span>
@@ -42,11 +46,24 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       ) : (
         <button
           type='button'
-          className='text-black-300 flex w-full items-center justify-center gap-1 rounded-md border border-gray-300 bg-[#E7E7E7] px-4 py-2 transition-colors hover:bg-gray-300 sm:gap-2'
+          className='
+            flex w-full items-center justify-center gap-1 rounded-md border
+            border-gray-300 bg-[#E7E7E7] px-4 py-2 text-black-300
+            transition-colors
+            hover:bg-gray-300
+            sm:gap-2
+          '
           onClick={handleFileUploadClick}
         >
-          <GoPlus className='pt-px text-sm sm:text-base' />
-          <span className='text-xs font-normal sm:text-sm md:text-base'>
+          <GoPlus className='
+            pt-px text-sm
+            sm:text-base
+          ' />
+          <span className='
+            text-xs font-normal
+            sm:text-sm
+            md:text-base
+          '>
             {isEditMode ? '領収書（レシート）を変更' : '領収書（レシート）をアップロード'}
           </span>
         </button>

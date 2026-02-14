@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface Props {
   size?: 'small' | 'medium' | 'large';
@@ -76,7 +76,13 @@ function FinanSuButton(props: Props): JSX.Element {
       break;
   }
 
-  const className = `${sizeClass} ${colorClass} ${shapeClass} ${textAlignClass} ${hoverClass}`;
+  const className = `
+    ${sizeClass}
+    ${colorClass}
+    ${shapeClass}
+    ${textAlignClass}
+    ${hoverClass}
+  `;
 
   return (
     <button className={clsx(className)} onClick={props.onClick}>

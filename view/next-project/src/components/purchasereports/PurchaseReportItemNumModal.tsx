@@ -114,7 +114,7 @@ export default function PurchaseReportItemNumModal() {
           </div>
           <div className='my-10 grid grid-cols-5 gap-5'>
             <div className='col-span-2 flex w-full items-center justify-center'>
-              <p className=' text-black-600'>年度</p>
+              <p className='text-black-600'>年度</p>
             </div>
             <div className='col-span-3 w-3/4'>
               <Select
@@ -131,7 +131,7 @@ export default function PurchaseReportItemNumModal() {
               </Select>
             </div>
             <div className='col-span-2 flex w-full items-center justify-center'>
-              <p className=' text-black-600'>購入した局・団体</p>
+              <p className='text-black-600'>購入した局・団体</p>
             </div>
             <div className='col-span-3 w-3/4'>
               <Select

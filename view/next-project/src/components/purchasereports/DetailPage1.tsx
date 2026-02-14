@@ -76,7 +76,9 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
 
   return (
     <>
-      <div className='mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-x-10 gap-y-3'>
+      <div className='
+        mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-x-10 gap-y-3
+      '>
         <p className='text-black-600'>ID</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
           <p>{props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}</p>
@@ -123,7 +125,9 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
         <p className='text-2xl font-thin text-black-600'>購入物品</p>
       </div>
       <div className='grid max-h-60 w-full justify-items-center overflow-auto'>
-        <div className='w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1'>
+        <div className='
+          w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1
+        '>
           <table className='w-full table-fixed border-collapse'>
             <thead>
               <tr className='border-b border-b-primary-1 py-3'>
@@ -207,7 +211,10 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
           </table>
         </div>
       </div>
-      <div className='my-5 hidden justify-center md:flex'>
+      <div className='
+        my-5 hidden justify-center
+        md:flex
+      '>
         <PrimaryButton
           onClick={async () => {
             downloadFile({
@@ -235,7 +242,10 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
         )}
       </div>
       <div className='mt-2 flex justify-end'>
-        <button onClick={() => toPage2()} className='rounded-full hover:bg-grey-300'>
+        <button onClick={() => toPage2()} className='
+          rounded-full
+          hover:bg-grey-300
+        '>
           <FaChevronCircleRight size={30} />
         </button>
       </div>

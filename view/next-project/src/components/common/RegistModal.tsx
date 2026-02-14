@@ -90,16 +90,21 @@ const RegistModal: FC<ModalProps> = (props) => {
     <Modal onClick={closeModal} className='w-full max-w-md'>
       <div className='p-3'>
         <div className='mt-5 flex justify-end'>
-          <div className='hover:bg-primary-3 mr-5 cursor-pointer rounded' onClick={closeModal}>
+          <div className='
+            mr-5 cursor-pointer rounded-sm
+            hover:bg-primary-3
+          ' onClick={closeModal}>
             <RiCloseCircleLine size={'23px'} color={'gray'} />
           </div>
         </div>
         <div className='flex flex-col items-center gap-8'>
-          <p className='text-black-600 text-xl'>予算の登録</p>
+          <p className='text-xl text-black-600'>予算の登録</p>
           <div className='flex flex-col gap-4'>
             <div className='flex items-center'>
-              <span className='text-black-600 mr-3'>年度</span>
-              <Select value={formData.yearID} onChange={handler('yearID')} className='w-56'>
+              <span className='mr-3 text-black-600'>年度</span>
+              <Select value={formData.yearID} onChange={handler('yearID')} className='
+                w-56
+              '>
                 {yearList.map((data) => (
                   <option key={data.id} value={data.id}>
                     {data.year}
@@ -108,8 +113,10 @@ const RegistModal: FC<ModalProps> = (props) => {
               </Select>
             </div>
             <div className='flex items-center'>
-              <span className='text-black-600 mr-3'>項目</span>
-              <Select value={formData.sourceID} onChange={handler('sourceID')} className='w-56'>
+              <span className='mr-3 text-black-600'>項目</span>
+              <Select value={formData.sourceID} onChange={handler('sourceID')} className='
+                w-56
+              '>
                 {sourceList.map((source) => (
                   <option key={source.id} value={source.id}>
                     {source.name}
@@ -118,7 +125,7 @@ const RegistModal: FC<ModalProps> = (props) => {
               </Select>
             </div>
             <div className='flex items-center'>
-              <span className='text-black-600 mr-3'>金額</span>
+              <span className='mr-3 text-black-600'>金額</span>
               <Input
                 className='w-24 px-4 py-2'
                 value={formData.price}

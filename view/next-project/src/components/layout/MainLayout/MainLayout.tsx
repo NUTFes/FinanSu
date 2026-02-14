@@ -80,7 +80,7 @@ export default function MainLayout(props: LayoutProps) {
             <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
           </div>
         )}
-        <div className='flex flex-1 overflow-hidden relative'>
+        <div className='relative flex flex-1 overflow-hidden'>
           {!isLoginPage && (
             <aside
               className={clsx(
@@ -88,15 +88,19 @@ export default function MainLayout(props: LayoutProps) {
                 'md:static md:block md:h-full',
                 isSideNavOpen
                   ? 'md:w-52 md:translate-x-0 md:opacity-100'
-                  : 'md:w-0 md:-translate-x-full md:opacity-0 md:overflow-hidden',
-                'fixed top-16 bottom-0 right-0',
-                !isSideNavOpen ? 'w-52 translate-x-0 shadow-xl' : 'w-0 translate-x-full',
+                  : `
+                    md:w-0 md:-translate-x-full md:overflow-hidden md:opacity-0
+                  `,
+                'fixed top-16 right-0 bottom-0',
+                !isSideNavOpen ? 'w-52 translate-x-0 shadow-xl' : `
+                  w-0 translate-x-full
+                `,
               )}
             >
               <SideNav />
             </aside>
           )}
-          <main className={clsx('flex-1 overflow-y-auto w-full relative')}>{props.children}</main>
+          <main className={clsx('relative w-full flex-1 overflow-y-auto')}>{props.children}</main>
         </div>
       </div>
     </>
