@@ -69,11 +69,11 @@ type ActivityStyle struct {
 
 // BuyReport 購入報告の際のパラメータ
 type BuyReport struct {
-	Amount         int    `json:"amount"`
-	FestivalItemID int    `json:"festivalItemID"`
-	Id             *int   `json:"id,omitempty"`
-	PaidBy         string `json:"paidBy"`
-	PaidByUserId   *int   `json:"paidByUserId,omitempty"`
+	Amount         int     `json:"amount"`
+	FestivalItemID int     `json:"festivalItemID"`
+	Id             *int    `json:"id,omitempty"`
+	PaidBy         *string `json:"paidBy,omitempty"`
+	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
 }
 
 // BuyReportDetail 購入報告ページで表示する詳細情報
@@ -88,6 +88,7 @@ type BuyReportDetail struct {
 	IsPacked            bool    `json:"isPacked"`
 	IsSettled           bool    `json:"isSettled"`
 	PaidBy              string  `json:"paidBy"`
+	PaidByUserId        *int    `json:"paidByUserId,omitempty"`
 	ReportDate          string  `json:"reportDate"`
 	Year                *int    `json:"year,omitempty"`
 }
@@ -120,6 +121,7 @@ type BuyReportWithDivisionId struct {
 	FestivalItemID *int    `json:"festivalItemID,omitempty"`
 	Id             *int    `json:"id,omitempty"`
 	PaidBy         *string `json:"paidBy,omitempty"`
+	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.

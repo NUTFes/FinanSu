@@ -119,6 +119,7 @@ func (bru *buyReportUseCase) CreateBuyReport(c context.Context, buyReportInfo Po
 		&resBuyReport.FestivalItemID,
 		&resBuyReport.Amount,
 		&resBuyReport.PaidBy,
+		&resBuyReport.PaidByUserId,
 	)
 	if err != nil {
 		return buyReportInfo, err
@@ -223,6 +224,7 @@ func (bru *buyReportUseCase) UpdateBuyReport(c context.Context, buyReportId stri
 		&resBuyReport.FestivalItemID,
 		&resBuyReport.Amount,
 		&resBuyReport.PaidBy,
+		&resBuyReport.PaidByUserId,
 	)
 	if err != nil {
 		return resBuyReport, err
@@ -316,6 +318,7 @@ func (bru *buyReportUseCase) GetBuyReports(c context.Context, year, financialRec
 			&detail.IsPacked,
 			&detail.IsSettled,
 			&detail.PaidBy,
+			&detail.PaidByUserId,
 			&detail.ReportDate,
 			&detail.FileName,
 			&detail.Year,
@@ -449,6 +452,7 @@ func (bru *buyReportUseCase) UpdateBuyReportStatus(c context.Context, buyReportI
 		&detail.IsPacked,
 		&detail.IsSettled,
 		&detail.PaidBy,
+		&detail.PaidByUserId,
 		&detail.ReportDate,
 		&detail.FileName,
 		&detail.Year,
@@ -475,6 +479,7 @@ func (bru *buyReportUseCase) GetBuyReportById(c context.Context, buyReportId str
 		&buyReport.FestivalItemID,
 		&buyReport.Amount,
 		&buyReport.PaidBy,
+		&buyReport.PaidByUserId,
 	)
 
 	if err != nil {
