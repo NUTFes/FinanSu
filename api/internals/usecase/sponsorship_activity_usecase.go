@@ -24,10 +24,32 @@ func NewSponsorshipActivityUseCase(repo repository.SponsorshipActivityRepository
 	return &sponsorshipActivityUseCase{repo: repo}
 }
 
-// 以下、ハリボテ実装
-
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
-	return u.repo.All(ctx, params)
+	//活動一覧の基本データを取得
+	activities, err := u.repo.All(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+
+	//取得した活動ごとに、申し込んでいるプランの内訳を取得・セット
+	for i := range activities {
+		styles, err := u.repo.GetStyleDetailsByActivityID(ctx, activities[i].ID)
+		if err != nil {
+			return nil, err
+		}
+		//「未着手」用
+		if styles == nil {
+			styles = []domain.SponsorStyleDetail{}
+		}
+		activities[i].SponsorStyles = styles
+	}
+
+	// 検索結果が0件の時用
+	if activities == nil {
+		activities = []domain.SponsorshipActivity{}
+	}
+
+	return activities, nil
 }
 
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
