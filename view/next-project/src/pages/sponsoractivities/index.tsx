@@ -245,19 +245,25 @@ export default function SponsorActivities(props: Props) {
       </Head>
       {isLoading && <Loading />}
       <Card w='w-fit'>
-        <div className='
-          mx-4 mt-8
-          md:mx-8
-        '>
-          <div className='
-            flex flex-col gap-4
-            md:flex-row md:items-center md:justify-between
-          '>
+        <div
+          className='
+            mx-4 mt-8
+            md:mx-8
+          '
+        >
+          <div
+            className='
+              flex flex-col gap-4
+              md:flex-row md:items-center md:justify-between
+            '
+          >
             {/* 左側の要素 */}
-            <div className='
-              flex flex-col items-center gap-4
-              md:flex-row md:gap-6
-            '>
+            <div
+              className='
+                flex flex-col items-center gap-4
+                md:flex-row md:gap-6
+              '
+            >
               <Title title={'協賛活動一覧'} />
               <select
                 className='border-b border-black-0'
@@ -337,10 +343,12 @@ export default function SponsorActivities(props: Props) {
               </PrimaryButton>
             </div>
             {/* 右側の協賛活動登録ボタン */}
-            <div className='
-              hidden
-              md:block
-            '>
+            <div
+              className='
+                hidden
+                md:block
+              '
+            >
               <OpenAddModalButton
                 users={users}
                 sponsors={sponsors}
@@ -352,10 +360,12 @@ export default function SponsorActivities(props: Props) {
             </div>
           </div>
         </div>
-        <div className='
-          mx-6 my-4 flex flex-col gap-2
-          md:hidden
-        '>
+        <div
+          className='
+            mx-6 my-4 flex flex-col gap-2
+            md:hidden
+          '
+        >
           <PrimaryButton onClick={() => setIsOpenBlankReceipt(true)}>
             手入力で領収書発行
           </PrimaryButton>
@@ -363,10 +373,12 @@ export default function SponsorActivities(props: Props) {
             手入力で請求書発行
           </PrimaryButton>
         </div>
-        <div className='
-          mx-6
-          md:hidden
-        '>
+        <div
+          className='
+            mx-6
+            md:hidden
+          '
+        >
           <OpenAddModalButton
             users={users}
             sponsors={props.sponsors}
@@ -374,10 +386,12 @@ export default function SponsorActivities(props: Props) {
             yearPeriods={yearPeriods}
           />
         </div>
-        <div className='
-          mx-6 mb-7
-          md:hidden
-        '>
+        <div
+          className='
+            mx-6 mb-7
+            md:hidden
+          '
+        >
           {sortedSponsorActivitiesViews &&
             sortedSponsorActivitiesViews.map((sponsorActivitiesItem) => (
               <Card key={sponsorActivitiesItem.sponsorActivity.id}>
@@ -385,16 +399,16 @@ export default function SponsorActivities(props: Props) {
                   <div className='flex items-center gap-2'>
                     {sponsorActivitiesItem.sponsorActivity.isDone ? (
                       <>
-                        <div className='
-                          size-3 shrink-0 rounded-full bg-[#7087FF]
-                        ' />
+                        <div
+                          className='size-3 shrink-0 rounded-full bg-[#7087FF]'
+                        />
                         <span className='text-sm font-medium'>回収完了</span>
                       </>
                     ) : (
                       <>
-                        <div className='
-                          size-3 shrink-0 rounded-full bg-[#FFA53C]
-                        ' />
+                        <div
+                          className='size-3 shrink-0 rounded-full bg-[#FFA53C]'
+                        />
                         <span className='text-sm font-medium'>未回収</span>
                       </>
                     )}
@@ -410,14 +424,18 @@ export default function SponsorActivities(props: Props) {
                         {sponsorActivitiesItem.styleDetail &&
                           sponsorActivitiesItem.styleDetail.map((styleDetail) => (
                             <tr key={styleDetail.sponsorStyle.id}>
-                              <td className='
-                                py-1 pr-2 text-left whitespace-nowrap
-                              '>
+                              <td
+                                className='
+                                  py-1 pr-2 text-left whitespace-nowrap
+                                '
+                              >
                                 {styleDetail.sponsorStyle.style}
                               </td>
-                              <td className='
-                                py-1 pr-2 text-left whitespace-nowrap
-                              '>
+                              <td
+                                className='
+                                  py-1 pr-2 text-left whitespace-nowrap
+                                '
+                              >
                                 {styleDetail.sponsorStyle.feature}
                               </td>
                               <td className='py-1 text-right whitespace-nowrap'>
@@ -428,9 +446,9 @@ export default function SponsorActivities(props: Props) {
                         <tr className='border-b border-primary-1'></tr>
                       </tbody>
                     </table>
-                    <div className='
-                      mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2
-                    '>
+                    <div
+                      className='mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2'
+                    >
                       <span className='text-black-600'>担当者</span>
                       <span className='border-b border-primary-1'>
                         {sponsorActivitiesItem.user.name}
@@ -440,9 +458,9 @@ export default function SponsorActivities(props: Props) {
                         {sponsorActivitiesItem.sponsorActivity.feature || '-'}
                       </span>
                       <span className='text-black-600'>デザイン</span>
-                      <div className='
-                        flex items-center border-b border-primary-1
-                      '>
+                      <div
+                        className='flex items-center border-b border-primary-1'
+                      >
                         {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design] || '-'}
                         {sponsorActivitiesItem.sponsorActivity.url !== '' && (
                           <a
@@ -482,59 +500,77 @@ export default function SponsorActivities(props: Props) {
             <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
           )}
         </div>
-        <div className='
-          mb-2 hidden overflow-auto px-8 py-5
-          md:block
-        '>
+        <div
+          className='
+            mb-2 hidden overflow-auto px-8 py-5
+            md:block
+          '
+        >
           <div className='flex justify-center'>
             <table className='mb-5 table-auto border-collapse'>
               <thead>
                 <tr className='border-b border-b-primary-1 py-3'>
-                  <th className='
-                    px-4 pb-2 text-sm font-normal whitespace-nowrap
-                    text-black-600
-                  '>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm font-normal whitespace-nowrap
+                      text-black-600
+                    '
+                  >
                     企業名
                   </th>
-                  <th className='
-                    px-4 pb-2 text-sm font-normal whitespace-nowrap
-                    text-black-600
-                  '>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm font-normal whitespace-nowrap
+                      text-black-600
+                    '
+                  >
                     協賛スタイル
                   </th>
-                  <th className='
-                    px-4 pb-2 text-sm font-normal whitespace-nowrap
-                    text-black-600
-                  '>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm font-normal whitespace-nowrap
+                      text-black-600
+                    '
+                  >
                     担当者名
                   </th>
-                  <th className='
-                    px-4 pb-2 text-sm font-normal whitespace-nowrap
-                    text-black-600
-                  '>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm font-normal whitespace-nowrap
+                      text-black-600
+                    '
+                  >
                     回収状況
                   </th>
-                  <th className='
-                    px-4 pb-2 text-sm font-normal whitespace-nowrap
-                    text-black-600
-                  '>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm font-normal whitespace-nowrap
+                      text-black-600
+                    '
+                  >
                     オプション
                   </th>
-                  <th className='
-                    px-4 pb-2 text-sm font-normal whitespace-nowrap
-                    text-black-600
-                  '>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm font-normal whitespace-nowrap
+                      text-black-600
+                    '
+                  >
                     デザイン
                   </th>
-                  <th className='
-                    px-4 pb-2 text-sm font-normal whitespace-nowrap
-                    text-black-600
-                  '>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm font-normal whitespace-nowrap
+                      text-black-600
+                    '
+                  >
                     交通費
                   </th>
-                  <th className='
-                    px-4 pb-2 text-sm whitespace-nowrap text-black-600
-                  '></th>
+                  <th
+                    className='
+                      px-4 pb-2 text-sm whitespace-nowrap text-black-600
+                    '
+                  ></th>
                 </tr>
               </thead>
               <tbody>

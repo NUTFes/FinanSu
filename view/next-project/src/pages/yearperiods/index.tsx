@@ -79,10 +79,12 @@ export default function Periods(props: Props) {
             <Title title={'年度一覧'} />
           </div>
         </div>
-        <div className='
-          hidden justify-end
-          md:flex
-        '>
+        <div
+          className='
+            hidden justify-end
+            md:flex
+          '
+        >
           <OpenAddModalButton yearPeriods={props.yearPeriods}>年度登録</OpenAddModalButton>
         </div>
         <div className='mb-2 p-5'>
@@ -112,9 +114,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1 py-3',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
-                          border-b py-3
-                        `,
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.id}</p>
@@ -123,9 +125,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
-                          border-b py-3
-                        `,
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.year}</p>
@@ -134,9 +136,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
-                          border-b py-3
-                        `,
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.startedAt}</p>
@@ -145,9 +147,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
-                          border-b py-3
-                        `,
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.endedAt}</p>
@@ -156,9 +158,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
-                          border-b py-3
-                        `,
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <div className='flex gap-2'>
