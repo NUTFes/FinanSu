@@ -80,11 +80,17 @@ func (r *sponsorshipActivityRepository) All(ctx context.Context, params domain.S
 
 	// ソート順の指定
 	if params.Sort != nil && params.Order != nil {
-		col := goqu.I("sa." + *params.Sort)
-		if *params.Order == "asc" {
-			dataset = dataset.Order(col.Asc())
-		} else {
-			dataset = dataset.Order(col.Desc())
+		//許可するカラム名のみを処理する
+		switch *params.Sort {
+		case "id", "year_periods_id", "sponsor_id", "user_id", "activity_status", "feasibility_status", "design_progress", "created_at", "updated_at":
+			col := goqu.I("sa." + *params.Sort)
+			if *params.Order == "asc" {
+				dataset = dataset.Order(col.Asc())
+			} else {
+				dataset = dataset.Order(col.Desc())
+			}
+		default:
+			dataset = dataset.Order(goqu.I("sa.id").Desc())
 		}
 	} else {
 		// デフォルトはID降順
