@@ -1,9 +1,9 @@
 -- テーブル作成: sponsorship_activities
 CREATE TABLE IF NOT EXISTS sponsorship_activities (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  year_periods_id INT NOT NULL COMMENT '年度期間ID',
-  sponsor_id INT NOT NULL COMMENT '企業ID',
-  user_id INT NOT NULL COMMENT '担当者ID',
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  year_periods_id INT UNSIGNED NOT NULL COMMENT '年度期間ID',
+  sponsor_id INT UNSIGNED NOT NULL COMMENT '企業ID',
+  user_id INT UNSIGNED NOT NULL COMMENT '担当者ID',
   activity_status ENUM(
     'unstarted',
     'material_sent',
@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS sponsorship_activities (
 
 -- テーブル作成: activity_sponsor_style_links (中間テーブル)
 CREATE TABLE IF NOT EXISTS activity_sponsor_style_links (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  sponsorship_activity_id INT NOT NULL,
-  sponsor_style_id INT NOT NULL,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  sponsorship_activity_id INT UNSIGNED NOT NULL,
+  sponsor_style_id INT UNSIGNED NOT NULL,
   category ENUM('money', 'goods') NOT NULL DEFAULT 'money' COMMENT '金銭/物品',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
