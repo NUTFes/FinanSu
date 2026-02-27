@@ -245,9 +245,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
         {sponsorActivityInformations &&
           sponsorActivityInformations.map((activityInformation, index) => (
             <>
-              <div className='
-                m-0 flex flex-row-reverse border-t border-primary-1 p-0
-              '>
+              <div
+                className='
+                  m-0 flex flex-row-reverse border-t border-primary-1 p-0
+                '
+              >
                 <div className='mt-2 w-1/12'>
                   <button className=''>
                     <DeleteButton
@@ -388,22 +390,30 @@ const DetailPage2: FC<ModalProps> = (props) => {
               {isLoading && <Loading />}
             </>
           ))}
-        <div className='
-          my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2
-        '>
-          <button className='
-            rounded-sm
-            hover:bg-grey-300
-          '>
+        <div
+          className='
+            my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1
+            p-2
+          '
+        >
+          <button
+            className='
+              rounded-sm
+              hover:bg-grey-300
+            '
+          >
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
           </button>
         </div>
       </div>
       <div className='mt-2'>
-        <button onClick={() => toPage1()} className='
-          rounded-full
-          hover:bg-grey-300
-        '>
+        <button
+          onClick={() => toPage1()}
+          className='
+            rounded-full
+            hover:bg-grey-300
+          '
+        >
           <FaChevronCircleLeft size={30} />
         </button>
       </div>

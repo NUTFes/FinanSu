@@ -283,10 +283,12 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           </Stepper>
           {isDone ? (
             <>
-              <div className='
-                mx-auto mt-3 mb-10 grid w-9/10 grid-cols-5 place-items-center
-                gap-4
-              '>
+              <div
+                className='
+                  mx-auto mt-3 mb-10 grid w-9/10 grid-cols-5 place-items-center
+                  gap-4
+                '
+              >
                 <p className='text-black-600'>割引</p>
                 <div className='col-span-4 w-full'>
                   <Input
