@@ -399,16 +399,16 @@ export default function SponsorActivities(props: Props) {
                   <div className='flex items-center gap-2'>
                     {sponsorActivitiesItem.sponsorActivity.isDone ? (
                       <>
-                        <div
-                          className='size-3 shrink-0 rounded-full bg-[#7087FF]'
-                        />
+                        <div className='
+                          size-3 shrink-0 rounded-full bg-[#7087FF]
+                        ' />
                         <span className='text-sm font-medium'>回収完了</span>
                       </>
                     ) : (
                       <>
-                        <div
-                          className='size-3 shrink-0 rounded-full bg-[#FFA53C]'
-                        />
+                        <div className='
+                          size-3 shrink-0 rounded-full bg-[#FFA53C]
+                        ' />
                         <span className='text-sm font-medium'>未回収</span>
                       </>
                     )}
@@ -446,9 +446,9 @@ export default function SponsorActivities(props: Props) {
                         <tr className='border-b border-primary-1'></tr>
                       </tbody>
                     </table>
-                    <div
-                      className='mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2'
-                    >
+                    <div className='
+                      mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2
+                    '>
                       <span className='text-black-600'>担当者</span>
                       <span className='border-b border-primary-1'>
                         {sponsorActivitiesItem.user.name}
@@ -458,9 +458,9 @@ export default function SponsorActivities(props: Props) {
                         {sponsorActivitiesItem.sponsorActivity.feature || '-'}
                       </span>
                       <span className='text-black-600'>デザイン</span>
-                      <div
-                        className='flex items-center border-b border-primary-1'
-                      >
+                      <div className='
+                        flex items-center border-b border-primary-1
+                      '>
                         {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design] || '-'}
                         {sponsorActivitiesItem.sponsorActivity.url !== '' && (
                           <a
