@@ -25,28 +25,36 @@ func NewSponsorshipActivityUseCase(repo repository.SponsorshipActivityRepository
 }
 
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
-	//活動一覧の基本データを取得
 	activities, err := u.repo.All(ctx, params)
+	if err != nil || len(activities) == 0 {
+		return activities, err
+	}
+
+	// 活動IDのみを抽出
+	ids := make([]int, len(activities))
+	for i, a := range activities {
+		ids[i] = a.ID
+	}
+
+	// 該当するスタイルを一括取得
+	allStyles, err := u.repo.GetStyleDetailsByActivityIDs(ctx, ids)
 	if err != nil {
 		return nil, err
 	}
 
-	//取得した活動ごとに、申し込んでいるプランの内訳を取得・セット
-	for i := range activities {
-		styles, err := u.repo.GetStyleDetailsByActivityID(ctx, activities[i].ID)
-		if err != nil {
-			return nil, err
-		}
-		//「未着手」用
-		if styles == nil {
-			styles = []domain.SponsorStyleDetail{}
-		}
-		activities[i].SponsorStyles = styles
+	// マップを作成
+	styleMap := make(map[int][]domain.SponsorStyleDetail)
+	for _, s := range allStyles {
+		styleMap[s.SponsorshipActivityID] = append(styleMap[s.SponsorshipActivityID], s)
 	}
 
-	// 検索結果が0件の時用
-	if activities == nil {
-		activities = []domain.SponsorshipActivity{}
+	//メモリ上でセット
+	for i := range activities {
+		if styles, ok := styleMap[activities[i].ID]; ok {
+			activities[i].SponsorStyles = styles
+		} else {
+			activities[i].SponsorStyles = []domain.SponsorStyleDetail{}
+		}
 	}
 
 	return activities, nil

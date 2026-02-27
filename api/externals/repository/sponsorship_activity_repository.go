@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 
+	//"fmt"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -13,7 +15,7 @@ import (
 
 type SponsorshipActivityRepository interface {
 	All(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
-	GetStyleDetailsByActivityID(ctx context.Context, activityID int) ([]domain.SponsorStyleDetail, error)
+	GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error)
 	Find(ctx context.Context, id int) (domain.SponsorshipActivity, error)
 	Create(ctx context.Context, activity domain.SponsorshipActivity) (int, error)
 	Update(ctx context.Context, activity domain.SponsorshipActivity) error
@@ -80,23 +82,31 @@ func (r *sponsorshipActivityRepository) All(ctx context.Context, params domain.S
 
 	// ソート順の指定
 	if params.Sort != nil && params.Order != nil {
-		col := goqu.I("sa." + *params.Sort)
-		if *params.Order == "asc" {
-			dataset = dataset.Order(col.Asc())
-		} else {
-			dataset = dataset.Order(col.Desc())
+		//許可するカラム名のみを処理する
+		switch *params.Sort {
+		case "id", "year_periods_id", "sponsor_id", "user_id", "activity_status", "feasibility_status", "design_progress", "created_at", "updated_at":
+			col := goqu.I("sa." + *params.Sort)
+			if *params.Order == "asc" {
+				dataset = dataset.Order(col.Asc())
+			} else {
+				dataset = dataset.Order(col.Desc())
+			}
+		default:
+			dataset = dataset.Order(goqu.I("sa.id").Desc())
 		}
 	} else {
 		// デフォルトはID降順
 		dataset = dataset.Order(goqu.I("sa.id").Desc())
 	}
 
-	query, _, err := dataset.ToSQL()
+	query, args, err := dataset.ToSQL()
 	if err != nil {
 		return nil, err
 	}
+	//テスト用
+	//fmt.Printf("\n[DEBUG SQL Activities]: %s\n", query)
 
-	rows, err := r.client.DB().QueryContext(ctx, query)
+	rows, err := r.client.DB().QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -130,22 +140,24 @@ func (r *sponsorshipActivityRepository) All(ctx context.Context, params domain.S
 }
 
 // 特定の活動IDに紐づくプラン内訳を取得
-func (r *sponsorshipActivityRepository) GetStyleDetailsByActivityID(ctx context.Context, activityID int) ([]domain.SponsorStyleDetail, error) {
+func (r *sponsorshipActivityRepository) GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error) {
 	dataset := goqu.Dialect("mysql").
 		Select(
-			"l.id", "l.sponsor_style_id", "l.category",
+			"l.id", "l.sponsorship_activity_id", "l.sponsor_style_id", "l.category", // sponsorship_activity_id を含める
 			"ss.id", "ss.style", "ss.feature", "ss.price", "ss.is_deleted", "ss.created_at", "ss.updated_at",
 		).
 		From(goqu.T("activity_sponsor_style_links").As("l")).
 		InnerJoin(goqu.T("sponsor_styles").As("ss"), goqu.On(goqu.I("l.sponsor_style_id").Eq(goqu.I("ss.id")))).
-		Where(goqu.I("l.sponsorship_activity_id").Eq(activityID))
+		Where(goqu.I("l.sponsorship_activity_id").In(activityIDs))
 
-	query, _, err := dataset.ToSQL()
+	query, args, err := dataset.ToSQL()
 	if err != nil {
 		return nil, err
 	}
+	//テスト用
+	//fmt.Printf("[DEBUG SQL Styles (N+1 check)]: %s\n\n", query)
 
-	rows, err := r.client.DB().QueryContext(ctx, query)
+	rows, err := r.client.DB().QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +168,7 @@ func (r *sponsorshipActivityRepository) GetStyleDetailsByActivityID(ctx context.
 		var d domain.SponsorStyleDetail
 		var ss domain.SponsorStyle
 		err := rows.Scan(
-			&d.ID, &d.SponsorStyleID, &d.Category,
+			&d.ID, &d.SponsorshipActivityID, &d.SponsorStyleID, &d.Category,
 			&ss.ID, &ss.Style, &ss.Feature, &ss.Price, &ss.IsDeleted, &ss.CreatedAt, &ss.UpdatedAt,
 		)
 		if err != nil {

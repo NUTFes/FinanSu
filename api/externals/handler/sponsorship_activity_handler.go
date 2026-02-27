@@ -27,8 +27,7 @@ func (h *Handler) GetSponsorshipActivities(c echo.Context, params generated.GetS
 		dp.FeasibilityStatus = &status
 	}
 	if params.Sort != nil {
-		sort := string(*params.Sort)
-		dp.Sort = &sort
+		dp.Sort = params.Sort
 	}
 	if params.Order != nil {
 		order := string(*params.Order)
