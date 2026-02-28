@@ -26,6 +26,7 @@ type SponsorshipActivityRepository interface {
 	GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error)
 	Find(ctx context.Context, id int) (domain.SponsorshipActivity, error)
 	Create(ctx context.Context, activity domain.SponsorshipActivity) (int, error)
+	CreateStyleLink(ctx context.Context, link domain.SponsorStyleDetail) error
 	Update(ctx context.Context, activity domain.SponsorshipActivity) error
 	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error
 	Delete(ctx context.Context, id int) error
@@ -180,8 +181,56 @@ func (r *sponsorshipActivityRepository) Find(ctx context.Context, id int) (domai
 	return domain.SponsorshipActivity{}, nil
 }
 
-func (r *sponsorshipActivityRepository) Create(ctx context.Context, activity domain.SponsorshipActivity) (int, error) {
-	return 0, nil
+// 登録
+func (r *sponsorshipActivityRepository) Create(ctx context.Context, a domain.SponsorshipActivity) (int, error) {
+	dataset := goqu.Dialect("mysql").Insert("sponsorship_activities").Rows(
+		goqu.Record{
+			"year_periods_id":    a.YearPeriodsID,
+			"sponsor_id":         a.SponsorID,
+			"user_id":            a.UserID,
+			"activity_status":    a.ActivityStatus,
+			"feasibility_status": a.FeasibilityStatus,
+			"design_progress":    a.DesignProgress,
+			"remarks":            a.Remarks,
+		},
+	)
+
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := r.client.DB().ExecContext(ctx, query, args...)
+	if err != nil {
+		return 0, err
+	}
+
+	// プランの紐付けで使用するため
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+}
+
+// 協賛活動とプランの紐付け登録
+func (r *sponsorshipActivityRepository) CreateStyleLink(ctx context.Context, l domain.SponsorStyleDetail) error {
+	dataset := goqu.Dialect("mysql").Insert("activity_sponsor_style_links").Rows(
+		goqu.Record{
+			"sponsorship_activity_id": l.SponsorshipActivityID,
+			"sponsor_style_id":        l.SponsorStyleID,
+			"category":                l.Category,
+		},
+	)
+
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	return err
 }
 
 func (r *sponsorshipActivityRepository) Update(ctx context.Context, activity domain.SponsorshipActivity) error {

@@ -64,7 +64,27 @@ func (h *Handler) GetSponsorshipActivities(c echo.Context, params generated.GetS
 
 // 作成 (Post)
 func (h *Handler) PostSponsorshipActivities(c echo.Context) error {
-	return c.String(http.StatusOK, "PostSponsorshipActivities: Mock Response")
+	// リクエストボディを受け取るための構造体を用意
+	var req domain.CreateSponsorshipActivityRequest
+
+	// 紐付け（JSONデータの読み取り）
+	if err := c.Bind(&req); err != nil {
+		return err
+	}
+
+	// 必須チェック
+	if req.YearPeriodsID == 0 || req.SponsorID == 0 || req.UserID == 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, "必須項目（年度期間ID、企業ID、担当者ID）が不足しています。")
+	}
+
+	// 登録処理（ユースケースの呼び出し）
+	createdActivity, err := h.sponsorshipActivityUseCase.CreateSponsorshipActivity(c.Request().Context(), req)
+	if err != nil {
+		return err
+	}
+
+	// 成功したら、作成されたデータの内容を 201 Created で返却
+	return c.JSON(http.StatusCreated, createdActivity)
 }
 
 // 詳細 (Get ID)
