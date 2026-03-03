@@ -61,7 +61,21 @@ func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Contex
 }
 
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
-	return u.repo.Find(ctx, id)
+	// 基本データを取得
+	activity, err := u.repo.FindByID(ctx, id)
+	if err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+
+	// プラン一覧を取得
+	styles, err := u.repo.GetStyleDetailsByActivityIDs(ctx, []int{id})
+	if err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+
+	// 結合して返す
+	activity.SponsorStyles = styles
+	return activity, nil
 }
 
 func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Context, req domain.CreateSponsorshipActivityRequest) (domain.SponsorshipActivity, error) {
@@ -111,7 +125,7 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 
 	activity.SponsorStyles = styles
 
-	return activity, nil
+	return u.GetSponsorshipActivityByID(ctx, newID)
 }
 
 func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {

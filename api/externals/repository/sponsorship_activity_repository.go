@@ -24,7 +24,7 @@ var selectSponsorshipActivityQuery = goqu.Dialect("mysql").
 type SponsorshipActivityRepository interface {
 	FindAll(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
 	GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error)
-	Find(ctx context.Context, id int) (domain.SponsorshipActivity, error)
+	FindByID(ctx context.Context, id int) (domain.SponsorshipActivity, error)
 	Create(ctx context.Context, activity domain.SponsorshipActivity) (int, error)
 	CreateStyleLink(ctx context.Context, link domain.SponsorStyleDetail) error
 	Update(ctx context.Context, activity domain.SponsorshipActivity) error
@@ -177,8 +177,49 @@ func (r *sponsorshipActivityRepository) GetStyleDetailsByActivityIDs(ctx context
 	return details, nil
 }
 
-func (r *sponsorshipActivityRepository) Find(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
-	return domain.SponsorshipActivity{}, nil
+func (r *sponsorshipActivityRepository) FindByID(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
+	dataset := selectSponsorshipActivityQuery.Where(goqu.I("sa.id").Eq(id))
+
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+
+	rows, err := r.client.DB().QueryContext(ctx, query, args...)
+	if err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+	defer rows.Close()
+
+	var activities []domain.SponsorshipActivity
+	for rows.Next() {
+		var a domain.SponsorshipActivity
+		var s domain.Sponsor
+		var u domain.User
+		var remarks sql.NullString
+
+		err := rows.Scan(
+			&a.ID, &a.YearPeriodsID, &a.SponsorID, &a.UserID, &a.ActivityStatus, &a.FeasibilityStatus, &a.DesignProgress, &remarks, &a.CreatedAt, &a.UpdatedAt,
+			&s.ID, &s.Name, &s.Tel, &s.Email, &s.Address, &s.Representative, &s.CreatedAt, &s.UpdatedAt,
+			&u.ID, &u.Name, &u.BureauID, &u.RoleID, &u.IsDeleted, &u.CreatedAt, &u.UpdatedAt,
+		)
+		if err != nil {
+			return domain.SponsorshipActivity{}, err
+		}
+
+		if remarks.Valid {
+			a.Remarks = remarks.String
+		}
+		a.Sponsor = s
+		a.User = u
+		activities = append(activities, a)
+	}
+
+	if len(activities) == 0 {
+		return domain.SponsorshipActivity{}, sql.ErrNoRows
+	}
+
+	return activities[0], nil
 }
 
 // 登録
