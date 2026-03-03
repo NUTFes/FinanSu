@@ -25,7 +25,7 @@ func NewSponsorshipActivityUseCase(repo repository.SponsorshipActivityRepository
 }
 
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
-	activities, err := u.repo.All(ctx, params)
+	activities, err := u.repo.FindAll(ctx, params)
 	if err != nil || len(activities) == 0 {
 		return activities, err
 	}

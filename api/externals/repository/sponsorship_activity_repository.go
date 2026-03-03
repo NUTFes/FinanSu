@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 
-	//"fmt"
-
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -13,8 +11,18 @@ import (
 	_ "github.com/doug-martin/goqu/v9/dialect/mysql"
 )
 
+var selectSponsorshipActivityQuery = goqu.Dialect("mysql").
+	Select(
+		"sa.id", "sa.year_periods_id", "sa.sponsor_id", "sa.user_id", "sa.activity_status", "sa.feasibility_status", "sa.design_progress", "sa.remarks", "sa.created_at", "sa.updated_at",
+		"s.id", "s.name", "s.tel", "s.email", "s.address", "s.representative", "s.created_at", "s.updated_at",
+		"u.id", "u.name", "u.bureau_id", "u.role_id", "u.is_deleted", "u.created_at", "u.updated_at",
+	).
+	From(goqu.T("sponsorship_activities").As("sa")).
+	InnerJoin(goqu.T("sponsors").As("s"), goqu.On(goqu.I("sa.sponsor_id").Eq(goqu.I("s.id")))).
+	InnerJoin(goqu.T("users").As("u"), goqu.On(goqu.I("sa.user_id").Eq(goqu.I("u.id"))))
+
 type SponsorshipActivityRepository interface {
-	All(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
+	FindAll(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
 	GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error)
 	Find(ctx context.Context, id int) (domain.SponsorshipActivity, error)
 	Create(ctx context.Context, activity domain.SponsorshipActivity) (int, error)
@@ -35,17 +43,9 @@ func NewSponsorshipActivityRepository(client db.Client, crud abstract.Crud) Spon
 	}
 }
 
-func (r *sponsorshipActivityRepository) All(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
+func (r *sponsorshipActivityRepository) FindAll(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
 	// ベースSQL
-	dataset := goqu.Dialect("mysql").
-		Select(
-			"sa.id", "sa.year_periods_id", "sa.sponsor_id", "sa.user_id", "sa.activity_status", "sa.feasibility_status", "sa.design_progress", "sa.remarks", "sa.created_at", "sa.updated_at",
-			"s.id", "s.name", "s.tel", "s.email", "s.address", "s.representative", "s.created_at", "s.updated_at",
-			"u.id", "u.name", "u.bureau_id", "u.role_id", "u.is_deleted", "u.created_at", "u.updated_at",
-		).
-		From(goqu.T("sponsorship_activities").As("sa")).
-		InnerJoin(goqu.T("sponsors").As("s"), goqu.On(goqu.I("sa.sponsor_id").Eq(goqu.I("s.id")))).
-		InnerJoin(goqu.T("users").As("u"), goqu.On(goqu.I("sa.user_id").Eq(goqu.I("u.id"))))
+	dataset := selectSponsorshipActivityQuery
 
 	// 絞り込み条件の追加
 	if params.YearPeriodsID != nil {
@@ -103,8 +103,6 @@ func (r *sponsorshipActivityRepository) All(ctx context.Context, params domain.S
 	if err != nil {
 		return nil, err
 	}
-	//テスト用
-	//fmt.Printf("\n[DEBUG SQL Activities]: %s\n", query)
 
 	rows, err := r.client.DB().QueryContext(ctx, query, args...)
 	if err != nil {
@@ -154,8 +152,6 @@ func (r *sponsorshipActivityRepository) GetStyleDetailsByActivityIDs(ctx context
 	if err != nil {
 		return nil, err
 	}
-	//テスト用
-	//fmt.Printf("[DEBUG SQL Styles (N+1 check)]: %s\n\n", query)
 
 	rows, err := r.client.DB().QueryContext(ctx, query, args...)
 	if err != nil {

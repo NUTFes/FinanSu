@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -44,7 +45,22 @@ func (h *Handler) GetSponsorshipActivities(c echo.Context, params generated.GetS
 		return err
 	}
 
-	return c.JSON(http.StatusOK, activities)
+	genActivities := make([]generated.SponsorshipActivity, 0, len(activities))
+	totalAmount := 0
+
+	for _, a := range activities {
+		genAct := convertToGeneratedSponsorshipActivity(a)
+		genActivities = append(genActivities, genAct)
+		for _, s := range a.SponsorStyles {
+			totalAmount += s.Style.Price
+		}
+	}
+	response := map[string]interface{}{
+		"totalAmount": totalAmount,
+		"activities":  genActivities,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 // 作成 (Post)
@@ -75,4 +91,70 @@ func (h *Handler) DeleteSponsorshipActivitiesId(c echo.Context, id int) error {
 // CSVエクスポート
 func (h *Handler) GetSponsorshipActivitiesExport(c echo.Context, params generated.GetSponsorshipActivitiesExportParams) error {
 	return c.String(http.StatusOK, "GetSponsorshipActivitiesExport: Mock Response")
+}
+
+func convertToGeneratedSponsorshipActivity(a domain.SponsorshipActivity) generated.SponsorshipActivity {
+	id, ypID, spID, uID := a.ID, a.YearPeriodsID, a.SponsorID, a.UserID
+	actStatus := generated.ActivityStatus(a.ActivityStatus)
+	feasStatus := generated.FeasibilityStatus(a.FeasibilityStatus)
+	designProg := generated.DesignProgress(a.DesignProgress)
+	remarks, createdAt, updatedAt := a.Remarks, a.CreatedAt, a.UpdatedAt
+
+	// 企業の変換
+	var genSponsor *generated.Sponsor
+	if a.Sponsor.ID != 0 {
+		sId, sName, sTel := a.Sponsor.ID, a.Sponsor.Name, a.Sponsor.Tel
+		sEmail, sAddr, sRep := a.Sponsor.Email, a.Sponsor.Address, a.Sponsor.Representative
+		genSponsor = &generated.Sponsor{
+			Id: &sId, Name: sName, Tel: sTel, Email: sEmail, Address: sAddr, Representative: sRep,
+		}
+	}
+
+	// 担当者の変換
+	var genUser *generated.User
+	if a.User.ID != 0 {
+		uId, uName, uBur, uRole := a.User.ID, a.User.Name, a.User.BureauID, a.User.RoleID
+		uIsDel := a.User.IsDeleted
+
+		uCreatedAt := a.User.CreatedAt.Format(time.RFC3339)
+		uUpdatedAt := a.User.UpdatedAt.Format(time.RFC3339)
+
+		genUser = &generated.User{
+			Id: uId, Name: uName, BureauID: uBur, RoleID: uRole, IsDeleted: uIsDel,
+			CreatedAt: uCreatedAt, UpdatedAt: uUpdatedAt,
+		}
+	}
+
+	// プランの変換
+	genStyles := make([]generated.ActivitySponsorStyleLink, 0)
+	for _, s := range a.SponsorStyles {
+		lId, ssId, cat := s.ID, s.SponsorStyleID, s.Category
+		styleStr, feat, price := s.Style.Style, s.Style.Feature, s.Style.Price
+
+		catEnum := generated.ActivitySponsorStyleLinkCategory(cat)
+
+		genStyleInfo := generated.SponsorStyle{
+			Style: styleStr, Feature: feat, Price: price,
+		}
+
+		genStyles = append(genStyles, generated.ActivitySponsorStyleLink{
+			Id: &lId, SponsorStyleId: &ssId, Category: &catEnum, Style: &genStyleInfo,
+		})
+	}
+
+	return generated.SponsorshipActivity{
+		Id:                &id,
+		YearPeriodsId:     &ypID,
+		SponsorId:         &spID,
+		UserId:            &uID,
+		ActivityStatus:    &actStatus,
+		FeasibilityStatus: &feasStatus,
+		DesignProgress:    &designProg,
+		Remarks:           &remarks,
+		CreatedAt:         &createdAt,
+		UpdatedAt:         &updatedAt,
+		Sponsor:           genSponsor,
+		User:              genUser,
+		SponsorStyles:     &genStyles,
+	}
 }
