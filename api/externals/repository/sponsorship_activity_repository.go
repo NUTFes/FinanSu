@@ -31,6 +31,7 @@ type SponsorshipActivityRepository interface {
 	Update(ctx context.Context, activity domain.SponsorshipActivity) error
 	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error
 	Delete(ctx context.Context, id int) error
+	DeleteStyleLinksByActivityID(ctx context.Context, activityID int) error
 }
 
 type sponsorshipActivityRepository struct {
@@ -45,6 +46,7 @@ func NewSponsorshipActivityRepository(client db.Client, crud abstract.Crud) Spon
 	}
 }
 
+// 絞り込み・ソート条件による一覧取得
 func (r *sponsorshipActivityRepository) FindAll(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
 	// ベースSQL
 	dataset := selectSponsorshipActivityQuery
@@ -178,6 +180,7 @@ func (r *sponsorshipActivityRepository) GetStyleDetailsByActivityIDs(ctx context
 	return details, nil
 }
 
+// IDによる取得
 func (r *sponsorshipActivityRepository) FindByID(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
 	dataset := selectSponsorshipActivityQuery.Where(goqu.I("sa.id").Eq(id))
 
@@ -274,6 +277,28 @@ func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int
 	return nil
 }
 
+// IDによる削除
 func (r *sponsorshipActivityRepository) Delete(ctx context.Context, id int) error {
-	return nil
+	dataset := goqu.Dialect("mysql").Delete("sponsorship_activities").Where(goqu.I("id").Eq(id))
+
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	return err
+}
+
+// 　IDによる紐づくプランの削除
+func (r *sponsorshipActivityRepository) DeleteStyleLinksByActivityID(ctx context.Context, activityID int) error {
+	dataset := goqu.Dialect("mysql").Delete("activity_sponsor_style_links").Where(goqu.I("sponsorship_activity_id").Eq(activityID))
+
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	return err
 }

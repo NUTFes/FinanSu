@@ -25,6 +25,7 @@ func NewSponsorshipActivityUseCase(repo repository.SponsorshipActivityRepository
 	return &sponsorshipActivityUseCase{repo: repo}
 }
 
+// 絞り込み・ソート条件による一覧取得
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
 	activities, err := u.repo.FindAll(ctx, params)
 	if err != nil || len(activities) == 0 {
@@ -61,6 +62,7 @@ func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Contex
 	return activities, nil
 }
 
+// IDによる取得
 func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
 	// 基本データを取得
 	activity, err := u.repo.FindByID(ctx, id)
@@ -79,6 +81,7 @@ func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Cont
 	return activity, nil
 }
 
+// 登録
 func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Context, req domain.CreateSponsorshipActivityRequest) (domain.SponsorshipActivity, error) {
 	// 未着手の補完
 	if req.ActivityStatus == "" {
@@ -148,6 +151,13 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context
 	return activity, nil
 }
 
+// IDによる削除
 func (u *sponsorshipActivityUseCase) DeleteSponsorshipActivity(ctx context.Context, id int) error {
+	// 紐づくプランをすべて削除
+	if err := u.repo.DeleteStyleLinksByActivityID(ctx, id); err != nil {
+		return err
+	}
+
+	// 協賛活動の本体を削除
 	return u.repo.Delete(ctx, id)
 }

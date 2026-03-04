@@ -111,7 +111,12 @@ func (h *Handler) PutSponsorshipActivitiesIdStatus(c echo.Context, id int) error
 
 // 削除 (Delete)
 func (h *Handler) DeleteSponsorshipActivitiesId(c echo.Context, id int) error {
-	return c.String(http.StatusOK, "DeleteSponsorshipActivitiesId: Mock Response")
+	err := h.sponsorshipActivityUseCase.DeleteSponsorshipActivity(c.Request().Context(), id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "Destroy Sponsorship Activity")
 }
 
 // CSVエクスポート
