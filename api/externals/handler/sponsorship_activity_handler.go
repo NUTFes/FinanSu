@@ -83,8 +83,9 @@ func (h *Handler) PostSponsorshipActivities(c echo.Context) error {
 		return err
 	}
 
-	// 成功したら、作成されたデータの内容を 201 Created で返却
-	return c.JSON(http.StatusCreated, createdActivity)
+	// 変換してレスポンス
+	genAct := convertToGeneratedSponsorshipActivity(createdActivity)
+	return c.JSON(http.StatusCreated, genAct)
 }
 
 // 詳細 (Get ID)
