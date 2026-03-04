@@ -106,7 +106,30 @@ func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
 
 // ステータス更新 (Put: Status)
 func (h *Handler) PutSponsorshipActivitiesIdStatus(c echo.Context, id int) error {
-	return c.String(http.StatusOK, "PutSponsorshipActivitiesIdStatus: Mock Response")
+	var req generated.PutSponsorshipActivitiesIdStatusJSONRequestBody
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	// 詰め替え
+	dp := domain.SponsorshipActivity{
+		ActivityStatus:    string(req.ActivityStatus),
+		FeasibilityStatus: string(req.FeasibilityStatus),
+		DesignProgress:    string(req.DesignProgress),
+	}
+	if req.Remarks != nil {
+		dp.Remarks = *req.Remarks
+	}
+
+	// 更新 ＆ 最新データを取得
+	updatedActivity, err := h.sponsorshipActivityUseCase.UpdateSponsorshipActivityStatus(c.Request().Context(), id, dp)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	// 変換して返す
+	genAct := convertToGeneratedSponsorshipActivity(updatedActivity)
+	return c.JSON(http.StatusOK, genAct)
 }
 
 // 削除 (Delete)

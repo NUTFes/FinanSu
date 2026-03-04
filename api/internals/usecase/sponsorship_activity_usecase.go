@@ -146,9 +146,15 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 	return activity, nil
 }
 
+// ステータスのみ更新
 func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
-	u.repo.UpdateStatus(ctx, id, activity)
-	return activity, nil
+	// ステータスを更新する
+	if err := u.repo.UpdateStatus(ctx, id, activity); err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+
+	// 更新されたデータを取得して返す
+	return u.GetSponsorshipActivityByID(ctx, id)
 }
 
 // IDによる削除

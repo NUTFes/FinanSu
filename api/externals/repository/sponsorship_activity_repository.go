@@ -273,8 +273,24 @@ func (r *sponsorshipActivityRepository) Update(ctx context.Context, activity dom
 	return nil
 }
 
+// ステータスのみ更新
 func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error {
-	return nil
+	dataset := goqu.Dialect("mysql").Update("sponsorship_activities").
+		Set(goqu.Record{
+			"activity_status":    activity.ActivityStatus,
+			"feasibility_status": activity.FeasibilityStatus,
+			"design_progress":    activity.DesignProgress,
+			"remarks":            activity.Remarks,
+		}).
+		Where(goqu.I("id").Eq(id))
+
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	return err
 }
 
 // IDによる削除
