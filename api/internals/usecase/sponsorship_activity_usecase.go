@@ -79,7 +79,7 @@ func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Cont
 }
 
 func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Context, req domain.CreateSponsorshipActivityRequest) (domain.SponsorshipActivity, error) {
-	// 未着手("unstarted")の補完
+	// 未着手の補完
 	if req.ActivityStatus == "" {
 		req.ActivityStatus = "unstarted"
 	}
@@ -101,15 +101,21 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 		Remarks:           req.Remarks,
 	}
 
-	// 活動を保存し、IDを受け取る
-	newID, err := u.repo.Create(ctx, activity)
+	// トランザクション開始
+	tx, err := u.repo.Begin(ctx)
 	if err != nil {
 		return domain.SponsorshipActivity{}, err
 	}
-	activity.ID = newID
+
+	defer tx.Rollback()
+
+	// 活動本体を保存し、IDを受け取る
+	newID, err := u.repo.Create(ctx, tx, activity)
+	if err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
 
 	// プラン内訳を一つずつ登録
-	var styles []domain.SponsorStyleDetail
 	for _, s := range req.SponsorStyleDetails {
 		link := domain.SponsorStyleDetail{
 			SponsorshipActivityID: newID,
@@ -117,14 +123,17 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 			Category:              s.Category,
 		}
 
-		if err := u.repo.CreateStyleLink(ctx, link); err != nil {
+		if err := u.repo.CreateStyleLink(ctx, tx, link); err != nil {
 			return domain.SponsorshipActivity{}, err
 		}
-		styles = append(styles, link)
 	}
 
-	activity.SponsorStyles = styles
+	// コミット
+	if err := tx.Commit(); err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
 
+	// 取得して返す
 	return u.GetSponsorshipActivityByID(ctx, newID)
 }
 

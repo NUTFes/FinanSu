@@ -25,8 +25,9 @@ type SponsorshipActivityRepository interface {
 	FindAll(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
 	GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error)
 	FindByID(ctx context.Context, id int) (domain.SponsorshipActivity, error)
-	Create(ctx context.Context, activity domain.SponsorshipActivity) (int, error)
-	CreateStyleLink(ctx context.Context, link domain.SponsorStyleDetail) error
+	Begin(ctx context.Context) (*sql.Tx, error)
+	Create(ctx context.Context, tx *sql.Tx, activity domain.SponsorshipActivity) (int, error)
+	CreateStyleLink(ctx context.Context, tx *sql.Tx, link domain.SponsorStyleDetail) error
 	Update(ctx context.Context, activity domain.SponsorshipActivity) error
 	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error
 	Delete(ctx context.Context, id int) error
@@ -222,8 +223,13 @@ func (r *sponsorshipActivityRepository) FindByID(ctx context.Context, id int) (d
 	return activities[0], nil
 }
 
+// トランザクション開始
+func (r *sponsorshipActivityRepository) Begin(ctx context.Context) (*sql.Tx, error) {
+	return r.client.DB().BeginTx(ctx, nil)
+}
+
 // 登録
-func (r *sponsorshipActivityRepository) Create(ctx context.Context, a domain.SponsorshipActivity) (int, error) {
+func (r *sponsorshipActivityRepository) Create(ctx context.Context, tx *sql.Tx, a domain.SponsorshipActivity) (int, error) {
 	dataset := goqu.Dialect("mysql").Insert("sponsorship_activities").Rows(
 		goqu.Record{
 			"year_periods_id":    a.YearPeriodsID,
@@ -241,12 +247,12 @@ func (r *sponsorshipActivityRepository) Create(ctx context.Context, a domain.Spo
 		return 0, err
 	}
 
-	result, err := r.client.DB().ExecContext(ctx, query, args...)
+	// ★ 変更：r.client.DB() ではなく tx を使う！
+	result, err := tx.ExecContext(ctx, query, args...)
 	if err != nil {
 		return 0, err
 	}
 
-	// プランの紐付けで使用するため
 	id, err := result.LastInsertId()
 	if err != nil {
 		return 0, err
@@ -256,7 +262,7 @@ func (r *sponsorshipActivityRepository) Create(ctx context.Context, a domain.Spo
 }
 
 // 協賛活動とプランの紐付け登録
-func (r *sponsorshipActivityRepository) CreateStyleLink(ctx context.Context, l domain.SponsorStyleDetail) error {
+func (r *sponsorshipActivityRepository) CreateStyleLink(ctx context.Context, tx *sql.Tx, l domain.SponsorStyleDetail) error {
 	dataset := goqu.Dialect("mysql").Insert("activity_sponsor_style_links").Rows(
 		goqu.Record{
 			"sponsorship_activity_id": l.SponsorshipActivityID,
@@ -270,7 +276,7 @@ func (r *sponsorshipActivityRepository) CreateStyleLink(ctx context.Context, l d
 		return err
 	}
 
-	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	_, err = tx.ExecContext(ctx, query, args...)
 	return err
 }
 
