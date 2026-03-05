@@ -28,10 +28,10 @@ type SponsorshipActivityRepository interface {
 	Begin(ctx context.Context) (*sql.Tx, error)
 	Create(ctx context.Context, tx *sql.Tx, activity domain.SponsorshipActivity) (int, error)
 	CreateStyleLink(ctx context.Context, tx *sql.Tx, link domain.SponsorStyleDetail) error
-	Update(ctx context.Context, activity domain.SponsorshipActivity) error
+	Update(ctx context.Context, tx *sql.Tx, id int, activity domain.SponsorshipActivity) error
 	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error
-	Delete(ctx context.Context, id int) error
-	DeleteStyleLinksByActivityID(ctx context.Context, activityID int) error
+	Delete(ctx context.Context, tx *sql.Tx, id int) error
+	DeleteStyleLinksByActivityID(ctx context.Context, tx *sql.Tx, activityID int) error
 }
 
 type sponsorshipActivityRepository struct {
@@ -269,8 +269,26 @@ func (r *sponsorshipActivityRepository) CreateStyleLink(ctx context.Context, tx 
 	return err
 }
 
-func (r *sponsorshipActivityRepository) Update(ctx context.Context, activity domain.SponsorshipActivity) error {
-	return nil
+// 全体更新
+func (r *sponsorshipActivityRepository) Update(ctx context.Context, tx *sql.Tx, id int, activity domain.SponsorshipActivity) error {
+	dataset := goqu.Dialect("mysql").Update("sponsorship_activities").
+		Set(goqu.Record{
+			"year_periods_id":    activity.YearPeriodsID,
+			"sponsor_id":         activity.SponsorID,
+			"user_id":            activity.UserID,
+			"activity_status":    activity.ActivityStatus,
+			"feasibility_status": activity.FeasibilityStatus,
+			"design_progress":    activity.DesignProgress,
+			"remarks":            activity.Remarks,
+		}).
+		Where(goqu.I("id").Eq(id))
+
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, query, args...)
+	return err
 }
 
 // ステータスのみ更新
@@ -294,27 +312,23 @@ func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int
 }
 
 // IDによる削除
-func (r *sponsorshipActivityRepository) Delete(ctx context.Context, id int) error {
+func (r *sponsorshipActivityRepository) Delete(ctx context.Context, tx *sql.Tx, id int) error {
 	dataset := goqu.Dialect("mysql").Delete("sponsorship_activities").Where(goqu.I("id").Eq(id))
-
 	query, args, err := dataset.ToSQL()
 	if err != nil {
 		return err
 	}
-
-	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	_, err = tx.ExecContext(ctx, query, args...)
 	return err
 }
 
 // 　IDによる紐づくプランの削除
-func (r *sponsorshipActivityRepository) DeleteStyleLinksByActivityID(ctx context.Context, activityID int) error {
+func (r *sponsorshipActivityRepository) DeleteStyleLinksByActivityID(ctx context.Context, tx *sql.Tx, activityID int) error {
 	dataset := goqu.Dialect("mysql").Delete("activity_sponsor_style_links").Where(goqu.I("sponsorship_activity_id").Eq(activityID))
-
 	query, args, err := dataset.ToSQL()
 	if err != nil {
 		return err
 	}
-
-	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	_, err = tx.ExecContext(ctx, query, args...)
 	return err
 }

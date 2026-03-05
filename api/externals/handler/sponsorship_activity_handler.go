@@ -101,7 +101,25 @@ func (h *Handler) GetSponsorshipActivitiesId(c echo.Context, id int) error {
 
 // 更新 (Put: 全項目更新)
 func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
-	return c.String(http.StatusOK, "PutSponsorshipActivitiesId: Mock Response")
+	var req domain.CreateSponsorshipActivityRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	// 必須チェック
+	if req.YearPeriodsID == 0 || req.SponsorID == 0 || req.UserID == 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, "必須項目（年度期間ID、企業ID、担当者ID）が不足しています。")
+	}
+
+	// 更新処理を実行
+	updatedActivity, err := h.sponsorshipActivityUseCase.UpdateSponsorshipActivity(c.Request().Context(), id, req)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	// 変換して返す
+	genAct := convertToGeneratedSponsorshipActivity(updatedActivity)
+	return c.JSON(http.StatusOK, genAct)
 }
 
 // ステータス更新 (Put: Status)

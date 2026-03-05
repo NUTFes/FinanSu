@@ -12,8 +12,8 @@ type SponsorshipActivityUseCase interface {
 	GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
 	GetSponsorshipActivityByID(ctx context.Context, id int) (domain.SponsorshipActivity, error)
 	CreateSponsorshipActivity(ctx context.Context, req domain.CreateSponsorshipActivityRequest) (domain.SponsorshipActivity, error)
-	UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
-	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) // ★追加
+	UpdateSponsorshipActivity(ctx context.Context, id int, req domain.CreateSponsorshipActivityRequest) (domain.SponsorshipActivity, error)
+	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
 	DeleteSponsorshipActivity(ctx context.Context, id int) error
 }
 
@@ -141,9 +141,53 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 	return u.GetSponsorshipActivityByID(ctx, newID)
 }
 
-func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
-	u.repo.Update(ctx, activity)
-	return activity, nil
+// 更新 (全項目更新)
+func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, req domain.CreateSponsorshipActivityRequest) (domain.SponsorshipActivity, error) {
+	activity := domain.SponsorshipActivity{
+		YearPeriodsID:     req.YearPeriodsID,
+		SponsorID:         req.SponsorID,
+		UserID:            req.UserID,
+		ActivityStatus:    req.ActivityStatus,
+		FeasibilityStatus: req.FeasibilityStatus,
+		DesignProgress:    req.DesignProgress,
+		Remarks:           req.Remarks,
+	}
+
+	// トランザクション開始
+	tx, err := u.repo.Begin(ctx)
+	if err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+	defer tx.Rollback()
+
+	// 本体の更新
+	if err := u.repo.Update(ctx, tx, id, activity); err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+
+	// 既存の紐付けを全削除
+	if err := u.repo.DeleteStyleLinksByActivityID(ctx, tx, id); err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+
+	// 新しい紐付けを登録
+	for _, s := range req.SponsorStyleDetails {
+		link := domain.SponsorStyleDetail{
+			SponsorshipActivityID: id,
+			SponsorStyleID:        s.SponsorStyleID,
+			Category:              s.Category,
+		}
+		if err := u.repo.CreateStyleLink(ctx, tx, link); err != nil {
+			return domain.SponsorshipActivity{}, err
+		}
+	}
+
+	// コミット
+	if err := tx.Commit(); err != nil {
+		return domain.SponsorshipActivity{}, err
+	}
+
+	return u.GetSponsorshipActivityByID(ctx, id)
 }
 
 // ステータスのみ更新
@@ -159,11 +203,18 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context
 
 // IDによる削除
 func (u *sponsorshipActivityUseCase) DeleteSponsorshipActivity(ctx context.Context, id int) error {
-	// 紐づくプランをすべて削除
-	if err := u.repo.DeleteStyleLinksByActivityID(ctx, id); err != nil {
+	tx, err := u.repo.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := u.repo.DeleteStyleLinksByActivityID(ctx, tx, id); err != nil {
+		return err
+	}
+	if err := u.repo.Delete(ctx, tx, id); err != nil {
 		return err
 	}
 
-	// 協賛活動の本体を削除
-	return u.repo.Delete(ctx, id)
+	return tx.Commit()
 }
