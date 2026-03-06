@@ -12,15 +12,15 @@ function Tooltip(props: Props): JSX.Element {
       {props.children}
       <div
         className='
-        absolute bottom-0 mb-6 hidden flex-col items-center
-        group-hover:flex
-      '
+          absolute bottom-0 mb-6 hidden flex-col items-center
+          group-hover:flex
+        '
       >
         <span
           className='
-          whitespace-no-wrap relative z-10 rounded-md bg-black-600 p-2 text-xs
-          leading-none text-white-0 shadow-lg
-        '
+            whitespace-no-wrap relative z-10 rounded-md bg-black-600 p-2 text-xs
+            leading-none text-white-0 shadow-lg
+          '
         >
           {props.text}
         </span>

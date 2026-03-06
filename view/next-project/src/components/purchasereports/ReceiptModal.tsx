@@ -26,8 +26,8 @@ export default function ReceiptModal(props: ModalProps) {
       </div>
       <div
         className={clsx(`
-        mb-10 grid w-full justify-items-center text-xl text-black-600
-      `)}
+          mb-10 grid w-full justify-items-center text-xl text-black-600
+        `)}
       >
         レシートの処理
       </div>
@@ -35,9 +35,7 @@ export default function ReceiptModal(props: ModalProps) {
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
           <div
-            className={clsx(`
-            h-100 w-full text-center text-base text-black-300
-          `)}
+            className={clsx(`h-100 w-full text-center text-base text-black-300`)}
           >
             お疲れ様でした。
             <br />
@@ -47,8 +45,8 @@ export default function ReceiptModal(props: ModalProps) {
           </div>
           <div
             className={clsx(`
-            my-6 h-100 w-full text-center text-5xl font-bold text-black-300
-          `)}
+              my-6 h-100 w-full text-center text-5xl font-bold text-black-300
+            `)}
           >
             ID: {props.purchaseReportId}
           </div>

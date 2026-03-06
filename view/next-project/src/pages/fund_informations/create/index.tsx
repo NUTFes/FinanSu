@@ -66,10 +66,10 @@ const CreateFundInformation = () => {
       <div className={`flex h-[calc(100vh-4rem)] items-center justify-center`}>
         <div
           className='
-          w-full max-w-[60%] min-w-75 px-4 py-8
-          sm:px-6
-          lg:px-8
-        '
+            w-full max-w-[60%] min-w-75 px-4 py-8
+            sm:px-6
+            lg:px-8
+          '
         >
           <Title className='mb-6 text-center' title='収入報告作成' />
           {error && <p className='mb-4 text-center text-red-500'>{error}</p>}

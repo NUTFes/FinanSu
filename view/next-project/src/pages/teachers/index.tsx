@@ -81,9 +81,9 @@ export default function TeachersList(props: Props) {
         <div className='mx-5 mt-10'>
           <div
             className='
-            flex flex-col
-            md:flex-row
-          '
+              flex flex-col
+              md:flex-row
+            '
           >
             <Title title={'教員一覧'} />
             <select
@@ -110,9 +110,9 @@ export default function TeachersList(props: Props) {
           </div>
           <div
             className='
-            hidden justify-end
-            md:flex
-          '
+              hidden justify-end
+              md:flex
+            '
           >
             <OpenAddModalButton departments={props.departments}>教員登録</OpenAddModalButton>
           </div>
@@ -120,9 +120,9 @@ export default function TeachersList(props: Props) {
         <div className='mb-2 overflow-scroll p-5'>
           <table
             className='
-            mb-5 w-max table-auto border-collapse
-            md:w-full
-          '
+              mb-5 w-max table-auto border-collapse
+              md:w-full
+            '
           >
             <thead className='text-sm text-black-600'>
               <tr className='border-b border-b-primary-1 py-3'>
@@ -227,9 +227,9 @@ export default function TeachersList(props: Props) {
       </Card>
       <div
         className='
-        fixed right-4 bottom-4
-        md:hidden
-      '
+          fixed right-4 bottom-4
+          md:hidden
+        '
       >
         <OpenAddModalButton departments={props.departments} />
       </div>

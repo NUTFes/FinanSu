@@ -247,8 +247,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
             <>
               <div
                 className='
-                m-0 flex flex-row-reverse border-t border-primary-1 p-0
-              '
+                  m-0 flex flex-row-reverse border-t border-primary-1 p-0
+                '
               >
                 <div className='mt-2 w-1/12'>
                   <button className=''>
@@ -392,14 +392,15 @@ const DetailPage2: FC<ModalProps> = (props) => {
           ))}
         <div
           className='
-          my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2
-        '
+            my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1
+            p-2
+          '
         >
           <button
             className='
-            rounded-sm
-            hover:bg-grey-300
-          '
+              rounded-sm
+              hover:bg-grey-300
+            '
           >
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
           </button>
@@ -409,9 +410,9 @@ const DetailPage2: FC<ModalProps> = (props) => {
         <button
           onClick={() => toPage1()}
           className='
-          rounded-full
-          hover:bg-grey-300
-        '
+            rounded-full
+            hover:bg-grey-300
+          '
         >
           <FaChevronCircleLeft size={30} />
         </button>

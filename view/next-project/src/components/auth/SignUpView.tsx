@@ -83,9 +83,9 @@ export default function SignUpView() {
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
             <p
               className='
-              md:text-md
-              text-sm whitespace-nowrap text-black-300
-            '
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
             >
               名前
             </p>
@@ -97,9 +97,9 @@ export default function SignUpView() {
             />
             <p
               className='
-              md:text-md
-              text-sm whitespace-nowrap text-black-300
-            '
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
             >
               学科
             </p>
@@ -116,9 +116,9 @@ export default function SignUpView() {
             </select>
             <p
               className='
-              md:text-md
-              text-sm whitespace-nowrap text-black-300
-            '
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
             >
               メールアドレス
             </p>
@@ -136,9 +136,9 @@ export default function SignUpView() {
             />
             <p
               className='
-              md:text-md
-              text-sm whitespace-nowrap text-black-300
-            '
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
             >
               パスワード
             </p>
@@ -155,9 +155,9 @@ export default function SignUpView() {
             />
             <p
               className='
-              md:text-md
-              text-sm whitespace-nowrap text-black-300
-            '
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
             >
               パスワード確認
             </p>

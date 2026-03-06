@@ -26,9 +26,9 @@ export default function Home() {
             />
             <p
               className='
-              text-2xl text-black-600
-              md:text-3xl
-            '
+                text-2xl text-black-600
+                md:text-3xl
+              '
             >
               ログイン
             </p>
@@ -58,9 +58,9 @@ export default function Home() {
             />
             <p
               className='
-              text-2xl text-black-600
-              md:text-3xl
-            '
+                text-2xl text-black-600
+                md:text-3xl
+              '
             >
               新規登録
             </p>
@@ -79,9 +79,9 @@ export default function Home() {
     <LoginLayout>
       <div
         className='
-        m-4 w-fit rounded-lg px-5 shadow-md
-        md:m-8 md:w-1/2 md:px-10
-      '
+          m-4 w-fit rounded-lg px-5 shadow-md
+          md:m-8 md:w-1/2 md:px-10
+        '
       >
         {cardContent(isMember)}
       </div>

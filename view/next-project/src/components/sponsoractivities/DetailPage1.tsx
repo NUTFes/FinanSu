@@ -31,8 +31,8 @@ const DetailPage1: FC<ModalProps> = (props) => {
     <>
       <p
         className='
-        mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest text-black-600
-      '
+          mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest text-black-600
+        '
       >
         協賛活動の詳細
       </p>
@@ -175,9 +175,9 @@ const DetailPage1: FC<ModalProps> = (props) => {
       </table>
       <div
         className='
-        mt-5 hidden justify-center gap-3
-        md:flex
-      '
+          mt-5 hidden justify-center gap-3
+          md:flex
+        '
       >
         <OpenAddPdfDetailModalButton
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
@@ -192,9 +192,9 @@ const DetailPage1: FC<ModalProps> = (props) => {
         <button
           onClick={() => toPage2()}
           className='
-          rounded-full
-          hover:bg-grey-300
-        '
+            rounded-full
+            hover:bg-grey-300
+          '
         >
           <FaChevronCircleRight size={30} />
         </button>

@@ -92,9 +92,9 @@ const RegistModal: FC<ModalProps> = (props) => {
         <div className='mt-5 flex justify-end'>
           <div
             className='
-            mr-5 cursor-pointer rounded-sm
-            hover:bg-primary-3
-          '
+              mr-5 cursor-pointer rounded-sm
+              hover:bg-primary-3
+            '
             onClick={closeModal}
           >
             <RiCloseCircleLine size={'23px'} color={'gray'} />
@@ -108,9 +108,7 @@ const RegistModal: FC<ModalProps> = (props) => {
               <Select
                 value={formData.yearID}
                 onChange={handler('yearID')}
-                className='
-                w-56
-              '
+                className='w-56'
               >
                 {yearList.map((data) => (
                   <option key={data.id} value={data.id}>
@@ -124,9 +122,7 @@ const RegistModal: FC<ModalProps> = (props) => {
               <Select
                 value={formData.sourceID}
                 onChange={handler('sourceID')}
-                className='
-                w-56
-              '
+                className='w-56'
               >
                 {sourceList.map((source) => (
                   <option key={source.id} value={source.id}>

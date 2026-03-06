@@ -6,37 +6,34 @@ export default function Custom500() {
   return (
     <div className='flex h-screen flex-col'>
       <header
-        className='
-        flex h-16 w-full items-center justify-center bg-primary-4
-      '
+        className='flex h-16 w-full items-center justify-center bg-primary-4'
       >
         <div
           className='
-          w-24
-          md:w-40
-        '
+            w-24
+            md:w-40
+          '
         >
           <Image
             src='/logo.svg'
             alt='FinanSu'
             width={150}
             height={40}
-            className='
-            size-fit
-          '
+            className='size-fit'
           />
         </div>
       </header>
       <main
         className='
-        flex grow items-center justify-center bg-gray-100 text-center
-      '
+          flex grow items-center justify-center bg-gray-100 text-center
+        '
       >
         <div
           className='
-          m-4 flex w-fit flex-col items-center rounded-lg bg-white p-5 shadow-md
-          md:m-8 md:w-1/2 md:p-10
-        '
+            m-4 flex w-fit flex-col items-center rounded-lg bg-white p-5
+            shadow-md
+            md:m-8 md:w-1/2 md:p-10
+          '
         >
           <h1 className='text-8xl font-bold'>500</h1>
           <h2 className='text-3xl'>Internal Server Error</h2>

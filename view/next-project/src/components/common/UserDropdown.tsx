@@ -39,9 +39,9 @@ const UserDropdown = (props: Props) => {
           <span
             suppressHydrationWarning
             className='
-            hidden text-base font-bold
-            md:block
-          '
+              hidden text-base font-bold
+              md:block
+            '
           >
             {props.title}
           </span>
@@ -52,9 +52,9 @@ const UserDropdown = (props: Props) => {
       {isOpen && (
         <div
           className='
-          absolute right-0 z-50 mt-2 w-48 rounded-md border bg-white-0 py-1
-          shadow-lg
-        '
+            absolute right-0 z-50 mt-2 w-48 rounded-md border bg-white-0 py-1
+            shadow-lg
+          '
         >
           <span
             suppressHydrationWarning

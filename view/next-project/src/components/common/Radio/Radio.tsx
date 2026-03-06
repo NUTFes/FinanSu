@@ -37,18 +37,18 @@ function Radio(props: Props): JSX.Element {
         />
         <div
           className='
-          pointer-events-none absolute size-2 scale-0 rounded-full bg-primary-1
-          opacity-0 transition-all
-          peer-checked:scale-100 peer-checked:opacity-100
-        '
+            pointer-events-none absolute size-2 scale-0 rounded-full
+            bg-primary-1 opacity-0 transition-all
+            peer-checked:scale-100 peer-checked:opacity-100
+          '
         />
       </div>
       {children && (
         <span
           className='
-          text-sm text-black-600 transition-colors select-none
-          group-hover:text-black-300
-        '
+            text-sm text-black-600 transition-colors select-none
+            group-hover:text-black-300
+          '
         >
           {children}
         </span>

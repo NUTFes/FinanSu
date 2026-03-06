@@ -55,9 +55,9 @@ const Dropdown = (props: Props) => {
           <>
             <div
               className='
-              absolute left-0 z-50 mt-2 w-32 origin-top-left rounded-md px-3
-              pt-2 shadow-lg
-            '
+                absolute left-0 z-50 mt-2 w-32 origin-top-left rounded-md px-3
+                pt-2 shadow-lg
+              '
             >
               <div className='rounded-md bg-white shadow-2xs'>
                 <div

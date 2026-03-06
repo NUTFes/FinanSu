@@ -106,10 +106,10 @@ const PurchaseReportPage = () => {
       <MainLayout>
         <div
           className={`
-          flex
-          ${CONTAINER_HEIGHT_CLASS}
-          items-center justify-center
-        `}
+            flex
+            ${CONTAINER_HEIGHT_CLASS}
+            items-center justify-center
+          `}
         >
           <div className='flex items-center justify-center'>
             <Spinner size='xl' />
@@ -126,10 +126,10 @@ const PurchaseReportPage = () => {
     <MainLayout>
       <div
         className={`
-        flex
-        ${CONTAINER_HEIGHT_CLASS}
-        items-center justify-center
-      `}
+          flex
+          ${CONTAINER_HEIGHT_CLASS}
+          items-center justify-center
+        `}
       >
         <div className={FORM_CONTAINER_CLASS}>
           <Title
@@ -145,9 +145,7 @@ const PurchaseReportPage = () => {
                   <Input
                     value={divisionName}
                     readOnly
-                    className='
-                    bg-gray-50 opacity-50
-                  '
+                    className='bg-gray-50 opacity-50'
                   />
                 ) : (
                   <Select
@@ -170,9 +168,7 @@ const PurchaseReportPage = () => {
                   <Input
                     value={festivalItemName}
                     readOnly
-                    className='
-                    bg-gray-50 opacity-50
-                  '
+                    className='bg-gray-50 opacity-50'
                   />
                 ) : (
                   <Select
@@ -233,9 +229,7 @@ const PurchaseReportPage = () => {
                   <Spinner
                     size='sm'
                     color='white'
-                    className='
-                  mr-2
-                '
+                    className='mr-2'
                   />
                 ) : null}
                 {isEditMode ? '更新する' : '登録する'}

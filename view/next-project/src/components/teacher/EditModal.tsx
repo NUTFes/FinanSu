@@ -48,8 +48,8 @@ export default function FundInformationEditModal(props: ModalProps) {
       <div className='mx-auto w-fit text-xl'>教員情報の編集</div>
       <div
         className='
-        my-10 grid grid-cols-5 place-items-center gap-5 text-black-600
-      '
+          my-10 grid grid-cols-5 place-items-center gap-5 text-black-600
+        '
       >
         <p>教員名</p>
         <div className='col-span-4 w-full'>

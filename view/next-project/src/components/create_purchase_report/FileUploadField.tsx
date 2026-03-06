@@ -57,16 +57,16 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         >
           <GoPlus
             className='
-            pt-px text-sm
-            sm:text-base
-          '
+              pt-px text-sm
+              sm:text-base
+            '
           />
           <span
             className='
-            text-xs font-normal
-            sm:text-sm
-            md:text-base
-          '
+              text-xs font-normal
+              sm:text-sm
+              md:text-base
+            '
           >
             {isEditMode ? '領収書（レシート）を変更' : '領収書（レシート）をアップロード'}
           </span>

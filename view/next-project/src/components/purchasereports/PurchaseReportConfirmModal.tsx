@@ -55,9 +55,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
                   index === purchaseItems.length - 1
                     ? 'pt-3 pb-4'
-                    : `
-                    border-b py-3
-                  `,
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.item}</div>
@@ -68,9 +66,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
                   index === purchaseItems.length - 1
                     ? 'pt-3 pb-4'
-                    : `
-                    border-b py-3
-                  `,
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.price}</div>
@@ -81,9 +77,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
                   index === purchaseItems.length - 1
                     ? 'pt-3 pb-4'
-                    : `
-                    border-b py-3
-                  `,
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.quantity}</div>
@@ -94,9 +88,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
                   index === purchaseItems.length - 1
                     ? 'pt-3 pb-4'
-                    : `
-                    border-b py-3
-                  `,
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.detail}</div>
@@ -107,9 +99,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
                   index === purchaseItems.length - 1
                     ? 'pt-3 pb-4'
-                    : `
-                    border-b py-3
-                  `,
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>
@@ -152,8 +142,8 @@ export default function PurchaseItemNumModal(props: ModalProps) {
       </div>
       <div
         className='
-        mb-10 grid w-full justify-items-center text-xl text-black-600
-      '
+          mb-10 grid w-full justify-items-center text-xl text-black-600
+        '
       >
         購入申請
       </div>

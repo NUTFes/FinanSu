@@ -25,9 +25,9 @@ export default function Periods() {
     <LoginLayout>
       <div
         className='
-        m-4 w-fit rounded-lg px-4 shadow-md
-        md:m-8 md:w-1/2 md:px-10
-      '
+          m-4 w-fit rounded-lg px-4 shadow-md
+          md:m-8 md:w-1/2 md:px-10
+        '
       >
         <div className='mt-8 flex items-center justify-center gap-2'>
           <Image
@@ -42,9 +42,9 @@ export default function Periods() {
           />
           <p
             className='
-            text-2xl text-black-600
-            md:text-3xl
-          '
+              text-2xl text-black-600
+              md:text-3xl
+            '
           >
             パスワードの変更
           </p>
@@ -82,8 +82,8 @@ export default function Periods() {
                 </div>
                 <div
                   className='
-                  grid grid-cols-3 items-center justify-items-end gap-5
-                '
+                    grid grid-cols-3 items-center justify-items-end gap-5
+                  '
                 >
                   <p className='text-md whitespace-nowrap text-black-300'>メールアドレス</p>
                   <input

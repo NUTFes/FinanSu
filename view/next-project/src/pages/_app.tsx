@@ -24,10 +24,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <main
         className={`
-        ${notoSansJP.className}
-        ${notoSansJP.variable}
-        h-full
-      `}
+          ${notoSansJP.className}
+          ${notoSansJP.variable}
+          h-full
+        `}
       >
         <ManagedUIContext>
           <Layout>

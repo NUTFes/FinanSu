@@ -54,9 +54,9 @@ export default function SignInView() {
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
             <p
               className='
-              md:text-md
-              text-sm whitespace-nowrap text-black-300
-            '
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
             >
               メールアドレス
             </p>
@@ -74,9 +74,9 @@ export default function SignInView() {
             />
             <p
               className='
-              md:text-md
-              text-sm whitespace-nowrap text-black-300
-            '
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
             >
               パスワード
             </p>

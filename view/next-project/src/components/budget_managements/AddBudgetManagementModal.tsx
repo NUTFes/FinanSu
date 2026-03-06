@@ -207,8 +207,8 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
         </div>
         <div
           className='
-          my-10 grid grid-cols-5 place-items-center gap-5 text-black-600
-        '
+            my-10 grid grid-cols-5 place-items-center gap-5 text-black-600
+          '
         >
           {content}
         </div>

@@ -208,9 +208,9 @@ export default function BudgetManagement(props: Props) {
         </div>
         <div
           className='
-          mb-4 flex flex-col items-center
-          md:flex-row md:justify-between
-        '
+            mb-4 flex flex-col items-center
+            md:flex-row md:justify-between
+          '
         >
           <div className='flex flex-col gap-4 py-2'>
             <div className='flex gap-3'>
@@ -234,9 +234,9 @@ export default function BudgetManagement(props: Props) {
             </div>
             <div
               className={`
-              flex gap-3
-              ${financialRecordId !== null ? 'visible' : `invisible`}
-            `}
+                flex gap-3
+                ${financialRecordId !== null ? 'visible' : `invisible`}
+              `}
             >
               <span className='text-base font-light'>申請する部門</span>
               <select
@@ -259,15 +259,15 @@ export default function BudgetManagement(props: Props) {
           </div>
           <div
             className='
-            mt-2 flex w-full flex-col gap-1
-            md:w-fit md:flex-row md:gap-3
-          '
+              mt-2 flex w-full flex-col gap-1
+              md:w-fit md:flex-row md:gap-3
+            '
           >
             <PrimaryButton
               className='
-              w-full
-              md:w-fit
-            '
+                w-full
+                md:w-fit
+              '
             >
               <a href={csvDownloadLink} download>
                 CSVダウンロード
@@ -293,9 +293,7 @@ export default function BudgetManagement(props: Props) {
             <thead>
               <tr className='border-b border-b-primary-1 py-3'>
                 <th
-                  className='
-                  w-1/4 pb-2 text-center font-medium text-black-600
-                '
+                  className='w-1/4 pb-2 text-center font-medium text-black-600'
                 >
                   {title}
                 </th>
@@ -303,22 +301,22 @@ export default function BudgetManagement(props: Props) {
                   <>
                     <th
                       className='
-                      w-1/4 pb-2 text-center font-medium text-black-600
-                    '
+                        w-1/4 pb-2 text-center font-medium text-black-600
+                      '
                     >
                       予算
                     </th>
                     <th
                       className='
-                      w-1/4 pb-2 text-center font-medium text-black-600
-                    '
+                        w-1/4 pb-2 text-center font-medium text-black-600
+                      '
                     >
                       使用額
                     </th>
                     <th
                       className='
-                      w-1/4 pb-2 text-center font-medium text-black-600
-                    '
+                        w-1/4 pb-2 text-center font-medium text-black-600
+                      '
                     >
                       残高
                     </th>

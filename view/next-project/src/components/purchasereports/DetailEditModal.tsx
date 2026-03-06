@@ -53,8 +53,8 @@ export const DetailEditModal: React.FC<{
       </div>
       <div
         className='
-        mx-auto my-6 grid w-9/10 grid-cols-4 place-items-center gap-4
-      '
+          mx-auto my-6 grid w-9/10 grid-cols-4 place-items-center gap-4
+        '
       >
         <p className='text-lg text-black-600'>購入した局</p>
         <div className='col-span-3 w-full'>

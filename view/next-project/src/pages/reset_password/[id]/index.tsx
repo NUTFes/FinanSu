@@ -84,9 +84,9 @@ export default function ResetPassword(props: Props) {
     <LoginLayout>
       <div
         className='
-        m-4 w-fit rounded-lg px-5 shadow-md
-        md:m-8 md:w-1/2 md:px-10
-      '
+          m-4 w-fit rounded-lg px-5 shadow-md
+          md:m-8 md:w-1/2 md:px-10
+        '
       >
         <div className='mt-8 flex items-center justify-center gap-2'>
           <Image
@@ -101,9 +101,9 @@ export default function ResetPassword(props: Props) {
           />
           <p
             className='
-            text-2xl text-black-600
-            md:text-3xl
-          '
+              text-2xl text-black-600
+              md:text-3xl
+            '
           >
             パスワードの変更
           </p>
@@ -117,9 +117,9 @@ export default function ResetPassword(props: Props) {
                     <div className='grid grid-cols-3 place-items-center gap-5'>
                       <p
                         className='
-                        md:text-md
-                        text-sm whitespace-nowrap text-black-300
-                      '
+                          md:text-md
+                          text-sm whitespace-nowrap text-black-300
+                        '
                       >
                         パスワード
                       </p>
@@ -138,9 +138,9 @@ export default function ResetPassword(props: Props) {
                       />
                       <p
                         className='
-                        md:text-md
-                        text-sm whitespace-nowrap text-black-300
-                      '
+                          md:text-md
+                          text-sm whitespace-nowrap text-black-300
+                        '
                       >
                         パスワード確認
                       </p>
@@ -162,9 +162,7 @@ export default function ResetPassword(props: Props) {
                       />
                     </div>
                     <div
-                      className='
-                      mb-5 flex flex-col items-center justify-center
-                    '
+                      className='mb-5 flex flex-col items-center justify-center'
                     >
                       <p className='text-red-500'>{errors.password && errors.password.message}</p>
                       <p className='text-red-500'>

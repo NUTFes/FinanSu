@@ -39,9 +39,9 @@ export default function SponsorStyleList(props: Props) {
           </div>
           <div
             className='
-            hidden justify-end
-            md:flex
-          '
+              hidden justify-end
+              md:flex
+            '
           >
             <OpenAddModalButton>協賛スタイル登録</OpenAddModalButton>
           </div>
@@ -69,9 +69,7 @@ export default function SponsorStyleList(props: Props) {
                 <tr
                   className={clsx(
                     index !== sponsorStyleList.length - 1 &&
-                      `
-                    border-b
-                  `,
+                      `border-b`,
                   )}
                   key={sponsorStyleItem.id}
                 >
@@ -101,9 +99,9 @@ export default function SponsorStyleList(props: Props) {
       </Card>
       <div
         className='
-        fixed right-4 bottom-4
-        md:hidden
-      '
+          fixed right-4 bottom-4
+          md:hidden
+        '
       >
         <OpenAddModalButton />
       </div>

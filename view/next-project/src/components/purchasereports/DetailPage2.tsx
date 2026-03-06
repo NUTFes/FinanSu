@@ -102,9 +102,9 @@ const DetailPage2: FC<ModalProps> = (props) => {
   return (
     <div
       className='
-      w-96
-      md:w-full
-    '
+        w-96
+        md:w-full
+      '
     >
       <p className='mx-auto w-fit text-xl text-black-600'>登録済レシート</p>
       <div className='max-h-96 overflow-auto'>
@@ -113,14 +113,14 @@ const DetailPage2: FC<ModalProps> = (props) => {
             <>
               <div
                 className='
-                m-0 flex flex-row-reverse border-t border-primary-1 p-0
-              '
+                  m-0 flex flex-row-reverse border-t border-primary-1 p-0
+                '
               >
                 <div
                   className='
-                  mt-2
-                  md:w-1/12
-                '
+                    mt-2
+                    md:w-1/12
+                  '
                 >
                   <button className=''>
                     <DeleteButton onClick={() => handleDeleteReceipt(receipt)} />
@@ -168,14 +168,15 @@ const DetailPage2: FC<ModalProps> = (props) => {
           ))}
         <div
           className='
-          my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2
-        '
+            my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1
+            p-2
+          '
         >
           <button
             className='
-            rounded-sm
-            hover:bg-grey-300
-          '
+              rounded-sm
+              hover:bg-grey-300
+            '
           >
             <FiPlusSquare size={30} onClick={() => handleCreateReceipt()} />
           </button>
@@ -185,9 +186,9 @@ const DetailPage2: FC<ModalProps> = (props) => {
         <button
           onClick={() => toPage1()}
           className='
-          rounded-full
-          hover:bg-grey-300
-        '
+            rounded-full
+            hover:bg-grey-300
+          '
         >
           <FaChevronCircleLeft size={30} />
         </button>

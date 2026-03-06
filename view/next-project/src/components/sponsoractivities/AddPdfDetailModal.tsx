@@ -74,8 +74,9 @@ export default function AddPdfDetailModal(props: ModalProps) {
         </div>
         <p
           className='
-          mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest text-black-600
-        '
+            mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest
+            text-black-600
+          '
         >
           請求書の発行
         </p>
@@ -116,9 +117,9 @@ export default function AddPdfDetailModal(props: ModalProps) {
       </div>
       <div
         className='
-        h-120 justify-center overflow-x-auto
-        md:flex
-      '
+          h-120 justify-center overflow-x-auto
+          md:flex
+        '
       >
         <PreviewPDF
           invoiceItem={invoiceData}

@@ -34,9 +34,9 @@ const UsersDeleteModal: FC<ModalProps> = (props) => {
   return (
     <Modal
       className='
-      font-thin
-      md:w-1/2
-    '
+        font-thin
+        md:w-1/2
+      '
     >
       <div className='w-full'>
         <div className='ml-auto w-fit'>
