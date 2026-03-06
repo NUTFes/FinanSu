@@ -136,6 +136,14 @@ type DesignProgress string
 // FeasibilityStatus 協賛可否
 type FeasibilityStatus string
 
+// SponsorshipActivitiesResponse 協賛活動一覧のレスポンス
+type SponsorshipActivitiesResponse struct {
+	Activities *[]SponsorshipActivity `json:"activities,omitempty"`
+
+	// TotalAmount 該当データの協賛金額合計
+	TotalAmount *int `json:"totalAmount,omitempty"`
+}
+
 // SponsorshipActivity 協賛活動データの詳細情報
 type SponsorshipActivity struct {
 	// ActivityStatus 活動ステータス

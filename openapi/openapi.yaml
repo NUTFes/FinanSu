@@ -2422,16 +2422,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  totalAmount:
-                    type: integer
-                    description: 該当データの協賛金額合計
-                    example: 350000
-                  activities:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/SponsorshipActivity"
+                $ref: "#/components/schemas/SponsorshipActivitiesResponse"
     post:
       tags:
         - sponsorship_activity
@@ -3434,5 +3425,18 @@ components:
           example: "money"
         style:
           $ref: "#/components/schemas/sponsorStyle"
+
+    SponsorshipActivitiesResponse:
+      type: object
+      description: 協賛活動一覧のレスポンス
+      properties:
+        totalAmount:
+          type: integer
+          description: 該当データの協賛金額合計
+          example: 350000
+        activities:
+          type: array
+          items:
+            $ref: "#/components/schemas/SponsorshipActivity"
 
 x-original-swagger-version: "2.0"

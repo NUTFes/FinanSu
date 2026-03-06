@@ -51,9 +51,11 @@ export default function AddBlankReceiptModal({ setIsOpen }: ModalProps) {
           協賛領収書の発行（手入力）
         </p>
 
-        <div className='
+        <div
+          className='
           mb-6 flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden
-        '>
+        '
+        >
           {/* 入力フォーム */}
           <div className='w-1/2 overflow-y-auto pr-4'>
             <div className='mx-auto max-w-md'>

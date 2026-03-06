@@ -55,11 +55,10 @@ func (h *Handler) GetSponsorshipActivities(c echo.Context, params generated.GetS
 			totalAmount += s.Style.Price
 		}
 	}
-	response := map[string]interface{}{
-		"totalAmount": totalAmount,
-		"activities":  genActivities,
+	response := generated.SponsorshipActivitiesResponse{
+		TotalAmount: &totalAmount,
+		Activities:  &genActivities,
 	}
-
 	return c.JSON(http.StatusOK, response)
 }
 

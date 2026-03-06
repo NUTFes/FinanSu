@@ -53,7 +53,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -64,7 +66,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -75,7 +79,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -86,7 +92,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -97,7 +105,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}

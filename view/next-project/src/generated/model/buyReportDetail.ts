@@ -17,6 +17,7 @@ export interface BuyReportDetail {
   amount: number;
   reportDate: string;
   paidBy: string;
+  paidByUserId?: number;
   isPacked: boolean;
   isSettled: boolean;
   fileName?: string;
