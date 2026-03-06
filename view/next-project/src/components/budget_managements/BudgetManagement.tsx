@@ -206,10 +206,12 @@ export default function BudgetManagement(props: Props) {
         <div className='flex-start mb-4 flex'>
           <Title>予算管理ページ</Title>
         </div>
-        <div className='
+        <div
+          className='
           mb-4 flex flex-col items-center
           md:flex-row md:justify-between
-        '>
+        '
+        >
           <div className='flex flex-col gap-4 py-2'>
             <div className='flex gap-3'>
               <span className='text-base font-light'>申請する局</span>
@@ -230,10 +232,12 @@ export default function BudgetManagement(props: Props) {
                   ))}
               </select>
             </div>
-            <div className={`
+            <div
+              className={`
               flex gap-3
               ${financialRecordId !== null ? 'visible' : `invisible`}
-            `}>
+            `}
+            >
               <span className='text-base font-light'>申請する部門</span>
               <select
                 value={divisionId ?? ''}
@@ -253,14 +257,18 @@ export default function BudgetManagement(props: Props) {
               </select>
             </div>
           </div>
-          <div className='
+          <div
+            className='
             mt-2 flex w-full flex-col gap-1
             md:w-fit md:flex-row md:gap-3
-          '>
-            <PrimaryButton className='
+          '
+          >
+            <PrimaryButton
+              className='
               w-full
               md:w-fit
-            '>
+            '
+            >
               <a href={csvDownloadLink} download>
                 CSVダウンロード
               </a>
@@ -284,20 +292,36 @@ export default function BudgetManagement(props: Props) {
           <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
               <tr className='border-b border-b-primary-1 py-3'>
-                <th className='
+                <th
+                  className='
                   w-1/4 pb-2 text-center font-medium text-black-600
-                '>{title}</th>
+                '
+                >
+                  {title}
+                </th>
                 {showBudgetColumns && (
                   <>
-                    <th className='
+                    <th
+                      className='
                       w-1/4 pb-2 text-center font-medium text-black-600
-                    '>予算</th>
-                    <th className='
+                    '
+                    >
+                      予算
+                    </th>
+                    <th
+                      className='
                       w-1/4 pb-2 text-center font-medium text-black-600
-                    '>使用額</th>
-                    <th className='
+                    '
+                    >
+                      使用額
+                    </th>
+                    <th
+                      className='
                       w-1/4 pb-2 text-center font-medium text-black-600
-                    '>残高</th>
+                    '
+                    >
+                      残高
+                    </th>
                   </>
                 )}
               </tr>
@@ -309,9 +333,7 @@ export default function BudgetManagement(props: Props) {
                     key={item.id}
                     className={`
                       cursor-pointer
-                      ${
-                      index !== displayItems.length - 1 ? 'border-b' : ''
-                    }
+                      ${index !== displayItems.length - 1 ? 'border-b' : ''}
                     `}
                   >
                     <td className='flex justify-center gap-2 py-3'>

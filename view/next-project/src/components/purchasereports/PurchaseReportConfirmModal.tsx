@@ -53,7 +53,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -64,7 +66,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -75,7 +79,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -86,7 +92,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -97,7 +105,9 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pt-4 pb-3' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `
                     border-b py-3
                   `,
                 )}
@@ -140,9 +150,13 @@ export default function PurchaseItemNumModal(props: ModalProps) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className='
+      <div
+        className='
         mb-10 grid w-full justify-items-center text-xl text-black-600
-      '>購入申請</div>
+      '
+      >
+        購入申請
+      </div>
       <div className='flex flex-col items-center gap-5'>
         <div className='mx-auto w-fit font-bold text-black-300'>購入物品</div>
         <div className='max-h-60 w-full overflow-scroll'>

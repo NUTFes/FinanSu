@@ -239,11 +239,13 @@ const EditFundInformation = () => {
   return (
     <MainLayout>
       <div className={`flex h-[calc(100vh-4rem)] items-center justify-center`}>
-        <div className='
+        <div
+          className='
           w-full max-w-[60%] min-w-75 px-4 py-8
           sm:px-6
           lg:px-8
-        '>
+        '
+        >
           <Title className='mb-6 text-center' title='収入データ修正' />
 
           <form className='space-y-6'>

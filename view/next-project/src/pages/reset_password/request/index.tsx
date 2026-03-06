@@ -23,10 +23,12 @@ export default function Periods() {
 
   return (
     <LoginLayout>
-      <div className='
+      <div
+        className='
         m-4 w-fit rounded-lg px-4 shadow-md
         md:m-8 md:w-1/2 md:px-10
-      '>
+      '
+      >
         <div className='mt-8 flex items-center justify-center gap-2'>
           <Image
             src='/logo-black.svg'
@@ -38,10 +40,14 @@ export default function Periods() {
               md:w-48
             '
           />
-          <p className='
+          <p
+            className='
             text-2xl text-black-600
             md:text-3xl
-          '>パスワードの変更</p>
+          '
+          >
+            パスワードの変更
+          </p>
         </div>
         {isSubmitted ? (
           <div className='my-20 flex w-full flex-col items-center'>
@@ -74,9 +80,11 @@ export default function Periods() {
                     パスワードリセットフォームをお送りします。
                   </p>
                 </div>
-                <div className='
+                <div
+                  className='
                   grid grid-cols-3 items-center justify-items-end gap-5
-                '>
+                '
+                >
                   <p className='text-md whitespace-nowrap text-black-300'>メールアドレス</p>
                   <input
                     type='email'

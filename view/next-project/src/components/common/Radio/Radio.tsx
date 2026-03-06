@@ -35,17 +35,21 @@ function Radio(props: Props): JSX.Element {
             focus-visible:ring-offset-2 focus-visible:outline-none
           '
         />
-        <div className='
+        <div
+          className='
           pointer-events-none absolute size-2 scale-0 rounded-full bg-primary-1
           opacity-0 transition-all
           peer-checked:scale-100 peer-checked:opacity-100
-        ' />
+        '
+        />
       </div>
       {children && (
-        <span className='
+        <span
+          className='
           text-sm text-black-600 transition-colors select-none
           group-hover:text-black-300
-        '>
+        '
+        >
           {children}
         </span>
       )}

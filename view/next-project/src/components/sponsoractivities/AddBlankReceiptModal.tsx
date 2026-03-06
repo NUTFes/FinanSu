@@ -42,15 +42,19 @@ export default function AddBlankReceiptModal({ setIsOpen }: ModalProps) {
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p className='
+        <p
+          className='
           mx-auto mb-4 w-fit text-2xl/8 font-thin tracking-widest text-black-600
-        '>
+        '
+        >
           協賛領収書の発行（手入力）
         </p>
 
-        <div className='
+        <div
+          className='
           mb-6 flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden
-        '>
+        '
+        >
           {/* 入力フォーム */}
           <div className='w-1/2 overflow-y-auto pr-4'>
             <div className='mx-auto max-w-md'>
@@ -90,9 +94,11 @@ export default function AddBlankReceiptModal({ setIsOpen }: ModalProps) {
           </div>
 
           {/* プレビュー */}
-          <div className='
+          <div
+            className='
             flex w-1/2 flex-col overflow-hidden border-l border-gray-200 pl-4
-          '>
+          '
+          >
             <div className='flex-1 overflow-hidden'>
               <PreviewPDF
                 sponsorActivitiesViewItem={

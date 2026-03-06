@@ -72,9 +72,11 @@ export default function AddPdfDetailModal(props: ModalProps) {
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p className='
+        <p
+          className='
           mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest text-black-600
-        '>
+        '
+        >
           請求書の発行
         </p>
         <div className='col-span-4 w-full'>
@@ -112,10 +114,12 @@ export default function AddPdfDetailModal(props: ModalProps) {
           <OpenEditInvoiceModalButton invoice={invoiceData} setInvoice={setInvoiceDate} />
         </div>
       </div>
-      <div className='
+      <div
+        className='
         h-120 justify-center overflow-x-auto
         md:flex
-      '>
+      '
+      >
         <PreviewPDF
           invoiceItem={invoiceData}
           deadline={invoiceData.deadline}

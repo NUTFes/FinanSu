@@ -157,18 +157,24 @@ export default function PurchaseReports() {
 
   return (
     <MainLayout>
-      <div className='
+      <div
+        className='
         flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4
-      '>
+      '
+      >
         <Card w='flex flex-col w-full md:w-fit'>
-          <div className='
+          <div
+            className='
             mx-4 mt-8
             md:mx-8 md:mt-16
-          '>
-            <div className='
+          '
+          >
+            <div
+              className='
               flex flex-col items-center gap-6
               md:flex-row
-            '>
+            '
+            >
               <Title title={'購入報告一覧'} />
               <select
                 className='border-b border-black-0'
@@ -192,105 +198,137 @@ export default function PurchaseReports() {
               </PrimaryButton>
             </div>
           </div>
-          <div className='
+          <div
+            className='
             mt-2 flex-1 overflow-auto p-4
             md:p-8
-          '>
+          '
+          >
             <div className='min-w-max'>
               <table className='mb-5 table-auto border-collapse'>
                 <thead>
                   <tr className='border-b border-b-primary-1 py-3'>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       日付
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       局名
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       部門
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       物品
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       立替者
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       金額
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       封詰め
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm font-normal whitespace-nowrap
                       text-black-600
-                    '>
+                    '
+                    >
                       清算完了
                     </th>
-                    <th className='
+                    <th
+                      className='
                       px-4 pb-2 text-sm whitespace-nowrap text-black-600
-                    '></th>
+                    '
+                    ></th>
                   </tr>
                 </thead>
                 <tbody>
                   {buyReports && buyReports.length > 0 ? (
                     buyReports.map((report) => (
                       <tr key={report.id}>
-                        <td className='
+                        <td
+                          className='
                           px-4 py-3 text-center text-sm whitespace-nowrap
                           text-black-600
-                        '>
+                        '
+                        >
                           {formatDate(report.reportDate ?? '')}
                         </td>
-                        <td className='
+                        <td
+                          className='
                           px-4 py-3 text-center text-sm whitespace-nowrap
                           text-black-600
-                        '>
+                        '
+                        >
                           {report.financialRecordName}
                         </td>
-                        <td className='
+                        <td
+                          className='
                           px-4 py-3 text-center text-sm whitespace-nowrap
                           text-black-600
-                        '>
+                        '
+                        >
                           {report.divisionName}
                         </td>
-                        <td className='
+                        <td
+                          className='
                           px-4 py-3 text-center text-sm whitespace-nowrap
                           text-black-600
-                        '>
+                        '
+                        >
                           {report.festivalItemName}
                         </td>
-                        <td className='
+                        <td
+                          className='
                           px-4 py-3 text-center text-sm whitespace-nowrap
                           text-black-600
-                        '>
+                        '
+                        >
                           {report.paidBy}
                         </td>
-                        <td className='
+                        <td
+                          className='
                           px-4 py-3 text-center text-sm whitespace-nowrap
                           text-black-600
-                        '>
+                        '
+                        >
                           {formatAmount(report.amount ?? 0)}
                         </td>
                         <td className='px-4 py-2 text-center'>

@@ -114,13 +114,17 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateI
   return (
     <tr>
       <td colSpan={5}>
-        <div className='
+        <div
+          className='
           flex w-full justify-start px-2
           md:w-9/10
-        '>
-          <div className='
+        '
+        >
+          <div
+            className='
             mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3
-          '>
+          '
+          >
             <table
               className='
                 w-full table-auto text-sm wrap-break-word whitespace-normal
