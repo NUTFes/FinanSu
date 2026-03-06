@@ -364,9 +364,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
                 {sponsorStyleView.map((style) => (
                   <div
                     key={style.id}
-                    className='
-                    text-center text-sm text-black-600
-                  '
+                    className='text-center text-sm text-black-600'
                   >
                     {style.style} / {style.feature} / {style.price} 円
                   </div>

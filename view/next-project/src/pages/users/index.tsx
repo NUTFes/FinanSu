@@ -131,9 +131,7 @@ export default function Users(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === filterUsers.length - 1
                         ? 'pt-3 pb-4'
-                        : `
-                        border-b py-3
-                      `,
+                        : `border-b py-3`,
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>{user.name}</p>
@@ -144,9 +142,7 @@ export default function Users(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === filterUsers.length - 1
                         ? 'pt-3 pb-4'
-                        : `
-                        border-b py-3
-                      `,
+                        : `border-b py-3`,
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>
@@ -159,9 +155,7 @@ export default function Users(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === filterUsers.length - 1
                         ? 'pt-3 pb-4'
-                        : `
-                        border-b py-3
-                      `,
+                        : `border-b py-3`,
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>
@@ -174,9 +168,7 @@ export default function Users(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === filterUsers.length - 1
                         ? 'pt-3 pb-4'
-                        : `
-                        border-b py-3
-                      `,
+                        : `border-b py-3`,
                     )}
                   >
                     <div className='flex justify-end'>
@@ -189,9 +181,7 @@ export default function Users(props: Props) {
                       index === 0 ? 'pt-4 pb-3' : 'py-3',
                       index === filterUsers.length - 1
                         ? 'pt-3 pb-4'
-                        : `
-                        border-b py-3
-                      `,
+                        : `border-b py-3`,
                     )}
                   >
                     <input
