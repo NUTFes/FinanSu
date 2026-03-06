@@ -12,6 +12,7 @@ import {
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
 import { useCurrentUser } from '@/store';
+import { get } from '@api/api_methods';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -21,6 +22,7 @@ import type {
   GetBuyReportsDetailsParams,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
+import type { User } from '@type/common';
 
 export default function PurchaseReports() {
   const router = useRouter();
@@ -53,9 +55,40 @@ export default function PurchaseReports() {
     mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+  const [userNameMap, setUserNameMap] = useState<Record<number, string>>({});
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchUsers = async () => {
+      try {
+        const usersResponse = await get(`${process.env.CSR_API_URI}/users`);
+        const users = Array.isArray(usersResponse)
+          ? usersResponse
+          : Array.isArray(usersResponse?.data)
+            ? usersResponse.data
+            : [];
+
+        if (!isMounted) return;
+
+        const nameMap = Object.fromEntries(
+          (users as User[]).map((targetUser) => [targetUser.id, targetUser.name]),
+        );
+        setUserNameMap(nameMap);
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      }
+    };
+
+    fetchUsers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
   useEffect(() => {
@@ -321,7 +354,9 @@ export default function PurchaseReports() {
                           text-black-600
                         '
                         >
-                          {report.paidBy}
+                          {(report.paidByUserId ? userNameMap[report.paidByUserId] : undefined) ??
+                            report.paidBy ??
+                            '-'}
                         </td>
                         <td
                           className='
