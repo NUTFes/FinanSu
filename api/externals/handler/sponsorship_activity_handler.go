@@ -103,7 +103,7 @@ func (h *Handler) GetSponsorshipActivitiesId(c echo.Context, id int) error {
 func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
 	var req domain.CreateSponsorshipActivityRequest
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	// 必須チェック
@@ -114,7 +114,7 @@ func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
 	// 更新処理を実行
 	updatedActivity, err := h.sponsorshipActivityUseCase.UpdateSponsorshipActivity(c.Request().Context(), id, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return err
 	}
 
 	// 変換して返す
@@ -126,7 +126,7 @@ func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
 func (h *Handler) PutSponsorshipActivitiesIdStatus(c echo.Context, id int) error {
 	var req generated.PutSponsorshipActivitiesIdStatusJSONRequestBody
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	// 詰め替え
@@ -142,7 +142,7 @@ func (h *Handler) PutSponsorshipActivitiesIdStatus(c echo.Context, id int) error
 	// 更新 ＆ 最新データを取得
 	updatedActivity, err := h.sponsorshipActivityUseCase.UpdateSponsorshipActivityStatus(c.Request().Context(), id, dp)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return err
 	}
 
 	// 変換して返す
@@ -154,7 +154,7 @@ func (h *Handler) PutSponsorshipActivitiesIdStatus(c echo.Context, id int) error
 func (h *Handler) DeleteSponsorshipActivitiesId(c echo.Context, id int) error {
 	err := h.sponsorshipActivityUseCase.DeleteSponsorshipActivity(c.Request().Context(), id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return err
 	}
 
 	return c.JSON(http.StatusOK, "Destroy Sponsorship Activity")
