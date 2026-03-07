@@ -36,10 +36,13 @@ const UserDropdown = (props: Props) => {
       >
         <div className='flex flex-row items-center gap-3'>
           {props.children}
-          <span suppressHydrationWarning className='
-            hidden text-base font-bold
-            md:block
-          '>
+          <span
+            suppressHydrationWarning
+            className='
+              hidden text-base font-bold
+              md:block
+            '
+          >
             {props.title}
           </span>
         </div>
@@ -47,10 +50,12 @@ const UserDropdown = (props: Props) => {
       </button>
 
       {isOpen && (
-        <div className='
-          absolute right-0 z-50 mt-2 w-48 rounded-md border bg-white-0 py-1
-          shadow-lg
-        '>
+        <div
+          className='
+            absolute right-0 z-50 mt-2 w-48 rounded-md border bg-white-0 py-1
+            shadow-lg
+          '
+        >
           <span
             suppressHydrationWarning
             className='

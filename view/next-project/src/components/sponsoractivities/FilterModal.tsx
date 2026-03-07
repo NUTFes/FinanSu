@@ -84,16 +84,18 @@ const FilterModal: FC<ModalProps> = (props) => {
             </div>
           </div>
           <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛フィルター</div>
-          <div className='
-            m-2 grid grid-cols-4 place-items-center gap-x-2 gap-y-5
-          '>
+          <div
+            className='m-2 grid grid-cols-4 place-items-center gap-x-2 gap-y-5'
+          >
             <p className='col-span-2 text-black-600'>協賛スタイル</p>
             <div className='col-span-2 w-full'>
               <div className=''>
-                <div className='
-                  flex rounded-md p-2
-                  hover:bg-white-100
-                '>
+                <div
+                  className='
+                    flex rounded-md p-2
+                    hover:bg-white-100
+                  '
+                >
                   <input
                     type='checkbox'
                     onChange={topCheckboxEvent}
@@ -108,14 +110,19 @@ const FilterModal: FC<ModalProps> = (props) => {
                     ）
                   </label>
                 </div>
-                <div className='
-                  max-h-28 overflow-y-auto rounded-md border-2 bg-white-0
-                '>
+                <div
+                  className='
+                    max-h-28 overflow-y-auto rounded-md border-2 bg-white-0
+                  '
+                >
                   {props.sponsorStyles.map((style) => (
-                    <div className='
-                      flex p-2
-                      hover:bg-white-100
-                    ' key={style.id}>
+                    <div
+                      className='
+                        flex p-2
+                        hover:bg-white-100
+                      '
+                      key={style.id}
+                    >
                       <input
                         type='checkbox'
                         checked={includeStyleIds(style?.id || 0)}
@@ -124,9 +131,10 @@ const FilterModal: FC<ModalProps> = (props) => {
                         }}
                         id={String(style.id)}
                       ></input>
-                      <label htmlFor={String(style.id)} className='
-                        mx-2 w-full text-black-300
-                      '>
+                      <label
+                        htmlFor={String(style.id)}
+                        className='mx-2 w-full text-black-300'
+                      >
                         {style.style}/{style.feature}/{style.price}円
                       </label>
                     </div>

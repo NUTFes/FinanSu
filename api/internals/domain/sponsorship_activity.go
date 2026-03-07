@@ -20,10 +20,11 @@ type SponsorshipActivity struct {
 }
 
 type SponsorStyleDetail struct {
-	ID             int          `json:"id"`
-	SponsorStyleID int          `json:"sponsorStyleId"`
-	Category       string       `json:"category"`
-	Style          SponsorStyle `json:"style"`
+	ID                    int          `json:"id"`
+	SponsorshipActivityID int          `json:"-"`
+	SponsorStyleID        int          `json:"sponsorStyleId"`
+	Category              string       `json:"category"`
+	Style                 SponsorStyle `json:"style"`
 }
 
 // 検索パラメータ用

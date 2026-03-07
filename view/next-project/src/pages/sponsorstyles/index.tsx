@@ -37,10 +37,12 @@ export default function SponsorStyleList(props: Props) {
           <div className='flex'>
             <Title>協賛スタイル一覧</Title>
           </div>
-          <div className='
-            hidden justify-end
-            md:flex
-          '>
+          <div
+            className='
+              hidden justify-end
+              md:flex
+            '
+          >
             <OpenAddModalButton>協賛スタイル登録</OpenAddModalButton>
           </div>
         </div>
@@ -65,9 +67,10 @@ export default function SponsorStyleList(props: Props) {
             <tbody>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
                 <tr
-                  className={clsx(index !== sponsorStyleList.length - 1 && `
-                    border-b
-                  `)}
+                  className={clsx(
+                    index !== sponsorStyleList.length - 1 &&
+                      `border-b`,
+                  )}
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>
@@ -94,10 +97,12 @@ export default function SponsorStyleList(props: Props) {
           </table>
         </div>
       </Card>
-      <div className='
-        fixed right-4 bottom-4
-        md:hidden
-      '>
+      <div
+        className='
+          fixed right-4 bottom-4
+          md:hidden
+        '
+      >
         <OpenAddModalButton />
       </div>
     </MainLayout>

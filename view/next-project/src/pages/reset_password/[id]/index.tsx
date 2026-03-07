@@ -82,10 +82,12 @@ export default function ResetPassword(props: Props) {
 
   return (
     <LoginLayout>
-      <div className='
-        m-4 w-fit rounded-lg px-5 shadow-md
-        md:m-8 md:w-1/2 md:px-10
-      '>
+      <div
+        className='
+          m-4 w-fit rounded-lg px-5 shadow-md
+          md:m-8 md:w-1/2 md:px-10
+        '
+      >
         <div className='mt-8 flex items-center justify-center gap-2'>
           <Image
             src='/logo-black.svg'
@@ -97,10 +99,14 @@ export default function ResetPassword(props: Props) {
               md:w-48
             '
           />
-          <p className='
-            text-2xl text-black-600
-            md:text-3xl
-          '>パスワードの変更</p>
+          <p
+            className='
+              text-2xl text-black-600
+              md:text-3xl
+            '
+          >
+            パスワードの変更
+          </p>
         </div>
         {isTokenValid ? (
           <div>
@@ -109,10 +115,12 @@ export default function ResetPassword(props: Props) {
                 <div className='my-20 flex w-full flex-col items-center'>
                   <div className='mb-10 flex flex-col gap-3'>
                     <div className='grid grid-cols-3 place-items-center gap-5'>
-                      <p className='
-                        md:text-md
-                        text-sm whitespace-nowrap text-black-300
-                      '>
+                      <p
+                        className='
+                          md:text-md
+                          text-sm whitespace-nowrap text-black-300
+                        '
+                      >
                         パスワード
                       </p>
                       <input
@@ -128,10 +136,12 @@ export default function ResetPassword(props: Props) {
                           },
                         })}
                       />
-                      <p className='
-                        md:text-md
-                        text-sm whitespace-nowrap text-black-300
-                      '>
+                      <p
+                        className='
+                          md:text-md
+                          text-sm whitespace-nowrap text-black-300
+                        '
+                      >
                         パスワード確認
                       </p>
                       <input
@@ -151,9 +161,9 @@ export default function ResetPassword(props: Props) {
                         })}
                       />
                     </div>
-                    <div className='
-                      mb-5 flex flex-col items-center justify-center
-                    '>
+                    <div
+                      className='mb-5 flex flex-col items-center justify-center'
+                    >
                       <p className='text-red-500'>{errors.password && errors.password.message}</p>
                       <p className='text-red-500'>
                         {errors.confirmPassword && errors.confirmPassword.type === 'correct' && (
