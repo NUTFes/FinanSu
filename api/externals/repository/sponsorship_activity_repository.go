@@ -247,7 +247,6 @@ func (r *sponsorshipActivityRepository) Create(ctx context.Context, tx *sql.Tx, 
 		return 0, err
 	}
 
-	// ★ 変更：r.client.DB() ではなく tx を使う！
 	result, err := tx.ExecContext(ctx, query, args...)
 	if err != nil {
 		return 0, err
