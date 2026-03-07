@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
 
@@ -81,13 +82,13 @@ func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Cont
 func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Context, req domain.CreateSponsorshipActivityRequest) (domain.SponsorshipActivity, error) {
 	// 未着手の補完
 	if req.ActivityStatus == "" {
-		req.ActivityStatus = "unstarted"
+		req.ActivityStatus = string(generated.ActivityStatusUnstarted)
 	}
 	if req.FeasibilityStatus == "" {
-		req.FeasibilityStatus = "unstarted"
+		req.FeasibilityStatus = string(generated.Unstarted)
 	}
 	if req.DesignProgress == "" {
-		req.DesignProgress = "unstarted"
+		req.DesignProgress = string(generated.DesignProgressUnstarted)
 	}
 
 	// 詰め替え

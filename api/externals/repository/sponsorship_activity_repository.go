@@ -186,41 +186,28 @@ func (r *sponsorshipActivityRepository) FindByID(ctx context.Context, id int) (d
 		return domain.SponsorshipActivity{}, err
 	}
 
-	rows, err := r.client.DB().QueryContext(ctx, query, args...)
+	var a domain.SponsorshipActivity
+	var s domain.Sponsor
+	var u domain.User
+	var remarks sql.NullString
+
+	row := r.client.DB().QueryRowContext(ctx, query, args...)
+	err = row.Scan(
+		&a.ID, &a.YearPeriodsID, &a.SponsorID, &a.UserID, &a.ActivityStatus, &a.FeasibilityStatus, &a.DesignProgress, &remarks, &a.CreatedAt, &a.UpdatedAt,
+		&s.ID, &s.Name, &s.Tel, &s.Email, &s.Address, &s.Representative, &s.CreatedAt, &s.UpdatedAt,
+		&u.ID, &u.Name, &u.BureauID, &u.RoleID, &u.IsDeleted, &u.CreatedAt, &u.UpdatedAt,
+	)
 	if err != nil {
 		return domain.SponsorshipActivity{}, err
 	}
-	defer rows.Close()
 
-	var activities []domain.SponsorshipActivity
-	for rows.Next() {
-		var a domain.SponsorshipActivity
-		var s domain.Sponsor
-		var u domain.User
-		var remarks sql.NullString
-
-		err := rows.Scan(
-			&a.ID, &a.YearPeriodsID, &a.SponsorID, &a.UserID, &a.ActivityStatus, &a.FeasibilityStatus, &a.DesignProgress, &remarks, &a.CreatedAt, &a.UpdatedAt,
-			&s.ID, &s.Name, &s.Tel, &s.Email, &s.Address, &s.Representative, &s.CreatedAt, &s.UpdatedAt,
-			&u.ID, &u.Name, &u.BureauID, &u.RoleID, &u.IsDeleted, &u.CreatedAt, &u.UpdatedAt,
-		)
-		if err != nil {
-			return domain.SponsorshipActivity{}, err
-		}
-
-		if remarks.Valid {
-			a.Remarks = remarks.String
-		}
-		a.Sponsor = s
-		a.User = u
-		activities = append(activities, a)
+	if remarks.Valid {
+		a.Remarks = remarks.String
 	}
+	a.Sponsor = s
+	a.User = u
 
-	if len(activities) == 0 {
-		return domain.SponsorshipActivity{}, sql.ErrNoRows
-	}
-
-	return activities[0], nil
+	return a, nil
 }
 
 // トランザクション開始

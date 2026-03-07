@@ -90,16 +90,12 @@ func (h *Handler) PostSponsorshipActivities(c echo.Context) error {
 
 // 詳細 (Get ID)
 func (h *Handler) GetSponsorshipActivitiesId(c echo.Context, id int) error {
-	// データを取得
 	activity, err := h.sponsorshipActivityUseCase.GetSponsorshipActivityByID(c.Request().Context(), id)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return err
 	}
 
-	// 変換
 	genAct := convertToGeneratedSponsorshipActivity(activity)
-
-	// レスポンス
 	return c.JSON(http.StatusOK, genAct)
 }
 
