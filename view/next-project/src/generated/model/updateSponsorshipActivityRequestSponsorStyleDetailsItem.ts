@@ -5,9 +5,9 @@
  * FinanSu APIドキュメント
  * OpenAPI spec version: 2.0.0
  */
-import type { UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory } from './updateSponsorshipActivityRequestSponsorStyleDetailsItemCategory';
+import type { SponsorStyleCategory } from './sponsorStyleCategory';
 
 export type UpdateSponsorshipActivityRequestSponsorStyleDetailsItem = {
   sponsorStyleId?: number;
-  category?: UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory;
+  category?: SponsorStyleCategory;
 };

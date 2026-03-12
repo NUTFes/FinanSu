@@ -6,6 +6,7 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	goqu "github.com/doug-martin/goqu/v9"
 	_ "github.com/doug-martin/goqu/v9/dialect/mysql"
@@ -13,21 +14,23 @@ import (
 
 var selectSponsorshipActivityQuery = goqu.Dialect("mysql").
 	Select(
-		"sa.id", "sa.year_periods_id", "sa.sponsor_id", "sa.user_id", "sa.activity_status", "sa.feasibility_status", "sa.design_progress", "sa.remarks", "sa.created_at", "sa.updated_at",
-		"s.id", "s.name", "s.tel", "s.email", "s.address", "s.representative", "s.created_at", "s.updated_at",
-		"u.id", "u.name", "u.bureau_id", "u.role_id", "u.is_deleted", "u.created_at", "u.updated_at",
+		"sponsorship_activities.id", "sponsorship_activities.year_periods_id", "sponsorship_activities.sponsor_id",
+		"sponsorship_activities.user_id", "sponsorship_activities.activity_status", "sponsorship_activities.feasibility_status",
+		"sponsorship_activities.design_progress", "sponsorship_activities.remarks",
+		"sponsorship_activities.created_at", "sponsorship_activities.updated_at",
+		"sponsors.name", "sponsors.tel", "sponsors.email", "sponsors.address", "sponsors.representative",
+		"users.id", "users.name", "users.bureau_id", "users.role_id", "users.is_deleted", "users.created_at", "users.updated_at",
 	).
-	From(goqu.T("sponsorship_activities").As("sa")).
-	InnerJoin(goqu.T("sponsors").As("s"), goqu.On(goqu.I("sa.sponsor_id").Eq(goqu.I("s.id")))).
-	InnerJoin(goqu.T("users").As("u"), goqu.On(goqu.I("sa.user_id").Eq(goqu.I("u.id"))))
+	From("sponsorship_activities").
+	InnerJoin(goqu.T("sponsors"), goqu.On(goqu.I("sponsorship_activities.sponsor_id").Eq(goqu.I("sponsors.id")))).
+	InnerJoin(goqu.T("users"), goqu.On(goqu.I("sponsorship_activities.user_id").Eq(goqu.I("users.id"))))
 
 type SponsorshipActivityRepository interface {
-	FindAll(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
-	GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error)
-	FindByID(ctx context.Context, id int) (domain.SponsorshipActivity, error)
-	Begin(ctx context.Context) (*sql.Tx, error)
-	Create(ctx context.Context, tx *sql.Tx, activity domain.SponsorshipActivity) (int, error)
-	CreateStyleLink(ctx context.Context, tx *sql.Tx, link domain.SponsorStyleDetail) error
+	FindAll(ctx context.Context, params generated.GetSponsorshipActivitiesParams) ([]generated.SponsorshipActivity, error)
+	GetSponsorStyleMapBySponsorshipActivityIDs(ctx context.Context, sponsorshipActivityIDs []int) (map[int][]generated.ActivitySponsorStyleLink, error)
+	FindByID(ctx context.Context, id int) (generated.SponsorshipActivity, error)
+	Create(ctx context.Context, tx *sql.Tx, sponsorshipActivity generated.SponsorshipActivity) (int, error)
+	CreateSponsorStyleLink(ctx context.Context, tx *sql.Tx, sponsorStyleLink generated.ActivitySponsorStyleLink, sponsorshipActivityID int) error
 	Update(ctx context.Context, activity domain.SponsorshipActivity) error
 	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error
 	Delete(ctx context.Context, id int) error
@@ -45,190 +48,206 @@ func NewSponsorshipActivityRepository(client db.Client, crud abstract.Crud) Spon
 	}
 }
 
-func (r *sponsorshipActivityRepository) FindAll(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
-	// ベースSQL
-	dataset := selectSponsorshipActivityQuery
+func (r *sponsorshipActivityRepository) FindAll(ctx context.Context, sponsorshipActivitiesSearchParams generated.GetSponsorshipActivitiesParams) ([]generated.SponsorshipActivity, error) {
+	queryDataset := selectSponsorshipActivityQuery
 
-	// 絞り込み条件の追加
-	if params.YearPeriodsID != nil {
-		dataset = dataset.Where(goqu.I("sa.year_periods_id").Eq(*params.YearPeriodsID))
+	// 検索パラメータに基づく協賛活動の絞り込み
+	if sponsorshipActivitiesSearchParams.YearPeriodsId != nil {
+		queryDataset = queryDataset.Where(goqu.I("sponsorship_activities.year_periods_id").Eq(*sponsorshipActivitiesSearchParams.YearPeriodsId))
 	}
-	if params.UserID != nil {
-		dataset = dataset.Where(goqu.I("sa.user_id").Eq(*params.UserID))
+	if sponsorshipActivitiesSearchParams.UserId != nil {
+		queryDataset = queryDataset.Where(goqu.I("sponsorship_activities.user_id").Eq(*sponsorshipActivitiesSearchParams.UserId))
 	}
-	if params.ActivityStatus != nil {
-		dataset = dataset.Where(goqu.I("sa.activity_status").Eq(*params.ActivityStatus))
+	if sponsorshipActivitiesSearchParams.ActivityStatus != nil {
+		queryDataset = queryDataset.Where(goqu.I("sponsorship_activities.activity_status").Eq(string(*sponsorshipActivitiesSearchParams.ActivityStatus)))
 	}
-	if params.FeasibilityStatus != nil {
-		dataset = dataset.Where(goqu.I("sa.feasibility_status").Eq(*params.FeasibilityStatus))
+	if sponsorshipActivitiesSearchParams.FeasibilityStatus != nil {
+		queryDataset = queryDataset.Where(goqu.I("sponsorship_activities.feasibility_status").Eq(string(*sponsorshipActivitiesSearchParams.FeasibilityStatus)))
 	}
-	// 企業名の部分一致検索
-	if params.Keyword != nil && *params.Keyword != "" {
-		likePattern := "%" + *params.Keyword + "%"
-		dataset = dataset.Where(goqu.I("s.name").Like(likePattern))
+	if sponsorshipActivitiesSearchParams.Keyword != nil && *sponsorshipActivitiesSearchParams.Keyword != "" {
+		likePattern := "%" + *sponsorshipActivitiesSearchParams.Keyword + "%"
+		queryDataset = queryDataset.Where(goqu.I("sponsors.name").Like(likePattern))
 	}
 
-	// 協賛プランID
-	if len(params.SponsorStyleIDs) > 0 {
-		dataset = dataset.Where(
+	// 指定された協賛プランを持つ協賛活動のみに絞り込む
+	if sponsorshipActivitiesSearchParams.SponsorStyleIds != nil && len(*sponsorshipActivitiesSearchParams.SponsorStyleIds) > 0 {
+		queryDataset = queryDataset.Where(
 			goqu.L("EXISTS ?", goqu.Dialect("mysql").
-				Select(goqu.I("l.sponsorship_activity_id")).
-				From(goqu.T("activity_sponsor_style_links").As("l")).
+				Select(goqu.I("activity_sponsor_style_links.sponsorship_activity_id")).
 				Where(
-					goqu.I("l.sponsorship_activity_id").Eq(goqu.I("sa.id")),
-					goqu.I("l.sponsor_style_id").In(params.SponsorStyleIDs),
+					goqu.I("activity_sponsor_style_links.sponsorship_activity_id").Eq(goqu.I("sponsorship_activities.id")),
+					goqu.I("activity_sponsor_style_links.sponsor_style_id").In(*sponsorshipActivitiesSearchParams.SponsorStyleIds),
 				),
 			),
 		)
 	}
 
-	// ソート順の指定
-	if params.Sort != nil && params.Order != nil {
-		//許可するカラム名のみを処理する
-		switch *params.Sort {
+	// 協賛活動のソート
+	if sponsorshipActivitiesSearchParams.Sort != nil && sponsorshipActivitiesSearchParams.Order != nil {
+		switch *sponsorshipActivitiesSearchParams.Sort {
 		case "id", "year_periods_id", "sponsor_id", "user_id", "activity_status", "feasibility_status", "design_progress", "created_at", "updated_at":
-			col := goqu.I("sa." + *params.Sort)
-			if *params.Order == "asc" {
-				dataset = dataset.Order(col.Asc())
+			sortColumn := goqu.I("sponsorship_activities." + *sponsorshipActivitiesSearchParams.Sort)
+			if string(*sponsorshipActivitiesSearchParams.Order) == "asc" {
+				queryDataset = queryDataset.Order(sortColumn.Asc())
 			} else {
-				dataset = dataset.Order(col.Desc())
+				queryDataset = queryDataset.Order(sortColumn.Desc())
 			}
 		default:
-			dataset = dataset.Order(goqu.I("sa.id").Desc())
+			queryDataset = queryDataset.Order(goqu.I("sponsorship_activities.id").Desc())
 		}
 	} else {
-		// デフォルトはID降順
-		dataset = dataset.Order(goqu.I("sa.id").Desc())
+		queryDataset = queryDataset.Order(goqu.I("sponsorship_activities.id").Desc())
 	}
 
-	query, args, err := dataset.ToSQL()
+	sqlString, sqlArgs, err := queryDataset.ToSQL()
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := r.client.DB().QueryContext(ctx, query, args...)
+	rows, err := r.client.DB().QueryContext(ctx, sqlString, sqlArgs...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var activities []domain.SponsorshipActivity
+	// 取得した値を詰め込む
+	var retrievedSponsorshipActivities []generated.SponsorshipActivity
 	for rows.Next() {
-		var a domain.SponsorshipActivity
-		var s domain.Sponsor
-		var u domain.User
-		var remarks sql.NullString
+		var currentSponsorshipActivity generated.SponsorshipActivity
+		var currentSponsor generated.Sponsor
+		var currentUser generated.User
+		var temporaryRemarks sql.NullString
 
 		err := rows.Scan(
-			&a.ID, &a.YearPeriodsID, &a.SponsorID, &a.UserID, &a.ActivityStatus, &a.FeasibilityStatus, &a.DesignProgress, &remarks, &a.CreatedAt, &a.UpdatedAt,
-			&s.ID, &s.Name, &s.Tel, &s.Email, &s.Address, &s.Representative, &s.CreatedAt, &s.UpdatedAt,
-			&u.ID, &u.Name, &u.BureauID, &u.RoleID, &u.IsDeleted, &u.CreatedAt, &u.UpdatedAt,
+			&currentSponsorshipActivity.Id, &currentSponsorshipActivity.YearPeriodsId, &currentSponsorshipActivity.SponsorId,
+			&currentSponsorshipActivity.UserId,
+			&currentSponsorshipActivity.ActivityStatus, &currentSponsorshipActivity.FeasibilityStatus, &currentSponsorshipActivity.DesignProgress, &temporaryRemarks,
+			&currentSponsorshipActivity.CreatedAt, &currentSponsorshipActivity.UpdatedAt,
+			&currentSponsor.Name, &currentSponsor.Tel, &currentSponsor.Email,
+			&currentSponsor.Address, &currentSponsor.Representative,
+			&currentUser.Id, &currentUser.Name, &currentUser.BureauID, &currentUser.RoleID, &currentUser.IsDeleted,
+			&currentUser.CreatedAt, &currentUser.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
 
-		// 値が存在する場合のみ文字列として格納
-		if remarks.Valid {
-			a.Remarks = remarks.String
+		if temporaryRemarks.Valid {
+			currentSponsorshipActivity.Remarks = &temporaryRemarks.String
 		}
-		a.Sponsor = s
-		a.User = u
-		activities = append(activities, a)
+
+		currentSponsorshipActivity.Sponsor = &currentSponsor
+		currentSponsorshipActivity.User = &currentUser
+
+		retrievedSponsorshipActivities = append(retrievedSponsorshipActivities, currentSponsorshipActivity)
 	}
-	return activities, nil
+	return retrievedSponsorshipActivities, nil
 }
 
 // 特定の活動IDに紐づくプラン内訳を取得
-func (r *sponsorshipActivityRepository) GetStyleDetailsByActivityIDs(ctx context.Context, activityIDs []int) ([]domain.SponsorStyleDetail, error) {
-	dataset := goqu.Dialect("mysql").
+func (r *sponsorshipActivityRepository) GetSponsorStyleMapBySponsorshipActivityIDs(ctx context.Context, sponsorshipActivityIDs []int) (map[int][]generated.ActivitySponsorStyleLink, error) {
+	queryDataset := goqu.Dialect("mysql").
 		Select(
-			"l.id", "l.sponsorship_activity_id", "l.sponsor_style_id", "l.category", // sponsorship_activity_id を含める
-			"ss.id", "ss.style", "ss.feature", "ss.price", "ss.is_deleted", "ss.created_at", "ss.updated_at",
+			"activity_sponsor_style_links.id",
+			"activity_sponsor_style_links.sponsorship_activity_id",
+			"activity_sponsor_style_links.sponsor_style_id",
+			"activity_sponsor_style_links.category",
+			"sponsor_styles.style", "sponsor_styles.feature", "sponsor_styles.price",
 		).
-		From(goqu.T("activity_sponsor_style_links").As("l")).
-		InnerJoin(goqu.T("sponsor_styles").As("ss"), goqu.On(goqu.I("l.sponsor_style_id").Eq(goqu.I("ss.id")))).
-		Where(goqu.I("l.sponsorship_activity_id").In(activityIDs))
+		From("activity_sponsor_style_links").
+		InnerJoin(goqu.T("sponsor_styles"), goqu.On(goqu.I("activity_sponsor_style_links.sponsor_style_id").Eq(goqu.I("sponsor_styles.id")))).
+		Where(goqu.I("activity_sponsor_style_links.sponsorship_activity_id").In(sponsorshipActivityIDs))
 
-	query, args, err := dataset.ToSQL()
+	sqlString, sqlArgs, err := queryDataset.ToSQL()
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := r.client.DB().QueryContext(ctx, query, args...)
+	rows, err := r.client.DB().QueryContext(ctx, sqlString, sqlArgs...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var details []domain.SponsorStyleDetail
+	// 取得した協賛プランを協賛活動IDとグループ化
+	sponsorStyleMapBySponsorshipActivityIDs := make(map[int][]generated.ActivitySponsorStyleLink)
 	for rows.Next() {
-		var d domain.SponsorStyleDetail
-		var ss domain.SponsorStyle
+		var currentSponsorStyleLink generated.ActivitySponsorStyleLink
+		var currentSponsorStyle generated.SponsorStyle
+		var temporaryCategoryString string
+
+		var SponsorshipActivityID int
+
 		err := rows.Scan(
-			&d.ID, &d.SponsorshipActivityID, &d.SponsorStyleID, &d.Category,
-			&ss.ID, &ss.Style, &ss.Feature, &ss.Price, &ss.IsDeleted, &ss.CreatedAt, &ss.UpdatedAt,
+			&currentSponsorStyleLink.Id, &SponsorshipActivityID, &currentSponsorStyleLink.SponsorStyleId,
+			&temporaryCategoryString,
+			&currentSponsorStyle.Style, &currentSponsorStyle.Feature, &currentSponsorStyle.Price,
 		)
 		if err != nil {
 			return nil, err
 		}
-		d.Style = ss
-		details = append(details, d)
+
+		categoryEnum := generated.SponsorStyleCategory(temporaryCategoryString)
+		currentSponsorStyleLink.Category = &categoryEnum
+		currentSponsorStyleLink.Style = &currentSponsorStyle
+
+		sponsorStyleMapBySponsorshipActivityIDs[SponsorshipActivityID] =
+			append(sponsorStyleMapBySponsorshipActivityIDs[SponsorshipActivityID], currentSponsorStyleLink)
 	}
-	return details, nil
+
+	return sponsorStyleMapBySponsorshipActivityIDs, nil
 }
 
-func (r *sponsorshipActivityRepository) FindByID(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
-	dataset := selectSponsorshipActivityQuery.Where(goqu.I("sa.id").Eq(id))
+func (r *sponsorshipActivityRepository) FindByID(ctx context.Context, targetSponsorshipActivityID int) (generated.SponsorshipActivity, error) {
+	queryDataset := selectSponsorshipActivityQuery.Where(goqu.I("sponsorship_activities.id").Eq(targetSponsorshipActivityID))
 
-	query, args, err := dataset.ToSQL()
+	sqlString, sqlArgs, err := queryDataset.ToSQL()
 	if err != nil {
-		return domain.SponsorshipActivity{}, err
+		return generated.SponsorshipActivity{}, err
 	}
 
-	var a domain.SponsorshipActivity
-	var s domain.Sponsor
-	var u domain.User
-	var remarks sql.NullString
+	var SponsorshipActivity generated.SponsorshipActivity
+	var Sponsor generated.Sponsor
+	var User generated.User
+	var temporaryRemarks sql.NullString
 
-	row := r.client.DB().QueryRowContext(ctx, query, args...)
+	row := r.client.DB().QueryRowContext(ctx, sqlString, sqlArgs...)
+
+	// 取得した値を詰め込む
 	err = row.Scan(
-		&a.ID, &a.YearPeriodsID, &a.SponsorID, &a.UserID, &a.ActivityStatus, &a.FeasibilityStatus, &a.DesignProgress, &remarks, &a.CreatedAt, &a.UpdatedAt,
-		&s.ID, &s.Name, &s.Tel, &s.Email, &s.Address, &s.Representative, &s.CreatedAt, &s.UpdatedAt,
-		&u.ID, &u.Name, &u.BureauID, &u.RoleID, &u.IsDeleted, &u.CreatedAt, &u.UpdatedAt,
+		&SponsorshipActivity.Id, &SponsorshipActivity.YearPeriodsId, &SponsorshipActivity.SponsorId, &SponsorshipActivity.UserId,
+		&SponsorshipActivity.ActivityStatus, &SponsorshipActivity.FeasibilityStatus, &SponsorshipActivity.DesignProgress,
+		&temporaryRemarks, &SponsorshipActivity.CreatedAt, &SponsorshipActivity.UpdatedAt,
+		&Sponsor.Name, &Sponsor.Tel, &Sponsor.Email, &Sponsor.Address, &Sponsor.Representative,
+		&User.Id, &User.Name, &User.BureauID, &User.RoleID, &User.IsDeleted, &User.CreatedAt, &User.UpdatedAt,
 	)
 	if err != nil {
-		return domain.SponsorshipActivity{}, err
+		return generated.SponsorshipActivity{}, err
 	}
 
-	if remarks.Valid {
-		a.Remarks = remarks.String
+	if temporaryRemarks.Valid {
+		SponsorshipActivity.Remarks = &temporaryRemarks.String
 	}
-	a.Sponsor = s
-	a.User = u
 
-	return a, nil
-}
+	SponsorshipActivity.Sponsor = &Sponsor
+	SponsorshipActivity.User = &User
 
-// トランザクション開始
-func (r *sponsorshipActivityRepository) Begin(ctx context.Context) (*sql.Tx, error) {
-	return r.client.DB().BeginTx(ctx, nil)
+	return SponsorshipActivity, nil
 }
 
 // 登録
-func (r *sponsorshipActivityRepository) Create(ctx context.Context, tx *sql.Tx, a domain.SponsorshipActivity) (int, error) {
+func (r *sponsorshipActivityRepository) Create(ctx context.Context, tx *sql.Tx, sponsorshipActivity generated.SponsorshipActivity) (int, error) {
 	dataset := goqu.Dialect("mysql").Insert("sponsorship_activities").Rows(
 		goqu.Record{
-			"year_periods_id":    a.YearPeriodsID,
-			"sponsor_id":         a.SponsorID,
-			"user_id":            a.UserID,
-			"activity_status":    a.ActivityStatus,
-			"feasibility_status": a.FeasibilityStatus,
-			"design_progress":    a.DesignProgress,
-			"remarks":            a.Remarks,
+			"year_periods_id":    sponsorshipActivity.YearPeriodsId,
+			"sponsor_id":         sponsorshipActivity.SponsorId,
+			"user_id":            sponsorshipActivity.UserId,
+			"activity_status":    sponsorshipActivity.ActivityStatus,
+			"feasibility_status": sponsorshipActivity.FeasibilityStatus,
+			"design_progress":    sponsorshipActivity.DesignProgress,
+			"remarks":            sponsorshipActivity.Remarks,
 		},
 	)
-
 	query, args, err := dataset.ToSQL()
 	if err != nil {
 		return 0, err
@@ -248,12 +267,12 @@ func (r *sponsorshipActivityRepository) Create(ctx context.Context, tx *sql.Tx, 
 }
 
 // 協賛活動とプランの紐付け登録
-func (r *sponsorshipActivityRepository) CreateStyleLink(ctx context.Context, tx *sql.Tx, l domain.SponsorStyleDetail) error {
+func (r *sponsorshipActivityRepository) CreateSponsorStyleLink(ctx context.Context, tx *sql.Tx, sponsorStyleLink generated.ActivitySponsorStyleLink, sponsorshipActivityID int) error {
 	dataset := goqu.Dialect("mysql").Insert("activity_sponsor_style_links").Rows(
 		goqu.Record{
-			"sponsorship_activity_id": l.SponsorshipActivityID,
-			"sponsor_style_id":        l.SponsorStyleID,
-			"category":                l.Category,
+			"sponsorship_activity_id": sponsorshipActivityID,
+			"sponsor_style_id":        sponsorStyleLink.SponsorStyleId,
+			"category":                sponsorStyleLink.Category,
 		},
 	)
 

@@ -209,6 +209,7 @@ export * from './putYearsPeriodsId200';
 export * from './receipt';
 export * from './sponsor';
 export * from './sponsorStyle';
+export * from './sponsorStyleCategory';
 export * from './sponsorshipActivitiesResponse';
 export * from './sponsorshipActivity';
 export * from './teacher';

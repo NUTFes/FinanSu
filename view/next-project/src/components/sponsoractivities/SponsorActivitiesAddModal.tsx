@@ -362,9 +362,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
               </td>
               <td className='flex flex-col gap-2 py-3'>
                 {sponsorStyleView.map((style) => (
-                  <div key={style.id} className='
+                  <div
+                    key={style.id}
+                    className='
                     text-center text-sm text-black-600
-                  '>
+                  '
+                  >
                     {style.style} / {style.feature} / {style.price} 円
                   </div>
                 ))}
