@@ -140,9 +140,7 @@ export default function PurchaseItemNumModal() {
         </div>
       </div>
       <div
-        className={clsx(`
-        mb-4 grid max-h-2/3 grid-cols-12 gap-4 overflow-scroll
-      `)}
+        className={clsx(`mb-4 grid max-h-2/3 grid-cols-12 gap-4 overflow-scroll`)}
       >
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
@@ -185,16 +183,12 @@ export default function PurchaseItemNumModal() {
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
                           index === purchaseOrderView.length - 1
                             ? 'pt-3 pb-4'
-                            : `
-                            border-b py-3
-                          `,
+                            : `border-b py-3`,
                         )}
                       >
                         {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
                         <div
-                          className={clsx(`
-                          text-center text-sm text-black-600
-                        `)}
+                          className={clsx(`text-center text-sm text-black-600`)}
                         >
                           {purchaseOrderItem.purchaseItem && (
                             <Radio
@@ -210,15 +204,11 @@ export default function PurchaseItemNumModal() {
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
                           index === purchaseOrderView.length - 1
                             ? 'pt-3 pb-4'
-                            : `
-                            border-b py-3
-                          `,
+                            : `border-b py-3`,
                         )}
                       >
                         <div
-                          className={clsx(`
-                          text-center text-sm text-black-600
-                        `)}
+                          className={clsx(`text-center text-sm text-black-600`)}
                         >
                           {
                             expenses.find(
@@ -233,15 +223,11 @@ export default function PurchaseItemNumModal() {
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
                           index === purchaseOrderView.length - 1
                             ? 'pt-3 pb-4'
-                            : `
-                            border-b py-3
-                          `,
+                            : `border-b py-3`,
                         )}
                       >
                         <div
-                          className={clsx(`
-                          text-center text-sm text-black-600
-                        `)}
+                          className={clsx(`text-center text-sm text-black-600`)}
                         >
                           {purchaseOrderItem.purchaseItem &&
                             calcTotalFee(purchaseOrderItem.purchaseItem)}
@@ -253,15 +239,11 @@ export default function PurchaseItemNumModal() {
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
                           index === purchaseOrderView.length - 1
                             ? 'pt-3 pb-4'
-                            : `
-                            border-b py-3
-                          `,
+                            : `border-b py-3`,
                         )}
                       >
                         <div
-                          className={clsx(`
-                          text-center text-sm text-black-600
-                        `)}
+                          className={clsx(`text-center text-sm text-black-600`)}
                         >
                           {purchaseOrderItem.purchaseItem &&
                             purchaseOrderItem.purchaseItem.map((purchaseItem) => (
@@ -278,15 +260,11 @@ export default function PurchaseItemNumModal() {
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
                           index === purchaseOrderView.length - 1
                             ? 'pt-3 pb-4'
-                            : `
-                            border-b py-3
-                          `,
+                            : `border-b py-3`,
                         )}
                       >
                         <div
-                          className={clsx(`
-                          text-center text-sm text-black-600
-                        `)}
+                          className={clsx(`text-center text-sm text-black-600`)}
                         >
                           {purchaseOrderItem.purchaseItem && purchaseOrderItem.purchaseItem.length}
                         </div>
@@ -297,15 +275,11 @@ export default function PurchaseItemNumModal() {
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
                           index === purchaseOrderView.length - 1
                             ? 'pt-3 pb-4'
-                            : `
-                            border-b py-3
-                          `,
+                            : `border-b py-3`,
                         )}
                       >
                         <div
-                          className={clsx(`
-                          text-center text-sm text-black-600
-                        `)}
+                          className={clsx(`text-center text-sm text-black-600`)}
                         >
                           {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
                         </div>

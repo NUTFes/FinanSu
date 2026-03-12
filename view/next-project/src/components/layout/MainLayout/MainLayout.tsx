@@ -94,9 +94,7 @@ export default function MainLayout(props: LayoutProps) {
                 'fixed top-16 right-0 bottom-0',
                 !isSideNavOpen
                   ? 'w-52 translate-x-0 shadow-xl'
-                  : `
-                  w-0 translate-x-full
-                `,
+                  : `w-0 translate-x-full`,
               )}
             >
               <SideNav />

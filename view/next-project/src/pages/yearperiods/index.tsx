@@ -116,9 +116,7 @@ export default function Periods(props: Props) {
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
                         index === formatYearPeriods.length - 1
                           ? 'pt-3 pb-4'
-                          : `
-                          border-b py-3
-                        `,
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.id}</p>
@@ -129,9 +127,7 @@ export default function Periods(props: Props) {
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
                         index === formatYearPeriods.length - 1
                           ? 'pt-3 pb-4'
-                          : `
-                          border-b py-3
-                        `,
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.year}</p>
@@ -142,9 +138,7 @@ export default function Periods(props: Props) {
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
                         index === formatYearPeriods.length - 1
                           ? 'pt-3 pb-4'
-                          : `
-                          border-b py-3
-                        `,
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.startedAt}</p>
@@ -155,9 +149,7 @@ export default function Periods(props: Props) {
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
                         index === formatYearPeriods.length - 1
                           ? 'pt-3 pb-4'
-                          : `
-                          border-b py-3
-                        `,
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.endedAt}</p>
@@ -168,9 +160,7 @@ export default function Periods(props: Props) {
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
                         index === formatYearPeriods.length - 1
                           ? 'pt-3 pb-4'
-                          : `
-                          border-b py-3
-                        `,
+                          : `border-b py-3`,
                       )}
                     >
                       <div className='flex gap-2'>

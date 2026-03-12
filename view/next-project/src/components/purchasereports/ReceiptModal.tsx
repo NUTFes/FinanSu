@@ -35,9 +35,7 @@ export default function ReceiptModal(props: ModalProps) {
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
           <div
-            className={clsx(`
-            h-100 w-full text-center text-base text-black-300
-          `)}
+            className={clsx(`h-100 w-full text-center text-base text-black-300`)}
           >
             お疲れ様でした。
             <br />

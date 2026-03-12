@@ -59,9 +59,7 @@ const Header = (props: HeaderProps) => {
             alt='logo'
             width={150}
             height={40}
-            className='
-            size-fit
-          '
+            className='size-fit'
           />
         </div>
         <div
