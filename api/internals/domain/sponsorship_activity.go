@@ -26,3 +26,4 @@ type SponsorStyleDetail struct {
 	Category              string       `json:"category"`
 	Style                 SponsorStyle `json:"style"`
 }
+

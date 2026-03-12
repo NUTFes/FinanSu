@@ -78,7 +78,18 @@ func (h *Handler) GetSponsorshipActivitiesId(c echo.Context, sponsorshipActivity
 
 // 更新 (Put: 全項目更新)
 func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
-	return c.String(http.StatusOK, "PutSponsorshipActivitiesId: Mock Response")
+	var req generated.PutSponsorshipActivitiesIdJSONRequestBody
+
+	if err := c.Bind(&req); err != nil {
+		return err
+	}
+
+	updatedSponsorshipActivity, err := h.sponsorshipActivityUseCase.UpdateSponsorshipActivity(c.Request().Context(), id, req)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, updatedSponsorshipActivity)
 }
 
 // ステータス更新 (Put: Status)

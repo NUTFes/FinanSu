@@ -12,7 +12,7 @@ type SponsorshipActivityUseCase interface {
 	GetSponsorshipActivities(ctx context.Context, params generated.GetSponsorshipActivitiesParams) ([]generated.SponsorshipActivity, error)
 	GetSponsorshipActivityByID(ctx context.Context, id int) (generated.SponsorshipActivity, error)
 	CreateSponsorshipActivity(ctx context.Context, req generated.CreateSponsorshipActivityRequest) (generated.SponsorshipActivity, error)
-	UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
+	UpdateSponsorshipActivity(ctx context.Context, id int, req generated.UpdateSponsorshipActivityRequest) (generated.SponsorshipActivity, error)
 	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
 	DeleteSponsorshipActivity(ctx context.Context, id int) error
 }
@@ -134,9 +134,113 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 	return u.GetSponsorshipActivityByID(ctx, newSponsorshipActivityID)
 }
 
-func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
-	u.repo.Update(ctx, activity)
-	return activity, nil
+type linkKey struct {
+	sponsorStyleId int
+	category       string
+}
+
+func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, req generated.UpdateSponsorshipActivityRequest) (generated.SponsorshipActivity, error) {
+	// 1. 既存リンクを取得（トランザクション外）
+	existingLinksMap, err := u.repo.GetSponsorStyleMapBySponsorshipActivityIDs(ctx, []int{id})
+	if err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// 既存リンク: linkKey → DB上のID
+	existingSet := make(map[linkKey]int)
+	for _, link := range existingLinksMap[id] {
+		if link.SponsorStyleId == nil || link.Id == nil {
+			continue
+		}
+		cat := ""
+		if link.Category != nil {
+			cat = string(*link.Category)
+		}
+		existingSet[linkKey{*link.SponsorStyleId, cat}] = *link.Id
+	}
+
+	// リクエストされたリンクのセット
+	requestedSet := make(map[linkKey]bool)
+	if req.SponsorStyleDetails != nil {
+		for _, detail := range *req.SponsorStyleDetails {
+			if detail.SponsorStyleId == nil {
+				continue
+			}
+			cat := ""
+			if detail.Category != nil {
+				cat = string(*detail.Category)
+			}
+			requestedSet[linkKey{*detail.SponsorStyleId, cat}] = true
+		}
+	}
+
+	// 2. generated.UpdateSponsorshipActivityRequest → domain.SponsorshipActivity へ変換
+	remarks := ""
+	if req.Remarks != nil {
+		remarks = *req.Remarks
+	}
+	activity := domain.SponsorshipActivity{
+		ID:                id,
+		YearPeriodsID:     req.YearPeriodsId,
+		SponsorID:         req.SponsorId,
+		UserID:            req.UserId,
+		ActivityStatus:    string(req.ActivityStatus),
+		FeasibilityStatus: string(req.FeasibilityStatus),
+		DesignProgress:    string(req.DesignProgress),
+		Remarks:           remarks,
+	}
+
+	// 3. トランザクション開始
+	tx, err := u.transactionRepo.StartTransaction(ctx)
+	if err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// 4. メイン情報更新
+	if err := u.repo.Update(ctx, tx, activity); err != nil {
+		u.transactionRepo.RollBack(ctx, tx)
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// 5. 削除: 既存にあってリクエストにないリンクを削除
+	for key, linkID := range existingSet {
+		if !requestedSet[key] {
+			if err := u.repo.DeleteSponsorStyleLinkByID(ctx, tx, linkID); err != nil {
+				u.transactionRepo.RollBack(ctx, tx)
+				return generated.SponsorshipActivity{}, err
+			}
+		}
+	}
+
+	// 6. 追加: リクエストにあって既存にないリンクを作成
+	if req.SponsorStyleDetails != nil {
+		for _, detail := range *req.SponsorStyleDetails {
+			if detail.SponsorStyleId == nil {
+				continue
+			}
+			cat := ""
+			if detail.Category != nil {
+				cat = string(*detail.Category)
+			}
+			if _, exists := existingSet[linkKey{*detail.SponsorStyleId, cat}]; !exists {
+				link := generated.ActivitySponsorStyleLink{
+					SponsorStyleId: detail.SponsorStyleId,
+					Category:       detail.Category,
+				}
+				if err := u.repo.CreateSponsorStyleLink(ctx, tx, link, id); err != nil {
+					u.transactionRepo.RollBack(ctx, tx)
+					return generated.SponsorshipActivity{}, err
+				}
+			}
+		}
+	}
+
+	// 7. コミット
+	if err := u.transactionRepo.Commit(ctx, tx); err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	return u.GetSponsorshipActivityByID(ctx, id)
 }
 
 func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {

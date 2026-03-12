@@ -31,7 +31,8 @@ type SponsorshipActivityRepository interface {
 	FindByID(ctx context.Context, id int) (generated.SponsorshipActivity, error)
 	Create(ctx context.Context, tx *sql.Tx, sponsorshipActivity generated.SponsorshipActivity) (int, error)
 	CreateSponsorStyleLink(ctx context.Context, tx *sql.Tx, sponsorStyleLink generated.ActivitySponsorStyleLink, sponsorshipActivityID int) error
-	Update(ctx context.Context, activity domain.SponsorshipActivity) error
+	Update(ctx context.Context, tx *sql.Tx, activity domain.SponsorshipActivity) error
+	DeleteSponsorStyleLinkByID(ctx context.Context, tx *sql.Tx, id int) error
 	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error
 	Delete(ctx context.Context, id int) error
 }
@@ -285,8 +286,35 @@ func (r *sponsorshipActivityRepository) CreateSponsorStyleLink(ctx context.Conte
 	return err
 }
 
-func (r *sponsorshipActivityRepository) Update(ctx context.Context, activity domain.SponsorshipActivity) error {
-	return nil
+func (r *sponsorshipActivityRepository) Update(ctx context.Context, tx *sql.Tx, activity domain.SponsorshipActivity) error {
+	dataset := goqu.Dialect("mysql").Update("sponsorship_activities").
+		Set(goqu.Record{
+			"year_periods_id":    activity.YearPeriodsID,
+			"sponsor_id":         activity.SponsorID,
+			"user_id":            activity.UserID,
+			"activity_status":    activity.ActivityStatus,
+			"feasibility_status": activity.FeasibilityStatus,
+			"design_progress":    activity.DesignProgress,
+			"remarks":            activity.Remarks,
+		}).
+		Where(goqu.I("id").Eq(activity.ID))
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, query, args...)
+	return err
+}
+
+func (r *sponsorshipActivityRepository) DeleteSponsorStyleLinkByID(ctx context.Context, tx *sql.Tx, id int) error {
+	dataset := goqu.Dialect("mysql").Delete("activity_sponsor_style_links").
+		Where(goqu.I("id").Eq(id))
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, query, args...)
+	return err
 }
 
 func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error {
