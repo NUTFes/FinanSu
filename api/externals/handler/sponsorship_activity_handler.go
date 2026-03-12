@@ -84,7 +84,17 @@ func (h *Handler) PutSponsorshipActivitiesId(c echo.Context, id int) error {
 
 // ステータス更新 (Put: Status)
 func (h *Handler) PutSponsorshipActivitiesIdStatus(c echo.Context, id int) error {
-	return c.String(http.StatusOK, "PutSponsorshipActivitiesIdStatus: Mock Response")
+	var req generated.PutSponsorshipActivitiesIdStatusJSONRequestBody
+	if err := c.Bind(&req); err != nil {
+		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+
+	updated, err := h.sponsorshipActivityUseCase.UpdateSponsorshipActivityStatus(c.Request().Context(), id, req)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "failed to update status")
+	}
+
+	return c.JSON(http.StatusOK, updated)
 }
 
 // 削除 (Delete)

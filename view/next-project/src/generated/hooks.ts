@@ -134,7 +134,6 @@ import type {
   PutIncomeExpenditureManagementsCheckId200,
   PutIncomeExpenditureManagementsCheckIdBody,
   PutSponsorsId200,
-  PutSponsorshipActivitiesIdStatusBody,
   PutSponsorstylesId200,
   PutTeachersId200,
   PutTeachersIdParams,
@@ -149,6 +148,7 @@ import type {
   SponsorshipActivity,
   Teacher,
   UpdateSponsorshipActivityRequest,
+  UpdateSponsorshipActivityStatusRequest,
   User,
   YearPeriods,
 } from './model';
@@ -7736,7 +7736,7 @@ export const getPutSponsorshipActivitiesIdStatusUrl = (id: number) => {
 
 export const putSponsorshipActivitiesIdStatus = async (
   id: number,
-  putSponsorshipActivitiesIdStatusBody: PutSponsorshipActivitiesIdStatusBody,
+  updateSponsorshipActivityStatusRequest: UpdateSponsorshipActivityStatusRequest,
   options?: RequestInit,
 ): Promise<putSponsorshipActivitiesIdStatusResponse> => {
   return customFetch<putSponsorshipActivitiesIdStatusResponse>(
@@ -7745,7 +7745,7 @@ export const putSponsorshipActivitiesIdStatus = async (
       ...options,
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(putSponsorshipActivitiesIdStatusBody),
+      body: JSON.stringify(updateSponsorshipActivityStatusRequest),
     },
   );
 };
@@ -7754,7 +7754,7 @@ export const getPutSponsorshipActivitiesIdStatusMutationFetcher = (
   id: number,
   options?: SecondParameter<typeof customFetch>,
 ) => {
-  return (_: Key, { arg }: { arg: PutSponsorshipActivitiesIdStatusBody }) => {
+  return (_: Key, { arg }: { arg: UpdateSponsorshipActivityStatusRequest }) => {
     return putSponsorshipActivitiesIdStatus(id, arg, options);
   };
 };
@@ -7776,7 +7776,7 @@ export const usePutSponsorshipActivitiesIdStatus = <TError = unknown>(
       Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>,
       TError,
       Key,
-      PutSponsorshipActivitiesIdStatusBody,
+      UpdateSponsorshipActivityStatusRequest,
       Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>
     > & { swrKey?: string };
     request?: SecondParameter<typeof customFetch>;

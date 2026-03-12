@@ -15,9 +15,15 @@ function LoginLayout({ children }: LayoutProps): JSX.Element {
             md:w-40
           '
         >
-          <Image src='/logo.svg' alt='logo' width={150} height={40} className='
+          <Image
+            src='/logo.svg'
+            alt='logo'
+            width={150}
+            height={40}
+            className='
             size-fit
-          ' />
+          '
+          />
         </div>
       </div>
       <div className='flex h-screen items-center justify-center'>{children}</div>

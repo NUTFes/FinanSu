@@ -144,9 +144,13 @@ const PurchaseReportPage = () => {
               {/* 部門選択フォーム */}
               <FormField id='department' label='部門' isRequired isDisabled={isEditMode}>
                 {isEditMode && divisionName ? (
-                  <Input value={divisionName} readOnly className='
+                  <Input
+                    value={divisionName}
+                    readOnly
+                    className='
                     bg-gray-50 opacity-50
-                  ' />
+                  '
+                  />
                 ) : (
                   <Select
                     placeholder='選択してください'
@@ -165,9 +169,13 @@ const PurchaseReportPage = () => {
               {/* 物品選択フォーム */}
               <FormField id='product' label='物品' isRequired isDisabled={isEditMode}>
                 {isEditMode && festivalItemName ? (
-                  <Input value={festivalItemName} readOnly className='
+                  <Input
+                    value={festivalItemName}
+                    readOnly
+                    className='
                     bg-gray-50 opacity-50
-                  ' />
+                  '
+                  />
                 ) : (
                   <Select
                     placeholder='選択してください'
@@ -227,9 +235,15 @@ const PurchaseReportPage = () => {
           <div className='mt-6 flex justify-center space-x-4'>
             <div className='flex flex-col gap-2'>
               <PrimaryButton disabled={!isFormValid} className='mx-auto' onClick={handleSubmit}>
-                {isProcessing ? <Spinner size='sm' color='white' className='
+                {isProcessing ? (
+                  <Spinner
+                    size='sm'
+                    color='white'
+                    className='
                   mr-2
-                ' /> : null}
+                '
+                  />
+                ) : null}
                 {isEditMode ? '更新する' : '登録する'}
               </PrimaryButton>
               <OutlinePrimaryButton onClick={router.back} disabled={isProcessing}>

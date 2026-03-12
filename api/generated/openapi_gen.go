@@ -178,6 +178,19 @@ type UpdateSponsorshipActivityRequest struct {
 	YearPeriodsId int `json:"yearPeriodsId"`
 }
 
+// UpdateSponsorshipActivityStatusRequest ステータス更新時のリクエストボディ
+type UpdateSponsorshipActivityStatusRequest struct {
+	// ActivityStatus 活動ステータス
+	ActivityStatus ActivityStatus `json:"activityStatus"`
+
+	// DesignProgress デザイン進捗
+	DesignProgress DesignProgress `json:"designProgress"`
+
+	// FeasibilityStatus 協賛可否
+	FeasibilityStatus FeasibilityStatus `json:"feasibilityStatus"`
+	Remarks           *string           `json:"remarks,omitempty"`
+}
+
 // Activity defines model for activity.
 type Activity struct {
 	Design    *int    `json:"design,omitempty"`
@@ -761,19 +774,6 @@ type GetSponsorshipActivitiesExportParams struct {
 	SponsorStyleIds   *[]int             `form:"sponsor_style_ids,omitempty" json:"sponsor_style_ids,omitempty"`
 }
 
-// PutSponsorshipActivitiesIdStatusJSONBody defines parameters for PutSponsorshipActivitiesIdStatus.
-type PutSponsorshipActivitiesIdStatusJSONBody struct {
-	// ActivityStatus 活動ステータス
-	ActivityStatus ActivityStatus `json:"activityStatus"`
-
-	// DesignProgress デザイン進捗
-	DesignProgress DesignProgress `json:"designProgress"`
-
-	// FeasibilityStatus 協賛可否
-	FeasibilityStatus FeasibilityStatus `json:"feasibilityStatus"`
-	Remarks           *string           `json:"remarks,omitempty"`
-}
-
 // PostTeachersParams defines parameters for PostTeachers.
 type PostTeachersParams struct {
 	// Name 名前
@@ -933,7 +933,7 @@ type PostSponsorshipActivitiesJSONRequestBody = CreateSponsorshipActivityRequest
 type PutSponsorshipActivitiesIdJSONRequestBody = UpdateSponsorshipActivityRequest
 
 // PutSponsorshipActivitiesIdStatusJSONRequestBody defines body for PutSponsorshipActivitiesIdStatus for application/json ContentType.
-type PutSponsorshipActivitiesIdStatusJSONRequestBody PutSponsorshipActivitiesIdStatusJSONBody
+type PutSponsorshipActivitiesIdStatusJSONRequestBody = UpdateSponsorshipActivityStatusRequest
 
 // PostSponsorstylesJSONRequestBody defines body for PostSponsorstyles for application/json ContentType.
 type PostSponsorstylesJSONRequestBody = SponsorStyle

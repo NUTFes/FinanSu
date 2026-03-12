@@ -13,7 +13,7 @@ type SponsorshipActivityUseCase interface {
 	GetSponsorshipActivityByID(ctx context.Context, id int) (generated.SponsorshipActivity, error)
 	CreateSponsorshipActivity(ctx context.Context, req generated.CreateSponsorshipActivityRequest) (generated.SponsorshipActivity, error)
 	UpdateSponsorshipActivity(ctx context.Context, id int, req generated.UpdateSponsorshipActivityRequest) (generated.SponsorshipActivity, error)
-	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
+	UpdateSponsorshipActivityStatus(ctx context.Context, id int, req generated.UpdateSponsorshipActivityStatusRequest) (generated.SponsorshipActivity, error)
 	DeleteSponsorshipActivity(ctx context.Context, id int) error
 }
 
@@ -217,9 +217,19 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 	return u.GetSponsorshipActivityByID(ctx, id)
 }
 
-func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
-	u.repo.UpdateStatus(ctx, id, activity)
-	return activity, nil
+func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context.Context, id int, req generated.UpdateSponsorshipActivityStatusRequest) (generated.SponsorshipActivity, error) {
+	activity := domain.SponsorshipActivity{
+		ActivityStatus:    string(req.ActivityStatus),
+		FeasibilityStatus: string(req.FeasibilityStatus),
+		DesignProgress:    string(req.DesignProgress),
+	}
+	if req.Remarks != nil {
+		activity.Remarks = *req.Remarks
+	}
+	if err := u.repo.UpdateStatus(ctx, id, activity); err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+	return u.GetSponsorshipActivityByID(ctx, id)
 }
 
 func (u *sponsorshipActivityUseCase) DeleteSponsorshipActivity(ctx context.Context, id int) error {
