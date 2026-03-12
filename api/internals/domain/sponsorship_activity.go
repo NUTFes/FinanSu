@@ -10,7 +10,7 @@ type SponsorshipActivity struct {
 	ActivityStatus    string    `json:"activityStatus"`
 	FeasibilityStatus string    `json:"feasibilityStatus"`
 	DesignProgress    string    `json:"designProgress"`
-	Remarks           string    `json:"remarks"`
+	Remarks           *string   `json:"remarks"`
 	CreatedAt         time.Time `json:"createdAt"`
 	UpdatedAt         time.Time `json:"updatedAt"`
 

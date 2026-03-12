@@ -20,7 +20,6 @@ func TestSponsorStyleLinks_Diff(t *testing.T) {
 		existing        SponsorStyleLinks
 		requested       SponsorStyleLinks
 		wantDeleteIDs   []int
-		wantCreateCount int
 		wantCreateLinks SponsorStyleLinks
 	}{
 		{

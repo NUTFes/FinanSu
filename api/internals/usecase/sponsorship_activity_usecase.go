@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -146,12 +148,12 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 	if req.SponsorStyleDetails != nil {
 		for _, detail := range *req.SponsorStyleDetails {
 			if detail.SponsorStyleId == nil {
-				continue
+				return generated.SponsorshipActivity{}, fmt.Errorf("sponsorStyleId is required")
 			}
-			cat := ""
-			if detail.Category != nil {
-				cat = string(*detail.Category)
+			if detail.Category == nil {
+				return generated.SponsorshipActivity{}, fmt.Errorf("category is required")
 			}
+			cat := string(*detail.Category)
 			requestedLinks = append(requestedLinks, domain.NewSponsorStyleLink(*detail.SponsorStyleId, cat))
 		}
 	}
@@ -160,10 +162,6 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 	toDeleteIDs, toCreate := existingLinks.Diff(requestedLinks)
 
 	// 2. generated.UpdateSponsorshipActivityRequest → domain.SponsorshipActivity へ変換
-	remarks := ""
-	if req.Remarks != nil {
-		remarks = *req.Remarks
-	}
 	activity := domain.SponsorshipActivity{
 		ID:                id,
 		YearPeriodsID:     req.YearPeriodsId,
@@ -172,7 +170,7 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 		ActivityStatus:    string(req.ActivityStatus),
 		FeasibilityStatus: string(req.FeasibilityStatus),
 		DesignProgress:    string(req.DesignProgress),
-		Remarks:           remarks,
+		Remarks:           req.Remarks,
 	}
 
 	// 3. トランザクション開始
@@ -181,36 +179,40 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 		return generated.SponsorshipActivity{}, err
 	}
 
-	// 4. メイン情報更新
-	if err := u.repo.Update(ctx, tx, activity); err != nil {
+	err = func(tx *sql.Tx) error {
+		// 4. メイン情報更新
+		if err := u.repo.Update(ctx, tx, activity); err != nil {
+			return err
+		}
+
+		// NOTE: 協賛スタイルの削除・追加は1リクエスト内で複数回の DELETE/INSERT をループで発行している。
+		//       想定される協賛スタイル数は多くなく、現状のパフォーマンスコストは許容範囲と判断している。
+		//       今後スタイル数が増加しボトルネックとなる場合は、バルク操作等による最適化を検討すること。
+		// 5. 削除
+		for _, linkID := range toDeleteIDs {
+			if err := u.repo.DeleteSponsorStyleLinkByID(ctx, tx, linkID); err != nil {
+				return err
+			}
+		}
+
+		// 6. 追加
+		for _, link := range toCreate {
+			category := generated.SponsorStyleCategory(link.Category)
+			newLink := generated.ActivitySponsorStyleLink{
+				SponsorStyleId: &link.Style.ID,
+				Category:       &category,
+			}
+			if err := u.repo.CreateSponsorStyleLink(ctx, tx, newLink, id); err != nil {
+				return err
+			}
+		}
+
+		// 7. コミット
+		return u.transactionRepo.Commit(ctx, tx)
+	}(tx)
+
+	if err != nil {
 		u.transactionRepo.RollBack(ctx, tx)
-		return generated.SponsorshipActivity{}, err
-	}
-
-	// NOTE: N+1問題はあるが、協賛スタイルは件数が多くない想定のため、許容 by わかぺ
-	// 5. 削除
-	for _, linkID := range toDeleteIDs {
-		if err := u.repo.DeleteSponsorStyleLinkByID(ctx, tx, linkID); err != nil {
-			u.transactionRepo.RollBack(ctx, tx)
-			return generated.SponsorshipActivity{}, err
-		}
-	}
-
-	// 6. 追加
-	for _, link := range toCreate {
-		category := generated.SponsorStyleCategory(link.Category)
-		newLink := generated.ActivitySponsorStyleLink{
-			SponsorStyleId: &link.Style.ID,
-			Category:       &category,
-		}
-		if err := u.repo.CreateSponsorStyleLink(ctx, tx, newLink, id); err != nil {
-			u.transactionRepo.RollBack(ctx, tx)
-			return generated.SponsorshipActivity{}, err
-		}
-	}
-
-	// 7. コミット
-	if err := u.transactionRepo.Commit(ctx, tx); err != nil {
 		return generated.SponsorshipActivity{}, err
 	}
 

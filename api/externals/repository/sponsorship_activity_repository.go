@@ -210,7 +210,8 @@ func (r *sponsorshipActivityRepository) GetSponsorStyleLinksBySponsorshipActivit
 		).
 		From("activity_sponsor_style_links").
 		InnerJoin(goqu.T("sponsor_styles"), goqu.On(goqu.I("activity_sponsor_style_links.sponsor_style_id").Eq(goqu.I("sponsor_styles.id")))).
-		Where(goqu.I("activity_sponsor_style_links.sponsorship_activity_id").Eq(sponsorshipActivityID))
+		Where(goqu.I("activity_sponsor_style_links.sponsorship_activity_id").Eq(sponsorshipActivityID)).
+		Order(goqu.I("activity_sponsor_style_links.id").Asc())
 
 	sqlString, sqlArgs, err := queryDataset.ToSQL()
 	if err != nil {
@@ -235,6 +236,9 @@ func (r *sponsorshipActivityRepository) GetSponsorStyleLinksBySponsorshipActivit
 			return nil, err
 		}
 		links = append(links, link)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 	return links, nil
 }
