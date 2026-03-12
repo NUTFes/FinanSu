@@ -46,16 +46,6 @@ func (h *Handler) PostSponsorshipActivities(c echo.Context) error {
 		return err
 	}
 
-	// 必須チェック
-	if createSponsorshipActivityRequest.YearPeriodsId == 0 ||
-		createSponsorshipActivityRequest.UserId == 0 ||
-		createSponsorshipActivityRequest.SponsorId == 0 ||
-		createSponsorshipActivityRequest.ActivityStatus == "" ||
-		createSponsorshipActivityRequest.FeasibilityStatus == "" ||
-		createSponsorshipActivityRequest.DesignProgress == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "必須項目が不足しています。")
-	}
-
 	// 登録
 	createdSponsorshipActivity, err := h.sponsorshipActivityUseCase.CreateSponsorshipActivity(c.Request().Context(), createSponsorshipActivityRequest)
 	if err != nil {
