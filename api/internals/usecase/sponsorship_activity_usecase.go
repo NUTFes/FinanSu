@@ -134,33 +134,15 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 	return u.GetSponsorshipActivityByID(ctx, newSponsorshipActivityID)
 }
 
-type linkKey struct {
-	sponsorStyleId int
-	category       string
-}
-
 func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, req generated.UpdateSponsorshipActivityRequest) (generated.SponsorshipActivity, error) {
 	// 1. 既存リンクを取得（トランザクション外）
-	existingLinksMap, err := u.repo.GetSponsorStyleMapBySponsorshipActivityIDs(ctx, []int{id})
+	existingLinks, err := u.repo.GetSponsorStyleLinksBySponsorshipActivityID(ctx, id)
 	if err != nil {
 		return generated.SponsorshipActivity{}, err
 	}
 
-	// 既存リンク: linkKey → DB上のID
-	existingSet := make(map[linkKey]int)
-	for _, link := range existingLinksMap[id] {
-		if link.SponsorStyleId == nil || link.Id == nil {
-			continue
-		}
-		cat := ""
-		if link.Category != nil {
-			cat = string(*link.Category)
-		}
-		existingSet[linkKey{*link.SponsorStyleId, cat}] = *link.Id
-	}
-
-	// リクエストされたリンクのセット
-	requestedSet := make(map[linkKey]bool)
+	// リクエストを domain.SponsorStyleLinks に変換
+	requestedLinks := domain.NewSponsorStyleLinks()
 	if req.SponsorStyleDetails != nil {
 		for _, detail := range *req.SponsorStyleDetails {
 			if detail.SponsorStyleId == nil {
@@ -170,9 +152,12 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 			if detail.Category != nil {
 				cat = string(*detail.Category)
 			}
-			requestedSet[linkKey{*detail.SponsorStyleId, cat}] = true
+			requestedLinks = append(requestedLinks, domain.NewSponsorStyleLink(*detail.SponsorStyleId, cat))
 		}
 	}
+
+	// 既存リンクとリクエストリンクの差分を計算
+	toDeleteIDs, toCreate := existingLinks.Diff(requestedLinks)
 
 	// 2. generated.UpdateSponsorshipActivityRequest → domain.SponsorshipActivity へ変換
 	remarks := ""
@@ -202,36 +187,25 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Conte
 		return generated.SponsorshipActivity{}, err
 	}
 
-	// 5. 削除: 既存にあってリクエストにないリンクを削除
-	for key, linkID := range existingSet {
-		if !requestedSet[key] {
-			if err := u.repo.DeleteSponsorStyleLinkByID(ctx, tx, linkID); err != nil {
-				u.transactionRepo.RollBack(ctx, tx)
-				return generated.SponsorshipActivity{}, err
-			}
+	// NOTE: N+1問題はあるが、協賛スタイルは件数が多くない想定のため、許容 by わかぺ
+	// 5. 削除
+	for _, linkID := range toDeleteIDs {
+		if err := u.repo.DeleteSponsorStyleLinkByID(ctx, tx, linkID); err != nil {
+			u.transactionRepo.RollBack(ctx, tx)
+			return generated.SponsorshipActivity{}, err
 		}
 	}
 
-	// 6. 追加: リクエストにあって既存にないリンクを作成
-	if req.SponsorStyleDetails != nil {
-		for _, detail := range *req.SponsorStyleDetails {
-			if detail.SponsorStyleId == nil {
-				continue
-			}
-			cat := ""
-			if detail.Category != nil {
-				cat = string(*detail.Category)
-			}
-			if _, exists := existingSet[linkKey{*detail.SponsorStyleId, cat}]; !exists {
-				link := generated.ActivitySponsorStyleLink{
-					SponsorStyleId: detail.SponsorStyleId,
-					Category:       detail.Category,
-				}
-				if err := u.repo.CreateSponsorStyleLink(ctx, tx, link, id); err != nil {
-					u.transactionRepo.RollBack(ctx, tx)
-					return generated.SponsorshipActivity{}, err
-				}
-			}
+	// 6. 追加
+	for _, link := range toCreate {
+		category := generated.SponsorStyleCategory(link.Category)
+		newLink := generated.ActivitySponsorStyleLink{
+			SponsorStyleId: &link.Style.ID,
+			Category:       &category,
+		}
+		if err := u.repo.CreateSponsorStyleLink(ctx, tx, newLink, id); err != nil {
+			u.transactionRepo.RollBack(ctx, tx)
+			return generated.SponsorshipActivity{}, err
 		}
 	}
 
