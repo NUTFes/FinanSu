@@ -60,6 +60,11 @@ export const RelationLinkItems: LinkItemProps[] = [
     href: '/sponsor-activities',
   },
   {
+    name: '進捗報告',
+    icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
+    href: '/sponsoractivities/progress_report',
+  },
+  {
     name: '協賛スタイル',
     icon: <BsVectorPen className='mx-2 text-xl' />,
     href: '/sponsorstyles',
