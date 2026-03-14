@@ -119,7 +119,7 @@ export const usePurchaseReportForm = (router: NextRouter) => {
     setPurchaseReport((prev) => ({
       ...prev,
       paidBy: userName,
-      paidByUserId: userId || undefined,
+      paidByUserId: userId,
     }));
   }, [isEditMode, userId, userName]);
 

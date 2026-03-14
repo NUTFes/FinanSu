@@ -61,8 +61,6 @@ export default function PurchaseReports() {
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
-    let isMounted = true;
-
     const fetchUsers = async () => {
       try {
         const usersResponse = await get(`${process.env.CSR_API_URI}/users`);
@@ -71,8 +69,6 @@ export default function PurchaseReports() {
           : Array.isArray(usersResponse?.data)
           ? usersResponse.data
           : [];
-
-        if (!isMounted) return;
 
         const nameMap = Object.fromEntries(
           (users as User[]).map((targetUser) => [targetUser.id, targetUser.name]),
@@ -84,10 +80,6 @@ export default function PurchaseReports() {
     };
 
     fetchUsers();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
