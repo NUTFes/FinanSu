@@ -84,7 +84,6 @@ import type {
   GetIncomeExpenditureManagementCsvDownloadParams,
   GetIncomeExpenditureManagementsParams,
   GetMailAuthIsSignin200,
-  GetSponsorshipActivities200,
   GetSponsorshipActivitiesExportParams,
   GetSponsorshipActivitiesParams,
   GetSponsorstyles200,
@@ -146,6 +145,7 @@ import type {
   PutYearsPeriodsId200,
   Sponsor,
   SponsorStyle,
+  SponsorshipActivitiesResponse,
   SponsorshipActivity,
   Teacher,
   UpdateSponsorshipActivityRequest,
@@ -7347,7 +7347,7 @@ export const useDeleteYearsPeriodsId = <TError = unknown>(
  * @summary 協賛活動一覧取得
  */
 export type getSponsorshipActivitiesResponse200 = {
-  data: GetSponsorshipActivities200;
+  data: SponsorshipActivitiesResponse;
   status: 200;
 };
 
