@@ -37,7 +37,12 @@ export default function SponsorStyleList(props: Props) {
           <div className='flex'>
             <Title>協賛スタイル一覧</Title>
           </div>
-          <div className='hidden justify-end md:flex'>
+          <div
+            className='
+              hidden justify-end
+              md:flex
+            '
+          >
             <OpenAddModalButton>協賛スタイル登録</OpenAddModalButton>
           </div>
         </div>
@@ -45,24 +50,27 @@ export default function SponsorStyleList(props: Props) {
           <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>協賛内容</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='mr-1 text-center text-sm text-black-600'>オプション</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>金額</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'></p>
                 </th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
                 <tr
-                  className={clsx(index !== sponsorStyleList.length - 1 && 'border-b')}
+                  className={clsx(
+                    index !== sponsorStyleList.length - 1 &&
+                      `border-b`,
+                  )}
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>
@@ -89,7 +97,12 @@ export default function SponsorStyleList(props: Props) {
           </table>
         </div>
       </Card>
-      <div className='fixed bottom-4 right-4 md:hidden'>
+      <div
+        className='
+          fixed right-4 bottom-4
+          md:hidden
+        '
+      >
         <OpenAddModalButton />
       </div>
     </MainLayout>

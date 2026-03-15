@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
-import AddButton from '../common/AddButton';
-import SponsorActivitiesAddModal from './SponsorActivitiesAddModal';
 import { User, Sponsor, SponsorStyle, YearPeriod } from '@type/common';
+
+import SponsorActivitiesAddModal from './SponsorActivitiesAddModal';
+import AddButton from '../common/AddButton';
 
 interface Props {
   users: User[];
@@ -18,7 +19,10 @@ export default function OpenAddModalButton(props: Props) {
   return (
     <>
       <AddButton
-        className='fixed bottom-4 right-4 md:static md:bottom-auto md:right-auto md:z-auto'
+        className='
+          fixed right-4 bottom-4
+          md:static md:right-auto md:bottom-auto md:z-auto
+        '
         onClick={() => {
           setIsOpen(true);
         }}

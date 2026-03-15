@@ -1,9 +1,8 @@
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
-import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
+import { CloseButton, Modal, PrimaryButton, Tooltip } from '@components/common';
 import ReceiptModal from '@components/purchasereports/ReceiptModal';
 import { PurchaseItem } from '@type/common';
 
@@ -15,8 +14,6 @@ interface ModalProps {
 }
 
 export default function PurchaseItemNumModal(props: ModalProps) {
-  const router = useRouter();
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = () => {
     setIsOpen(true);
@@ -41,7 +38,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
     return (
       <table className='table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+          <tr className='border-b border-b-primary-1 py-3'>
             {tableColumns.map((tableColumn: string) => (
               <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
                 <div className='text-center text-sm text-black-600'>{tableColumn}</div>
@@ -49,14 +46,16 @@ export default function PurchaseItemNumModal(props: ModalProps) {
             ))}
           </tr>
         </thead>
-        <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+        <tbody>
           {purchaseItems.map((purchaseItem, index) => (
             <tr key={purchaseItem.id}>
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.item}</div>
@@ -64,8 +63,10 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.price}</div>
@@ -73,8 +74,10 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.quantity}</div>
@@ -82,8 +85,10 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>{purchaseItem.detail}</div>
@@ -91,8 +96,10 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pt-3 pb-4'
+                    : `border-b py-3`,
                 )}
               >
                 <div className='text-center text-sm text-black-300'>
@@ -133,7 +140,13 @@ export default function PurchaseItemNumModal(props: ModalProps) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className='mb-10 grid w-full justify-items-center text-xl text-black-600'>購入申請</div>
+      <div
+        className='
+          mb-10 grid w-full justify-items-center text-xl text-black-600
+        '
+      >
+        購入申請
+      </div>
       <div className='flex flex-col items-center gap-5'>
         <div className='mx-auto w-fit font-bold text-black-300'>購入物品</div>
         <div className='max-h-60 w-full overflow-scroll'>

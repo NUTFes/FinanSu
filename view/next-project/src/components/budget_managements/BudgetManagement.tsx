@@ -1,19 +1,22 @@
-import { useQueryStates, parseAsInteger } from 'nuqs';
+import { parseAsInteger, useQueryStates } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
-import formatNumber from '../common/Formatter';
-import OpenDeleteModalButton from './OpenDeleteModalButton';
-import OpenEditModalButton from './OpenEditModalButton';
+
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
-import { Card, Title, Loading } from '@/components/common';
+import { Card, Loading, Title } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
+import { Year } from '@/type/common';
+
+import OpenDeleteModalButton from './OpenDeleteModalButton';
+import OpenEditModalButton from './OpenEditModalButton';
+import formatNumber from '../common/Formatter';
+
 import type {
   Division,
   FinancialRecord,
   GetDivisionsParams,
   GetFestivalItemsParams,
 } from '@/generated/model';
-import { Year } from '@/type/common';
 
 interface FinancialRecordWithId extends FinancialRecord {
   id: number;
@@ -41,7 +44,7 @@ export default function BudgetManagement(props: Props) {
     division_id: divisionId ?? undefined,
   };
 
-  const [selectedYear, setSelectedYear] = useState<Year>(
+  const [selectedYear, _setSelectedYear] = useState<Year>(
     // 本番環境では、2025のyear_idを1にします
     years ? years[years.length - 1] : { id: 1, year: 2025 },
   );
@@ -145,7 +148,7 @@ export default function BudgetManagement(props: Props) {
     }
   }, [financialRecordId, divisionId, selectedYear.id, financialRecords, divisions]);
 
-  const handleRowClick = (item: any) => {
+  const handleRowClick = (item: { id?: number }) => {
     if (financialRecordId === null) {
       setQueryState({ financialRecordId: item.id, divisionId: null, festivalItemId: null });
       return;
@@ -203,14 +206,22 @@ export default function BudgetManagement(props: Props) {
         <div className='flex-start mb-4 flex'>
           <Title>予算管理ページ</Title>
         </div>
-        <div className='mb-4 flex flex-col items-center md:flex-row md:justify-between'>
+        <div
+          className='
+            mb-4 flex flex-col items-center
+            md:flex-row md:justify-between
+          '
+        >
           <div className='flex flex-col gap-4 py-2'>
             <div className='flex gap-3'>
               <span className='text-base font-light'>申請する局</span>
               <select
                 value={financialRecordId ?? ''}
                 onChange={handleFinancialRecordChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='
+                  border-b border-black-300
+                  focus:outline-hidden
+                '
               >
                 <option value=''>ALL</option>
                 {financialRecords &&
@@ -221,12 +232,20 @@ export default function BudgetManagement(props: Props) {
                   ))}
               </select>
             </div>
-            <div className={`flex gap-3 ${financialRecordId !== null ? 'visible' : 'invisible'}`}>
+            <div
+              className={`
+                flex gap-3
+                ${financialRecordId !== null ? 'visible' : `invisible`}
+              `}
+            >
               <span className='text-base font-light'>申請する部門</span>
               <select
                 value={divisionId ?? ''}
                 onChange={handleDivisionChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='
+                  border-b border-black-300
+                  focus:outline-hidden
+                '
               >
                 <option value=''>ALL</option>
                 {divisions &&
@@ -238,14 +257,27 @@ export default function BudgetManagement(props: Props) {
               </select>
             </div>
           </div>
-          <div className='mt-2 flex w-full flex-col gap-1 md:w-fit md:flex-row md:gap-3'>
-            <PrimaryButton className='w-full md:w-fit'>
+          <div
+            className='
+              mt-2 flex w-full flex-col gap-1
+              md:w-fit md:flex-row md:gap-3
+            '
+          >
+            <PrimaryButton
+              className='
+                w-full
+                md:w-fit
+              '
+            >
               <a href={csvDownloadLink} download>
                 CSVダウンロード
               </a>
             </PrimaryButton>
             <OpenAddModalButton
-              className='w-full md:w-fit'
+              className='
+                w-full
+                md:w-fit
+              '
               phase={phase}
               year={selectedYear}
               fr={fr}
@@ -259,13 +291,35 @@ export default function BudgetManagement(props: Props) {
         <div className='mt-5 overflow-x-auto'>
           <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-1/4 pb-2 text-center font-medium text-black-600'>{title}</th>
+              <tr className='border-b border-b-primary-1 py-3'>
+                <th
+                  className='w-1/4 pb-2 text-center font-medium text-black-600'
+                >
+                  {title}
+                </th>
                 {showBudgetColumns && (
                   <>
-                    <th className='w-1/4 pb-2 text-center font-medium text-black-600'>予算</th>
-                    <th className='w-1/4 pb-2 text-center font-medium text-black-600'>使用額</th>
-                    <th className='w-1/4 pb-2 text-center font-medium text-black-600'>残高</th>
+                    <th
+                      className='
+                        w-1/4 pb-2 text-center font-medium text-black-600
+                      '
+                    >
+                      予算
+                    </th>
+                    <th
+                      className='
+                        w-1/4 pb-2 text-center font-medium text-black-600
+                      '
+                    >
+                      使用額
+                    </th>
+                    <th
+                      className='
+                        w-1/4 pb-2 text-center font-medium text-black-600
+                      '
+                    >
+                      残高
+                    </th>
                   </>
                 )}
               </tr>
@@ -275,9 +329,10 @@ export default function BudgetManagement(props: Props) {
                 displayItems.map((item, index) => (
                   <tr
                     key={item.id}
-                    className={`cursor-pointer ${
-                      index !== displayItems.length - 1 ? 'border-b' : ''
-                    }`}
+                    className={`
+                      cursor-pointer
+                      ${index !== displayItems.length - 1 ? 'border-b' : ''}
+                    `}
                   >
                     <td className='flex justify-center gap-2 py-3'>
                       <div
@@ -310,7 +365,7 @@ export default function BudgetManagement(props: Props) {
                   </tr>
                 ))}
               {showBudgetColumns && displayItems && displayItems.length > 0 && (
-                <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
+                <tr className='border-t border-t-primary-1'>
                   <td className='py-3 text-center font-bold'>合計</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalBudget)}</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalExpense)}</td>
@@ -321,7 +376,7 @@ export default function BudgetManagement(props: Props) {
                 <tr>
                   <td
                     colSpan={showBudgetColumns ? 4 : 1}
-                    className='text-gray-500 px-4 py-6 text-center text-sm'
+                    className='px-4 py-6 text-center text-sm text-gray-500'
                   >
                     データがありません
                   </td>

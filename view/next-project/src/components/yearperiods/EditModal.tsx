@@ -2,8 +2,8 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { Modal, Input, CloseButton, PrimaryButton } from '../common';
 import { put } from '@api/api_methods';
+import { Modal, Input, CloseButton, PrimaryButton } from '@components/common';
 import { YearPeriod } from '@type/common';
 
 interface ModalProps {
@@ -65,12 +65,12 @@ export default function EditModal(props: ModalProps) {
   return (
     <Modal className='md:w-1/2'>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
       <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>年度の編集</h1>
-      <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
+      <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
         <p className='col-span-1 text-black-600'>年度</p>
         <div className='col-span-4 h-12 w-full'>
           <Input

@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { BureauLabel } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof BureauLabel> = {
   title: 'FinanSu/common/BureauLabel',

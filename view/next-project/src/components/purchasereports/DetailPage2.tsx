@@ -1,11 +1,14 @@
 import { saveAs } from 'file-saver';
-import React, { FC, useEffect, useState } from 'react';
+import Image from 'next/image';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
-import { DeleteButton, OutlinePrimaryButton, PrimaryButton, Loading } from '../common';
-import UploadFileModal from './UploadFileModal';
+
 import { del, get } from '@api/api_methods';
+import { DeleteButton, Loading, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 import { Receipt } from '@type/common';
+
+import UploadFileModal from './UploadFileModal';
 
 interface ModalProps {
   id: number;
@@ -24,11 +27,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
   const [receiptsData, setReceiptsData] = useState<Receipt[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const getReceipts = async () => {
+  const getReceipts = useCallback(async () => {
     const getReceiptURL = `${process.env.CSR_API_URI}/receipts/reports/${id}`;
     const res: Receipt[] = await get(getReceiptURL);
     setReceiptsData(res);
-  };
+  }, [id]);
 
   const createURL = (receipt: Receipt) => {
     const url = `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/${receipt.bucketName}/${year}/receipts/${receipt.fileName}`;
@@ -94,17 +97,31 @@ const DetailPage2: FC<ModalProps> = (props) => {
   useEffect(() => {
     getReceipts();
     setIsLoading(false);
-  }, []);
+  }, [getReceipts]);
 
   return (
-    <div className='w-96 md:w-full'>
+    <div
+      className='
+        w-96
+        md:w-full
+      '
+    >
       <p className='mx-auto w-fit text-xl text-black-600'>登録済レシート</p>
       <div className='max-h-96 overflow-auto'>
         {receiptsData &&
           receiptsData.map((receipt) => (
             <>
-              <div className='m-0 flex flex-row-reverse border-t border-primary-1 p-0'>
-                <div className='mt-2 md:w-1/12'>
+              <div
+                className='
+                  m-0 flex flex-row-reverse border-t border-primary-1 p-0
+                '
+              >
+                <div
+                  className='
+                    mt-2
+                    md:w-1/12
+                  '
+                >
                   <button className=''>
                     <DeleteButton onClick={() => handleDeleteReceipt(receipt)} />
                   </button>
@@ -115,10 +132,16 @@ const DetailPage2: FC<ModalProps> = (props) => {
                   <embed src={createURL(receipt)} type='application/pdf' width='200' />
                 )}
                 {receipt.fileType !== 'application/pdf' && receipt.fileName && (
-                  <img src={createURL(receipt)} alt='Picture of the author' width='200' />
+                  <Image
+                    src={createURL(receipt)}
+                    alt='Picture of the author'
+                    width={200}
+                    height={200}
+                    style={{ width: 'auto', height: 'auto' }}
+                  />
                 )}
               </div>
-              <div className='my-1 flex flex-wrap justify-center gap-7 '>
+              <div className='my-1 flex flex-wrap justify-center gap-7'>
                 {receipt.fileName !== '' && (
                   <div className='my-2 flex flex-wrap justify-center gap-2'>
                     <OutlinePrimaryButton
@@ -143,14 +166,30 @@ const DetailPage2: FC<ModalProps> = (props) => {
               </div>
             </>
           ))}
-        <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
-          <button className='rounded hover:bg-grey-300'>
+        <div
+          className='
+            my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1
+            p-2
+          '
+        >
+          <button
+            className='
+              rounded-sm
+              hover:bg-grey-300
+            '
+          >
             <FiPlusSquare size={30} onClick={() => handleCreateReceipt()} />
           </button>
         </div>
       </div>
       <div className='mt-2'>
-        <button onClick={() => toPage1()} className='rounded-full hover:bg-grey-300'>
+        <button
+          onClick={() => toPage1()}
+          className='
+            rounded-full
+            hover:bg-grey-300
+          '
+        >
           <FaChevronCircleLeft size={30} />
         </button>
       </div>

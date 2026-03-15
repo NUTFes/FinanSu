@@ -27,3 +27,12 @@ services:
     environment:
       ENV: "production"
       RESET_PASSWORD_URL: "https://finansu.nutfes.net/reset_password"
+
+  finansu-prd-dozzle-agent:
+    image: amir20/dozzle:latest
+    container_name: "dozzle-agent"
+    command: agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 7007:7007

@@ -1,29 +1,59 @@
 import clsx from 'clsx';
-import React, { MouseEventHandler } from 'react';
+
+import type React from 'react';
+import type { JSX } from 'react';
 
 interface Props {
   className?: string;
-  value?: string | number;
+  value: string;
   checked?: boolean;
-  onClick?: MouseEventHandler<HTMLInputElement>;
-  onChange?: () => void;
+  onChange?: (value: string) => void;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
   children?: React.ReactNode;
+  name?: string;
 }
 
 function Radio(props: Props): JSX.Element {
-  const className = '' + (props.className ? ` ${props.className}` : '');
+  const { className, value, checked, onChange, onClick, children, name } = props;
+
   return (
-    <input
-      type='radio'
-      name='radio'
-      checked={props.checked}
-      className={clsx(className)}
-      value={props.value}
-      onClick={props.onClick}
-      onChange={props.onChange}
-    >
-      {props.children}
-    </input>
+    <label className={clsx('group flex cursor-pointer items-center gap-2', className)}>
+      <div className='relative flex size-4 shrink-0 items-center justify-center'>
+        <input
+          type='radio'
+          name={name}
+          value={value}
+          checked={checked}
+          onChange={(e) => onChange?.(e.target.value)}
+          onClick={onClick}
+          className='
+            peer size-full cursor-pointer appearance-none rounded-full border-2
+            border-primary-1 bg-white-0 transition-all
+            group-hover:border-primary-2
+            checked:border-primary-1
+            focus-visible:ring-2 focus-visible:ring-primary-1
+            focus-visible:ring-offset-2 focus-visible:outline-none
+          '
+        />
+        <div
+          className='
+            pointer-events-none absolute size-2 scale-0 rounded-full
+            bg-primary-1 opacity-0 transition-all
+            peer-checked:scale-100 peer-checked:opacity-100
+          '
+        />
+      </div>
+      {children && (
+        <span
+          className='
+            text-sm text-black-600 transition-colors select-none
+            group-hover:text-black-300
+          '
+        >
+          {children}
+        </span>
+      )}
+    </label>
   );
 }
 

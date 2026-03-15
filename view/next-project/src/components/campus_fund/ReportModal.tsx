@@ -1,19 +1,8 @@
-import {
-  VStack,
-  FormLabel,
-  HStack,
-  Text,
-  Button,
-  InputGroup,
-  InputRightElement,
-  Icon,
-} from '@chakra-ui/react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { FaRegCalendarAlt } from 'react-icons/fa';
-import { useRecoilValue } from 'recoil';
-import { userAtom } from '@/store/atoms';
 import { PrimaryButton, Modal, Title, CloseButton, Input } from '@components/common';
+import { useCurrentUser } from '@/store';
 import 'react-datepicker/dist/react-datepicker.css';
 import formatNumber from '@components/common/Formatter';
 
@@ -28,7 +17,7 @@ interface Props {
 const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [amount, setAmount] = useState<string>('');
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
 
   if (!isOpen) return null;
 
@@ -39,71 +28,43 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
           <CloseButton onClick={onClose} />
         </div>
         <Title>{building}</Title>
-        <Text fontSize={{ base: 'sm', md: 'lg' }} color='gray.600' mt={4} align='center'>
+        <p className='mt-4 text-center text-sm text-gray-600 md:text-lg'>
           {teacher ? `${teacher.room} ${teacher.name}` : ''}
-        </Text>
-        <VStack spacing={6} align='center' mt={12}>
-          {/* 日時 */}
-          <HStack spacing={4} align='center'>
-            <FormLabel
-              fontWeight='bold'
-              fontSize={{ base: 'xs', md: 'sm' }}
-              color='gray.600'
-              minWidth='80px'
-              textAlign='right'
-            >
+        </p>
+        <div className='mt-12 space-y-6'>
+          <div className='flex flex-col items-start gap-2 sm:flex-row sm:items-center'>
+            <label className='min-w-20 text-xs font-bold text-gray-600 sm:text-right md:text-sm'>
               日時
-            </FormLabel>
-            <InputGroup w='full' zIndex={2}>
+            </label>
+            <div className='relative z-2 w-full'>
               <DatePicker
                 selected={selectedDate}
                 onChange={(date: Date | null) => setSelectedDate(date)}
                 dateFormat='yyyy/MM/dd'
                 placeholderText='日付を選択'
-                className='border-gray-400 focus:border-teal-400 w-full border-b pr-10 text-sm focus:outline-none md:text-base'
+                className='w-full border-b border-gray-400 pr-10 text-sm focus:border-teal-400 focus:outline-none md:text-base'
                 popperPlacement='bottom'
                 popperClassName='z-datepicker-gal'
               />
-              <InputRightElement
-                pointerEvents='none'
-                right='10px'
-                top='50%'
-                transform='translateY(-50%)'
-              >
-                <Icon as={FaRegCalendarAlt} color='gray.400' boxSize={5} />
-              </InputRightElement>
-            </InputGroup>
-          </HStack>
+              <FaRegCalendarAlt className='pointer-events-none absolute right-2 top-1/2 size-5 -translate-y-1/2 text-gray-400' />
+            </div>
+          </div>
 
-          {/* 記入担当者 */}
-          <HStack spacing={4} align='center'>
-            <FormLabel
-              fontWeight='bold'
-              fontSize={{ base: 'xs', md: 'sm' }}
-              color='gray.600'
-              minWidth='80px'
-              textAlign='right'
-            >
+          <div className='flex flex-col items-start gap-2 sm:flex-row sm:items-center'>
+            <label className='min-w-20 text-xs font-bold text-gray-600 sm:text-right md:text-sm'>
               記入担当者
-            </FormLabel>
+            </label>
             <input
-              value={user ? `${user.name}` : ''}
-              readOnly={true}
-              className='border-gray-400 bg-gray-100 w-full border-b text-sm focus:outline-none md:text-base'
+              value={user?.name ?? ''}
+              readOnly
+              className='w-full border-b border-gray-400 bg-gray-100 text-sm focus:outline-none md:text-base'
             />
-          </HStack>
+          </div>
 
-          {/* 金額 */}
-          <HStack spacing={4} align='center' mb={8}>
-            <FormLabel
-              fontWeight='bold'
-              fontSize={{ base: 'xs', md: 'sm' }}
-              color='gray.600'
-              minWidth='80px'
-              textAlign='right'
-            >
+          <div className='mb-8 flex flex-col items-start gap-2 sm:flex-row sm:items-center'>
+            <label className='min-w-20 text-xs font-bold text-gray-600 sm:text-right md:text-sm'>
               金額
-            </FormLabel>
+            </label>
             <Input
               placeholder='金額を入力'
               value={amount}
@@ -113,25 +74,21 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
                   setAmount(formatNumber(Number(value)));
                 }
               }}
-              className='border-gray-400 focus:border-teal-400 border-b text-sm focus:outline-none md:text-base'
+              className='border-gray-400 border-b text-sm focus:border-teal-400 focus:outline-none md:text-base'
             />
-          </HStack>
+          </div>
 
-          {/* 戻る＆追加ボタン */}
-          <HStack spacing={4} w='100%' justify='center'>
-            <Button
-              zIndex={1}
-              colorScheme='gray'
-              variant='outline'
+          <div className='flex w-full justify-center gap-4'>
+            <button
+              type='button'
               onClick={onBack}
-              minW='100px'
-              fontSize={{ base: 'xs', md: 'sm' }}
+              className='min-w-[100px] rounded-full border border-gray-300 px-4 py-2 text-xs text-gray-700 transition hover:bg-gray-100 md:text-sm'
             >
               戻る
-            </Button>
+            </button>
             <PrimaryButton onClick={onClose}>追加する</PrimaryButton>
-          </HStack>
-        </VStack>
+          </div>
+        </div>
       </div>
     </Modal>
   );

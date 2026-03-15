@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
 import { put } from '@api/teachers';
-import { PrimaryButton, Modal, Input, Select } from '@components/common';
+import { Input, Modal, PrimaryButton, Radio, Select } from '@components/common';
 import { Department, Teacher } from '@type/common';
 
 interface ModalProps {
@@ -46,7 +46,11 @@ export default function FundInformationEditModal(props: ModalProps) {
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={closeModal} />
       </div>
       <div className='mx-auto w-fit text-xl'>教員情報の編集</div>
-      <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+      <div
+        className='
+          my-10 grid grid-cols-5 place-items-center gap-5 text-black-600
+        '
+      >
         <p>教員名</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.name} onChange={handler('name')} />
@@ -75,28 +79,22 @@ export default function FundInformationEditModal(props: ModalProps) {
         </div>
         <p>ブラックリスト</p>
         <div className='col-span-4 flex justify-center gap-10'>
-          <div key='black' className='flex items-center gap-3'>
-            <input
-              id='black'
-              type='radio'
-              name='isBlack'
-              value='true'
-              checked={formData.isBlack}
-              onChange={() => setFormData({ ...formData, isBlack: true })}
-            />
-            <label htmlFor='black'>はい</label>
-          </div>
-          <div key='notBlack' className='flex items-center gap-3'>
-            <input
-              id='notBlack'
-              type='radio'
-              name='isBlack'
-              value='false'
-              checked={!formData.isBlack}
-              onChange={() => setFormData({ ...formData, isBlack: false })}
-            />
-            <label htmlFor='notBlack'>いいえ</label>
-          </div>
+          <Radio
+            name='isBlack'
+            value='true'
+            checked={formData.isBlack}
+            onChange={() => setFormData({ ...formData, isBlack: true })}
+          >
+            はい
+          </Radio>
+          <Radio
+            name='isBlack'
+            value='false'
+            checked={!formData.isBlack}
+            onChange={() => setFormData({ ...formData, isBlack: false })}
+          >
+            いいえ
+          </Radio>
         </div>
         <p>備考</p>
         <div className='col-span-4 w-full'>

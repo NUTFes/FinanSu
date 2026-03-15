@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import { OpenEditInvoiceModalButton } from './index';
 import { createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
@@ -11,6 +10,8 @@ import {
   SponsorStyleDetail,
   InvoiceSponsorStyle,
 } from '@type/common';
+
+import { OpenEditInvoiceModalButton } from './index';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -27,6 +28,8 @@ export default function AddPdfDetailModal(props: ModalProps) {
       const res: InvoiceSponsorStyle = {
         styleName: `${sponsorStyle.style}(${sponsorStyle.feature})`,
         price: sponsorStyle.price,
+        quantity: 1,
+        unitPrice: sponsorStyle.price,
       };
       return res;
     });
@@ -69,25 +72,30 @@ export default function AddPdfDetailModal(props: ModalProps) {
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p className='mx-auto mb-7 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
+        <p
+          className='
+            mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest
+            text-black-600
+          '
+        >
           請求書の発行
         </p>
         <div className='col-span-4 w-full'>
-          <p className='text-gray-600 mb-3 ml-1 text-sm'>請求書発行日</p>
+          <p className='mb-3 ml-1 text-sm text-gray-600'>請求書発行日</p>
           <Input
             type='date'
             value={invoiceData.issuedDate}
             onChange={handler('issuedDate')}
             className='mb-3 w-full'
           />
-          <p className='text-gray-600 mb-3 ml-1 text-sm'>振込締め切り日</p>
+          <p className='mb-3 ml-1 text-sm text-gray-600'>振込締め切り日</p>
           <Input
             type='date'
             value={invoiceData.deadline}
             onChange={handler('deadline')}
             className='mb-3 w-full'
           />
-          <p className='text-gray-600 mb-3 ml-1 text-sm'>備考を入力</p>
+          <p className='mb-3 ml-1 text-sm text-gray-600'>備考を入力</p>
           <Input
             type='text'
             value={invoiceData.remark}
@@ -107,7 +115,12 @@ export default function AddPdfDetailModal(props: ModalProps) {
           <OpenEditInvoiceModalButton invoice={invoiceData} setInvoice={setInvoiceDate} />
         </div>
       </div>
-      <div className='h-[30rem] justify-center overflow-x-auto md:flex'>
+      <div
+        className='
+          h-120 justify-center overflow-x-auto
+          md:flex
+        '
+      >
         <PreviewPDF
           invoiceItem={invoiceData}
           deadline={invoiceData.deadline}

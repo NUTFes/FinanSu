@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Dispatch, SetStateAction } from 'react';
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
+
 import {
-  useDeleteFinancialRecordsId,
   useDeleteDivisionsId,
   useDeleteFestivalItemsId,
+  useDeleteFinancialRecordsId,
 } from '@/generated/hooks';
-import { PrimaryButton, Modal } from '@components/common';
+import { Modal, PrimaryButton } from '@components/common';
 
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -53,8 +53,9 @@ const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error: any) {
-      alert(`削除エラー: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      alert(`削除エラー: ${errorMessage}`);
     }
   };
 
@@ -72,7 +73,9 @@ const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
           {phase === 2 && '申請部門削除'}
           {phase === 3 && '申請物品削除'}
         </div>
-        <div className='my-10 grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+        <div
+          className='my-10 grid-cols-5 place-items-center gap-5 text-black-600'
+        >
           <div className='mx-auto my-5 w-fit text-xl'>{name}を削除しますか？</div>
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>

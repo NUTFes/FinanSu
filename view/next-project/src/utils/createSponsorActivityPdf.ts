@@ -1,5 +1,6 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
+
 import { SponsorActivityView, SponsorStyleDetail } from '../type/common';
 
 export const createSponsorActivityFormPdf = async (
@@ -18,26 +19,7 @@ export const createSponsorActivityFormPdf = async (
     await (await fetch('./fonts/Nasu-Regular.ttf')).arrayBuffer(),
     { subset: true },
   );
-  // 日本語フォント以外を判定する関数
-  const isNonJapaneseFont = (str: string): boolean => {
-    const nonJapaneseRegex = /^[A-Za-z0-9!-~\s]*$/;
-    return nonJapaneseRegex.test(str);
-  };
-  //文字列を省略する関数
-  const truncateString = (str: string, maxLength: number, maxLength2: number) => {
-    if (isNonJapaneseFont(str)) {
-      return str.length > maxLength2 ? `${str.slice(0, maxLength2)}...` : str;
-    } else {
-      return str.length > maxLength ? `${str.slice(0, maxLength - 1)}…` : str;
-    }
-  };
-  const fontSizeFunc = (str: string) => {
-    if (isNonJapaneseFont(str)) {
-      return 8;
-    } else {
-      return fontSizes[2];
-    }
-  };
+
   //フォントのサイズ
   const fontSizes = [12, 24, 8, 14, 16];
 
@@ -197,6 +179,6 @@ export const createSponsorActivityFormPdf = async (
   // 生成されたPDFデータを取得
   const pdfBytes = await pdfDoc.save();
   // Blobを作成
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
   return blob;
 };

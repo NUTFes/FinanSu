@@ -1,20 +1,19 @@
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 
-import { PrimaryButton } from '../common';
 import { BUREAUS } from '@/constants/bureaus';
-import { authAtom, userAtom } from '@/store/atoms';
+import { useAuthStore, useUserStore } from '@/store';
 import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
+import { PrimaryButton } from '@components/common';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignUp, User } from '@type/common';
 
 export default function SignUpView() {
-  const [, setAuth] = useRecoilState(authAtom);
-  const [, setUser] = useRecoilState(userAtom);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const setUser = useUserStore((state) => state.setUser);
 
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
@@ -82,14 +81,28 @@ export default function SignUpView() {
       <div className='my-16 flex w-full flex-col items-center'>
         <div className='mb-10 flex flex-col gap-3'>
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
-            <p className='md:text-md whitespace-nowrap text-sm text-black-300'>名前</p>
+            <p
+              className='
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
+            >
+              名前
+            </p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='text'
               value={postUserData.name}
               onChange={userDataHandler('name')}
             />
-            <p className='md:text-md whitespace-nowrap text-sm text-black-300'>学科</p>
+            <p
+              className='
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
+            >
+              学科
+            </p>
             <select
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               value={postUserData.bureauID}
@@ -101,7 +114,14 @@ export default function SignUpView() {
                 </option>
               ))}
             </select>
-            <p className='md:text-md whitespace-nowrap text-sm text-black-300'>メールアドレス</p>
+            <p
+              className='
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
+            >
+              メールアドレス
+            </p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='text'
@@ -114,7 +134,14 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p className='md:text-md whitespace-nowrap text-sm text-black-300'>パスワード</p>
+            <p
+              className='
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
+            >
+              パスワード
+            </p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='password'
@@ -126,7 +153,14 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p className='md:text-md whitespace-nowrap text-sm text-black-300'>パスワード確認</p>
+            <p
+              className='
+                md:text-md
+                text-sm whitespace-nowrap text-black-300
+              '
+            >
+              パスワード確認
+            </p>
             <input
               className='col-span-2 w-full border-b border-b-primary-1 p-1'
               type='password'

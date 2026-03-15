@@ -1,7 +1,9 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
-import { PurchaseReportView } from '../type/common';
+
 import { BUREAUS } from '@/constants/bureaus';
+
+import { PurchaseReportView } from '../type/common';
 
 export const createPurchaseReportFormPdf = async (
   purchaseReportViews: PurchaseReportView,
@@ -589,6 +591,6 @@ export const createPurchaseReportFormPdf = async (
   // 生成されたPDFデータを取得
   const pdfBytes = await pdfDoc.save();
   // Blobを作成
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
   return blob;
 };

@@ -1,6 +1,7 @@
-import React, { FC, useState } from 'react';
-import { Modal, Select, CloseButton, Input, PrimaryButton } from '@components/common';
-import { SponsorStyle, SponsorFilterType } from '@type/common';
+import { FC, useState } from 'react';
+
+import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
+import { SponsorFilterType, SponsorStyle } from '@type/common';
 
 interface ModalProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ const FilterModal: FC<ModalProps> = (props) => {
     return draftFilterData.styleIds.includes(id);
   }
 
-  function filterHandler(event: any) {
+  function filterHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFilterData(draftFilterData);
     setIsAllStyleCheck(isAllStyleCheck);
@@ -50,11 +51,11 @@ const FilterModal: FC<ModalProps> = (props) => {
           setIsAllStyleCheck(true));
   }
 
-  const topCheckboxEvent = (event: any) => {
+  const topCheckboxEvent = (_event: React.ChangeEvent<HTMLInputElement>) => {
     isAllStyleCheck ? deleteAllStyleIds() : addAllStyleIds();
   };
 
-  const preventCloseModalEvent = (event: any) => {
+  const preventCloseModalEvent = (event: React.MouseEvent) => {
     event.stopPropagation();
   };
 
@@ -83,11 +84,18 @@ const FilterModal: FC<ModalProps> = (props) => {
             </div>
           </div>
           <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛フィルター</div>
-          <div className='m-2 grid  grid-cols-4 items-center justify-items-center gap-x-2 gap-y-5'>
+          <div
+            className='m-2 grid grid-cols-4 place-items-center gap-x-2 gap-y-5'
+          >
             <p className='col-span-2 text-black-600'>協賛スタイル</p>
             <div className='col-span-2 w-full'>
               <div className=''>
-                <div className='flex rounded-md p-2 hover:bg-white-100'>
+                <div
+                  className='
+                    flex rounded-md p-2
+                    hover:bg-white-100
+                  '
+                >
                   <input
                     type='checkbox'
                     onChange={topCheckboxEvent}
@@ -102,9 +110,19 @@ const FilterModal: FC<ModalProps> = (props) => {
                     ）
                   </label>
                 </div>
-                <div className='max-h-28 overflow-y-auto rounded-md border-2 bg-white-0'>
+                <div
+                  className='
+                    max-h-28 overflow-y-auto rounded-md border-2 bg-white-0
+                  '
+                >
                   {props.sponsorStyles.map((style) => (
-                    <div className='flex p-2 hover:bg-white-100' key={style.id}>
+                    <div
+                      className='
+                        flex p-2
+                        hover:bg-white-100
+                      '
+                      key={style.id}
+                    >
                       <input
                         type='checkbox'
                         checked={includeStyleIds(style?.id || 0)}
@@ -113,7 +131,10 @@ const FilterModal: FC<ModalProps> = (props) => {
                         }}
                         id={String(style.id)}
                       ></input>
-                      <label htmlFor={String(style.id)} className='mx-2 w-full text-black-300'>
+                      <label
+                        htmlFor={String(style.id)}
+                        className='mx-2 w-full text-black-300'
+                      >
                         {style.style}/{style.feature}/{style.price}円
                       </label>
                     </div>

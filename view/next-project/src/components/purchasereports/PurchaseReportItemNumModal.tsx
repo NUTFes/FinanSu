@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import React, { useEffect, useState } from 'react';
 
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import {
   CloseButton,
   Modal,
@@ -12,7 +11,7 @@ import {
 } from '@components/common';
 import PurchaseReportAddModal from '@components/purchasereports/PurchaseReportAddModal';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, Expense, YearPeriod } from '@type/common';
+import { Expense, PurchaseOrder, YearPeriod } from '@type/common';
 import { get } from '@utils/api/api_methods';
 
 export default function PurchaseReportItemNumModal() {
@@ -28,9 +27,10 @@ export default function PurchaseReportItemNumModal() {
       setYearPeriods(res);
     };
     getPeriods();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [user] = useRecoilState(userAtom);
+  const user = useCurrentUser();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [expenseID, setExpenseID] = useState(0);
 
@@ -114,7 +114,7 @@ export default function PurchaseReportItemNumModal() {
           </div>
           <div className='my-10 grid grid-cols-5 gap-5'>
             <div className='col-span-2 flex w-full items-center justify-center'>
-              <p className=' text-black-600'>年度</p>
+              <p className='text-black-600'>年度</p>
             </div>
             <div className='col-span-3 w-3/4'>
               <Select
@@ -131,7 +131,7 @@ export default function PurchaseReportItemNumModal() {
               </Select>
             </div>
             <div className='col-span-2 flex w-full items-center justify-center'>
-              <p className=' text-black-600'>購入した局・団体</p>
+              <p className='text-black-600'>購入した局・団体</p>
             </div>
             <div className='col-span-3 w-3/4'>
               <Select

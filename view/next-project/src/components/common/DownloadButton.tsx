@@ -1,6 +1,7 @@
-import { Tooltip } from '@chakra-ui/react';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { IoMdDownload } from 'react-icons/io';
+
+import { Tooltip } from '@/components/common';
 
 interface Props {
   onClick?: () => void;
@@ -15,15 +16,18 @@ const DownloadButton = (props: Props) => {
     if (isDisabled) {
       return 'cursor-default bg-primary-1 opacity-25';
     } else {
-      return 'cursor-pointer bg-gradient-to-br from-primary-1 to-primary-2 hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1';
+      return 'cursor-pointer bg-linear-to-br from-primary-1 to-primary-2 hover:bg-linear-to-br hover:from-primary-2 hover:to-primary-1';
     }
   }, [isDisabled]);
 
   return (
-    <Tooltip label={tooltip} hasArrow>
+    <Tooltip text={tooltip}>
       <button
         disabled={isDisabled}
-        className={`${buttonClass} flex h-6 w-6 min-w-0 items-center justify-center rounded-full`}
+        className={`
+          ${buttonClass}
+          flex size-6 min-w-0 items-center justify-center rounded-full
+        `}
         onClick={onClick}
         suppressHydrationWarning
       >

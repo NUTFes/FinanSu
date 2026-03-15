@@ -9,6 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Auto Assign PR
-        uses: hkusu/review-assign-action@v1
+        uses: hkusu/review-assign-action@v1.4.0
         with:
           assignees: ${{ github.actor }}

@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction } from 'react';
-import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '../common';
+import { Dispatch, FC, SetStateAction } from 'react';
+
 import { useDeleteBuyReportsId } from '@/generated/hooks';
+import { CloseButton, Modal, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -15,8 +15,6 @@ const PurchaseReportDeleteModal: FC<ModalProps> = (props) => {
   const closeModal = () => {
     props.setShowModal(false);
   };
-
-  const router = useRouter();
 
   const { trigger, error: delTrigger } = useDeleteBuyReportsId(props.id);
 

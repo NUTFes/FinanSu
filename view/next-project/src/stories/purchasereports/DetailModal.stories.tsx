@@ -1,18 +1,12 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { RecoilRoot } from 'recoil';
-import { PURCHASE_REPORT_VIEW, EXPENSES } from '../constants';
 import { DetailModal } from '@components/purchasereports/';
+
+import { EXPENSES, PURCHASE_REPORT_VIEW } from '../constants';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof DetailModal> = {
   title: 'FinanSu/purchasereports/DetailModal',
   component: DetailModal,
-  decorators: [
-    (Story) => (
-      <RecoilRoot>
-        <Story />
-      </RecoilRoot>
-    ),
-  ],
   tags: ['autodocs'],
   argTypes: {},
 };

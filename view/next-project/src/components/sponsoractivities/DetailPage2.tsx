@@ -1,23 +1,25 @@
 import { clsx } from 'clsx';
 import { saveAs } from 'file-saver';
-import React, { FC, useEffect, useState } from 'react';
-
-import { FaChevronCircleLeft, FaCheckCircle } from 'react-icons/fa';
+import Image from 'next/image';
+import { FC, useEffect, useState } from 'react';
+import { FaCheckCircle, FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 import { RiCloseCircleLine } from 'react-icons/ri';
+
+import { del, post, put } from '@/utils/api/api_methods';
+import { DESIGN_PROGRESSES } from '@constants/designProgresses';
+import { SponsorActivityInformation, SponsorActivityView } from '@type/common';
+
 import {
   DeleteButton,
   EditButton,
   Input,
+  Loading,
   OutlinePrimaryButton,
   PrimaryButton,
   Select,
-  Loading,
 } from '../common';
 import UplaodFileModal from './UploadFileModal';
-import { post, del, put } from '@/utils/api/api_methods';
-import { DESIGN_PROGRESSES } from '@constants/designProgresses';
-import { SponsorActivityView, SponsorActivityInformation } from '@type/common';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;
@@ -55,6 +57,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
       sponsorActivityInformations: sponsorActivityInformations,
     };
     props.setSponsorActivitiesView(newSponsorActivitiesView);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sponsorActivityInformations]);
 
   const designProgresses =
@@ -94,11 +97,11 @@ const DetailPage2: FC<ModalProps> = (props) => {
       (sponsorActivityInformation) => sponsorActivityInformation.id !== id,
     );
     if (activityInformation.fileName === '') {
-      const res = await del(deleteSponsorActivityInformationUrl);
+      await del(deleteSponsorActivityInformationUrl);
     } else {
       const confirm = window.confirm('本当に削除してよろしいですか？');
       if (confirm) {
-        const response = await fetch('/api/advertisements', {
+        await fetch('/api/advertisements', {
           method: 'DELETE',
           body: formData,
         })
@@ -113,7 +116,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
           .catch((error) => {
             console.error('Error:', error);
           });
-        const res = await del(deleteSponsorActivityInformationUrl);
+        await del(deleteSponsorActivityInformationUrl);
       } else {
         window.alert('キャンセルしました');
         return;
@@ -133,8 +136,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
       designProgress: 1,
       fileInformation: '',
     };
-    const res = await post(sponsorActivitiesUrl, nullData);
-    const newSponsorActivityInformations = [...sponsorActivityInformations, res];
+    const createdInfo = await post(sponsorActivitiesUrl, nullData);
+    const newSponsorActivityInformations = [...sponsorActivityInformations, createdInfo];
     setSponsorActivityInformations(newSponsorActivityInformations);
     setIsEditInformations([...isEditInformations, false]);
     props.setIsChange(true);
@@ -150,7 +153,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
       ...activityInformation,
       designProgress: Number(e.target.value),
     };
-    const res = await put(sponsorActivitiesUrl, updateActivityInformation);
+    await put(sponsorActivitiesUrl, updateActivityInformation);
     const newSponsorActivityInformations = sponsorActivityInformations.map(
       (sponsorActivityInformation) => {
         if (sponsorActivityInformation.id === activityInformation.id) {
@@ -170,7 +173,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
       ...activityInformation,
       fileInformation: activityInformationData,
     };
-    const res = await put(sponsorActivitiesUrl, updateActivityInformation);
+    await put(sponsorActivitiesUrl, updateActivityInformation);
     const newSponsorActivityInformations = sponsorActivityInformations.map(
       (sponsorActivityInformation) => {
         if (sponsorActivityInformation.id === activityInformation.id) {
@@ -190,10 +193,10 @@ const DetailPage2: FC<ModalProps> = (props) => {
 
   return (
     <>
-      <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>協賛スタイル</p>
+      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛スタイル</p>
       <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+          <tr className='border-b border-b-primary-1 py-3'>
             <th className='w-1/4 px-6 pb-2'>
               <div className='text-center text-sm text-black-600'>協賛内容</div>
             </th>
@@ -210,8 +213,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
             props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
               <tr
                 key={index}
-                className={clsx('border border-x-white-0 border-t-white-0', {
-                  'border-b-primary-1':
+                className={clsx({
+                  'border-b border-b-primary-1':
                     index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
                 })}
               >
@@ -227,7 +230,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
               </tr>
             ))
           ) : (
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tr className='border-b border-b-primary-1'>
               <td colSpan={3} className='py-3'>
                 <div className='text-center text-sm text-red-500'>
                   協賛スタイルを登録してください
@@ -237,12 +240,16 @@ const DetailPage2: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
-      <p className='mx-auto mb-2 mt-7 w-fit text-xl text-black-600'>広告デザイン</p>
+      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>広告デザイン</p>
       <div className='max-h-60 overflow-auto'>
         {sponsorActivityInformations &&
           sponsorActivityInformations.map((activityInformation, index) => (
             <>
-              <div className='m-0 flex flex-row-reverse border-t border-primary-1 p-0'>
+              <div
+                className='
+                  m-0 flex flex-row-reverse border-t border-primary-1 p-0
+                '
+              >
                 <div className='mt-2 w-1/12'>
                   <button className=''>
                     <DeleteButton
@@ -273,7 +280,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                     </Select>
                   </div>
                 </div>
-                <div className='my-1 ml-4 flex flex-wrap justify-center gap-7 '>
+                <div className='my-1 ml-4 flex flex-wrap justify-center gap-7'>
                   <div className='flex items-center justify-center gap-3'>
                     <p className='text-black-600'>情報</p>
                     {isEditInformations[index] ? (
@@ -335,14 +342,16 @@ const DetailPage2: FC<ModalProps> = (props) => {
                   )}
                 {activityInformation.fileType !== 'application/pdf' &&
                   activityInformation.fileName && (
-                    <img
+                    <Image
                       src={fileURLs && fileURLs[index]}
                       alt='Picture of the author'
-                      width='160'
+                      width={160}
+                      height={160}
+                      style={{ width: 'auto', height: 'auto' }}
                     />
                   )}
               </div>
-              <div className='my-1 flex flex-wrap justify-center gap-7 '>
+              <div className='my-1 flex flex-wrap justify-center gap-7'>
                 {activityInformation.fileName !== '' && (
                   <div className='my-2 flex flex-wrap justify-center gap-2'>
                     <OutlinePrimaryButton
@@ -381,14 +390,30 @@ const DetailPage2: FC<ModalProps> = (props) => {
               {isLoading && <Loading />}
             </>
           ))}
-        <div className='my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1 p-2'>
-          <button className='rounded hover:bg-grey-300'>
+        <div
+          className='
+            my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1
+            p-2
+          '
+        >
+          <button
+            className='
+              rounded-sm
+              hover:bg-grey-300
+            '
+          >
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
           </button>
         </div>
       </div>
       <div className='mt-2'>
-        <button onClick={() => toPage1()} className='rounded-full hover:bg-grey-300'>
+        <button
+          onClick={() => toPage1()}
+          className='
+            rounded-full
+            hover:bg-grey-300
+          '
+        >
           <FaChevronCircleLeft size={30} />
         </button>
       </div>

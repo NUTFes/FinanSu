@@ -2,9 +2,9 @@ import Image from 'next/image';
 import React, { FC, useRef, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { PrimaryButton, Loading } from '../common';
 import { put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
+import { Loading, PrimaryButton } from '@components/common';
 import { SponsorActivityInformation } from '@type/common';
 
 interface ModalProps {
@@ -129,7 +129,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
 
     // ファイルをチャンクに分割してアップロード
     const SPLIT_NUMBER = 10;
-    const chunkSize = imageFile.size / SPLIT_NUMBER;
+    const chunkSize = Math.max(1, Math.ceil(imageFile.size / SPLIT_NUMBER));
     const chunks = splitFile(imageFile, chunkSize);
 
     for (let i = 0; i < chunks.length; i++) {
@@ -194,7 +194,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-5/12' onClick={onClose}>
+    <Modal className='md:mt-5 md:h-6/12 md:w-5/12' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
@@ -205,23 +205,29 @@ const UploadFileModal: FC<ModalProps> = (props) => {
           type='file'
           ref={fileInputRef}
           onChange={handleFileChange}
-          className='file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm hover:file:bg-grey-300'
+          className='
+            file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2
+            file:text-sm
+            hover:file:bg-grey-300
+          '
         />
         <p className='mt-2 text-sm text-red-500'>※ファイルサイズは1GB以下にしてください。</p>
         {isLoading && (
           <div className='mt-2 w-full text-center'>
-            <p className='text-gray-600 text-sm'>
+            <p className='text-sm text-gray-600'>
               {uploadProgress === 100 ? '処理中...' : `${uploadProgress}% アップロード中...`}
             </p>
           </div>
         )}
       </div>
-      <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
+      <div
+        className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'
+      >
         {preview.type === 'application/pdf' ? (
           <embed
             src={preview.uploadImageURL}
             type='application/pdf'
-            className='mx-auto object-scale-down '
+            className='mx-auto object-scale-down'
           />
         ) : (
           preview.type !== '' && (

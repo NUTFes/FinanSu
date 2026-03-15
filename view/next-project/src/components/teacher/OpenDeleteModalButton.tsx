@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { DeleteButton } from '../common';
+import { DeleteButton } from '@components/common';
 import DeleteModal from '@components/teacher/DeleteModal';
 import { Teacher } from '@type/common';
 
@@ -21,7 +21,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   //   if (props.isDisabled) {
   //     return 'cursor-default opacity-25';
   //   } else {
-  //     return 'cursor-pointer hover:bg-gradient-to-br hover:from-red-600 hover:to-red-500';
+  //     return 'cursor-pointer hover:bg-linear-to-br hover:from-red-600 hover:to-red-500';
   //   }
   // }, [props.isDisabled]);
 

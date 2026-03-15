@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import DetailPage1 from './DetailPage1';
-import DetailPage2 from './DetailPage2';
+
 import { Modal } from '@components/common';
 import { SponsorActivityView } from '@type/common';
+
+import DetailPage1 from './DetailPage1';
+import DetailPage2 from './DetailPage2';
 
 interface ModalProps {
   isOpen: boolean;
@@ -31,7 +33,7 @@ const DetailModal: FC<ModalProps> = (props) => {
   const [pageNum, setPageNum] = useState<number>(1);
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-6/12' onClick={onClose}>
+    <Modal className='md:mt-5 md:size-6/12' onClick={onClose}>
       <div className='ml-auto w-fit'>
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
       </div>

@@ -1,7 +1,9 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 import SponsorEditModal from '@components/sponsors/SponsorEditModal';
 import { Sponsor } from '@type/common';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 export default {
   title: 'FinanSu/sponsors/SponsorEditModal',
@@ -10,7 +12,7 @@ export default {
 } as Meta<typeof SponsorEditModal>;
 
 const Template: StoryFn<typeof SponsorEditModal> = (args) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [_isOpen, setIsOpen] = useState(true);
   return <SponsorEditModal {...args} setIsOpen={setIsOpen} />;
 };
 

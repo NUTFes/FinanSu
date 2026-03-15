@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import DeleteConfirmModal from './modals/DeleteModal';
-import UncheckConfirmModal from './modals/UncheckConfirmModal';
+
 import { IncomeExpenditureManagement } from '@/generated/model/incomeExpenditureManagement';
 import { Checkbox, DeleteButton, EditButton } from '@components/common';
+
+import DeleteConfirmModal from './modals/DeleteModal';
+import UncheckConfirmModal from './modals/UncheckConfirmModal';
 
 interface FundInformationTableProps {
   fundInformations: IncomeExpenditureManagement[];
@@ -14,7 +16,7 @@ interface FundInformationTableProps {
 
 const TableHeader = () => (
   <thead>
-    <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+    <tr className='border-b border-b-primary-1'>
       <th className='w-[15%] pb-2'>
         <div className='text-center text-sm font-normal text-black-600'>日付</div>
       </th>
@@ -214,7 +216,7 @@ const FundInformationTable = ({
   onCheckChange,
 }: FundInformationTableProps) => {
   return (
-    <div className='min-w-[768px]'>
+    <div className='min-w-3xl'>
       <table className='w-full table-fixed border-collapse'>
         <TableHeader />
         <tbody className='text-nowrap'>

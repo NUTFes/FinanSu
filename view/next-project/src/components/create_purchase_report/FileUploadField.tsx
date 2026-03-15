@@ -1,12 +1,13 @@
-import { Button, FormControl, FormLabel, Text, Box } from '@chakra-ui/react';
-import React, { RefObject } from 'react';
+import { RefObject } from 'react';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { GoPlus } from 'react-icons/go';
+
+import { FormControl, FormLabel } from '@/components/common';
 
 interface FileUploadFieldProps {
   isEditMode: boolean;
   uploadedFile: File | null;
-  fileInputRef: RefObject<HTMLInputElement>;
+  fileInputRef: RefObject<HTMLInputElement | null>;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   validationError?: string;
 }
@@ -32,41 +33,59 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       />
       {uploadedFile ? (
         <div
-          className='border-gray-200 hover:bg-gray-300 flex min-h-[40px] cursor-pointer items-center gap-2 rounded-md border bg-[#E7E7E7] p-2 transition-colors'
+          className='
+            flex min-h-10 cursor-pointer items-center gap-2 rounded-md border
+            border-gray-200 bg-[#E7E7E7] p-2 transition-colors
+            hover:bg-gray-300
+          '
           onClick={handleFileUploadClick}
         >
-          <Text className='ml-2 min-w-0 flex-1 truncate'>{uploadedFile.name}</Text>
-          <Text className='text-gray-500 mr-2 text-sm'>クリックして変更</Text>
+          <span className='ml-2 min-w-0 flex-1 truncate'>{uploadedFile.name}</span>
+          <span className='mr-2 text-sm text-gray-500'>クリックして変更</span>
         </div>
       ) : (
-        <Button
-          className='w-full bg-[#E7E7E7]'
-          colorScheme='gray'
-          variant='outline'
+        <button
+          type='button'
+          className='
+            flex w-full items-center justify-center gap-1 rounded-md border
+            border-gray-300 bg-[#E7E7E7] px-4 py-2 text-black-300
+            transition-colors
+            hover:bg-gray-300
+            sm:gap-2
+          '
           onClick={handleFileUploadClick}
         >
-          <span className='flex w-full items-center justify-center gap-1 font-normal sm:gap-2'>
-            <GoPlus className='pt-[1px] text-sm sm:text-base' />
-            <Text className='text-xs sm:text-sm md:text-base'>
-              {isEditMode ? '領収書（レシート）を変更' : '領収書（レシート）をアップロード'}
-            </Text>
+          <GoPlus
+            className='
+              pt-px text-sm
+              sm:text-base
+            '
+          />
+          <span
+            className='
+              text-xs font-normal
+              sm:text-sm
+              md:text-base
+            '
+          >
+            {isEditMode ? '領収書（レシート）を変更' : '領収書（レシート）をアップロード'}
           </span>
-        </Button>
+        </button>
       )}
       {validationError && !isEditMode ? (
-        <Box className='mt-6 flex items-center justify-center gap-2'>
-          <FaExclamationCircle color='#B91C1C' className='pt-[1px]' />
-          <Text className='text-sm text-[#B91C1C]'>{validationError}</Text>
-        </Box>
+        <div className='mt-6 flex items-center justify-center gap-2'>
+          <FaExclamationCircle color='#B91C1C' className='pt-px' />
+          <span className='text-sm text-[#B91C1C]'>{validationError}</span>
+        </div>
       ) : (
         !uploadedFile &&
         !isEditMode && (
-          <Box className='mt-6 flex items-center justify-center gap-2'>
+          <div className='mt-6 flex items-center justify-center gap-2'>
             <FaExclamationCircle color='#B91C1C' />
-            <Text className='text-sm text-[#B91C1C]'>
+            <span className='text-sm text-[#B91C1C]'>
               領収書（レシート）をアップロードしてください
-            </Text>
-          </Box>
+            </span>
+          </div>
         )
       )}
     </FormControl>

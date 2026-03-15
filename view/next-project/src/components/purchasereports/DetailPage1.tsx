@@ -2,13 +2,13 @@ import { useRouter } from 'next/router';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { FaChevronCircleRight } from 'react-icons/fa';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
+
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { downloadFile } from '@/utils/downloadFile';
 import { del } from '@api/api_methods';
 import { Checkbox, RedButton, Tooltip } from '@components/common';
-import { PurchaseItem, PurchaseReport, PurchaseReportView, Expense } from '@type/common';
+import { Expense, PurchaseItem, PurchaseReport, PurchaseReportView } from '@type/common';
 import { createPurchaseReportFormPdf } from '@utils/createPurchaseReportPdf';
 
 interface DetailModalProps {
@@ -21,7 +21,7 @@ interface DetailModalProps {
 }
 
 const DetailPage1: FC<DetailModalProps> = (props) => {
-  const [user] = useRecoilState(userAtom);
+  const user = useCurrentUser();
 
   const [date, setDate] = useState(String);
   const [japaneseDate, setJapaneseDate] = useState(String);
@@ -76,7 +76,12 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
 
   return (
     <>
-      <div className='mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-x-10 gap-y-3'>
+      <div
+        className='
+          mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-x-10
+          gap-y-3
+        '
+      >
         <p className='text-black-600'>ID</p>
         <div className='w-full border-b border-b-primary-1 text-right'>
           <p>{props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}</p>
@@ -123,10 +128,14 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
         <p className='text-2xl font-thin text-black-600'>購入物品</p>
       </div>
       <div className='grid max-h-60 w-full justify-items-center overflow-auto'>
-        <div className='w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1'>
+        <div
+          className='
+            w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1
+          '
+        >
           <table className='w-full table-fixed border-collapse'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+              <tr className='border-b border-b-primary-1 py-3'>
                 {user.roleID === 1 ? (
                   <th className='w-3/12 pb-2'>
                     <div className='text-center text-sm text-black-600'>品名</div>
@@ -153,7 +162,7 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
                 </th>
               </tr>
             </thead>
-            <tbody className='w-full border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody className='w-full'>
               {/* <div className='flex items-start'> */}
               {props.purchaseReportViewItem?.purchaseItems?.map((purchaseItem) => (
                 <tr key={purchaseItem.id} className='w-full'>
@@ -207,7 +216,12 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
           </table>
         </div>
       </div>
-      <div className='my-5 hidden justify-center md:flex'>
+      <div
+        className='
+          my-5 hidden justify-center
+          md:flex
+        '
+      >
         <PrimaryButton
           onClick={async () => {
             downloadFile({
@@ -235,7 +249,13 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
         )}
       </div>
       <div className='mt-2 flex justify-end'>
-        <button onClick={() => toPage2()} className='rounded-full hover:bg-grey-300'>
+        <button
+          onClick={() => toPage2()}
+          className='
+            rounded-full
+            hover:bg-grey-300
+          '
+        >
           <FaChevronCircleRight size={30} />
         </button>
       </div>

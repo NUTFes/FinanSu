@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
+
 import { Invoice } from '@/type/common';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
@@ -115,6 +116,8 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
       invoiceSponsorStyle: items.map((item) => ({
         styleName: getDisplayStyleName(item.styleName),
         price: item.price * item.quantity,
+        quantity: item.quantity,
+        unitPrice: item.price,
       })),
       issuedDate: form.issuedDate,
       deadline: form.deadline,
@@ -176,29 +179,36 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p className='mx-auto mb-4 w-fit text-2xl font-thin leading-8 tracking-widest text-black-600'>
+        <p
+          className='
+            mx-auto mb-4 w-fit text-2xl/8 font-thin tracking-widest
+            text-black-600
+          '
+        >
           請求書の発行（手入力）
         </p>
 
-        <div className='flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4'>
+        <div
+          className='flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4'
+        >
           <div className='w-1/2 overflow-y-auto pr-4'>
             <div className='grid grid-cols-1 gap-4'>
               <div>
-                <p className='text-gray-600 mb-2 ml-1 text-sm'>企業名</p>
+                <p className='mb-2 ml-1 text-sm text-gray-600'>企業名</p>
                 <Input
                   type='text'
                   value={form.sponsorName}
                   onChange={onChange('sponsorName')}
                   className='mb-3 w-full'
                 />
-                <p className='text-gray-600 mb-2 ml-1 text-sm'>担当者名(企業)</p>
+                <p className='mb-2 ml-1 text-sm text-gray-600'>担当者名(企業)</p>
                 <Input
                   type='text'
                   value={form.managerName}
                   onChange={onChange('managerName')}
                   className='mb-3 w-full'
                 />
-                <p className='text-gray-600 mb-2 ml-1 text-sm'>件名</p>
+                <p className='mb-2 ml-1 text-sm text-gray-600'>件名</p>
                 <Input
                   type='text'
                   value={form.subject}
@@ -206,21 +216,21 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   className='mb-3 w-full'
                   placeholder='例: 技大祭企業協賛'
                 />
-                <p className='text-gray-600 mb-2 ml-1 text-sm'>請求日</p>
+                <p className='mb-2 ml-1 text-sm text-gray-600'>請求日</p>
                 <Input
                   type='date'
                   value={form.issuedDate}
                   onChange={onChange('issuedDate')}
                   className='mb-3 w-full'
                 />
-                <p className='text-gray-600 mb-2 ml-1 text-sm'>振込締切日</p>
+                <p className='mb-2 ml-1 text-sm text-gray-600'>振込締切日</p>
                 <Input
                   type='date'
                   value={form.deadline}
                   onChange={onChange('deadline')}
                   className='mb-3 w-full'
                 />
-                <p className='text-gray-600 mb-2 ml-1 text-sm'>担当者名(実行委員)</p>
+                <p className='mb-2 ml-1 text-sm text-gray-600'>担当者名(実行委員)</p>
                 <Input
                   type='text'
                   value={form.fesStuffName}
@@ -231,10 +241,14 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
 
               <div>
                 <div className='mb-2 flex items-center justify-between'>
-                  <p className='text-gray-600 ml-1 text-sm'>協賛内容リスト</p>
+                  <p className='ml-1 text-sm text-gray-600'>協賛内容リスト</p>
                 </div>
 
-                <div className='text-gray-600 mb-2 grid grid-cols-12 gap-2 px-2 text-xs'>
+                <div
+                  className='
+                    mb-2 grid grid-cols-12 gap-2 px-2 text-xs text-gray-600
+                  '
+                >
                   <div className='col-span-5 text-center'>概要</div>
                   <div className='col-span-2 text-center'>数量</div>
                   <div className='col-span-2 text-center'>単価</div>
@@ -242,11 +256,14 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   <div className='col-span-1'></div>
                 </div>
 
-                <div className='mb-4 max-h-[300px] space-y-2 overflow-y-auto'>
+                <div className='mb-4 max-h-75 space-y-2 overflow-y-auto'>
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className='bg-gray-50 grid grid-cols-12 items-center gap-2 rounded p-2'
+                      className='
+                        grid grid-cols-12 items-center gap-2 rounded-sm
+                        bg-gray-50 p-2
+                      '
                     >
                       <div className='col-span-5'>
                         <Select value={item.styleName} onChange={onItemStyleChange(item.id)}>
@@ -280,7 +297,10 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                       <div className='col-span-1 flex justify-center'>
                         <button
                           type='button'
-                          className='hover:text-red-700 text-red-500'
+                          className='
+                            text-red-500
+                            hover:text-red-700
+                          '
                           onClick={() => removeItem(item.id)}
                           disabled={items.length === 1}
                           title='削除'
@@ -292,7 +312,10 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   ))}
                   <div className='flex justify-center'>
                     <AddButton
-                      className='text-blue-500 flex items-center text-sm hover:underline'
+                      className='
+                        flex items-center text-sm text-blue-500
+                        hover:underline
+                      '
                       onClick={addItem}
                     >
                       項目追加
@@ -307,7 +330,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   </div>
                 </div>
 
-                <p className='text-gray-600 mb-2 ml-1 text-sm'>備考</p>
+                <p className='mb-2 ml-1 text-sm text-gray-600'>備考</p>
                 <Textarea
                   value={form.remark}
                   onChange={onChange('remark')}
@@ -323,7 +346,11 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
             </div>
           </div>
 
-          <div className='border-gray-200 flex w-1/2 flex-col overflow-hidden border-l pl-4'>
+          <div
+            className='
+              flex w-1/2 flex-col overflow-hidden border-l border-gray-200 pl-4
+            '
+          >
             <div className='flex-1 overflow-hidden'>
               <PreviewPDF
                 invoiceItem={createInvoiceData()}

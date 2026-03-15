@@ -1,22 +1,24 @@
 import { clsx } from 'clsx';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { get, post } from '@/utils/api/api_methods';
-import { MultiSelect, SearchSelect } from '@components/common';
 
+import { get, post } from '@/utils/api/api_methods';
 import {
   CloseButton,
+  Input,
   Modal,
+  MultiSelect,
   OutlinePrimaryButton,
   PrimaryButton,
+  Radio,
+  SearchSelect,
   Select,
-  Input,
   Textarea,
 } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { DESIGNERS, DESIGNER_VALUES } from '@constants/designers';
-import { SponsorActivity, Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
+import { Sponsor, SponsorActivity, SponsorStyle, User, YearPeriod } from '@type/common';
 
 const TABLE_COLUMNS = ['企業名', '協賛スタイル', '担当者名', '回収状況'];
 
@@ -98,6 +100,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       });
     if (res.length !== 0) setFormData({ ...formData, userID: res[0].id });
     return res;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bureauId]);
 
   const formDataHandler =
@@ -166,6 +169,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         remark: '',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSelectSponsorBooth]);
 
   const currentYear = yearPeriods
@@ -191,10 +195,12 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   useEffect(() => {
     getSponsors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
   useEffect(() => {
     setFormData({ ...formData, sponsorID: Number(formDataSponsorID) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formDataSponsorID]);
 
   const NO_SPONSORS_MESSAGE = '企業が登録されていません';
@@ -205,7 +211,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
 
   // 協賛活動の情報
   const content = (data: SponsorActivity) => (
-    <div className='mx-auto my-10 grid grid-cols-5 items-center justify-items-center gap-2'>
+    <div className='mx-auto my-10 grid grid-cols-5 place-items-center gap-2'>
       <p className='text-black-600'>年度</p>
       <div className='col-span-4 w-full'>
         <Select
@@ -289,17 +295,19 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <p className='text-black-600'>デザイン作成</p>
       <div className='col-span-4 flex w-full justify-around'>
         {DESIGNER_VALUES.map((designer) => (
-          <div className='flex gap-3' key={designer.value}>
-            <input
-              type='radio'
-              id={designer.id}
-              name='design'
-              value={designer.value}
-              checked={data.design === designer.value}
-              onChange={setDesign}
-            />
-            <label htmlFor={designer.id}>{designer.label}</label>
-          </div>
+          <Radio
+            key={designer.value}
+            name='design'
+            value={String(designer.value)}
+            checked={data.design === designer.value}
+            onChange={(val) => {
+              setDesign({
+                target: { value: val },
+              } as React.ChangeEvent<HTMLInputElement>);
+            }}
+          >
+            {designer.label}
+          </Radio>
         ))}
       </div>
       <p className='text-black-600'>交通費</p>
@@ -339,7 +347,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
       <div>
         <table className='my-5 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               {TABLE_COLUMNS.map((tableColumn: string) => (
                 <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
                   <div className='text-center text-sm text-black-600'>{tableColumn}</div>
@@ -347,14 +355,17 @@ export default function SponsorActivitiesAddModal(props: Props) {
               ))}
             </tr>
           </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tbody>
+            <tr className='border-b border-b-primary-1'>
               <td className='py-3'>
                 <p className='text-center text-sm text-black-600'>{sponsorView?.name}</p>
               </td>
               <td className='flex flex-col gap-2 py-3'>
                 {sponsorStyleView.map((style) => (
-                  <div key={style.id} className='text-center text-sm text-black-600'>
+                  <div
+                    key={style.id}
+                    className='text-center text-sm text-black-600'
+                  >
                     {style.style} / {style.feature} / {style.price} 円
                   </div>
                 ))}
@@ -372,7 +383,7 @@ export default function SponsorActivitiesAddModal(props: Props) {
         </table>
         <table className='mb-7 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               {TABLE_COLUMNS2.map((tableColumn: string) => (
                 <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
                   <div className='text-center text-sm text-black-600'>{tableColumn}</div>
@@ -380,8 +391,8 @@ export default function SponsorActivitiesAddModal(props: Props) {
               ))}
             </tr>
           </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tbody>
+            <tr className='border-b border-b-primary-1'>
               <td className='py-3'>
                 <div className='text-center text-sm text-black-600'>
                   {sponsorActivities.feature}
@@ -402,13 +413,13 @@ export default function SponsorActivitiesAddModal(props: Props) {
         </table>
         <table className='mb-10 w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <tr className='border-b border-b-primary-1 py-3'>
               <th className='border-b-primary-1 px-6 pb-2'>
                 <div className='text-center text-sm text-black-600'>備考</div>
               </th>
             </tr>
           </thead>
-          <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+          <tbody>
             <tr>
               <td>
                 <div className='py-3 text-sm text-black-600'>

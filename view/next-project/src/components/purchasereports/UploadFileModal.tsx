@@ -1,11 +1,12 @@
-import React, { FC, useState, useCallback } from 'react';
+import Image from 'next/image';
+import { FC, useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { MdFileUpload } from 'react-icons/md';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { PrimaryButton, Loading } from '../common';
 import { post, put } from '@/utils/api/api_methods';
 import { Modal } from '@components/common';
+import { Loading, PrimaryButton } from '@components/common';
 import { Receipt } from '@type/common';
 
 interface ModalProps {
@@ -37,7 +38,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
     const formData = new FormData();
     formData.append('fileName', `${receipt?.fileName}`);
     formData.append('year', year);
-    const response = await fetch('/api/receipts', {
+    const _response = await fetch('/api/receipts', {
       method: 'DELETE',
       body: formData,
     })
@@ -162,24 +163,33 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-4/12'>
+    <Modal className='md:mt-5 md:h-6/12 md:w-4/12'>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
-      <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
+      <div
+        className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'
+      >
         <div {...getRootProps()} className='h-56 w-full'>
           <input {...getInputProps()} />
           {preview.type === 'application/pdf' ? (
             <embed
               src={preview.uploadImageURL}
               type='application/pdf'
-              className='mx-auto object-scale-down '
+              className='mx-auto object-scale-down'
             />
           ) : (
             preview.type !== '' && (
-              <img src={preview.uploadImageURL} className='mx-auto object-scale-down ' />
+              <Image
+                src={preview.uploadImageURL}
+                alt='Preview image'
+                width={200}
+                height={200}
+                className='mx-auto object-scale-down'
+                style={{ width: 'auto', height: 'auto' }}
+              />
             )
           )}
           {preview.uploadImageURL === '' && (

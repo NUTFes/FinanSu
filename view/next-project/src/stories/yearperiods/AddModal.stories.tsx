@@ -1,18 +1,11 @@
 // /Users/kobayashiryota/Workspace/FinanSu/view/next-project/src/stories/yearperiods/AddModal.stories.tsx
-import type { Meta, StoryFn } from '@storybook/react';
-import { RecoilRoot } from 'recoil';
 import { AddModal } from '@components/yearperiods';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof AddModal> = {
   title: 'FinanSu/yearperiods/AddModal',
   component: AddModal,
-  decorators: [
-    (Story) => (
-      <RecoilRoot>
-        <Story />
-      </RecoilRoot>
-    ),
-  ],
   argTypes: {},
   tags: ['autodocs'],
 };

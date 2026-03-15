@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useMemo, useState } from 'react';
+
 import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
@@ -35,7 +35,7 @@ export default function Users(props: Props) {
   const { users, bureaus } = props;
   const router = useRouter();
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
   const [selectedBureau, setSelectedBureau] = useState(0);
   const [filterUsers, setFilterUsers] = useState<User[]>(users);
@@ -82,7 +82,10 @@ export default function Users(props: Props) {
           <div className='flex'>
             <Title title={'ユーザー一覧'} />
             <select
-              className='md:w-100 mx-auto my-4 w-fit md:mx-10 md:my-0'
+              className='
+                mx-auto my-4 w-fit
+                md:mx-10 md:my-0 md:w-100
+              '
               value={selectedBureau}
               onChange={(e) => setSelectedBureau(Number(e.target.value))}
             >
@@ -99,17 +102,17 @@ export default function Users(props: Props) {
           <table className='mb-5 w-full table-auto border-collapse'>
             <thead>
               <tr>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>氏名</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>学科</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>権限</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3' />
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='border-b border-b-primary-1 py-3' />
+                <th className='border-b border-b-primary-1 py-3'>
                   <div className='flex justify-center'>
                     <OpenDeleteModalButton
                       isDisabled={deleteUsers.ids.length == 0}
@@ -119,14 +122,16 @@ export default function Users(props: Props) {
                 </th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {filterUsers.map((user: User, index) => (
                 <tr key={user.id}>
                   <td
                     className={clsx(
                       'px-1 py-3',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1
+                        ? 'pt-3 pb-4'
+                        : `border-b py-3`,
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>{user.name}</p>
@@ -134,8 +139,10 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1
+                        ? 'pt-3 pb-4'
+                        : `border-b py-3`,
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>
@@ -145,8 +152,10 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1
+                        ? 'pt-3 pb-4'
+                        : `border-b py-3`,
                     )}
                   >
                     <p className='text-center text-sm text-black-600'>
@@ -156,8 +165,10 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1
+                        ? 'pt-3 pb-4'
+                        : `border-b py-3`,
                     )}
                   >
                     <div className='flex justify-end'>
@@ -167,14 +178,16 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1 text-center text-sm text-black-600',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1
+                        ? 'pt-3 pb-4'
+                        : `border-b py-3`,
                     )}
                   >
                     <input
                       checked={deleteUsers.ids.includes(user.id)}
                       type='checkbox'
-                      onChange={(e) => {
+                      onChange={(_e) => {
                         deleteUsers.ids.includes(user.id)
                           ? setDeleteUsers({
                               users: deleteUsers?.users.filter((selectedUser) => {

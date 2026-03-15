@@ -1,17 +1,16 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useMemo, useState } from 'react';
 
 import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
 import OpenDeleteModalButton from '@/components/yearperiods/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/yearperiods/OpenEditModalButton';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
-import { YearPeriod, User } from '@type/common';
+import { User, YearPeriod } from '@type/common';
 
 interface Props {
   yearPeriods: YearPeriod[];
@@ -32,7 +31,7 @@ export default function Periods(props: Props) {
   const { yearPeriods } = props;
   const router = useRouter();
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
 
   const formatYearPeriods =
@@ -47,6 +46,7 @@ export default function Periods(props: Props) {
 
   useEffect(() => {
     setCurrentUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ログイン中のユーザの権限
@@ -63,6 +63,7 @@ export default function Periods(props: Props) {
     if (!isDeveloperOrAdimin) {
       router.push('/purchaseorders');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDeveloperOrAdimin, currentUser?.roleID]);
 
   return (
@@ -78,37 +79,44 @@ export default function Periods(props: Props) {
             <Title title={'年度一覧'} />
           </div>
         </div>
-        <div className='hidden justify-end md:flex '>
+        <div
+          className='
+            hidden justify-end
+            md:flex
+          '
+        >
           <OpenAddModalButton yearPeriods={props.yearPeriods}>年度登録</OpenAddModalButton>
         </div>
         <div className='mb-2 p-5'>
           <table className='mb-5 w-full table-auto border-collapse'>
             <thead>
               <tr>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>ID</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>年度</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>開始日</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'>
                   <p className='text-center text-sm text-black-600'>終了日</p>
                 </th>
-                <th className='w-1/4 border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'></th>
+                <th className='w-1/4 border-b border-b-primary-1 py-3'></th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {formatYearPeriods &&
                 formatYearPeriods.map((yearPeriod: YearPeriod, index) => (
                   <tr key={yearPeriod.id}>
                     <td
                       className={clsx(
                         'px-1 py-3',
-                        index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.id}</p>
@@ -116,8 +124,10 @@ export default function Periods(props: Props) {
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.year}</p>
@@ -125,8 +135,10 @@ export default function Periods(props: Props) {
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.startedAt}</p>
@@ -134,8 +146,10 @@ export default function Periods(props: Props) {
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <p className='text-center text-sm text-black-600'>{yearPeriod.endedAt}</p>
@@ -143,8 +157,10 @@ export default function Periods(props: Props) {
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pb-3 pt-4' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `border-b py-3`,
                       )}
                     >
                       <div className='flex gap-2'>

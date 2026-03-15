@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { get, post } from '@api/api_methods';
 import { post as postItem, put } from '@api/purchaseItem';
 import { post as postOrder } from '@api/purchaseOrder';
@@ -36,7 +35,7 @@ interface ModalProps {
 }
 
 export default function PurchaseReportAddModal(props: ModalProps) {
-  const [user] = useRecoilState(userAtom);
+  const user = useCurrentUser();
 
   const router = useRouter();
 
@@ -134,6 +133,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
       // 購入申請を新しく作成したかどうかで判断
       props.purchaseOrder ? createNonePurchaseItems() : getPurchaseItems();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, getPurchaseItems]);
 
   // 購入報告用のhandler
@@ -283,7 +283,12 @@ export default function PurchaseReportAddModal(props: ModalProps) {
           </Stepper>
           {isDone ? (
             <>
-              <div className='mx-auto mb-10 mt-3 grid w-9/10 grid-cols-5 items-center justify-items-center gap-4'>
+              <div
+                className='
+                  mx-auto mt-3 mb-10 grid w-9/10 grid-cols-5 place-items-center
+                  gap-4
+                '
+              >
                 <p className='text-black-600'>割引</p>
                 <div className='col-span-4 w-full'>
                   <Input

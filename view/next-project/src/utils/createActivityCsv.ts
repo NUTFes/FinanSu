@@ -1,6 +1,7 @@
-import { SponsorActivityView } from '../type/common';
-import { createCsv, createCsvData } from './createCsv';
 import { BUREAUS } from '@/constants/bureaus';
+
+import { createCsv, createCsvData } from './createCsv';
+import { SponsorActivityView } from '../type/common';
 
 export const createPresentationCsv = async (activityViews: SponsorActivityView[]) =>
   createCsv(
@@ -34,7 +35,7 @@ export const createPresentationCsv = async (activityViews: SponsorActivityView[]
         label: '所属局',
       },
       {
-        getCustomValue: (row) => (row.sponsorActivity.isDone ? '回収済み' : '未回収' || ''),
+        getCustomValue: (row) => (row.sponsorActivity.isDone ? '回収済み' : '未回収'),
         label: '回収状況',
       },
       {

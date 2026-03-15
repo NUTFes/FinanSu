@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { EditButton } from '../common';
+import { EditButton } from '@components/common';
 import EditModal from '@components/teacher/EditModal';
 import { Department, Teacher } from '@type/common';
 

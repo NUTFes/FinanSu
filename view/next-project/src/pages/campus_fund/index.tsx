@@ -1,4 +1,3 @@
-import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import ReportModal from '@/components/campus_fund/ReportModal';
 import SelectTeacherModal from '@/components/campus_fund/SelectTeacherModal';
@@ -39,41 +38,25 @@ const CampusFund = () => {
 
   return (
     <MainLayout>
-      <Box p={{ base: 2, md: 8 }} mx='auto' maxW='1200px'>
-        <Text fontSize='2xl' fontWeight='bold' color='#26C1CE' textAlign='center' mt={8}>
-          総募金額
-        </Text>
-        <Text fontSize='6xl' fontWeight='bold' color='#04668C' textAlign='center' mb={8}>
+      <div className='mx-auto max-w-[1200px] p-2 md:p-8'>
+        <p className='mt-8 text-center text-2xl font-bold text-[#26C1CE]'>総募金額</p>
+        <p className='mb-8 text-center text-5xl font-bold text-[#04668C] md:text-6xl'>
           ¥{formatNumber(totalAmount)}
-        </Text>
-        <Grid
-          templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }}
-          gap={4}
-        >
+        </p>
+        <div className='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'>
           {buildings.map((building) => (
-            <GridItem
+            <button
+              type='button'
               key={building.name}
-              p={4}
-              border='1px solid #E2E8F0'
-              borderRadius='md'
-              textAlign='center'
-              cursor='pointer'
+              className='min-w-0 rounded-md border border-gray-200 bg-white p-4 text-center transition hover:bg-[#f0f9fa] hover:shadow-md'
               onClick={() => handleBuildingClick(building.name)}
-              bg='white'
-              _hover={{ boxShadow: 'md', bg: '#f0f9fa' }}
-              minW={0}
             >
-              <Text fontSize='lg' fontWeight='bold'>
-                {building.name}
-              </Text>
-              <Text fontSize='xl' color='#26C1CE'>
-                ¥{formatNumber(building.amount)}
-              </Text>
-            </GridItem>
+              <p className='text-lg font-bold'>{building.name}</p>
+              <p className='text-xl text-[#26C1CE]'>¥{formatNumber(building.amount)}</p>
+            </button>
           ))}
-        </Grid>
+        </div>
 
-        {/* 教員選択モーダル */}
         <SelectTeacherModal
           isOpen={isSelectTeacherOpen}
           onClose={() => setIsSelectTeacherOpen(false)}
@@ -81,7 +64,6 @@ const CampusFund = () => {
           building={selectedBuilding}
         />
 
-        {/* 報告モーダル */}
         <ReportModal
           isOpen={isReportModalOpen}
           onClose={() => setIsReportModalOpen(false)}
@@ -99,7 +81,7 @@ const CampusFund = () => {
             setIsSelectTeacherOpen(true);
           }}
         />
-      </Box>
+      </div>
     </MainLayout>
   );
 };

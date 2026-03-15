@@ -1,4 +1,5 @@
 import { GrStatusGoodSmall } from 'react-icons/gr';
+
 import type { BuyReportInformationStatus } from '@/generated/model';
 
 interface StatusProps {
@@ -30,7 +31,7 @@ const Status = ({ status }: StatusProps) => {
   return (
     <div className='flex items-center gap-2'>
       <GrStatusGoodSmall size={'15px'} color={iconColor} />
-      <div className='text-black text-nowrap text-sm font-normal'>{statusText}</div>
+      <div className='text-sm font-normal text-nowrap text-black'>{statusText}</div>
     </div>
   );
 };
