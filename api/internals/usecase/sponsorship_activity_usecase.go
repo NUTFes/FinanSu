@@ -226,7 +226,7 @@ func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context
 		DesignProgress:    string(req.DesignProgress),
 	}
 	if req.Remarks != nil {
-		activity.Remarks = *req.Remarks
+		activity.Remarks = req.Remarks
 	}
 	if err := u.repo.UpdateStatus(ctx, id, activity); err != nil {
 		return generated.SponsorshipActivity{}, err
