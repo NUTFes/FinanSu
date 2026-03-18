@@ -28,10 +28,12 @@ var selectSponsorshipActivityQuery = goqu.Dialect("mysql").
 type SponsorshipActivityRepository interface {
 	FindAll(ctx context.Context, params generated.GetSponsorshipActivitiesParams) ([]generated.SponsorshipActivity, error)
 	GetSponsorStyleMapBySponsorshipActivityIDs(ctx context.Context, sponsorshipActivityIDs []int) (map[int][]generated.ActivitySponsorStyleLink, error)
+	GetSponsorStyleLinksBySponsorshipActivityID(ctx context.Context, sponsorshipActivityID int) (domain.SponsorStyleLinks, error)
 	FindByID(ctx context.Context, id int) (generated.SponsorshipActivity, error)
 	Create(ctx context.Context, tx *sql.Tx, sponsorshipActivity generated.SponsorshipActivity) (int, error)
 	CreateSponsorStyleLink(ctx context.Context, tx *sql.Tx, sponsorStyleLink generated.ActivitySponsorStyleLink, sponsorshipActivityID int) error
-	Update(ctx context.Context, activity domain.SponsorshipActivity) error
+	Update(ctx context.Context, tx *sql.Tx, activity domain.SponsorshipActivity) error
+	DeleteSponsorStyleLinkByID(ctx context.Context, tx *sql.Tx, id int) error
 	UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error
 	Delete(ctx context.Context, id int) error
 }
@@ -198,6 +200,49 @@ func (r *sponsorshipActivityRepository) GetSponsorStyleMapBySponsorshipActivityI
 	return sponsorStyleMapBySponsorshipActivityIDs, nil
 }
 
+// 特定の活動IDに紐づくプランリストを取得
+func (r *sponsorshipActivityRepository) GetSponsorStyleLinksBySponsorshipActivityID(ctx context.Context, sponsorshipActivityID int) (domain.SponsorStyleLinks, error) {
+	queryDataset := goqu.Dialect("mysql").
+		Select(
+			"activity_sponsor_style_links.id",
+			"activity_sponsor_style_links.category",
+			"sponsor_styles.id", "sponsor_styles.style", "sponsor_styles.feature", "sponsor_styles.price",
+		).
+		From("activity_sponsor_style_links").
+		InnerJoin(goqu.T("sponsor_styles"), goqu.On(goqu.I("activity_sponsor_style_links.sponsor_style_id").Eq(goqu.I("sponsor_styles.id")))).
+		Where(goqu.I("activity_sponsor_style_links.sponsorship_activity_id").Eq(sponsorshipActivityID)).
+		Order(goqu.I("activity_sponsor_style_links.id").Asc())
+
+	sqlString, sqlArgs, err := queryDataset.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := r.client.DB().QueryContext(ctx, sqlString, sqlArgs...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	links := domain.NewSponsorStyleLinks()
+	for rows.Next() {
+		var link domain.SponsorStyleLink
+		err := rows.Scan(
+			&link.SponsorStyleLinkID,
+			&link.Category,
+			&link.Style.ID, &link.Style.Style, &link.Style.Feature, &link.Style.Price,
+		)
+		if err != nil {
+			return nil, err
+		}
+		links = append(links, link)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return links, nil
+}
+
 func (r *sponsorshipActivityRepository) FindByID(ctx context.Context, targetSponsorshipActivityID int) (generated.SponsorshipActivity, error) {
 	queryDataset := selectSponsorshipActivityQuery.Where(goqu.I("sponsorship_activities.id").Eq(targetSponsorshipActivityID))
 
@@ -285,8 +330,35 @@ func (r *sponsorshipActivityRepository) CreateSponsorStyleLink(ctx context.Conte
 	return err
 }
 
-func (r *sponsorshipActivityRepository) Update(ctx context.Context, activity domain.SponsorshipActivity) error {
-	return nil
+func (r *sponsorshipActivityRepository) Update(ctx context.Context, tx *sql.Tx, activity domain.SponsorshipActivity) error {
+	dataset := goqu.Dialect("mysql").Update("sponsorship_activities").
+		Set(goqu.Record{
+			"year_periods_id":    activity.YearPeriodsID,
+			"sponsor_id":         activity.SponsorID,
+			"user_id":            activity.UserID,
+			"activity_status":    activity.ActivityStatus,
+			"feasibility_status": activity.FeasibilityStatus,
+			"design_progress":    activity.DesignProgress,
+			"remarks":            activity.Remarks,
+		}).
+		Where(goqu.I("id").Eq(activity.ID))
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, query, args...)
+	return err
+}
+
+func (r *sponsorshipActivityRepository) DeleteSponsorStyleLinkByID(ctx context.Context, tx *sql.Tx, id int) error {
+	dataset := goqu.Dialect("mysql").Delete("activity_sponsor_style_links").
+		Where(goqu.I("id").Eq(id))
+	query, args, err := dataset.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, query, args...)
+	return err
 }
 
 func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error {

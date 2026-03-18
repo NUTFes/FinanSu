@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
@@ -12,7 +14,7 @@ type SponsorshipActivityUseCase interface {
 	GetSponsorshipActivities(ctx context.Context, params generated.GetSponsorshipActivitiesParams) ([]generated.SponsorshipActivity, error)
 	GetSponsorshipActivityByID(ctx context.Context, id int) (generated.SponsorshipActivity, error)
 	CreateSponsorshipActivity(ctx context.Context, req generated.CreateSponsorshipActivityRequest) (generated.SponsorshipActivity, error)
-	UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
+	UpdateSponsorshipActivity(ctx context.Context, id int, req generated.UpdateSponsorshipActivityRequest) (generated.SponsorshipActivity, error)
 	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
 	DeleteSponsorshipActivity(ctx context.Context, id int) error
 }
@@ -134,9 +136,87 @@ func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Conte
 	return u.GetSponsorshipActivityByID(ctx, newSponsorshipActivityID)
 }
 
-func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
-	u.repo.Update(ctx, activity)
-	return activity, nil
+func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, req generated.UpdateSponsorshipActivityRequest) (generated.SponsorshipActivity, error) {
+	// 1. 既存リンクを取得（トランザクション外）
+	existingLinks, err := u.repo.GetSponsorStyleLinksBySponsorshipActivityID(ctx, id)
+	if err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// リクエストを domain.SponsorStyleLinks に変換
+	requestedLinks := domain.NewSponsorStyleLinks()
+	if req.SponsorStyleDetails != nil {
+		for _, detail := range *req.SponsorStyleDetails {
+			if detail.SponsorStyleId == nil {
+				return generated.SponsorshipActivity{}, fmt.Errorf("sponsorStyleId is required")
+			}
+			if detail.Category == nil {
+				return generated.SponsorshipActivity{}, fmt.Errorf("category is required")
+			}
+			cat := string(*detail.Category)
+			requestedLinks = append(requestedLinks, domain.NewSponsorStyleLink(*detail.SponsorStyleId, cat))
+		}
+	}
+
+	// 既存リンクとリクエストリンクの差分を計算
+	toDeleteIDs, toCreate := existingLinks.Diff(requestedLinks)
+
+	// 2. generated.UpdateSponsorshipActivityRequest → domain.SponsorshipActivity へ変換
+	activity := domain.SponsorshipActivity{
+		ID:                id,
+		YearPeriodsID:     req.YearPeriodsId,
+		SponsorID:         req.SponsorId,
+		UserID:            req.UserId,
+		ActivityStatus:    string(req.ActivityStatus),
+		FeasibilityStatus: string(req.FeasibilityStatus),
+		DesignProgress:    string(req.DesignProgress),
+		Remarks:           req.Remarks,
+	}
+
+	// 3. トランザクション開始
+	tx, err := u.transactionRepo.StartTransaction(ctx)
+	if err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	err = func(tx *sql.Tx) error {
+		// 4. メイン情報更新
+		if err := u.repo.Update(ctx, tx, activity); err != nil {
+			return err
+		}
+
+		// NOTE: 協賛スタイルの削除・追加は1リクエスト内で複数回の DELETE/INSERT をループで発行している。
+		//       想定される協賛スタイル数は多くなく、現状のパフォーマンスコストは許容範囲と判断している。
+		//       今後スタイル数が増加しボトルネックとなる場合は、バルク操作等による最適化を検討すること。
+		// 5. 削除
+		for _, linkID := range toDeleteIDs {
+			if err := u.repo.DeleteSponsorStyleLinkByID(ctx, tx, linkID); err != nil {
+				return err
+			}
+		}
+
+		// 6. 追加
+		for _, link := range toCreate {
+			category := generated.SponsorStyleCategory(link.Category)
+			newLink := generated.ActivitySponsorStyleLink{
+				SponsorStyleId: &link.Style.ID,
+				Category:       &category,
+			}
+			if err := u.repo.CreateSponsorStyleLink(ctx, tx, newLink, id); err != nil {
+				return err
+			}
+		}
+
+		// 7. コミット
+		return u.transactionRepo.Commit(ctx, tx)
+	}(tx)
+
+	if err != nil {
+		u.transactionRepo.RollBack(ctx, tx)
+		return generated.SponsorshipActivity{}, err
+	}
+
+	return u.GetSponsorshipActivityByID(ctx, id)
 }
 
 func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
