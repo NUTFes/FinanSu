@@ -2524,21 +2524,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - activityStatus
-                - feasibilityStatus
-                - designProgress
-              properties:
-                activityStatus:
-                  $ref: "#/components/schemas/ActivityStatus"
-                feasibilityStatus:
-                  $ref: "#/components/schemas/FeasibilityStatus"
-                designProgress:
-                  $ref: "#/components/schemas/DesignProgress"
-                remarks:
-                  type: string
-                  example: "電話にて確認済み"
+              $ref: "#/components/schemas/UpdateSponsorshipActivityStatusRequest"
       responses:
         "200":
           description: Updated
@@ -3363,6 +3349,24 @@ components:
                 example: 1
               category:
                 $ref: "#/components/schemas/SponsorStyleCategory"
+
+    UpdateSponsorshipActivityStatusRequest:
+      type: object
+      description: ステータス更新時のリクエストボディ
+      required:
+        - activityStatus
+        - feasibilityStatus
+        - designProgress
+      properties:
+        activityStatus:
+          $ref: "#/components/schemas/ActivityStatus"
+        feasibilityStatus:
+          $ref: "#/components/schemas/FeasibilityStatus"
+        designProgress:
+          $ref: "#/components/schemas/DesignProgress"
+        remarks:
+          type: string
+          example: "電話にて確認済み"
 
     UpdateSponsorshipActivityRequest:
       type: object

@@ -362,7 +362,20 @@ func (r *sponsorshipActivityRepository) DeleteSponsorStyleLinkByID(ctx context.C
 }
 
 func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) error {
-	return nil
+	query, args, err := goqu.Dialect("mysql").Update("sponsorship_activities").
+		Set(goqu.Record{
+			"activity_status":    activity.ActivityStatus,
+			"feasibility_status": activity.FeasibilityStatus,
+			"design_progress":    activity.DesignProgress,
+			"remarks":            activity.Remarks,
+		}).
+		Where(goqu.C("id").Eq(id)).
+		ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	return err
 }
 
 func (r *sponsorshipActivityRepository) Delete(ctx context.Context, id int) error {
