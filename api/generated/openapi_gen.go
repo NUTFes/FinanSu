@@ -13,12 +13,6 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
-// Defines values for ActivitySponsorStyleLinkCategory.
-const (
-	ActivitySponsorStyleLinkCategoryGoods ActivitySponsorStyleLinkCategory = "goods"
-	ActivitySponsorStyleLinkCategoryMoney ActivitySponsorStyleLinkCategory = "money"
-)
-
 // Defines values for ActivityStatus.
 const (
 	ActivityStatusConfirmed        ActivityStatus = "confirmed"
@@ -29,12 +23,6 @@ const (
 	ActivityStatusReceiptSent      ActivityStatus = "receipt_sent"
 	ActivityStatusRejected         ActivityStatus = "rejected"
 	ActivityStatusUnstarted        ActivityStatus = "unstarted"
-)
-
-// Defines values for CreateSponsorshipActivityRequestSponsorStyleDetailsCategory.
-const (
-	CreateSponsorshipActivityRequestSponsorStyleDetailsCategoryGoods CreateSponsorshipActivityRequestSponsorStyleDetailsCategory = "goods"
-	CreateSponsorshipActivityRequestSponsorStyleDetailsCategoryMoney CreateSponsorshipActivityRequestSponsorStyleDetailsCategory = "money"
 )
 
 // Defines values for DesignProgress.
@@ -52,10 +40,10 @@ const (
 	Unstarted  FeasibilityStatus = "unstarted"
 )
 
-// Defines values for UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory.
+// Defines values for SponsorStyleCategory.
 const (
-	Goods UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory = "goods"
-	Money UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory = "money"
+	Goods SponsorStyleCategory = "goods"
+	Money SponsorStyleCategory = "money"
 )
 
 // Defines values for BuyReportInformationStatus.
@@ -93,14 +81,12 @@ const (
 
 // ActivitySponsorStyleLink 協賛活動とプランの紐付け情報
 type ActivitySponsorStyleLink struct {
-	Category       *ActivitySponsorStyleLinkCategory `json:"category,omitempty"`
-	Id             *int                              `json:"id,omitempty"`
-	SponsorStyleId *int                              `json:"sponsorStyleId,omitempty"`
-	Style          *SponsorStyle                     `json:"style,omitempty"`
+	// Category 協賛スタイルのカテゴリー（お金か物品か）
+	Category       *SponsorStyleCategory `json:"category,omitempty"`
+	Id             *int                  `json:"id,omitempty"`
+	SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
+	Style          *SponsorStyle         `json:"style,omitempty"`
 }
-
-// ActivitySponsorStyleLinkCategory defines model for ActivitySponsorStyleLink.Category.
-type ActivitySponsorStyleLinkCategory string
 
 // ActivityStatus 活動ステータス
 type ActivityStatus string
@@ -120,21 +106,22 @@ type CreateSponsorshipActivityRequest struct {
 
 	// SponsorStyleDetails 登録したい協賛プラン情報のリスト
 	SponsorStyleDetails *[]struct {
-		Category       *CreateSponsorshipActivityRequestSponsorStyleDetailsCategory `json:"category,omitempty"`
-		SponsorStyleId *int                                                         `json:"sponsorStyleId,omitempty"`
+		// Category 協賛スタイルのカテゴリー（お金か物品か）
+		Category       *SponsorStyleCategory `json:"category,omitempty"`
+		SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
 	} `json:"sponsorStyleDetails,omitempty"`
 	UserId        int `json:"userId"`
 	YearPeriodsId int `json:"yearPeriodsId"`
 }
-
-// CreateSponsorshipActivityRequestSponsorStyleDetailsCategory defines model for CreateSponsorshipActivityRequest.SponsorStyleDetails.Category.
-type CreateSponsorshipActivityRequestSponsorStyleDetailsCategory string
 
 // DesignProgress デザイン進捗
 type DesignProgress string
 
 // FeasibilityStatus 協賛可否
 type FeasibilityStatus string
+
+// SponsorStyleCategory 協賛スタイルのカテゴリー（お金か物品か）
+type SponsorStyleCategory string
 
 // SponsorshipActivitiesResponse 協賛活動一覧のレスポンス
 type SponsorshipActivitiesResponse struct {
@@ -183,15 +170,13 @@ type UpdateSponsorshipActivityRequest struct {
 
 	// SponsorStyleDetails 更新したい協賛プラン情報のリスト（全置換）
 	SponsorStyleDetails *[]struct {
-		Category       *UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory `json:"category,omitempty"`
-		SponsorStyleId *int                                                         `json:"sponsorStyleId,omitempty"`
+		// Category 協賛スタイルのカテゴリー（お金か物品か）
+		Category       *SponsorStyleCategory `json:"category,omitempty"`
+		SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
 	} `json:"sponsorStyleDetails,omitempty"`
 	UserId        int `json:"userId"`
 	YearPeriodsId int `json:"yearPeriodsId"`
 }
-
-// UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory defines model for UpdateSponsorshipActivityRequest.SponsorStyleDetails.Category.
-type UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory string
 
 // Activity defines model for activity.
 type Activity struct {

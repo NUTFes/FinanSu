@@ -4,69 +4,134 @@ import (
 	"context"
 
 	"github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
 
 type SponsorshipActivityUseCase interface {
-	GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error)
-	GetSponsorshipActivityByID(ctx context.Context, id int) (domain.SponsorshipActivity, error)
-	CreateSponsorshipActivity(ctx context.Context, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
+	GetSponsorshipActivities(ctx context.Context, params generated.GetSponsorshipActivitiesParams) ([]generated.SponsorshipActivity, error)
+	GetSponsorshipActivityByID(ctx context.Context, id int) (generated.SponsorshipActivity, error)
+	CreateSponsorshipActivity(ctx context.Context, req generated.CreateSponsorshipActivityRequest) (generated.SponsorshipActivity, error)
 	UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
-	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) // ★追加
+	UpdateSponsorshipActivityStatus(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error)
 	DeleteSponsorshipActivity(ctx context.Context, id int) error
 }
 
 type sponsorshipActivityUseCase struct {
-	repo repository.SponsorshipActivityRepository
+	repo            repository.SponsorshipActivityRepository
+	transactionRepo repository.TransactionRepository
 }
 
-func NewSponsorshipActivityUseCase(repo repository.SponsorshipActivityRepository) SponsorshipActivityUseCase {
-	return &sponsorshipActivityUseCase{repo: repo}
+func NewSponsorshipActivityUseCase(repo repository.SponsorshipActivityRepository, transactionRepo repository.TransactionRepository) SponsorshipActivityUseCase {
+	return &sponsorshipActivityUseCase{
+		repo:            repo,
+		transactionRepo: transactionRepo,
+	}
 }
 
-func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Context, params domain.SponsorshipActivityParams) ([]domain.SponsorshipActivity, error) {
-	activities, err := u.repo.FindAll(ctx, params)
-	if err != nil || len(activities) == 0 {
-		return activities, err
+func (u *sponsorshipActivityUseCase) GetSponsorshipActivities(ctx context.Context, sponsorshipActivitiesSearchParams generated.GetSponsorshipActivitiesParams) ([]generated.SponsorshipActivity, error) {
+	//絞り込み・ソート条件を元に協賛活動を一覧取得
+	retrievedSponsorshipActivities, err := u.repo.FindAll(ctx, sponsorshipActivitiesSearchParams)
+	if err != nil || len(retrievedSponsorshipActivities) == 0 {
+		return retrievedSponsorshipActivities, err
 	}
 
-	// 活動IDのみを抽出
-	ids := make([]int, len(activities))
-	for i, a := range activities {
-		ids[i] = a.ID
+	//協賛活動のIDの配列
+	sponsorshipActivityIDs := make([]int, len(retrievedSponsorshipActivities))
+	for index, currentSponsorshipActivity := range retrievedSponsorshipActivities {
+		sponsorshipActivityIDs[index] = *currentSponsorshipActivity.Id
 	}
 
-	// 該当するスタイルを一括取得
-	allStyles, err := u.repo.GetStyleDetailsByActivityIDs(ctx, ids)
+	//IDを元に、紐づく協賛プランを取得
+	sponsorStyleLinksMapBySponsorshipActivityID, err := u.repo.GetSponsorStyleMapBySponsorshipActivityIDs(ctx, sponsorshipActivityIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	// マップを作成
-	styleMap := make(map[int][]domain.SponsorStyleDetail)
-	for _, s := range allStyles {
-		styleMap[s.SponsorshipActivityID] = append(styleMap[s.SponsorshipActivityID], s)
-	}
-
-	//メモリ上でセット
-	for i := range activities {
-		if styles, ok := styleMap[activities[i].ID]; ok {
-			activities[i].SponsorStyles = styles
+	//協賛活動と協賛プランをマッピング
+	for index, currentSponsorshipActivity := range retrievedSponsorshipActivities {
+		if styles, exists := sponsorStyleLinksMapBySponsorshipActivityID[*currentSponsorshipActivity.Id]; exists {
+			retrievedSponsorshipActivities[index].SponsorStyles = &styles
 		} else {
-			activities[i].SponsorStyles = []domain.SponsorStyleDetail{}
+			emptySponsorStyleLinks := []generated.ActivitySponsorStyleLink{}
+			retrievedSponsorshipActivities[index].SponsorStyles = &emptySponsorStyleLinks
 		}
 	}
 
-	return activities, nil
+	return retrievedSponsorshipActivities, nil
 }
 
-func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Context, id int) (domain.SponsorshipActivity, error) {
-	return u.repo.Find(ctx, id)
+func (u *sponsorshipActivityUseCase) GetSponsorshipActivityByID(ctx context.Context, sponsorshipActivityID int) (generated.SponsorshipActivity, error) {
+	// 指定した協賛活動のデータを1件取得
+	retrievedSponsorshipActivityByID, err := u.repo.FindByID(ctx, sponsorshipActivityID)
+	if err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// 指定IDに紐づく協賛プランを取得
+	sponsorStyleMapBySponsorsshipActivityID, err := u.repo.GetSponsorStyleMapBySponsorshipActivityIDs(ctx, []int{sponsorshipActivityID})
+	if err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// 協賛活動と協賛プランをマッピング
+	sponsorStyles, exists := sponsorStyleMapBySponsorsshipActivityID[sponsorshipActivityID]
+	if exists {
+		retrievedSponsorshipActivityByID.SponsorStyles = &sponsorStyles
+	} else {
+		emptyStyles := []generated.ActivitySponsorStyleLink{}
+		retrievedSponsorshipActivityByID.SponsorStyles = &emptyStyles
+	}
+
+	return retrievedSponsorshipActivityByID, nil
 }
 
-func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Context, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {
-	u.repo.Create(ctx, activity)
-	return activity, nil
+func (u *sponsorshipActivityUseCase) CreateSponsorshipActivity(ctx context.Context, sponsorchipActivityRequestBody generated.CreateSponsorshipActivityRequest) (generated.SponsorshipActivity, error) {
+	// リクエストボディからの保存用構造体を組み立て
+	newSponsorshipActivity := generated.SponsorshipActivity{
+		YearPeriodsId:     &sponsorchipActivityRequestBody.YearPeriodsId,
+		SponsorId:         &sponsorchipActivityRequestBody.SponsorId,
+		UserId:            &sponsorchipActivityRequestBody.UserId,
+		ActivityStatus:    &sponsorchipActivityRequestBody.ActivityStatus,
+		FeasibilityStatus: &sponsorchipActivityRequestBody.FeasibilityStatus,
+		DesignProgress:    &sponsorchipActivityRequestBody.DesignProgress,
+		Remarks:           sponsorchipActivityRequestBody.Remarks,
+	}
+
+	// トランザクションを開始
+	tx, err := u.transactionRepo.StartTransaction(ctx)
+	if err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// 協賛活動を登録し、IDを取得
+	newSponsorshipActivityID, err := u.repo.Create(ctx, tx, newSponsorshipActivity)
+	if err != nil {
+		u.transactionRepo.RollBack(ctx, tx)
+		return generated.SponsorshipActivity{}, err
+	}
+
+	// 協賛プランを順番に登録
+	if sponsorchipActivityRequestBody.SponsorStyleDetails != nil {
+		for _, sponsorStyleDetail := range *sponsorchipActivityRequestBody.SponsorStyleDetails {
+			sponsorshipStyleLink := generated.ActivitySponsorStyleLink{
+				SponsorStyleId: sponsorStyleDetail.SponsorStyleId,
+				Category:       sponsorStyleDetail.Category,
+			}
+
+			if err := u.repo.CreateSponsorStyleLink(ctx, tx, sponsorshipStyleLink, newSponsorshipActivityID); err != nil {
+				u.transactionRepo.RollBack(ctx, tx)
+				return generated.SponsorshipActivity{}, err
+			}
+		}
+	}
+
+	// コミット
+	if err := u.transactionRepo.Commit(ctx, tx); err != nil {
+		return generated.SponsorshipActivity{}, err
+	}
+
+	return u.GetSponsorshipActivityByID(ctx, newSponsorshipActivityID)
 }
 
 func (u *sponsorshipActivityUseCase) UpdateSponsorshipActivity(ctx context.Context, id int, activity domain.SponsorshipActivity) (domain.SponsorshipActivity, error) {

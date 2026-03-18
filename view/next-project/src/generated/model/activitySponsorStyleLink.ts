@@ -5,7 +5,7 @@
  * FinanSu APIドキュメント
  * OpenAPI spec version: 2.0.0
  */
-import type { ActivitySponsorStyleLinkCategory } from './activitySponsorStyleLinkCategory';
+import type { SponsorStyleCategory } from './sponsorStyleCategory';
 import type { SponsorStyle } from './sponsorStyle';
 
 /**
@@ -14,6 +14,6 @@ import type { SponsorStyle } from './sponsorStyle';
 export interface ActivitySponsorStyleLink {
   id?: number;
   sponsorStyleId?: number;
-  category?: ActivitySponsorStyleLinkCategory;
+  category?: SponsorStyleCategory;
   style?: SponsorStyle;
 }

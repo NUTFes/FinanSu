@@ -26,15 +26,3 @@ type SponsorStyleDetail struct {
 	Category              string       `json:"category"`
 	Style                 SponsorStyle `json:"style"`
 }
-
-// 検索パラメータ用
-type SponsorshipActivityParams struct {
-	YearPeriodsID     *int
-	Keyword           *string
-	ActivityStatus    *string
-	FeasibilityStatus *string
-	UserID            *int
-	SponsorStyleIDs   []int
-	Sort              *string
-	Order             *string
-}
