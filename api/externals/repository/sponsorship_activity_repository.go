@@ -379,5 +379,12 @@ func (r *sponsorshipActivityRepository) UpdateStatus(ctx context.Context, id int
 }
 
 func (r *sponsorshipActivityRepository) Delete(ctx context.Context, id int) error {
-	return nil
+	query, args, err := goqu.Dialect("mysql").Delete("sponsorship_activities").
+		Where(goqu.C("id").Eq(id)).
+		ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.client.DB().ExecContext(ctx, query, args...)
+	return err
 }
