@@ -161,9 +161,11 @@ export default function ResetPassword(props: Props) {
                         })}
                       />
                     </div>
-                    <div className='
+                    <div
+                      className='
                       mb-5 flex flex-col items-center justify-center
-                    '>
+                    '
+                    >
                       <p className='text-red-500'>{errors.password && errors.password.message}</p>
                       <p className='text-red-500'>
                         {errors.confirmPassword && errors.confirmPassword.type === 'correct' && (

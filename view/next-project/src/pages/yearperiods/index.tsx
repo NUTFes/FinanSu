@@ -114,7 +114,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1 py-3',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `
                           border-b py-3
                         `,
                       )}
@@ -125,7 +127,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `
                           border-b py-3
                         `,
                       )}
@@ -136,7 +140,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `
                           border-b py-3
                         `,
                       )}
@@ -147,7 +153,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `
                           border-b py-3
                         `,
                       )}
@@ -158,7 +166,9 @@ export default function Periods(props: Props) {
                       className={clsx(
                         'px-1',
                         index === 0 ? 'pt-4 pb-3' : 'py-3',
-                        index === formatYearPeriods.length - 1 ? 'pt-3 pb-4' : `
+                        index === formatYearPeriods.length - 1
+                          ? 'pt-3 pb-4'
+                          : `
                           border-b py-3
                         `,
                       )}

@@ -141,7 +141,6 @@ import type {
   PutIncomeExpenditureManagementsCheckId200,
   PutIncomeExpenditureManagementsCheckIdBody,
   PutSponsorsId200,
-  PutSponsorshipActivitiesIdStatusBody,
   PutSponsorstylesId200,
   PutTeachersId200,
   PutTeachersIdParams,
@@ -156,6 +155,7 @@ import type {
   SponsorshipActivity,
   Teacher,
   UpdateSponsorshipActivityRequest,
+  UpdateSponsorshipActivityStatusRequest,
   User,
   UserLookup,
   YearPeriods
@@ -7585,7 +7585,7 @@ export const getPutSponsorshipActivitiesIdStatusUrl = (id: number,) => {
 }
 
 export const putSponsorshipActivitiesIdStatus = async (id: number,
-    putSponsorshipActivitiesIdStatusBody: PutSponsorshipActivitiesIdStatusBody, options?: RequestInit): Promise<putSponsorshipActivitiesIdStatusResponse> => {
+    updateSponsorshipActivityStatusRequest: UpdateSponsorshipActivityStatusRequest, options?: RequestInit): Promise<putSponsorshipActivitiesIdStatusResponse> => {
   
   return customFetch<putSponsorshipActivitiesIdStatusResponse>(getPutSponsorshipActivitiesIdStatusUrl(id),
   {      
@@ -7593,7 +7593,7 @@ export const putSponsorshipActivitiesIdStatus = async (id: number,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      putSponsorshipActivitiesIdStatusBody,)
+      updateSponsorshipActivityStatusRequest,)
   }
 );}
 
@@ -7601,7 +7601,7 @@ export const putSponsorshipActivitiesIdStatus = async (id: number,
 
 
 export const getPutSponsorshipActivitiesIdStatusMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
-  return (_: Key, { arg }: { arg: PutSponsorshipActivitiesIdStatusBody }) => {
+  return (_: Key, { arg }: { arg: UpdateSponsorshipActivityStatusRequest }) => {
     return putSponsorshipActivitiesIdStatus(id, arg, options);
   }
 }
@@ -7614,7 +7614,7 @@ export type PutSponsorshipActivitiesIdStatusMutationError = unknown
  * @summary 協賛活動ステータスの更新
  */
 export const usePutSponsorshipActivitiesIdStatus = <TError = unknown>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>, TError, Key, PutSponsorshipActivitiesIdStatusBody, Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>, TError, Key, UpdateSponsorshipActivityStatusRequest, Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
 
   const {swr: swrOptions, request: requestOptions} = options ?? {}

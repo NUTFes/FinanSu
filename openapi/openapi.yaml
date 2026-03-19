@@ -2552,21 +2552,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - activityStatus
-                - feasibilityStatus
-                - designProgress
-              properties:
-                activityStatus:
-                  $ref: "#/components/schemas/ActivityStatus"
-                feasibilityStatus:
-                  $ref: "#/components/schemas/FeasibilityStatus"
-                designProgress:
-                  $ref: "#/components/schemas/DesignProgress"
-                remarks:
-                  type: string
-                  example: "電話にて確認済み"
+              $ref: "#/components/schemas/UpdateSponsorshipActivityStatusRequest"
       responses:
         "200":
           description: Updated
@@ -3402,9 +3388,25 @@ components:
                 type: integer
                 example: 1
               category:
-                type: string
-                enum: ["money", "goods"]
-                example: "money"
+                $ref: "#/components/schemas/SponsorStyleCategory"
+
+    UpdateSponsorshipActivityStatusRequest:
+      type: object
+      description: ステータス更新時のリクエストボディ
+      required:
+        - activityStatus
+        - feasibilityStatus
+        - designProgress
+      properties:
+        activityStatus:
+          $ref: "#/components/schemas/ActivityStatus"
+        feasibilityStatus:
+          $ref: "#/components/schemas/FeasibilityStatus"
+        designProgress:
+          $ref: "#/components/schemas/DesignProgress"
+        remarks:
+          type: string
+          example: "電話にて確認済み"
 
     UpdateSponsorshipActivityRequest:
       type: object
@@ -3445,9 +3447,7 @@ components:
                 type: integer
                 example: 1
               category:
-                type: string
-                enum: ["money", "goods"]
-                example: "money"
+                $ref: "#/components/schemas/SponsorStyleCategory"
 
     ActivitySponsorStyleLink:
       type: object
@@ -3460,9 +3460,7 @@ components:
           type: integer
           example: 2
         category:
-          type: string
-          enum: ["money", "goods"]
-          example: "money"
+          $ref: "#/components/schemas/SponsorStyleCategory"
         style:
           $ref: "#/components/schemas/sponsorStyle"
 
@@ -3478,5 +3476,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/SponsorshipActivity"
+
+    SponsorStyleCategory:
+      type: string
+      description: 協賛スタイルのカテゴリー（お金か物品か）
+      enum:
+        - money
+        - goods
 
 x-original-swagger-version: "2.0"
