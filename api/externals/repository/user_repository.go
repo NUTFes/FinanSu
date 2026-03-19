@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"strconv"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -17,6 +18,7 @@ type userRepository struct {
 type UserRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
+	FindByIDs(context.Context, []int) (*sql.Rows, error)
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
@@ -39,6 +41,22 @@ func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
 func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
 	query := "SELECT * FROM users WHERE id = " + id
 	return ur.crud.ReadByID(c, query)
+}
+
+// 複数件取得
+func (ur *userRepository) FindByIDs(c context.Context, ids []int) (*sql.Rows, error) {
+	if len(ids) == 0 {
+		query := "SELECT id, name FROM users WHERE 1 = 0"
+		return ur.crud.Read(c, query)
+	}
+
+	idStrings := make([]string, 0, len(ids))
+	for _, id := range ids {
+		idStrings = append(idStrings, strconv.Itoa(id))
+	}
+
+	query := "SELECT id, name FROM users WHERE  id IN (" + strings.Join(idStrings, ",") + ")"
+	return ur.crud.Read(c, query)
 }
 
 // 作成

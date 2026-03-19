@@ -479,6 +479,12 @@ type User struct {
 	UpdatedAt string `json:"updatedAt"`
 }
 
+// UserLookup defines model for userLookup.
+type UserLookup struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 // YearPeriods defines model for year_periods.
 type YearPeriods struct {
 	EndedAt   string `json:"endedAt"`
@@ -852,6 +858,12 @@ type PostUsersParams struct {
 
 	// RoleId role_id
 	RoleId int `form:"role_id" json:"role_id"`
+}
+
+// GetUsersLookupParams defines parameters for GetUsersLookup.
+type GetUsersLookupParams struct {
+	// Ids カンマ区切りのuser id一覧
+	Ids *string `form:"ids,omitempty" json:"ids,omitempty"`
 }
 
 // PutUsersIdParams defines parameters for PutUsersId.
@@ -1279,6 +1291,9 @@ type ServerInterface interface {
 
 	// (DELETE /users/delete)
 	DeleteUsersDelete(ctx echo.Context) error
+
+	// (GET /users/lookup)
+	GetUsersLookup(ctx echo.Context, params GetUsersLookupParams) error
 
 	// (DELETE /users/{id})
 	DeleteUsersId(ctx echo.Context, id int) error
@@ -3247,6 +3262,24 @@ func (w *ServerInterfaceWrapper) DeleteUsersDelete(ctx echo.Context) error {
 	return err
 }
 
+// GetUsersLookup converts echo context to params.
+func (w *ServerInterfaceWrapper) GetUsersLookup(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUsersLookupParams
+	// ------------- Optional query parameter "ids" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "ids", ctx.QueryParams(), &params.Ids)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter ids: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetUsersLookup(ctx, params)
+	return err
+}
+
 // DeleteUsersId converts echo context to params.
 func (w *ServerInterfaceWrapper) DeleteUsersId(ctx echo.Context) error {
 	var err error
@@ -3583,6 +3616,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/users", wrapper.GetUsers)
 	router.POST(baseURL+"/users", wrapper.PostUsers)
 	router.DELETE(baseURL+"/users/delete", wrapper.DeleteUsersDelete)
+	router.GET(baseURL+"/users/lookup", wrapper.GetUsersLookup)
 	router.DELETE(baseURL+"/users/:id", wrapper.DeleteUsersId)
 	router.GET(baseURL+"/users/:id", wrapper.GetUsersId)
 	router.PUT(baseURL+"/users/:id", wrapper.PutUsersId)

@@ -2,7 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
@@ -15,6 +17,41 @@ func (h *Handler) GetUsers(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	return c.JSON(http.StatusOK, users)
+}
+
+// router.GET(baseURL+"/users/lookup", wrapper.GetUsersLookup)
+func (h *Handler) GetUsersLookup(c echo.Context, params generated.GetUsersLookupParams) error {
+	ids := make([]int, 0)
+	if params.Ids != nil && *params.Ids != "" {
+		seen := make(map[int]struct{})
+		for _, rawID := range strings.Split(*params.Ids, ",") {
+			trimmedID := strings.TrimSpace(rawID)
+			if trimmedID == "" {
+				continue
+			}
+
+			id, err := strconv.Atoi(trimmedID)
+			if err != nil {
+				return c.String(http.StatusBadRequest, "ids must be comma-separated integers")
+			}
+			if _, exists := seen[id]; exists {
+				continue
+			}
+			seen[id] = struct{}{}
+			ids = append(ids, id)
+		}
+	}
+
+	users, err := h.userUseCase.GetUsersByIDs(c.Request().Context(), ids)
+	if err != nil {
+		return err
+	}
+
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].ID < users[j].ID
+	})
+
 	return c.JSON(http.StatusOK, users)
 }
 

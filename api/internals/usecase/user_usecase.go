@@ -19,6 +19,7 @@ type userUseCase struct {
 type UserUseCase interface {
 	GetUsers(context.Context) ([]domain.User, error)
 	GetUserByID(context.Context, string) (domain.User, error)
+	GetUsersByIDs(context.Context, []int) ([]domain.UserLookup, error)
 	CreateUser(context.Context, string, string, string) (domain.User, error)
 	UpdateUser(context.Context, string, string, string, string) (domain.User, error)
 	DestroyUser(context.Context, string) error
@@ -89,6 +90,34 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 	}
 
 	return user, nil
+}
+
+func (u *userUseCase) GetUsersByIDs(c context.Context, ids []int) ([]domain.UserLookup, error) {
+	if len(ids) == 0 {
+		return []domain.UserLookup{}, nil
+	}
+
+	rows, err := u.userRep.FindByIDs(c, ids)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	users := make([]domain.UserLookup, 0, len(ids))
+	for rows.Next() {
+		user := domain.UserLookup{}
+		err := rows.Scan(&user.ID, &user.Name)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot connect SQL")
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
 func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {

@@ -2085,6 +2085,34 @@ paths:
               schema:
                 type: object
 
+  /users/lookup:
+    get:
+      tags:
+        - user
+      description: ID一覧で指定されたuser名の取得
+      parameters:
+        - name: ids
+          in: query
+          description: カンマ区切りのuser id一覧
+          required: false
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        "200":
+          description: user idとnameの一覧を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/userLookup"
+              example:
+                - id: 1
+                  name: 技大太郎1
+                - id: 2
+                  name: 技大太郎2
+
   /users/delete:
     delete:
       tags:
@@ -3249,6 +3277,18 @@ components:
         - isDeleted
         - createdAt
         - updatedAt
+    userLookup:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 技大太郎1
+      required:
+        - id
+        - name
 
     ActivityStatus:
       type: string

@@ -14,6 +14,11 @@ type User struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
+type UserLookup struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type UserDetail struct{
 	User		User
 	MailAuth	MailAuth
