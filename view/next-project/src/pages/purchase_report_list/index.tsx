@@ -8,11 +8,11 @@ import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrima
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
+  useGetUsersLookup,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
 import { useCurrentUser } from '@/store';
-import { get } from '@api/api_methods';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -22,7 +22,6 @@ import type {
   GetBuyReportsDetailsParams,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
-import type { User } from '@type/common';
 
 export default function PurchaseReports() {
   const router = useRouter();
@@ -33,6 +32,9 @@ export default function PurchaseReports() {
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
   const user = useCurrentUser();
+  const [selectedYear, setSelectedYear] = useState<number>(
+    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
+  );
 
   user?.roleID === 1 && router.push('/my_page');
 
@@ -42,10 +44,6 @@ export default function PurchaseReports() {
       setSelectedYear(latestYear);
     }
   }, [yearPeriods]);
-
-  const [selectedYear, setSelectedYear] = useState<number>(
-    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
-  );
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = { year: selectedYear };
 
   const {
@@ -55,32 +53,29 @@ export default function PurchaseReports() {
     mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
-  const [userNameMap, setUserNameMap] = useState<Record<number, string>>({});
+  
+  const paidByUserIds = useMemo(
+    () =>
+      [...new Set(buyReports.map((report) => report.paidByUserId).filter((id): id is number => !!id))],
+    [buyReports],
+  );
+  const userLookupParams = useMemo(
+    () => (paidByUserIds.length > 0 ? { ids: paidByUserIds.join(',') } : undefined),
+    [paidByUserIds],
+  );
+  const { data: userLookupData } = useGetUsersLookup(userLookupParams, {
+    swr: {
+      enabled: !!userLookupParams,
+    },
+  });
+  const userNameMap = useMemo(
+    () =>
+      Object.fromEntries((userLookupData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name])),
+    [userLookupData],
+  );
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const usersResponse = await get(`${process.env.CSR_API_URI}/users`);
-        const users = Array.isArray(usersResponse)
-          ? usersResponse
-          : Array.isArray(usersResponse?.data)
-          ? usersResponse.data
-          : [];
-
-        const nameMap = Object.fromEntries(
-          (users as User[]).map((targetUser) => [targetUser.id, targetUser.name]),
-        );
-        setUserNameMap(nameMap);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
 
   // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
   useEffect(() => {
