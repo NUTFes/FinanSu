@@ -7,8 +7,8 @@
  */
 
 export type GetFinancialRecordsParams = {
-/**
- * year
- */
-year?: number;
+  /**
+   * year
+   */
+  year?: number;
 };

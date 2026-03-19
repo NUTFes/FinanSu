@@ -9,8 +9,7 @@
 /**
  * 協賛可否
  */
-export type FeasibilityStatus = typeof FeasibilityStatus[keyof typeof FeasibilityStatus];
-
+export type FeasibilityStatus = (typeof FeasibilityStatus)[keyof typeof FeasibilityStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeasibilityStatus = {

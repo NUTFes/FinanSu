@@ -20,9 +20,7 @@ function LoginLayout({ children }: LayoutProps): JSX.Element {
             alt='logo'
             width={150}
             height={40}
-            className='
-            size-fit
-          '
+            className='size-fit'
           />
         </div>
       </div>

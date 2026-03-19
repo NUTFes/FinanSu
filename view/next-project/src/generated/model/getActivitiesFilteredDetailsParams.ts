@@ -8,16 +8,16 @@
 import type { GetActivitiesFilteredDetailsIsDone } from './getActivitiesFilteredDetailsIsDone';
 
 export type GetActivitiesFilteredDetailsParams = {
-/**
- * 完了状態を表すフラグ
- */
-is_done?: GetActivitiesFilteredDetailsIsDone;
-/**
- * スポンサースタイルIDの配列
- */
-sponsor_style_id?: number[];
-/**
- * キーワード検索用の文字列
- */
-keyword?: string;
+  /**
+   * 完了状態を表すフラグ
+   */
+  is_done?: GetActivitiesFilteredDetailsIsDone;
+  /**
+   * スポンサースタイルIDの配列
+   */
+  sponsor_style_id?: number[];
+  /**
+   * キーワード検索用の文字列
+   */
+  keyword?: string;
 };

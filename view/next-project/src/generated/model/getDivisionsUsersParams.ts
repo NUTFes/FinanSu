@@ -7,12 +7,12 @@
  */
 
 export type GetDivisionsUsersParams = {
-/**
- * 年度
- */
-year?: number;
-/**
- * ユーザーid
- */
-user_id: number;
+  /**
+   * 年度
+   */
+  year?: number;
+  /**
+   * ユーザーid
+   */
+  user_id: number;
 };

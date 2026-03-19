@@ -293,9 +293,7 @@ export default function BudgetManagement(props: Props) {
             <thead>
               <tr className='border-b border-b-primary-1 py-3'>
                 <th
-                  className='
-                  w-1/4 pb-2 text-center font-medium text-black-600
-                '
+                  className='w-1/4 pb-2 text-center font-medium text-black-600'
                 >
                   {title}
                 </th>

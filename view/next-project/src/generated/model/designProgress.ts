@@ -9,8 +9,7 @@
 /**
  * デザイン進捗
  */
-export type DesignProgress = typeof DesignProgress[keyof typeof DesignProgress];
-
+export type DesignProgress = (typeof DesignProgress)[keyof typeof DesignProgress];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DesignProgress = {

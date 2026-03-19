@@ -53,10 +53,13 @@ export default function PurchaseReports() {
     mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
-  
+
   const paidByUserIds = useMemo(
-    () =>
-      [...new Set(buyReports.map((report) => report.paidByUserId).filter((id): id is number => !!id))],
+    () => [
+      ...new Set(
+        buyReports.map((report) => report.paidByUserId).filter((id): id is number => !!id),
+      ),
+    ],
     [buyReports],
   );
   const userLookupParams = useMemo(
@@ -70,7 +73,9 @@ export default function PurchaseReports() {
   });
   const userNameMap = useMemo(
     () =>
-      Object.fromEntries((userLookupData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name])),
+      Object.fromEntries(
+        (userLookupData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name]),
+      ),
     [userLookupData],
   );
 

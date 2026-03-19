@@ -7,8 +7,8 @@
  */
 
 export type GetDivisionsYearsParams = {
-/**
- * year
- */
-year?: number;
+  /**
+   * year
+   */
+  year?: number;
 };

@@ -9,8 +9,7 @@
 /**
  * 協賛スタイルのカテゴリー（お金か物品か）
  */
-export type SponsorStyleCategory = typeof SponsorStyleCategory[keyof typeof SponsorStyleCategory];
-
+export type SponsorStyleCategory = (typeof SponsorStyleCategory)[keyof typeof SponsorStyleCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SponsorStyleCategory = {

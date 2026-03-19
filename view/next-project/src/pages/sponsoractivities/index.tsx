@@ -400,18 +400,14 @@ export default function SponsorActivities(props: Props) {
                     {sponsorActivitiesItem.sponsorActivity.isDone ? (
                       <>
                         <div
-                          className='
-                          size-3 shrink-0 rounded-full bg-[#7087FF]
-                        '
+                          className='size-3 shrink-0 rounded-full bg-[#7087FF]'
                         />
                         <span className='text-sm font-medium'>回収完了</span>
                       </>
                     ) : (
                       <>
                         <div
-                          className='
-                          size-3 shrink-0 rounded-full bg-[#FFA53C]
-                        '
+                          className='size-3 shrink-0 rounded-full bg-[#FFA53C]'
                         />
                         <span className='text-sm font-medium'>未回収</span>
                       </>
@@ -451,9 +447,7 @@ export default function SponsorActivities(props: Props) {
                       </tbody>
                     </table>
                     <div
-                      className='
-                      mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2
-                    '
+                      className='mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2'
                     >
                       <span className='text-black-600'>担当者</span>
                       <span className='border-b border-primary-1'>
@@ -465,9 +459,7 @@ export default function SponsorActivities(props: Props) {
                       </span>
                       <span className='text-black-600'>デザイン</span>
                       <div
-                        className='
-                        flex items-center border-b border-primary-1
-                      '
+                        className='flex items-center border-b border-primary-1'
                       >
                         {DESIGNERS[sponsorActivitiesItem.sponsorActivity.design] || '-'}
                         {sponsorActivitiesItem.sponsorActivity.url !== '' && (

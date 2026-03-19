@@ -7,16 +7,16 @@
  */
 
 export type PutUsersIdParams = {
-/**
- * name
- */
-name: string;
-/**
- * bureau_d
- */
-bureau_id: number;
-/**
- * role_id
- */
-role_id: number;
+  /**
+   * name
+   */
+  name: string;
+  /**
+   * bureau_d
+   */
+  bureau_id: number;
+  /**
+   * role_id
+   */
+  role_id: number;
 };

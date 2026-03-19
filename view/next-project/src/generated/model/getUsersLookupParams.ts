@@ -7,8 +7,8 @@
  */
 
 export type GetUsersLookupParams = {
-/**
- * カンマ区切りのuser id一覧
- */
-ids?: string;
+  /**
+   * カンマ区切りのuser id一覧
+   */
+  ids?: string;
 };

@@ -7,8 +7,8 @@
  */
 
 export type PutYearsIdParams = {
-/**
- * year
- */
-year: number;
+  /**
+   * year
+   */
+  year: number;
 };

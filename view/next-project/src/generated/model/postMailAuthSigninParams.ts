@@ -7,12 +7,12 @@
  */
 
 export type PostMailAuthSigninParams = {
-/**
- * email
- */
-email: string;
-/**
- * password
- */
-password: string;
+  /**
+   * email
+   */
+  email: string;
+  /**
+   * password
+   */
+  password: string;
 };

@@ -7,8 +7,8 @@
  */
 
 export type PostPasswordResetRequestParams = {
-/**
- * email
- */
-email?: string;
+  /**
+   * email
+   */
+  email?: string;
 };

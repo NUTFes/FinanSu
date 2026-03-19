@@ -7,8 +7,8 @@
  */
 
 export type PostDepartmentsParams = {
-/**
- * name
- */
-name?: string;
+  /**
+   * name
+   */
+  name?: string;
 };

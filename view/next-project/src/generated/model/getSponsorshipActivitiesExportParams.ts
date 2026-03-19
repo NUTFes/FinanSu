@@ -9,10 +9,10 @@ import type { ActivityStatus } from './activityStatus';
 import type { FeasibilityStatus } from './feasibilityStatus';
 
 export type GetSponsorshipActivitiesExportParams = {
-year_periods_id?: number;
-keyword?: string;
-activity_status?: ActivityStatus;
-feasibility_status?: FeasibilityStatus;
-user_id?: number;
-sponsor_style_ids?: number[];
+  year_periods_id?: number;
+  keyword?: string;
+  activity_status?: ActivityStatus;
+  feasibility_status?: FeasibilityStatus;
+  user_id?: number;
+  sponsor_style_ids?: number[];
 };
