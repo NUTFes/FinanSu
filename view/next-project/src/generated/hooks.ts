@@ -6,10 +6,16 @@
  * OpenAPI spec version: 2.0.0
  */
 import useSwr from 'swr';
-import type { Arguments, Key, SWRConfiguration } from 'swr';
+import type {
+  Arguments,
+  Key,
+  SWRConfiguration
+} from 'swr';
 
 import useSWRMutation from 'swr/mutation';
-import type { SWRMutationConfiguration } from 'swr/mutation';
+import type {
+  SWRMutationConfiguration
+} from 'swr/mutation';
 
 import type {
   Activity,
@@ -90,6 +96,7 @@ import type {
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
   GetUsersId200,
+  GetUsersLookupParams,
   Income,
   IncomeCategory,
   IncomeExpenditureManagementDetails,
@@ -150,307 +157,336 @@ import type {
   Teacher,
   UpdateSponsorshipActivityRequest,
   User,
-  YearPeriods,
+  UserLookup,
+  YearPeriods
 } from './model';
 
 import { customFetch } from '../mutator/custom-instance';
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
+
+  
 /**
  * health check
  */
 export type getResponse200 = {
-  data: string;
-  status: 200;
-};
-
-export type getResponseSuccess = getResponse200 & {
+  data: string
+  status: 200
+}
+    
+export type getResponseSuccess = (getResponse200) & {
   headers: Headers;
 };
-export type getResponse = getResponseSuccess;
+;
+
+export type getResponse = (getResponseSuccess)
 
 export const getGetUrl = () => {
-  return `/`;
-};
 
-export const get = async (options?: RequestInit): Promise<getResponse> => {
-  return customFetch<getResponse>(getGetUrl(), {
+
+  
+
+  return `/`
+}
+
+export const get = async ( options?: RequestInit): Promise<getResponse> => {
+  
+  return customFetch<getResponse>(getGetUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetKey = () => [`/`] as const;
 
-export type GetQueryResult = NonNullable<Awaited<ReturnType<typeof get>>>;
-export type GetQueryError = unknown;
+export type GetQueryResult = NonNullable<Awaited<ReturnType<typeof get>>>
+export type GetQueryError = unknown
 
-export const useGet = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof get>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGet = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof get>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetKey() : null));
-  const swrFn = () => get(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetKey() : null);
+  const swrFn = () => get(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activitiesの一覧を取得
  */
 export type getActivitiesResponse200 = {
-  data: GetActivities200;
-  status: 200;
-};
-
-export type getActivitiesResponseSuccess = getActivitiesResponse200 & {
+  data: GetActivities200
+  status: 200
+}
+    
+export type getActivitiesResponseSuccess = (getActivitiesResponse200) & {
   headers: Headers;
 };
-export type getActivitiesResponse = getActivitiesResponseSuccess;
+;
+
+export type getActivitiesResponse = (getActivitiesResponseSuccess)
 
 export const getGetActivitiesUrl = () => {
-  return `/activities`;
-};
 
-export const getActivities = async (options?: RequestInit): Promise<getActivitiesResponse> => {
-  return customFetch<getActivitiesResponse>(getGetActivitiesUrl(), {
+
+  
+
+  return `/activities`
+}
+
+export const getActivities = async ( options?: RequestInit): Promise<getActivitiesResponse> => {
+  
+  return customFetch<getActivitiesResponse>(getGetActivitiesUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetActivitiesKey = () => [`/activities`] as const;
 
-export type GetActivitiesQueryResult = NonNullable<Awaited<ReturnType<typeof getActivities>>>;
-export type GetActivitiesQueryError = unknown;
+export type GetActivitiesQueryResult = NonNullable<Awaited<ReturnType<typeof getActivities>>>
+export type GetActivitiesQueryError = unknown
 
-export const useGetActivities = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivities>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetActivities = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivities>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivitiesKey() : null));
-  const swrFn = () => getActivities(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivitiesKey() : null);
+  const swrFn = () => getActivities(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activitiesの作成
  */
 export type postActivitiesResponse200 = {
-  data: PostActivities200;
-  status: 200;
-};
-
-export type postActivitiesResponseSuccess = postActivitiesResponse200 & {
+  data: PostActivities200
+  status: 200
+}
+    
+export type postActivitiesResponseSuccess = (postActivitiesResponse200) & {
   headers: Headers;
 };
-export type postActivitiesResponse = postActivitiesResponseSuccess;
+;
+
+export type postActivitiesResponse = (postActivitiesResponseSuccess)
 
 export const getPostActivitiesUrl = () => {
-  return `/activities`;
-};
 
-export const postActivities = async (
-  activity: Activity,
-  options?: RequestInit,
-): Promise<postActivitiesResponse> => {
-  return customFetch<postActivitiesResponse>(getPostActivitiesUrl(), {
+
+  
+
+  return `/activities`
+}
+
+export const postActivities = async (activity: Activity, options?: RequestInit): Promise<postActivitiesResponse> => {
+  
+  return customFetch<postActivitiesResponse>(getPostActivitiesUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(activity),
-  });
-};
+    body: JSON.stringify(
+      activity,)
+  }
+);}
 
-export const getPostActivitiesMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+
+
+
+export const getPostActivitiesMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Activity }) => {
     return postActivities(arg, options);
-  };
-};
+  }
+}
 export const getPostActivitiesMutationKey = () => [`/activities`] as const;
 
-export type PostActivitiesMutationResult = NonNullable<Awaited<ReturnType<typeof postActivities>>>;
-export type PostActivitiesMutationError = unknown;
+export type PostActivitiesMutationResult = NonNullable<Awaited<ReturnType<typeof postActivities>>>
+export type PostActivitiesMutationError = unknown
 
-export const usePostActivities = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postActivities>>,
-    TError,
-    Key,
-    Activity,
-    Awaited<ReturnType<typeof postActivities>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostActivities = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postActivities>>, TError, Key, Activity, Awaited<ReturnType<typeof postActivities>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostActivitiesMutationKey();
   const swrFn = getPostActivitiesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesDetailsResponse200 = {
-  data: GetActivitiesDetails200;
-  status: 200;
-};
-
-export type getActivitiesDetailsResponseSuccess = getActivitiesDetailsResponse200 & {
+  data: GetActivitiesDetails200
+  status: 200
+}
+    
+export type getActivitiesDetailsResponseSuccess = (getActivitiesDetailsResponse200) & {
   headers: Headers;
 };
-export type getActivitiesDetailsResponse = getActivitiesDetailsResponseSuccess;
+;
+
+export type getActivitiesDetailsResponse = (getActivitiesDetailsResponseSuccess)
 
 export const getGetActivitiesDetailsUrl = () => {
-  return `/activities/details`;
-};
 
-export const getActivitiesDetails = async (
-  options?: RequestInit,
-): Promise<getActivitiesDetailsResponse> => {
-  return customFetch<getActivitiesDetailsResponse>(getGetActivitiesDetailsUrl(), {
+
+  
+
+  return `/activities/details`
+}
+
+export const getActivitiesDetails = async ( options?: RequestInit): Promise<getActivitiesDetailsResponse> => {
+  
+  return customFetch<getActivitiesDetailsResponse>(getGetActivitiesDetailsUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetActivitiesDetailsKey = () => [`/activities/details`] as const;
 
-export type GetActivitiesDetailsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivitiesDetails>>
->;
-export type GetActivitiesDetailsQueryError = unknown;
+export type GetActivitiesDetailsQueryResult = NonNullable<Awaited<ReturnType<typeof getActivitiesDetails>>>
+export type GetActivitiesDetailsQueryError = unknown
 
-export const useGetActivitiesDetails = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivitiesDetails>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetActivitiesDetails = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivitiesDetails>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivitiesDetailsKey() : null));
-  const swrFn = () => getActivitiesDetails(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivitiesDetailsKey() : null);
+  const swrFn = () => getActivitiesDetails(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 年度で指定されたactivitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesDetailsYearResponse200 = {
-  data: GetActivitiesDetailsYear200;
-  status: 200;
-};
-
-export type getActivitiesDetailsYearResponseSuccess = getActivitiesDetailsYearResponse200 & {
+  data: GetActivitiesDetailsYear200
+  status: 200
+}
+    
+export type getActivitiesDetailsYearResponseSuccess = (getActivitiesDetailsYearResponse200) & {
   headers: Headers;
 };
-export type getActivitiesDetailsYearResponse = getActivitiesDetailsYearResponseSuccess;
+;
 
-export const getGetActivitiesDetailsYearUrl = (year: number) => {
-  return `/activities/details/${year}`;
-};
+export type getActivitiesDetailsYearResponse = (getActivitiesDetailsYearResponseSuccess)
 
-export const getActivitiesDetailsYear = async (
-  year: number,
-  options?: RequestInit,
-): Promise<getActivitiesDetailsYearResponse> => {
-  return customFetch<getActivitiesDetailsYearResponse>(getGetActivitiesDetailsYearUrl(year), {
+export const getGetActivitiesDetailsYearUrl = (year: number,) => {
+
+
+  
+
+  return `/activities/details/${year}`
+}
+
+export const getActivitiesDetailsYear = async (year: number, options?: RequestInit): Promise<getActivitiesDetailsYearResponse> => {
+  
+  return customFetch<getActivitiesDetailsYearResponse>(getGetActivitiesDetailsYearUrl(year),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetActivitiesDetailsYearKey = (year: number) =>
-  [`/activities/details/${year}`] as const;
 
-export type GetActivitiesDetailsYearQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivitiesDetailsYear>>
->;
-export type GetActivitiesDetailsYearQueryError = unknown;
+
+
+export const getGetActivitiesDetailsYearKey = (year: number,) => [`/activities/details/${year}`] as const;
+
+export type GetActivitiesDetailsYearQueryResult = NonNullable<Awaited<ReturnType<typeof getActivitiesDetailsYear>>>
+export type GetActivitiesDetailsYearQueryError = unknown
 
 export const useGetActivitiesDetailsYear = <TError = unknown>(
-  year: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivitiesDetailsYear>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  year: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivitiesDetailsYear>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!year;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivitiesDetailsYearKey(year) : null));
-  const swrFn = () => getActivitiesDetailsYear(year, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(year)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivitiesDetailsYearKey(year) : null);
+  const swrFn = () => getActivitiesDetailsYear(year, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesFilteredDetailsResponse200 = {
-  data: GetActivitiesFilteredDetails200;
-  status: 200;
+  data: GetActivitiesFilteredDetails200
+  status: 200
+}
+    
+export type getActivitiesFilteredDetailsResponseSuccess = (getActivitiesFilteredDetailsResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getActivitiesFilteredDetailsResponseSuccess =
-  getActivitiesFilteredDetailsResponse200 & {
-    headers: Headers;
-  };
-export type getActivitiesFilteredDetailsResponse = getActivitiesFilteredDetailsResponseSuccess;
+export type getActivitiesFilteredDetailsResponse = (getActivitiesFilteredDetailsResponseSuccess)
 
-export const getGetActivitiesFilteredDetailsUrl = (params?: GetActivitiesFilteredDetailsParams) => {
+export const getGetActivitiesFilteredDetailsUrl = (params?: GetActivitiesFilteredDetailsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['sponsor_style_id'];
+    const explodeParameters = ["sponsor_style_id"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
       value.forEach((v) => {
@@ -458,88 +494,74 @@ export const getGetActivitiesFilteredDetailsUrl = (params?: GetActivitiesFiltere
       });
       return;
     }
-
+      
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/activities/filtered_details?${stringifiedParams}`
-    : `/activities/filtered_details`;
-};
+  return stringifiedParams.length > 0 ? `/activities/filtered_details?${stringifiedParams}` : `/activities/filtered_details`
+}
 
-export const getActivitiesFilteredDetails = async (
-  params?: GetActivitiesFilteredDetailsParams,
-  options?: RequestInit,
-): Promise<getActivitiesFilteredDetailsResponse> => {
-  return customFetch<getActivitiesFilteredDetailsResponse>(
-    getGetActivitiesFilteredDetailsUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
+export const getActivitiesFilteredDetails = async (params?: GetActivitiesFilteredDetailsParams, options?: RequestInit): Promise<getActivitiesFilteredDetailsResponse> => {
+  
+  return customFetch<getActivitiesFilteredDetailsResponse>(getGetActivitiesFilteredDetailsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetActivitiesFilteredDetailsKey = (params?: GetActivitiesFilteredDetailsParams) =>
-  [`/activities/filtered_details`, ...(params ? [params] : [])] as const;
 
-export type GetActivitiesFilteredDetailsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivitiesFilteredDetails>>
->;
-export type GetActivitiesFilteredDetailsQueryError = unknown;
+
+
+export const getGetActivitiesFilteredDetailsKey = (params?: GetActivitiesFilteredDetailsParams,) => [`/activities/filtered_details`, ...(params ? [params]: [])] as const;
+
+export type GetActivitiesFilteredDetailsQueryResult = NonNullable<Awaited<ReturnType<typeof getActivitiesFilteredDetails>>>
+export type GetActivitiesFilteredDetailsQueryError = unknown
 
 export const useGetActivitiesFilteredDetails = <TError = unknown>(
-  params?: GetActivitiesFilteredDetailsParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivitiesFilteredDetails>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetActivitiesFilteredDetailsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivitiesFilteredDetails>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivitiesFilteredDetailsKey(params) : null));
-  const swrFn = () => getActivitiesFilteredDetails(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivitiesFilteredDetailsKey(params) : null);
+  const swrFn = () => getActivitiesFilteredDetails(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activitiesとsponsor,sponsorStyle,userの一覧を取得
  */
 export type getActivitiesFilteredDetailsYearResponse200 = {
-  data: GetActivitiesFilteredDetailsYear200;
-  status: 200;
+  data: GetActivitiesFilteredDetailsYear200
+  status: 200
+}
+    
+export type getActivitiesFilteredDetailsYearResponseSuccess = (getActivitiesFilteredDetailsYearResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getActivitiesFilteredDetailsYearResponseSuccess =
-  getActivitiesFilteredDetailsYearResponse200 & {
-    headers: Headers;
-  };
-export type getActivitiesFilteredDetailsYearResponse =
-  getActivitiesFilteredDetailsYearResponseSuccess;
+export type getActivitiesFilteredDetailsYearResponse = (getActivitiesFilteredDetailsYearResponseSuccess)
 
-export const getGetActivitiesFilteredDetailsYearUrl = (
-  year: string,
-  params?: GetActivitiesFilteredDetailsYearParams,
-) => {
+export const getGetActivitiesFilteredDetailsYearUrl = (year: string,
+    params?: GetActivitiesFilteredDetailsYearParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['sponsor_style_id'];
+    const explodeParameters = ["sponsor_style_id"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
       value.forEach((v) => {
@@ -547,6798 +569,6646 @@ export const getGetActivitiesFilteredDetailsYearUrl = (
       });
       return;
     }
-
+      
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/activities/filtered_details/${year}?${stringifiedParams}`
-    : `/activities/filtered_details/${year}`;
-};
+  return stringifiedParams.length > 0 ? `/activities/filtered_details/${year}?${stringifiedParams}` : `/activities/filtered_details/${year}`
+}
 
-export const getActivitiesFilteredDetailsYear = async (
-  year: string,
-  params?: GetActivitiesFilteredDetailsYearParams,
-  options?: RequestInit,
-): Promise<getActivitiesFilteredDetailsYearResponse> => {
-  return customFetch<getActivitiesFilteredDetailsYearResponse>(
-    getGetActivitiesFilteredDetailsYearUrl(year, params),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
+export const getActivitiesFilteredDetailsYear = async (year: string,
+    params?: GetActivitiesFilteredDetailsYearParams, options?: RequestInit): Promise<getActivitiesFilteredDetailsYearResponse> => {
+  
+  return customFetch<getActivitiesFilteredDetailsYearResponse>(getGetActivitiesFilteredDetailsYearUrl(year,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetActivitiesFilteredDetailsYearKey = (
-  year: string,
-  params?: GetActivitiesFilteredDetailsYearParams,
-) => [`/activities/filtered_details/${year}`, ...(params ? [params] : [])] as const;
 
-export type GetActivitiesFilteredDetailsYearQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivitiesFilteredDetailsYear>>
->;
-export type GetActivitiesFilteredDetailsYearQueryError = unknown;
+
+
+export const getGetActivitiesFilteredDetailsYearKey = (year: string,
+    params?: GetActivitiesFilteredDetailsYearParams,) => [`/activities/filtered_details/${year}`, ...(params ? [params]: [])] as const;
+
+export type GetActivitiesFilteredDetailsYearQueryResult = NonNullable<Awaited<ReturnType<typeof getActivitiesFilteredDetailsYear>>>
+export type GetActivitiesFilteredDetailsYearQueryError = unknown
 
 export const useGetActivitiesFilteredDetailsYear = <TError = unknown>(
   year: string,
-  params?: GetActivitiesFilteredDetailsYearParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivitiesFilteredDetailsYear>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params?: GetActivitiesFilteredDetailsYearParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivitiesFilteredDetailsYear>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!year;
-  const swrKey =
-    swrOptions?.swrKey ??
-    (() => (isEnabled ? getGetActivitiesFilteredDetailsYearKey(year, params) : null));
-  const swrFn = () => getActivitiesFilteredDetailsYear(year, params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(year)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivitiesFilteredDetailsYearKey(year,params) : null);
+  const swrFn = () => getActivitiesFilteredDetailsYear(year,params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたactivitiesの取得
  */
 export type getActivitiesIdResponse200 = {
-  data: GetActivitiesId200;
-  status: 200;
-};
-
-export type getActivitiesIdResponseSuccess = getActivitiesIdResponse200 & {
+  data: GetActivitiesId200
+  status: 200
+}
+    
+export type getActivitiesIdResponseSuccess = (getActivitiesIdResponse200) & {
   headers: Headers;
 };
-export type getActivitiesIdResponse = getActivitiesIdResponseSuccess;
+;
 
-export const getGetActivitiesIdUrl = (id: number) => {
-  return `/activities/${id}`;
-};
+export type getActivitiesIdResponse = (getActivitiesIdResponseSuccess)
 
-export const getActivitiesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getActivitiesIdResponse> => {
-  return customFetch<getActivitiesIdResponse>(getGetActivitiesIdUrl(id), {
+export const getGetActivitiesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activities/${id}`
+}
+
+export const getActivitiesId = async (id: number, options?: RequestInit): Promise<getActivitiesIdResponse> => {
+  
+  return customFetch<getActivitiesIdResponse>(getGetActivitiesIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetActivitiesIdKey = (id: number) => [`/activities/${id}`] as const;
 
-export type GetActivitiesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getActivitiesId>>>;
-export type GetActivitiesIdQueryError = unknown;
+
+
+export const getGetActivitiesIdKey = (id: number,) => [`/activities/${id}`] as const;
+
+export type GetActivitiesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getActivitiesId>>>
+export type GetActivitiesIdQueryError = unknown
 
 export const useGetActivitiesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivitiesId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivitiesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivitiesIdKey(id) : null));
-  const swrFn = () => getActivitiesId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivitiesIdKey(id) : null);
+  const swrFn = () => getActivitiesId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activitiesの更新
  */
 export type putActivitiesIdResponse200 = {
-  data: PutActivitiesId200;
-  status: 200;
-};
-
-export type putActivitiesIdResponseSuccess = putActivitiesIdResponse200 & {
+  data: PutActivitiesId200
+  status: 200
+}
+    
+export type putActivitiesIdResponseSuccess = (putActivitiesIdResponse200) & {
   headers: Headers;
 };
-export type putActivitiesIdResponse = putActivitiesIdResponseSuccess;
+;
 
-export const getPutActivitiesIdUrl = (id: number) => {
-  return `/activities/${id}`;
-};
+export type putActivitiesIdResponse = (putActivitiesIdResponseSuccess)
 
-export const putActivitiesId = async (
-  id: number,
-  activity?: Activity,
-  options?: RequestInit,
-): Promise<putActivitiesIdResponse> => {
-  return customFetch<putActivitiesIdResponse>(getPutActivitiesIdUrl(id), {
+export const getPutActivitiesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activities/${id}`
+}
+
+export const putActivitiesId = async (id: number,
+    activity?: Activity, options?: RequestInit): Promise<putActivitiesIdResponse> => {
+  
+  return customFetch<putActivitiesIdResponse>(getPutActivitiesIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(activity),
-  });
-};
+    body: JSON.stringify(
+      activity,)
+  }
+);}
 
-export const getPutActivitiesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutActivitiesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Activity }) => {
     return putActivitiesId(id, arg, options);
-  };
-};
-export const getPutActivitiesIdMutationKey = (id: number) => [`/activities/${id}`] as const;
+  }
+}
+export const getPutActivitiesIdMutationKey = (id: number,) => [`/activities/${id}`] as const;
 
-export type PutActivitiesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putActivitiesId>>
->;
-export type PutActivitiesIdMutationError = unknown;
+export type PutActivitiesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putActivitiesId>>>
+export type PutActivitiesIdMutationError = unknown
 
 export const usePutActivitiesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putActivitiesId>>,
-      TError,
-      Key,
-      Activity,
-      Awaited<ReturnType<typeof putActivitiesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putActivitiesId>>, TError, Key, Activity, Awaited<ReturnType<typeof putActivitiesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutActivitiesIdMutationKey(id);
   const swrFn = getPutActivitiesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してactivitiesの削除
  */
 export type deleteActivitiesIdResponse200 = {
-  data: DeleteActivitiesId200;
-  status: 200;
-};
-
-export type deleteActivitiesIdResponseSuccess = deleteActivitiesIdResponse200 & {
+  data: DeleteActivitiesId200
+  status: 200
+}
+    
+export type deleteActivitiesIdResponseSuccess = (deleteActivitiesIdResponse200) & {
   headers: Headers;
 };
-export type deleteActivitiesIdResponse = deleteActivitiesIdResponseSuccess;
+;
 
-export const getDeleteActivitiesIdUrl = (id: number) => {
-  return `/activities/${id}`;
-};
+export type deleteActivitiesIdResponse = (deleteActivitiesIdResponseSuccess)
 
-export const deleteActivitiesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteActivitiesIdResponse> => {
-  return customFetch<deleteActivitiesIdResponse>(getDeleteActivitiesIdUrl(id), {
+export const getDeleteActivitiesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activities/${id}`
+}
+
+export const deleteActivitiesId = async (id: number, options?: RequestInit): Promise<deleteActivitiesIdResponse> => {
+  
+  return customFetch<deleteActivitiesIdResponse>(getDeleteActivitiesIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteActivitiesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteActivitiesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteActivitiesId(id, options);
-  };
-};
-export const getDeleteActivitiesIdMutationKey = (id: number) => [`/activities/${id}`] as const;
+  }
+}
+export const getDeleteActivitiesIdMutationKey = (id: number,) => [`/activities/${id}`] as const;
 
-export type DeleteActivitiesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteActivitiesId>>
->;
-export type DeleteActivitiesIdMutationError = unknown;
+export type DeleteActivitiesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteActivitiesId>>>
+export type DeleteActivitiesIdMutationError = unknown
 
 export const useDeleteActivitiesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteActivitiesId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteActivitiesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteActivitiesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteActivitiesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteActivitiesIdMutationKey(id);
   const swrFn = getDeleteActivitiesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activity_informationの一覧を取得
  */
 export type getActivityInformationsResponse200 = {
-  data: GetActivityInformations200;
-  status: 200;
-};
-
-export type getActivityInformationsResponseSuccess = getActivityInformationsResponse200 & {
+  data: GetActivityInformations200
+  status: 200
+}
+    
+export type getActivityInformationsResponseSuccess = (getActivityInformationsResponse200) & {
   headers: Headers;
 };
-export type getActivityInformationsResponse = getActivityInformationsResponseSuccess;
+;
+
+export type getActivityInformationsResponse = (getActivityInformationsResponseSuccess)
 
 export const getGetActivityInformationsUrl = () => {
-  return `/activity_informations`;
-};
 
-export const getActivityInformations = async (
-  options?: RequestInit,
-): Promise<getActivityInformationsResponse> => {
-  return customFetch<getActivityInformationsResponse>(getGetActivityInformationsUrl(), {
+
+  
+
+  return `/activity_informations`
+}
+
+export const getActivityInformations = async ( options?: RequestInit): Promise<getActivityInformationsResponse> => {
+  
+  return customFetch<getActivityInformationsResponse>(getGetActivityInformationsUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetActivityInformationsKey = () => [`/activity_informations`] as const;
 
-export type GetActivityInformationsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivityInformations>>
->;
-export type GetActivityInformationsQueryError = unknown;
+export type GetActivityInformationsQueryResult = NonNullable<Awaited<ReturnType<typeof getActivityInformations>>>
+export type GetActivityInformationsQueryError = unknown
 
-export const useGetActivityInformations = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivityInformations>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetActivityInformations = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivityInformations>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivityInformationsKey() : null));
-  const swrFn = () => getActivityInformations(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivityInformationsKey() : null);
+  const swrFn = () => getActivityInformations(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activity_informationの作成
  */
 export type postActivityInformationsResponse200 = {
-  data: PostActivityInformations200;
-  status: 200;
-};
-
-export type postActivityInformationsResponseSuccess = postActivityInformationsResponse200 & {
+  data: PostActivityInformations200
+  status: 200
+}
+    
+export type postActivityInformationsResponseSuccess = (postActivityInformationsResponse200) & {
   headers: Headers;
 };
-export type postActivityInformationsResponse = postActivityInformationsResponseSuccess;
+;
+
+export type postActivityInformationsResponse = (postActivityInformationsResponseSuccess)
 
 export const getPostActivityInformationsUrl = () => {
-  return `/activity_informations`;
-};
 
-export const postActivityInformations = async (
-  activityInformation?: ActivityInformation,
-  options?: RequestInit,
-): Promise<postActivityInformationsResponse> => {
-  return customFetch<postActivityInformationsResponse>(getPostActivityInformationsUrl(), {
+
+  
+
+  return `/activity_informations`
+}
+
+export const postActivityInformations = async (activityInformation?: ActivityInformation, options?: RequestInit): Promise<postActivityInformationsResponse> => {
+  
+  return customFetch<postActivityInformationsResponse>(getPostActivityInformationsUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(activityInformation),
-  });
-};
+    body: JSON.stringify(
+      activityInformation,)
+  }
+);}
 
-export const getPostActivityInformationsMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostActivityInformationsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: ActivityInformation }) => {
     return postActivityInformations(arg, options);
-  };
-};
+  }
+}
 export const getPostActivityInformationsMutationKey = () => [`/activity_informations`] as const;
 
-export type PostActivityInformationsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postActivityInformations>>
->;
-export type PostActivityInformationsMutationError = unknown;
+export type PostActivityInformationsMutationResult = NonNullable<Awaited<ReturnType<typeof postActivityInformations>>>
+export type PostActivityInformationsMutationError = unknown
 
-export const usePostActivityInformations = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postActivityInformations>>,
-    TError,
-    Key,
-    ActivityInformation,
-    Awaited<ReturnType<typeof postActivityInformations>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostActivityInformations = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postActivityInformations>>, TError, Key, ActivityInformation, Awaited<ReturnType<typeof postActivityInformations>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostActivityInformationsMutationKey();
   const swrFn = getPostActivityInformationsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたactivity_informationsの取得
  */
 export type getActivityInformationsIdResponse200 = {
-  data: GetActivityInformationsId200;
-  status: 200;
-};
-
-export type getActivityInformationsIdResponseSuccess = getActivityInformationsIdResponse200 & {
+  data: GetActivityInformationsId200
+  status: 200
+}
+    
+export type getActivityInformationsIdResponseSuccess = (getActivityInformationsIdResponse200) & {
   headers: Headers;
 };
-export type getActivityInformationsIdResponse = getActivityInformationsIdResponseSuccess;
+;
 
-export const getGetActivityInformationsIdUrl = (id: number) => {
-  return `/activity_informations/${id}`;
-};
+export type getActivityInformationsIdResponse = (getActivityInformationsIdResponseSuccess)
 
-export const getActivityInformationsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getActivityInformationsIdResponse> => {
-  return customFetch<getActivityInformationsIdResponse>(getGetActivityInformationsIdUrl(id), {
+export const getGetActivityInformationsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activity_informations/${id}`
+}
+
+export const getActivityInformationsId = async (id: number, options?: RequestInit): Promise<getActivityInformationsIdResponse> => {
+  
+  return customFetch<getActivityInformationsIdResponse>(getGetActivityInformationsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetActivityInformationsIdKey = (id: number) =>
-  [`/activity_informations/${id}`] as const;
 
-export type GetActivityInformationsIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivityInformationsId>>
->;
-export type GetActivityInformationsIdQueryError = unknown;
+
+
+export const getGetActivityInformationsIdKey = (id: number,) => [`/activity_informations/${id}`] as const;
+
+export type GetActivityInformationsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getActivityInformationsId>>>
+export type GetActivityInformationsIdQueryError = unknown
 
 export const useGetActivityInformationsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivityInformationsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivityInformationsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivityInformationsIdKey(id) : null));
-  const swrFn = () => getActivityInformationsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivityInformationsIdKey(id) : null);
+  const swrFn = () => getActivityInformationsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activity_informationの更新
  */
 export type putActivityInformationsIdResponse200 = {
-  data: PutActivityInformationsId200;
-  status: 200;
-};
-
-export type putActivityInformationsIdResponseSuccess = putActivityInformationsIdResponse200 & {
+  data: PutActivityInformationsId200
+  status: 200
+}
+    
+export type putActivityInformationsIdResponseSuccess = (putActivityInformationsIdResponse200) & {
   headers: Headers;
 };
-export type putActivityInformationsIdResponse = putActivityInformationsIdResponseSuccess;
+;
 
-export const getPutActivityInformationsIdUrl = (id: number) => {
-  return `/activity_informations/${id}`;
-};
+export type putActivityInformationsIdResponse = (putActivityInformationsIdResponseSuccess)
 
-export const putActivityInformationsId = async (
-  id: number,
-  activityInformation?: ActivityInformation,
-  options?: RequestInit,
-): Promise<putActivityInformationsIdResponse> => {
-  return customFetch<putActivityInformationsIdResponse>(getPutActivityInformationsIdUrl(id), {
+export const getPutActivityInformationsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activity_informations/${id}`
+}
+
+export const putActivityInformationsId = async (id: number,
+    activityInformation?: ActivityInformation, options?: RequestInit): Promise<putActivityInformationsIdResponse> => {
+  
+  return customFetch<putActivityInformationsIdResponse>(getPutActivityInformationsIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(activityInformation),
-  });
-};
+    body: JSON.stringify(
+      activityInformation,)
+  }
+);}
 
-export const getPutActivityInformationsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutActivityInformationsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: ActivityInformation }) => {
     return putActivityInformationsId(id, arg, options);
-  };
-};
-export const getPutActivityInformationsIdMutationKey = (id: number) =>
-  [`/activity_informations/${id}`] as const;
+  }
+}
+export const getPutActivityInformationsIdMutationKey = (id: number,) => [`/activity_informations/${id}`] as const;
 
-export type PutActivityInformationsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putActivityInformationsId>>
->;
-export type PutActivityInformationsIdMutationError = unknown;
+export type PutActivityInformationsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putActivityInformationsId>>>
+export type PutActivityInformationsIdMutationError = unknown
 
 export const usePutActivityInformationsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putActivityInformationsId>>,
-      TError,
-      Key,
-      ActivityInformation,
-      Awaited<ReturnType<typeof putActivityInformationsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putActivityInformationsId>>, TError, Key, ActivityInformation, Awaited<ReturnType<typeof putActivityInformationsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutActivityInformationsIdMutationKey(id);
   const swrFn = getPutActivityInformationsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してactivity_informationの削除
  */
 export type deleteActivityInformationsIdResponse200 = {
-  data: DeleteActivityInformationsId200;
-  status: 200;
+  data: DeleteActivityInformationsId200
+  status: 200
+}
+    
+export type deleteActivityInformationsIdResponseSuccess = (deleteActivityInformationsIdResponse200) & {
+  headers: Headers;
 };
+;
 
-export type deleteActivityInformationsIdResponseSuccess =
-  deleteActivityInformationsIdResponse200 & {
-    headers: Headers;
-  };
-export type deleteActivityInformationsIdResponse = deleteActivityInformationsIdResponseSuccess;
+export type deleteActivityInformationsIdResponse = (deleteActivityInformationsIdResponseSuccess)
 
-export const getDeleteActivityInformationsIdUrl = (id: number) => {
-  return `/activity_informations/${id}`;
-};
+export const getDeleteActivityInformationsIdUrl = (id: number,) => {
 
-export const deleteActivityInformationsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteActivityInformationsIdResponse> => {
-  return customFetch<deleteActivityInformationsIdResponse>(getDeleteActivityInformationsIdUrl(id), {
+
+  
+
+  return `/activity_informations/${id}`
+}
+
+export const deleteActivityInformationsId = async (id: number, options?: RequestInit): Promise<deleteActivityInformationsIdResponse> => {
+  
+  return customFetch<deleteActivityInformationsIdResponse>(getDeleteActivityInformationsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteActivityInformationsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteActivityInformationsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteActivityInformationsId(id, options);
-  };
-};
-export const getDeleteActivityInformationsIdMutationKey = (id: number) =>
-  [`/activity_informations/${id}`] as const;
+  }
+}
+export const getDeleteActivityInformationsIdMutationKey = (id: number,) => [`/activity_informations/${id}`] as const;
 
-export type DeleteActivityInformationsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteActivityInformationsId>>
->;
-export type DeleteActivityInformationsIdMutationError = unknown;
+export type DeleteActivityInformationsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteActivityInformationsId>>>
+export type DeleteActivityInformationsIdMutationError = unknown
 
 export const useDeleteActivityInformationsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteActivityInformationsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteActivityInformationsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteActivityInformationsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteActivityInformationsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteActivityInformationsIdMutationKey(id);
   const swrFn = getDeleteActivityInformationsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activity_styleの一覧を取得
  */
 export type getActivityStylesResponse200 = {
-  data: GetActivityStyles200;
-  status: 200;
-};
-
-export type getActivityStylesResponseSuccess = getActivityStylesResponse200 & {
+  data: GetActivityStyles200
+  status: 200
+}
+    
+export type getActivityStylesResponseSuccess = (getActivityStylesResponse200) & {
   headers: Headers;
 };
-export type getActivityStylesResponse = getActivityStylesResponseSuccess;
+;
+
+export type getActivityStylesResponse = (getActivityStylesResponseSuccess)
 
 export const getGetActivityStylesUrl = () => {
-  return `/activity_styles`;
-};
 
-export const getActivityStyles = async (
-  options?: RequestInit,
-): Promise<getActivityStylesResponse> => {
-  return customFetch<getActivityStylesResponse>(getGetActivityStylesUrl(), {
+
+  
+
+  return `/activity_styles`
+}
+
+export const getActivityStyles = async ( options?: RequestInit): Promise<getActivityStylesResponse> => {
+  
+  return customFetch<getActivityStylesResponse>(getGetActivityStylesUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetActivityStylesKey = () => [`/activity_styles`] as const;
 
-export type GetActivityStylesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivityStyles>>
->;
-export type GetActivityStylesQueryError = unknown;
+export type GetActivityStylesQueryResult = NonNullable<Awaited<ReturnType<typeof getActivityStyles>>>
+export type GetActivityStylesQueryError = unknown
 
-export const useGetActivityStyles = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivityStyles>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetActivityStyles = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivityStyles>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivityStylesKey() : null));
-  const swrFn = () => getActivityStyles(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivityStylesKey() : null);
+  const swrFn = () => getActivityStyles(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activity_styleの作成
  */
 export type postActivityStylesResponse200 = {
-  data: PostActivityStyles200;
-  status: 200;
-};
-
-export type postActivityStylesResponseSuccess = postActivityStylesResponse200 & {
+  data: PostActivityStyles200
+  status: 200
+}
+    
+export type postActivityStylesResponseSuccess = (postActivityStylesResponse200) & {
   headers: Headers;
 };
-export type postActivityStylesResponse = postActivityStylesResponseSuccess;
+;
+
+export type postActivityStylesResponse = (postActivityStylesResponseSuccess)
 
 export const getPostActivityStylesUrl = () => {
-  return `/activity_styles`;
-};
 
-export const postActivityStyles = async (
-  activityStyle?: ActivityStyle,
-  options?: RequestInit,
-): Promise<postActivityStylesResponse> => {
-  return customFetch<postActivityStylesResponse>(getPostActivityStylesUrl(), {
+
+  
+
+  return `/activity_styles`
+}
+
+export const postActivityStyles = async (activityStyle?: ActivityStyle, options?: RequestInit): Promise<postActivityStylesResponse> => {
+  
+  return customFetch<postActivityStylesResponse>(getPostActivityStylesUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(activityStyle),
-  });
-};
+    body: JSON.stringify(
+      activityStyle,)
+  }
+);}
 
-export const getPostActivityStylesMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostActivityStylesMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: ActivityStyle }) => {
     return postActivityStyles(arg, options);
-  };
-};
+  }
+}
 export const getPostActivityStylesMutationKey = () => [`/activity_styles`] as const;
 
-export type PostActivityStylesMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postActivityStyles>>
->;
-export type PostActivityStylesMutationError = unknown;
+export type PostActivityStylesMutationResult = NonNullable<Awaited<ReturnType<typeof postActivityStyles>>>
+export type PostActivityStylesMutationError = unknown
 
-export const usePostActivityStyles = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postActivityStyles>>,
-    TError,
-    Key,
-    ActivityStyle,
-    Awaited<ReturnType<typeof postActivityStyles>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostActivityStyles = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postActivityStyles>>, TError, Key, ActivityStyle, Awaited<ReturnType<typeof postActivityStyles>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostActivityStylesMutationKey();
   const swrFn = getPostActivityStylesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたactivity_styleの取得
  */
 export type getActivityStylesIdResponse200 = {
-  data: GetActivityStylesId200;
-  status: 200;
-};
-
-export type getActivityStylesIdResponseSuccess = getActivityStylesIdResponse200 & {
+  data: GetActivityStylesId200
+  status: 200
+}
+    
+export type getActivityStylesIdResponseSuccess = (getActivityStylesIdResponse200) & {
   headers: Headers;
 };
-export type getActivityStylesIdResponse = getActivityStylesIdResponseSuccess;
+;
 
-export const getGetActivityStylesIdUrl = (id: number) => {
-  return `/activity_styles/${id}`;
-};
+export type getActivityStylesIdResponse = (getActivityStylesIdResponseSuccess)
 
-export const getActivityStylesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getActivityStylesIdResponse> => {
-  return customFetch<getActivityStylesIdResponse>(getGetActivityStylesIdUrl(id), {
+export const getGetActivityStylesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activity_styles/${id}`
+}
+
+export const getActivityStylesId = async (id: number, options?: RequestInit): Promise<getActivityStylesIdResponse> => {
+  
+  return customFetch<getActivityStylesIdResponse>(getGetActivityStylesIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetActivityStylesIdKey = (id: number) => [`/activity_styles/${id}`] as const;
 
-export type GetActivityStylesIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getActivityStylesId>>
->;
-export type GetActivityStylesIdQueryError = unknown;
+
+
+export const getGetActivityStylesIdKey = (id: number,) => [`/activity_styles/${id}`] as const;
+
+export type GetActivityStylesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getActivityStylesId>>>
+export type GetActivityStylesIdQueryError = unknown
 
 export const useGetActivityStylesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getActivityStylesId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getActivityStylesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetActivityStylesIdKey(id) : null));
-  const swrFn = () => getActivityStylesId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetActivityStylesIdKey(id) : null);
+  const swrFn = () => getActivityStylesId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * activity_styleの更新
  */
 export type putActivityStylesIdResponse200 = {
-  data: PutActivityStylesId200;
-  status: 200;
-};
-
-export type putActivityStylesIdResponseSuccess = putActivityStylesIdResponse200 & {
+  data: PutActivityStylesId200
+  status: 200
+}
+    
+export type putActivityStylesIdResponseSuccess = (putActivityStylesIdResponse200) & {
   headers: Headers;
 };
-export type putActivityStylesIdResponse = putActivityStylesIdResponseSuccess;
+;
 
-export const getPutActivityStylesIdUrl = (id: number) => {
-  return `/activity_styles/${id}`;
-};
+export type putActivityStylesIdResponse = (putActivityStylesIdResponseSuccess)
 
-export const putActivityStylesId = async (
-  id: number,
-  activityStyle?: ActivityStyle,
-  options?: RequestInit,
-): Promise<putActivityStylesIdResponse> => {
-  return customFetch<putActivityStylesIdResponse>(getPutActivityStylesIdUrl(id), {
+export const getPutActivityStylesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activity_styles/${id}`
+}
+
+export const putActivityStylesId = async (id: number,
+    activityStyle?: ActivityStyle, options?: RequestInit): Promise<putActivityStylesIdResponse> => {
+  
+  return customFetch<putActivityStylesIdResponse>(getPutActivityStylesIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(activityStyle),
-  });
-};
+    body: JSON.stringify(
+      activityStyle,)
+  }
+);}
 
-export const getPutActivityStylesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutActivityStylesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: ActivityStyle }) => {
     return putActivityStylesId(id, arg, options);
-  };
-};
-export const getPutActivityStylesIdMutationKey = (id: number) =>
-  [`/activity_styles/${id}`] as const;
+  }
+}
+export const getPutActivityStylesIdMutationKey = (id: number,) => [`/activity_styles/${id}`] as const;
 
-export type PutActivityStylesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putActivityStylesId>>
->;
-export type PutActivityStylesIdMutationError = unknown;
+export type PutActivityStylesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putActivityStylesId>>>
+export type PutActivityStylesIdMutationError = unknown
 
 export const usePutActivityStylesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putActivityStylesId>>,
-      TError,
-      Key,
-      ActivityStyle,
-      Awaited<ReturnType<typeof putActivityStylesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putActivityStylesId>>, TError, Key, ActivityStyle, Awaited<ReturnType<typeof putActivityStylesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutActivityStylesIdMutationKey(id);
   const swrFn = getPutActivityStylesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してactivity_styleの削除
  */
 export type deleteActivityStylesIdResponse200 = {
-  data: DeleteActivityStylesId200;
-  status: 200;
-};
-
-export type deleteActivityStylesIdResponseSuccess = deleteActivityStylesIdResponse200 & {
+  data: DeleteActivityStylesId200
+  status: 200
+}
+    
+export type deleteActivityStylesIdResponseSuccess = (deleteActivityStylesIdResponse200) & {
   headers: Headers;
 };
-export type deleteActivityStylesIdResponse = deleteActivityStylesIdResponseSuccess;
+;
 
-export const getDeleteActivityStylesIdUrl = (id: number) => {
-  return `/activity_styles/${id}`;
-};
+export type deleteActivityStylesIdResponse = (deleteActivityStylesIdResponseSuccess)
 
-export const deleteActivityStylesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteActivityStylesIdResponse> => {
-  return customFetch<deleteActivityStylesIdResponse>(getDeleteActivityStylesIdUrl(id), {
+export const getDeleteActivityStylesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/activity_styles/${id}`
+}
+
+export const deleteActivityStylesId = async (id: number, options?: RequestInit): Promise<deleteActivityStylesIdResponse> => {
+  
+  return customFetch<deleteActivityStylesIdResponse>(getDeleteActivityStylesIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteActivityStylesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteActivityStylesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteActivityStylesId(id, options);
-  };
-};
-export const getDeleteActivityStylesIdMutationKey = (id: number) =>
-  [`/activity_styles/${id}`] as const;
+  }
+}
+export const getDeleteActivityStylesIdMutationKey = (id: number,) => [`/activity_styles/${id}`] as const;
 
-export type DeleteActivityStylesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteActivityStylesId>>
->;
-export type DeleteActivityStylesIdMutationError = unknown;
+export type DeleteActivityStylesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteActivityStylesId>>>
+export type DeleteActivityStylesIdMutationError = unknown
 
 export const useDeleteActivityStylesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteActivityStylesId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteActivityStylesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteActivityStylesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteActivityStylesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteActivityStylesIdMutationKey(id);
   const swrFn = getDeleteActivityStylesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * bureauの一覧を取得
  */
 export type getBureausResponse200 = {
-  data: GetBureaus200;
-  status: 200;
-};
-
-export type getBureausResponseSuccess = getBureausResponse200 & {
+  data: GetBureaus200
+  status: 200
+}
+    
+export type getBureausResponseSuccess = (getBureausResponse200) & {
   headers: Headers;
 };
-export type getBureausResponse = getBureausResponseSuccess;
+;
+
+export type getBureausResponse = (getBureausResponseSuccess)
 
 export const getGetBureausUrl = () => {
-  return `/bureaus`;
-};
 
-export const getBureaus = async (options?: RequestInit): Promise<getBureausResponse> => {
-  return customFetch<getBureausResponse>(getGetBureausUrl(), {
+
+  
+
+  return `/bureaus`
+}
+
+export const getBureaus = async ( options?: RequestInit): Promise<getBureausResponse> => {
+  
+  return customFetch<getBureausResponse>(getGetBureausUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetBureausKey = () => [`/bureaus`] as const;
 
-export type GetBureausQueryResult = NonNullable<Awaited<ReturnType<typeof getBureaus>>>;
-export type GetBureausQueryError = unknown;
+export type GetBureausQueryResult = NonNullable<Awaited<ReturnType<typeof getBureaus>>>
+export type GetBureausQueryError = unknown
 
-export const useGetBureaus = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getBureaus>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetBureaus = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBureaus>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetBureausKey() : null));
-  const swrFn = () => getBureaus(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBureausKey() : null);
+  const swrFn = () => getBureaus(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * bureauの作成
  */
 export type postBureausResponse200 = {
-  data: PostBureaus200;
-  status: 200;
-};
-
-export type postBureausResponseSuccess = postBureausResponse200 & {
+  data: PostBureaus200
+  status: 200
+}
+    
+export type postBureausResponseSuccess = (postBureausResponse200) & {
   headers: Headers;
 };
-export type postBureausResponse = postBureausResponseSuccess;
+;
 
-export const getPostBureausUrl = (params: PostBureausParams) => {
+export type postBureausResponse = (postBureausResponseSuccess)
+
+export const getPostBureausUrl = (params: PostBureausParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/bureaus?${stringifiedParams}` : `/bureaus`;
-};
+  return stringifiedParams.length > 0 ? `/bureaus?${stringifiedParams}` : `/bureaus`
+}
 
-export const postBureaus = async (
-  params: PostBureausParams,
-  options?: RequestInit,
-): Promise<postBureausResponse> => {
-  return customFetch<postBureausResponse>(getPostBureausUrl(params), {
+export const postBureaus = async (params: PostBureausParams, options?: RequestInit): Promise<postBureausResponse> => {
+  
+  return customFetch<postBureausResponse>(getPostBureausUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostBureausMutationFetcher = (
-  params: PostBureausParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostBureausMutationFetcher = (params: PostBureausParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postBureaus(params, options);
-  };
-};
-export const getPostBureausMutationKey = (params: PostBureausParams) =>
-  [`/bureaus`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostBureausMutationKey = (params: PostBureausParams,) => [`/bureaus`, ...(params ? [params]: [])] as const;
 
-export type PostBureausMutationResult = NonNullable<Awaited<ReturnType<typeof postBureaus>>>;
-export type PostBureausMutationError = unknown;
+export type PostBureausMutationResult = NonNullable<Awaited<ReturnType<typeof postBureaus>>>
+export type PostBureausMutationError = unknown
 
 export const usePostBureaus = <TError = unknown>(
-  params: PostBureausParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postBureaus>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postBureaus>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: PostBureausParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postBureaus>>, TError, Key, Arguments, Awaited<ReturnType<typeof postBureaus>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostBureausMutationKey(params);
   const swrFn = getPostBureausMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたbureauの取得
  */
 export type getBureausIdResponse200 = {
-  data: GetBureausId200;
-  status: 200;
-};
-
-export type getBureausIdResponseSuccess = getBureausIdResponse200 & {
+  data: GetBureausId200
+  status: 200
+}
+    
+export type getBureausIdResponseSuccess = (getBureausIdResponse200) & {
   headers: Headers;
 };
-export type getBureausIdResponse = getBureausIdResponseSuccess;
+;
 
-export const getGetBureausIdUrl = (id: number) => {
-  return `/bureaus/${id}`;
-};
+export type getBureausIdResponse = (getBureausIdResponseSuccess)
 
-export const getBureausId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getBureausIdResponse> => {
-  return customFetch<getBureausIdResponse>(getGetBureausIdUrl(id), {
+export const getGetBureausIdUrl = (id: number,) => {
+
+
+  
+
+  return `/bureaus/${id}`
+}
+
+export const getBureausId = async (id: number, options?: RequestInit): Promise<getBureausIdResponse> => {
+  
+  return customFetch<getBureausIdResponse>(getGetBureausIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetBureausIdKey = (id: number) => [`/bureaus/${id}`] as const;
 
-export type GetBureausIdQueryResult = NonNullable<Awaited<ReturnType<typeof getBureausId>>>;
-export type GetBureausIdQueryError = unknown;
+
+
+export const getGetBureausIdKey = (id: number,) => [`/bureaus/${id}`] as const;
+
+export type GetBureausIdQueryResult = NonNullable<Awaited<ReturnType<typeof getBureausId>>>
+export type GetBureausIdQueryError = unknown
 
 export const useGetBureausId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBureausId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBureausId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetBureausIdKey(id) : null));
-  const swrFn = () => getBureausId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBureausIdKey(id) : null);
+  const swrFn = () => getBureausId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * bureauの更新
  */
 export type putBureausIdResponse200 = {
-  data: PutBureausId200;
-  status: 200;
-};
-
-export type putBureausIdResponseSuccess = putBureausIdResponse200 & {
+  data: PutBureausId200
+  status: 200
+}
+    
+export type putBureausIdResponseSuccess = (putBureausIdResponse200) & {
   headers: Headers;
 };
-export type putBureausIdResponse = putBureausIdResponseSuccess;
+;
 
-export const getPutBureausIdUrl = (id: number, params?: PutBureausIdParams) => {
+export type putBureausIdResponse = (putBureausIdResponseSuccess)
+
+export const getPutBureausIdUrl = (id: number,
+    params?: PutBureausIdParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/bureaus/${id}?${stringifiedParams}` : `/bureaus/${id}`;
-};
+  return stringifiedParams.length > 0 ? `/bureaus/${id}?${stringifiedParams}` : `/bureaus/${id}`
+}
 
-export const putBureausId = async (
-  id: number,
-  params?: PutBureausIdParams,
-  options?: RequestInit,
-): Promise<putBureausIdResponse> => {
-  return customFetch<putBureausIdResponse>(getPutBureausIdUrl(id, params), {
+export const putBureausId = async (id: number,
+    params?: PutBureausIdParams, options?: RequestInit): Promise<putBureausIdResponse> => {
+  
+  return customFetch<putBureausIdResponse>(getPutBureausIdUrl(id,params),
+  {      
     ...options,
-    method: 'PUT',
-  });
-};
+    method: 'PUT'
+    
+    
+  }
+);}
 
-export const getPutBureausIdMutationFetcher = (
-  id: number,
-  params?: PutBureausIdParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutBureausIdMutationFetcher = (id: number,
+    params?: PutBureausIdParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return putBureausId(id, params, options);
-  };
-};
-export const getPutBureausIdMutationKey = (id: number, params?: PutBureausIdParams) =>
-  [`/bureaus/${id}`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPutBureausIdMutationKey = (id: number,
+    params?: PutBureausIdParams,) => [`/bureaus/${id}`, ...(params ? [params]: [])] as const;
 
-export type PutBureausIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBureausId>>>;
-export type PutBureausIdMutationError = unknown;
+export type PutBureausIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBureausId>>>
+export type PutBureausIdMutationError = unknown
 
 export const usePutBureausId = <TError = unknown>(
   id: number,
-  params?: PutBureausIdParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putBureausId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof putBureausId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params?: PutBureausIdParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putBureausId>>, TError, Key, Arguments, Awaited<ReturnType<typeof putBureausId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPutBureausIdMutationKey(id, params);
-  const swrFn = getPutBureausIdMutationFetcher(id, params, requestOptions);
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const swrKey = swrOptions?.swrKey ?? getPutBureausIdMutationKey(id,params);
+  const swrFn = getPutBureausIdMutationFetcher(id,params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してbureauの削除
  */
 export type deleteBureausIdResponse200 = {
-  data: DeleteBureausId200;
-  status: 200;
-};
-
-export type deleteBureausIdResponseSuccess = deleteBureausIdResponse200 & {
+  data: DeleteBureausId200
+  status: 200
+}
+    
+export type deleteBureausIdResponseSuccess = (deleteBureausIdResponse200) & {
   headers: Headers;
 };
-export type deleteBureausIdResponse = deleteBureausIdResponseSuccess;
+;
 
-export const getDeleteBureausIdUrl = (id: number) => {
-  return `/bureaus/${id}`;
-};
+export type deleteBureausIdResponse = (deleteBureausIdResponseSuccess)
 
-export const deleteBureausId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteBureausIdResponse> => {
-  return customFetch<deleteBureausIdResponse>(getDeleteBureausIdUrl(id), {
+export const getDeleteBureausIdUrl = (id: number,) => {
+
+
+  
+
+  return `/bureaus/${id}`
+}
+
+export const deleteBureausId = async (id: number, options?: RequestInit): Promise<deleteBureausIdResponse> => {
+  
+  return customFetch<deleteBureausIdResponse>(getDeleteBureausIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteBureausIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteBureausIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteBureausId(id, options);
-  };
-};
-export const getDeleteBureausIdMutationKey = (id: number) => [`/bureaus/${id}`] as const;
+  }
+}
+export const getDeleteBureausIdMutationKey = (id: number,) => [`/bureaus/${id}`] as const;
 
-export type DeleteBureausIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteBureausId>>
->;
-export type DeleteBureausIdMutationError = unknown;
+export type DeleteBureausIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteBureausId>>>
+export type DeleteBureausIdMutationError = unknown
 
 export const useDeleteBureausId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteBureausId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteBureausId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteBureausId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteBureausId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteBureausIdMutationKey(id);
   const swrFn = getDeleteBureausIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 購入報告を行うAPI
  */
 export type postBuyReportsResponse200 = {
-  data: BuyReport;
-  status: 200;
-};
-
-export type postBuyReportsResponseSuccess = postBuyReportsResponse200 & {
+  data: BuyReport
+  status: 200
+}
+    
+export type postBuyReportsResponseSuccess = (postBuyReportsResponse200) & {
   headers: Headers;
 };
-export type postBuyReportsResponse = postBuyReportsResponseSuccess;
+;
+
+export type postBuyReportsResponse = (postBuyReportsResponseSuccess)
 
 export const getPostBuyReportsUrl = () => {
-  return `/buy_reports`;
-};
 
-export const postBuyReports = async (
-  postBuyReportsBody: PostBuyReportsBody,
-  options?: RequestInit,
-): Promise<postBuyReportsResponse> => {
-  const formData = new FormData();
-  formData.append(`file`, postBuyReportsBody.file);
-  formData.append(`buy_report`, JSON.stringify(postBuyReportsBody.buy_report));
 
-  return customFetch<postBuyReportsResponse>(getPostBuyReportsUrl(), {
+  
+
+  return `/buy_reports`
+}
+
+export const postBuyReports = async (postBuyReportsBody: PostBuyReportsBody, options?: RequestInit): Promise<postBuyReportsResponse> => {
+    const formData = new FormData();
+formData.append(`file`, postBuyReportsBody.file)
+formData.append(`buy_report`, JSON.stringify(postBuyReportsBody.buy_report));
+
+  return customFetch<postBuyReportsResponse>(getPostBuyReportsUrl(),
+  {      
     ...options,
-    method: 'POST',
-    body: formData,
-  });
-};
+    method: 'POST'
+    ,
+    body: 
+      formData,
+  }
+);}
 
-export const getPostBuyReportsMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+
+
+
+export const getPostBuyReportsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: PostBuyReportsBody }) => {
     return postBuyReports(arg, options);
-  };
-};
+  }
+}
 export const getPostBuyReportsMutationKey = () => [`/buy_reports`] as const;
 
-export type PostBuyReportsMutationResult = NonNullable<Awaited<ReturnType<typeof postBuyReports>>>;
-export type PostBuyReportsMutationError = unknown;
+export type PostBuyReportsMutationResult = NonNullable<Awaited<ReturnType<typeof postBuyReports>>>
+export type PostBuyReportsMutationError = unknown
 
-export const usePostBuyReports = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postBuyReports>>,
-    TError,
-    Key,
-    PostBuyReportsBody,
-    Awaited<ReturnType<typeof postBuyReports>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostBuyReports = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postBuyReports>>, TError, Key, PostBuyReportsBody, Awaited<ReturnType<typeof postBuyReports>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostBuyReportsMutationKey();
   const swrFn = getPostBuyReportsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたbuy_reportの取得（購入報告編集用）
  */
 export type getBuyReportsIdResponse200 = {
-  data: BuyReportWithDivisionId;
-  status: 200;
-};
-
-export type getBuyReportsIdResponseSuccess = getBuyReportsIdResponse200 & {
+  data: BuyReportWithDivisionId
+  status: 200
+}
+    
+export type getBuyReportsIdResponseSuccess = (getBuyReportsIdResponse200) & {
   headers: Headers;
 };
-export type getBuyReportsIdResponse = getBuyReportsIdResponseSuccess;
+;
 
-export const getGetBuyReportsIdUrl = (id: number) => {
-  return `/buy_reports/${id}`;
-};
+export type getBuyReportsIdResponse = (getBuyReportsIdResponseSuccess)
 
-export const getBuyReportsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getBuyReportsIdResponse> => {
-  return customFetch<getBuyReportsIdResponse>(getGetBuyReportsIdUrl(id), {
+export const getGetBuyReportsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/buy_reports/${id}`
+}
+
+export const getBuyReportsId = async (id: number, options?: RequestInit): Promise<getBuyReportsIdResponse> => {
+  
+  return customFetch<getBuyReportsIdResponse>(getGetBuyReportsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetBuyReportsIdKey = (id: number) => [`/buy_reports/${id}`] as const;
 
-export type GetBuyReportsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsId>>>;
-export type GetBuyReportsIdQueryError = unknown;
+
+
+export const getGetBuyReportsIdKey = (id: number,) => [`/buy_reports/${id}`] as const;
+
+export type GetBuyReportsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsId>>>
+export type GetBuyReportsIdQueryError = unknown
 
 export const useGetBuyReportsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsIdKey(id) : null));
-  const swrFn = () => getBuyReportsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsIdKey(id) : null);
+  const swrFn = () => getBuyReportsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 購入報告を修正するAPI、画像がある場合は画像も更新
  */
 export type putBuyReportsIdResponse200 = {
-  data: BuyReport;
-  status: 200;
-};
-
-export type putBuyReportsIdResponseSuccess = putBuyReportsIdResponse200 & {
+  data: BuyReport
+  status: 200
+}
+    
+export type putBuyReportsIdResponseSuccess = (putBuyReportsIdResponse200) & {
   headers: Headers;
 };
-export type putBuyReportsIdResponse = putBuyReportsIdResponseSuccess;
+;
 
-export const getPutBuyReportsIdUrl = (id: number) => {
-  return `/buy_reports/${id}`;
-};
+export type putBuyReportsIdResponse = (putBuyReportsIdResponseSuccess)
 
-export const putBuyReportsId = async (
-  id: number,
-  putBuyReportsIdBody: PutBuyReportsIdBody,
-  options?: RequestInit,
-): Promise<putBuyReportsIdResponse> => {
-  const formData = new FormData();
-  if (putBuyReportsIdBody.file !== undefined) {
-    formData.append(`file`, putBuyReportsIdBody.file);
-  }
-  formData.append(`buy_report`, JSON.stringify(putBuyReportsIdBody.buy_report));
+export const getPutBuyReportsIdUrl = (id: number,) => {
 
-  return customFetch<putBuyReportsIdResponse>(getPutBuyReportsIdUrl(id), {
+
+  
+
+  return `/buy_reports/${id}`
+}
+
+export const putBuyReportsId = async (id: number,
+    putBuyReportsIdBody: PutBuyReportsIdBody, options?: RequestInit): Promise<putBuyReportsIdResponse> => {
+    const formData = new FormData();
+if(putBuyReportsIdBody.file !== undefined) {
+ formData.append(`file`, putBuyReportsIdBody.file)
+ }
+formData.append(`buy_report`, JSON.stringify(putBuyReportsIdBody.buy_report));
+
+  return customFetch<putBuyReportsIdResponse>(getPutBuyReportsIdUrl(id),
+  {      
     ...options,
-    method: 'PUT',
-    body: formData,
-  });
-};
+    method: 'PUT'
+    ,
+    body: 
+      formData,
+  }
+);}
 
-export const getPutBuyReportsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutBuyReportsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: PutBuyReportsIdBody }) => {
     return putBuyReportsId(id, arg, options);
-  };
-};
-export const getPutBuyReportsIdMutationKey = (id: number) => [`/buy_reports/${id}`] as const;
+  }
+}
+export const getPutBuyReportsIdMutationKey = (id: number,) => [`/buy_reports/${id}`] as const;
 
-export type PutBuyReportsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putBuyReportsId>>
->;
-export type PutBuyReportsIdMutationError = unknown;
+export type PutBuyReportsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBuyReportsId>>>
+export type PutBuyReportsIdMutationError = unknown
 
 export const usePutBuyReportsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putBuyReportsId>>,
-      TError,
-      Key,
-      PutBuyReportsIdBody,
-      Awaited<ReturnType<typeof putBuyReportsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putBuyReportsId>>, TError, Key, PutBuyReportsIdBody, Awaited<ReturnType<typeof putBuyReportsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutBuyReportsIdMutationKey(id);
   const swrFn = getPutBuyReportsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してbuy_reportの削除、紐づいた画像も削除、マイページから削除できる
  */
 export type deleteBuyReportsIdResponse200 = {
-  data: DeleteBuyReportsId200;
-  status: 200;
-};
-
-export type deleteBuyReportsIdResponseSuccess = deleteBuyReportsIdResponse200 & {
+  data: DeleteBuyReportsId200
+  status: 200
+}
+    
+export type deleteBuyReportsIdResponseSuccess = (deleteBuyReportsIdResponse200) & {
   headers: Headers;
 };
-export type deleteBuyReportsIdResponse = deleteBuyReportsIdResponseSuccess;
+;
 
-export const getDeleteBuyReportsIdUrl = (id: number) => {
-  return `/buy_reports/${id}`;
-};
+export type deleteBuyReportsIdResponse = (deleteBuyReportsIdResponseSuccess)
 
-export const deleteBuyReportsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteBuyReportsIdResponse> => {
-  return customFetch<deleteBuyReportsIdResponse>(getDeleteBuyReportsIdUrl(id), {
+export const getDeleteBuyReportsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/buy_reports/${id}`
+}
+
+export const deleteBuyReportsId = async (id: number, options?: RequestInit): Promise<deleteBuyReportsIdResponse> => {
+  
+  return customFetch<deleteBuyReportsIdResponse>(getDeleteBuyReportsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteBuyReportsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteBuyReportsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteBuyReportsId(id, options);
-  };
-};
-export const getDeleteBuyReportsIdMutationKey = (id: number) => [`/buy_reports/${id}`] as const;
+  }
+}
+export const getDeleteBuyReportsIdMutationKey = (id: number,) => [`/buy_reports/${id}`] as const;
 
-export type DeleteBuyReportsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteBuyReportsId>>
->;
-export type DeleteBuyReportsIdMutationError = unknown;
+export type DeleteBuyReportsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteBuyReportsId>>>
+export type DeleteBuyReportsIdMutationError = unknown
 
 export const useDeleteBuyReportsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteBuyReportsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteBuyReportsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteBuyReportsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteBuyReportsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteBuyReportsIdMutationKey(id);
   const swrFn = getDeleteBuyReportsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 購入報告で表示するbuy_report一覧の取得、主に財務向けのページ
  */
 export type getBuyReportsDetailsResponse200 = {
-  data: BuyReportDetail[];
-  status: 200;
-};
-
-export type getBuyReportsDetailsResponseSuccess = getBuyReportsDetailsResponse200 & {
+  data: BuyReportDetail[]
+  status: 200
+}
+    
+export type getBuyReportsDetailsResponseSuccess = (getBuyReportsDetailsResponse200) & {
   headers: Headers;
 };
-export type getBuyReportsDetailsResponse = getBuyReportsDetailsResponseSuccess;
+;
 
-export const getGetBuyReportsDetailsUrl = (params?: GetBuyReportsDetailsParams) => {
+export type getBuyReportsDetailsResponse = (getBuyReportsDetailsResponseSuccess)
+
+export const getGetBuyReportsDetailsUrl = (params?: GetBuyReportsDetailsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/buy_reports/details?${stringifiedParams}`
-    : `/buy_reports/details`;
-};
+  return stringifiedParams.length > 0 ? `/buy_reports/details?${stringifiedParams}` : `/buy_reports/details`
+}
 
-export const getBuyReportsDetails = async (
-  params?: GetBuyReportsDetailsParams,
-  options?: RequestInit,
-): Promise<getBuyReportsDetailsResponse> => {
-  return customFetch<getBuyReportsDetailsResponse>(getGetBuyReportsDetailsUrl(params), {
+export const getBuyReportsDetails = async (params?: GetBuyReportsDetailsParams, options?: RequestInit): Promise<getBuyReportsDetailsResponse> => {
+  
+  return customFetch<getBuyReportsDetailsResponse>(getGetBuyReportsDetailsUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetBuyReportsDetailsKey = (params?: GetBuyReportsDetailsParams) =>
-  [`/buy_reports/details`, ...(params ? [params] : [])] as const;
 
-export type GetBuyReportsDetailsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getBuyReportsDetails>>
->;
-export type GetBuyReportsDetailsQueryError = unknown;
+
+
+export const getGetBuyReportsDetailsKey = (params?: GetBuyReportsDetailsParams,) => [`/buy_reports/details`, ...(params ? [params]: [])] as const;
+
+export type GetBuyReportsDetailsQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsDetails>>>
+export type GetBuyReportsDetailsQueryError = unknown
 
 export const useGetBuyReportsDetails = <TError = unknown>(
-  params?: GetBuyReportsDetailsParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsDetails>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetBuyReportsDetailsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsDetails>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsDetailsKey(params) : null));
-  const swrFn = () => getBuyReportsDetails(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsDetailsKey(params) : null);
+  const swrFn = () => getBuyReportsDetails(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 購入報告一覧の未精算/未封詰め合計を返す
  */
 export type getBuyReportsSummaryResponse200 = {
-  data: BuyReportSummary;
-  status: 200;
-};
-
-export type getBuyReportsSummaryResponseSuccess = getBuyReportsSummaryResponse200 & {
+  data: BuyReportSummary
+  status: 200
+}
+    
+export type getBuyReportsSummaryResponseSuccess = (getBuyReportsSummaryResponse200) & {
   headers: Headers;
 };
-export type getBuyReportsSummaryResponse = getBuyReportsSummaryResponseSuccess;
+;
 
-export const getGetBuyReportsSummaryUrl = (params: GetBuyReportsSummaryParams) => {
+export type getBuyReportsSummaryResponse = (getBuyReportsSummaryResponseSuccess)
+
+export const getGetBuyReportsSummaryUrl = (params: GetBuyReportsSummaryParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/buy_reports/summary?${stringifiedParams}`
-    : `/buy_reports/summary`;
-};
+  return stringifiedParams.length > 0 ? `/buy_reports/summary?${stringifiedParams}` : `/buy_reports/summary`
+}
 
-export const getBuyReportsSummary = async (
-  params: GetBuyReportsSummaryParams,
-  options?: RequestInit,
-): Promise<getBuyReportsSummaryResponse> => {
-  return customFetch<getBuyReportsSummaryResponse>(getGetBuyReportsSummaryUrl(params), {
+export const getBuyReportsSummary = async (params: GetBuyReportsSummaryParams, options?: RequestInit): Promise<getBuyReportsSummaryResponse> => {
+  
+  return customFetch<getBuyReportsSummaryResponse>(getGetBuyReportsSummaryUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetBuyReportsSummaryKey = (params: GetBuyReportsSummaryParams) =>
-  [`/buy_reports/summary`, ...(params ? [params] : [])] as const;
 
-export type GetBuyReportsSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getBuyReportsSummary>>
->;
-export type GetBuyReportsSummaryQueryError = unknown;
+
+
+export const getGetBuyReportsSummaryKey = (params: GetBuyReportsSummaryParams,) => [`/buy_reports/summary`, ...(params ? [params]: [])] as const;
+
+export type GetBuyReportsSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsSummary>>>
+export type GetBuyReportsSummaryQueryError = unknown
 
 export const useGetBuyReportsSummary = <TError = unknown>(
-  params: GetBuyReportsSummaryParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsSummary>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: GetBuyReportsSummaryParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsSummary>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsSummaryKey(params) : null));
-  const swrFn = () => getBuyReportsSummary(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsSummaryKey(params) : null);
+  const swrFn = () => getBuyReportsSummary(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * buy_reportのステータス更新、財務が封詰め、精算済みにするAPI
  */
 export type putBuyReportStatusBuyReportIdResponse200 = {
-  data: BuyReportDetail;
-  status: 200;
+  data: BuyReportDetail
+  status: 200
+}
+    
+export type putBuyReportStatusBuyReportIdResponseSuccess = (putBuyReportStatusBuyReportIdResponse200) & {
+  headers: Headers;
 };
+;
 
-export type putBuyReportStatusBuyReportIdResponseSuccess =
-  putBuyReportStatusBuyReportIdResponse200 & {
-    headers: Headers;
-  };
-export type putBuyReportStatusBuyReportIdResponse = putBuyReportStatusBuyReportIdResponseSuccess;
+export type putBuyReportStatusBuyReportIdResponse = (putBuyReportStatusBuyReportIdResponseSuccess)
 
-export const getPutBuyReportStatusBuyReportIdUrl = (buyReportId: number) => {
-  return `/buy_report/status/${buyReportId}`;
-};
+export const getPutBuyReportStatusBuyReportIdUrl = (buyReportId: number,) => {
 
-export const putBuyReportStatusBuyReportId = async (
-  buyReportId: number,
-  putBuyReportStatusBuyReportIdBody: PutBuyReportStatusBuyReportIdBody,
-  options?: RequestInit,
-): Promise<putBuyReportStatusBuyReportIdResponse> => {
-  return customFetch<putBuyReportStatusBuyReportIdResponse>(
-    getPutBuyReportStatusBuyReportIdUrl(buyReportId),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(putBuyReportStatusBuyReportIdBody),
-    },
-  );
-};
 
-export const getPutBuyReportStatusBuyReportIdMutationFetcher = (
-  buyReportId: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+  
+
+  return `/buy_report/status/${buyReportId}`
+}
+
+export const putBuyReportStatusBuyReportId = async (buyReportId: number,
+    putBuyReportStatusBuyReportIdBody: PutBuyReportStatusBuyReportIdBody, options?: RequestInit): Promise<putBuyReportStatusBuyReportIdResponse> => {
+  
+  return customFetch<putBuyReportStatusBuyReportIdResponse>(getPutBuyReportStatusBuyReportIdUrl(buyReportId),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      putBuyReportStatusBuyReportIdBody,)
+  }
+);}
+
+
+
+
+export const getPutBuyReportStatusBuyReportIdMutationFetcher = (buyReportId: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: PutBuyReportStatusBuyReportIdBody }) => {
     return putBuyReportStatusBuyReportId(buyReportId, arg, options);
-  };
-};
-export const getPutBuyReportStatusBuyReportIdMutationKey = (buyReportId: number) =>
-  [`/buy_report/status/${buyReportId}`] as const;
+  }
+}
+export const getPutBuyReportStatusBuyReportIdMutationKey = (buyReportId: number,) => [`/buy_report/status/${buyReportId}`] as const;
 
-export type PutBuyReportStatusBuyReportIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>
->;
-export type PutBuyReportStatusBuyReportIdMutationError = unknown;
+export type PutBuyReportStatusBuyReportIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>>
+export type PutBuyReportStatusBuyReportIdMutationError = unknown
 
 export const usePutBuyReportStatusBuyReportId = <TError = unknown>(
-  buyReportId: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>,
-      TError,
-      Key,
-      PutBuyReportStatusBuyReportIdBody,
-      Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  buyReportId: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>, TError, Key, PutBuyReportStatusBuyReportIdBody, Awaited<ReturnType<typeof putBuyReportStatusBuyReportId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutBuyReportStatusBuyReportIdMutationKey(buyReportId);
   const swrFn = getPutBuyReportStatusBuyReportIdMutationFetcher(buyReportId, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 購入報告一覧のCSVダウンロード、財務向けのページ
  */
 export type getBuyReportsCsvDownloadResponse200 = {
-  data: Blob;
-  status: 200;
-};
-
-export type getBuyReportsCsvDownloadResponseSuccess = getBuyReportsCsvDownloadResponse200 & {
+  data: Blob
+  status: 200
+}
+    
+export type getBuyReportsCsvDownloadResponseSuccess = (getBuyReportsCsvDownloadResponse200) & {
   headers: Headers;
 };
-export type getBuyReportsCsvDownloadResponse = getBuyReportsCsvDownloadResponseSuccess;
+;
 
-export const getGetBuyReportsCsvDownloadUrl = (params?: GetBuyReportsCsvDownloadParams) => {
+export type getBuyReportsCsvDownloadResponse = (getBuyReportsCsvDownloadResponseSuccess)
+
+export const getGetBuyReportsCsvDownloadUrl = (params?: GetBuyReportsCsvDownloadParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/buy_reports/csv/download?${stringifiedParams}`
-    : `/buy_reports/csv/download`;
-};
+  return stringifiedParams.length > 0 ? `/buy_reports/csv/download?${stringifiedParams}` : `/buy_reports/csv/download`
+}
 
-export const getBuyReportsCsvDownload = async (
-  params?: GetBuyReportsCsvDownloadParams,
-  options?: RequestInit,
-): Promise<getBuyReportsCsvDownloadResponse> => {
-  return customFetch<getBuyReportsCsvDownloadResponse>(getGetBuyReportsCsvDownloadUrl(params), {
+export const getBuyReportsCsvDownload = async (params?: GetBuyReportsCsvDownloadParams, options?: RequestInit): Promise<getBuyReportsCsvDownloadResponse> => {
+  
+  return customFetch<getBuyReportsCsvDownloadResponse>(getGetBuyReportsCsvDownloadUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetBuyReportsCsvDownloadKey = (params?: GetBuyReportsCsvDownloadParams) =>
-  [`/buy_reports/csv/download`, ...(params ? [params] : [])] as const;
 
-export type GetBuyReportsCsvDownloadQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getBuyReportsCsvDownload>>
->;
-export type GetBuyReportsCsvDownloadQueryError = unknown;
+
+
+export const getGetBuyReportsCsvDownloadKey = (params?: GetBuyReportsCsvDownloadParams,) => [`/buy_reports/csv/download`, ...(params ? [params]: [])] as const;
+
+export type GetBuyReportsCsvDownloadQueryResult = NonNullable<Awaited<ReturnType<typeof getBuyReportsCsvDownload>>>
+export type GetBuyReportsCsvDownloadQueryError = unknown
 
 export const useGetBuyReportsCsvDownload = <TError = unknown>(
-  params?: GetBuyReportsCsvDownloadParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsCsvDownload>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetBuyReportsCsvDownloadParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getBuyReportsCsvDownload>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetBuyReportsCsvDownloadKey(params) : null));
-  const swrFn = () => getBuyReportsCsvDownload(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetBuyReportsCsvDownloadKey(params) : null);
+  const swrFn = () => getBuyReportsCsvDownload(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 現在ログインしているユーザーの情報を取得
  */
 export type getCurrentUserResponse200 = {
-  data: User;
-  status: 200;
-};
-
-export type getCurrentUserResponseSuccess = getCurrentUserResponse200 & {
+  data: User
+  status: 200
+}
+    
+export type getCurrentUserResponseSuccess = (getCurrentUserResponse200) & {
   headers: Headers;
 };
-export type getCurrentUserResponse = getCurrentUserResponseSuccess;
+;
+
+export type getCurrentUserResponse = (getCurrentUserResponseSuccess)
 
 export const getGetCurrentUserUrl = () => {
-  return `/current_user`;
-};
 
-export const getCurrentUser = async (options?: RequestInit): Promise<getCurrentUserResponse> => {
-  return customFetch<getCurrentUserResponse>(getGetCurrentUserUrl(), {
+
+  
+
+  return `/current_user`
+}
+
+export const getCurrentUser = async ( options?: RequestInit): Promise<getCurrentUserResponse> => {
+  
+  return customFetch<getCurrentUserResponse>(getGetCurrentUserUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetCurrentUserKey = () => [`/current_user`] as const;
 
-export type GetCurrentUserQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
-export type GetCurrentUserQueryError = unknown;
+export type GetCurrentUserQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>
+export type GetCurrentUserQueryError = unknown
 
-export const useGetCurrentUser = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getCurrentUser>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetCurrentUser = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getCurrentUser>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetCurrentUserKey() : null));
-  const swrFn = () => getCurrentUser(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetCurrentUserKey() : null);
+  const swrFn = () => getCurrentUser(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * departmentの一覧の取得
  */
 export type getDepartmentsResponse200 = {
-  data: GetDepartments200;
-  status: 200;
-};
-
-export type getDepartmentsResponseSuccess = getDepartmentsResponse200 & {
+  data: GetDepartments200
+  status: 200
+}
+    
+export type getDepartmentsResponseSuccess = (getDepartmentsResponse200) & {
   headers: Headers;
 };
-export type getDepartmentsResponse = getDepartmentsResponseSuccess;
+;
+
+export type getDepartmentsResponse = (getDepartmentsResponseSuccess)
 
 export const getGetDepartmentsUrl = () => {
-  return `/departments`;
-};
 
-export const getDepartments = async (options?: RequestInit): Promise<getDepartmentsResponse> => {
-  return customFetch<getDepartmentsResponse>(getGetDepartmentsUrl(), {
+
+  
+
+  return `/departments`
+}
+
+export const getDepartments = async ( options?: RequestInit): Promise<getDepartmentsResponse> => {
+  
+  return customFetch<getDepartmentsResponse>(getGetDepartmentsUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetDepartmentsKey = () => [`/departments`] as const;
 
-export type GetDepartmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getDepartments>>>;
-export type GetDepartmentsQueryError = unknown;
+export type GetDepartmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getDepartments>>>
+export type GetDepartmentsQueryError = unknown
 
-export const useGetDepartments = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getDepartments>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetDepartments = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDepartments>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDepartmentsKey() : null));
-  const swrFn = () => getDepartments(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDepartmentsKey() : null);
+  const swrFn = () => getDepartments(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * departmentの作成
  */
 export type postDepartmentsResponse200 = {
-  data: PostDepartments200;
-  status: 200;
-};
-
-export type postDepartmentsResponseSuccess = postDepartmentsResponse200 & {
+  data: PostDepartments200
+  status: 200
+}
+    
+export type postDepartmentsResponseSuccess = (postDepartmentsResponse200) & {
   headers: Headers;
 };
-export type postDepartmentsResponse = postDepartmentsResponseSuccess;
+;
 
-export const getPostDepartmentsUrl = (params?: PostDepartmentsParams) => {
+export type postDepartmentsResponse = (postDepartmentsResponseSuccess)
+
+export const getPostDepartmentsUrl = (params?: PostDepartmentsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/departments?${stringifiedParams}` : `/departments`;
-};
+  return stringifiedParams.length > 0 ? `/departments?${stringifiedParams}` : `/departments`
+}
 
-export const postDepartments = async (
-  params?: PostDepartmentsParams,
-  options?: RequestInit,
-): Promise<postDepartmentsResponse> => {
-  return customFetch<postDepartmentsResponse>(getPostDepartmentsUrl(params), {
+export const postDepartments = async (params?: PostDepartmentsParams, options?: RequestInit): Promise<postDepartmentsResponse> => {
+  
+  return customFetch<postDepartmentsResponse>(getPostDepartmentsUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostDepartmentsMutationFetcher = (
-  params?: PostDepartmentsParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostDepartmentsMutationFetcher = (params?: PostDepartmentsParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postDepartments(params, options);
-  };
-};
-export const getPostDepartmentsMutationKey = (params?: PostDepartmentsParams) =>
-  [`/departments`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostDepartmentsMutationKey = (params?: PostDepartmentsParams,) => [`/departments`, ...(params ? [params]: [])] as const;
 
-export type PostDepartmentsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postDepartments>>
->;
-export type PostDepartmentsMutationError = unknown;
+export type PostDepartmentsMutationResult = NonNullable<Awaited<ReturnType<typeof postDepartments>>>
+export type PostDepartmentsMutationError = unknown
 
 export const usePostDepartments = <TError = unknown>(
-  params?: PostDepartmentsParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postDepartments>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postDepartments>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: PostDepartmentsParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postDepartments>>, TError, Key, Arguments, Awaited<ReturnType<typeof postDepartments>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostDepartmentsMutationKey(params);
   const swrFn = getPostDepartmentsMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたdepartmentの取得
  */
 export type getDepartmentsIdResponse200 = {
-  data: GetDepartmentsId200;
-  status: 200;
-};
-
-export type getDepartmentsIdResponseSuccess = getDepartmentsIdResponse200 & {
+  data: GetDepartmentsId200
+  status: 200
+}
+    
+export type getDepartmentsIdResponseSuccess = (getDepartmentsIdResponse200) & {
   headers: Headers;
 };
-export type getDepartmentsIdResponse = getDepartmentsIdResponseSuccess;
+;
 
-export const getGetDepartmentsIdUrl = (id: number) => {
-  return `/departments/${id}`;
-};
+export type getDepartmentsIdResponse = (getDepartmentsIdResponseSuccess)
 
-export const getDepartmentsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getDepartmentsIdResponse> => {
-  return customFetch<getDepartmentsIdResponse>(getGetDepartmentsIdUrl(id), {
+export const getGetDepartmentsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/departments/${id}`
+}
+
+export const getDepartmentsId = async (id: number, options?: RequestInit): Promise<getDepartmentsIdResponse> => {
+  
+  return customFetch<getDepartmentsIdResponse>(getGetDepartmentsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetDepartmentsIdKey = (id: number) => [`/departments/${id}`] as const;
 
-export type GetDepartmentsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getDepartmentsId>>>;
-export type GetDepartmentsIdQueryError = unknown;
+
+
+export const getGetDepartmentsIdKey = (id: number,) => [`/departments/${id}`] as const;
+
+export type GetDepartmentsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getDepartmentsId>>>
+export type GetDepartmentsIdQueryError = unknown
 
 export const useGetDepartmentsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getDepartmentsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDepartmentsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDepartmentsIdKey(id) : null));
-  const swrFn = () => getDepartmentsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDepartmentsIdKey(id) : null);
+  const swrFn = () => getDepartmentsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * departmentの更新
  */
 export type putDepartmentsIdResponse200 = {
-  data: PutDepartmentsId200;
-  status: 200;
-};
-
-export type putDepartmentsIdResponseSuccess = putDepartmentsIdResponse200 & {
+  data: PutDepartmentsId200
+  status: 200
+}
+    
+export type putDepartmentsIdResponseSuccess = (putDepartmentsIdResponse200) & {
   headers: Headers;
 };
-export type putDepartmentsIdResponse = putDepartmentsIdResponseSuccess;
+;
 
-export const getPutDepartmentsIdUrl = (id: number, params?: PutDepartmentsIdParams) => {
+export type putDepartmentsIdResponse = (putDepartmentsIdResponseSuccess)
+
+export const getPutDepartmentsIdUrl = (id: number,
+    params?: PutDepartmentsIdParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/departments/${id}?${stringifiedParams}`
-    : `/departments/${id}`;
-};
+  return stringifiedParams.length > 0 ? `/departments/${id}?${stringifiedParams}` : `/departments/${id}`
+}
 
-export const putDepartmentsId = async (
-  id: number,
-  params?: PutDepartmentsIdParams,
-  options?: RequestInit,
-): Promise<putDepartmentsIdResponse> => {
-  return customFetch<putDepartmentsIdResponse>(getPutDepartmentsIdUrl(id, params), {
+export const putDepartmentsId = async (id: number,
+    params?: PutDepartmentsIdParams, options?: RequestInit): Promise<putDepartmentsIdResponse> => {
+  
+  return customFetch<putDepartmentsIdResponse>(getPutDepartmentsIdUrl(id,params),
+  {      
     ...options,
-    method: 'PUT',
-  });
-};
+    method: 'PUT'
+    
+    
+  }
+);}
 
-export const getPutDepartmentsIdMutationFetcher = (
-  id: number,
-  params?: PutDepartmentsIdParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutDepartmentsIdMutationFetcher = (id: number,
+    params?: PutDepartmentsIdParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return putDepartmentsId(id, params, options);
-  };
-};
-export const getPutDepartmentsIdMutationKey = (id: number, params?: PutDepartmentsIdParams) =>
-  [`/departments/${id}`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPutDepartmentsIdMutationKey = (id: number,
+    params?: PutDepartmentsIdParams,) => [`/departments/${id}`, ...(params ? [params]: [])] as const;
 
-export type PutDepartmentsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putDepartmentsId>>
->;
-export type PutDepartmentsIdMutationError = unknown;
+export type PutDepartmentsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putDepartmentsId>>>
+export type PutDepartmentsIdMutationError = unknown
 
 export const usePutDepartmentsId = <TError = unknown>(
   id: number,
-  params?: PutDepartmentsIdParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putDepartmentsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof putDepartmentsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params?: PutDepartmentsIdParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putDepartmentsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof putDepartmentsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPutDepartmentsIdMutationKey(id, params);
-  const swrFn = getPutDepartmentsIdMutationFetcher(id, params, requestOptions);
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const swrKey = swrOptions?.swrKey ?? getPutDepartmentsIdMutationKey(id,params);
+  const swrFn = getPutDepartmentsIdMutationFetcher(id,params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してdepartmentの削除
  */
 export type deleteDepartmentsIdResponse200 = {
-  data: DeleteDepartmentsId200;
-  status: 200;
-};
-
-export type deleteDepartmentsIdResponseSuccess = deleteDepartmentsIdResponse200 & {
+  data: DeleteDepartmentsId200
+  status: 200
+}
+    
+export type deleteDepartmentsIdResponseSuccess = (deleteDepartmentsIdResponse200) & {
   headers: Headers;
 };
-export type deleteDepartmentsIdResponse = deleteDepartmentsIdResponseSuccess;
+;
 
-export const getDeleteDepartmentsIdUrl = (id: number) => {
-  return `/departments/${id}`;
-};
+export type deleteDepartmentsIdResponse = (deleteDepartmentsIdResponseSuccess)
 
-export const deleteDepartmentsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteDepartmentsIdResponse> => {
-  return customFetch<deleteDepartmentsIdResponse>(getDeleteDepartmentsIdUrl(id), {
+export const getDeleteDepartmentsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/departments/${id}`
+}
+
+export const deleteDepartmentsId = async (id: number, options?: RequestInit): Promise<deleteDepartmentsIdResponse> => {
+  
+  return customFetch<deleteDepartmentsIdResponse>(getDeleteDepartmentsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteDepartmentsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteDepartmentsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteDepartmentsId(id, options);
-  };
-};
-export const getDeleteDepartmentsIdMutationKey = (id: number) => [`/departments/${id}`] as const;
+  }
+}
+export const getDeleteDepartmentsIdMutationKey = (id: number,) => [`/departments/${id}`] as const;
 
-export type DeleteDepartmentsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteDepartmentsId>>
->;
-export type DeleteDepartmentsIdMutationError = unknown;
+export type DeleteDepartmentsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteDepartmentsId>>>
+export type DeleteDepartmentsIdMutationError = unknown
 
 export const useDeleteDepartmentsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteDepartmentsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteDepartmentsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteDepartmentsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteDepartmentsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteDepartmentsIdMutationKey(id);
   const swrFn = getDeleteDepartmentsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * division一覧の取得 クエリでyearを指定することで年度ごとのdivisionを取得可能
  */
 export type getDivisionsResponse200 = {
-  data: DivisionDetails;
-  status: 200;
-};
-
-export type getDivisionsResponseSuccess = getDivisionsResponse200 & {
+  data: DivisionDetails
+  status: 200
+}
+    
+export type getDivisionsResponseSuccess = (getDivisionsResponse200) & {
   headers: Headers;
 };
-export type getDivisionsResponse = getDivisionsResponseSuccess;
+;
 
-export const getGetDivisionsUrl = (params?: GetDivisionsParams) => {
+export type getDivisionsResponse = (getDivisionsResponseSuccess)
+
+export const getGetDivisionsUrl = (params?: GetDivisionsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/divisions?${stringifiedParams}` : `/divisions`;
-};
+  return stringifiedParams.length > 0 ? `/divisions?${stringifiedParams}` : `/divisions`
+}
 
-export const getDivisions = async (
-  params?: GetDivisionsParams,
-  options?: RequestInit,
-): Promise<getDivisionsResponse> => {
-  return customFetch<getDivisionsResponse>(getGetDivisionsUrl(params), {
+export const getDivisions = async (params?: GetDivisionsParams, options?: RequestInit): Promise<getDivisionsResponse> => {
+  
+  return customFetch<getDivisionsResponse>(getGetDivisionsUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetDivisionsKey = (params?: GetDivisionsParams) =>
-  [`/divisions`, ...(params ? [params] : [])] as const;
 
-export type GetDivisionsQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisions>>>;
-export type GetDivisionsQueryError = unknown;
+
+
+export const getGetDivisionsKey = (params?: GetDivisionsParams,) => [`/divisions`, ...(params ? [params]: [])] as const;
+
+export type GetDivisionsQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisions>>>
+export type GetDivisionsQueryError = unknown
 
 export const useGetDivisions = <TError = unknown>(
-  params?: GetDivisionsParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getDivisions>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetDivisionsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisions>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDivisionsKey(params) : null));
-  const swrFn = () => getDivisions(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsKey(params) : null);
+  const swrFn = () => getDivisions(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * divisionの作成
  */
 export type postDivisionsResponse200 = {
-  data: DivisionWithBalance;
-  status: 200;
-};
-
-export type postDivisionsResponseSuccess = postDivisionsResponse200 & {
+  data: DivisionWithBalance
+  status: 200
+}
+    
+export type postDivisionsResponseSuccess = (postDivisionsResponse200) & {
   headers: Headers;
 };
-export type postDivisionsResponse = postDivisionsResponseSuccess;
+;
+
+export type postDivisionsResponse = (postDivisionsResponseSuccess)
 
 export const getPostDivisionsUrl = () => {
-  return `/divisions`;
-};
 
-export const postDivisions = async (
-  division: Division,
-  options?: RequestInit,
-): Promise<postDivisionsResponse> => {
-  return customFetch<postDivisionsResponse>(getPostDivisionsUrl(), {
+
+  
+
+  return `/divisions`
+}
+
+export const postDivisions = async (division: Division, options?: RequestInit): Promise<postDivisionsResponse> => {
+  
+  return customFetch<postDivisionsResponse>(getPostDivisionsUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(division),
-  });
-};
+    body: JSON.stringify(
+      division,)
+  }
+);}
 
-export const getPostDivisionsMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+
+
+
+export const getPostDivisionsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Division }) => {
     return postDivisions(arg, options);
-  };
-};
+  }
+}
 export const getPostDivisionsMutationKey = () => [`/divisions`] as const;
 
-export type PostDivisionsMutationResult = NonNullable<Awaited<ReturnType<typeof postDivisions>>>;
-export type PostDivisionsMutationError = unknown;
+export type PostDivisionsMutationResult = NonNullable<Awaited<ReturnType<typeof postDivisions>>>
+export type PostDivisionsMutationError = unknown
 
-export const usePostDivisions = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postDivisions>>,
-    TError,
-    Key,
-    Division,
-    Awaited<ReturnType<typeof postDivisions>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostDivisions = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postDivisions>>, TError, Key, Division, Awaited<ReturnType<typeof postDivisions>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostDivisionsMutationKey();
   const swrFn = getPostDivisionsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたdivisionの取得
  */
 export type getDivisionsIdResponse200 = {
-  data: Division;
-  status: 200;
-};
-
-export type getDivisionsIdResponseSuccess = getDivisionsIdResponse200 & {
+  data: Division
+  status: 200
+}
+    
+export type getDivisionsIdResponseSuccess = (getDivisionsIdResponse200) & {
   headers: Headers;
 };
-export type getDivisionsIdResponse = getDivisionsIdResponseSuccess;
+;
 
-export const getGetDivisionsIdUrl = (id: number) => {
-  return `/divisions/${id}`;
-};
+export type getDivisionsIdResponse = (getDivisionsIdResponseSuccess)
 
-export const getDivisionsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getDivisionsIdResponse> => {
-  return customFetch<getDivisionsIdResponse>(getGetDivisionsIdUrl(id), {
+export const getGetDivisionsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/divisions/${id}`
+}
+
+export const getDivisionsId = async (id: number, options?: RequestInit): Promise<getDivisionsIdResponse> => {
+  
+  return customFetch<getDivisionsIdResponse>(getGetDivisionsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetDivisionsIdKey = (id: number) => [`/divisions/${id}`] as const;
 
-export type GetDivisionsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisionsId>>>;
-export type GetDivisionsIdQueryError = unknown;
+
+
+export const getGetDivisionsIdKey = (id: number,) => [`/divisions/${id}`] as const;
+
+export type GetDivisionsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisionsId>>>
+export type GetDivisionsIdQueryError = unknown
 
 export const useGetDivisionsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getDivisionsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisionsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDivisionsIdKey(id) : null));
-  const swrFn = () => getDivisionsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsIdKey(id) : null);
+  const swrFn = () => getDivisionsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * divisionの更新
  */
 export type putDivisionsIdResponse200 = {
-  data: DivisionWithBalance;
-  status: 200;
-};
-
-export type putDivisionsIdResponseSuccess = putDivisionsIdResponse200 & {
+  data: DivisionWithBalance
+  status: 200
+}
+    
+export type putDivisionsIdResponseSuccess = (putDivisionsIdResponse200) & {
   headers: Headers;
 };
-export type putDivisionsIdResponse = putDivisionsIdResponseSuccess;
+;
 
-export const getPutDivisionsIdUrl = (id: number) => {
-  return `/divisions/${id}`;
-};
+export type putDivisionsIdResponse = (putDivisionsIdResponseSuccess)
 
-export const putDivisionsId = async (
-  id: number,
-  division: Division,
-  options?: RequestInit,
-): Promise<putDivisionsIdResponse> => {
-  return customFetch<putDivisionsIdResponse>(getPutDivisionsIdUrl(id), {
+export const getPutDivisionsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/divisions/${id}`
+}
+
+export const putDivisionsId = async (id: number,
+    division: Division, options?: RequestInit): Promise<putDivisionsIdResponse> => {
+  
+  return customFetch<putDivisionsIdResponse>(getPutDivisionsIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(division),
-  });
-};
+    body: JSON.stringify(
+      division,)
+  }
+);}
 
-export const getPutDivisionsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutDivisionsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Division }) => {
     return putDivisionsId(id, arg, options);
-  };
-};
-export const getPutDivisionsIdMutationKey = (id: number) => [`/divisions/${id}`] as const;
+  }
+}
+export const getPutDivisionsIdMutationKey = (id: number,) => [`/divisions/${id}`] as const;
 
-export type PutDivisionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putDivisionsId>>>;
-export type PutDivisionsIdMutationError = unknown;
+export type PutDivisionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putDivisionsId>>>
+export type PutDivisionsIdMutationError = unknown
 
 export const usePutDivisionsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putDivisionsId>>,
-      TError,
-      Key,
-      Division,
-      Awaited<ReturnType<typeof putDivisionsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putDivisionsId>>, TError, Key, Division, Awaited<ReturnType<typeof putDivisionsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutDivisionsIdMutationKey(id);
   const swrFn = getPutDivisionsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してdivisionの削除
  */
 export type deleteDivisionsIdResponse200 = {
-  data: DeleteDivisionsId200;
-  status: 200;
-};
-
-export type deleteDivisionsIdResponseSuccess = deleteDivisionsIdResponse200 & {
+  data: DeleteDivisionsId200
+  status: 200
+}
+    
+export type deleteDivisionsIdResponseSuccess = (deleteDivisionsIdResponse200) & {
   headers: Headers;
 };
-export type deleteDivisionsIdResponse = deleteDivisionsIdResponseSuccess;
+;
 
-export const getDeleteDivisionsIdUrl = (id: number) => {
-  return `/divisions/${id}`;
-};
+export type deleteDivisionsIdResponse = (deleteDivisionsIdResponseSuccess)
 
-export const deleteDivisionsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteDivisionsIdResponse> => {
-  return customFetch<deleteDivisionsIdResponse>(getDeleteDivisionsIdUrl(id), {
+export const getDeleteDivisionsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/divisions/${id}`
+}
+
+export const deleteDivisionsId = async (id: number, options?: RequestInit): Promise<deleteDivisionsIdResponse> => {
+  
+  return customFetch<deleteDivisionsIdResponse>(getDeleteDivisionsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteDivisionsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteDivisionsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteDivisionsId(id, options);
-  };
-};
-export const getDeleteDivisionsIdMutationKey = (id: number) => [`/divisions/${id}`] as const;
+  }
+}
+export const getDeleteDivisionsIdMutationKey = (id: number,) => [`/divisions/${id}`] as const;
 
-export type DeleteDivisionsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteDivisionsId>>
->;
-export type DeleteDivisionsIdMutationError = unknown;
+export type DeleteDivisionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteDivisionsId>>>
+export type DeleteDivisionsIdMutationError = unknown
 
 export const useDeleteDivisionsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteDivisionsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteDivisionsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteDivisionsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteDivisionsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteDivisionsIdMutationKey(id);
   const swrFn = getDeleteDivisionsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 購入報告ページの部門一覧の取得
  */
 export type getDivisionsUsersResponse200 = {
-  data: DivisionOption[];
-  status: 200;
-};
-
-export type getDivisionsUsersResponseSuccess = getDivisionsUsersResponse200 & {
+  data: DivisionOption[]
+  status: 200
+}
+    
+export type getDivisionsUsersResponseSuccess = (getDivisionsUsersResponse200) & {
   headers: Headers;
 };
-export type getDivisionsUsersResponse = getDivisionsUsersResponseSuccess;
+;
 
-export const getGetDivisionsUsersUrl = (params: GetDivisionsUsersParams) => {
+export type getDivisionsUsersResponse = (getDivisionsUsersResponseSuccess)
+
+export const getGetDivisionsUsersUrl = (params: GetDivisionsUsersParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/divisions/users?${stringifiedParams}`
-    : `/divisions/users`;
-};
+  return stringifiedParams.length > 0 ? `/divisions/users?${stringifiedParams}` : `/divisions/users`
+}
 
-export const getDivisionsUsers = async (
-  params: GetDivisionsUsersParams,
-  options?: RequestInit,
-): Promise<getDivisionsUsersResponse> => {
-  return customFetch<getDivisionsUsersResponse>(getGetDivisionsUsersUrl(params), {
+export const getDivisionsUsers = async (params: GetDivisionsUsersParams, options?: RequestInit): Promise<getDivisionsUsersResponse> => {
+  
+  return customFetch<getDivisionsUsersResponse>(getGetDivisionsUsersUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetDivisionsUsersKey = (params: GetDivisionsUsersParams) =>
-  [`/divisions/users`, ...(params ? [params] : [])] as const;
 
-export type GetDivisionsUsersQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getDivisionsUsers>>
->;
-export type GetDivisionsUsersQueryError = unknown;
+
+
+export const getGetDivisionsUsersKey = (params: GetDivisionsUsersParams,) => [`/divisions/users`, ...(params ? [params]: [])] as const;
+
+export type GetDivisionsUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisionsUsers>>>
+export type GetDivisionsUsersQueryError = unknown
 
 export const useGetDivisionsUsers = <TError = unknown>(
-  params: GetDivisionsUsersParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getDivisionsUsers>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: GetDivisionsUsersParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisionsUsers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDivisionsUsersKey(params) : null));
-  const swrFn = () => getDivisionsUsers(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsUsersKey(params) : null);
+  const swrFn = () => getDivisionsUsers(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 年度ごとのdivisionの一覧を取得
  */
 export type getDivisionsYearsResponse200 = {
-  data: DivisionOption[];
-  status: 200;
-};
-
-export type getDivisionsYearsResponseSuccess = getDivisionsYearsResponse200 & {
+  data: DivisionOption[]
+  status: 200
+}
+    
+export type getDivisionsYearsResponseSuccess = (getDivisionsYearsResponse200) & {
   headers: Headers;
 };
-export type getDivisionsYearsResponse = getDivisionsYearsResponseSuccess;
+;
 
-export const getGetDivisionsYearsUrl = (params?: GetDivisionsYearsParams) => {
+export type getDivisionsYearsResponse = (getDivisionsYearsResponseSuccess)
+
+export const getGetDivisionsYearsUrl = (params?: GetDivisionsYearsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/divisions/years?${stringifiedParams}`
-    : `/divisions/years`;
-};
+  return stringifiedParams.length > 0 ? `/divisions/years?${stringifiedParams}` : `/divisions/years`
+}
 
-export const getDivisionsYears = async (
-  params?: GetDivisionsYearsParams,
-  options?: RequestInit,
-): Promise<getDivisionsYearsResponse> => {
-  return customFetch<getDivisionsYearsResponse>(getGetDivisionsYearsUrl(params), {
+export const getDivisionsYears = async (params?: GetDivisionsYearsParams, options?: RequestInit): Promise<getDivisionsYearsResponse> => {
+  
+  return customFetch<getDivisionsYearsResponse>(getGetDivisionsYearsUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetDivisionsYearsKey = (params?: GetDivisionsYearsParams) =>
-  [`/divisions/years`, ...(params ? [params] : [])] as const;
 
-export type GetDivisionsYearsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getDivisionsYears>>
->;
-export type GetDivisionsYearsQueryError = unknown;
+
+
+export const getGetDivisionsYearsKey = (params?: GetDivisionsYearsParams,) => [`/divisions/years`, ...(params ? [params]: [])] as const;
+
+export type GetDivisionsYearsQueryResult = NonNullable<Awaited<ReturnType<typeof getDivisionsYears>>>
+export type GetDivisionsYearsQueryError = unknown
 
 export const useGetDivisionsYears = <TError = unknown>(
-  params?: GetDivisionsYearsParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getDivisionsYears>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetDivisionsYearsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getDivisionsYears>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetDivisionsYearsKey(params) : null));
-  const swrFn = () => getDivisionsYears(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetDivisionsYearsKey(params) : null);
+  const swrFn = () => getDivisionsYears(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * festival_itemの一覧の取得
  */
 export type getFestivalItemsResponse200 = {
-  data: FestivalItemDetails;
-  status: 200;
-};
-
-export type getFestivalItemsResponseSuccess = getFestivalItemsResponse200 & {
+  data: FestivalItemDetails
+  status: 200
+}
+    
+export type getFestivalItemsResponseSuccess = (getFestivalItemsResponse200) & {
   headers: Headers;
 };
-export type getFestivalItemsResponse = getFestivalItemsResponseSuccess;
+;
 
-export const getGetFestivalItemsUrl = (params?: GetFestivalItemsParams) => {
+export type getFestivalItemsResponse = (getFestivalItemsResponseSuccess)
+
+export const getGetFestivalItemsUrl = (params?: GetFestivalItemsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/festival_items?${stringifiedParams}` : `/festival_items`;
-};
+  return stringifiedParams.length > 0 ? `/festival_items?${stringifiedParams}` : `/festival_items`
+}
 
-export const getFestivalItems = async (
-  params?: GetFestivalItemsParams,
-  options?: RequestInit,
-): Promise<getFestivalItemsResponse> => {
-  return customFetch<getFestivalItemsResponse>(getGetFestivalItemsUrl(params), {
+export const getFestivalItems = async (params?: GetFestivalItemsParams, options?: RequestInit): Promise<getFestivalItemsResponse> => {
+  
+  return customFetch<getFestivalItemsResponse>(getGetFestivalItemsUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetFestivalItemsKey = (params?: GetFestivalItemsParams) =>
-  [`/festival_items`, ...(params ? [params] : [])] as const;
 
-export type GetFestivalItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItems>>>;
-export type GetFestivalItemsQueryError = unknown;
+
+
+export const getGetFestivalItemsKey = (params?: GetFestivalItemsParams,) => [`/festival_items`, ...(params ? [params]: [])] as const;
+
+export type GetFestivalItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItems>>>
+export type GetFestivalItemsQueryError = unknown
 
 export const useGetFestivalItems = <TError = unknown>(
-  params?: GetFestivalItemsParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFestivalItems>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetFestivalItemsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetFestivalItemsKey(params) : null));
-  const swrFn = () => getFestivalItems(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsKey(params) : null);
+  const swrFn = () => getFestivalItems(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * festival_itemの作成
  */
 export type postFestivalItemsResponse200 = {
-  data: FestivalItemWithBalance;
-  status: 200;
-};
-
-export type postFestivalItemsResponseSuccess = postFestivalItemsResponse200 & {
+  data: FestivalItemWithBalance
+  status: 200
+}
+    
+export type postFestivalItemsResponseSuccess = (postFestivalItemsResponse200) & {
   headers: Headers;
 };
-export type postFestivalItemsResponse = postFestivalItemsResponseSuccess;
+;
+
+export type postFestivalItemsResponse = (postFestivalItemsResponseSuccess)
 
 export const getPostFestivalItemsUrl = () => {
-  return `/festival_items`;
-};
 
-export const postFestivalItems = async (
-  festivalItem: FestivalItem,
-  options?: RequestInit,
-): Promise<postFestivalItemsResponse> => {
-  return customFetch<postFestivalItemsResponse>(getPostFestivalItemsUrl(), {
+
+  
+
+  return `/festival_items`
+}
+
+export const postFestivalItems = async (festivalItem: FestivalItem, options?: RequestInit): Promise<postFestivalItemsResponse> => {
+  
+  return customFetch<postFestivalItemsResponse>(getPostFestivalItemsUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(festivalItem),
-  });
-};
+    body: JSON.stringify(
+      festivalItem,)
+  }
+);}
 
-export const getPostFestivalItemsMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostFestivalItemsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: FestivalItem }) => {
     return postFestivalItems(arg, options);
-  };
-};
+  }
+}
 export const getPostFestivalItemsMutationKey = () => [`/festival_items`] as const;
 
-export type PostFestivalItemsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postFestivalItems>>
->;
-export type PostFestivalItemsMutationError = unknown;
+export type PostFestivalItemsMutationResult = NonNullable<Awaited<ReturnType<typeof postFestivalItems>>>
+export type PostFestivalItemsMutationError = unknown
 
-export const usePostFestivalItems = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postFestivalItems>>,
-    TError,
-    Key,
-    FestivalItem,
-    Awaited<ReturnType<typeof postFestivalItems>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostFestivalItems = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postFestivalItems>>, TError, Key, FestivalItem, Awaited<ReturnType<typeof postFestivalItems>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostFestivalItemsMutationKey();
   const swrFn = getPostFestivalItemsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたfestival_itemの取得
  */
 export type getFestivalItemsIdResponse200 = {
-  data: FestivalItem;
-  status: 200;
-};
-
-export type getFestivalItemsIdResponseSuccess = getFestivalItemsIdResponse200 & {
+  data: FestivalItem
+  status: 200
+}
+    
+export type getFestivalItemsIdResponseSuccess = (getFestivalItemsIdResponse200) & {
   headers: Headers;
 };
-export type getFestivalItemsIdResponse = getFestivalItemsIdResponseSuccess;
+;
 
-export const getGetFestivalItemsIdUrl = (id: number) => {
-  return `/festival_items/${id}`;
-};
+export type getFestivalItemsIdResponse = (getFestivalItemsIdResponseSuccess)
 
-export const getFestivalItemsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getFestivalItemsIdResponse> => {
-  return customFetch<getFestivalItemsIdResponse>(getGetFestivalItemsIdUrl(id), {
+export const getGetFestivalItemsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/festival_items/${id}`
+}
+
+export const getFestivalItemsId = async (id: number, options?: RequestInit): Promise<getFestivalItemsIdResponse> => {
+  
+  return customFetch<getFestivalItemsIdResponse>(getGetFestivalItemsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetFestivalItemsIdKey = (id: number) => [`/festival_items/${id}`] as const;
 
-export type GetFestivalItemsIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFestivalItemsId>>
->;
-export type GetFestivalItemsIdQueryError = unknown;
+
+
+export const getGetFestivalItemsIdKey = (id: number,) => [`/festival_items/${id}`] as const;
+
+export type GetFestivalItemsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItemsId>>>
+export type GetFestivalItemsIdQueryError = unknown
 
 export const useGetFestivalItemsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetFestivalItemsIdKey(id) : null));
-  const swrFn = () => getFestivalItemsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsIdKey(id) : null);
+  const swrFn = () => getFestivalItemsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * festival_itemの更新
  */
 export type putFestivalItemsIdResponse200 = {
-  data: FestivalItemWithBalance;
-  status: 200;
-};
-
-export type putFestivalItemsIdResponseSuccess = putFestivalItemsIdResponse200 & {
+  data: FestivalItemWithBalance
+  status: 200
+}
+    
+export type putFestivalItemsIdResponseSuccess = (putFestivalItemsIdResponse200) & {
   headers: Headers;
 };
-export type putFestivalItemsIdResponse = putFestivalItemsIdResponseSuccess;
+;
 
-export const getPutFestivalItemsIdUrl = (id: number) => {
-  return `/festival_items/${id}`;
-};
+export type putFestivalItemsIdResponse = (putFestivalItemsIdResponseSuccess)
 
-export const putFestivalItemsId = async (
-  id: number,
-  festivalItem: FestivalItem,
-  options?: RequestInit,
-): Promise<putFestivalItemsIdResponse> => {
-  return customFetch<putFestivalItemsIdResponse>(getPutFestivalItemsIdUrl(id), {
+export const getPutFestivalItemsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/festival_items/${id}`
+}
+
+export const putFestivalItemsId = async (id: number,
+    festivalItem: FestivalItem, options?: RequestInit): Promise<putFestivalItemsIdResponse> => {
+  
+  return customFetch<putFestivalItemsIdResponse>(getPutFestivalItemsIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(festivalItem),
-  });
-};
+    body: JSON.stringify(
+      festivalItem,)
+  }
+);}
 
-export const getPutFestivalItemsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutFestivalItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: FestivalItem }) => {
     return putFestivalItemsId(id, arg, options);
-  };
-};
-export const getPutFestivalItemsIdMutationKey = (id: number) => [`/festival_items/${id}`] as const;
+  }
+}
+export const getPutFestivalItemsIdMutationKey = (id: number,) => [`/festival_items/${id}`] as const;
 
-export type PutFestivalItemsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putFestivalItemsId>>
->;
-export type PutFestivalItemsIdMutationError = unknown;
+export type PutFestivalItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putFestivalItemsId>>>
+export type PutFestivalItemsIdMutationError = unknown
 
 export const usePutFestivalItemsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putFestivalItemsId>>,
-      TError,
-      Key,
-      FestivalItem,
-      Awaited<ReturnType<typeof putFestivalItemsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putFestivalItemsId>>, TError, Key, FestivalItem, Awaited<ReturnType<typeof putFestivalItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutFestivalItemsIdMutationKey(id);
   const swrFn = getPutFestivalItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してfestival_itemの削除
  */
 export type deleteFestivalItemsIdResponse200 = {
-  data: DeleteFestivalItemsId200;
-  status: 200;
-};
-
-export type deleteFestivalItemsIdResponseSuccess = deleteFestivalItemsIdResponse200 & {
+  data: DeleteFestivalItemsId200
+  status: 200
+}
+    
+export type deleteFestivalItemsIdResponseSuccess = (deleteFestivalItemsIdResponse200) & {
   headers: Headers;
 };
-export type deleteFestivalItemsIdResponse = deleteFestivalItemsIdResponseSuccess;
+;
 
-export const getDeleteFestivalItemsIdUrl = (id: number) => {
-  return `/festival_items/${id}`;
-};
+export type deleteFestivalItemsIdResponse = (deleteFestivalItemsIdResponseSuccess)
 
-export const deleteFestivalItemsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteFestivalItemsIdResponse> => {
-  return customFetch<deleteFestivalItemsIdResponse>(getDeleteFestivalItemsIdUrl(id), {
+export const getDeleteFestivalItemsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/festival_items/${id}`
+}
+
+export const deleteFestivalItemsId = async (id: number, options?: RequestInit): Promise<deleteFestivalItemsIdResponse> => {
+  
+  return customFetch<deleteFestivalItemsIdResponse>(getDeleteFestivalItemsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteFestivalItemsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteFestivalItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteFestivalItemsId(id, options);
-  };
-};
-export const getDeleteFestivalItemsIdMutationKey = (id: number) =>
-  [`/festival_items/${id}`] as const;
+  }
+}
+export const getDeleteFestivalItemsIdMutationKey = (id: number,) => [`/festival_items/${id}`] as const;
 
-export type DeleteFestivalItemsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteFestivalItemsId>>
->;
-export type DeleteFestivalItemsIdMutationError = unknown;
+export type DeleteFestivalItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteFestivalItemsId>>>
+export type DeleteFestivalItemsIdMutationError = unknown
 
 export const useDeleteFestivalItemsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteFestivalItemsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteFestivalItemsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteFestivalItemsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteFestivalItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteFestivalItemsIdMutationKey(id);
   const swrFn = getDeleteFestivalItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * ユーザーのマイページの予算一覧の取得
  */
 export type getFestivalItemsDetailsUserIdResponse200 = {
-  data: FestivalItemsForMyPage[];
-  status: 200;
+  data: FestivalItemsForMyPage[]
+  status: 200
+}
+    
+export type getFestivalItemsDetailsUserIdResponseSuccess = (getFestivalItemsDetailsUserIdResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getFestivalItemsDetailsUserIdResponseSuccess =
-  getFestivalItemsDetailsUserIdResponse200 & {
-    headers: Headers;
-  };
-export type getFestivalItemsDetailsUserIdResponse = getFestivalItemsDetailsUserIdResponseSuccess;
+export type getFestivalItemsDetailsUserIdResponse = (getFestivalItemsDetailsUserIdResponseSuccess)
 
-export const getGetFestivalItemsDetailsUserIdUrl = (
-  userId: number,
-  params?: GetFestivalItemsDetailsUserIdParams,
-) => {
+export const getGetFestivalItemsDetailsUserIdUrl = (userId: number,
+    params?: GetFestivalItemsDetailsUserIdParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/festival_items/details/${userId}?${stringifiedParams}`
-    : `/festival_items/details/${userId}`;
-};
+  return stringifiedParams.length > 0 ? `/festival_items/details/${userId}?${stringifiedParams}` : `/festival_items/details/${userId}`
+}
 
-export const getFestivalItemsDetailsUserId = async (
-  userId: number,
-  params?: GetFestivalItemsDetailsUserIdParams,
-  options?: RequestInit,
-): Promise<getFestivalItemsDetailsUserIdResponse> => {
-  return customFetch<getFestivalItemsDetailsUserIdResponse>(
-    getGetFestivalItemsDetailsUserIdUrl(userId, params),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
+export const getFestivalItemsDetailsUserId = async (userId: number,
+    params?: GetFestivalItemsDetailsUserIdParams, options?: RequestInit): Promise<getFestivalItemsDetailsUserIdResponse> => {
+  
+  return customFetch<getFestivalItemsDetailsUserIdResponse>(getGetFestivalItemsDetailsUserIdUrl(userId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetFestivalItemsDetailsUserIdKey = (
-  userId: number,
-  params?: GetFestivalItemsDetailsUserIdParams,
-) => [`/festival_items/details/${userId}`, ...(params ? [params] : [])] as const;
 
-export type GetFestivalItemsDetailsUserIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFestivalItemsDetailsUserId>>
->;
-export type GetFestivalItemsDetailsUserIdQueryError = unknown;
+
+
+export const getGetFestivalItemsDetailsUserIdKey = (userId: number,
+    params?: GetFestivalItemsDetailsUserIdParams,) => [`/festival_items/details/${userId}`, ...(params ? [params]: [])] as const;
+
+export type GetFestivalItemsDetailsUserIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItemsDetailsUserId>>>
+export type GetFestivalItemsDetailsUserIdQueryError = unknown
 
 export const useGetFestivalItemsDetailsUserId = <TError = unknown>(
   userId: number,
-  params?: GetFestivalItemsDetailsUserIdParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsDetailsUserId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params?: GetFestivalItemsDetailsUserIdParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsDetailsUserId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!userId;
-  const swrKey =
-    swrOptions?.swrKey ??
-    (() => (isEnabled ? getGetFestivalItemsDetailsUserIdKey(userId, params) : null));
-  const swrFn = () => getFestivalItemsDetailsUserId(userId, params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(userId)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsDetailsUserIdKey(userId,params) : null);
+  const swrFn = () => getFestivalItemsDetailsUserId(userId,params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 購入報告ページの物品一覧の取得
  */
 export type getFestivalItemsUsersResponse200 = {
-  data: FestivalItemOption[];
-  status: 200;
-};
-
-export type getFestivalItemsUsersResponseSuccess = getFestivalItemsUsersResponse200 & {
+  data: FestivalItemOption[]
+  status: 200
+}
+    
+export type getFestivalItemsUsersResponseSuccess = (getFestivalItemsUsersResponse200) & {
   headers: Headers;
 };
-export type getFestivalItemsUsersResponse = getFestivalItemsUsersResponseSuccess;
+;
 
-export const getGetFestivalItemsUsersUrl = (params: GetFestivalItemsUsersParams) => {
+export type getFestivalItemsUsersResponse = (getFestivalItemsUsersResponseSuccess)
+
+export const getGetFestivalItemsUsersUrl = (params: GetFestivalItemsUsersParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/festival_items/users?${stringifiedParams}`
-    : `/festival_items/users`;
-};
+  return stringifiedParams.length > 0 ? `/festival_items/users?${stringifiedParams}` : `/festival_items/users`
+}
 
-export const getFestivalItemsUsers = async (
-  params: GetFestivalItemsUsersParams,
-  options?: RequestInit,
-): Promise<getFestivalItemsUsersResponse> => {
-  return customFetch<getFestivalItemsUsersResponse>(getGetFestivalItemsUsersUrl(params), {
+export const getFestivalItemsUsers = async (params: GetFestivalItemsUsersParams, options?: RequestInit): Promise<getFestivalItemsUsersResponse> => {
+  
+  return customFetch<getFestivalItemsUsersResponse>(getGetFestivalItemsUsersUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetFestivalItemsUsersKey = (params: GetFestivalItemsUsersParams) =>
-  [`/festival_items/users`, ...(params ? [params] : [])] as const;
 
-export type GetFestivalItemsUsersQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFestivalItemsUsers>>
->;
-export type GetFestivalItemsUsersQueryError = unknown;
+
+
+export const getGetFestivalItemsUsersKey = (params: GetFestivalItemsUsersParams,) => [`/festival_items/users`, ...(params ? [params]: [])] as const;
+
+export type GetFestivalItemsUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getFestivalItemsUsers>>>
+export type GetFestivalItemsUsersQueryError = unknown
 
 export const useGetFestivalItemsUsers = <TError = unknown>(
-  params: GetFestivalItemsUsersParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsUsers>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: GetFestivalItemsUsersParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFestivalItemsUsers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFestivalItemsUsersKey(params) : null));
-  const swrFn = () => getFestivalItemsUsers(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFestivalItemsUsersKey(params) : null);
+  const swrFn = () => getFestivalItemsUsers(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * financial_recordの一覧を取得
  */
 export type getFinancialRecordsResponse200 = {
-  data: FinancialRecordDetails;
-  status: 200;
-};
-
-export type getFinancialRecordsResponseSuccess = getFinancialRecordsResponse200 & {
+  data: FinancialRecordDetails
+  status: 200
+}
+    
+export type getFinancialRecordsResponseSuccess = (getFinancialRecordsResponse200) & {
   headers: Headers;
 };
-export type getFinancialRecordsResponse = getFinancialRecordsResponseSuccess;
+;
 
-export const getGetFinancialRecordsUrl = (params?: GetFinancialRecordsParams) => {
+export type getFinancialRecordsResponse = (getFinancialRecordsResponseSuccess)
+
+export const getGetFinancialRecordsUrl = (params?: GetFinancialRecordsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/financial_records?${stringifiedParams}`
-    : `/financial_records`;
-};
+  return stringifiedParams.length > 0 ? `/financial_records?${stringifiedParams}` : `/financial_records`
+}
 
-export const getFinancialRecords = async (
-  params?: GetFinancialRecordsParams,
-  options?: RequestInit,
-): Promise<getFinancialRecordsResponse> => {
-  return customFetch<getFinancialRecordsResponse>(getGetFinancialRecordsUrl(params), {
+export const getFinancialRecords = async (params?: GetFinancialRecordsParams, options?: RequestInit): Promise<getFinancialRecordsResponse> => {
+  
+  return customFetch<getFinancialRecordsResponse>(getGetFinancialRecordsUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetFinancialRecordsKey = (params?: GetFinancialRecordsParams) =>
-  [`/financial_records`, ...(params ? [params] : [])] as const;
 
-export type GetFinancialRecordsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFinancialRecords>>
->;
-export type GetFinancialRecordsQueryError = unknown;
+
+
+export const getGetFinancialRecordsKey = (params?: GetFinancialRecordsParams,) => [`/financial_records`, ...(params ? [params]: [])] as const;
+
+export type GetFinancialRecordsQueryResult = NonNullable<Awaited<ReturnType<typeof getFinancialRecords>>>
+export type GetFinancialRecordsQueryError = unknown
 
 export const useGetFinancialRecords = <TError = unknown>(
-  params?: GetFinancialRecordsParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecords>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetFinancialRecordsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecords>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFinancialRecordsKey(params) : null));
-  const swrFn = () => getFinancialRecords(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFinancialRecordsKey(params) : null);
+  const swrFn = () => getFinancialRecords(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * financial_recordの作成
  */
 export type postFinancialRecordsResponse200 = {
-  data: FinancialRecordWithBalance;
-  status: 200;
-};
-
-export type postFinancialRecordsResponseSuccess = postFinancialRecordsResponse200 & {
+  data: FinancialRecordWithBalance
+  status: 200
+}
+    
+export type postFinancialRecordsResponseSuccess = (postFinancialRecordsResponse200) & {
   headers: Headers;
 };
-export type postFinancialRecordsResponse = postFinancialRecordsResponseSuccess;
+;
+
+export type postFinancialRecordsResponse = (postFinancialRecordsResponseSuccess)
 
 export const getPostFinancialRecordsUrl = () => {
-  return `/financial_records`;
-};
 
-export const postFinancialRecords = async (
-  financialRecord: FinancialRecord,
-  options?: RequestInit,
-): Promise<postFinancialRecordsResponse> => {
-  return customFetch<postFinancialRecordsResponse>(getPostFinancialRecordsUrl(), {
+
+  
+
+  return `/financial_records`
+}
+
+export const postFinancialRecords = async (financialRecord: FinancialRecord, options?: RequestInit): Promise<postFinancialRecordsResponse> => {
+  
+  return customFetch<postFinancialRecordsResponse>(getPostFinancialRecordsUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(financialRecord),
-  });
-};
+    body: JSON.stringify(
+      financialRecord,)
+  }
+);}
 
-export const getPostFinancialRecordsMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostFinancialRecordsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: FinancialRecord }) => {
     return postFinancialRecords(arg, options);
-  };
-};
+  }
+}
 export const getPostFinancialRecordsMutationKey = () => [`/financial_records`] as const;
 
-export type PostFinancialRecordsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postFinancialRecords>>
->;
-export type PostFinancialRecordsMutationError = unknown;
+export type PostFinancialRecordsMutationResult = NonNullable<Awaited<ReturnType<typeof postFinancialRecords>>>
+export type PostFinancialRecordsMutationError = unknown
 
-export const usePostFinancialRecords = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postFinancialRecords>>,
-    TError,
-    Key,
-    FinancialRecord,
-    Awaited<ReturnType<typeof postFinancialRecords>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostFinancialRecords = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postFinancialRecords>>, TError, Key, FinancialRecord, Awaited<ReturnType<typeof postFinancialRecords>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostFinancialRecordsMutationKey();
   const swrFn = getPostFinancialRecordsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたfinancial_recordの取得
  */
 export type getFinancialRecordsIdResponse200 = {
-  data: FinancialRecord;
-  status: 200;
-};
-
-export type getFinancialRecordsIdResponseSuccess = getFinancialRecordsIdResponse200 & {
+  data: FinancialRecord
+  status: 200
+}
+    
+export type getFinancialRecordsIdResponseSuccess = (getFinancialRecordsIdResponse200) & {
   headers: Headers;
 };
-export type getFinancialRecordsIdResponse = getFinancialRecordsIdResponseSuccess;
+;
 
-export const getGetFinancialRecordsIdUrl = (id: number) => {
-  return `/financial_records/${id}`;
-};
+export type getFinancialRecordsIdResponse = (getFinancialRecordsIdResponseSuccess)
 
-export const getFinancialRecordsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getFinancialRecordsIdResponse> => {
-  return customFetch<getFinancialRecordsIdResponse>(getGetFinancialRecordsIdUrl(id), {
+export const getGetFinancialRecordsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/financial_records/${id}`
+}
+
+export const getFinancialRecordsId = async (id: number, options?: RequestInit): Promise<getFinancialRecordsIdResponse> => {
+  
+  return customFetch<getFinancialRecordsIdResponse>(getGetFinancialRecordsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetFinancialRecordsIdKey = (id: number) => [`/financial_records/${id}`] as const;
 
-export type GetFinancialRecordsIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFinancialRecordsId>>
->;
-export type GetFinancialRecordsIdQueryError = unknown;
+
+
+export const getGetFinancialRecordsIdKey = (id: number,) => [`/financial_records/${id}`] as const;
+
+export type GetFinancialRecordsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFinancialRecordsId>>>
+export type GetFinancialRecordsIdQueryError = unknown
 
 export const useGetFinancialRecordsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecordsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecordsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetFinancialRecordsIdKey(id) : null));
-  const swrFn = () => getFinancialRecordsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFinancialRecordsIdKey(id) : null);
+  const swrFn = () => getFinancialRecordsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * financial_recordの更新
  */
 export type putFinancialRecordsIdResponse200 = {
-  data: FinancialRecordWithBalance;
-  status: 200;
-};
-
-export type putFinancialRecordsIdResponseSuccess = putFinancialRecordsIdResponse200 & {
+  data: FinancialRecordWithBalance
+  status: 200
+}
+    
+export type putFinancialRecordsIdResponseSuccess = (putFinancialRecordsIdResponse200) & {
   headers: Headers;
 };
-export type putFinancialRecordsIdResponse = putFinancialRecordsIdResponseSuccess;
+;
 
-export const getPutFinancialRecordsIdUrl = (id: number) => {
-  return `/financial_records/${id}`;
-};
+export type putFinancialRecordsIdResponse = (putFinancialRecordsIdResponseSuccess)
 
-export const putFinancialRecordsId = async (
-  id: number,
-  financialRecord: FinancialRecord,
-  options?: RequestInit,
-): Promise<putFinancialRecordsIdResponse> => {
-  return customFetch<putFinancialRecordsIdResponse>(getPutFinancialRecordsIdUrl(id), {
+export const getPutFinancialRecordsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/financial_records/${id}`
+}
+
+export const putFinancialRecordsId = async (id: number,
+    financialRecord: FinancialRecord, options?: RequestInit): Promise<putFinancialRecordsIdResponse> => {
+  
+  return customFetch<putFinancialRecordsIdResponse>(getPutFinancialRecordsIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(financialRecord),
-  });
-};
+    body: JSON.stringify(
+      financialRecord,)
+  }
+);}
 
-export const getPutFinancialRecordsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutFinancialRecordsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: FinancialRecord }) => {
     return putFinancialRecordsId(id, arg, options);
-  };
-};
-export const getPutFinancialRecordsIdMutationKey = (id: number) =>
-  [`/financial_records/${id}`] as const;
+  }
+}
+export const getPutFinancialRecordsIdMutationKey = (id: number,) => [`/financial_records/${id}`] as const;
 
-export type PutFinancialRecordsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putFinancialRecordsId>>
->;
-export type PutFinancialRecordsIdMutationError = unknown;
+export type PutFinancialRecordsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putFinancialRecordsId>>>
+export type PutFinancialRecordsIdMutationError = unknown
 
 export const usePutFinancialRecordsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putFinancialRecordsId>>,
-      TError,
-      Key,
-      FinancialRecord,
-      Awaited<ReturnType<typeof putFinancialRecordsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putFinancialRecordsId>>, TError, Key, FinancialRecord, Awaited<ReturnType<typeof putFinancialRecordsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutFinancialRecordsIdMutationKey(id);
   const swrFn = getPutFinancialRecordsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してfinancial_recordの削除
  */
 export type deleteFinancialRecordsIdResponse200 = {
-  data: DeleteFinancialRecordsId200;
-  status: 200;
-};
-
-export type deleteFinancialRecordsIdResponseSuccess = deleteFinancialRecordsIdResponse200 & {
+  data: DeleteFinancialRecordsId200
+  status: 200
+}
+    
+export type deleteFinancialRecordsIdResponseSuccess = (deleteFinancialRecordsIdResponse200) & {
   headers: Headers;
 };
-export type deleteFinancialRecordsIdResponse = deleteFinancialRecordsIdResponseSuccess;
+;
 
-export const getDeleteFinancialRecordsIdUrl = (id: number) => {
-  return `/financial_records/${id}`;
-};
+export type deleteFinancialRecordsIdResponse = (deleteFinancialRecordsIdResponseSuccess)
 
-export const deleteFinancialRecordsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteFinancialRecordsIdResponse> => {
-  return customFetch<deleteFinancialRecordsIdResponse>(getDeleteFinancialRecordsIdUrl(id), {
+export const getDeleteFinancialRecordsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/financial_records/${id}`
+}
+
+export const deleteFinancialRecordsId = async (id: number, options?: RequestInit): Promise<deleteFinancialRecordsIdResponse> => {
+  
+  return customFetch<deleteFinancialRecordsIdResponse>(getDeleteFinancialRecordsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteFinancialRecordsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteFinancialRecordsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteFinancialRecordsId(id, options);
-  };
-};
-export const getDeleteFinancialRecordsIdMutationKey = (id: number) =>
-  [`/financial_records/${id}`] as const;
+  }
+}
+export const getDeleteFinancialRecordsIdMutationKey = (id: number,) => [`/financial_records/${id}`] as const;
 
-export type DeleteFinancialRecordsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteFinancialRecordsId>>
->;
-export type DeleteFinancialRecordsIdMutationError = unknown;
+export type DeleteFinancialRecordsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteFinancialRecordsId>>>
+export type DeleteFinancialRecordsIdMutationError = unknown
 
 export const useDeleteFinancialRecordsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteFinancialRecordsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteFinancialRecordsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteFinancialRecordsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteFinancialRecordsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteFinancialRecordsIdMutationKey(id);
   const swrFn = getDeleteFinancialRecordsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * financial_recordの年度予算のCSVをダウンロード
  */
 export type getFinancialRecordsCsvDownloadResponse200 = {
-  data: Blob;
-  status: 200;
+  data: Blob
+  status: 200
+}
+    
+export type getFinancialRecordsCsvDownloadResponseSuccess = (getFinancialRecordsCsvDownloadResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getFinancialRecordsCsvDownloadResponseSuccess =
-  getFinancialRecordsCsvDownloadResponse200 & {
-    headers: Headers;
-  };
-export type getFinancialRecordsCsvDownloadResponse = getFinancialRecordsCsvDownloadResponseSuccess;
+export type getFinancialRecordsCsvDownloadResponse = (getFinancialRecordsCsvDownloadResponseSuccess)
 
-export const getGetFinancialRecordsCsvDownloadUrl = (
-  params: GetFinancialRecordsCsvDownloadParams,
-) => {
+export const getGetFinancialRecordsCsvDownloadUrl = (params: GetFinancialRecordsCsvDownloadParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/financial_records/csv/download?${stringifiedParams}`
-    : `/financial_records/csv/download`;
-};
+  return stringifiedParams.length > 0 ? `/financial_records/csv/download?${stringifiedParams}` : `/financial_records/csv/download`
+}
 
-export const getFinancialRecordsCsvDownload = async (
-  params: GetFinancialRecordsCsvDownloadParams,
-  options?: RequestInit,
-): Promise<getFinancialRecordsCsvDownloadResponse> => {
-  return customFetch<getFinancialRecordsCsvDownloadResponse>(
-    getGetFinancialRecordsCsvDownloadUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
+export const getFinancialRecordsCsvDownload = async (params: GetFinancialRecordsCsvDownloadParams, options?: RequestInit): Promise<getFinancialRecordsCsvDownloadResponse> => {
+  
+  return customFetch<getFinancialRecordsCsvDownloadResponse>(getGetFinancialRecordsCsvDownloadUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetFinancialRecordsCsvDownloadKey = (
-  params: GetFinancialRecordsCsvDownloadParams,
-) => [`/financial_records/csv/download`, ...(params ? [params] : [])] as const;
 
-export type GetFinancialRecordsCsvDownloadQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getFinancialRecordsCsvDownload>>
->;
-export type GetFinancialRecordsCsvDownloadQueryError = unknown;
+
+
+export const getGetFinancialRecordsCsvDownloadKey = (params: GetFinancialRecordsCsvDownloadParams,) => [`/financial_records/csv/download`, ...(params ? [params]: [])] as const;
+
+export type GetFinancialRecordsCsvDownloadQueryResult = NonNullable<Awaited<ReturnType<typeof getFinancialRecordsCsvDownload>>>
+export type GetFinancialRecordsCsvDownloadQueryError = unknown
 
 export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
-  params: GetFinancialRecordsCsvDownloadParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecordsCsvDownload>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: GetFinancialRecordsCsvDownloadParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFinancialRecordsCsvDownload>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFinancialRecordsCsvDownloadKey(params) : null));
-  const swrFn = () => getFinancialRecordsCsvDownload(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFinancialRecordsCsvDownloadKey(params) : null);
+  const swrFn = () => getFinancialRecordsCsvDownload(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 収支管理一覧のCSVダウンロード、財務向けのページ
  */
 export type getIncomeExpenditureManagementCsvDownloadResponse200 = {
-  data: Blob;
-  status: 200;
+  data: Blob
+  status: 200
+}
+    
+export type getIncomeExpenditureManagementCsvDownloadResponseSuccess = (getIncomeExpenditureManagementCsvDownloadResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getIncomeExpenditureManagementCsvDownloadResponseSuccess =
-  getIncomeExpenditureManagementCsvDownloadResponse200 & {
-    headers: Headers;
-  };
-export type getIncomeExpenditureManagementCsvDownloadResponse =
-  getIncomeExpenditureManagementCsvDownloadResponseSuccess;
+export type getIncomeExpenditureManagementCsvDownloadResponse = (getIncomeExpenditureManagementCsvDownloadResponseSuccess)
 
-export const getGetIncomeExpenditureManagementCsvDownloadUrl = (
-  params?: GetIncomeExpenditureManagementCsvDownloadParams,
-) => {
+export const getGetIncomeExpenditureManagementCsvDownloadUrl = (params?: GetIncomeExpenditureManagementCsvDownloadParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/income_expenditure_management/csv/download?${stringifiedParams}`
-    : `/income_expenditure_management/csv/download`;
-};
+  return stringifiedParams.length > 0 ? `/income_expenditure_management/csv/download?${stringifiedParams}` : `/income_expenditure_management/csv/download`
+}
 
-export const getIncomeExpenditureManagementCsvDownload = async (
-  params?: GetIncomeExpenditureManagementCsvDownloadParams,
-  options?: RequestInit,
-): Promise<getIncomeExpenditureManagementCsvDownloadResponse> => {
-  return customFetch<getIncomeExpenditureManagementCsvDownloadResponse>(
-    getGetIncomeExpenditureManagementCsvDownloadUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
+export const getIncomeExpenditureManagementCsvDownload = async (params?: GetIncomeExpenditureManagementCsvDownloadParams, options?: RequestInit): Promise<getIncomeExpenditureManagementCsvDownloadResponse> => {
+  
+  return customFetch<getIncomeExpenditureManagementCsvDownloadResponse>(getGetIncomeExpenditureManagementCsvDownloadUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetIncomeExpenditureManagementCsvDownloadKey = (
-  params?: GetIncomeExpenditureManagementCsvDownloadParams,
-) => [`/income_expenditure_management/csv/download`, ...(params ? [params] : [])] as const;
 
-export type GetIncomeExpenditureManagementCsvDownloadQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>
->;
-export type GetIncomeExpenditureManagementCsvDownloadQueryError = unknown;
+
+
+export const getGetIncomeExpenditureManagementCsvDownloadKey = (params?: GetIncomeExpenditureManagementCsvDownloadParams,) => [`/income_expenditure_management/csv/download`, ...(params ? [params]: [])] as const;
+
+export type GetIncomeExpenditureManagementCsvDownloadQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>>
+export type GetIncomeExpenditureManagementCsvDownloadQueryError = unknown
 
 export const useGetIncomeExpenditureManagementCsvDownload = <TError = unknown>(
-  params?: GetIncomeExpenditureManagementCsvDownloadParams,
-  options?: {
-    swr?: SWRConfiguration<
-      Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>,
-      TError
-    > & { swrKey?: Key; enabled?: boolean };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetIncomeExpenditureManagementCsvDownloadParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getIncomeExpenditureManagementCsvDownload>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ??
-    (() => (isEnabled ? getGetIncomeExpenditureManagementCsvDownloadKey(params) : null));
-  const swrFn = () => getIncomeExpenditureManagementCsvDownload(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetIncomeExpenditureManagementCsvDownloadKey(params) : null);
+  const swrFn = () => getIncomeExpenditureManagementCsvDownload(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 収支管理で収入の項目を取得（教育振興会費、雑収入など）
  */
 export type getIncomesResponse200 = {
-  data: IncomeCategory[];
-  status: 200;
-};
-
-export type getIncomesResponseSuccess = getIncomesResponse200 & {
+  data: IncomeCategory[]
+  status: 200
+}
+    
+export type getIncomesResponseSuccess = (getIncomesResponse200) & {
   headers: Headers;
 };
-export type getIncomesResponse = getIncomesResponseSuccess;
+;
+
+export type getIncomesResponse = (getIncomesResponseSuccess)
 
 export const getGetIncomesUrl = () => {
-  return `/incomes`;
-};
 
-export const getIncomes = async (options?: RequestInit): Promise<getIncomesResponse> => {
-  return customFetch<getIncomesResponse>(getGetIncomesUrl(), {
+
+  
+
+  return `/incomes`
+}
+
+export const getIncomes = async ( options?: RequestInit): Promise<getIncomesResponse> => {
+  
+  return customFetch<getIncomesResponse>(getGetIncomesUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetIncomesKey = () => [`/incomes`] as const;
 
-export type GetIncomesQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomes>>>;
-export type GetIncomesQueryError = unknown;
+export type GetIncomesQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomes>>>
+export type GetIncomesQueryError = unknown
 
-export const useGetIncomes = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getIncomes>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetIncomes = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getIncomes>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetIncomesKey() : null));
-  const swrFn = () => getIncomes(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetIncomesKey() : null);
+  const swrFn = () => getIncomes(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * incomeの作成
  */
 export type postIncomesResponse200 = {
-  data: Income;
-  status: 200;
-};
-
-export type postIncomesResponseSuccess = postIncomesResponse200 & {
+  data: Income
+  status: 200
+}
+    
+export type postIncomesResponseSuccess = (postIncomesResponse200) & {
   headers: Headers;
 };
-export type postIncomesResponse = postIncomesResponseSuccess;
+;
+
+export type postIncomesResponse = (postIncomesResponseSuccess)
 
 export const getPostIncomesUrl = () => {
-  return `/incomes`;
-};
 
-export const postIncomes = async (
-  income: Income,
-  options?: RequestInit,
-): Promise<postIncomesResponse> => {
-  return customFetch<postIncomesResponse>(getPostIncomesUrl(), {
+
+  
+
+  return `/incomes`
+}
+
+export const postIncomes = async (income: Income, options?: RequestInit): Promise<postIncomesResponse> => {
+  
+  return customFetch<postIncomesResponse>(getPostIncomesUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(income),
-  });
-};
+    body: JSON.stringify(
+      income,)
+  }
+);}
 
-export const getPostIncomesMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+
+
+
+export const getPostIncomesMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Income }) => {
     return postIncomes(arg, options);
-  };
-};
+  }
+}
 export const getPostIncomesMutationKey = () => [`/incomes`] as const;
 
-export type PostIncomesMutationResult = NonNullable<Awaited<ReturnType<typeof postIncomes>>>;
-export type PostIncomesMutationError = unknown;
+export type PostIncomesMutationResult = NonNullable<Awaited<ReturnType<typeof postIncomes>>>
+export type PostIncomesMutationError = unknown
 
-export const usePostIncomes = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postIncomes>>,
-    TError,
-    Key,
-    Income,
-    Awaited<ReturnType<typeof postIncomes>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostIncomes = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postIncomes>>, TError, Key, Income, Awaited<ReturnType<typeof postIncomes>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostIncomesMutationKey();
   const swrFn = getPostIncomesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたincomeの取得
  */
 export type getIncomesIdResponse200 = {
-  data: Income;
-  status: 200;
-};
-
-export type getIncomesIdResponseSuccess = getIncomesIdResponse200 & {
+  data: Income
+  status: 200
+}
+    
+export type getIncomesIdResponseSuccess = (getIncomesIdResponse200) & {
   headers: Headers;
 };
-export type getIncomesIdResponse = getIncomesIdResponseSuccess;
+;
 
-export const getGetIncomesIdUrl = (id: number) => {
-  return `/incomes/${id}`;
-};
+export type getIncomesIdResponse = (getIncomesIdResponseSuccess)
 
-export const getIncomesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getIncomesIdResponse> => {
-  return customFetch<getIncomesIdResponse>(getGetIncomesIdUrl(id), {
+export const getGetIncomesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/incomes/${id}`
+}
+
+export const getIncomesId = async (id: number, options?: RequestInit): Promise<getIncomesIdResponse> => {
+  
+  return customFetch<getIncomesIdResponse>(getGetIncomesIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetIncomesIdKey = (id: number) => [`/incomes/${id}`] as const;
 
-export type GetIncomesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomesId>>>;
-export type GetIncomesIdQueryError = unknown;
+
+
+export const getGetIncomesIdKey = (id: number,) => [`/incomes/${id}`] as const;
+
+export type GetIncomesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomesId>>>
+export type GetIncomesIdQueryError = unknown
 
 export const useGetIncomesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getIncomesId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getIncomesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetIncomesIdKey(id) : null));
-  const swrFn = () => getIncomesId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetIncomesIdKey(id) : null);
+  const swrFn = () => getIncomesId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * incomeの更新
  */
 export type putIncomesIdResponse200 = {
-  data: Income;
-  status: 200;
-};
-
-export type putIncomesIdResponseSuccess = putIncomesIdResponse200 & {
+  data: Income
+  status: 200
+}
+    
+export type putIncomesIdResponseSuccess = (putIncomesIdResponse200) & {
   headers: Headers;
 };
-export type putIncomesIdResponse = putIncomesIdResponseSuccess;
+;
 
-export const getPutIncomesIdUrl = (id: number) => {
-  return `/incomes/${id}`;
-};
+export type putIncomesIdResponse = (putIncomesIdResponseSuccess)
 
-export const putIncomesId = async (
-  id: number,
-  income: Income,
-  options?: RequestInit,
-): Promise<putIncomesIdResponse> => {
-  return customFetch<putIncomesIdResponse>(getPutIncomesIdUrl(id), {
+export const getPutIncomesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/incomes/${id}`
+}
+
+export const putIncomesId = async (id: number,
+    income: Income, options?: RequestInit): Promise<putIncomesIdResponse> => {
+  
+  return customFetch<putIncomesIdResponse>(getPutIncomesIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(income),
-  });
-};
+    body: JSON.stringify(
+      income,)
+  }
+);}
 
-export const getPutIncomesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutIncomesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Income }) => {
     return putIncomesId(id, arg, options);
-  };
-};
-export const getPutIncomesIdMutationKey = (id: number) => [`/incomes/${id}`] as const;
+  }
+}
+export const getPutIncomesIdMutationKey = (id: number,) => [`/incomes/${id}`] as const;
 
-export type PutIncomesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putIncomesId>>>;
-export type PutIncomesIdMutationError = unknown;
+export type PutIncomesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putIncomesId>>>
+export type PutIncomesIdMutationError = unknown
 
 export const usePutIncomesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putIncomesId>>,
-      TError,
-      Key,
-      Income,
-      Awaited<ReturnType<typeof putIncomesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putIncomesId>>, TError, Key, Income, Awaited<ReturnType<typeof putIncomesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutIncomesIdMutationKey(id);
   const swrFn = getPutIncomesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してincomeの削除
  */
 export type deleteIncomesIdResponse200 = {
-  data: DeleteIncomesId200;
-  status: 200;
-};
-
-export type deleteIncomesIdResponseSuccess = deleteIncomesIdResponse200 & {
+  data: DeleteIncomesId200
+  status: 200
+}
+    
+export type deleteIncomesIdResponseSuccess = (deleteIncomesIdResponse200) & {
   headers: Headers;
 };
-export type deleteIncomesIdResponse = deleteIncomesIdResponseSuccess;
+;
 
-export const getDeleteIncomesIdUrl = (id: number) => {
-  return `/incomes/${id}`;
-};
+export type deleteIncomesIdResponse = (deleteIncomesIdResponseSuccess)
 
-export const deleteIncomesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteIncomesIdResponse> => {
-  return customFetch<deleteIncomesIdResponse>(getDeleteIncomesIdUrl(id), {
+export const getDeleteIncomesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/incomes/${id}`
+}
+
+export const deleteIncomesId = async (id: number, options?: RequestInit): Promise<deleteIncomesIdResponse> => {
+  
+  return customFetch<deleteIncomesIdResponse>(getDeleteIncomesIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteIncomesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteIncomesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteIncomesId(id, options);
-  };
-};
-export const getDeleteIncomesIdMutationKey = (id: number) => [`/incomes/${id}`] as const;
+  }
+}
+export const getDeleteIncomesIdMutationKey = (id: number,) => [`/incomes/${id}`] as const;
 
-export type DeleteIncomesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteIncomesId>>
->;
-export type DeleteIncomesIdMutationError = unknown;
+export type DeleteIncomesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteIncomesId>>>
+export type DeleteIncomesIdMutationError = unknown
 
 export const useDeleteIncomesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteIncomesId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteIncomesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteIncomesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteIncomesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteIncomesIdMutationKey(id);
   const swrFn = getDeleteIncomesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * income_expenditure_managementの一覧を取得
  */
 export type getIncomeExpenditureManagementsResponse200 = {
-  data: IncomeExpenditureManagementDetails;
-  status: 200;
+  data: IncomeExpenditureManagementDetails
+  status: 200
+}
+    
+export type getIncomeExpenditureManagementsResponseSuccess = (getIncomeExpenditureManagementsResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getIncomeExpenditureManagementsResponseSuccess =
-  getIncomeExpenditureManagementsResponse200 & {
-    headers: Headers;
-  };
-export type getIncomeExpenditureManagementsResponse =
-  getIncomeExpenditureManagementsResponseSuccess;
+export type getIncomeExpenditureManagementsResponse = (getIncomeExpenditureManagementsResponseSuccess)
 
-export const getGetIncomeExpenditureManagementsUrl = (
-  params?: GetIncomeExpenditureManagementsParams,
-) => {
+export const getGetIncomeExpenditureManagementsUrl = (params?: GetIncomeExpenditureManagementsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/income_expenditure_managements?${stringifiedParams}`
-    : `/income_expenditure_managements`;
-};
+  return stringifiedParams.length > 0 ? `/income_expenditure_managements?${stringifiedParams}` : `/income_expenditure_managements`
+}
 
-export const getIncomeExpenditureManagements = async (
-  params?: GetIncomeExpenditureManagementsParams,
-  options?: RequestInit,
-): Promise<getIncomeExpenditureManagementsResponse> => {
-  return customFetch<getIncomeExpenditureManagementsResponse>(
-    getGetIncomeExpenditureManagementsUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
+export const getIncomeExpenditureManagements = async (params?: GetIncomeExpenditureManagementsParams, options?: RequestInit): Promise<getIncomeExpenditureManagementsResponse> => {
+  
+  return customFetch<getIncomeExpenditureManagementsResponse>(getGetIncomeExpenditureManagementsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetIncomeExpenditureManagementsKey = (
-  params?: GetIncomeExpenditureManagementsParams,
-) => [`/income_expenditure_managements`, ...(params ? [params] : [])] as const;
 
-export type GetIncomeExpenditureManagementsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getIncomeExpenditureManagements>>
->;
-export type GetIncomeExpenditureManagementsQueryError = unknown;
+
+
+export const getGetIncomeExpenditureManagementsKey = (params?: GetIncomeExpenditureManagementsParams,) => [`/income_expenditure_managements`, ...(params ? [params]: [])] as const;
+
+export type GetIncomeExpenditureManagementsQueryResult = NonNullable<Awaited<ReturnType<typeof getIncomeExpenditureManagements>>>
+export type GetIncomeExpenditureManagementsQueryError = unknown
 
 export const useGetIncomeExpenditureManagements = <TError = unknown>(
-  params?: GetIncomeExpenditureManagementsParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getIncomeExpenditureManagements>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetIncomeExpenditureManagementsParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getIncomeExpenditureManagements>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ??
-    (() => (isEnabled ? getGetIncomeExpenditureManagementsKey(params) : null));
-  const swrFn = () => getIncomeExpenditureManagements(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetIncomeExpenditureManagementsKey(params) : null);
+  const swrFn = () => getIncomeExpenditureManagements(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * income_expenditure_managementのチェック
  */
 export type putIncomeExpenditureManagementsCheckIdResponse200 = {
-  data: PutIncomeExpenditureManagementsCheckId200;
-  status: 200;
+  data: PutIncomeExpenditureManagementsCheckId200
+  status: 200
+}
+    
+export type putIncomeExpenditureManagementsCheckIdResponseSuccess = (putIncomeExpenditureManagementsCheckIdResponse200) & {
+  headers: Headers;
 };
+;
 
-export type putIncomeExpenditureManagementsCheckIdResponseSuccess =
-  putIncomeExpenditureManagementsCheckIdResponse200 & {
-    headers: Headers;
-  };
-export type putIncomeExpenditureManagementsCheckIdResponse =
-  putIncomeExpenditureManagementsCheckIdResponseSuccess;
+export type putIncomeExpenditureManagementsCheckIdResponse = (putIncomeExpenditureManagementsCheckIdResponseSuccess)
 
-export const getPutIncomeExpenditureManagementsCheckIdUrl = (id: number) => {
-  return `/income_expenditure_managements/check/${id}`;
-};
+export const getPutIncomeExpenditureManagementsCheckIdUrl = (id: number,) => {
 
-export const putIncomeExpenditureManagementsCheckId = async (
-  id: number,
-  putIncomeExpenditureManagementsCheckIdBody: PutIncomeExpenditureManagementsCheckIdBody,
-  options?: RequestInit,
-): Promise<putIncomeExpenditureManagementsCheckIdResponse> => {
-  return customFetch<putIncomeExpenditureManagementsCheckIdResponse>(
-    getPutIncomeExpenditureManagementsCheckIdUrl(id),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(putIncomeExpenditureManagementsCheckIdBody),
-    },
-  );
-};
 
-export const getPutIncomeExpenditureManagementsCheckIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+  
+
+  return `/income_expenditure_managements/check/${id}`
+}
+
+export const putIncomeExpenditureManagementsCheckId = async (id: number,
+    putIncomeExpenditureManagementsCheckIdBody: PutIncomeExpenditureManagementsCheckIdBody, options?: RequestInit): Promise<putIncomeExpenditureManagementsCheckIdResponse> => {
+  
+  return customFetch<putIncomeExpenditureManagementsCheckIdResponse>(getPutIncomeExpenditureManagementsCheckIdUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      putIncomeExpenditureManagementsCheckIdBody,)
+  }
+);}
+
+
+
+
+export const getPutIncomeExpenditureManagementsCheckIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: PutIncomeExpenditureManagementsCheckIdBody }) => {
     return putIncomeExpenditureManagementsCheckId(id, arg, options);
-  };
-};
-export const getPutIncomeExpenditureManagementsCheckIdMutationKey = (id: number) =>
-  [`/income_expenditure_managements/check/${id}`] as const;
+  }
+}
+export const getPutIncomeExpenditureManagementsCheckIdMutationKey = (id: number,) => [`/income_expenditure_managements/check/${id}`] as const;
 
-export type PutIncomeExpenditureManagementsCheckIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>
->;
-export type PutIncomeExpenditureManagementsCheckIdMutationError = unknown;
+export type PutIncomeExpenditureManagementsCheckIdMutationResult = NonNullable<Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>>
+export type PutIncomeExpenditureManagementsCheckIdMutationError = unknown
 
 export const usePutIncomeExpenditureManagementsCheckId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>,
-      TError,
-      Key,
-      PutIncomeExpenditureManagementsCheckIdBody,
-      Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>, TError, Key, PutIncomeExpenditureManagementsCheckIdBody, Awaited<ReturnType<typeof putIncomeExpenditureManagementsCheckId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutIncomeExpenditureManagementsCheckIdMutationKey(id);
   const swrFn = getPutIncomeExpenditureManagementsCheckIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * ユーザー登録
  */
 export type postMailAuthSignupResponse200 = {
-  data: PostMailAuthSignup200;
-  status: 200;
-};
-
-export type postMailAuthSignupResponseSuccess = postMailAuthSignupResponse200 & {
+  data: PostMailAuthSignup200
+  status: 200
+}
+    
+export type postMailAuthSignupResponseSuccess = (postMailAuthSignupResponse200) & {
   headers: Headers;
 };
-export type postMailAuthSignupResponse = postMailAuthSignupResponseSuccess;
+;
 
-export const getPostMailAuthSignupUrl = (params: PostMailAuthSignupParams) => {
+export type postMailAuthSignupResponse = (postMailAuthSignupResponseSuccess)
+
+export const getPostMailAuthSignupUrl = (params: PostMailAuthSignupParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/mail_auth/signup?${stringifiedParams}`
-    : `/mail_auth/signup`;
-};
+  return stringifiedParams.length > 0 ? `/mail_auth/signup?${stringifiedParams}` : `/mail_auth/signup`
+}
 
-export const postMailAuthSignup = async (
-  params: PostMailAuthSignupParams,
-  options?: RequestInit,
-): Promise<postMailAuthSignupResponse> => {
-  return customFetch<postMailAuthSignupResponse>(getPostMailAuthSignupUrl(params), {
+export const postMailAuthSignup = async (params: PostMailAuthSignupParams, options?: RequestInit): Promise<postMailAuthSignupResponse> => {
+  
+  return customFetch<postMailAuthSignupResponse>(getPostMailAuthSignupUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostMailAuthSignupMutationFetcher = (
-  params: PostMailAuthSignupParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostMailAuthSignupMutationFetcher = (params: PostMailAuthSignupParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postMailAuthSignup(params, options);
-  };
-};
-export const getPostMailAuthSignupMutationKey = (params: PostMailAuthSignupParams) =>
-  [`/mail_auth/signup`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostMailAuthSignupMutationKey = (params: PostMailAuthSignupParams,) => [`/mail_auth/signup`, ...(params ? [params]: [])] as const;
 
-export type PostMailAuthSignupMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postMailAuthSignup>>
->;
-export type PostMailAuthSignupMutationError = unknown;
+export type PostMailAuthSignupMutationResult = NonNullable<Awaited<ReturnType<typeof postMailAuthSignup>>>
+export type PostMailAuthSignupMutationError = unknown
 
 export const usePostMailAuthSignup = <TError = unknown>(
-  params: PostMailAuthSignupParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postMailAuthSignup>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postMailAuthSignup>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: PostMailAuthSignupParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postMailAuthSignup>>, TError, Key, Arguments, Awaited<ReturnType<typeof postMailAuthSignup>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostMailAuthSignupMutationKey(params);
   const swrFn = getPostMailAuthSignupMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * ログイン
  */
 export type postMailAuthSigninResponse200 = {
-  data: PostMailAuthSignin200;
-  status: 200;
-};
-
-export type postMailAuthSigninResponseSuccess = postMailAuthSigninResponse200 & {
+  data: PostMailAuthSignin200
+  status: 200
+}
+    
+export type postMailAuthSigninResponseSuccess = (postMailAuthSigninResponse200) & {
   headers: Headers;
 };
-export type postMailAuthSigninResponse = postMailAuthSigninResponseSuccess;
+;
 
-export const getPostMailAuthSigninUrl = (params: PostMailAuthSigninParams) => {
+export type postMailAuthSigninResponse = (postMailAuthSigninResponseSuccess)
+
+export const getPostMailAuthSigninUrl = (params: PostMailAuthSigninParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/mail_auth/signin?${stringifiedParams}`
-    : `/mail_auth/signin`;
-};
+  return stringifiedParams.length > 0 ? `/mail_auth/signin?${stringifiedParams}` : `/mail_auth/signin`
+}
 
-export const postMailAuthSignin = async (
-  params: PostMailAuthSigninParams,
-  options?: RequestInit,
-): Promise<postMailAuthSigninResponse> => {
-  return customFetch<postMailAuthSigninResponse>(getPostMailAuthSigninUrl(params), {
+export const postMailAuthSignin = async (params: PostMailAuthSigninParams, options?: RequestInit): Promise<postMailAuthSigninResponse> => {
+  
+  return customFetch<postMailAuthSigninResponse>(getPostMailAuthSigninUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostMailAuthSigninMutationFetcher = (
-  params: PostMailAuthSigninParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostMailAuthSigninMutationFetcher = (params: PostMailAuthSigninParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postMailAuthSignin(params, options);
-  };
-};
-export const getPostMailAuthSigninMutationKey = (params: PostMailAuthSigninParams) =>
-  [`/mail_auth/signin`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostMailAuthSigninMutationKey = (params: PostMailAuthSigninParams,) => [`/mail_auth/signin`, ...(params ? [params]: [])] as const;
 
-export type PostMailAuthSigninMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postMailAuthSignin>>
->;
-export type PostMailAuthSigninMutationError = unknown;
+export type PostMailAuthSigninMutationResult = NonNullable<Awaited<ReturnType<typeof postMailAuthSignin>>>
+export type PostMailAuthSigninMutationError = unknown
 
 export const usePostMailAuthSignin = <TError = unknown>(
-  params: PostMailAuthSigninParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postMailAuthSignin>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postMailAuthSignin>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: PostMailAuthSigninParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postMailAuthSignin>>, TError, Key, Arguments, Awaited<ReturnType<typeof postMailAuthSignin>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostMailAuthSigninMutationKey(params);
   const swrFn = getPostMailAuthSigninMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * ログアウト
  */
 export type deleteMailAuthSignoutResponse200 = {
-  data: DeleteMailAuthSignout200;
-  status: 200;
-};
-
-export type deleteMailAuthSignoutResponseSuccess = deleteMailAuthSignoutResponse200 & {
+  data: DeleteMailAuthSignout200
+  status: 200
+}
+    
+export type deleteMailAuthSignoutResponseSuccess = (deleteMailAuthSignoutResponse200) & {
   headers: Headers;
 };
-export type deleteMailAuthSignoutResponse = deleteMailAuthSignoutResponseSuccess;
+;
+
+export type deleteMailAuthSignoutResponse = (deleteMailAuthSignoutResponseSuccess)
 
 export const getDeleteMailAuthSignoutUrl = () => {
-  return `/mail_auth/signout`;
-};
 
-export const deleteMailAuthSignout = async (
-  options?: RequestInit,
-): Promise<deleteMailAuthSignoutResponse> => {
-  return customFetch<deleteMailAuthSignoutResponse>(getDeleteMailAuthSignoutUrl(), {
+
+  
+
+  return `/mail_auth/signout`
+}
+
+export const deleteMailAuthSignout = async ( options?: RequestInit): Promise<deleteMailAuthSignoutResponse> => {
+  
+  return customFetch<deleteMailAuthSignoutResponse>(getDeleteMailAuthSignoutUrl(),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteMailAuthSignoutMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteMailAuthSignoutMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteMailAuthSignout(options);
-  };
-};
+  }
+}
 export const getDeleteMailAuthSignoutMutationKey = () => [`/mail_auth/signout`] as const;
 
-export type DeleteMailAuthSignoutMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteMailAuthSignout>>
->;
-export type DeleteMailAuthSignoutMutationError = unknown;
+export type DeleteMailAuthSignoutMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMailAuthSignout>>>
+export type DeleteMailAuthSignoutMutationError = unknown
 
-export const useDeleteMailAuthSignout = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof deleteMailAuthSignout>>,
-    TError,
-    Key,
-    Arguments,
-    Awaited<ReturnType<typeof deleteMailAuthSignout>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useDeleteMailAuthSignout = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteMailAuthSignout>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteMailAuthSignout>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteMailAuthSignoutMutationKey();
   const swrFn = getDeleteMailAuthSignoutMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * ログイン状態の確認
  */
 export type getMailAuthIsSigninResponse200 = {
-  data: GetMailAuthIsSignin200;
-  status: 200;
-};
-
-export type getMailAuthIsSigninResponseSuccess = getMailAuthIsSigninResponse200 & {
+  data: GetMailAuthIsSignin200
+  status: 200
+}
+    
+export type getMailAuthIsSigninResponseSuccess = (getMailAuthIsSigninResponse200) & {
   headers: Headers;
 };
-export type getMailAuthIsSigninResponse = getMailAuthIsSigninResponseSuccess;
+;
+
+export type getMailAuthIsSigninResponse = (getMailAuthIsSigninResponseSuccess)
 
 export const getGetMailAuthIsSigninUrl = () => {
-  return `/mail_auth/is_signin`;
-};
 
-export const getMailAuthIsSignin = async (
-  options?: RequestInit,
-): Promise<getMailAuthIsSigninResponse> => {
-  return customFetch<getMailAuthIsSigninResponse>(getGetMailAuthIsSigninUrl(), {
+
+  
+
+  return `/mail_auth/is_signin`
+}
+
+export const getMailAuthIsSignin = async ( options?: RequestInit): Promise<getMailAuthIsSigninResponse> => {
+  
+  return customFetch<getMailAuthIsSigninResponse>(getGetMailAuthIsSigninUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetMailAuthIsSigninKey = () => [`/mail_auth/is_signin`] as const;
 
-export type GetMailAuthIsSigninQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getMailAuthIsSignin>>
->;
-export type GetMailAuthIsSigninQueryError = unknown;
+export type GetMailAuthIsSigninQueryResult = NonNullable<Awaited<ReturnType<typeof getMailAuthIsSignin>>>
+export type GetMailAuthIsSigninQueryError = unknown
 
-export const useGetMailAuthIsSignin = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getMailAuthIsSignin>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetMailAuthIsSignin = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getMailAuthIsSignin>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetMailAuthIsSigninKey() : null));
-  const swrFn = () => getMailAuthIsSignin(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetMailAuthIsSigninKey() : null);
+  const swrFn = () => getMailAuthIsSignin(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * password_変更
  */
 export type postPasswordResetIdResponse200 = {
-  data: PostPasswordResetId200;
-  status: 200;
-};
-
-export type postPasswordResetIdResponseSuccess = postPasswordResetIdResponse200 & {
+  data: PostPasswordResetId200
+  status: 200
+}
+    
+export type postPasswordResetIdResponseSuccess = (postPasswordResetIdResponse200) & {
   headers: Headers;
 };
-export type postPasswordResetIdResponse = postPasswordResetIdResponseSuccess;
+;
 
-export const getPostPasswordResetIdUrl = (id: number) => {
-  return `/password_reset/${id}`;
-};
+export type postPasswordResetIdResponse = (postPasswordResetIdResponseSuccess)
 
-export const postPasswordResetId = async (
-  id: number,
-  passwordResetData?: PasswordResetData,
-  options?: RequestInit,
-): Promise<postPasswordResetIdResponse> => {
-  return customFetch<postPasswordResetIdResponse>(getPostPasswordResetIdUrl(id), {
+export const getPostPasswordResetIdUrl = (id: number,) => {
+
+
+  
+
+  return `/password_reset/${id}`
+}
+
+export const postPasswordResetId = async (id: number,
+    passwordResetData?: PasswordResetData, options?: RequestInit): Promise<postPasswordResetIdResponse> => {
+  
+  return customFetch<postPasswordResetIdResponse>(getPostPasswordResetIdUrl(id),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(passwordResetData),
-  });
-};
+    body: JSON.stringify(
+      passwordResetData,)
+  }
+);}
 
-export const getPostPasswordResetIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostPasswordResetIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: PasswordResetData }) => {
     return postPasswordResetId(id, arg, options);
-  };
-};
-export const getPostPasswordResetIdMutationKey = (id: number) => [`/password_reset/${id}`] as const;
+  }
+}
+export const getPostPasswordResetIdMutationKey = (id: number,) => [`/password_reset/${id}`] as const;
 
-export type PostPasswordResetIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postPasswordResetId>>
->;
-export type PostPasswordResetIdMutationError = unknown;
+export type PostPasswordResetIdMutationResult = NonNullable<Awaited<ReturnType<typeof postPasswordResetId>>>
+export type PostPasswordResetIdMutationError = unknown
 
 export const usePostPasswordResetId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postPasswordResetId>>,
-      TError,
-      Key,
-      PasswordResetData,
-      Awaited<ReturnType<typeof postPasswordResetId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPasswordResetId>>, TError, Key, PasswordResetData, Awaited<ReturnType<typeof postPasswordResetId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostPasswordResetIdMutationKey(id);
   const swrFn = getPostPasswordResetIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * password_reset_token発行リクエスト
  */
 export type postPasswordResetRequestResponse200 = {
-  data: PostPasswordResetRequest200;
-  status: 200;
-};
-
-export type postPasswordResetRequestResponseSuccess = postPasswordResetRequestResponse200 & {
+  data: PostPasswordResetRequest200
+  status: 200
+}
+    
+export type postPasswordResetRequestResponseSuccess = (postPasswordResetRequestResponse200) & {
   headers: Headers;
 };
-export type postPasswordResetRequestResponse = postPasswordResetRequestResponseSuccess;
+;
 
-export const getPostPasswordResetRequestUrl = (params?: PostPasswordResetRequestParams) => {
+export type postPasswordResetRequestResponse = (postPasswordResetRequestResponseSuccess)
+
+export const getPostPasswordResetRequestUrl = (params?: PostPasswordResetRequestParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/password_reset/request?${stringifiedParams}`
-    : `/password_reset/request`;
-};
+  return stringifiedParams.length > 0 ? `/password_reset/request?${stringifiedParams}` : `/password_reset/request`
+}
 
-export const postPasswordResetRequest = async (
-  params?: PostPasswordResetRequestParams,
-  options?: RequestInit,
-): Promise<postPasswordResetRequestResponse> => {
-  return customFetch<postPasswordResetRequestResponse>(getPostPasswordResetRequestUrl(params), {
+export const postPasswordResetRequest = async (params?: PostPasswordResetRequestParams, options?: RequestInit): Promise<postPasswordResetRequestResponse> => {
+  
+  return customFetch<postPasswordResetRequestResponse>(getPostPasswordResetRequestUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostPasswordResetRequestMutationFetcher = (
-  params?: PostPasswordResetRequestParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostPasswordResetRequestMutationFetcher = (params?: PostPasswordResetRequestParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postPasswordResetRequest(params, options);
-  };
-};
-export const getPostPasswordResetRequestMutationKey = (params?: PostPasswordResetRequestParams) =>
-  [`/password_reset/request`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostPasswordResetRequestMutationKey = (params?: PostPasswordResetRequestParams,) => [`/password_reset/request`, ...(params ? [params]: [])] as const;
 
-export type PostPasswordResetRequestMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postPasswordResetRequest>>
->;
-export type PostPasswordResetRequestMutationError = unknown;
+export type PostPasswordResetRequestMutationResult = NonNullable<Awaited<ReturnType<typeof postPasswordResetRequest>>>
+export type PostPasswordResetRequestMutationError = unknown
 
 export const usePostPasswordResetRequest = <TError = unknown>(
-  params?: PostPasswordResetRequestParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postPasswordResetRequest>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postPasswordResetRequest>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: PostPasswordResetRequestParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPasswordResetRequest>>, TError, Key, Arguments, Awaited<ReturnType<typeof postPasswordResetRequest>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostPasswordResetRequestMutationKey(params);
   const swrFn = getPostPasswordResetRequestMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * トークンの称号
  */
 export type postPasswordResetIdValidResponse200 = {
-  data: PostPasswordResetIdValid200;
-  status: 200;
-};
-
-export type postPasswordResetIdValidResponseSuccess = postPasswordResetIdValidResponse200 & {
+  data: PostPasswordResetIdValid200
+  status: 200
+}
+    
+export type postPasswordResetIdValidResponseSuccess = (postPasswordResetIdValidResponse200) & {
   headers: Headers;
 };
-export type postPasswordResetIdValidResponse = postPasswordResetIdValidResponseSuccess;
+;
 
-export const getPostPasswordResetIdValidUrl = (
-  id: number,
-  params?: PostPasswordResetIdValidParams,
-) => {
+export type postPasswordResetIdValidResponse = (postPasswordResetIdValidResponseSuccess)
+
+export const getPostPasswordResetIdValidUrl = (id: number,
+    params?: PostPasswordResetIdValidParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/password_reset/${id}/valid?${stringifiedParams}`
-    : `/password_reset/${id}/valid`;
-};
+  return stringifiedParams.length > 0 ? `/password_reset/${id}/valid?${stringifiedParams}` : `/password_reset/${id}/valid`
+}
 
-export const postPasswordResetIdValid = async (
-  id: number,
-  params?: PostPasswordResetIdValidParams,
-  options?: RequestInit,
-): Promise<postPasswordResetIdValidResponse> => {
-  return customFetch<postPasswordResetIdValidResponse>(getPostPasswordResetIdValidUrl(id, params), {
+export const postPasswordResetIdValid = async (id: number,
+    params?: PostPasswordResetIdValidParams, options?: RequestInit): Promise<postPasswordResetIdValidResponse> => {
+  
+  return customFetch<postPasswordResetIdValidResponse>(getPostPasswordResetIdValidUrl(id,params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostPasswordResetIdValidMutationFetcher = (
-  id: number,
-  params?: PostPasswordResetIdValidParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostPasswordResetIdValidMutationFetcher = (id: number,
+    params?: PostPasswordResetIdValidParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postPasswordResetIdValid(id, params, options);
-  };
-};
-export const getPostPasswordResetIdValidMutationKey = (
-  id: number,
-  params?: PostPasswordResetIdValidParams,
-) => [`/password_reset/${id}/valid`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostPasswordResetIdValidMutationKey = (id: number,
+    params?: PostPasswordResetIdValidParams,) => [`/password_reset/${id}/valid`, ...(params ? [params]: [])] as const;
 
-export type PostPasswordResetIdValidMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postPasswordResetIdValid>>
->;
-export type PostPasswordResetIdValidMutationError = unknown;
+export type PostPasswordResetIdValidMutationResult = NonNullable<Awaited<ReturnType<typeof postPasswordResetIdValid>>>
+export type PostPasswordResetIdValidMutationError = unknown
 
 export const usePostPasswordResetIdValid = <TError = unknown>(
   id: number,
-  params?: PostPasswordResetIdValidParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postPasswordResetIdValid>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postPasswordResetIdValid>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params?: PostPasswordResetIdValidParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPasswordResetIdValid>>, TError, Key, Arguments, Awaited<ReturnType<typeof postPasswordResetIdValid>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPostPasswordResetIdValidMutationKey(id, params);
-  const swrFn = getPostPasswordResetIdValidMutationFetcher(id, params, requestOptions);
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const swrKey = swrOptions?.swrKey ?? getPostPasswordResetIdValidMutationKey(id,params);
+  const swrFn = getPostPasswordResetIdValidMutationFetcher(id,params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * sponsorの一覧の取得
  */
 export type getSponsorsResponse200 = {
-  data: Sponsor;
-  status: 200;
-};
-
-export type getSponsorsResponseSuccess = getSponsorsResponse200 & {
+  data: Sponsor
+  status: 200
+}
+    
+export type getSponsorsResponseSuccess = (getSponsorsResponse200) & {
   headers: Headers;
 };
-export type getSponsorsResponse = getSponsorsResponseSuccess;
+;
+
+export type getSponsorsResponse = (getSponsorsResponseSuccess)
 
 export const getGetSponsorsUrl = () => {
-  return `/sponsors`;
-};
 
-export const getSponsors = async (options?: RequestInit): Promise<getSponsorsResponse> => {
-  return customFetch<getSponsorsResponse>(getGetSponsorsUrl(), {
+
+  
+
+  return `/sponsors`
+}
+
+export const getSponsors = async ( options?: RequestInit): Promise<getSponsorsResponse> => {
+  
+  return customFetch<getSponsorsResponse>(getGetSponsorsUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetSponsorsKey = () => [`/sponsors`] as const;
 
-export type GetSponsorsQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsors>>>;
-export type GetSponsorsQueryError = unknown;
+export type GetSponsorsQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsors>>>
+export type GetSponsorsQueryError = unknown
 
-export const useGetSponsors = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsors>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetSponsors = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsors>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorsKey() : null));
-  const swrFn = () => getSponsors(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorsKey() : null);
+  const swrFn = () => getSponsors(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * sponsorの作成
  */
 export type postSponsorsResponse200 = {
-  data: PostSponsors200;
-  status: 200;
-};
-
-export type postSponsorsResponseSuccess = postSponsorsResponse200 & {
+  data: PostSponsors200
+  status: 200
+}
+    
+export type postSponsorsResponseSuccess = (postSponsorsResponse200) & {
   headers: Headers;
 };
-export type postSponsorsResponse = postSponsorsResponseSuccess;
+;
+
+export type postSponsorsResponse = (postSponsorsResponseSuccess)
 
 export const getPostSponsorsUrl = () => {
-  return `/sponsors`;
-};
 
-export const postSponsors = async (
-  sponsor?: Sponsor,
-  options?: RequestInit,
-): Promise<postSponsorsResponse> => {
-  return customFetch<postSponsorsResponse>(getPostSponsorsUrl(), {
+
+  
+
+  return `/sponsors`
+}
+
+export const postSponsors = async (sponsor?: Sponsor, options?: RequestInit): Promise<postSponsorsResponse> => {
+  
+  return customFetch<postSponsorsResponse>(getPostSponsorsUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(sponsor),
-  });
-};
+    body: JSON.stringify(
+      sponsor,)
+  }
+);}
 
-export const getPostSponsorsMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+
+
+
+export const getPostSponsorsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Sponsor }) => {
     return postSponsors(arg, options);
-  };
-};
+  }
+}
 export const getPostSponsorsMutationKey = () => [`/sponsors`] as const;
 
-export type PostSponsorsMutationResult = NonNullable<Awaited<ReturnType<typeof postSponsors>>>;
-export type PostSponsorsMutationError = unknown;
+export type PostSponsorsMutationResult = NonNullable<Awaited<ReturnType<typeof postSponsors>>>
+export type PostSponsorsMutationError = unknown
 
-export const usePostSponsors = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postSponsors>>,
-    TError,
-    Key,
-    Sponsor,
-    Awaited<ReturnType<typeof postSponsors>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostSponsors = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postSponsors>>, TError, Key, Sponsor, Awaited<ReturnType<typeof postSponsors>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostSponsorsMutationKey();
   const swrFn = getPostSponsorsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたsponsorの取得
  */
 export type getSponsorsIdResponse200 = {
-  data: Sponsor;
-  status: 200;
-};
-
-export type getSponsorsIdResponseSuccess = getSponsorsIdResponse200 & {
+  data: Sponsor
+  status: 200
+}
+    
+export type getSponsorsIdResponseSuccess = (getSponsorsIdResponse200) & {
   headers: Headers;
 };
-export type getSponsorsIdResponse = getSponsorsIdResponseSuccess;
+;
 
-export const getGetSponsorsIdUrl = (id: number) => {
-  return `/sponsors/${id}`;
-};
+export type getSponsorsIdResponse = (getSponsorsIdResponseSuccess)
 
-export const getSponsorsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getSponsorsIdResponse> => {
-  return customFetch<getSponsorsIdResponse>(getGetSponsorsIdUrl(id), {
+export const getGetSponsorsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsors/${id}`
+}
+
+export const getSponsorsId = async (id: number, options?: RequestInit): Promise<getSponsorsIdResponse> => {
+  
+  return customFetch<getSponsorsIdResponse>(getGetSponsorsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetSponsorsIdKey = (id: number) => [`/sponsors/${id}`] as const;
 
-export type GetSponsorsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorsId>>>;
-export type GetSponsorsIdQueryError = unknown;
+
+
+export const getGetSponsorsIdKey = (id: number,) => [`/sponsors/${id}`] as const;
+
+export type GetSponsorsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorsId>>>
+export type GetSponsorsIdQueryError = unknown
 
 export const useGetSponsorsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsorsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsorsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorsIdKey(id) : null));
-  const swrFn = () => getSponsorsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorsIdKey(id) : null);
+  const swrFn = () => getSponsorsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * sponsorの更新
  */
 export type putSponsorsIdResponse200 = {
-  data: PutSponsorsId200;
-  status: 200;
-};
-
-export type putSponsorsIdResponseSuccess = putSponsorsIdResponse200 & {
+  data: PutSponsorsId200
+  status: 200
+}
+    
+export type putSponsorsIdResponseSuccess = (putSponsorsIdResponse200) & {
   headers: Headers;
 };
-export type putSponsorsIdResponse = putSponsorsIdResponseSuccess;
+;
 
-export const getPutSponsorsIdUrl = (id: number) => {
-  return `/sponsors/${id}`;
-};
+export type putSponsorsIdResponse = (putSponsorsIdResponseSuccess)
 
-export const putSponsorsId = async (
-  id: number,
-  sponsor?: Sponsor,
-  options?: RequestInit,
-): Promise<putSponsorsIdResponse> => {
-  return customFetch<putSponsorsIdResponse>(getPutSponsorsIdUrl(id), {
+export const getPutSponsorsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsors/${id}`
+}
+
+export const putSponsorsId = async (id: number,
+    sponsor?: Sponsor, options?: RequestInit): Promise<putSponsorsIdResponse> => {
+  
+  return customFetch<putSponsorsIdResponse>(getPutSponsorsIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(sponsor),
-  });
-};
+    body: JSON.stringify(
+      sponsor,)
+  }
+);}
 
-export const getPutSponsorsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutSponsorsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: Sponsor }) => {
     return putSponsorsId(id, arg, options);
-  };
-};
-export const getPutSponsorsIdMutationKey = (id: number) => [`/sponsors/${id}`] as const;
+  }
+}
+export const getPutSponsorsIdMutationKey = (id: number,) => [`/sponsors/${id}`] as const;
 
-export type PutSponsorsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putSponsorsId>>>;
-export type PutSponsorsIdMutationError = unknown;
+export type PutSponsorsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putSponsorsId>>>
+export type PutSponsorsIdMutationError = unknown
 
 export const usePutSponsorsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putSponsorsId>>,
-      TError,
-      Key,
-      Sponsor,
-      Awaited<ReturnType<typeof putSponsorsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putSponsorsId>>, TError, Key, Sponsor, Awaited<ReturnType<typeof putSponsorsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutSponsorsIdMutationKey(id);
   const swrFn = getPutSponsorsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してsponsorの削除
  */
 export type deleteSponsorsIdResponse200 = {
-  data: DeleteSponsorsId200;
-  status: 200;
-};
-
-export type deleteSponsorsIdResponseSuccess = deleteSponsorsIdResponse200 & {
+  data: DeleteSponsorsId200
+  status: 200
+}
+    
+export type deleteSponsorsIdResponseSuccess = (deleteSponsorsIdResponse200) & {
   headers: Headers;
 };
-export type deleteSponsorsIdResponse = deleteSponsorsIdResponseSuccess;
+;
 
-export const getDeleteSponsorsIdUrl = (id: number) => {
-  return `/sponsors/${id}`;
-};
+export type deleteSponsorsIdResponse = (deleteSponsorsIdResponseSuccess)
 
-export const deleteSponsorsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteSponsorsIdResponse> => {
-  return customFetch<deleteSponsorsIdResponse>(getDeleteSponsorsIdUrl(id), {
+export const getDeleteSponsorsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsors/${id}`
+}
+
+export const deleteSponsorsId = async (id: number, options?: RequestInit): Promise<deleteSponsorsIdResponse> => {
+  
+  return customFetch<deleteSponsorsIdResponse>(getDeleteSponsorsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteSponsorsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteSponsorsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteSponsorsId(id, options);
-  };
-};
-export const getDeleteSponsorsIdMutationKey = (id: number) => [`/sponsors/${id}`] as const;
+  }
+}
+export const getDeleteSponsorsIdMutationKey = (id: number,) => [`/sponsors/${id}`] as const;
 
-export type DeleteSponsorsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteSponsorsId>>
->;
-export type DeleteSponsorsIdMutationError = unknown;
+export type DeleteSponsorsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSponsorsId>>>
+export type DeleteSponsorsIdMutationError = unknown
 
 export const useDeleteSponsorsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteSponsorsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteSponsorsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteSponsorsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteSponsorsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteSponsorsIdMutationKey(id);
   const swrFn = getDeleteSponsorsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 年度で指定されたsponsorを取得
  */
 export type getSponsorsPeriodsYearResponse200 = {
-  data: Sponsor[];
-  status: 200;
-};
-
-export type getSponsorsPeriodsYearResponseSuccess = getSponsorsPeriodsYearResponse200 & {
+  data: Sponsor[]
+  status: 200
+}
+    
+export type getSponsorsPeriodsYearResponseSuccess = (getSponsorsPeriodsYearResponse200) & {
   headers: Headers;
 };
-export type getSponsorsPeriodsYearResponse = getSponsorsPeriodsYearResponseSuccess;
+;
 
-export const getGetSponsorsPeriodsYearUrl = (year: number) => {
-  return `/sponsors/periods/${year}`;
-};
+export type getSponsorsPeriodsYearResponse = (getSponsorsPeriodsYearResponseSuccess)
 
-export const getSponsorsPeriodsYear = async (
-  year: number,
-  options?: RequestInit,
-): Promise<getSponsorsPeriodsYearResponse> => {
-  return customFetch<getSponsorsPeriodsYearResponse>(getGetSponsorsPeriodsYearUrl(year), {
+export const getGetSponsorsPeriodsYearUrl = (year: number,) => {
+
+
+  
+
+  return `/sponsors/periods/${year}`
+}
+
+export const getSponsorsPeriodsYear = async (year: number, options?: RequestInit): Promise<getSponsorsPeriodsYearResponse> => {
+  
+  return customFetch<getSponsorsPeriodsYearResponse>(getGetSponsorsPeriodsYearUrl(year),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetSponsorsPeriodsYearKey = (year: number) =>
-  [`/sponsors/periods/${year}`] as const;
 
-export type GetSponsorsPeriodsYearQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getSponsorsPeriodsYear>>
->;
-export type GetSponsorsPeriodsYearQueryError = unknown;
+
+
+export const getGetSponsorsPeriodsYearKey = (year: number,) => [`/sponsors/periods/${year}`] as const;
+
+export type GetSponsorsPeriodsYearQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorsPeriodsYear>>>
+export type GetSponsorsPeriodsYearQueryError = unknown
 
 export const useGetSponsorsPeriodsYear = <TError = unknown>(
-  year: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsorsPeriodsYear>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  year: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsorsPeriodsYear>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!year;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorsPeriodsYearKey(year) : null));
-  const swrFn = () => getSponsorsPeriodsYear(year, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(year)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorsPeriodsYearKey(year) : null);
+  const swrFn = () => getSponsorsPeriodsYear(year, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * sponsorstyleの一覧の取得
  */
 export type getSponsorstylesResponse200 = {
-  data: GetSponsorstyles200;
-  status: 200;
-};
-
-export type getSponsorstylesResponseSuccess = getSponsorstylesResponse200 & {
+  data: GetSponsorstyles200
+  status: 200
+}
+    
+export type getSponsorstylesResponseSuccess = (getSponsorstylesResponse200) & {
   headers: Headers;
 };
-export type getSponsorstylesResponse = getSponsorstylesResponseSuccess;
+;
+
+export type getSponsorstylesResponse = (getSponsorstylesResponseSuccess)
 
 export const getGetSponsorstylesUrl = () => {
-  return `/sponsorstyles`;
-};
 
-export const getSponsorstyles = async (
-  options?: RequestInit,
-): Promise<getSponsorstylesResponse> => {
-  return customFetch<getSponsorstylesResponse>(getGetSponsorstylesUrl(), {
+
+  
+
+  return `/sponsorstyles`
+}
+
+export const getSponsorstyles = async ( options?: RequestInit): Promise<getSponsorstylesResponse> => {
+  
+  return customFetch<getSponsorstylesResponse>(getGetSponsorstylesUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetSponsorstylesKey = () => [`/sponsorstyles`] as const;
 
-export type GetSponsorstylesQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorstyles>>>;
-export type GetSponsorstylesQueryError = unknown;
+export type GetSponsorstylesQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorstyles>>>
+export type GetSponsorstylesQueryError = unknown
 
-export const useGetSponsorstyles = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsorstyles>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetSponsorstyles = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsorstyles>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorstylesKey() : null));
-  const swrFn = () => getSponsorstyles(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorstylesKey() : null);
+  const swrFn = () => getSponsorstyles(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * sponsorstyleの作成
  */
 export type postSponsorstylesResponse200 = {
-  data: PostSponsorstyles200;
-  status: 200;
-};
-
-export type postSponsorstylesResponseSuccess = postSponsorstylesResponse200 & {
+  data: PostSponsorstyles200
+  status: 200
+}
+    
+export type postSponsorstylesResponseSuccess = (postSponsorstylesResponse200) & {
   headers: Headers;
 };
-export type postSponsorstylesResponse = postSponsorstylesResponseSuccess;
+;
+
+export type postSponsorstylesResponse = (postSponsorstylesResponseSuccess)
 
 export const getPostSponsorstylesUrl = () => {
-  return `/sponsorstyles`;
-};
 
-export const postSponsorstyles = async (
-  sponsorStyle?: SponsorStyle,
-  options?: RequestInit,
-): Promise<postSponsorstylesResponse> => {
-  return customFetch<postSponsorstylesResponse>(getPostSponsorstylesUrl(), {
+
+  
+
+  return `/sponsorstyles`
+}
+
+export const postSponsorstyles = async (sponsorStyle?: SponsorStyle, options?: RequestInit): Promise<postSponsorstylesResponse> => {
+  
+  return customFetch<postSponsorstylesResponse>(getPostSponsorstylesUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(sponsorStyle),
-  });
-};
+    body: JSON.stringify(
+      sponsorStyle,)
+  }
+);}
 
-export const getPostSponsorstylesMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostSponsorstylesMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: SponsorStyle }) => {
     return postSponsorstyles(arg, options);
-  };
-};
+  }
+}
 export const getPostSponsorstylesMutationKey = () => [`/sponsorstyles`] as const;
 
-export type PostSponsorstylesMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postSponsorstyles>>
->;
-export type PostSponsorstylesMutationError = unknown;
+export type PostSponsorstylesMutationResult = NonNullable<Awaited<ReturnType<typeof postSponsorstyles>>>
+export type PostSponsorstylesMutationError = unknown
 
-export const usePostSponsorstyles = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postSponsorstyles>>,
-    TError,
-    Key,
-    SponsorStyle,
-    Awaited<ReturnType<typeof postSponsorstyles>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostSponsorstyles = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postSponsorstyles>>, TError, Key, SponsorStyle, Awaited<ReturnType<typeof postSponsorstyles>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostSponsorstylesMutationKey();
   const swrFn = getPostSponsorstylesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたsponsorstyleの取得
  */
 export type getSponsorstylesIdResponse200 = {
-  data: GetSponsorstylesId200;
-  status: 200;
-};
-
-export type getSponsorstylesIdResponseSuccess = getSponsorstylesIdResponse200 & {
+  data: GetSponsorstylesId200
+  status: 200
+}
+    
+export type getSponsorstylesIdResponseSuccess = (getSponsorstylesIdResponse200) & {
   headers: Headers;
 };
-export type getSponsorstylesIdResponse = getSponsorstylesIdResponseSuccess;
+;
 
-export const getGetSponsorstylesIdUrl = (id: number) => {
-  return `/sponsorstyles/${id}`;
-};
+export type getSponsorstylesIdResponse = (getSponsorstylesIdResponseSuccess)
 
-export const getSponsorstylesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getSponsorstylesIdResponse> => {
-  return customFetch<getSponsorstylesIdResponse>(getGetSponsorstylesIdUrl(id), {
+export const getGetSponsorstylesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsorstyles/${id}`
+}
+
+export const getSponsorstylesId = async (id: number, options?: RequestInit): Promise<getSponsorstylesIdResponse> => {
+  
+  return customFetch<getSponsorstylesIdResponse>(getGetSponsorstylesIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetSponsorstylesIdKey = (id: number) => [`/sponsorstyles/${id}`] as const;
 
-export type GetSponsorstylesIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getSponsorstylesId>>
->;
-export type GetSponsorstylesIdQueryError = unknown;
+
+
+export const getGetSponsorstylesIdKey = (id: number,) => [`/sponsorstyles/${id}`] as const;
+
+export type GetSponsorstylesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorstylesId>>>
+export type GetSponsorstylesIdQueryError = unknown
 
 export const useGetSponsorstylesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsorstylesId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsorstylesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorstylesIdKey(id) : null));
-  const swrFn = () => getSponsorstylesId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorstylesIdKey(id) : null);
+  const swrFn = () => getSponsorstylesId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * sponsorstyleの更新
  */
 export type putSponsorstylesIdResponse200 = {
-  data: PutSponsorstylesId200;
-  status: 200;
-};
-
-export type putSponsorstylesIdResponseSuccess = putSponsorstylesIdResponse200 & {
+  data: PutSponsorstylesId200
+  status: 200
+}
+    
+export type putSponsorstylesIdResponseSuccess = (putSponsorstylesIdResponse200) & {
   headers: Headers;
 };
-export type putSponsorstylesIdResponse = putSponsorstylesIdResponseSuccess;
+;
 
-export const getPutSponsorstylesIdUrl = (id: number) => {
-  return `/sponsorstyles/${id}`;
-};
+export type putSponsorstylesIdResponse = (putSponsorstylesIdResponseSuccess)
 
-export const putSponsorstylesId = async (
-  id: number,
-  sponsorStyle?: SponsorStyle,
-  options?: RequestInit,
-): Promise<putSponsorstylesIdResponse> => {
-  return customFetch<putSponsorstylesIdResponse>(getPutSponsorstylesIdUrl(id), {
+export const getPutSponsorstylesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsorstyles/${id}`
+}
+
+export const putSponsorstylesId = async (id: number,
+    sponsorStyle?: SponsorStyle, options?: RequestInit): Promise<putSponsorstylesIdResponse> => {
+  
+  return customFetch<putSponsorstylesIdResponse>(getPutSponsorstylesIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(sponsorStyle),
-  });
-};
+    body: JSON.stringify(
+      sponsorStyle,)
+  }
+);}
 
-export const getPutSponsorstylesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutSponsorstylesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: SponsorStyle }) => {
     return putSponsorstylesId(id, arg, options);
-  };
-};
-export const getPutSponsorstylesIdMutationKey = (id: number) => [`/sponsorstyles/${id}`] as const;
+  }
+}
+export const getPutSponsorstylesIdMutationKey = (id: number,) => [`/sponsorstyles/${id}`] as const;
 
-export type PutSponsorstylesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putSponsorstylesId>>
->;
-export type PutSponsorstylesIdMutationError = unknown;
+export type PutSponsorstylesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putSponsorstylesId>>>
+export type PutSponsorstylesIdMutationError = unknown
 
 export const usePutSponsorstylesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putSponsorstylesId>>,
-      TError,
-      Key,
-      SponsorStyle,
-      Awaited<ReturnType<typeof putSponsorstylesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putSponsorstylesId>>, TError, Key, SponsorStyle, Awaited<ReturnType<typeof putSponsorstylesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutSponsorstylesIdMutationKey(id);
   const swrFn = getPutSponsorstylesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してsponsorstyleの論理削除
  */
 export type deleteSponsorstylesIdResponse200 = {
-  data: DeleteSponsorstylesId200;
-  status: 200;
-};
-
-export type deleteSponsorstylesIdResponseSuccess = deleteSponsorstylesIdResponse200 & {
+  data: DeleteSponsorstylesId200
+  status: 200
+}
+    
+export type deleteSponsorstylesIdResponseSuccess = (deleteSponsorstylesIdResponse200) & {
   headers: Headers;
 };
-export type deleteSponsorstylesIdResponse = deleteSponsorstylesIdResponseSuccess;
+;
 
-export const getDeleteSponsorstylesIdUrl = (id: number) => {
-  return `/sponsorstyles/${id}`;
-};
+export type deleteSponsorstylesIdResponse = (deleteSponsorstylesIdResponseSuccess)
 
-export const deleteSponsorstylesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteSponsorstylesIdResponse> => {
-  return customFetch<deleteSponsorstylesIdResponse>(getDeleteSponsorstylesIdUrl(id), {
+export const getDeleteSponsorstylesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsorstyles/${id}`
+}
+
+export const deleteSponsorstylesId = async (id: number, options?: RequestInit): Promise<deleteSponsorstylesIdResponse> => {
+  
+  return customFetch<deleteSponsorstylesIdResponse>(getDeleteSponsorstylesIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteSponsorstylesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteSponsorstylesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteSponsorstylesId(id, options);
-  };
-};
-export const getDeleteSponsorstylesIdMutationKey = (id: number) =>
-  [`/sponsorstyles/${id}`] as const;
+  }
+}
+export const getDeleteSponsorstylesIdMutationKey = (id: number,) => [`/sponsorstyles/${id}`] as const;
 
-export type DeleteSponsorstylesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteSponsorstylesId>>
->;
-export type DeleteSponsorstylesIdMutationError = unknown;
+export type DeleteSponsorstylesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSponsorstylesId>>>
+export type DeleteSponsorstylesIdMutationError = unknown
 
 export const useDeleteSponsorstylesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteSponsorstylesId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteSponsorstylesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteSponsorstylesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteSponsorstylesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteSponsorstylesIdMutationKey(id);
   const swrFn = getDeleteSponsorstylesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * teacherの一覧を取得
  */
 export type getTeachersResponse200 = {
-  data: Teacher;
-  status: 200;
-};
-
-export type getTeachersResponseSuccess = getTeachersResponse200 & {
+  data: Teacher
+  status: 200
+}
+    
+export type getTeachersResponseSuccess = (getTeachersResponse200) & {
   headers: Headers;
 };
-export type getTeachersResponse = getTeachersResponseSuccess;
+;
+
+export type getTeachersResponse = (getTeachersResponseSuccess)
 
 export const getGetTeachersUrl = () => {
-  return `/teachers`;
-};
 
-export const getTeachers = async (options?: RequestInit): Promise<getTeachersResponse> => {
-  return customFetch<getTeachersResponse>(getGetTeachersUrl(), {
+
+  
+
+  return `/teachers`
+}
+
+export const getTeachers = async ( options?: RequestInit): Promise<getTeachersResponse> => {
+  
+  return customFetch<getTeachersResponse>(getGetTeachersUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetTeachersKey = () => [`/teachers`] as const;
 
-export type GetTeachersQueryResult = NonNullable<Awaited<ReturnType<typeof getTeachers>>>;
-export type GetTeachersQueryError = unknown;
+export type GetTeachersQueryResult = NonNullable<Awaited<ReturnType<typeof getTeachers>>>
+export type GetTeachersQueryError = unknown
 
-export const useGetTeachers = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getTeachers>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetTeachers = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTeachers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetTeachersKey() : null));
-  const swrFn = () => getTeachers(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTeachersKey() : null);
+  const swrFn = () => getTeachers(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * teacherの作成
  */
 export type postTeachersResponse200 = {
-  data: PostTeachers200;
-  status: 200;
-};
-
-export type postTeachersResponseSuccess = postTeachersResponse200 & {
+  data: PostTeachers200
+  status: 200
+}
+    
+export type postTeachersResponseSuccess = (postTeachersResponse200) & {
   headers: Headers;
 };
-export type postTeachersResponse = postTeachersResponseSuccess;
+;
 
-export const getPostTeachersUrl = (params: PostTeachersParams) => {
+export type postTeachersResponse = (postTeachersResponseSuccess)
+
+export const getPostTeachersUrl = (params: PostTeachersParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/teachers?${stringifiedParams}` : `/teachers`;
-};
+  return stringifiedParams.length > 0 ? `/teachers?${stringifiedParams}` : `/teachers`
+}
 
-export const postTeachers = async (
-  params: PostTeachersParams,
-  options?: RequestInit,
-): Promise<postTeachersResponse> => {
-  return customFetch<postTeachersResponse>(getPostTeachersUrl(params), {
+export const postTeachers = async (params: PostTeachersParams, options?: RequestInit): Promise<postTeachersResponse> => {
+  
+  return customFetch<postTeachersResponse>(getPostTeachersUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostTeachersMutationFetcher = (
-  params: PostTeachersParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostTeachersMutationFetcher = (params: PostTeachersParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postTeachers(params, options);
-  };
-};
-export const getPostTeachersMutationKey = (params: PostTeachersParams) =>
-  [`/teachers`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostTeachersMutationKey = (params: PostTeachersParams,) => [`/teachers`, ...(params ? [params]: [])] as const;
 
-export type PostTeachersMutationResult = NonNullable<Awaited<ReturnType<typeof postTeachers>>>;
-export type PostTeachersMutationError = unknown;
+export type PostTeachersMutationResult = NonNullable<Awaited<ReturnType<typeof postTeachers>>>
+export type PostTeachersMutationError = unknown
 
 export const usePostTeachers = <TError = unknown>(
-  params: PostTeachersParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postTeachers>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postTeachers>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: PostTeachersParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postTeachers>>, TError, Key, Arguments, Awaited<ReturnType<typeof postTeachers>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostTeachersMutationKey(params);
   const swrFn = getPostTeachersMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * teacherの複数削除
  */
 export type deleteTeachersDeleteResponse200 = {
-  data: DeleteTeachersDelete200;
-  status: 200;
-};
-
-export type deleteTeachersDeleteResponseSuccess = deleteTeachersDeleteResponse200 & {
+  data: DeleteTeachersDelete200
+  status: 200
+}
+    
+export type deleteTeachersDeleteResponseSuccess = (deleteTeachersDeleteResponse200) & {
   headers: Headers;
 };
-export type deleteTeachersDeleteResponse = deleteTeachersDeleteResponseSuccess;
+;
+
+export type deleteTeachersDeleteResponse = (deleteTeachersDeleteResponseSuccess)
 
 export const getDeleteTeachersDeleteUrl = () => {
-  return `/teachers/delete`;
-};
 
-export const deleteTeachersDelete = async (
-  destroyTeacherIDs?: DestroyTeacherIDs,
-  options?: RequestInit,
-): Promise<deleteTeachersDeleteResponse> => {
-  return customFetch<deleteTeachersDeleteResponse>(getDeleteTeachersDeleteUrl(), {
+
+  
+
+  return `/teachers/delete`
+}
+
+export const deleteTeachersDelete = async (destroyTeacherIDs?: DestroyTeacherIDs, options?: RequestInit): Promise<deleteTeachersDeleteResponse> => {
+  
+  return customFetch<deleteTeachersDeleteResponse>(getDeleteTeachersDeleteUrl(),
+  {      
     ...options,
     method: 'DELETE',
     headers: { 'Content-Type': '*/*', ...options?.headers },
-    body: JSON.stringify(destroyTeacherIDs),
-  });
-};
+    body: JSON.stringify(
+      destroyTeacherIDs,)
+  }
+);}
 
-export const getDeleteTeachersDeleteMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteTeachersDeleteMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: DestroyTeacherIDs }) => {
     return deleteTeachersDelete(arg, options);
-  };
-};
+  }
+}
 export const getDeleteTeachersDeleteMutationKey = () => [`/teachers/delete`] as const;
 
-export type DeleteTeachersDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteTeachersDelete>>
->;
-export type DeleteTeachersDeleteMutationError = unknown;
+export type DeleteTeachersDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTeachersDelete>>>
+export type DeleteTeachersDeleteMutationError = unknown
 
-export const useDeleteTeachersDelete = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof deleteTeachersDelete>>,
-    TError,
-    Key,
-    DestroyTeacherIDs,
-    Awaited<ReturnType<typeof deleteTeachersDelete>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useDeleteTeachersDelete = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteTeachersDelete>>, TError, Key, DestroyTeacherIDs, Awaited<ReturnType<typeof deleteTeachersDelete>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteTeachersDeleteMutationKey();
   const swrFn = getDeleteTeachersDeleteMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたteacherの取得
  */
 export type getTeachersIdResponse200 = {
-  data: Teacher;
-  status: 200;
-};
-
-export type getTeachersIdResponseSuccess = getTeachersIdResponse200 & {
+  data: Teacher
+  status: 200
+}
+    
+export type getTeachersIdResponseSuccess = (getTeachersIdResponse200) & {
   headers: Headers;
 };
-export type getTeachersIdResponse = getTeachersIdResponseSuccess;
+;
 
-export const getGetTeachersIdUrl = (id: number) => {
-  return `/teachers/${id}`;
-};
+export type getTeachersIdResponse = (getTeachersIdResponseSuccess)
 
-export const getTeachersId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getTeachersIdResponse> => {
-  return customFetch<getTeachersIdResponse>(getGetTeachersIdUrl(id), {
+export const getGetTeachersIdUrl = (id: number,) => {
+
+
+  
+
+  return `/teachers/${id}`
+}
+
+export const getTeachersId = async (id: number, options?: RequestInit): Promise<getTeachersIdResponse> => {
+  
+  return customFetch<getTeachersIdResponse>(getGetTeachersIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetTeachersIdKey = (id: number) => [`/teachers/${id}`] as const;
 
-export type GetTeachersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getTeachersId>>>;
-export type GetTeachersIdQueryError = unknown;
+
+
+export const getGetTeachersIdKey = (id: number,) => [`/teachers/${id}`] as const;
+
+export type GetTeachersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getTeachersId>>>
+export type GetTeachersIdQueryError = unknown
 
 export const useGetTeachersId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getTeachersId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTeachersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetTeachersIdKey(id) : null));
-  const swrFn = () => getTeachersId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTeachersIdKey(id) : null);
+  const swrFn = () => getTeachersId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * teacherの更新
  */
 export type putTeachersIdResponse200 = {
-  data: PutTeachersId200;
-  status: 200;
-};
-
-export type putTeachersIdResponseSuccess = putTeachersIdResponse200 & {
+  data: PutTeachersId200
+  status: 200
+}
+    
+export type putTeachersIdResponseSuccess = (putTeachersIdResponse200) & {
   headers: Headers;
 };
-export type putTeachersIdResponse = putTeachersIdResponseSuccess;
+;
 
-export const getPutTeachersIdUrl = (id: number, params: PutTeachersIdParams) => {
+export type putTeachersIdResponse = (putTeachersIdResponseSuccess)
+
+export const getPutTeachersIdUrl = (id: number,
+    params: PutTeachersIdParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/teachers/${id}?${stringifiedParams}` : `/teachers/${id}`;
-};
+  return stringifiedParams.length > 0 ? `/teachers/${id}?${stringifiedParams}` : `/teachers/${id}`
+}
 
-export const putTeachersId = async (
-  id: number,
-  params: PutTeachersIdParams,
-  options?: RequestInit,
-): Promise<putTeachersIdResponse> => {
-  return customFetch<putTeachersIdResponse>(getPutTeachersIdUrl(id, params), {
+export const putTeachersId = async (id: number,
+    params: PutTeachersIdParams, options?: RequestInit): Promise<putTeachersIdResponse> => {
+  
+  return customFetch<putTeachersIdResponse>(getPutTeachersIdUrl(id,params),
+  {      
     ...options,
-    method: 'PUT',
-  });
-};
+    method: 'PUT'
+    
+    
+  }
+);}
 
-export const getPutTeachersIdMutationFetcher = (
-  id: number,
-  params: PutTeachersIdParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutTeachersIdMutationFetcher = (id: number,
+    params: PutTeachersIdParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return putTeachersId(id, params, options);
-  };
-};
-export const getPutTeachersIdMutationKey = (id: number, params: PutTeachersIdParams) =>
-  [`/teachers/${id}`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPutTeachersIdMutationKey = (id: number,
+    params: PutTeachersIdParams,) => [`/teachers/${id}`, ...(params ? [params]: [])] as const;
 
-export type PutTeachersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putTeachersId>>>;
-export type PutTeachersIdMutationError = unknown;
+export type PutTeachersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putTeachersId>>>
+export type PutTeachersIdMutationError = unknown
 
 export const usePutTeachersId = <TError = unknown>(
   id: number,
-  params: PutTeachersIdParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putTeachersId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof putTeachersId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params: PutTeachersIdParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putTeachersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof putTeachersId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPutTeachersIdMutationKey(id, params);
-  const swrFn = getPutTeachersIdMutationFetcher(id, params, requestOptions);
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const swrKey = swrOptions?.swrKey ?? getPutTeachersIdMutationKey(id,params);
+  const swrFn = getPutTeachersIdMutationFetcher(id,params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してteacherの削除
  */
 export type deleteTeachersIdResponse200 = {
-  data: DeleteTeachersId200;
-  status: 200;
-};
-
-export type deleteTeachersIdResponseSuccess = deleteTeachersIdResponse200 & {
+  data: DeleteTeachersId200
+  status: 200
+}
+    
+export type deleteTeachersIdResponseSuccess = (deleteTeachersIdResponse200) & {
   headers: Headers;
 };
-export type deleteTeachersIdResponse = deleteTeachersIdResponseSuccess;
+;
 
-export const getDeleteTeachersIdUrl = (id: number) => {
-  return `/teachers/${id}`;
-};
+export type deleteTeachersIdResponse = (deleteTeachersIdResponseSuccess)
 
-export const deleteTeachersId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteTeachersIdResponse> => {
-  return customFetch<deleteTeachersIdResponse>(getDeleteTeachersIdUrl(id), {
+export const getDeleteTeachersIdUrl = (id: number,) => {
+
+
+  
+
+  return `/teachers/${id}`
+}
+
+export const deleteTeachersId = async (id: number, options?: RequestInit): Promise<deleteTeachersIdResponse> => {
+  
+  return customFetch<deleteTeachersIdResponse>(getDeleteTeachersIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteTeachersIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteTeachersIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteTeachersId(id, options);
-  };
-};
-export const getDeleteTeachersIdMutationKey = (id: number) => [`/teachers/${id}`] as const;
+  }
+}
+export const getDeleteTeachersIdMutationKey = (id: number,) => [`/teachers/${id}`] as const;
 
-export type DeleteTeachersIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteTeachersId>>
->;
-export type DeleteTeachersIdMutationError = unknown;
+export type DeleteTeachersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTeachersId>>>
+export type DeleteTeachersIdMutationError = unknown
 
 export const useDeleteTeachersId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteTeachersId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteTeachersId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteTeachersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteTeachersId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteTeachersIdMutationKey(id);
   const swrFn = getDeleteTeachersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 募金登録済みのteacherのidを取得
  */
 export type getTeachersFundRegisteredYearResponse200 = {
-  data: GetTeachersFundRegisteredYear200;
-  status: 200;
+  data: GetTeachersFundRegisteredYear200
+  status: 200
+}
+    
+export type getTeachersFundRegisteredYearResponseSuccess = (getTeachersFundRegisteredYearResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getTeachersFundRegisteredYearResponseSuccess =
-  getTeachersFundRegisteredYearResponse200 & {
-    headers: Headers;
-  };
-export type getTeachersFundRegisteredYearResponse = getTeachersFundRegisteredYearResponseSuccess;
+export type getTeachersFundRegisteredYearResponse = (getTeachersFundRegisteredYearResponseSuccess)
 
-export const getGetTeachersFundRegisteredYearUrl = (year: number) => {
-  return `/teachers/fundRegistered/${year}`;
-};
+export const getGetTeachersFundRegisteredYearUrl = (year: number,) => {
 
-export const getTeachersFundRegisteredYear = async (
-  year: number,
-  options?: RequestInit,
-): Promise<getTeachersFundRegisteredYearResponse> => {
-  return customFetch<getTeachersFundRegisteredYearResponse>(
-    getGetTeachersFundRegisteredYearUrl(year),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
 
-export const getGetTeachersFundRegisteredYearKey = (year: number) =>
-  [`/teachers/fundRegistered/${year}`] as const;
+  
 
-export type GetTeachersFundRegisteredYearQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getTeachersFundRegisteredYear>>
->;
-export type GetTeachersFundRegisteredYearQueryError = unknown;
+  return `/teachers/fundRegistered/${year}`
+}
+
+export const getTeachersFundRegisteredYear = async (year: number, options?: RequestInit): Promise<getTeachersFundRegisteredYearResponse> => {
+  
+  return customFetch<getTeachersFundRegisteredYearResponse>(getGetTeachersFundRegisteredYearUrl(year),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetTeachersFundRegisteredYearKey = (year: number,) => [`/teachers/fundRegistered/${year}`] as const;
+
+export type GetTeachersFundRegisteredYearQueryResult = NonNullable<Awaited<ReturnType<typeof getTeachersFundRegisteredYear>>>
+export type GetTeachersFundRegisteredYearQueryError = unknown
 
 export const useGetTeachersFundRegisteredYear = <TError = unknown>(
-  year: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getTeachersFundRegisteredYear>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  year: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTeachersFundRegisteredYear>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!year;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetTeachersFundRegisteredYearKey(year) : null));
-  const swrFn = () => getTeachersFundRegisteredYear(year, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(year)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTeachersFundRegisteredYearKey(year) : null);
+  const swrFn = () => getTeachersFundRegisteredYear(year, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * ファイルアップロード
  */
 export type postUploadFileResponse200 = {
-  data: PostUploadFile200;
-  status: 200;
-};
-
-export type postUploadFileResponseSuccess = postUploadFileResponse200 & {
+  data: PostUploadFile200
+  status: 200
+}
+    
+export type postUploadFileResponseSuccess = (postUploadFileResponse200) & {
   headers: Headers;
 };
-export type postUploadFileResponse = postUploadFileResponseSuccess;
+;
+
+export type postUploadFileResponse = (postUploadFileResponseSuccess)
 
 export const getPostUploadFileUrl = () => {
-  return `/upload_file`;
-};
 
-export const postUploadFile = async (
-  postUploadFileBody: PostUploadFileBody,
-  options?: RequestInit,
-): Promise<postUploadFileResponse> => {
-  const formData = new FormData();
-  if (postUploadFileBody.file !== undefined) {
-    formData.append(`file`, postUploadFileBody.file);
-  }
 
-  return customFetch<postUploadFileResponse>(getPostUploadFileUrl(), {
+  
+
+  return `/upload_file`
+}
+
+export const postUploadFile = async (postUploadFileBody: PostUploadFileBody, options?: RequestInit): Promise<postUploadFileResponse> => {
+    const formData = new FormData();
+if(postUploadFileBody.file !== undefined) {
+ formData.append(`file`, postUploadFileBody.file)
+ }
+
+  return customFetch<postUploadFileResponse>(getPostUploadFileUrl(),
+  {      
     ...options,
-    method: 'POST',
-    body: formData,
-  });
-};
+    method: 'POST'
+    ,
+    body: 
+      formData,
+  }
+);}
 
-export const getPostUploadFileMutationFetcher = (options?: SecondParameter<typeof customFetch>) => {
+
+
+
+export const getPostUploadFileMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: PostUploadFileBody }) => {
     return postUploadFile(arg, options);
-  };
-};
+  }
+}
 export const getPostUploadFileMutationKey = () => [`/upload_file`] as const;
 
-export type PostUploadFileMutationResult = NonNullable<Awaited<ReturnType<typeof postUploadFile>>>;
-export type PostUploadFileMutationError = unknown;
+export type PostUploadFileMutationResult = NonNullable<Awaited<ReturnType<typeof postUploadFile>>>
+export type PostUploadFileMutationError = unknown
 
-export const usePostUploadFile = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postUploadFile>>,
-    TError,
-    Key,
-    PostUploadFileBody,
-    Awaited<ReturnType<typeof postUploadFile>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostUploadFile = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postUploadFile>>, TError, Key, PostUploadFileBody, Awaited<ReturnType<typeof postUploadFile>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostUploadFileMutationKey();
   const swrFn = getPostUploadFileMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * userの一覧を取得
  */
 export type getUsersResponse200 = {
-  data: void;
-  status: 200;
-};
-
-export type getUsersResponseSuccess = getUsersResponse200 & {
+  data: void
+  status: 200
+}
+    
+export type getUsersResponseSuccess = (getUsersResponse200) & {
   headers: Headers;
 };
-export type getUsersResponse = getUsersResponseSuccess;
+;
+
+export type getUsersResponse = (getUsersResponseSuccess)
 
 export const getGetUsersUrl = () => {
-  return `/users`;
-};
 
-export const getUsers = async (options?: RequestInit): Promise<getUsersResponse> => {
-  return customFetch<getUsersResponse>(getGetUsersUrl(), {
+
+  
+
+  return `/users`
+}
+
+export const getUsers = async ( options?: RequestInit): Promise<getUsersResponse> => {
+  
+  return customFetch<getUsersResponse>(getGetUsersUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetUsersKey = () => [`/users`] as const;
 
-export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>;
-export type GetUsersQueryError = unknown;
+export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>
+export type GetUsersQueryError = unknown
 
-export const useGetUsers = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetUsers = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersKey() : null));
-  const swrFn = () => getUsers(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUsersKey() : null);
+  const swrFn = () => getUsers(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * userの作成
  */
 export type postUsersResponse200 = {
-  data: PostUsers200;
-  status: 200;
-};
-
-export type postUsersResponseSuccess = postUsersResponse200 & {
+  data: PostUsers200
+  status: 200
+}
+    
+export type postUsersResponseSuccess = (postUsersResponse200) & {
   headers: Headers;
 };
-export type postUsersResponse = postUsersResponseSuccess;
+;
 
-export const getPostUsersUrl = (params: PostUsersParams) => {
+export type postUsersResponse = (postUsersResponseSuccess)
+
+export const getPostUsersUrl = (params: PostUsersParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/users?${stringifiedParams}` : `/users`;
-};
+  return stringifiedParams.length > 0 ? `/users?${stringifiedParams}` : `/users`
+}
 
-export const postUsers = async (
-  params: PostUsersParams,
-  options?: RequestInit,
-): Promise<postUsersResponse> => {
-  return customFetch<postUsersResponse>(getPostUsersUrl(params), {
+export const postUsers = async (params: PostUsersParams, options?: RequestInit): Promise<postUsersResponse> => {
+  
+  return customFetch<postUsersResponse>(getPostUsersUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostUsersMutationFetcher = (
-  params: PostUsersParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostUsersMutationFetcher = (params: PostUsersParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postUsers(params, options);
-  };
-};
-export const getPostUsersMutationKey = (params: PostUsersParams) =>
-  [`/users`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostUsersMutationKey = (params: PostUsersParams,) => [`/users`, ...(params ? [params]: [])] as const;
 
-export type PostUsersMutationResult = NonNullable<Awaited<ReturnType<typeof postUsers>>>;
-export type PostUsersMutationError = unknown;
+export type PostUsersMutationResult = NonNullable<Awaited<ReturnType<typeof postUsers>>>
+export type PostUsersMutationError = unknown
 
 export const usePostUsers = <TError = unknown>(
-  params: PostUsersParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postUsers>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postUsers>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: PostUsersParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postUsers>>, TError, Key, Arguments, Awaited<ReturnType<typeof postUsers>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostUsersMutationKey(params);
   const swrFn = getPostUsersMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
+    ...query
+  }
+}
+
+/**
+ * ID一覧で指定されたuser名の取得
+ */
+export type getUsersLookupResponse200 = {
+  data: UserLookup[]
+  status: 200
+}
+    
+export type getUsersLookupResponseSuccess = (getUsersLookupResponse200) & {
+  headers: Headers;
 };
+;
+
+export type getUsersLookupResponse = (getUsersLookupResponseSuccess)
+
+export const getGetUsersLookupUrl = (params?: GetUsersLookupParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/users/lookup?${stringifiedParams}` : `/users/lookup`
+}
+
+export const getUsersLookup = async (params?: GetUsersLookupParams, options?: RequestInit): Promise<getUsersLookupResponse> => {
+  
+  return customFetch<getUsersLookupResponse>(getGetUsersLookupUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+export const getGetUsersLookupKey = (params?: GetUsersLookupParams,) => [`/users/lookup`, ...(params ? [params]: [])] as const;
+
+export type GetUsersLookupQueryResult = NonNullable<Awaited<ReturnType<typeof getUsersLookup>>>
+export type GetUsersLookupQueryError = unknown
+
+export const useGetUsersLookup = <TError = unknown>(
+  params?: GetUsersLookupParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUsersLookup>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUsersLookupKey(params) : null);
+  const swrFn = () => getUsersLookup(params, requestOptions)
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
 
 /**
  * userの複数作成
  */
 export type deleteUsersDeleteResponse200 = {
-  data: DeleteUsersDelete200;
-  status: 200;
-};
-
-export type deleteUsersDeleteResponseSuccess = deleteUsersDeleteResponse200 & {
+  data: DeleteUsersDelete200
+  status: 200
+}
+    
+export type deleteUsersDeleteResponseSuccess = (deleteUsersDeleteResponse200) & {
   headers: Headers;
 };
-export type deleteUsersDeleteResponse = deleteUsersDeleteResponseSuccess;
+;
+
+export type deleteUsersDeleteResponse = (deleteUsersDeleteResponseSuccess)
 
 export const getDeleteUsersDeleteUrl = () => {
-  return `/users/delete`;
-};
 
-export const deleteUsersDelete = async (
-  destroyUserIDs?: DestroyUserIDs,
-  options?: RequestInit,
-): Promise<deleteUsersDeleteResponse> => {
-  return customFetch<deleteUsersDeleteResponse>(getDeleteUsersDeleteUrl(), {
+
+  
+
+  return `/users/delete`
+}
+
+export const deleteUsersDelete = async (destroyUserIDs?: DestroyUserIDs, options?: RequestInit): Promise<deleteUsersDeleteResponse> => {
+  
+  return customFetch<deleteUsersDeleteResponse>(getDeleteUsersDeleteUrl(),
+  {      
     ...options,
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(destroyUserIDs),
-  });
-};
+    body: JSON.stringify(
+      destroyUserIDs,)
+  }
+);}
 
-export const getDeleteUsersDeleteMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteUsersDeleteMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: DestroyUserIDs }) => {
     return deleteUsersDelete(arg, options);
-  };
-};
+  }
+}
 export const getDeleteUsersDeleteMutationKey = () => [`/users/delete`] as const;
 
-export type DeleteUsersDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteUsersDelete>>
->;
-export type DeleteUsersDeleteMutationError = unknown;
+export type DeleteUsersDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUsersDelete>>>
+export type DeleteUsersDeleteMutationError = unknown
 
-export const useDeleteUsersDelete = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof deleteUsersDelete>>,
-    TError,
-    Key,
-    DestroyUserIDs,
-    Awaited<ReturnType<typeof deleteUsersDelete>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useDeleteUsersDelete = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteUsersDelete>>, TError, Key, DestroyUserIDs, Awaited<ReturnType<typeof deleteUsersDelete>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteUsersDeleteMutationKey();
   const swrFn = getDeleteUsersDeleteMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたuserの取得
  */
 export type getUsersIdResponse200 = {
-  data: GetUsersId200;
-  status: 200;
-};
-
-export type getUsersIdResponseSuccess = getUsersIdResponse200 & {
+  data: GetUsersId200
+  status: 200
+}
+    
+export type getUsersIdResponseSuccess = (getUsersIdResponse200) & {
   headers: Headers;
 };
-export type getUsersIdResponse = getUsersIdResponseSuccess;
+;
 
-export const getGetUsersIdUrl = (id: number) => {
-  return `/users/${id}`;
-};
+export type getUsersIdResponse = (getUsersIdResponseSuccess)
 
-export const getUsersId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getUsersIdResponse> => {
-  return customFetch<getUsersIdResponse>(getGetUsersIdUrl(id), {
+export const getGetUsersIdUrl = (id: number,) => {
+
+
+  
+
+  return `/users/${id}`
+}
+
+export const getUsersId = async (id: number, options?: RequestInit): Promise<getUsersIdResponse> => {
+  
+  return customFetch<getUsersIdResponse>(getGetUsersIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetUsersIdKey = (id: number) => [`/users/${id}`] as const;
 
-export type GetUsersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getUsersId>>>;
-export type GetUsersIdQueryError = unknown;
+
+
+export const getGetUsersIdKey = (id: number,) => [`/users/${id}`] as const;
+
+export type GetUsersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getUsersId>>>
+export type GetUsersIdQueryError = unknown
 
 export const useGetUsersId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsersId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUsersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersIdKey(id) : null));
-  const swrFn = () => getUsersId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUsersIdKey(id) : null);
+  const swrFn = () => getUsersId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * userの更新
  */
 export type putUsersIdResponse200 = {
-  data: PutUsersId200;
-  status: 200;
-};
-
-export type putUsersIdResponseSuccess = putUsersIdResponse200 & {
+  data: PutUsersId200
+  status: 200
+}
+    
+export type putUsersIdResponseSuccess = (putUsersIdResponse200) & {
   headers: Headers;
 };
-export type putUsersIdResponse = putUsersIdResponseSuccess;
+;
 
-export const getPutUsersIdUrl = (id: number, params: PutUsersIdParams) => {
+export type putUsersIdResponse = (putUsersIdResponseSuccess)
+
+export const getPutUsersIdUrl = (id: number,
+    params: PutUsersIdParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/users/${id}?${stringifiedParams}` : `/users/${id}`;
-};
+  return stringifiedParams.length > 0 ? `/users/${id}?${stringifiedParams}` : `/users/${id}`
+}
 
-export const putUsersId = async (
-  id: number,
-  params: PutUsersIdParams,
-  options?: RequestInit,
-): Promise<putUsersIdResponse> => {
-  return customFetch<putUsersIdResponse>(getPutUsersIdUrl(id, params), {
+export const putUsersId = async (id: number,
+    params: PutUsersIdParams, options?: RequestInit): Promise<putUsersIdResponse> => {
+  
+  return customFetch<putUsersIdResponse>(getPutUsersIdUrl(id,params),
+  {      
     ...options,
-    method: 'PUT',
-  });
-};
+    method: 'PUT'
+    
+    
+  }
+);}
 
-export const getPutUsersIdMutationFetcher = (
-  id: number,
-  params: PutUsersIdParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutUsersIdMutationFetcher = (id: number,
+    params: PutUsersIdParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return putUsersId(id, params, options);
-  };
-};
-export const getPutUsersIdMutationKey = (id: number, params: PutUsersIdParams) =>
-  [`/users/${id}`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPutUsersIdMutationKey = (id: number,
+    params: PutUsersIdParams,) => [`/users/${id}`, ...(params ? [params]: [])] as const;
 
-export type PutUsersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putUsersId>>>;
-export type PutUsersIdMutationError = unknown;
+export type PutUsersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putUsersId>>>
+export type PutUsersIdMutationError = unknown
 
 export const usePutUsersId = <TError = unknown>(
   id: number,
-  params: PutUsersIdParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putUsersId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof putUsersId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params: PutUsersIdParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putUsersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof putUsersId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPutUsersIdMutationKey(id, params);
-  const swrFn = getPutUsersIdMutationFetcher(id, params, requestOptions);
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const swrKey = swrOptions?.swrKey ?? getPutUsersIdMutationKey(id,params);
+  const swrFn = getPutUsersIdMutationFetcher(id,params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してuserの削除
  */
 export type deleteUsersIdResponse200 = {
-  data: DeleteUsersId200;
-  status: 200;
-};
-
-export type deleteUsersIdResponseSuccess = deleteUsersIdResponse200 & {
+  data: DeleteUsersId200
+  status: 200
+}
+    
+export type deleteUsersIdResponseSuccess = (deleteUsersIdResponse200) & {
   headers: Headers;
 };
-export type deleteUsersIdResponse = deleteUsersIdResponseSuccess;
+;
 
-export const getDeleteUsersIdUrl = (id: number) => {
-  return `/users/${id}`;
-};
+export type deleteUsersIdResponse = (deleteUsersIdResponseSuccess)
 
-export const deleteUsersId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteUsersIdResponse> => {
-  return customFetch<deleteUsersIdResponse>(getDeleteUsersIdUrl(id), {
+export const getDeleteUsersIdUrl = (id: number,) => {
+
+
+  
+
+  return `/users/${id}`
+}
+
+export const deleteUsersId = async (id: number, options?: RequestInit): Promise<deleteUsersIdResponse> => {
+  
+  return customFetch<deleteUsersIdResponse>(getDeleteUsersIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteUsersIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteUsersIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteUsersId(id, options);
-  };
-};
-export const getDeleteUsersIdMutationKey = (id: number) => [`/users/${id}`] as const;
+  }
+}
+export const getDeleteUsersIdMutationKey = (id: number,) => [`/users/${id}`] as const;
 
-export type DeleteUsersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUsersId>>>;
-export type DeleteUsersIdMutationError = unknown;
+export type DeleteUsersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUsersId>>>
+export type DeleteUsersIdMutationError = unknown
 
 export const useDeleteUsersId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteUsersId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteUsersId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteUsersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteUsersId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteUsersIdMutationKey(id);
   const swrFn = getDeleteUsersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * yearの一覧の取得
  */
 export type getYearsResponse200 = {
-  data: YearPeriods[];
-  status: 200;
-};
-
-export type getYearsResponseSuccess = getYearsResponse200 & {
+  data: YearPeriods[]
+  status: 200
+}
+    
+export type getYearsResponseSuccess = (getYearsResponse200) & {
   headers: Headers;
 };
-export type getYearsResponse = getYearsResponseSuccess;
+;
+
+export type getYearsResponse = (getYearsResponseSuccess)
 
 export const getGetYearsUrl = () => {
-  return `/years`;
-};
 
-export const getYears = async (options?: RequestInit): Promise<getYearsResponse> => {
-  return customFetch<getYearsResponse>(getGetYearsUrl(), {
+
+  
+
+  return `/years`
+}
+
+export const getYears = async ( options?: RequestInit): Promise<getYearsResponse> => {
+  
+  return customFetch<getYearsResponse>(getGetYearsUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetYearsKey = () => [`/years`] as const;
 
-export type GetYearsQueryResult = NonNullable<Awaited<ReturnType<typeof getYears>>>;
-export type GetYearsQueryError = unknown;
+export type GetYearsQueryResult = NonNullable<Awaited<ReturnType<typeof getYears>>>
+export type GetYearsQueryError = unknown
 
-export const useGetYears = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getYears>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetYears = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getYears>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetYearsKey() : null));
-  const swrFn = () => getYears(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetYearsKey() : null);
+  const swrFn = () => getYears(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * yearの作成
  */
 export type postYearsResponse200 = {
-  data: PostYears200;
-  status: 200;
-};
-
-export type postYearsResponseSuccess = postYearsResponse200 & {
+  data: PostYears200
+  status: 200
+}
+    
+export type postYearsResponseSuccess = (postYearsResponse200) & {
   headers: Headers;
 };
-export type postYearsResponse = postYearsResponseSuccess;
+;
 
-export const getPostYearsUrl = (params: PostYearsParams) => {
+export type postYearsResponse = (postYearsResponseSuccess)
+
+export const getPostYearsUrl = (params: PostYearsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/years?${stringifiedParams}` : `/years`;
-};
+  return stringifiedParams.length > 0 ? `/years?${stringifiedParams}` : `/years`
+}
 
-export const postYears = async (
-  params: PostYearsParams,
-  options?: RequestInit,
-): Promise<postYearsResponse> => {
-  return customFetch<postYearsResponse>(getPostYearsUrl(params), {
+export const postYears = async (params: PostYearsParams, options?: RequestInit): Promise<postYearsResponse> => {
+  
+  return customFetch<postYearsResponse>(getPostYearsUrl(params),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPostYearsMutationFetcher = (
-  params: PostYearsParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostYearsMutationFetcher = (params: PostYearsParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return postYears(params, options);
-  };
-};
-export const getPostYearsMutationKey = (params: PostYearsParams) =>
-  [`/years`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPostYearsMutationKey = (params: PostYearsParams,) => [`/years`, ...(params ? [params]: [])] as const;
 
-export type PostYearsMutationResult = NonNullable<Awaited<ReturnType<typeof postYears>>>;
-export type PostYearsMutationError = unknown;
+export type PostYearsMutationResult = NonNullable<Awaited<ReturnType<typeof postYears>>>
+export type PostYearsMutationError = unknown
 
 export const usePostYears = <TError = unknown>(
-  params: PostYearsParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postYears>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postYears>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params: PostYearsParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postYears>>, TError, Key, Arguments, Awaited<ReturnType<typeof postYears>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostYearsMutationKey(params);
   const swrFn = getPostYearsMutationFetcher(params, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDで指定されたyearの取得
  */
 export type getYearsIdResponse200 = {
-  data: YearPeriods;
-  status: 200;
-};
-
-export type getYearsIdResponseSuccess = getYearsIdResponse200 & {
+  data: YearPeriods
+  status: 200
+}
+    
+export type getYearsIdResponseSuccess = (getYearsIdResponse200) & {
   headers: Headers;
 };
-export type getYearsIdResponse = getYearsIdResponseSuccess;
+;
 
-export const getGetYearsIdUrl = (id: number) => {
-  return `/years/${id}`;
-};
+export type getYearsIdResponse = (getYearsIdResponseSuccess)
 
-export const getYearsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getYearsIdResponse> => {
-  return customFetch<getYearsIdResponse>(getGetYearsIdUrl(id), {
+export const getGetYearsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/years/${id}`
+}
+
+export const getYearsId = async (id: number, options?: RequestInit): Promise<getYearsIdResponse> => {
+  
+  return customFetch<getYearsIdResponse>(getGetYearsIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetYearsIdKey = (id: number) => [`/years/${id}`] as const;
 
-export type GetYearsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getYearsId>>>;
-export type GetYearsIdQueryError = unknown;
+
+
+export const getGetYearsIdKey = (id: number,) => [`/years/${id}`] as const;
+
+export type GetYearsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getYearsId>>>
+export type GetYearsIdQueryError = unknown
 
 export const useGetYearsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getYearsId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getYearsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetYearsIdKey(id) : null));
-  const swrFn = () => getYearsId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetYearsIdKey(id) : null);
+  const swrFn = () => getYearsId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * yearの更新
  */
 export type putYearsIdResponse200 = {
-  data: PutYearsId200;
-  status: 200;
-};
-
-export type putYearsIdResponseSuccess = putYearsIdResponse200 & {
+  data: PutYearsId200
+  status: 200
+}
+    
+export type putYearsIdResponseSuccess = (putYearsIdResponse200) & {
   headers: Headers;
 };
-export type putYearsIdResponse = putYearsIdResponseSuccess;
+;
 
-export const getPutYearsIdUrl = (id: number, params: PutYearsIdParams) => {
+export type putYearsIdResponse = (putYearsIdResponseSuccess)
+
+export const getPutYearsIdUrl = (id: number,
+    params: PutYearsIdParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/years/${id}?${stringifiedParams}` : `/years/${id}`;
-};
+  return stringifiedParams.length > 0 ? `/years/${id}?${stringifiedParams}` : `/years/${id}`
+}
 
-export const putYearsId = async (
-  id: number,
-  params: PutYearsIdParams,
-  options?: RequestInit,
-): Promise<putYearsIdResponse> => {
-  return customFetch<putYearsIdResponse>(getPutYearsIdUrl(id, params), {
+export const putYearsId = async (id: number,
+    params: PutYearsIdParams, options?: RequestInit): Promise<putYearsIdResponse> => {
+  
+  return customFetch<putYearsIdResponse>(getPutYearsIdUrl(id,params),
+  {      
     ...options,
-    method: 'PUT',
-  });
-};
+    method: 'PUT'
+    
+    
+  }
+);}
 
-export const getPutYearsIdMutationFetcher = (
-  id: number,
-  params: PutYearsIdParams,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutYearsIdMutationFetcher = (id: number,
+    params: PutYearsIdParams, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return putYearsId(id, params, options);
-  };
-};
-export const getPutYearsIdMutationKey = (id: number, params: PutYearsIdParams) =>
-  [`/years/${id}`, ...(params ? [params] : [])] as const;
+  }
+}
+export const getPutYearsIdMutationKey = (id: number,
+    params: PutYearsIdParams,) => [`/years/${id}`, ...(params ? [params]: [])] as const;
 
-export type PutYearsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putYearsId>>>;
-export type PutYearsIdMutationError = unknown;
+export type PutYearsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putYearsId>>>
+export type PutYearsIdMutationError = unknown
 
 export const usePutYearsId = <TError = unknown>(
   id: number,
-  params: PutYearsIdParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putYearsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof putYearsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+    params: PutYearsIdParams, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putYearsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof putYearsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPutYearsIdMutationKey(id, params);
-  const swrFn = getPutYearsIdMutationFetcher(id, params, requestOptions);
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const swrKey = swrOptions?.swrKey ?? getPutYearsIdMutationKey(id,params);
+  const swrFn = getPutYearsIdMutationFetcher(id,params, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してyearの削除
  */
 export type deleteYearsIdResponse200 = {
-  data: DeleteYearsId200;
-  status: 200;
-};
-
-export type deleteYearsIdResponseSuccess = deleteYearsIdResponse200 & {
+  data: DeleteYearsId200
+  status: 200
+}
+    
+export type deleteYearsIdResponseSuccess = (deleteYearsIdResponse200) & {
   headers: Headers;
 };
-export type deleteYearsIdResponse = deleteYearsIdResponseSuccess;
+;
 
-export const getDeleteYearsIdUrl = (id: number) => {
-  return `/years/${id}`;
-};
+export type deleteYearsIdResponse = (deleteYearsIdResponseSuccess)
 
-export const deleteYearsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteYearsIdResponse> => {
-  return customFetch<deleteYearsIdResponse>(getDeleteYearsIdUrl(id), {
+export const getDeleteYearsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/years/${id}`
+}
+
+export const deleteYearsId = async (id: number, options?: RequestInit): Promise<deleteYearsIdResponse> => {
+  
+  return customFetch<deleteYearsIdResponse>(getDeleteYearsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteYearsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteYearsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteYearsId(id, options);
-  };
-};
-export const getDeleteYearsIdMutationKey = (id: number) => [`/years/${id}`] as const;
+  }
+}
+export const getDeleteYearsIdMutationKey = (id: number,) => [`/years/${id}`] as const;
 
-export type DeleteYearsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteYearsId>>>;
-export type DeleteYearsIdMutationError = unknown;
+export type DeleteYearsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteYearsId>>>
+export type DeleteYearsIdMutationError = unknown
 
 export const useDeleteYearsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteYearsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteYearsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteYearsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteYearsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteYearsIdMutationKey(id);
   const swrFn = getDeleteYearsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 年度一覧の取得
  */
 export type getYearsPeriodsResponse200 = {
-  data: YearPeriods[];
-  status: 200;
-};
-
-export type getYearsPeriodsResponseSuccess = getYearsPeriodsResponse200 & {
+  data: YearPeriods[]
+  status: 200
+}
+    
+export type getYearsPeriodsResponseSuccess = (getYearsPeriodsResponse200) & {
   headers: Headers;
 };
-export type getYearsPeriodsResponse = getYearsPeriodsResponseSuccess;
+;
+
+export type getYearsPeriodsResponse = (getYearsPeriodsResponseSuccess)
 
 export const getGetYearsPeriodsUrl = () => {
-  return `/years/periods`;
-};
 
-export const getYearsPeriods = async (options?: RequestInit): Promise<getYearsPeriodsResponse> => {
-  return customFetch<getYearsPeriodsResponse>(getGetYearsPeriodsUrl(), {
+
+  
+
+  return `/years/periods`
+}
+
+export const getYearsPeriods = async ( options?: RequestInit): Promise<getYearsPeriodsResponse> => {
+  
+  return customFetch<getYearsPeriodsResponse>(getGetYearsPeriodsUrl(),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 
 export const getGetYearsPeriodsKey = () => [`/years/periods`] as const;
 
-export type GetYearsPeriodsQueryResult = NonNullable<Awaited<ReturnType<typeof getYearsPeriods>>>;
-export type GetYearsPeriodsQueryError = unknown;
+export type GetYearsPeriodsQueryResult = NonNullable<Awaited<ReturnType<typeof getYearsPeriods>>>
+export type GetYearsPeriodsQueryError = unknown
 
-export const useGetYearsPeriods = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getYearsPeriods>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const useGetYearsPeriods = <TError = unknown>(
+   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getYearsPeriods>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
+) => {
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetYearsPeriodsKey() : null));
-  const swrFn = () => getYearsPeriods(requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetYearsPeriodsKey() : null);
+  const swrFn = () => getYearsPeriods(requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * year_periodsの作成
  */
 export type postYearsPeriodsResponse200 = {
-  data: PostYearsPeriods200;
-  status: 200;
-};
-
-export type postYearsPeriodsResponseSuccess = postYearsPeriodsResponse200 & {
+  data: PostYearsPeriods200
+  status: 200
+}
+    
+export type postYearsPeriodsResponseSuccess = (postYearsPeriodsResponse200) & {
   headers: Headers;
 };
-export type postYearsPeriodsResponse = postYearsPeriodsResponseSuccess;
+;
+
+export type postYearsPeriodsResponse = (postYearsPeriodsResponseSuccess)
 
 export const getPostYearsPeriodsUrl = () => {
-  return `/years/periods`;
-};
 
-export const postYearsPeriods = async (
-  yearPeriods?: YearPeriods,
-  options?: RequestInit,
-): Promise<postYearsPeriodsResponse> => {
-  return customFetch<postYearsPeriodsResponse>(getPostYearsPeriodsUrl(), {
+
+  
+
+  return `/years/periods`
+}
+
+export const postYearsPeriods = async (yearPeriods?: YearPeriods, options?: RequestInit): Promise<postYearsPeriodsResponse> => {
+  
+  return customFetch<postYearsPeriodsResponse>(getPostYearsPeriodsUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(yearPeriods),
-  });
-};
+    body: JSON.stringify(
+      yearPeriods,)
+  }
+);}
 
-export const getPostYearsPeriodsMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostYearsPeriodsMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: YearPeriods }) => {
     return postYearsPeriods(arg, options);
-  };
-};
+  }
+}
 export const getPostYearsPeriodsMutationKey = () => [`/years/periods`] as const;
 
-export type PostYearsPeriodsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postYearsPeriods>>
->;
-export type PostYearsPeriodsMutationError = unknown;
+export type PostYearsPeriodsMutationResult = NonNullable<Awaited<ReturnType<typeof postYearsPeriods>>>
+export type PostYearsPeriodsMutationError = unknown
 
-export const usePostYearsPeriods = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postYearsPeriods>>,
-    TError,
-    Key,
-    YearPeriods,
-    Awaited<ReturnType<typeof postYearsPeriods>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostYearsPeriods = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postYearsPeriods>>, TError, Key, YearPeriods, Awaited<ReturnType<typeof postYearsPeriods>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostYearsPeriodsMutationKey();
   const swrFn = getPostYearsPeriodsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * year_periodsの更新
  */
 export type putYearsPeriodsIdResponse200 = {
-  data: PutYearsPeriodsId200;
-  status: 200;
-};
-
-export type putYearsPeriodsIdResponseSuccess = putYearsPeriodsIdResponse200 & {
+  data: PutYearsPeriodsId200
+  status: 200
+}
+    
+export type putYearsPeriodsIdResponseSuccess = (putYearsPeriodsIdResponse200) & {
   headers: Headers;
 };
-export type putYearsPeriodsIdResponse = putYearsPeriodsIdResponseSuccess;
+;
 
-export const getPutYearsPeriodsIdUrl = (id: number) => {
-  return `/years/periods/${id}`;
-};
+export type putYearsPeriodsIdResponse = (putYearsPeriodsIdResponseSuccess)
 
-export const putYearsPeriodsId = async (
-  id: number,
-  yearPeriods?: YearPeriods,
-  options?: RequestInit,
-): Promise<putYearsPeriodsIdResponse> => {
-  return customFetch<putYearsPeriodsIdResponse>(getPutYearsPeriodsIdUrl(id), {
+export const getPutYearsPeriodsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/years/periods/${id}`
+}
+
+export const putYearsPeriodsId = async (id: number,
+    yearPeriods?: YearPeriods, options?: RequestInit): Promise<putYearsPeriodsIdResponse> => {
+  
+  return customFetch<putYearsPeriodsIdResponse>(getPutYearsPeriodsIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(yearPeriods),
-  });
-};
+    body: JSON.stringify(
+      yearPeriods,)
+  }
+);}
 
-export const getPutYearsPeriodsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutYearsPeriodsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: YearPeriods }) => {
     return putYearsPeriodsId(id, arg, options);
-  };
-};
-export const getPutYearsPeriodsIdMutationKey = (id: number) => [`/years/periods/${id}`] as const;
+  }
+}
+export const getPutYearsPeriodsIdMutationKey = (id: number,) => [`/years/periods/${id}`] as const;
 
-export type PutYearsPeriodsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putYearsPeriodsId>>
->;
-export type PutYearsPeriodsIdMutationError = unknown;
+export type PutYearsPeriodsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putYearsPeriodsId>>>
+export type PutYearsPeriodsIdMutationError = unknown
 
 export const usePutYearsPeriodsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putYearsPeriodsId>>,
-      TError,
-      Key,
-      YearPeriods,
-      Awaited<ReturnType<typeof putYearsPeriodsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putYearsPeriodsId>>, TError, Key, YearPeriods, Awaited<ReturnType<typeof putYearsPeriodsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutYearsPeriodsIdMutationKey(id);
   const swrFn = getPutYearsPeriodsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * IDを指定してyear_periodsの削除
  */
 export type deleteYearsPeriodsIdResponse200 = {
-  data: DeleteYearsPeriodsId200;
-  status: 200;
-};
-
-export type deleteYearsPeriodsIdResponseSuccess = deleteYearsPeriodsIdResponse200 & {
+  data: DeleteYearsPeriodsId200
+  status: 200
+}
+    
+export type deleteYearsPeriodsIdResponseSuccess = (deleteYearsPeriodsIdResponse200) & {
   headers: Headers;
 };
-export type deleteYearsPeriodsIdResponse = deleteYearsPeriodsIdResponseSuccess;
+;
 
-export const getDeleteYearsPeriodsIdUrl = (id: number) => {
-  return `/years/periods/${id}`;
-};
+export type deleteYearsPeriodsIdResponse = (deleteYearsPeriodsIdResponseSuccess)
 
-export const deleteYearsPeriodsId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteYearsPeriodsIdResponse> => {
-  return customFetch<deleteYearsPeriodsIdResponse>(getDeleteYearsPeriodsIdUrl(id), {
+export const getDeleteYearsPeriodsIdUrl = (id: number,) => {
+
+
+  
+
+  return `/years/periods/${id}`
+}
+
+export const deleteYearsPeriodsId = async (id: number, options?: RequestInit): Promise<deleteYearsPeriodsIdResponse> => {
+  
+  return customFetch<deleteYearsPeriodsIdResponse>(getDeleteYearsPeriodsIdUrl(id),
+  {      
     ...options,
-    method: 'DELETE',
-  });
-};
+    method: 'DELETE'
+    
+    
+  }
+);}
 
-export const getDeleteYearsPeriodsIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getDeleteYearsPeriodsIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteYearsPeriodsId(id, options);
-  };
-};
-export const getDeleteYearsPeriodsIdMutationKey = (id: number) => [`/years/periods/${id}`] as const;
+  }
+}
+export const getDeleteYearsPeriodsIdMutationKey = (id: number,) => [`/years/periods/${id}`] as const;
 
-export type DeleteYearsPeriodsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteYearsPeriodsId>>
->;
-export type DeleteYearsPeriodsIdMutationError = unknown;
+export type DeleteYearsPeriodsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteYearsPeriodsId>>>
+export type DeleteYearsPeriodsIdMutationError = unknown
 
 export const useDeleteYearsPeriodsId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteYearsPeriodsId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteYearsPeriodsId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteYearsPeriodsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteYearsPeriodsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteYearsPeriodsIdMutationKey(id);
   const swrFn = getDeleteYearsPeriodsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 年度、キーワード、ステータス、担当者、協賛プランなどで絞り込み、指定順序でソートして一覧を取得。
@@ -7347,20 +7217,22 @@ export const useDeleteYearsPeriodsId = <TError = unknown>(
  * @summary 協賛活動一覧取得
  */
 export type getSponsorshipActivitiesResponse200 = {
-  data: SponsorshipActivitiesResponse;
-  status: 200;
-};
-
-export type getSponsorshipActivitiesResponseSuccess = getSponsorshipActivitiesResponse200 & {
+  data: SponsorshipActivitiesResponse
+  status: 200
+}
+    
+export type getSponsorshipActivitiesResponseSuccess = (getSponsorshipActivitiesResponse200) & {
   headers: Headers;
 };
-export type getSponsorshipActivitiesResponse = getSponsorshipActivitiesResponseSuccess;
+;
 
-export const getGetSponsorshipActivitiesUrl = (params?: GetSponsorshipActivitiesParams) => {
+export type getSponsorshipActivitiesResponse = (getSponsorshipActivitiesResponseSuccess)
+
+export const getGetSponsorshipActivitiesUrl = (params?: GetSponsorshipActivitiesParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['sponsor_style_ids'];
+    const explodeParameters = ["sponsor_style_ids"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
       value.forEach((v) => {
@@ -7368,455 +7240,417 @@ export const getGetSponsorshipActivitiesUrl = (params?: GetSponsorshipActivities
       });
       return;
     }
-
+      
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/sponsorship_activities?${stringifiedParams}`
-    : `/sponsorship_activities`;
-};
+  return stringifiedParams.length > 0 ? `/sponsorship_activities?${stringifiedParams}` : `/sponsorship_activities`
+}
 
-export const getSponsorshipActivities = async (
-  params?: GetSponsorshipActivitiesParams,
-  options?: RequestInit,
-): Promise<getSponsorshipActivitiesResponse> => {
-  return customFetch<getSponsorshipActivitiesResponse>(getGetSponsorshipActivitiesUrl(params), {
+export const getSponsorshipActivities = async (params?: GetSponsorshipActivitiesParams, options?: RequestInit): Promise<getSponsorshipActivitiesResponse> => {
+  
+  return customFetch<getSponsorshipActivitiesResponse>(getGetSponsorshipActivitiesUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetSponsorshipActivitiesKey = (params?: GetSponsorshipActivitiesParams) =>
-  [`/sponsorship_activities`, ...(params ? [params] : [])] as const;
 
-export type GetSponsorshipActivitiesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getSponsorshipActivities>>
->;
-export type GetSponsorshipActivitiesQueryError = unknown;
+
+
+export const getGetSponsorshipActivitiesKey = (params?: GetSponsorshipActivitiesParams,) => [`/sponsorship_activities`, ...(params ? [params]: [])] as const;
+
+export type GetSponsorshipActivitiesQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorshipActivities>>>
+export type GetSponsorshipActivitiesQueryError = unknown
 
 /**
  * @summary 協賛活動一覧取得
  */
 export const useGetSponsorshipActivities = <TError = unknown>(
-  params?: GetSponsorshipActivitiesParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsorshipActivities>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetSponsorshipActivitiesParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsorshipActivities>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorshipActivitiesKey(params) : null));
-  const swrFn = () => getSponsorshipActivities(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorshipActivitiesKey(params) : null);
+  const swrFn = () => getSponsorshipActivities(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 新しい協賛活動データを作成。
  * @summary 協賛活動の新規作成
  */
 export type postSponsorshipActivitiesResponse200 = {
-  data: SponsorshipActivity;
-  status: 200;
-};
-
-export type postSponsorshipActivitiesResponseSuccess = postSponsorshipActivitiesResponse200 & {
+  data: SponsorshipActivity
+  status: 200
+}
+    
+export type postSponsorshipActivitiesResponseSuccess = (postSponsorshipActivitiesResponse200) & {
   headers: Headers;
 };
-export type postSponsorshipActivitiesResponse = postSponsorshipActivitiesResponseSuccess;
+;
+
+export type postSponsorshipActivitiesResponse = (postSponsorshipActivitiesResponseSuccess)
 
 export const getPostSponsorshipActivitiesUrl = () => {
-  return `/sponsorship_activities`;
-};
 
-export const postSponsorshipActivities = async (
-  createSponsorshipActivityRequest: CreateSponsorshipActivityRequest,
-  options?: RequestInit,
-): Promise<postSponsorshipActivitiesResponse> => {
-  return customFetch<postSponsorshipActivitiesResponse>(getPostSponsorshipActivitiesUrl(), {
+
+  
+
+  return `/sponsorship_activities`
+}
+
+export const postSponsorshipActivities = async (createSponsorshipActivityRequest: CreateSponsorshipActivityRequest, options?: RequestInit): Promise<postSponsorshipActivitiesResponse> => {
+  
+  return customFetch<postSponsorshipActivitiesResponse>(getPostSponsorshipActivitiesUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createSponsorshipActivityRequest),
-  });
-};
+    body: JSON.stringify(
+      createSponsorshipActivityRequest,)
+  }
+);}
 
-export const getPostSponsorshipActivitiesMutationFetcher = (
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPostSponsorshipActivitiesMutationFetcher = ( options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: CreateSponsorshipActivityRequest }) => {
     return postSponsorshipActivities(arg, options);
-  };
-};
+  }
+}
 export const getPostSponsorshipActivitiesMutationKey = () => [`/sponsorship_activities`] as const;
 
-export type PostSponsorshipActivitiesMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postSponsorshipActivities>>
->;
-export type PostSponsorshipActivitiesMutationError = unknown;
+export type PostSponsorshipActivitiesMutationResult = NonNullable<Awaited<ReturnType<typeof postSponsorshipActivities>>>
+export type PostSponsorshipActivitiesMutationError = unknown
 
 /**
  * @summary 協賛活動の新規作成
  */
-export const usePostSponsorshipActivities = <TError = unknown>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof postSponsorshipActivities>>,
-    TError,
-    Key,
-    CreateSponsorshipActivityRequest,
-    Awaited<ReturnType<typeof postSponsorshipActivities>>
-  > & { swrKey?: string };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+export const usePostSponsorshipActivities = <TError = unknown>(
+   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postSponsorshipActivities>>, TError, Key, CreateSponsorshipActivityRequest, Awaited<ReturnType<typeof postSponsorshipActivities>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPostSponsorshipActivitiesMutationKey();
   const swrFn = getPostSponsorshipActivitiesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 指定IDの協賛活動データを取得。
  * @summary 協賛活動詳細取得
  */
 export type getSponsorshipActivitiesIdResponse200 = {
-  data: SponsorshipActivity;
-  status: 200;
-};
-
-export type getSponsorshipActivitiesIdResponseSuccess = getSponsorshipActivitiesIdResponse200 & {
+  data: SponsorshipActivity
+  status: 200
+}
+    
+export type getSponsorshipActivitiesIdResponseSuccess = (getSponsorshipActivitiesIdResponse200) & {
   headers: Headers;
 };
-export type getSponsorshipActivitiesIdResponse = getSponsorshipActivitiesIdResponseSuccess;
+;
 
-export const getGetSponsorshipActivitiesIdUrl = (id: number) => {
-  return `/sponsorship_activities/${id}`;
-};
+export type getSponsorshipActivitiesIdResponse = (getSponsorshipActivitiesIdResponseSuccess)
 
-export const getSponsorshipActivitiesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<getSponsorshipActivitiesIdResponse> => {
-  return customFetch<getSponsorshipActivitiesIdResponse>(getGetSponsorshipActivitiesIdUrl(id), {
+export const getGetSponsorshipActivitiesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsorship_activities/${id}`
+}
+
+export const getSponsorshipActivitiesId = async (id: number, options?: RequestInit): Promise<getSponsorshipActivitiesIdResponse> => {
+  
+  return customFetch<getSponsorshipActivitiesIdResponse>(getGetSponsorshipActivitiesIdUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetSponsorshipActivitiesIdKey = (id: number) =>
-  [`/sponsorship_activities/${id}`] as const;
 
-export type GetSponsorshipActivitiesIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getSponsorshipActivitiesId>>
->;
-export type GetSponsorshipActivitiesIdQueryError = unknown;
+
+
+export const getGetSponsorshipActivitiesIdKey = (id: number,) => [`/sponsorship_activities/${id}`] as const;
+
+export type GetSponsorshipActivitiesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorshipActivitiesId>>>
+export type GetSponsorshipActivitiesIdQueryError = unknown
 
 /**
  * @summary 協賛活動詳細取得
  */
 export const useGetSponsorshipActivitiesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsorshipActivitiesId>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsorshipActivitiesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorshipActivitiesIdKey(id) : null));
-  const swrFn = () => getSponsorshipActivitiesId(id, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(id)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorshipActivitiesIdKey(id) : null);
+  const swrFn = () => getSponsorshipActivitiesId(id, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 指定IDの協賛活動データを更新（基本情報・プランなど）。
  * @summary 協賛活動の更新（全項目）
  */
 export type putSponsorshipActivitiesIdResponse200 = {
-  data: SponsorshipActivity;
-  status: 200;
-};
-
-export type putSponsorshipActivitiesIdResponseSuccess = putSponsorshipActivitiesIdResponse200 & {
+  data: SponsorshipActivity
+  status: 200
+}
+    
+export type putSponsorshipActivitiesIdResponseSuccess = (putSponsorshipActivitiesIdResponse200) & {
   headers: Headers;
 };
-export type putSponsorshipActivitiesIdResponse = putSponsorshipActivitiesIdResponseSuccess;
+;
 
-export const getPutSponsorshipActivitiesIdUrl = (id: number) => {
-  return `/sponsorship_activities/${id}`;
-};
+export type putSponsorshipActivitiesIdResponse = (putSponsorshipActivitiesIdResponseSuccess)
 
-export const putSponsorshipActivitiesId = async (
-  id: number,
-  updateSponsorshipActivityRequest: UpdateSponsorshipActivityRequest,
-  options?: RequestInit,
-): Promise<putSponsorshipActivitiesIdResponse> => {
-  return customFetch<putSponsorshipActivitiesIdResponse>(getPutSponsorshipActivitiesIdUrl(id), {
+export const getPutSponsorshipActivitiesIdUrl = (id: number,) => {
+
+
+  
+
+  return `/sponsorship_activities/${id}`
+}
+
+export const putSponsorshipActivitiesId = async (id: number,
+    updateSponsorshipActivityRequest: UpdateSponsorshipActivityRequest, options?: RequestInit): Promise<putSponsorshipActivitiesIdResponse> => {
+  
+  return customFetch<putSponsorshipActivitiesIdResponse>(getPutSponsorshipActivitiesIdUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(updateSponsorshipActivityRequest),
-  });
-};
+    body: JSON.stringify(
+      updateSponsorshipActivityRequest,)
+  }
+);}
 
-export const getPutSponsorshipActivitiesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+
+
+
+export const getPutSponsorshipActivitiesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: UpdateSponsorshipActivityRequest }) => {
     return putSponsorshipActivitiesId(id, arg, options);
-  };
-};
-export const getPutSponsorshipActivitiesIdMutationKey = (id: number) =>
-  [`/sponsorship_activities/${id}`] as const;
+  }
+}
+export const getPutSponsorshipActivitiesIdMutationKey = (id: number,) => [`/sponsorship_activities/${id}`] as const;
 
-export type PutSponsorshipActivitiesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putSponsorshipActivitiesId>>
->;
-export type PutSponsorshipActivitiesIdMutationError = unknown;
+export type PutSponsorshipActivitiesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putSponsorshipActivitiesId>>>
+export type PutSponsorshipActivitiesIdMutationError = unknown
 
 /**
  * @summary 協賛活動の更新（全項目）
  */
 export const usePutSponsorshipActivitiesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putSponsorshipActivitiesId>>,
-      TError,
-      Key,
-      UpdateSponsorshipActivityRequest,
-      Awaited<ReturnType<typeof putSponsorshipActivitiesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putSponsorshipActivitiesId>>, TError, Key, UpdateSponsorshipActivityRequest, Awaited<ReturnType<typeof putSponsorshipActivitiesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutSponsorshipActivitiesIdMutationKey(id);
   const swrFn = getPutSponsorshipActivitiesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 指定IDの協賛活動データを物理削除。
  * @summary 協賛活動の削除
  */
 export type deleteSponsorshipActivitiesIdResponse200 = {
-  data: DeleteSponsorshipActivitiesId200;
-  status: 200;
+  data: DeleteSponsorshipActivitiesId200
+  status: 200
+}
+    
+export type deleteSponsorshipActivitiesIdResponseSuccess = (deleteSponsorshipActivitiesIdResponse200) & {
+  headers: Headers;
 };
+;
 
-export type deleteSponsorshipActivitiesIdResponseSuccess =
-  deleteSponsorshipActivitiesIdResponse200 & {
-    headers: Headers;
-  };
-export type deleteSponsorshipActivitiesIdResponse = deleteSponsorshipActivitiesIdResponseSuccess;
+export type deleteSponsorshipActivitiesIdResponse = (deleteSponsorshipActivitiesIdResponseSuccess)
 
-export const getDeleteSponsorshipActivitiesIdUrl = (id: number) => {
-  return `/sponsorship_activities/${id}`;
-};
+export const getDeleteSponsorshipActivitiesIdUrl = (id: number,) => {
 
-export const deleteSponsorshipActivitiesId = async (
-  id: number,
-  options?: RequestInit,
-): Promise<deleteSponsorshipActivitiesIdResponse> => {
-  return customFetch<deleteSponsorshipActivitiesIdResponse>(
-    getDeleteSponsorshipActivitiesIdUrl(id),
-    {
-      ...options,
-      method: 'DELETE',
-    },
-  );
-};
 
-export const getDeleteSponsorshipActivitiesIdMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+  
+
+  return `/sponsorship_activities/${id}`
+}
+
+export const deleteSponsorshipActivitiesId = async (id: number, options?: RequestInit): Promise<deleteSponsorshipActivitiesIdResponse> => {
+  
+  return customFetch<deleteSponsorshipActivitiesIdResponse>(getDeleteSponsorshipActivitiesIdUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+);}
+
+
+
+
+export const getDeleteSponsorshipActivitiesIdMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteSponsorshipActivitiesId(id, options);
-  };
-};
-export const getDeleteSponsorshipActivitiesIdMutationKey = (id: number) =>
-  [`/sponsorship_activities/${id}`] as const;
+  }
+}
+export const getDeleteSponsorshipActivitiesIdMutationKey = (id: number,) => [`/sponsorship_activities/${id}`] as const;
 
-export type DeleteSponsorshipActivitiesIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteSponsorshipActivitiesId>>
->;
-export type DeleteSponsorshipActivitiesIdMutationError = unknown;
+export type DeleteSponsorshipActivitiesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSponsorshipActivitiesId>>>
+export type DeleteSponsorshipActivitiesIdMutationError = unknown
 
 /**
  * @summary 協賛活動の削除
  */
 export const useDeleteSponsorshipActivitiesId = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteSponsorshipActivitiesId>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof deleteSponsorshipActivitiesId>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteSponsorshipActivitiesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteSponsorshipActivitiesId>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getDeleteSponsorshipActivitiesIdMutationKey(id);
   const swrFn = getDeleteSponsorshipActivitiesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * ステータス、可否、デザイン進捗、備考のみを更新。
  * @summary 協賛活動ステータスの更新
  */
 export type putSponsorshipActivitiesIdStatusResponse200 = {
-  data: SponsorshipActivity;
-  status: 200;
+  data: SponsorshipActivity
+  status: 200
+}
+    
+export type putSponsorshipActivitiesIdStatusResponseSuccess = (putSponsorshipActivitiesIdStatusResponse200) & {
+  headers: Headers;
 };
+;
 
-export type putSponsorshipActivitiesIdStatusResponseSuccess =
-  putSponsorshipActivitiesIdStatusResponse200 & {
-    headers: Headers;
-  };
-export type putSponsorshipActivitiesIdStatusResponse =
-  putSponsorshipActivitiesIdStatusResponseSuccess;
+export type putSponsorshipActivitiesIdStatusResponse = (putSponsorshipActivitiesIdStatusResponseSuccess)
 
-export const getPutSponsorshipActivitiesIdStatusUrl = (id: number) => {
-  return `/sponsorship_activities/${id}/status`;
-};
+export const getPutSponsorshipActivitiesIdStatusUrl = (id: number,) => {
 
-export const putSponsorshipActivitiesIdStatus = async (
-  id: number,
-  putSponsorshipActivitiesIdStatusBody: PutSponsorshipActivitiesIdStatusBody,
-  options?: RequestInit,
-): Promise<putSponsorshipActivitiesIdStatusResponse> => {
-  return customFetch<putSponsorshipActivitiesIdStatusResponse>(
-    getPutSponsorshipActivitiesIdStatusUrl(id),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(putSponsorshipActivitiesIdStatusBody),
-    },
-  );
-};
 
-export const getPutSponsorshipActivitiesIdStatusMutationFetcher = (
-  id: number,
-  options?: SecondParameter<typeof customFetch>,
-) => {
+  
+
+  return `/sponsorship_activities/${id}/status`
+}
+
+export const putSponsorshipActivitiesIdStatus = async (id: number,
+    putSponsorshipActivitiesIdStatusBody: PutSponsorshipActivitiesIdStatusBody, options?: RequestInit): Promise<putSponsorshipActivitiesIdStatusResponse> => {
+  
+  return customFetch<putSponsorshipActivitiesIdStatusResponse>(getPutSponsorshipActivitiesIdStatusUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      putSponsorshipActivitiesIdStatusBody,)
+  }
+);}
+
+
+
+
+export const getPutSponsorshipActivitiesIdStatusMutationFetcher = (id: number, options?: SecondParameter<typeof customFetch>) => {
   return (_: Key, { arg }: { arg: PutSponsorshipActivitiesIdStatusBody }) => {
     return putSponsorshipActivitiesIdStatus(id, arg, options);
-  };
-};
-export const getPutSponsorshipActivitiesIdStatusMutationKey = (id: number) =>
-  [`/sponsorship_activities/${id}/status`] as const;
+  }
+}
+export const getPutSponsorshipActivitiesIdStatusMutationKey = (id: number,) => [`/sponsorship_activities/${id}/status`] as const;
 
-export type PutSponsorshipActivitiesIdStatusMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>
->;
-export type PutSponsorshipActivitiesIdStatusMutationError = unknown;
+export type PutSponsorshipActivitiesIdStatusMutationResult = NonNullable<Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>>
+export type PutSponsorshipActivitiesIdStatusMutationError = unknown
 
 /**
  * @summary 協賛活動ステータスの更新
  */
 export const usePutSponsorshipActivitiesIdStatus = <TError = unknown>(
-  id: number,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>,
-      TError,
-      Key,
-      PutSponsorshipActivitiesIdStatusBody,
-      Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>, TError, Key, PutSponsorshipActivitiesIdStatusBody, Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>> & { swrKey?: string }, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
   const swrKey = swrOptions?.swrKey ?? getPutSponsorshipActivitiesIdStatusMutationKey(id);
   const swrFn = getPutSponsorshipActivitiesIdStatusMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
 
 /**
  * 検索条件に一致するデータをCSV形式でダウンロード。
  * @summary CSVエクスポート
  */
 export type getSponsorshipActivitiesExportResponse200 = {
-  data: Blob;
-  status: 200;
+  data: Blob
+  status: 200
+}
+    
+export type getSponsorshipActivitiesExportResponseSuccess = (getSponsorshipActivitiesExportResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getSponsorshipActivitiesExportResponseSuccess =
-  getSponsorshipActivitiesExportResponse200 & {
-    headers: Headers;
-  };
-export type getSponsorshipActivitiesExportResponse = getSponsorshipActivitiesExportResponseSuccess;
+export type getSponsorshipActivitiesExportResponse = (getSponsorshipActivitiesExportResponseSuccess)
 
-export const getGetSponsorshipActivitiesExportUrl = (
-  params?: GetSponsorshipActivitiesExportParams,
-) => {
+export const getGetSponsorshipActivitiesExportUrl = (params?: GetSponsorshipActivitiesExportParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['sponsor_style_ids'];
+    const explodeParameters = ["sponsor_style_ids"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
       value.forEach((v) => {
@@ -7824,65 +7658,52 @@ export const getGetSponsorshipActivitiesExportUrl = (
       });
       return;
     }
-
+      
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/sponsorship_activities/export?${stringifiedParams}`
-    : `/sponsorship_activities/export`;
-};
+  return stringifiedParams.length > 0 ? `/sponsorship_activities/export?${stringifiedParams}` : `/sponsorship_activities/export`
+}
 
-export const getSponsorshipActivitiesExport = async (
-  params?: GetSponsorshipActivitiesExportParams,
-  options?: RequestInit,
-): Promise<getSponsorshipActivitiesExportResponse> => {
-  return customFetch<getSponsorshipActivitiesExportResponse>(
-    getGetSponsorshipActivitiesExportUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    },
-  );
-};
+export const getSponsorshipActivitiesExport = async (params?: GetSponsorshipActivitiesExportParams, options?: RequestInit): Promise<getSponsorshipActivitiesExportResponse> => {
+  
+  return customFetch<getSponsorshipActivitiesExportResponse>(getGetSponsorshipActivitiesExportUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetSponsorshipActivitiesExportKey = (
-  params?: GetSponsorshipActivitiesExportParams,
-) => [`/sponsorship_activities/export`, ...(params ? [params] : [])] as const;
 
-export type GetSponsorshipActivitiesExportQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getSponsorshipActivitiesExport>>
->;
-export type GetSponsorshipActivitiesExportQueryError = unknown;
+
+
+export const getGetSponsorshipActivitiesExportKey = (params?: GetSponsorshipActivitiesExportParams,) => [`/sponsorship_activities/export`, ...(params ? [params]: [])] as const;
+
+export type GetSponsorshipActivitiesExportQueryResult = NonNullable<Awaited<ReturnType<typeof getSponsorshipActivitiesExport>>>
+export type GetSponsorshipActivitiesExportQueryError = unknown
 
 /**
  * @summary CSVエクスポート
  */
 export const useGetSponsorshipActivitiesExport = <TError = unknown>(
-  params?: GetSponsorshipActivitiesExportParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getSponsorshipActivitiesExport>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
+  params?: GetSponsorshipActivitiesExportParams, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSponsorshipActivitiesExport>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof customFetch> }
 ) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
 
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetSponsorshipActivitiesExportKey(params) : null));
-  const swrFn = () => getSponsorshipActivitiesExport(params, requestOptions);
+  const isEnabled = swrOptions?.enabled !== false
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSponsorshipActivitiesExportKey(params) : null);
+  const swrFn = () => getSponsorshipActivitiesExport(params, requestOptions)
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
-    ...query,
-  };
-};
+    ...query
+  }
+}
