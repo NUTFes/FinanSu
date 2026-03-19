@@ -7,8 +7,8 @@
  */
 
 export type GetIncomeExpenditureManagementCsvDownloadParams = {
-  /**
-   * year
-   */
-  year?: number;
+/**
+ * year
+ */
+year?: number;
 };

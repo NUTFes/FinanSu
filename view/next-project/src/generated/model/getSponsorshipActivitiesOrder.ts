@@ -6,8 +6,8 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type GetSponsorshipActivitiesOrder =
-  (typeof GetSponsorshipActivitiesOrder)[keyof typeof GetSponsorshipActivitiesOrder];
+export type GetSponsorshipActivitiesOrder = typeof GetSponsorshipActivitiesOrder[keyof typeof GetSponsorshipActivitiesOrder];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetSponsorshipActivitiesOrder = {

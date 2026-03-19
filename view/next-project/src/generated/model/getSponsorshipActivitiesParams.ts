@@ -10,36 +10,36 @@ import type { FeasibilityStatus } from './feasibilityStatus';
 import type { GetSponsorshipActivitiesOrder } from './getSponsorshipActivitiesOrder';
 
 export type GetSponsorshipActivitiesParams = {
-  /**
-   * 年度期間ID (指定なし時は最新年度)
-   */
-  year_periods_id?: number;
-  /**
-   * 検索キーワード（企業名、担当者名など）
-   */
-  keyword?: string;
-  /**
-   * 活動ステータス (ActivityStatusの値を指定)
-   */
-  activity_status?: ActivityStatus;
-  /**
-   * 協賛可否ステータス (FeasibilityStatusの値を指定)
-   */
-  feasibility_status?: FeasibilityStatus;
-  /**
-   * 担当者ID
-   */
-  user_id?: number;
-  /**
-   * 協賛プランID（複数指定可）
-   */
-  sponsor_style_ids?: number[];
-  /**
-   * ソート対象カラム (例: updated_at, created_at, sponsor_id)
-   */
-  sort?: string;
-  /**
-   * ソート順序 (asc または desc)
-   */
-  order?: GetSponsorshipActivitiesOrder;
+/**
+ * 年度期間ID (指定なし時は最新年度)
+ */
+year_periods_id?: number;
+/**
+ * 検索キーワード（企業名、担当者名など）
+ */
+keyword?: string;
+/**
+ * 活動ステータス (ActivityStatusの値を指定)
+ */
+activity_status?: ActivityStatus;
+/**
+ * 協賛可否ステータス (FeasibilityStatusの値を指定)
+ */
+feasibility_status?: FeasibilityStatus;
+/**
+ * 担当者ID
+ */
+user_id?: number;
+/**
+ * 協賛プランID（複数指定可）
+ */
+sponsor_style_ids?: number[];
+/**
+ * ソート対象カラム (例: updated_at, created_at, sponsor_id)
+ */
+sort?: string;
+/**
+ * ソート順序 (asc または desc)
+ */
+order?: GetSponsorshipActivitiesOrder;
 };

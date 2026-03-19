@@ -7,8 +7,8 @@
  */
 
 export type GetFestivalItemsDetailsUserIdParams = {
-  /**
-   * year
-   */
-  year?: number;
+/**
+ * year
+ */
+year?: number;
 };

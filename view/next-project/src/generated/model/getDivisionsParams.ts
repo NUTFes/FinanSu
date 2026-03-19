@@ -7,12 +7,12 @@
  */
 
 export type GetDivisionsParams = {
-  /**
-   * year
-   */
-  year?: number;
-  /**
-   * financial_record_id
-   */
-  financial_record_id?: number;
+/**
+ * year
+ */
+year?: number;
+/**
+ * financial_record_id
+ */
+financial_record_id?: number;
 };

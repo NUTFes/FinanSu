@@ -6,8 +6,8 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory =
-  (typeof UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory)[keyof typeof UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory];
+export type UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory = typeof UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory[keyof typeof UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateSponsorshipActivityRequestSponsorStyleDetailsItemCategory = {

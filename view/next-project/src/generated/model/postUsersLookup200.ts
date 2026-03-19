@@ -6,9 +6,4 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type GetFinancialRecordsCsvDownloadParams = {
-/**
- * year
- */
-year: number;
-};
+export type PostUsersLookup200 = { [key: string]: unknown };
