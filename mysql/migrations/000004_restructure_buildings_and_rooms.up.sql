@@ -1,3 +1,8 @@
+-- buildings / rooms の再設計（000001 比）
+--
+-- 運用前提: 本番・開発とも、マイグレーション後にシード（mysql/seed/...）を新スキーマ向けに更新して投入する。
+-- 段階的な二重書き込み期間は設けない。
+--
 -- buildingsテーブルにunit_numbersカラムを追加
 ALTER TABLE buildings ADD COLUMN unit_numbers VARCHAR(255);
 
