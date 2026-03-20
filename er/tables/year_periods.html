@@ -117,6 +117,11 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="sponsorship_activities.year_periods_id references year_periods.id via sponsorship_activities_ibfk_1"><a href='sponsorship_activities.html'>sponsorship_activities</a><span class='relatedKey'>.year_periods_id</span></td>
+                                                <td class="constraint detail">sponsorship_activities_ibfk_1</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -264,13 +269,25 @@
                                 <h5>Close relationships within degrees of separation</h5>
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
+                                    <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="year_periods.html" target="_top" title="year_periods" alt="" coords="5,5,313,251">
+<area shape="rect" id="node1" href="sponsorship_activities.html" target="_top" title="sponsorship_activities" alt="" coords="357,5,657,211">
+<area shape="rect" id="node2" href="year_periods.html" target="_top" title="year_periods" alt="" coords="5,32,313,277">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/year_periods.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="activity_sponsor_style_links.html" target="_top" title="activity_sponsor_style_links" alt="" coords="701,209,1055,297">
+<area shape="rect" id="node2" href="sponsorship_activities.html" target="_top" title="sponsorship_activities" alt="" coords="357,207,657,412">
+<area shape="rect" id="node3" href="sponsors.html" target="_top" title="sponsors" alt="" coords="73,268,245,356">
+<area shape="rect" id="node4" href="users.html" target="_top" title="users" alt="" coords="91,373,227,461">
+<area shape="rect" id="node5" href="year_periods.html" target="_top" title="year_periods" alt="" coords="5,5,313,251">
+</map>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/year_periods.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

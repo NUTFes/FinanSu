@@ -118,9 +118,9 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="building_units.building_id references buildings.id via building_units_ibfk_1"><a href='building_units.html'>building_units</a><span class='relatedKey'>.building_id</span></td>
-                                                <td class="constraint detail">building_units_ibfk_1</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="rooms.building_id references buildings.id via rooms_building_id_foreign_key"><a href='rooms.html'>rooms</a><span class='relatedKey'>.building_id</span></td>
+                                                <td class="constraint detail">rooms_building_id_foreign_key</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -171,6 +171,23 @@
                                     <td title=''></td>
                                     <td title=''></td>
                                     <td>CURRENT_TIMESTAMP</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="unit_numbers">unit_numbers</span></td>
+                                    <td>VARCHAR</td>
+                                    <td>255</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
@@ -240,16 +257,16 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="building_units.html" target="_top" title="building_units" alt="" coords="343,5,564,152">
-<area shape="rect" id="node2" href="buildings.html" target="_top" title="buildings" alt="" coords="5,32,299,219">
+<area shape="rect" id="node1" href="rooms.html" target="_top" title="rooms" alt="" coords="367,5,545,152">
+<area shape="rect" id="node2" href="buildings.html" target="_top" title="buildings" alt="" coords="5,32,323,248">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/buildings.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="building_units.html" target="_top" title="building_units" alt="" coords="343,5,564,152">
-<area shape="rect" id="node2" href="buildings.html" target="_top" title="buildings" alt="" coords="5,32,299,219">
-<area shape="rect" id="node3" href="floors.html" target="_top" title="floors" alt="" coords="608,8,751,96">
+<area shape="rect" id="node1" href="room_teachers.html" target="_top" title="room_teachers" alt="" coords="589,8,817,96">
+<area shape="rect" id="node2" href="rooms.html" target="_top" title="rooms" alt="" coords="367,5,545,152">
+<area shape="rect" id="node3" href="buildings.html" target="_top" title="buildings" alt="" coords="5,32,323,248">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/buildings.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

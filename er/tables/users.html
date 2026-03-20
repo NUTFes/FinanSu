@@ -118,8 +118,18 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="buy_reports.paid_by_user_id references users.id via paid_by_user_id_foreign_key"><a href='buy_reports.html'>buy_reports</a><span class='relatedKey'>.paid_by_user_id</span></td>
+                                                <td class="constraint detail">paid_by_user_id_foreign_key</td>
+                                                <td class="constraint detail"><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="campus_donations.user_id references users.id via campus_donations_ibfk_2"><a href='campus_donations.html'>campus_donations</a><span class='relatedKey'>.user_id</span></td>
                                                 <td class="constraint detail">campus_donations_ibfk_2</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="sponsorship_activities.user_id references users.id via sponsorship_activities_ibfk_3"><a href='sponsorship_activities.html'>sponsorship_activities</a><span class='relatedKey'>.user_id</span></td>
+                                                <td class="constraint detail">sponsorship_activities_ibfk_3</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                             <tr>
@@ -296,20 +306,31 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="campus_donations.html" target="_top" title="campus_donations" alt="" coords="343,5,607,211">
-<area shape="rect" id="node2" href="users.html" target="_top" title="users" alt="" coords="5,144,299,419">
-<area shape="rect" id="node3" href="user_groups.html" target="_top" title="user_groups" alt="" coords="373,228,576,404">
+<area shape="rect" id="node1" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="391,5,594,181">
+<area shape="rect" id="node2" href="users.html" target="_top" title="users" alt="" coords="5,367,299,641">
+<area shape="rect" id="node3" href="campus_donations.html" target="_top" title="campus_donations" alt="" coords="361,199,625,404">
+<area shape="rect" id="node4" href="sponsorship_activities.html" target="_top" title="sponsorship_activities" alt="" coords="343,421,643,627">
+<area shape="rect" id="node5" href="user_groups.html" target="_top" title="user_groups" alt="" coords="391,644,594,820">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/users.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="campus_donations.html" target="_top" title="campus_donations" alt="" coords="343,84,607,289">
-<area shape="rect" id="node2" href="teachers.html" target="_top" title="teachers" alt="" coords="68,5,236,93">
-<area shape="rect" id="node3" href="users.html" target="_top" title="users" alt="" coords="5,111,299,385">
-<area shape="rect" id="node4" href="years.html" target="_top" title="years" alt="" coords="83,403,221,491">
-<area shape="rect" id="node5" href="user_groups.html" target="_top" title="user_groups" alt="" coords="373,376,576,552">
-<area shape="rect" id="node6" href="divisions.html" target="_top" title="divisions" alt="" coords="67,508,237,596">
+<area shape="rect" id="node1" href="activity_sponsor_style_links.html" target="_top" title="activity_sponsor_style_links" alt="" coords="995,32,1348,120">
+<area shape="rect" id="node2" href="sponsorship_activities.html" target="_top" title="sponsorship_activities" alt="" coords="556,29,856,235">
+<area shape="rect" id="node6" href="users.html" target="_top" title="users" alt="" coords="219,340,512,615">
+<area shape="rect" id="node13" href="sponsors.html" target="_top" title="sponsors" alt="" coords="279,111,451,199">
+<area shape="rect" id="node14" href="year_periods.html" target="_top" title="year_periods" alt="" coords="261,5,469,93">
+<area shape="rect" id="node3" href="buy_report_income_expenditure_m_26c10aac.html" target="_top" title="buy_report_income_expenditure_managements" alt="" coords="900,360,1443,448">
+<area shape="rect" id="node4" href="buy_reports.html" target="_top" title="buy_reports" alt="" coords="605,252,807,428">
+<area shape="rect" id="node5" href="festival_items.html" target="_top" title="festival_items" alt="" coords="256,235,475,323">
+<area shape="rect" id="node11" href="divisions.html" target="_top" title="divisions" alt="" coords="5,415,175,503">
+<area shape="rect" id="node7" href="buy_statuses.html" target="_top" title="buy_statuses" alt="" coords="1065,149,1277,237">
+<area shape="rect" id="node8" href="campus_donations.html" target="_top" title="campus_donations" alt="" coords="574,639,838,844">
+<area shape="rect" id="node9" href="teachers.html" target="_top" title="teachers" alt="" coords="281,684,449,772">
+<area shape="rect" id="node10" href="years.html" target="_top" title="years" alt="" coords="297,789,434,877">
+<area shape="rect" id="node12" href="payment_receipts.html" target="_top" title="payment_receipts" alt="" coords="1043,255,1300,343">
+<area shape="rect" id="node15" href="user_groups.html" target="_top" title="user_groups" alt="" coords="605,445,807,621">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/users.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
