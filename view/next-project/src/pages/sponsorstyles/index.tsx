@@ -67,10 +67,7 @@ export default function SponsorStyleList(props: Props) {
             <tbody>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
                 <tr
-                  className={clsx(
-                    index !== sponsorStyleList.length - 1 &&
-                      `border-b`,
-                  )}
+                  className={clsx(index !== sponsorStyleList.length - 1 && `border-b`)}
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>

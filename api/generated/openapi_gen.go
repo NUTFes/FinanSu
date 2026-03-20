@@ -477,12 +477,6 @@ type User struct {
 	UpdatedAt string `json:"updatedAt"`
 }
 
-// UserLookup defines model for userLookup.
-type UserLookup struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
-}
-
 // YearPeriods defines model for year_periods.
 type YearPeriods struct {
 	EndedAt   string `json:"endedAt"`
@@ -833,6 +827,12 @@ type PostUploadFileMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
 }
 
+// GetUsersParams defines parameters for GetUsers.
+type GetUsersParams struct {
+	// Ids user id一覧（複数指定可）.未指定時は全件取得
+	Ids *[]int `form:"ids,omitempty" json:"ids,omitempty"`
+}
+
 // PostUsersParams defines parameters for PostUsers.
 type PostUsersParams struct {
 	// Name name
@@ -843,12 +843,6 @@ type PostUsersParams struct {
 
 	// RoleId role_id
 	RoleId int `form:"role_id" json:"role_id"`
-}
-
-// GetUsersLookupParams defines parameters for GetUsersLookup.
-type GetUsersLookupParams struct {
-	// Ids カンマ区切りのuser id一覧
-	Ids *string `form:"ids,omitempty" json:"ids,omitempty"`
 }
 
 // PutUsersIdParams defines parameters for PutUsersId.
@@ -1269,16 +1263,13 @@ type ServerInterface interface {
 	PostUploadFile(ctx echo.Context) error
 
 	// (GET /users)
-	GetUsers(ctx echo.Context) error
+	GetUsers(ctx echo.Context, params GetUsersParams) error
 
 	// (POST /users)
 	PostUsers(ctx echo.Context, params PostUsersParams) error
 
 	// (DELETE /users/delete)
 	DeleteUsersDelete(ctx echo.Context) error
-
-	// (GET /users/lookup)
-	GetUsersLookup(ctx echo.Context, params GetUsersLookupParams) error
 
 	// (DELETE /users/{id})
 	DeleteUsersId(ctx echo.Context, id int) error
@@ -3201,8 +3192,17 @@ func (w *ServerInterfaceWrapper) PostUploadFile(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetUsers(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUsersParams
+	// ------------- Optional query parameter "ids" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "ids", ctx.QueryParams(), &params.Ids)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter ids: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetUsers(ctx)
+	err = w.Handler.GetUsers(ctx, params)
 	return err
 }
 
@@ -3244,24 +3244,6 @@ func (w *ServerInterfaceWrapper) DeleteUsersDelete(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteUsersDelete(ctx)
-	return err
-}
-
-// GetUsersLookup converts echo context to params.
-func (w *ServerInterfaceWrapper) GetUsersLookup(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetUsersLookupParams
-	// ------------- Optional query parameter "ids" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "ids", ctx.QueryParams(), &params.Ids)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter ids: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetUsersLookup(ctx, params)
 	return err
 }
 
@@ -3601,7 +3583,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/users", wrapper.GetUsers)
 	router.POST(baseURL+"/users", wrapper.PostUsers)
 	router.DELETE(baseURL+"/users/delete", wrapper.DeleteUsersDelete)
-	router.GET(baseURL+"/users/lookup", wrapper.GetUsersLookup)
 	router.DELETE(baseURL+"/users/:id", wrapper.DeleteUsersId)
 	router.GET(baseURL+"/users/:id", wrapper.GetUsersId)
 	router.PUT(baseURL+"/users/:id", wrapper.PutUsersId)

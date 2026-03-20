@@ -169,9 +169,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>
-      <div
-        className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'
-      >
+      <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
         <div {...getRootProps()} className='h-56 w-full'>
           <input {...getInputProps()} />
           {preview.type === 'application/pdf' ? (

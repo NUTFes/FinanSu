@@ -2047,13 +2047,41 @@ paths:
       tags:
         - user
       description: userの一覧を取得
+      parameters:
+        - name: ids
+          in: query
+          description: user id一覧（複数指定可）.未指定時は全件取得
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: integer
+            example: [1, 2]
       responses:
         "200":
           description: userの一覧を取得
-          # content:
-          #   "*/*":
-          #     schema:
-          #       type: array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/user"
+                example:
+                - id: 1
+                  name: 技大太郎1
+                  bureauID: 1
+                  roleID: 1
+                  isDeleted: false
+                  createdAt: 2026-01-01T00:00:00Z
+                  updatedAt: 2026-01-01T00:00:00Z
+                - id: 2
+                  name: 技大太郎2
+                  bureauID: 1
+                  roleID: 1
+                  isDeleted: false
+                  createdAt: 2026-01-02T00:00:00Z
+                  updatedAt: 2026-01-02T00:00:00Z
     post:
       tags:
         - user
@@ -2084,34 +2112,6 @@ paths:
             application/json:
               schema:
                 type: object
-
-  /users/lookup:
-    get:
-      tags:
-        - user
-      description: ID一覧で指定されたuser名の取得
-      parameters:
-        - name: ids
-          in: query
-          description: カンマ区切りのuser id一覧
-          required: false
-          schema:
-            type: string
-            example: "1,2,3"
-      responses:
-        "200":
-          description: user idとnameの一覧を取得
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/userLookup"
-              example:
-                - id: 1
-                  name: 技大太郎1
-                - id: 2
-                  name: 技大太郎2
 
   /users/delete:
     delete:
@@ -3263,18 +3263,6 @@ components:
         - isDeleted
         - createdAt
         - updatedAt
-    userLookup:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        name:
-          type: string
-          example: 技大太郎1
-      required:
-        - id
-        - name
 
     ActivityStatus:
       type: string

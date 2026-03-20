@@ -220,9 +220,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
           </div>
         )}
       </div>
-      <div
-        className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'
-      >
+      <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
         {preview.type === 'application/pdf' ? (
           <embed
             src={preview.uploadImageURL}

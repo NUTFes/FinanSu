@@ -89,9 +89,7 @@ const NavItem = (props: NavItemProps) => {
         >
           <span
             className={clsx(
-              props.isShow
-                ? 'rotate-180 transition-transform'
-                : `rotate-0 transition-transform`,
+              props.isShow ? 'rotate-180 transition-transform' : `rotate-0 transition-transform`,
             )}
           >
             {props.icon}

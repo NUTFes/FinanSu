@@ -90,7 +90,7 @@ import type {
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
   GetUsersId200,
-  GetUsersLookupParams,
+  GetUsersParams,
   Income,
   IncomeCategory,
   IncomeExpenditureManagementDetails,
@@ -151,7 +151,6 @@ import type {
   UpdateSponsorshipActivityRequest,
   UpdateSponsorshipActivityStatusRequest,
   User,
-  UserLookup,
   YearPeriods,
 } from './model';
 
@@ -6367,7 +6366,7 @@ export const usePostUploadFile = <TError = unknown>(options?: {
  * userの一覧を取得
  */
 export type getUsersResponse200 = {
-  data: void;
+  data: User[];
   status: 200;
 };
 
@@ -6376,34 +6375,56 @@ export type getUsersResponseSuccess = getUsersResponse200 & {
 };
 export type getUsersResponse = getUsersResponseSuccess;
 
-export const getGetUsersUrl = () => {
-  return `/users`;
+export const getGetUsersUrl = (params?: GetUsersParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ['ids'];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/users?${stringifiedParams}` : `/users`;
 };
 
-export const getUsers = async (options?: RequestInit): Promise<getUsersResponse> => {
-  return customFetch<getUsersResponse>(getGetUsersUrl(), {
+export const getUsers = async (
+  params?: GetUsersParams,
+  options?: RequestInit,
+): Promise<getUsersResponse> => {
+  return customFetch<getUsersResponse>(getGetUsersUrl(params), {
     ...options,
     method: 'GET',
   });
 };
 
-export const getGetUsersKey = () => [`/users`] as const;
+export const getGetUsersKey = (params?: GetUsersParams) =>
+  [`/users`, ...(params ? [params] : [])] as const;
 
 export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>;
 export type GetUsersQueryError = unknown;
 
-export const useGetUsers = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
+export const useGetUsers = <TError = unknown>(
+  params?: GetUsersParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
   const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersKey() : null));
-  const swrFn = () => getUsers(requestOptions);
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersKey(params) : null));
+  const swrFn = () => getUsers(params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
@@ -6483,73 +6504,6 @@ export const usePostUsers = <TError = unknown>(
   const swrFn = getPostUsersMutationFetcher(params, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
-
-  return {
-    swrKey,
-    ...query,
-  };
-};
-
-/**
- * ID一覧で指定されたuser名の取得
- */
-export type getUsersLookupResponse200 = {
-  data: UserLookup[];
-  status: 200;
-};
-
-export type getUsersLookupResponseSuccess = getUsersLookupResponse200 & {
-  headers: Headers;
-};
-export type getUsersLookupResponse = getUsersLookupResponseSuccess;
-
-export const getGetUsersLookupUrl = (params?: GetUsersLookupParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/users/lookup?${stringifiedParams}` : `/users/lookup`;
-};
-
-export const getUsersLookup = async (
-  params?: GetUsersLookupParams,
-  options?: RequestInit,
-): Promise<getUsersLookupResponse> => {
-  return customFetch<getUsersLookupResponse>(getGetUsersLookupUrl(params), {
-    ...options,
-    method: 'GET',
-  });
-};
-
-export const getGetUsersLookupKey = (params?: GetUsersLookupParams) =>
-  [`/users/lookup`, ...(params ? [params] : [])] as const;
-
-export type GetUsersLookupQueryResult = NonNullable<Awaited<ReturnType<typeof getUsersLookup>>>;
-export type GetUsersLookupQueryError = unknown;
-
-export const useGetUsersLookup = <TError = unknown>(
-  params?: GetUsersLookupParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsersLookup>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { swr: swrOptions, request: requestOptions } = options ?? {};
-
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersLookupKey(params) : null));
-  const swrFn = () => getUsersLookup(params, requestOptions);
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,

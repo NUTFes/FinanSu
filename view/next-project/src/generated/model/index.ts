@@ -131,6 +131,7 @@ export * from './getTeachersFundRegisteredYear200';
 export * from './getTeachersId200';
 export * from './getUsersId200';
 export * from './getUsersLookupParams';
+export * from './getUsersParams';
 export * from './income';
 export * from './incomeCategory';
 export * from './incomeExpenditureManagement';
