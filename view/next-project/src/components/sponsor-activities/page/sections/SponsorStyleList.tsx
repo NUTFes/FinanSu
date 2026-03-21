@@ -11,12 +11,20 @@ export default function SponsorStyleList({ styles }: SponsorStyleListProps) {
     return <p className='text-sm text-black-600'>未定</p>;
   }
 
+  const orderedStyles = styles
+    .map((styleLink, index) => ({ styleLink, index }))
+    .sort((a, b) => {
+      const aPriority = a.styleLink.category === 'goods' ? 1 : 0;
+      const bPriority = b.styleLink.category === 'goods' ? 1 : 0;
+      if (aPriority !== bPriority) return aPriority - bPriority;
+      return a.index - b.index;
+    })
+    .map(({ styleLink }) => styleLink);
+
   return (
     <div className='flex flex-col gap-1'>
-      {styles.map((styleLink, index) => {
-        const key = `${styleLink.sponsorStyleId || index}-${
-          styleLink.category || 'money'
-        }-${index}`;
+      {orderedStyles.map((styleLink, index) => {
+        const key = `${styleLink.sponsorStyleId || index}-${styleLink.category || 'money'}-${index}`;
         const styleName = styleLink.style?.style || '';
         const styleFeature = styleLink.style?.feature || '';
         const label = [styleName, styleFeature].filter(Boolean).join(' ');

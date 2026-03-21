@@ -29,7 +29,6 @@ const searchSelectStyles: StylesConfig<Option, false> = {
 interface SearchSelectProps {
   options?: Option[];
   value?: Option | null;
-  defaultValue?: Option | null;
   onChange?: (value: Option | null) => void;
   setID?: Dispatch<SetStateAction<string>>;
   noOptionMessage?: string;
@@ -40,7 +39,6 @@ interface SearchSelectProps {
 const SearchSelect: React.FC<SearchSelectProps> = ({
   options,
   value,
-  defaultValue,
   setID,
   noOptionMessage,
   placeholder,
@@ -48,11 +46,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   isClearable = false,
 }) => {
   const selected =
-    value !== undefined
-      ? value
-      : defaultValue !== undefined
-      ? defaultValue
-      : (options && options[0]) || null;
+    value !== undefined ? value : (options && options[0]) || null;
 
   return (
     <Select
@@ -60,7 +54,6 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
       options={options}
       value={selected}
       isClearable={isClearable}
-      defaultValue={defaultValue ?? (value === undefined ? options?.[0] : undefined)}
       noOptionsMessage={() => noOptionMessage}
       placeholder={placeholder}
       onChange={(option, actionMeta) => {

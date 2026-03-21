@@ -77,15 +77,6 @@ export function useSponsorActivitiesQuery({
         signal: abortController.signal,
       });
       let nextActivities = response.data.activities || [];
-      const selectedStyleIdSet = new Set(filterData.styleIds);
-
-      if (selectedStyleIdSet.size > 0 && selectedStyleIdSet.size !== allSponsorStyleIds.length) {
-        nextActivities = nextActivities.filter((activity) =>
-          (activity.sponsorStyles || []).some((styleLink) =>
-            selectedStyleIdSet.has(styleLink.sponsorStyleId || 0),
-          ),
-        );
-      }
 
       if (filterData.bureauId !== 'all') {
         nextActivities = nextActivities.filter(

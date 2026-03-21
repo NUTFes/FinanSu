@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 
 import { deleteSponsorshipActivitiesId } from '@/generated/hooks';
+import { useToast } from '@/hooks/useToast';
 import { Modal, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
@@ -13,8 +14,8 @@ interface ModalProps {
 
 const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
   const router = useRouter();
+  const toast = useToast();
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const onClose = () => {
     props.setShowModal(false);
@@ -32,7 +33,6 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
         <PrimaryButton
           disabled={isDeleting}
           onClick={async () => {
-            setErrorMessage('');
             setIsDeleting(true);
 
             try {
@@ -43,8 +43,15 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
               } else {
                 router.reload();
               }
-            } catch {
-              setErrorMessage('削除に失敗しました。時間をおいて再度お試しください。');
+            } catch (error) {
+              console.error('Failed to delete sponsor activity:', error);
+              toast({
+                title: '削除失敗',
+                description: '削除に失敗しました。時間をおいて再度お試しください。',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+              });
             } finally {
               setIsDeleting(false);
             }
@@ -53,7 +60,6 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
           削除する
         </PrimaryButton>
       </div>
-      {errorMessage && <div className='mt-4 text-center text-sm text-red-600'>{errorMessage}</div>}
     </Modal>
   );
 };

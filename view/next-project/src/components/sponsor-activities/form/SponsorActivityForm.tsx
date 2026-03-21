@@ -251,7 +251,8 @@ function StyleFieldRow(props: StyleFieldRowProps) {
 }
 
 interface StyleFieldsProps {
-  styleOptions: StyleOption[];
+  moneyStyleOptions: StyleOption[];
+  goodsStyleOptions: StyleOption[];
   moneyStyleValues: StyleOption[];
   goodsStyleValues: StyleOption[];
   onMoneyStylesChange: (options: StyleOption[]) => void;
@@ -265,13 +266,13 @@ function StyleFields(props: StyleFieldsProps) {
       <div className='flex w-full flex-col gap-2'>
         <StyleFieldRow
           categoryLabel='金'
-          styleOptions={props.styleOptions}
+          styleOptions={props.moneyStyleOptions}
           values={props.moneyStyleValues}
           onChange={props.onMoneyStylesChange}
         />
         <StyleFieldRow
           categoryLabel='物'
-          styleOptions={props.styleOptions}
+          styleOptions={props.goodsStyleOptions}
           values={props.goodsStyleValues}
           onChange={props.onGoodsStylesChange}
         />
@@ -434,6 +435,25 @@ function useSponsorActivityFormModel(props: Props) {
     [selectedGoodsStyleIds, styleOptionsMap],
   );
 
+  const selectedMoneyStyleIdSet = useMemo(
+    () => new Set(selectedMoneyStyleIds),
+    [selectedMoneyStyleIds],
+  );
+  const selectedGoodsStyleIdSet = useMemo(
+    () => new Set(selectedGoodsStyleIds),
+    [selectedGoodsStyleIds],
+  );
+  const moneyStyleOptions = useMemo(
+    () =>
+      styleOptions.filter((option) => !selectedGoodsStyleIdSet.has(Number(option.value))),
+    [selectedGoodsStyleIdSet, styleOptions],
+  );
+  const goodsStyleOptions = useMemo(
+    () =>
+      styleOptions.filter((option) => !selectedMoneyStyleIdSet.has(Number(option.value))),
+    [selectedMoneyStyleIdSet, styleOptions],
+  );
+
   // Sync selected user when selectable users change
   useEffect(() => {
     if (!filteredUsers.some((user) => user.id === selectedUserId)) {
@@ -578,7 +598,8 @@ function useSponsorActivityFormModel(props: Props) {
     handleUserChange,
     feasibilityStatus,
     setFeasibilityStatus,
-    styleOptions,
+    moneyStyleOptions,
+    goodsStyleOptions,
     moneyStyleValues,
     goodsStyleValues,
     handleMoneyStylesChange,
@@ -650,7 +671,8 @@ export default function SponsorActivityForm(props: Props) {
         </div>
 
         <StyleFields
-          styleOptions={model.styleOptions}
+          moneyStyleOptions={model.moneyStyleOptions}
+          goodsStyleOptions={model.goodsStyleOptions}
           moneyStyleValues={model.moneyStyleValues}
           goodsStyleValues={model.goodsStyleValues}
           onMoneyStylesChange={model.handleMoneyStylesChange}
