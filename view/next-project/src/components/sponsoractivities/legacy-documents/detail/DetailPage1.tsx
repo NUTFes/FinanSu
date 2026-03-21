@@ -5,8 +5,8 @@ import { FaChevronCircleRight } from 'react-icons/fa';
 import { DESIGNERS } from '@constants/designers';
 import { SponsorActivityView } from '@type/common';
 
-import OpenAddPdfDetailModalButton from './OpenAddPdfDetailModalButton';
-import OpenPaymentDayModalButton from './OpenPaymentDayModalButton';
+import OpenAddPdfDetailModalButton from '../invoice/OpenAddPdfDetailModalButton';
+import OpenPaymentDayModalButton from '../receipt/OpenPaymentDayModalButton';
 
 interface ModalProps {
   setPageNum: (isOpen: number) => void;

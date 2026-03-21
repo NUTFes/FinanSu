@@ -11,7 +11,7 @@ import {
   InvoiceSponsorStyle,
 } from '@type/common';
 
-import { OpenEditInvoiceModalButton } from './index';
+import OpenEditInvoiceModalButton from './OpenEditInvoiceModalButton';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;

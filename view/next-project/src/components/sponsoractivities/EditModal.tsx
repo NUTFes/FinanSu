@@ -2,7 +2,7 @@ import { putSponsorshipActivitiesId } from '@/generated/hooks';
 import { SponsorshipActivity } from '@/generated/model';
 import { Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
 
-import SponsorActivityForm, { SponsorActivityFormInitialValues } from './SponsorActivityForm';
+import SponsorActivityForm, { SponsorActivityFormInitialValues } from './form/SponsorActivityForm';
 
 interface ModalProps {
   sponsorshipActivityId: number | string;

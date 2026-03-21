@@ -1,4 +1,4 @@
-import { DetailPage1 } from '@components/sponsoractivities';
+import { DetailPage1 } from '@components/sponsoractivities/legacy-documents';
 
 import type { Meta, StoryFn } from '@storybook/react';
 

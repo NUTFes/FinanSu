@@ -1,7 +1,7 @@
 import { postSponsorshipActivities } from '@/generated/hooks';
 import { Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
 
-import SponsorActivityForm from './SponsorActivityForm';
+import SponsorActivityForm from './form/SponsorActivityForm';
 
 interface Props {
   users: User[];

@@ -1,4 +1,4 @@
-import { OpenPaymentDayModalButton } from '@components/sponsoractivities';
+import { OpenPaymentDayModalButton } from '@components/sponsoractivities/legacy-documents';
 
 import type { Meta } from '@storybook/react';
 

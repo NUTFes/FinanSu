@@ -1,4 +1,4 @@
-import { DetailModal } from '@components/sponsoractivities';
+import { DetailModal } from '@components/sponsoractivities/legacy-documents';
 
 import type { Meta, StoryFn } from '@storybook/react';
 

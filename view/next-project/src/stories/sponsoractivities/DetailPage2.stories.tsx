@@ -1,4 +1,4 @@
-import { DetailPage2 } from '@components/sponsoractivities';
+import { DetailPage2 } from '@components/sponsoractivities/legacy-documents';
 
 import { SPONSOR_ACTIVITY_VIEW } from '../constants';
 

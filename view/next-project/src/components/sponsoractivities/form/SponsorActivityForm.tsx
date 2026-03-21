@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { getSponsorsPeriodsYear } from '@/generated/hooks';
 import { ActivityStatus, DesignProgress, FeasibilityStatus } from '@/generated/model';
+import { useSponsorsByYear } from '@/hooks/sponsoractivities/useSponsorsByYear';
 import {
   ACTIVITY_STATUS_OPTIONS,
   DESIGN_PROGRESS_OPTIONS,
@@ -63,18 +63,15 @@ interface Props {
 interface UseSponsorActivityFormStateParams {
   initialValues?: SponsorActivityFormInitialValues;
   latestYearPeriodId?: number;
-  initialSponsors: Sponsor[];
 }
 
 function useSponsorActivityFormState({
   initialValues,
   latestYearPeriodId,
-  initialSponsors,
 }: UseSponsorActivityFormStateParams) {
   const [selectedYearPeriodId, setSelectedYearPeriodId] = useState<number>(
     initialValues?.yearPeriodsId ?? latestYearPeriodId ?? 0,
   );
-  const [sponsors, setSponsors] = useState<Sponsor[]>(initialSponsors);
   const [selectedSponsorId, setSelectedSponsorId] = useState<number | null>(
     initialValues?.sponsorId ?? null,
   );
@@ -104,8 +101,6 @@ function useSponsorActivityFormState({
   return {
     selectedYearPeriodId,
     setSelectedYearPeriodId,
-    sponsors,
-    setSponsors,
     selectedSponsorId,
     setSelectedSponsorId,
     bureauId,
@@ -289,7 +284,6 @@ function StyleFields(props: StyleFieldsProps) {
 function useSponsorActivityFormModel(props: Props) {
   const router = useRouter();
   const { users, sponsorStyles, yearPeriods, initialValues } = props;
-  const sponsorFetchAbortControllerRef = useRef<AbortController | null>(null);
 
   const selectableYearPeriods = useMemo(
     () =>
@@ -302,8 +296,6 @@ function useSponsorActivityFormModel(props: Props) {
   const {
     selectedYearPeriodId,
     setSelectedYearPeriodId,
-    sponsors,
-    setSponsors,
     selectedSponsorId,
     setSelectedSponsorId,
     bureauId,
@@ -329,12 +321,15 @@ function useSponsorActivityFormModel(props: Props) {
   } = useSponsorActivityFormState({
     initialValues,
     latestYearPeriodId: latestYearPeriod?.id,
-    initialSponsors: props.sponsors || [],
   });
   const selectedYear = useMemo(() => {
     const selectedPeriod = selectableYearPeriods.find((yp) => yp.id === selectedYearPeriodId);
     return Number(selectedPeriod?.year ?? new Date().getFullYear());
   }, [selectableYearPeriods, selectedYearPeriodId]);
+  const sponsors = useSponsorsByYear({
+    year: selectedYear,
+    initialSponsors: props.sponsors || [],
+  });
 
   const selectableSponsorStyles = useMemo(
     () =>
@@ -469,36 +464,6 @@ function useSponsorActivityFormModel(props: Props) {
       setSelectedSponsorId(null);
     }
   }, [selectedSponsorId, setSelectedSponsorId, sponsors]);
-
-  // Fetch sponsors when selected year changes
-  useEffect(() => {
-    sponsorFetchAbortControllerRef.current?.abort();
-    const abortController = new AbortController();
-    sponsorFetchAbortControllerRef.current = abortController;
-
-    const fetchSponsors = async () => {
-      if (!selectedYear) return;
-      try {
-        const sponsorsResponse = await getSponsorsPeriodsYear(selectedYear, {
-          signal: abortController.signal,
-        });
-        if (sponsorFetchAbortControllerRef.current === abortController) {
-          setSponsors((sponsorsResponse.data || []) as Sponsor[]);
-        }
-      } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-          return;
-        }
-        setSponsors([]);
-      }
-    };
-
-    fetchSponsors();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [selectedYear, setSponsors]);
 
   const onClose = () => {
     props.setIsOpen(false);

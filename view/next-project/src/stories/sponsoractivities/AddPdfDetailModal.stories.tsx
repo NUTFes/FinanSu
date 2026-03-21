@@ -1,4 +1,4 @@
-import { AddPdfDetailModal } from '@components/sponsoractivities';
+import { AddPdfDetailModal } from '@components/sponsoractivities/legacy-documents';
 
 import type { Meta, StoryFn } from '@storybook/react';
 

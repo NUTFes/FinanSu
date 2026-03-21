@@ -1,4 +1,4 @@
-import { UploadFileModal } from '@components/sponsoractivities';
+import { UploadFileModal } from '@components/sponsoractivities/legacy-documents';
 
 import { SPONSOR_ACTIVITY_INFORMATION } from '../constants';
 

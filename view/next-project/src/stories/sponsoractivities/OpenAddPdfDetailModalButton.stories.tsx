@@ -1,4 +1,4 @@
-import { OpenAddPdfDetailModalButton } from '@components/sponsoractivities';
+import { OpenAddPdfDetailModalButton } from '@components/sponsoractivities/legacy-documents';
 
 import type { Meta } from '@storybook/react';
 

@@ -6,10 +6,6 @@ import { FaCheckCircle, FaChevronCircleLeft } from 'react-icons/fa';
 import { FiPlusSquare } from 'react-icons/fi';
 import { RiCloseCircleLine } from 'react-icons/ri';
 
-import { del, post, put } from '@/utils/api/api_methods';
-import { DESIGN_PROGRESSES } from '@constants/designProgresses';
-import { SponsorActivityInformation, SponsorActivityView } from '@type/common';
-
 import {
   DeleteButton,
   EditButton,
@@ -18,7 +14,11 @@ import {
   OutlinePrimaryButton,
   PrimaryButton,
   Select,
-} from '../common';
+} from '@/components/common';
+import { del, post, put } from '@/utils/api/api_methods';
+import { DESIGN_PROGRESSES } from '@constants/designProgresses';
+import { SponsorActivityInformation, SponsorActivityView } from '@type/common';
+
 import UplaodFileModal from './UploadFileModal';
 
 interface ModalProps {

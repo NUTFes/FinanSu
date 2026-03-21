@@ -1,4 +1,4 @@
-import { PaymentDayModal } from '@components/sponsoractivities';
+import { PaymentDayModal } from '@components/sponsoractivities/legacy-documents';
 
 import { SPONSOR_ACTIVITY_VIEW } from '../constants';
 
