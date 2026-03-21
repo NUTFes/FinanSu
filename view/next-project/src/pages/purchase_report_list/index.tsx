@@ -8,7 +8,7 @@ import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrima
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
-  useGetUsersLookup,
+  useGetUsers,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
@@ -62,21 +62,24 @@ export default function PurchaseReports() {
     ],
     [buyReports],
   );
-  const userLookupParams = useMemo(
-    () => (paidByUserIds.length > 0 ? { ids: paidByUserIds.join(',') } : undefined),
+
+  const userParams = useMemo(
+    () => (paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined),
     [paidByUserIds],
   );
-  const { data: userLookupData } = useGetUsersLookup(userLookupParams, {
+
+  const { data: userData } = useGetUsers(userParams, {
     swr: {
-      enabled: !!userLookupParams,
+      enabled: !!userParams,
     },
   });
+  
   const userNameMap = useMemo(
     () =>
       Object.fromEntries(
-        (userLookupData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name]),
+        (userData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name]),
       ),
-    [userLookupData],
+    [userData],
   );
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
