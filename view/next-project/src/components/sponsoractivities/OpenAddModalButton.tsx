@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-import { User, Sponsor, SponsorStyle, YearPeriod } from '@type/common';
+import { Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
 
 import SponsorActivitiesAddModal from './SponsorActivitiesAddModal';
 import AddButton from '../common/AddButton';
@@ -11,6 +11,7 @@ interface Props {
   sponsorStyles: SponsorStyle[];
   yearPeriods: YearPeriod[];
   children?: React.ReactNode;
+  onSaved?: () => Promise<void> | void;
 }
 
 export default function OpenAddModalButton(props: Props) {
@@ -36,6 +37,7 @@ export default function OpenAddModalButton(props: Props) {
           sponsorStyles={props.sponsorStyles}
           setIsOpen={setIsOpen}
           yearPeriods={props.yearPeriods}
+          onSaved={props.onSaved}
         />
       )}
     </>

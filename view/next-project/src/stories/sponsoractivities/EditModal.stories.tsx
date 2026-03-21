@@ -1,15 +1,24 @@
+import { ActivityStatus, DesignProgress, FeasibilityStatus } from '@/generated/model';
 import { EditModal } from '@components/sponsoractivities';
 
-import {
-  USER,
-  SPONSOR_ACTIVITY,
-  SPONSOR_STYLE,
-  SPONSOR,
-  ACTIVITY_STYLE,
-  YEAEPERIOD,
-} from '../constants';
+import { SPONSOR, SPONSOR_STYLE, USER, YEAEPERIOD } from '../constants';
 
+import type { SponsorshipActivity } from '@/generated/model';
 import type { Meta, StoryFn } from '@storybook/react';
+
+const MOCK_SPONSORSHIP_ACTIVITY: SponsorshipActivity = {
+  id: 1000,
+  yearPeriodsId: YEAEPERIOD[0]?.id,
+  sponsorId: SPONSOR.id,
+  userId: USER.id,
+  activityStatus: ActivityStatus.unstarted,
+  feasibilityStatus: FeasibilityStatus.unstarted,
+  designProgress: DesignProgress.unstarted,
+  remarks: 'テスト備考',
+  sponsorStyles: [],
+  createdAt: '2021-09-01T00:00:00.000Z',
+  updatedAt: '2021-09-01T00:00:00.000Z',
+};
 
 const meta: Meta<typeof EditModal> = {
   title: 'FinanSu/sponsoractivities/EditModal',
@@ -24,13 +33,10 @@ const Template: StoryFn<typeof EditModal> = (args) => <EditModal {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  sponsorActivityId: '1000',
-  sponsorActivity: SPONSOR_ACTIVITY,
-  sponsorStyles: [SPONSOR_STYLE],
+  sponsorshipActivityId: '1000',
+  sponsorshipActivity: MOCK_SPONSORSHIP_ACTIVITY,
   sponsors: [SPONSOR],
   users: [USER],
-  sponsorStyleDetails: [ACTIVITY_STYLE],
-  activityStyles: [ACTIVITY_STYLE],
-  year: '2024',
+  sponsorStyles: [SPONSOR_STYLE],
   yearPeriods: YEAEPERIOD,
 };

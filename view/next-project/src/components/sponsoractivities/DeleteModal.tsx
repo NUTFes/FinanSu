@@ -1,54 +1,59 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 
-import { del } from '@api/api_methods';
-import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
+import { deleteSponsorshipActivitiesId } from '@/generated/hooks';
+import { Modal, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   children?: React.ReactNode;
   id: number | string;
+  onDeleted?: () => Promise<void> | void;
 }
 
 const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
   const router = useRouter();
-
-  const closeModal = () => {
-    props.setShowModal(false);
-    router.reload();
-  };
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const onClose = () => {
     props.setShowModal(false);
   };
 
   const deleteSponsorActivity = async () => {
-    const deleteSponsorActivityUrl = process.env.CSR_API_URI + '/activities/' + props.id;
-    await del(deleteSponsorActivityUrl);
+    await deleteSponsorshipActivitiesId(Number(props.id));
   };
 
   return (
-    <Modal className='md:w-1/2' onClick={onClose}>
-      <div className='w-full'>
-        <div className='ml-auto w-fit'>
-          <CloseButton onClick={onClose} />
-        </div>
+    <Modal className='w-fit px-15 py-12.5' onClick={onClose}>
+      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>本当に削除しますか？</div>
+      <div className='flex flex-row justify-center gap-4'>
+        <OutlinePrimaryButton onClick={onClose}>キャンセル</OutlinePrimaryButton>
+        <PrimaryButton
+          disabled={isDeleting}
+          onClick={async () => {
+            setErrorMessage('');
+            setIsDeleting(true);
+
+            try {
+              await deleteSponsorActivity();
+              onClose();
+              if (props.onDeleted) {
+                await props.onDeleted();
+              } else {
+                router.reload();
+              }
+            } catch {
+              setErrorMessage('削除に失敗しました。時間をおいて再度お試しください。');
+            } finally {
+              setIsDeleting(false);
+            }
+          }}
+        >
+          削除する
+        </PrimaryButton>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛企業の削除</div>
-      <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
-      <div className=''>
-        <div className='flex flex-row justify-center gap-5'>
-          <OutlinePrimaryButton onClick={onClose}>戻る</OutlinePrimaryButton>
-          <PrimaryButton
-            onClick={() => {
-              deleteSponsorActivity();
-              closeModal();
-            }}
-          >
-            削除
-          </PrimaryButton>
-        </div>
-      </div>
+      {errorMessage && <div className='mt-4 text-center text-sm text-red-600'>{errorMessage}</div>}
     </Modal>
   );
 };

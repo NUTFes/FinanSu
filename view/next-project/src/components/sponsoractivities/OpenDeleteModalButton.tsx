@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { DeleteButton } from '@components/common';
 
@@ -8,6 +8,7 @@ interface Props {
   children?: React.ReactNode;
   id: number | string;
   isDisabled?: boolean;
+  onDeleted?: () => Promise<void> | void;
 }
 
 const OpenDeleteModalButton: React.FC<Props> = (props) => {
@@ -18,7 +19,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
   return (
     <>
       <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
-      {isOpen && <DeleteModal id={props.id} setShowModal={setIsOpen} />}
+      {isOpen && <DeleteModal id={props.id} setShowModal={setIsOpen} onDeleted={props.onDeleted} />}
     </>
   );
 };

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import Select from 'react-select';
+import { useMemo } from 'react';
+import Select, { MultiValue, StylesConfig } from 'react-select';
 
 interface Option {
   value: string;
@@ -11,49 +11,42 @@ interface MultiSelectProps {
   values?: Option[];
   onChange: (value: Option[]) => void;
   placeholder?: string;
+  customStyles?: StylesConfig<Option, true>;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
   onChange,
-  values = [options[0]],
+  values,
   placeholder,
+  customStyles,
 }) => {
-  const [selected, setSelected] = useState<{ value: string; label: string }[]>(values);
+  const normalizedValues = useMemo(() => values ?? [], [values]);
+
+  const menuPortalTarget = typeof window !== 'undefined' ? document.body : undefined;
+  const mergedStyles = useMemo<StylesConfig<Option, true>>(
+    () => ({
+      menuPortal: (base) => ({
+        ...base,
+        zIndex: 70,
+      }),
+      ...customStyles,
+    }),
+    [customStyles],
+  );
 
   return (
-    <Select
+    <Select<Option, true>
       isMulti
       options={options}
-      value={selected}
+      value={normalizedValues}
       placeholder={placeholder}
-      onChange={(_, actionMeta) => {
-        switch (actionMeta.action) {
-          case 'select-option':
-            if (actionMeta.option) {
-              setSelected([...selected, actionMeta.option]);
-              onChange([...selected, actionMeta.option]);
-            }
-            break;
-
-          case 'remove-value':
-          case 'pop-value':
-            if (actionMeta.removedValue) {
-              setSelected(
-                selected.filter((option) => option.value !== actionMeta.removedValue.value),
-              );
-              onChange(selected.filter((option) => option.value !== actionMeta.removedValue.value));
-            }
-            break;
-
-          case 'clear':
-            setSelected([]);
-            onChange([]);
-            break;
-
-          default:
-            break;
-        }
+      menuPortalTarget={menuPortalTarget}
+      menuPosition='fixed'
+      styles={mergedStyles}
+      onChange={(newValue: MultiValue<Option>) => {
+        const nextSelected = [...newValue];
+        onChange(nextSelected);
       }}
     />
   );
