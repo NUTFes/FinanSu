@@ -41,48 +41,57 @@ export default function SponsorActivitiesDesktopSection({
             <tr className='border-b border-b-primary-1 py-3'>
               <th
                 className='
-                  px-4 pb-2 text-sm font-normal whitespace-nowrap text-black-600
+                  pr-4 pb-2 pl-8 text-center text-sm font-normal
+                  whitespace-nowrap text-black-600
                 '
               >
                 企業名
               </th>
               <th
                 className='
-                  px-4 pb-2 text-sm font-normal whitespace-nowrap text-black-600
+                  px-4 pb-2 text-center text-sm font-normal whitespace-nowrap
+                  text-black-600
                 '
               >
                 担当者
               </th>
               <th
                 className='
-                  px-4 pb-2 text-sm font-normal whitespace-nowrap text-black-600
+                  px-4 pb-2 text-center text-sm font-normal whitespace-nowrap
+                  text-black-600
                 '
               >
                 ステータス
               </th>
               <th
                 className='
-                  px-4 pb-2 text-sm font-normal whitespace-nowrap text-black-600
+                  px-4 pb-2 text-center text-sm font-normal whitespace-nowrap
+                  text-black-600
                 '
               >
                 協賛可否
               </th>
               <th
                 className='
-                  px-4 pb-2 text-sm font-normal whitespace-nowrap text-black-600
+                  px-4 pb-2 text-center text-sm font-normal whitespace-nowrap
+                  text-black-600
                 '
               >
                 協賛スタイル
               </th>
               <th
                 className='
-                  px-4 pb-2 text-sm font-normal whitespace-nowrap text-black-600
+                  px-4 pb-2 text-center text-sm font-normal whitespace-nowrap
+                  text-black-600
                 '
               >
                 デザイン
               </th>
               <th
-                className='px-4 pb-2 text-sm whitespace-nowrap text-black-600'
+                className='
+                  pr-8 pb-2 pl-4 text-center text-sm whitespace-nowrap
+                  text-black-600
+                '
               ></th>
             </tr>
           </thead>
@@ -97,7 +106,7 @@ export default function SponsorActivitiesDesktopSection({
               >
                 <td
                   className='
-                    px-4 py-3 text-center text-sm whitespace-nowrap
+                    py-3 pr-4 pl-8 text-center text-sm whitespace-nowrap
                     text-black-600
                   '
                 >
@@ -138,9 +147,9 @@ export default function SponsorActivitiesDesktopSection({
                 >
                   {getDesignProgressLabel(activity.designProgress)}
                 </td>
-                <td>
-                  <div className='flex'>
-                    <div className='mx-1'>
+                <td className='py-3 pr-8 pl-4'>
+                  <div className='flex justify-center gap-2'>
+                    <div>
                       <OpenEditModalButton
                         id={activity.id || 0}
                         sponsorshipActivity={activity}
@@ -151,7 +160,7 @@ export default function SponsorActivitiesDesktopSection({
                         onSaved={fetchSponsorshipActivities}
                       />
                     </div>
-                    <div className='mx-1'>
+                    <div>
                       <OpenDeleteModalButton
                         id={activity.id || 0}
                         onDeleted={fetchSponsorshipActivities}
@@ -169,10 +178,19 @@ export default function SponsorActivitiesDesktopSection({
               </tr>
             )}
           </tbody>
+          <tfoot>
+            <tr>
+              <td
+                colSpan={7}
+                className='
+                pt-3 pr-8 text-right text-sm text-black-600
+              '
+              >
+                合計金額：{totalAmount.toLocaleString()} 円
+              </td>
+            </tr>
+          </tfoot>
         </table>
-      </div>
-      <div className='mt-3 flex justify-end text-sm text-black-600'>
-        合計金額：{totalAmount.toLocaleString()} 円
       </div>
     </div>
   );

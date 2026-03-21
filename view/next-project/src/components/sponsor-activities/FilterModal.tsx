@@ -56,7 +56,7 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
             className='
               max-h-28 overflow-y-auto rounded-md border-2 bg-white-0
             '
-          >
+            >
             {styleOptions.map((style) => (
               <div
                 className='
@@ -239,25 +239,29 @@ const FilterModal: FC<ModalProps> = (props) => {
 
   const selectedBureauOption = useMemo(
     () =>
-      bureauSelectOptions.find((option) => option.value === String(draftFilterData.bureauId)) ||
-      bureauSelectOptions[0] ||
-      null,
+      draftFilterData.bureauId === 'all'
+        ? null
+        : bureauSelectOptions.find((option) => option.value === String(draftFilterData.bureauId)) ||
+          null,
     [bureauSelectOptions, draftFilterData.bureauId],
   );
 
   const selectedUserOption = useMemo(
     () =>
-      userSelectOptions.find((option) => option.value === String(draftFilterData.userId)) ||
-      userSelectOptions[0] ||
-      null,
+      draftFilterData.userId === 'all'
+        ? null
+        : userSelectOptions.find((option) => option.value === String(draftFilterData.userId)) ||
+          null,
     [userSelectOptions, draftFilterData.userId],
   );
 
   const selectedSponsorOption = useMemo(
     () =>
-      sponsorSelectOptions.find((option) => option.value === String(draftFilterData.sponsorId)) ||
-      sponsorSelectOptions[0] ||
-      null,
+      draftFilterData.sponsorId === 'all'
+        ? null
+        : sponsorSelectOptions.find(
+            (option) => option.value === String(draftFilterData.sponsorId),
+          ) || null,
     [sponsorSelectOptions, draftFilterData.sponsorId],
   );
 

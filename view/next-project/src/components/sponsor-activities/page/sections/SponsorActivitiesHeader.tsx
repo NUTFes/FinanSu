@@ -1,4 +1,4 @@
-import { MdCircle, MdFilterList } from 'react-icons/md';
+import { MdCircle, MdFilterList, MdOutlineFileDownload } from 'react-icons/md';
 
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { FilterModal, OpenAddModalButton } from '@/components/sponsor-activities';
@@ -68,12 +68,12 @@ export default function SponsorActivitiesHeader({
             md:flex-row md:items-center
           '
         >
-          <div
-            className='
-              flex flex-col items-center gap-4
+            <div
+              className='
+                flex flex-col items-center gap-4
               md:flex-row md:gap-11
-            '
-          >
+              '
+            >
             <Title title={'協賛活動一覧'} />
             <div className='flex gap-2.5'>
               <select
@@ -135,6 +135,7 @@ export default function SponsorActivitiesHeader({
                 });
               }}
             >
+              <MdOutlineFileDownload size='20' className='mt-0.5 mr-1' />
               CSVダウンロード
             </PrimaryButton>
           </div>
