@@ -52,9 +52,7 @@ export default function AddBlankReceiptModal({ setIsOpen }: ModalProps) {
         </p>
 
         <div
-          className='
-          mb-6 flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden
-        '
+          className='mb-6 flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden'
         >
           {/* 入力フォーム */}
           <div className='w-1/2 overflow-y-auto pr-4'>

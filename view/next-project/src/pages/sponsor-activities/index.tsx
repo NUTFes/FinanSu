@@ -92,7 +92,9 @@ export default function SponsorActivities(props: Props) {
   });
   const { selectedYearPeriodId, isFilterOpen, filterData } = state;
   const selectedYear = useMemo(() => {
-    const selectedPeriod = selectableYearPeriods.find((yearPeriod) => yearPeriod.id === selectedYearPeriodId);
+    const selectedPeriod = selectableYearPeriods.find(
+      (yearPeriod) => yearPeriod.id === selectedYearPeriodId,
+    );
     return Number(selectedPeriod?.year ?? new Date().getFullYear());
   }, [selectableYearPeriods, selectedYearPeriodId]);
   const sponsorsByYear = useSponsorsByYear({

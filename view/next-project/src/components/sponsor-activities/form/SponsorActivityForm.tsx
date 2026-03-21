@@ -227,9 +227,7 @@ interface StyleFieldRowProps {
 function StyleFieldRow(props: StyleFieldRowProps) {
   return (
     <div
-      className='
-        flex min-h-10 items-stretch rounded-md border border-primary-1
-      '
+      className='flex min-h-10 items-stretch rounded-md border border-primary-1'
     >
       <div
         className='
@@ -489,13 +487,17 @@ function useSponsorActivityFormModel(props: Props) {
   const handleMoneyStylesChange = (options: StyleOption[]) => {
     const nextMoneyStyleIds = options.map((option) => Number(option.value));
     setSelectedMoneyStyleIds(nextMoneyStyleIds);
-    setSelectedGoodsStyleIds((prev) => prev.filter((styleId) => !nextMoneyStyleIds.includes(styleId)));
+    setSelectedGoodsStyleIds((prev) =>
+      prev.filter((styleId) => !nextMoneyStyleIds.includes(styleId)),
+    );
   };
 
   const handleGoodsStylesChange = (options: StyleOption[]) => {
     const nextGoodsStyleIds = options.map((option) => Number(option.value));
     setSelectedGoodsStyleIds(nextGoodsStyleIds);
-    setSelectedMoneyStyleIds((prev) => prev.filter((styleId) => !nextGoodsStyleIds.includes(styleId)));
+    setSelectedMoneyStyleIds((prev) =>
+      prev.filter((styleId) => !nextGoodsStyleIds.includes(styleId)),
+    );
   };
 
   const submit = async () => {
@@ -635,7 +637,9 @@ export default function SponsorActivityForm(props: Props) {
         <div className='w-full'>
           <Select
             value={model.feasibilityStatus}
-            onChange={(event) => model.setFeasibilityStatus(event.target.value as FeasibilityStatus)}
+            onChange={(event) =>
+              model.setFeasibilityStatus(event.target.value as FeasibilityStatus)
+            }
           >
             {FEASIBILITY_STATUS_OPTIONS.map((statusOption) => (
               <option key={statusOption.value} value={statusOption.value}>

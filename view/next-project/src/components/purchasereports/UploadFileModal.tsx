@@ -170,9 +170,7 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
         </div>
       </div>
       <div
-        className='
-        my-2 flex h-60 w-full flex-wrap justify-center overflow-auto
-      '
+        className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'
       >
         <div {...getRootProps()} className='h-56 w-full'>
           <input {...getInputProps()} />

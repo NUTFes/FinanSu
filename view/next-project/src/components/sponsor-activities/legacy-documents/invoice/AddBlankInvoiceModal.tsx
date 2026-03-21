@@ -189,9 +189,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
         </p>
 
         <div
-          className='
-          flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4
-        '
+          className='flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4'
         >
           <div className='w-1/2 overflow-y-auto pr-4'>
             <div className='grid grid-cols-1 gap-4'>

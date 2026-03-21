@@ -2,7 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getSponsorshipActivities } from '@/generated/hooks';
 import { GetSponsorshipActivitiesParams, SponsorshipActivity } from '@/generated/model';
-import { sortSponsorshipActivities, SponsorActivitiesFilterType } from '@/utils/sponsorshipActivity';
+import {
+  sortSponsorshipActivities,
+  SponsorActivitiesFilterType,
+} from '@/utils/sponsorshipActivity';
 
 interface UseSponsorActivitiesQueryParams {
   selectedYearPeriodId: number;

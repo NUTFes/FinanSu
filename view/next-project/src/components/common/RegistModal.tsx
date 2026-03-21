@@ -108,9 +108,7 @@ const RegistModal: FC<ModalProps> = (props) => {
               <Select
                 value={formData.yearID}
                 onChange={handler('yearID')}
-                className='
-                w-56
-              '
+                className='w-56'
               >
                 {yearList.map((data) => (
                   <option key={data.id} value={data.id}>
@@ -124,9 +122,7 @@ const RegistModal: FC<ModalProps> = (props) => {
               <Select
                 value={formData.sourceID}
                 onChange={handler('sourceID')}
-                className='
-                w-56
-              '
+                className='w-56'
               >
                 {sourceList.map((source) => (
                   <option key={source.id} value={source.id}>

@@ -69,9 +69,7 @@ export default function SponsorStyleList(props: Props) {
                 <tr
                   className={clsx(
                     index !== sponsorStyleList.length - 1 &&
-                      `
-                    border-b
-                  `,
+                      `border-b`,
                   )}
                   key={sponsorStyleItem.id}
                 >

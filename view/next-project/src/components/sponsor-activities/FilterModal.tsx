@@ -18,7 +18,6 @@ interface ModalProps {
 const SELECT = '選択中';
 const NOT_SELECT = '未選択';
 
-
 interface StyleSelectionSectionProps {
   styleOptions: (SponsorStyle & { id: number })[];
   selectedStyleIds: number[];
@@ -49,14 +48,13 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
           >
             <input type='checkbox' onChange={onToggleAll} checked={isAllStyleCheck} id='all' />
             <label htmlFor='all' className='mx-2 w-full text-black-300'>
-              すべて （{selectedStyleIds.length > 0 ? SELECT + selectedStyleIds.length : NOT_SELECT}）
+              すべて （{selectedStyleIds.length > 0 ? SELECT + selectedStyleIds.length : NOT_SELECT}
+              ）
             </label>
           </div>
           <div
-            className='
-              max-h-28 overflow-y-auto rounded-md border-2 bg-white-0
-            '
-            >
+            className='max-h-28 overflow-y-auto rounded-md border-2 bg-white-0'
+          >
             {styleOptions.map((style) => (
               <div
                 className='
@@ -75,9 +73,7 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
                 />
                 <label
                   htmlFor={String(style.id)}
-                  className='
-                    mx-2 w-full text-black-300
-                  '
+                  className='mx-2 w-full text-black-300'
                 >
                   {style.style}/{style.feature}/{style.price}円
                 </label>
@@ -152,7 +148,10 @@ const BasicFilterSection: FC<BasicFilterSectionProps> = ({
     </div>
     <p>協賛可否</p>
     <div className='w-full'>
-      <Select value={draftFilterData.feasibilityStatus} onChange={(e) => onFeasibilityChange(e.target.value)}>
+      <Select
+        value={draftFilterData.feasibilityStatus}
+        onChange={(e) => onFeasibilityChange(e.target.value)}
+      >
         <option value='all'>すべて</option>
         <option value={FeasibilityStatus.possible}>可</option>
         <option value={FeasibilityStatus.impossible}>否</option>
@@ -194,7 +193,6 @@ const FilterModal: FC<ModalProps> = (props) => {
 
   // モーダル用の変数
   const [draftFilterData, setDraftFilterData] = useState<SponsorActivitiesFilterType>(filterData);
-
 
   const isAllStyleCheck =
     styleOptions.length > 0 && draftFilterData.styleIds.length === styleOptions.length;
@@ -265,7 +263,6 @@ const FilterModal: FC<ModalProps> = (props) => {
     [sponsorSelectOptions, draftFilterData.sponsorId],
   );
 
-
   function filterHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const availableStyleIdSet = new Set(styleOptions.map((style) => style.id));
@@ -322,7 +319,11 @@ const FilterModal: FC<ModalProps> = (props) => {
   return (
     <Modal className='w-full max-w-2xl px-15 py-12.5' onClick={onClose}>
       <form onSubmit={filterHandler}>
-        <div onClick={preventCloseModalClick} onKeyDown={preventCloseModalKeyDown} role='presentation'>
+        <div
+          onClick={preventCloseModalClick}
+          onKeyDown={preventCloseModalKeyDown}
+          role='presentation'
+        >
           <div className='w-full'>
             <div className='ml-auto w-fit'>
               <CloseButton onClick={onClose} />

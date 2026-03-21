@@ -14,7 +14,9 @@ export default function SponsorStyleList({ styles }: SponsorStyleListProps) {
   return (
     <div className='flex flex-col gap-1'>
       {styles.map((styleLink, index) => {
-        const key = `${styleLink.sponsorStyleId || index}-${styleLink.category || 'money'}-${index}`;
+        const key = `${styleLink.sponsorStyleId || index}-${
+          styleLink.category || 'money'
+        }-${index}`;
         const styleName = styleLink.style?.style || '';
         const styleFeature = styleLink.style?.feature || '';
         const label = [styleName, styleFeature].filter(Boolean).join(' ');

@@ -84,7 +84,10 @@ export default function SponsorActivitiesMobileSection({
                   yearPeriods={yearPeriods}
                   onSaved={fetchSponsorshipActivities}
                 />
-                <OpenDeleteModalButton id={activity.id || 0} onDeleted={fetchSponsorshipActivities} />
+                <OpenDeleteModalButton
+                  id={activity.id || 0}
+                  onDeleted={fetchSponsorshipActivities}
+                />
               </div>
             </div>
           </Card>
