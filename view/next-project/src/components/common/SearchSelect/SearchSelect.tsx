@@ -45,8 +45,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   onChange,
   isClearable = false,
 }) => {
-  const selected =
-    value !== undefined ? value : (options && options[0]) || null;
+  const selected = value !== undefined ? value : (options && options[0]) || null;
 
   return (
     <Select
