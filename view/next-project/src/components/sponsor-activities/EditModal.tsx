@@ -25,7 +25,7 @@ export default function EditModal(props: ModalProps) {
       sponsorshipActivity.user?.bureauID ??
       users.find((u) => u.id === sponsorshipActivity.userId)?.bureauID ??
       null,
-    userId: sponsorshipActivity.userId,
+    userId: sponsorshipActivity.userId ?? null,
     activityStatus: sponsorshipActivity.activityStatus,
     feasibilityStatus: sponsorshipActivity.feasibilityStatus,
     designProgress: sponsorshipActivity.designProgress,

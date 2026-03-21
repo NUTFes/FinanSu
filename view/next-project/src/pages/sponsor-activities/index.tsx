@@ -1,7 +1,8 @@
-import { useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useReducer } from 'react';
 
 import SponsorActivitiesLayout from '@/components/sponsor-activities/page/SponsorActivitiesLayout';
 import { useSponsorActivitiesQuery } from '@/hooks/sponsor-activities/useSponsorActivitiesQuery';
+import { useSponsorsByYear } from '@/hooks/sponsor-activities/useSponsorsByYear';
 import { get } from '@/utils/api/api_methods';
 import {
   calculateActivitiesTotalAmount,
@@ -90,6 +91,14 @@ export default function SponsorActivities(props: Props) {
     filterData: createDefaultSponsorActivitiesFilter(sponsorStyles),
   });
   const { selectedYearPeriodId, isFilterOpen, filterData } = state;
+  const selectedYear = useMemo(() => {
+    const selectedPeriod = selectableYearPeriods.find((yearPeriod) => yearPeriod.id === selectedYearPeriodId);
+    return Number(selectedPeriod?.year ?? new Date().getFullYear());
+  }, [selectableYearPeriods, selectedYearPeriodId]);
+  const sponsorsByYear = useSponsorsByYear({
+    year: selectedYear,
+    initialSponsors: sponsors,
+  });
 
   const allSponsorStyleIds = useMemo(
     () =>
@@ -99,6 +108,15 @@ export default function SponsorActivities(props: Props) {
     [sponsorStyles],
   );
   const allSponsorStyleIdSet = useMemo(() => new Set(allSponsorStyleIds), [allSponsorStyleIds]);
+  const sponsorIdSetByYear = useMemo(
+    () =>
+      new Set(
+        sponsorsByYear
+          .map((sponsor) => sponsor.id)
+          .filter((sponsorId): sponsorId is number => sponsorId !== undefined),
+      ),
+    [sponsorsByYear],
+  );
 
   const isFiltered = useMemo(() => {
     const isStyleFiltered =
@@ -135,10 +153,20 @@ export default function SponsorActivities(props: Props) {
     [sponsorshipActivities],
   );
 
+  useEffect(() => {
+    if (filterData.sponsorId === 'all') return;
+    if (sponsorIdSetByYear.has(filterData.sponsorId)) return;
+
+    dispatch({
+      type: 'set-filter-data',
+      payload: { ...filterData, sponsorId: 'all' },
+    });
+  }, [filterData, sponsorIdSetByYear]);
+
   return (
     <SponsorActivitiesLayout
       sponsorStyles={sponsorStyles}
-      sponsors={sponsors}
+      sponsors={sponsorsByYear}
       users={users}
       yearPeriods={yearPeriods}
       selectableYearPeriods={selectableYearPeriods}

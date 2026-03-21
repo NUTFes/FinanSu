@@ -37,12 +37,13 @@ interface StyleOption {
 
 type SponsorActivityEditableFields = Omit<
   CreateSponsorshipActivityRequest,
-  'sponsorId' | 'sponsorStyleDetails'
+  'sponsorId' | 'userId' | 'sponsorStyleDetails'
 >;
 
 export type SponsorActivityFormInitialValues = Partial<SponsorActivityEditableFields> & {
   sponsorId?: number | null;
   bureauId?: number | null;
+  userId?: number | null;
   moneyStyleIds?: number[];
   goodsStyleIds?: number[];
 };
@@ -396,15 +397,7 @@ function useSponsorActivityFormModel(props: Props) {
 
   const filteredUsers = useMemo(() => {
     if (bureauId === null) return users;
-
-    const seen = new Set<string>();
-    return users
-      .filter((user) => user.bureauID === bureauId)
-      .filter((user) => {
-        if (seen.has(user.name)) return false;
-        seen.add(user.name);
-        return true;
-      });
+    return users.filter((user) => user.bureauID === bureauId);
   }, [users, bureauId]);
 
   const userSelectOptions = useMemo<SearchOption[]>(
