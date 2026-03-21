@@ -171,6 +171,7 @@ export * from './postTeachers200';
 export * from './postTeachersParams';
 export * from './postUploadFile200';
 export * from './postUploadFileBody';
+export * from './postUsers200';
 export * from './postUsersParams';
 export * from './postYears200';
 export * from './postYearsParams';
