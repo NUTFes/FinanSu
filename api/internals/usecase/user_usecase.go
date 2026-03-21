@@ -17,9 +17,8 @@ type userUseCase struct {
 }
 
 type UserUseCase interface {
-	GetUsers(context.Context) ([]domain.User, error)
+	GetUsers(context.Context, *[]int) ([]domain.User, error)
 	GetUserByID(context.Context, string) (domain.User, error)
-	GetUsersByIDs(context.Context, []int) ([]domain.UserLookup, error)
 	CreateUser(context.Context, string, string, string) (domain.User, error)
 	UpdateUser(context.Context, string, string, string, string) (domain.User, error)
 	DestroyUser(context.Context, string) error
@@ -31,12 +30,21 @@ func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository
 	return &userUseCase{userRep: userRep, sessionRep: sessionRep}
 }
 
-func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
-
+func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
 	user := domain.User{}
 	var users []domain.User
 
-	rows, err := u.userRep.All(c)
+	var rows *sql.Rows
+	var err error
+
+	if ids == nil {
+		rows, err = u.userRep.All(c)
+	} else if len(*ids) == 0 {
+		return []domain.User{}, nil
+	} else {
+		rows, err = u.userRep.FindByIDs(c, *ids)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -90,34 +98,6 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 	}
 
 	return user, nil
-}
-
-func (u *userUseCase) GetUsersByIDs(c context.Context, ids []int) ([]domain.UserLookup, error) {
-	if len(ids) == 0 {
-		return []domain.UserLookup{}, nil
-	}
-
-	rows, err := u.userRep.FindByIDs(c, ids)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			log.Println(err)
-		}
-	}()
-
-	users := make([]domain.UserLookup, 0, len(ids))
-	for rows.Next() {
-		user := domain.UserLookup{}
-		err := rows.Scan(&user.ID, &user.Name)
-		if err != nil {
-			return nil, errors.Wrapf(err, "cannot connect SQL")
-		}
-		users = append(users, user)
-	}
-
-	return users, nil
 }
 
 func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {

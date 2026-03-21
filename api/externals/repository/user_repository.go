@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"strconv"
-	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	goqu "github.com/doug-martin/goqu/v9"
 )
 
 type userRepository struct {
@@ -45,17 +45,16 @@ func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
 
 // 複数件取得
 func (ur *userRepository) FindByIDs(c context.Context, ids []int) (*sql.Rows, error) {
-	if len(ids) == 0 {
-		query := "SELECT id, name FROM users WHERE 1 = 0"
-		return ur.crud.Read(c, query)
+	ds := dialect.
+		From("users").
+		Select("users.*").
+		Where(goqu.I("users.id").In(ids))
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
 	}
 
-	idStrings := make([]string, 0, len(ids))
-	for _, id := range ids {
-		idStrings = append(idStrings, strconv.Itoa(id))
-	}
-
-	query := "SELECT id, name FROM users WHERE  id IN (" + strings.Join(idStrings, ",") + ")"
 	return ur.crud.Read(c, query)
 }
 
