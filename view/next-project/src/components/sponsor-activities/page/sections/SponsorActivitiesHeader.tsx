@@ -1,7 +1,7 @@
 import { MdCircle, MdFilterList } from 'react-icons/md';
 
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
-import { FilterModal, OpenAddModalButton } from '@/components/sponsoractivities';
+import { FilterModal, OpenAddModalButton } from '@/components/sponsor-activities';
 import { SponsorshipActivity } from '@/generated/model';
 import { createSponsorshipActivityCsv } from '@/utils/createSponsorshipActivityCsv';
 import { downloadFile } from '@/utils/downloadFile';

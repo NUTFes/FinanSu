@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ActivityStatus, DesignProgress, FeasibilityStatus } from '@/generated/model';
-import { useSponsorsByYear } from '@/hooks/sponsoractivities/useSponsorsByYear';
+import { useSponsorsByYear } from '@/hooks/sponsor-activities/useSponsorsByYear';
 import {
   ACTIVITY_STATUS_OPTIONS,
   DESIGN_PROGRESS_OPTIONS,

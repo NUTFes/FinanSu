@@ -1,17 +1,17 @@
-import { DetailModal } from '@components/sponsoractivities/legacy-documents';
+import { AddPdfDetailModal } from '@components/sponsor-activities/legacy-documents';
 
 import type { Meta, StoryFn } from '@storybook/react';
 
-const meta: Meta<typeof DetailModal> = {
-  title: 'FinanSu/sponsoractivities/DetailModal',
-  component: DetailModal,
+const meta: Meta<typeof AddPdfDetailModal> = {
+  title: 'FinanSu/sponsor-activities/AddPdfDetailModal',
+  component: AddPdfDetailModal,
   tags: ['autodocs'],
   argTypes: {},
 };
 
 export default meta;
 
-const Template: StoryFn<typeof DetailModal> = (args) => <DetailModal {...args} />;
+const Template: StoryFn<typeof AddPdfDetailModal> = (args) => <AddPdfDetailModal {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {

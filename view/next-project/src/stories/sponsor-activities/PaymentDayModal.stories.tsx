@@ -1,11 +1,11 @@
-import { PaymentDayModal } from '@components/sponsoractivities/legacy-documents';
+import { PaymentDayModal } from '@components/sponsor-activities/legacy-documents';
 
 import { SPONSOR_ACTIVITY_VIEW } from '../constants';
 
 import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof PaymentDayModal> = {
-  title: 'FinanSu/sponsoractivities/PaymentDayModal',
+  title: 'FinanSu/sponsor-activities/PaymentDayModal',
   component: PaymentDayModal,
   tags: ['autodocs'],
   argTypes: {},

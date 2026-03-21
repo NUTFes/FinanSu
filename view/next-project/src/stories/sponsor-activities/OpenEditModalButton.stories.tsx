@@ -1,9 +1,9 @@
-import { OpenEditModalButton } from '@components/sponsoractivities';
+import { OpenEditModalButton } from '@components/sponsor-activities';
 
 import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof OpenEditModalButton> = {
-  title: 'FinanSu/sponsoractivities/OpenEditModalButton',
+  title: 'FinanSu/sponsor-activities/OpenEditModalButton',
   component: OpenEditModalButton,
   tags: ['autodocs'],
   argTypes: {},

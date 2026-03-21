@@ -1,11 +1,11 @@
-import { DetailPage2 } from '@components/sponsoractivities/legacy-documents';
+import { DetailPage2 } from '@components/sponsor-activities/legacy-documents';
 
 import { SPONSOR_ACTIVITY_VIEW } from '../constants';
 
 import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof DetailPage2> = {
-  title: 'FinanSu/sponsoractivities/DetailPage2',
+  title: 'FinanSu/sponsor-activities/DetailPage2',
   component: DetailPage2,
   tags: ['autodocs'],
   argTypes: {},

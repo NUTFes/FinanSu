@@ -1,10 +1,10 @@
-import { DeleteModal } from '@components/sponsoractivities';
+import { OpenAddModalButton } from '@components/sponsor-activities';
 
 import type { Meta } from '@storybook/react';
 
-const meta: Meta<typeof DeleteModal> = {
-  title: 'FinanSu/sponsoractivities/DeleteModal',
-  component: DeleteModal,
+const meta: Meta<typeof OpenAddModalButton> = {
+  title: 'FinanSu/sponsor-activities/OpenAddModalButton',
+  component: OpenAddModalButton,
   tags: ['autodocs'],
   argTypes: {},
 };

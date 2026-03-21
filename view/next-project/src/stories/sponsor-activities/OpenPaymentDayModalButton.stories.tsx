@@ -1,9 +1,9 @@
-import { OpenPaymentDayModalButton } from '@components/sponsoractivities/legacy-documents';
+import { OpenPaymentDayModalButton } from '@components/sponsor-activities/legacy-documents';
 
 import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof OpenPaymentDayModalButton> = {
-  title: 'FinanSu/sponsoractivities/OpenPaymentDayModalButton',
+  title: 'FinanSu/sponsor-activities/OpenPaymentDayModalButton',
   component: OpenPaymentDayModalButton,
   tags: ['autodocs'],
   argTypes: {},

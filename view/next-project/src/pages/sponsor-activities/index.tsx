@@ -1,7 +1,7 @@
 import { useMemo, useReducer } from 'react';
 
-import SponsorActivitiesLayout from '@/components/sponsoractivities/page/SponsorActivitiesLayout';
-import { useSponsorActivitiesQuery } from '@/hooks/sponsoractivities/useSponsorActivitiesQuery';
+import SponsorActivitiesLayout from '@/components/sponsor-activities/page/SponsorActivitiesLayout';
+import { useSponsorActivitiesQuery } from '@/hooks/sponsor-activities/useSponsorActivitiesQuery';
 import { get } from '@/utils/api/api_methods';
 import {
   calculateActivitiesTotalAmount,

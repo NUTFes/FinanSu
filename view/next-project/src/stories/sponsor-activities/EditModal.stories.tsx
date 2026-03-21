@@ -1,5 +1,5 @@
 import { ActivityStatus, DesignProgress, FeasibilityStatus } from '@/generated/model';
-import { EditModal } from '@components/sponsoractivities';
+import { EditModal } from '@components/sponsor-activities';
 
 import { SPONSOR, SPONSOR_STYLE, USER, YEAEPERIOD } from '../constants';
 
@@ -21,7 +21,7 @@ const MOCK_SPONSORSHIP_ACTIVITY: SponsorshipActivity = {
 };
 
 const meta: Meta<typeof EditModal> = {
-  title: 'FinanSu/sponsoractivities/EditModal',
+  title: 'FinanSu/sponsor-activities/EditModal',
   component: EditModal,
   tags: ['autodocs'],
   argTypes: {},

@@ -1,11 +1,11 @@
-import { UploadFileModal } from '@components/sponsoractivities/legacy-documents';
+import { UploadFileModal } from '@components/sponsor-activities/legacy-documents';
 
 import { SPONSOR_ACTIVITY_INFORMATION } from '../constants';
 
 import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof UploadFileModal> = {
-  title: 'FinanSu/sponsoractivities/UploadFileModal',
+  title: 'FinanSu/sponsor-activities/UploadFileModal',
   component: UploadFileModal,
   tags: ['autodocs'],
   argTypes: {},

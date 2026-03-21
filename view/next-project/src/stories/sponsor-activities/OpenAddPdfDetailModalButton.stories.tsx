@@ -1,9 +1,9 @@
-import { OpenAddPdfDetailModalButton } from '@components/sponsoractivities/legacy-documents';
+import { OpenAddPdfDetailModalButton } from '@components/sponsor-activities/legacy-documents';
 
 import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof OpenAddPdfDetailModalButton> = {
-  title: 'FinanSu/sponsoractivities/OpenAddPdfDetailModalButton',
+  title: 'FinanSu/sponsor-activities/OpenAddPdfDetailModalButton',
   component: OpenAddPdfDetailModalButton,
   tags: ['autodocs'],
   argTypes: {},
