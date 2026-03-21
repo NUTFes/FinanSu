@@ -139,7 +139,9 @@ export default function PurchaseItemNumModal() {
           </div>
         </div>
       </div>
-      <div className={clsx(`mb-4 grid max-h-2/3 grid-cols-12 gap-4 overflow-scroll`)}>
+      <div className={clsx(`
+        mb-4 grid max-h-2/3 grid-cols-12 gap-4 overflow-scroll
+      `)}>
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
           <div className={clsx('mb-2 w-full p-5')}>
@@ -179,11 +181,15 @@ export default function PurchaseItemNumModal() {
                         className={clsx(
                           'px-4',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `
+                            border-b py-3
+                          `,
                         )}
                       >
                         {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
-                        <div className={clsx(`text-center text-sm text-black-600`)}>
+                        <div className={clsx(`
+                          text-center text-sm text-black-600
+                        `)}>
                           {purchaseOrderItem.purchaseItem && (
                             <Radio
                               value={String(purchaseOrderItem.purchaseOrder?.id ?? '')}
@@ -196,10 +202,14 @@ export default function PurchaseItemNumModal() {
                         className={clsx(
                           'px-4',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `
+                            border-b py-3
+                          `,
                         )}
                       >
-                        <div className={clsx(`text-center text-sm text-black-600`)}>
+                        <div className={clsx(`
+                          text-center text-sm text-black-600
+                        `)}>
                           {
                             expenses.find(
                               (expense) => expense.id === purchaseOrderItem.purchaseOrder.expenseID,
@@ -211,10 +221,14 @@ export default function PurchaseItemNumModal() {
                         className={clsx(
                           'px-4',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `
+                            border-b py-3
+                          `,
                         )}
                       >
-                        <div className={clsx(`text-center text-sm text-black-600`)}>
+                        <div className={clsx(`
+                          text-center text-sm text-black-600
+                        `)}>
                           {purchaseOrderItem.purchaseItem &&
                             calcTotalFee(purchaseOrderItem.purchaseItem)}
                         </div>
@@ -223,10 +237,14 @@ export default function PurchaseItemNumModal() {
                         className={clsx(
                           'px-4',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `
+                            border-b py-3
+                          `,
                         )}
                       >
-                        <div className={clsx(`text-center text-sm text-black-600`)}>
+                        <div className={clsx(`
+                          text-center text-sm text-black-600
+                        `)}>
                           {purchaseOrderItem.purchaseItem &&
                             purchaseOrderItem.purchaseItem.map((purchaseItem) => (
                               <div key={purchaseItem.id}>
@@ -240,10 +258,14 @@ export default function PurchaseItemNumModal() {
                         className={clsx(
                           'px-4',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `
+                            border-b py-3
+                          `,
                         )}
                       >
-                        <div className={clsx(`text-center text-sm text-black-600`)}>
+                        <div className={clsx(`
+                          text-center text-sm text-black-600
+                        `)}>
                           {purchaseOrderItem.purchaseItem && purchaseOrderItem.purchaseItem.length}
                         </div>
                       </td>
@@ -251,10 +273,14 @@ export default function PurchaseItemNumModal() {
                         className={clsx(
                           'px-4',
                           index === 0 ? 'pt-4 pb-3' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `
+                            border-b py-3
+                          `,
                         )}
                       >
-                        <div className={clsx(`text-center text-sm text-black-600`)}>
+                        <div className={clsx(`
+                          text-center text-sm text-black-600
+                        `)}>
                           {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
                         </div>
                       </td>

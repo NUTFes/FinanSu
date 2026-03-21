@@ -221,4 +221,3 @@ export * from './updateSponsorshipActivityRequestSponsorStyleDetailsItemCategory
 export * from './updateSponsorshipActivityStatusRequest';
 export * from './user';
 export * from './yearPeriods';
-

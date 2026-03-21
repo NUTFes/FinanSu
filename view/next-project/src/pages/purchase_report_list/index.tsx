@@ -73,7 +73,7 @@ export default function PurchaseReports() {
       enabled: !!userParams,
     },
   });
-  
+
   const userNameMap = useMemo(
     () =>
       Object.fromEntries(
