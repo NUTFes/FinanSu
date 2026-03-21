@@ -9,21 +9,16 @@ type User struct {
 	Name      string    `json:"name"`
 	BureauID  int       `json:"bureauID"`
 	RoleID    int       `json:"roleID"`
-	IsDeleted bool		`json:"isDeleted"`
+	IsDeleted bool      `json:"isDeleted"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-type UserLookup struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-type UserDetail struct{
-	User		User
-	MailAuth	MailAuth
+type UserDetail struct {
+	User     User
+	MailAuth MailAuth
 }
 
 type DestroyUserIDs struct {
-	DeleteIDs	[]int	`json:"deleteIDs"`
+	DeleteIDs []int `json:"deleteIDs"`
 }
