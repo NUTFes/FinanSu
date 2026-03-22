@@ -827,6 +827,12 @@ type PostUploadFileMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
 }
 
+// GetUsersParams defines parameters for GetUsers.
+type GetUsersParams struct {
+	// Ids user id一覧（複数指定可）.未指定時は全件取得
+	Ids *[]int `form:"ids,omitempty" json:"ids,omitempty"`
+}
+
 // PostUsersParams defines parameters for PostUsers.
 type PostUsersParams struct {
 	// Name name
@@ -1257,7 +1263,7 @@ type ServerInterface interface {
 	PostUploadFile(ctx echo.Context) error
 
 	// (GET /users)
-	GetUsers(ctx echo.Context) error
+	GetUsers(ctx echo.Context, params GetUsersParams) error
 
 	// (POST /users)
 	PostUsers(ctx echo.Context, params PostUsersParams) error
@@ -3186,8 +3192,17 @@ func (w *ServerInterfaceWrapper) PostUploadFile(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetUsers(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUsersParams
+	// ------------- Optional query parameter "ids" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "ids", ctx.QueryParams(), &params.Ids)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter ids: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetUsers(ctx)
+	err = w.Handler.GetUsers(ctx, params)
 	return err
 }
 

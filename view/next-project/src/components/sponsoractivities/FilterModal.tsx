@@ -84,11 +84,9 @@ const FilterModal: FC<ModalProps> = (props) => {
             </div>
           </div>
           <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛フィルター</div>
-          <div
-            className='
+          <div className='
             m-2 grid grid-cols-4 place-items-center gap-x-2 gap-y-5
-          '
-          >
+          '>
             <p className='col-span-2 text-black-600'>協賛スタイル</p>
             <div className='col-span-2 w-full'>
               <div className=''>
@@ -133,12 +131,9 @@ const FilterModal: FC<ModalProps> = (props) => {
                         }}
                         id={String(style.id)}
                       ></input>
-                      <label
-                        htmlFor={String(style.id)}
-                        className='
+                      <label htmlFor={String(style.id)} className='
                         mx-2 w-full text-black-300
-                      '
-                      >
+                      '>
                         {style.style}/{style.feature}/{style.price}円
                       </label>
                     </div>
