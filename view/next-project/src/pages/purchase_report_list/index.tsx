@@ -8,6 +8,7 @@ import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrima
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
+  useGetUsers,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
@@ -31,6 +32,9 @@ export default function PurchaseReports() {
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
   const user = useCurrentUser();
+  const [selectedYear, setSelectedYear] = useState<number>(
+    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
+  );
 
   user?.roleID === 1 && router.push('/my_page');
 
@@ -40,10 +44,6 @@ export default function PurchaseReports() {
       setSelectedYear(latestYear);
     }
   }, [yearPeriods]);
-
-  const [selectedYear, setSelectedYear] = useState<number>(
-    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
-  );
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = { year: selectedYear };
 
   const {
@@ -53,6 +53,34 @@ export default function PurchaseReports() {
     mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+
+  const paidByUserIds = useMemo(
+    () => [
+      ...new Set(
+        buyReports.map((report) => report.paidByUserId).filter((id): id is number => !!id),
+      ),
+    ],
+    [buyReports],
+  );
+
+  const userParams = useMemo(
+    () => (paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined),
+    [paidByUserIds],
+  );
+
+  const { data: userData } = useGetUsers(userParams, {
+    swr: {
+      enabled: !!userParams,
+    },
+  });
+
+  const userNameMap = useMemo(
+    () =>
+      Object.fromEntries(
+        (userData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name]),
+      ),
+    [userData],
+  );
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
@@ -321,7 +349,9 @@ export default function PurchaseReports() {
                             text-black-600
                           '
                         >
-                          {report.paidBy}
+                          {(report.paidByUserId ? userNameMap[report.paidByUserId] : undefined) ??
+                            report.paidBy ??
+                            '-'}
                         </td>
                         <td
                           className='

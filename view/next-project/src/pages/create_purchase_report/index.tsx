@@ -37,7 +37,6 @@ const PurchaseReportPage = () => {
   const {
     isEditMode,
     purchaseReport,
-    setPurchaseReport,
     uploadedFile,
     setUploadedFile,
     departments,
@@ -94,7 +93,6 @@ const PurchaseReportPage = () => {
       !isProcessing &&
       !formErrors.amountError
     : !!uploadedFile &&
-      !!purchaseReport.paidBy &&
       purchaseReport.amount > 0 &&
       !!purchaseReport.festivalItemID &&
       !!activeDivisionId &&
@@ -184,17 +182,13 @@ const PurchaseReportPage = () => {
                 )}
               </FormField>
 
-              {/* 立替者入力フォーム */}
-              <FormField id='proposer' label='立替者' isRequired isDisabled={isEditMode}>
+              {/* 立替者表示 */}
+              <FormField id='proposer' label='立替者' isDisabled>
                 <Input
                   type='text'
-                  value={purchaseReport.paidBy}
-                  onChange={(e) =>
-                    setPurchaseReport((prev) => ({ ...prev, paidBy: e.target.value }))
-                  }
-                  placeholder='立替者を入力してください'
-                  readOnly={isEditMode}
-                  className='disabled:bg-gray-50 disabled:opacity-50'
+                  value={purchaseReport.paidBy || '-'}
+                  readOnly
+                  className='bg-gray-50 opacity-50'
                 />
               </FormField>
 
