@@ -7,8 +7,8 @@
 ALTER TABLE buildings ADD COLUMN unit_number TINYINT UNSIGNED NOT NULL DEFAULT 0;
 
 -- room系マスタはシードで再投入する前提で空にする
-TRUNCATE TABLE room_teachers;
-TRUNCATE TABLE rooms;
+DELETE FROM room_teachers;
+DELETE FROM rooms;
 
 -- roomsテーブルの構造変更の準備
 ALTER TABLE rooms ADD COLUMN building_id INT(10) UNSIGNED NOT NULL;
