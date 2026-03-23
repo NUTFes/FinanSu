@@ -44,4 +44,4 @@ CREATE TABLE floors (
 ALTER TABLE rooms ADD COLUMN floor_id INT(10) UNSIGNED NOT NULL;
 ALTER TABLE rooms ADD CONSTRAINT rooms_ibfk_1 FOREIGN KEY (floor_id) REFERENCES floors (id);
 
-ALTER TABLE buildings DROP COLUMN unit_numbers;
+ALTER TABLE buildings DROP COLUMN unit_number;

@@ -3,38 +3,16 @@
 -- 運用前提: 本番・開発とも、マイグレーション後にシード（mysql/seed/...）を新スキーマ向けに更新して投入する。
 -- 段階的な二重書き込み期間は設けない。
 --
--- buildingsテーブルにunit_numbersカラムを追加
-ALTER TABLE buildings ADD COLUMN unit_numbers VARCHAR(255);
+-- buildingsテーブルにunit_numberカラムを追加
+ALTER TABLE buildings ADD COLUMN unit_number TINYINT UNSIGNED NOT NULL DEFAULT 0;
 
--- 既存データの移行: building_unitsのunit_numberをbuildingsのunit_numbersに移行
-UPDATE buildings b
-SET unit_numbers = (
-    SELECT bu.unit_number
-    FROM building_units bu
-    WHERE bu.building_id = b.id
-    LIMIT 1
-);
+-- room系マスタはシードで再投入する前提で空にする
+TRUNCATE TABLE room_teachers;
+TRUNCATE TABLE rooms;
 
 -- roomsテーブルの構造変更の準備
--- 一時的にbuilding_idカラムを追加
-ALTER TABLE rooms ADD COLUMN building_id INT(10) UNSIGNED;
-
--- floor_numberカラムを追加
-ALTER TABLE rooms ADD COLUMN floor_number VARCHAR(255);
-
--- 既存データの移行: floorsのfloor_numberとbuilding情報をroomsに移行
-UPDATE rooms r
-JOIN floors f ON r.floor_id = f.id
-JOIN building_units bu ON f.building_unit_id = bu.id
-SET 
-    r.building_id = bu.building_id,
-    r.floor_number = f.floor_number;
-
--- roomsテーブルのbuilding_idにNOT NULL制約を追加
-ALTER TABLE rooms MODIFY COLUMN building_id INT(10) UNSIGNED NOT NULL;
-
--- roomsテーブルのfloor_numberにNOT NULL制約を追加
-ALTER TABLE rooms MODIFY COLUMN floor_number VARCHAR(255) NOT NULL;
+ALTER TABLE rooms ADD COLUMN building_id INT(10) UNSIGNED NOT NULL;
+ALTER TABLE rooms ADD COLUMN floor_number VARCHAR(255) NOT NULL;
 
 -- 新しい外部キー制約を追加
 ALTER TABLE rooms ADD CONSTRAINT rooms_building_id_foreign_key 
