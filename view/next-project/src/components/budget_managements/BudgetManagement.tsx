@@ -7,15 +7,16 @@ import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrima
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import { Year } from '@/type/common';
 
+import formatNumber from '../common/Formatter';
 import OpenDeleteModalButton from './OpenDeleteModalButton';
 import OpenEditModalButton from './OpenEditModalButton';
-import formatNumber from '../common/Formatter';
 
 import type {
   Division,
   FinancialRecord,
   GetDivisionsParams,
   GetFestivalItemsParams,
+  GetFinancialRecordsParams,
 } from '@/generated/model';
 
 interface FinancialRecordWithId extends FinancialRecord {
@@ -37,24 +38,30 @@ export default function BudgetManagement(props: Props) {
     divisionId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
     festivalItemId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
   });
-  const divisionsParams: GetDivisionsParams = {
-    financial_record_id: financialRecordId ?? undefined,
-  };
-  const festivalItemsParams: GetFestivalItemsParams = {
-    division_id: divisionId ?? undefined,
-  };
 
-  const [selectedYear, _setSelectedYear] = useState<Year>(
+  const [selectedYear, setSelectedYear] = useState<Year>(
     // 本番環境では、2025のyear_idを1にします
     years ? years[years.length - 1] : { id: 1, year: 2025 },
   );
+
+  const financialRecordsParams: GetFinancialRecordsParams = {
+    year: selectedYear.year,
+  };
+  const divisionsParams: GetDivisionsParams = {
+    year: selectedYear.year,
+    financial_record_id: financialRecordId ?? undefined,
+  };
+  const festivalItemsParams: GetFestivalItemsParams = {
+    year: selectedYear.year,
+    division_id: divisionId ?? undefined,
+  };
 
   const {
     data: financialRecordData,
     isLoading: isFinancialRecordLoading,
     error: financialRecordError,
     mutate: mutateFinancialRecords,
-  } = useGetFinancialRecords();
+  } = useGetFinancialRecords(financialRecordsParams);
   const {
     data: divisionsData,
     isLoading: isDivisionsLoading,
@@ -82,6 +89,13 @@ export default function BudgetManagement(props: Props) {
   let totalBudget = 0;
   let totalExpense = 0;
   let totalBalance = 0;
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextYear = years.find((year) => year.year === Number(e.target.value));
+    if (!nextYear) return;
+    setSelectedYear(nextYear);
+    setQueryState({ financialRecordId: null, divisionId: null, festivalItemId: null });
+  };
 
   const handleFinancialRecordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const frId = e.target.value ? parseInt(e.target.value, 10) : null;
@@ -213,6 +227,24 @@ export default function BudgetManagement(props: Props) {
           '
         >
           <div className='flex flex-col gap-4 py-2'>
+            <div className='flex gap-3'>
+              <span className='text-base font-light'>年度</span>
+              <select
+                value={selectedYear.year}
+                onChange={handleYearChange}
+                className='
+                  border-b border-black-300
+                  focus:outline-hidden
+                '
+              >
+                {years &&
+                  years.map((year) => (
+                    <option key={year.id} value={year.year}>
+                      {year.year}
+                    </option>
+                  ))}
+              </select>
+            </div>
             <div className='flex gap-3'>
               <span className='text-base font-light'>申請する局</span>
               <select
