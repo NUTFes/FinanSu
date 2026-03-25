@@ -502,6 +502,16 @@ function useSponsorActivityFormModel(props: Props) {
     }
   };
 
+  const handleActivityStatusChange = (nextActivityStatus: ActivityStatus) => {
+    setActivityStatus(nextActivityStatus);
+
+    if (nextActivityStatus === ActivityStatus.rejected) {
+      setFeasibilityStatus((prev) =>
+        prev === FeasibilityStatus.unstarted ? FeasibilityStatus.impossible : prev,
+      );
+    }
+  };
+
   const handleMoneyStylesChange = (options: StyleOption[]) => {
     const nextMoneyStyleIds = options.map((option) => Number(option.value));
     setSelectedMoneyStyleIds(nextMoneyStyleIds);
@@ -534,10 +544,6 @@ function useSponsorActivityFormModel(props: Props) {
     }
     if (!selectedUserId) {
       setErrorMessage('担当者を選択してください。');
-      return;
-    }
-    if (uniqueMoneyStyleIds.length + uniqueGoodsStyleIds.length === 0) {
-      setErrorMessage('協賛スタイルを1件以上追加してください。');
       return;
     }
 
@@ -586,7 +592,7 @@ function useSponsorActivityFormModel(props: Props) {
     sponsorSelectOptions,
     selectedSponsorOption,
     activityStatus,
-    setActivityStatus,
+    handleActivityStatusChange,
     bureauSelectOptions,
     selectedBureauOption,
     userSelectOptions,
@@ -647,7 +653,7 @@ export default function SponsorActivityForm(props: Props) {
           selectedUserOption={model.selectedUserOption}
           onYearPeriodChange={model.setSelectedYearPeriodId}
           onSponsorChange={model.handleSponsorChange}
-          onActivityStatusChange={model.setActivityStatus}
+          onActivityStatusChange={model.handleActivityStatusChange}
           onBureauChange={model.handleBureauChange}
           onUserChange={model.handleUserChange}
         />
