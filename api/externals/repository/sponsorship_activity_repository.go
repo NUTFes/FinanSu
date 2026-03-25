@@ -76,6 +76,7 @@ func (r *sponsorshipActivityRepository) FindAll(ctx context.Context, sponsorship
 		queryDataset = queryDataset.Where(
 			goqu.L("EXISTS ?", goqu.Dialect("mysql").
 				Select(goqu.I("activity_sponsor_style_links.sponsorship_activity_id")).
+				From("activity_sponsor_style_links").
 				Where(
 					goqu.I("activity_sponsor_style_links.sponsorship_activity_id").Eq(goqu.I("sponsorship_activities.id")),
 					goqu.I("activity_sponsor_style_links.sponsor_style_id").In(*sponsorshipActivitiesSearchParams.SponsorStyleIds),
