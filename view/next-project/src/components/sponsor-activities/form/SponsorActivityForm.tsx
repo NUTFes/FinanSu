@@ -226,9 +226,9 @@ interface StyleFieldRowProps {
 
 function StyleFieldRow(props: StyleFieldRowProps) {
   return (
-    <div
-      className='flex min-h-10 items-stretch rounded-md border border-primary-1'
-    >
+    <div className='
+      flex min-h-10 items-stretch rounded-md border border-primary-1
+    '>
       <div
         className='
           flex w-10 shrink-0 items-center justify-center text-black-600
