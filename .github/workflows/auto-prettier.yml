@@ -38,5 +38,6 @@ jobs:
         working-directory: view/next-project
         run: pnpm run type-check
       - uses: stefanzweifel/git-auto-commit-action@v7
+        if: github.head_ref != 'develop' && github.head_ref != 'main'
         with:
           commit_message: formatted by workflow
