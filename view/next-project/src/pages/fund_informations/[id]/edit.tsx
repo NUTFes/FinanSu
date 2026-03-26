@@ -53,7 +53,7 @@ const EditFundInformation = () => {
     isLoading,
     error: hookError,
     updateFundInformation,
-  } = useFundInformations(numId);
+  } = useFundInformations({ id: numId });
 
   const [incomeReport, setIncomeReport] = useState<Income>({
     id: numId,
