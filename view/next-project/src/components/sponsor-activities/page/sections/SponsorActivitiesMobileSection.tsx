@@ -72,7 +72,11 @@ export default function SponsorActivitiesMobileSection({
               </div>
               <div>
                 <p className='mb-1 text-sm text-black-600'>協賛スタイル</p>
-                <SponsorStyleList styles={activity.sponsorStyles} />
+                <SponsorStyleList
+                  styles={activity.sponsorStyles}
+                  textMaxWidthClassName='max-w-[14rem]'
+                  alignClassName='justify-start'
+                />
               </div>
               <div className='ml-auto flex flex-row gap-4'>
                 <OpenEditModalButton

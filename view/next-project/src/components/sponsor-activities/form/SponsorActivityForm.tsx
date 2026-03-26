@@ -244,6 +244,7 @@ function StyleFieldRow(props: StyleFieldRowProps) {
           onChange={props.onChange}
           placeholder='選択して下さい'
           customStyles={multiSelectStyles}
+          getOptionTitle={(option) => option.label}
         />
       </div>
     </div>
@@ -625,8 +626,8 @@ export default function SponsorActivityForm(props: Props) {
   return (
     <Modal
       className='
-        px-20 py-12
-        md:w-1/3
+        w-[min(92vw,980px)] px-6 py-10
+        md:p-12
       '
       onClick={model.onClose}
     >

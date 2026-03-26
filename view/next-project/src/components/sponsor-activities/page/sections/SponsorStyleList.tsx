@@ -4,9 +4,15 @@ import { SponsorshipActivity } from '@/generated/model';
 
 interface SponsorStyleListProps {
   styles: SponsorshipActivity['sponsorStyles'];
+  textMaxWidthClassName?: string;
+  alignClassName?: string;
 }
 
-export default function SponsorStyleList({ styles }: SponsorStyleListProps) {
+export default function SponsorStyleList({
+  styles,
+  textMaxWidthClassName = 'max-w-[12rem]',
+  alignClassName = 'justify-center',
+}: SponsorStyleListProps) {
   if (!styles || styles.length === 0) {
     return <p className='text-sm text-black-600'>未定</p>;
   }
@@ -22,7 +28,7 @@ export default function SponsorStyleList({ styles }: SponsorStyleListProps) {
     .map(({ styleLink }) => styleLink);
 
   return (
-    <div className='flex flex-col gap-1'>
+    <div className='flex min-w-0 flex-col gap-1'>
       {orderedStyles.map((styleLink, index) => {
         const key = `${styleLink.sponsorStyleId || index}-${
           styleLink.category || 'money'
@@ -32,13 +38,27 @@ export default function SponsorStyleList({ styles }: SponsorStyleListProps) {
         const label = [styleName, styleFeature].filter(Boolean).join(' ');
 
         return (
-          <div key={key} className='flex items-center justify-center gap-1'>
+          <div
+            key={key}
+            className={`
+              flex min-w-0 items-center gap-1
+              ${alignClassName}
+            `}
+          >
             {styleLink.category === 'goods' ? (
-              <MdInventory2 className='text-black-600' size={16} />
+              <MdInventory2 className='shrink-0 text-black-600' size={16} />
             ) : (
-              <MdAttachMoney className='text-black-600' size={16} />
+              <MdAttachMoney className='shrink-0 text-black-600' size={16} />
             )}
-            <span className='text-sm text-black-600'>{label || '-'}</span>
+            <span
+              className={`
+                block min-w-0 truncate text-sm text-black-600
+                ${textMaxWidthClassName}
+              `}
+              title={label || '-'}
+            >
+              {label || '-'}
+            </span>
           </div>
         );
       })}

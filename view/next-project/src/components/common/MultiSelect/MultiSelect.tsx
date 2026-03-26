@@ -12,6 +12,7 @@ interface MultiSelectProps {
   onChange: (value: Option[]) => void;
   placeholder?: string;
   customStyles?: StylesConfig<Option, true>;
+  getOptionTitle?: (option: Option) => string;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -20,6 +21,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   values,
   placeholder,
   customStyles,
+  getOptionTitle,
 }) => {
   const normalizedValues = useMemo(() => values ?? [], [values]);
 
@@ -44,6 +46,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       menuPortalTarget={menuPortalTarget}
       menuPosition='fixed'
       styles={mergedStyles}
+      components={{
+        MultiValueLabel: ({ data, children, innerProps }) => (
+          <div {...innerProps} title={getOptionTitle?.(data) ?? data.label}>
+            {children}
+          </div>
+        ),
+      }}
       onChange={(newValue: MultiValue<Option>) => {
         const nextSelected = [...newValue];
         onChange(nextSelected);
