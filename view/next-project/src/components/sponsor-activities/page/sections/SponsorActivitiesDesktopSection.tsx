@@ -181,10 +181,9 @@ export default function SponsorActivitiesDesktopSection({
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={7}
-                className='pt-3 pr-8 text-right text-sm text-black-600'
-              >
+              <td colSpan={7} className='
+                pt-3 pr-8 text-right text-sm text-black-600
+              '>
                 合計金額：{totalAmount.toLocaleString()} 円
               </td>
             </tr>
