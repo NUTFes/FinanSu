@@ -35,7 +35,9 @@ const MyPage = () => {
   }, [yearPeriods]);
 
   const userId = currentUser?.id || 0;
-  const { data, error, isLoading } = useGetFestivalItemsDetailsUserId(userId, { year: selectedYear });
+  const { data, error, isLoading } = useGetFestivalItemsDetailsUserId(userId, {
+    year: selectedYear,
+  });
 
   const handleCreatePurchaseReport = () => {
     router.push({
