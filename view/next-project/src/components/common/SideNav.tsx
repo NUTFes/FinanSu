@@ -83,15 +83,15 @@ const NavItem = (props: NavItemProps) => {
         <div
           className={clsx(
             className +
-              ` cursor-pointer ${!props.isShow && 'border-b-2 border-dashed border-primary-1'}`,
+              ` cursor-pointer ${!props.isShow && 'border-primary-1 border-b-2 border-dashed'}`,
           )}
           onClick={props.onClick}
         >
           <span
             className={clsx(
-              props.isShow
-                ? 'rotate-180 transition-transform'
-                : `rotate-0 transition-transform`,
+              props.isShow ? 'rotate-180 transition-transform' : `
+                rotate-0 transition-transform
+              `,
             )}
           >
             {props.icon}
