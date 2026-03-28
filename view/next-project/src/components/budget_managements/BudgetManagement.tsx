@@ -91,9 +91,9 @@ export default function BudgetManagement(props: Props) {
   let totalBalance = 0;
 
   const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextYear = years.find((year) => year.year === Number(e.target.value));
-    if (!nextYear) return;
-    setSelectedYear(nextYear);
+    const chosenYear = years.find((year) => year.year === Number(e.target.value));
+    if (!chosenYear) return;
+    setSelectedYear(chosenYear);
     setQueryState({ financialRecordId: null, divisionId: null, festivalItemId: null });
   };
 
@@ -324,9 +324,7 @@ export default function BudgetManagement(props: Props) {
           <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
               <tr className='border-b border-b-primary-1 py-3'>
-                <th className='
-                  w-1/4 pb-2 text-center font-medium text-black-600
-                '>{title}</th>
+                <th className='w-1/4 pb-2 text-center font-medium text-black-600'>{title}</th>
                 {showBudgetColumns && (
                   <>
                     <th
