@@ -74,8 +74,8 @@ export default function AddPdfDetailModal(props: ModalProps) {
         </div>
         <p
           className='
-            mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest
-            text-black-600
+            text-black-600 mx-auto mb-7 w-fit text-2xl/8 font-thin
+            tracking-widest
           '
         >
           請求書の発行

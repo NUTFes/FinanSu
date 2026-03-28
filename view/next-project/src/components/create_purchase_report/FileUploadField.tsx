@@ -34,7 +34,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       {uploadedFile ? (
         <div
           className='
-            flex min-h-10 cursor-pointer items-center gap-2 rounded-md border
+            min-h-10 flex cursor-pointer items-center gap-2 rounded-md border
             border-gray-200 bg-[#E7E7E7] p-2 transition-colors
             hover:bg-gray-300
           '
@@ -47,8 +47,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         <button
           type='button'
           className='
-            flex w-full items-center justify-center gap-1 rounded-md border
-            border-gray-300 bg-[#E7E7E7] px-4 py-2 text-black-300
+            text-black-300 flex w-full items-center justify-center gap-1 rounded-md
+            border border-gray-300 bg-[#E7E7E7] px-4 py-2
             transition-colors
             hover:bg-gray-300
             sm:gap-2

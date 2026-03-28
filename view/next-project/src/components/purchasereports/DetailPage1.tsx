@@ -78,16 +78,16 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
     <>
       <div
         className='
-          mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-x-10
+          w-9/10 mx-auto mb-10 grid grid-cols-4 justify-items-end gap-x-10
           gap-y-3
         '
       >
         <p className='text-black-600'>ID</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
+        <div className='border-b-primary-1 w-full border-b text-right'>
           <p>{props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}</p>
         </div>
         <p className='text-black-600'>合計金額</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
+        <div className='border-b-primary-1 w-full border-b text-right'>
           {props.purchaseReportViewItem &&
             TotalFee(
               props.purchaseReportViewItem.purchaseReport,
@@ -95,9 +95,9 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
             )}
         </div>
         <p className='text-black-600'>購入した局</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>{expenseName}</div>
+        <div className='border-b-primary-1 w-full border-b text-right'>{expenseName}</div>
         <p className='text-black-600'>報告日</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
+        <div className='border-b-primary-1 w-full border-b text-right'>
           {props.purchaseReportViewItem &&
             formatDate(
               props.purchaseReportViewItem.purchaseReport.createdAt
@@ -106,59 +106,59 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
             )}
         </div>
         <p className='text-black-600'>割引</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
+        <div className='border-b-primary-1 w-full border-b text-right'>
           {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.discount}
         </div>
         <p className='text-black-600'>加算</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
+        <div className='border-b-primary-1 w-full border-b text-right'>
           {props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.addition}
         </div>
         <p className='text-black-600'>備考</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
+        <div className='border-b-primary-1 w-full border-b text-right'>
           {(props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.remark) ||
             '無し'}
         </div>
         <p className='text-black-600'>購入者(任意)</p>
-        <div className='w-full border-b border-b-primary-1 text-right'>
+        <div className='border-b-primary-1 w-full border-b text-right'>
           {(props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.buyer) ||
             ''}
         </div>
       </div>
       <div className='mx-auto mb-10 w-fit'>
-        <p className='text-2xl font-thin text-black-600'>購入物品</p>
+        <p className='text-black-600 text-2xl font-thin'>購入物品</p>
       </div>
       <div className='grid max-h-60 w-full justify-items-center overflow-auto'>
         <div
           className='
-            w-6/7 overflow-auto border border-x-0 border-t-0 border-b-primary-1
+            w-6/7 border-b-primary-1 overflow-auto border border-x-0 border-t-0
           '
         >
           <table className='w-full table-fixed border-collapse'>
             <thead>
-              <tr className='border-b border-b-primary-1 py-3'>
+              <tr className='border-b-primary-1 border-b py-3'>
                 {user.roleID === 1 ? (
                   <th className='w-3/12 pb-2'>
-                    <div className='text-center text-sm text-black-600'>品名</div>
+                    <div className='text-black-600 text-center text-sm'>品名</div>
                   </th>
                 ) : (
                   <th className='w-4/12 pb-2'>
-                    <div className='text-center text-sm text-black-600'>品名</div>
+                    <div className='text-black-600 text-center text-sm'>品名</div>
                   </th>
                 )}
-                <th className='w-2/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>単価</div>
+                <th className='border-b-primary-1 w-2/12 pb-2'>
+                  <div className='text-black-600 text-center text-sm'>単価</div>
                 </th>
-                <th className='w-1/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>個数</div>
+                <th className='border-b-primary-1 w-1/12 pb-2'>
+                  <div className='text-black-600 text-center text-sm'>個数</div>
                 </th>
-                <th className='w-3/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>詳細</div>
+                <th className='border-b-primary-1 w-3/12 pb-2'>
+                  <div className='text-black-600 text-center text-sm'>詳細</div>
                 </th>
-                <th className='w-2/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>URL</div>
+                <th className='border-b-primary-1 w-2/12 pb-2'>
+                  <div className='text-black-600 text-center text-sm'>URL</div>
                 </th>
-                <th className='w-2/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>購入有無</div>
+                <th className='border-b-primary-1 w-2/12 pb-2'>
+                  <div className='text-black-600 text-center text-sm'>購入有無</div>
                 </th>
               </tr>
             </thead>
@@ -167,21 +167,21 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
               {props.purchaseReportViewItem?.purchaseItems?.map((purchaseItem) => (
                 <tr key={purchaseItem.id} className='w-full'>
                   <td className='border-b py-3'>
-                    <div className='text-center text-sm text-black-300'>{purchaseItem.item}</div>
+                    <div className='text-black-300 text-center text-sm'>{purchaseItem.item}</div>
                   </td>
                   <td className='border-b py-3'>
-                    <div className='text-center text-sm text-black-300'>{purchaseItem.price}</div>
+                    <div className='text-black-300 text-center text-sm'>{purchaseItem.price}</div>
                   </td>
                   <td className='border-b py-3'>
-                    <div className='text-center text-sm text-black-300'>
+                    <div className='text-black-300 text-center text-sm'>
                       {purchaseItem.quantity}
                     </div>
                   </td>
                   <td className='border-b py-3'>
-                    <div className='text-center text-sm text-black-300'>{purchaseItem.detail}</div>
+                    <div className='text-black-300 text-center text-sm'>{purchaseItem.detail}</div>
                   </td>
                   <td className='border-b py-3'>
-                    <div className='text-center text-sm text-black-300'>
+                    <div className='text-black-300 text-center text-sm'>
                       {purchaseItem.url && (
                         <div className='flex justify-center'>
                           <a
@@ -206,7 +206,7 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
                     </div>
                   </td>
                   <td className='border-b py-3'>
-                    <div className='text-center text-sm text-black-300'>
+                    <div className='text-black-300 text-center text-sm'>
                       <Checkbox checked={purchaseItem.financeCheck} disabled={true} />
                     </div>
                   </td>
@@ -252,8 +252,8 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
         <button
           onClick={() => toPage2()}
           className='
-            rounded-full
             hover:bg-grey-300
+            rounded-full
           '
         >
           <FaChevronCircleRight size={30} />

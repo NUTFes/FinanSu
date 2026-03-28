@@ -161,7 +161,7 @@ function CoreInfoFields(props: CoreInfoFieldsProps) {
         </Select>
       </div>
 
-      <p className='flex items-center gap-0.5 text-black-600'>
+      <p className='text-black-600 flex items-center gap-0.5'>
         企業名<span className='text-red-500'>*</span>
       </p>
       <div className='w-full'>
@@ -188,7 +188,7 @@ function CoreInfoFields(props: CoreInfoFieldsProps) {
         </Select>
       </div>
 
-      <p className='flex items-center gap-0.5 text-black-600'>
+      <p className='text-black-600 flex items-center gap-0.5'>
         所属局<span className='text-red-500'>*</span>
       </p>
       <div className='w-full'>
@@ -226,17 +226,19 @@ interface StyleFieldRowProps {
 
 function StyleFieldRow(props: StyleFieldRowProps) {
   return (
-    <div className='
-      flex min-h-10 items-stretch rounded-md border border-primary-1
-    '>
+    <div
+      className='
+      min-h-10 border-primary-1 flex items-stretch rounded-md border
+    '
+    >
       <div
         className='
-          flex w-10 shrink-0 items-center justify-center text-black-600
+          text-black-600 flex w-10 shrink-0 items-center justify-center
         '
       >
         {props.categoryLabel}
       </div>
-      <div className='my-2 w-px shrink-0 bg-grey-200' />
+      <div className='bg-grey-200 my-2 w-px shrink-0' />
       <div className='min-w-0 flex-1'>
         <MultiSelect
           options={props.styleOptions}
@@ -713,7 +715,7 @@ export default function SponsorActivityForm(props: Props) {
         <div className='mb-4 text-center text-sm text-red-600'>{model.errorMessage}</div>
       )}
 
-      <div className='mt-5 flex flex-row justify-center gap-17.5'>
+      <div className='gap-17.5 mt-5 flex flex-row justify-center'>
         <OutlinePrimaryButton onClick={model.onClose}>戻る</OutlinePrimaryButton>
         <PrimaryButton onClick={model.submit} disabled={model.isSubmitting}>
           {props.submitLabel}

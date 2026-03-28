@@ -106,14 +106,14 @@ const DetailPage2: FC<ModalProps> = (props) => {
         md:w-full
       '
     >
-      <p className='mx-auto w-fit text-xl text-black-600'>登録済レシート</p>
+      <p className='text-black-600 mx-auto w-fit text-xl'>登録済レシート</p>
       <div className='max-h-96 overflow-auto'>
         {receiptsData &&
           receiptsData.map((receipt) => (
             <>
               <div
                 className='
-                  m-0 flex flex-row-reverse border-t border-primary-1 p-0
+                  border-primary-1 m-0 flex flex-row-reverse border-t p-0
                 '
               >
                 <div
@@ -168,14 +168,14 @@ const DetailPage2: FC<ModalProps> = (props) => {
           ))}
         <div
           className='
-            my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1
+            border-primary-1 my-1 flex flex-wrap justify-center gap-7 border-t
             p-2
           '
         >
           <button
             className='
-              rounded-sm
               hover:bg-grey-300
+              rounded-sm
             '
           >
             <FiPlusSquare size={30} onClick={() => handleCreateReceipt()} />
@@ -186,8 +186,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
         <button
           onClick={() => toPage1()}
           className='
-            rounded-full
             hover:bg-grey-300
+            rounded-full
           '
         >
           <FaChevronCircleLeft size={30} />

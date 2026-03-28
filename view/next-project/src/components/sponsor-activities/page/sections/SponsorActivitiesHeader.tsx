@@ -77,7 +77,7 @@ export default function SponsorActivitiesHeader({
             <Title title={'協賛活動一覧'} />
             <div className='flex gap-2.5'>
               <select
-                className='border-b border-black-0'
+                className='border-black-0 border-b'
                 value={selectedYearPeriodId}
                 onChange={(event) => {
                   onSetSelectedYearPeriodId(Number(event.target.value));
@@ -96,8 +96,8 @@ export default function SponsorActivitiesHeader({
                   type='button'
                   aria-label='協賛フィルターを開く'
                   className='
-                    rounded-md p-1.5
-                    hover:bg-white-100
+                    hover:bg-white-100 rounded-md
+                    p-1.5
                   '
                   onClick={() => {
                     onSetFilterOpen(!isFilterOpen);
@@ -106,7 +106,7 @@ export default function SponsorActivitiesHeader({
                   <MdFilterList size='22' color='#666666' />
                 </button>
                 {isFiltered && (
-                  <div className='absolute -top-0.5 -right-0.5'>
+                  <div className='absolute -right-0.5 -top-0.5'>
                     <MdCircle color='rgb(4 102 140)' size={8} />
                   </div>
                 )}
@@ -135,7 +135,7 @@ export default function SponsorActivitiesHeader({
                 });
               }}
             >
-              <MdOutlineFileDownload size='20' className='mt-0.5 mr-1' />
+              <MdOutlineFileDownload size='20' className='mr-1 mt-0.5' />
               CSVダウンロード
             </PrimaryButton>
           </div>

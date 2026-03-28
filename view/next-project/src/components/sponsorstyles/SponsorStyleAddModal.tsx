@@ -42,11 +42,11 @@ export default function SponsorAddModal(props: ModalProps) {
   return (
     <Modal className='md:w-1/2'>
       <div className='w-full'>
-        <div className='mr-5 ml-auto w-fit'>
+        <div className='ml-auto mr-5 w-fit'>
           <CloseButton onClick={() => props.setIsOpen(false)} />
         </div>
       </div>
-      <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛スタイルの登録</h1>
+      <h1 className='text-black-600 mx-auto mb-10 w-fit text-xl'>協賛スタイルの登録</h1>
       <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
         <p className='text-black-600'>協賛内容</p>
         <div className='col-span-4 w-full'>

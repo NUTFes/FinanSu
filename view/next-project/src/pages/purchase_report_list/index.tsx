@@ -205,7 +205,7 @@ export default function PurchaseReports() {
             >
               <Title title={'購入報告一覧'} />
               <select
-                className='border-b border-black-0'
+                className='border-black-0 border-b'
                 defaultValue={selectedYear}
                 onChange={async (e) => {
                   setSelectedYear(Number(e.target.value));
@@ -235,74 +235,74 @@ export default function PurchaseReports() {
             <div className='min-w-max'>
               <table className='mb-5 table-auto border-collapse'>
                 <thead>
-                  <tr className='border-b border-b-primary-1 py-3'>
+                  <tr className='border-b-primary-1 border-b py-3'>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       日付
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       局名
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       部門
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       物品
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       立替者
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       金額
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       封詰め
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm font-normal whitespace-nowrap
-                        text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
                       '
                     >
                       清算完了
                     </th>
                     <th
                       className='
-                        px-4 pb-2 text-sm whitespace-nowrap text-black-600
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
                       '
                     ></th>
                   </tr>
@@ -313,40 +313,40 @@ export default function PurchaseReports() {
                       <tr key={report.id}>
                         <td
                           className='
-                            px-4 py-3 text-center text-sm whitespace-nowrap
-                            text-black-600
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
                           '
                         >
                           {formatDate(report.reportDate ?? '')}
                         </td>
                         <td
                           className='
-                            px-4 py-3 text-center text-sm whitespace-nowrap
-                            text-black-600
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
                           '
                         >
                           {report.financialRecordName}
                         </td>
                         <td
                           className='
-                            px-4 py-3 text-center text-sm whitespace-nowrap
-                            text-black-600
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
                           '
                         >
                           {report.divisionName}
                         </td>
                         <td
                           className='
-                            px-4 py-3 text-center text-sm whitespace-nowrap
-                            text-black-600
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
                           '
                         >
                           {report.festivalItemName}
                         </td>
                         <td
                           className='
-                            px-4 py-3 text-center text-sm whitespace-nowrap
-                            text-black-600
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
                           '
                         >
                           {(report.paidByUserId ? userNameMap[report.paidByUserId] : undefined) ??
@@ -355,8 +355,8 @@ export default function PurchaseReports() {
                         </td>
                         <td
                           className='
-                            px-4 py-3 text-center text-sm whitespace-nowrap
-                            text-black-600
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
                           '
                         >
                           {formatAmount(report.amount ?? 0)}
@@ -413,8 +413,8 @@ export default function PurchaseReports() {
                     ))
                   ) : (
                     <tr>
-                      <td className='border-b border-primary-1 px-1 py-3' colSpan={9}>
-                        <div className='text-center text-sm text-black-600'>データがありません</div>
+                      <td className='border-primary-1 border-b px-1 py-3' colSpan={9}>
+                        <div className='text-black-600 text-center text-sm'>データがありません</div>
                       </td>
                     </tr>
                   )}

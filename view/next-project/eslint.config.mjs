@@ -2,7 +2,7 @@ import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
+//import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
 import _import from 'eslint-plugin-import';
 import storybook from 'eslint-plugin-storybook';
 import unusedImports from 'eslint-plugin-unused-imports';
@@ -18,15 +18,15 @@ export default defineConfig([
   ...nextVitals,
   ...storybook.configs['flat/recommended'],
 
-  {
-    extends: [eslintPluginBetterTailwindcss.configs['recommended-warn']],
-    settings: {
-      'better-tailwindcss': {
-        // Tailwind CSS v4: CSS-based configuration entry file
-        entryPoint: 'src/styles/globals.css',
-      },
-    },
-  },
+  //  {
+  //    extends: [eslintPluginBetterTailwindcss.configs['recommended-warn']],
+  //    settings: {
+  //      'better-tailwindcss': {
+  //        // Tailwind CSS v4: CSS-based configuration entry file
+  //        entryPoint: 'src/styles/globals.css',
+  //      },
+  //    },
+  //  },
 
   globalIgnores([
     // Default ignores of eslint-config-next

@@ -26,7 +26,7 @@ const DownloadButton = (props: Props) => {
         disabled={isDisabled}
         className={`
           ${buttonClass}
-          flex size-6 min-w-0 items-center justify-center rounded-full
+          size-6 flex min-w-0 items-center justify-center rounded-full
         `}
         onClick={onClick}
         suppressHydrationWarning
