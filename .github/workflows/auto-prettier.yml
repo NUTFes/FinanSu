@@ -27,7 +27,7 @@ jobs:
           cache-dependency-path: view/next-project/pnpm-lock.yaml
       - name: Install dependencies
         working-directory: view/next-project
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Prettier
         working-directory: view/next-project
         run: pnpm run format
