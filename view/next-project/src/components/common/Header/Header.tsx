@@ -54,9 +54,13 @@ const Header = (props: HeaderProps) => {
             md:w-40
           '
         >
-          <Image src='/logo.svg' alt='logo' width={150} height={40} className='
-            size-fit
-          ' />
+          <Image
+            src='/logo.svg'
+            alt='logo'
+            width={150}
+            height={40}
+            className='size-fit'
+          />
         </div>
         <div
           className='
