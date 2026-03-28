@@ -33,6 +33,7 @@ function useSelectedYearId(selectedYear?: number) {
     }
 
     // YearPeriods型だとid取れなそう？
+    // TODO: APIの型定義を見直すか、フロント側で必要な型を定義して変換することを検討
     type YearData = { id: number; year: number; createdAt: string; updatedAt: string };
 
     const years = yearData.data as unknown as YearData[];

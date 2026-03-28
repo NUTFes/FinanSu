@@ -41,6 +41,7 @@ export default function BudgetManagement(props: Props) {
 
   const [selectedYear, setSelectedYear] = useState<Year>(
     // 本番環境では、2025のyear_idを1にします
+    //TODO: マジックナンバーみたいになってるから後でいい感じにしましょう
     years ? years[years.length - 1] : { id: 1, year: 2025 },
   );
 
@@ -324,9 +325,13 @@ export default function BudgetManagement(props: Props) {
           <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
               <tr className='border-b border-b-primary-1 py-3'>
-                <th className='
+                <th
+                  className='
                   w-1/4 pb-2 text-center font-medium text-black-600
-                '>{title}</th>
+                '
+                >
+                  {title}
+                </th>
                 {showBudgetColumns && (
                   <>
                     <th
