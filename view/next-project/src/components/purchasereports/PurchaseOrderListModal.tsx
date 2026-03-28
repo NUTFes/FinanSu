@@ -113,7 +113,7 @@ export default function PurchaseItemNumModal() {
       </div>
       <div
         className={clsx(`
-          mb-10 grid w-full justify-items-center text-xl text-black-600
+          text-black-600 mb-10 grid w-full justify-items-center text-xl
         `)}
       >
         購入申請
@@ -140,7 +140,9 @@ export default function PurchaseItemNumModal() {
         </div>
       </div>
       <div
-        className={clsx(`mb-4 grid max-h-2/3 grid-cols-12 gap-4 overflow-scroll`)}
+        className={clsx(`
+        max-h-2/3 mb-4 grid grid-cols-12 gap-4 overflow-scroll
+      `)}
       >
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
@@ -152,43 +154,47 @@ export default function PurchaseItemNumModal() {
               `)}
             >
               <thead>
-                <tr className={clsx('border-b border-b-primary-1 py-3')}>
+                <tr className={clsx('border-b-primary-1 border-b py-3')}>
                   <th className={clsx('px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>選択</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>選択</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>局</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>局</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>金額</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>金額</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>物品名</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>物品名</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>品数</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>品数</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>申請日</div>
                   </th>
                 </tr>
               </thead>
-              <tbody className={clsx('border-b border-b-primary-1')}>
+              <tbody className={clsx('border-b-primary-1 border-b')}>
                 {purchaseOrderView &&
                   purchaseOrderView.map((purchaseOrderItem, index) => (
                     <tr key={purchaseOrderItem.purchaseOrder?.id}>
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1
-                            ? 'pt-3 pb-4'
-                            : `border-b py-3`,
+                            ? 'pb-4 pt-3'
+                            : `
+                            border-b py-3
+                          `,
                         )}
                       >
                         {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
                         <div
-                          className={clsx(`text-center text-sm text-black-600`)}
+                          className={clsx(`
+                          text-black-600 text-center text-sm
+                        `)}
                         >
                           {purchaseOrderItem.purchaseItem && (
                             <Radio
@@ -201,14 +207,18 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1
-                            ? 'pt-3 pb-4'
-                            : `border-b py-3`,
+                            ? 'pb-4 pt-3'
+                            : `
+                            border-b py-3
+                          `,
                         )}
                       >
                         <div
-                          className={clsx(`text-center text-sm text-black-600`)}
+                          className={clsx(`
+                          text-black-600 text-center text-sm
+                        `)}
                         >
                           {
                             expenses.find(
@@ -220,14 +230,18 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1
-                            ? 'pt-3 pb-4'
-                            : `border-b py-3`,
+                            ? 'pb-4 pt-3'
+                            : `
+                            border-b py-3
+                          `,
                         )}
                       >
                         <div
-                          className={clsx(`text-center text-sm text-black-600`)}
+                          className={clsx(`
+                          text-black-600 text-center text-sm
+                        `)}
                         >
                           {purchaseOrderItem.purchaseItem &&
                             calcTotalFee(purchaseOrderItem.purchaseItem)}
@@ -236,14 +250,18 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1
-                            ? 'pt-3 pb-4'
-                            : `border-b py-3`,
+                            ? 'pb-4 pt-3'
+                            : `
+                            border-b py-3
+                          `,
                         )}
                       >
                         <div
-                          className={clsx(`text-center text-sm text-black-600`)}
+                          className={clsx(`
+                          text-black-600 text-center text-sm
+                        `)}
                         >
                           {purchaseOrderItem.purchaseItem &&
                             purchaseOrderItem.purchaseItem.map((purchaseItem) => (
@@ -257,14 +275,18 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1
-                            ? 'pt-3 pb-4'
-                            : `border-b py-3`,
+                            ? 'pb-4 pt-3'
+                            : `
+                            border-b py-3
+                          `,
                         )}
                       >
                         <div
-                          className={clsx(`text-center text-sm text-black-600`)}
+                          className={clsx(`
+                          text-black-600 text-center text-sm
+                        `)}
                         >
                           {purchaseOrderItem.purchaseItem && purchaseOrderItem.purchaseItem.length}
                         </div>
@@ -272,14 +294,18 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === 0 ? 'pb-3 pt-4' : 'py-3',
                           index === purchaseOrderView.length - 1
-                            ? 'pt-3 pb-4'
-                            : `border-b py-3`,
+                            ? 'pb-4 pt-3'
+                            : `
+                            border-b py-3
+                          `,
                         )}
                       >
                         <div
-                          className={clsx(`text-center text-sm text-black-600`)}
+                          className={clsx(`
+                          text-black-600 text-center text-sm
+                        `)}
                         >
                           {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
                         </div>
@@ -289,7 +315,7 @@ export default function PurchaseItemNumModal() {
                 {!purchaseOrderView && (
                   <tr>
                     <td className={clsx('px-4 py-3')} colSpan={6}>
-                      <div className={clsx('text-center text-sm text-black-600')}>
+                      <div className={clsx('text-black-600 text-center text-sm')}>
                         申請がありません
                       </div>
                     </td>
@@ -302,18 +328,18 @@ export default function PurchaseItemNumModal() {
         <div className={clsx('col-span-1 grid')} />
       </div>
       <div className={clsx('grid w-full grid-cols-12 pb-5')}>
-        <div className={clsx('col-span-1 grid h-100')} />
+        <div className={clsx('h-100 col-span-1 grid')} />
         <div
           className={clsx(
             `
-              text-md col-span-10 grid h-100 w-full justify-items-center pr-3
-              text-black-600
+              text-md h-100 text-black-600 col-span-10 grid w-full justify-items-center
+              pr-3
             `,
           )}
         >
           <div
             className={clsx(`
-              text-md grid h-100 w-full justify-items-center pb-3 text-black-600
+              text-md h-100 text-black-600 grid w-full justify-items-center pb-3
             `)}
           >
             申請を選択してください
@@ -350,7 +376,7 @@ export default function PurchaseItemNumModal() {
             </div>
           </div>
         </div>
-        <div className={clsx('col-span-1 grid h-100')} />
+        <div className={clsx('h-100 col-span-1 grid')} />
       </div>
       <div className={clsx('grid justify-items-center px-1')}></div>
     </Modal>

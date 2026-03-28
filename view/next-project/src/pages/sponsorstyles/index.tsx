@@ -50,17 +50,17 @@ export default function SponsorStyleList(props: Props) {
           <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr>
-                <th className='border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>協賛内容</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>協賛内容</p>
                 </th>
-                <th className='border-b border-b-primary-1 py-3'>
-                  <p className='mr-1 text-center text-sm text-black-600'>オプション</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 mr-1 text-center text-sm'>オプション</p>
                 </th>
-                <th className='border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>金額</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>金額</p>
                 </th>
-                <th className='border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'></p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'></p>
                 </th>
               </tr>
             </thead>
@@ -69,18 +69,20 @@ export default function SponsorStyleList(props: Props) {
                 <tr
                   className={clsx(
                     index !== sponsorStyleList.length - 1 &&
-                      `border-b`,
+                      `
+                    border-b
+                  `,
                   )}
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.style}</p>
+                    <p className='text-black-600 text-center text-sm'>{sponsorStyleItem.style}</p>
                   </td>
                   <td>
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.feature}</p>
+                    <p className='text-black-600 text-center text-sm'>{sponsorStyleItem.feature}</p>
                   </td>
                   <td className='py-3'>
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.price}</p>
+                    <p className='text-black-600 text-center text-sm'>{sponsorStyleItem.price}</p>
                   </td>
                   <td>
                     <div className='flex flex-row gap-3'>
@@ -99,7 +101,7 @@ export default function SponsorStyleList(props: Props) {
       </Card>
       <div
         className='
-          fixed right-4 bottom-4
+          fixed bottom-4 right-4
           md:hidden
         '
       >

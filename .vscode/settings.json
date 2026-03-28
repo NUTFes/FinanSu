@@ -1,11 +1,13 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "prettier.requireConfig": true,
+  "prettier.prettierPath": "${workspaceFolder}/view/next-project/node_modules/prettier/index.js",
   "eslint.workingDirectories": ["./view/next-project"],
+  "eslint.useFlatConfig": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
-    "source.fixAll.prettier": "always",
-    "source.organizeImports": "always"
+    "source.fixAll.prettier": "always"
   },
   "[go]": {
     "editor.defaultFormatter": "golang.go"

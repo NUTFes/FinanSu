@@ -101,7 +101,7 @@ export default function ResetPassword(props: Props) {
           />
           <p
             className='
-              text-2xl text-black-600
+              text-black-600 text-2xl
               md:text-3xl
             '
           >
@@ -118,7 +118,7 @@ export default function ResetPassword(props: Props) {
                       <p
                         className='
                           md:text-md
-                          text-sm whitespace-nowrap text-black-300
+                          text-black-300 whitespace-nowrap text-sm
                         '
                       >
                         パスワード
@@ -126,7 +126,7 @@ export default function ResetPassword(props: Props) {
                       <input
                         type='password'
                         className='
-                          col-span-2 w-full border-b border-b-primary-1 p-1
+                          border-b-primary-1 col-span-2 w-full border-b p-1
                         '
                         {...register('password', {
                           required: 'パスワードは必須です。',
@@ -139,7 +139,7 @@ export default function ResetPassword(props: Props) {
                       <p
                         className='
                           md:text-md
-                          text-sm whitespace-nowrap text-black-300
+                          text-black-300 whitespace-nowrap text-sm
                         '
                       >
                         パスワード確認
@@ -147,7 +147,7 @@ export default function ResetPassword(props: Props) {
                       <input
                         type='password'
                         className='
-                          col-span-2 w-full border-b border-b-primary-1 p-1
+                          border-b-primary-1 col-span-2 w-full border-b p-1
                         '
                         {...register('confirmPassword', {
                           required: 'パスワードは必須です。',
@@ -162,7 +162,9 @@ export default function ResetPassword(props: Props) {
                       />
                     </div>
                     <div
-                      className='mb-5 flex flex-col items-center justify-center'
+                      className='
+                      mb-5 flex flex-col items-center justify-center
+                    '
                     >
                       <p className='text-red-500'>{errors.password && errors.password.message}</p>
                       <p className='text-red-500'>
@@ -190,10 +192,10 @@ export default function ResetPassword(props: Props) {
         ) : (
           <div className='my-20 flex w-full flex-col items-center'>
             <div className='mb-10 flex flex-col items-center gap-3'>
-              <p className='text-lg whitespace-nowrap text-black-300'>
+              <p className='text-black-300 whitespace-nowrap text-lg'>
                 リンクが無効もしくは、有効期限が切れています。
               </p>
-              <p className='text-lg whitespace-nowrap text-black-300'>
+              <p className='text-black-300 whitespace-nowrap text-lg'>
                 再度パスワードリセットメールを送信して下さい。
               </p>
             </div>

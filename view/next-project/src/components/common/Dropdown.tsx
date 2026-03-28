@@ -36,9 +36,9 @@ const Dropdown = (props: Props) => {
             onClick={() => setIsOpen(!isOpen)}
             type='button'
             className='
-              inline-flex w-full justify-center px-4 text-xl transition
-              duration-150 ease-in-out
-              focus:outline-hidden
+              focus:outline-hidden inline-flex w-full justify-center px-4 text-xl
+              transition duration-150
+              ease-in-out
             '
             id='options-menu'
             aria-haspopup='true'
@@ -59,7 +59,7 @@ const Dropdown = (props: Props) => {
                 pt-2 shadow-lg
               '
             >
-              <div className='rounded-md bg-white shadow-2xs'>
+              <div className='shadow-2xs rounded-md bg-white'>
                 <div
                   className='py-1'
                   role='menu'

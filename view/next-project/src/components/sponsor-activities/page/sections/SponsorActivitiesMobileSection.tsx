@@ -54,11 +54,11 @@ export default function SponsorActivitiesMobileSection({
         {sponsorshipActivities.map((activity) => (
           <Card key={activity.id}>
             <div className='flex flex-col gap-3 p-4'>
-              <div className='text-lg font-medium text-black-300'>{activity.sponsor?.name}</div>
+              <div className='text-black-300 text-lg font-medium'>{activity.sponsor?.name}</div>
               <div
                 className='
-                  grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm
-                  text-black-600
+                  text-black-600 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2
+                  text-sm
                 '
               >
                 <span>担当者</span>
@@ -71,7 +71,7 @@ export default function SponsorActivitiesMobileSection({
                 <span>{getDesignProgressLabel(activity.designProgress)}</span>
               </div>
               <div>
-                <p className='mb-1 text-sm text-black-600'>協賛スタイル</p>
+                <p className='text-black-600 mb-1 text-sm'>協賛スタイル</p>
                 <SponsorStyleList
                   styles={activity.sponsorStyles}
                   textMaxWidthClassName='max-w-[14rem]'
@@ -97,9 +97,9 @@ export default function SponsorActivitiesMobileSection({
           </Card>
         ))}
         {sponsorshipActivities.length === 0 && (
-          <div className='my-5 text-center text-sm text-black-600'>データがありません</div>
+          <div className='text-black-600 my-5 text-center text-sm'>データがありません</div>
         )}
-        <div className='mt-3 flex justify-end text-sm text-black-600'>
+        <div className='text-black-600 mt-3 flex justify-end text-sm'>
           合計金額：{totalAmount.toLocaleString()} 円
         </div>
       </div>

@@ -219,8 +219,8 @@ export default function BudgetManagement(props: Props) {
                 value={financialRecordId ?? ''}
                 onChange={handleFinancialRecordChange}
                 className='
-                  border-b border-black-300
-                  focus:outline-hidden
+                  border-black-300 focus:outline-hidden
+                  border-b
                 '
               >
                 <option value=''>ALL</option>
@@ -243,8 +243,8 @@ export default function BudgetManagement(props: Props) {
                 value={divisionId ?? ''}
                 onChange={handleDivisionChange}
                 className='
-                  border-b border-black-300
-                  focus:outline-hidden
+                  border-black-300 focus:outline-hidden
+                  border-b
                 '
               >
                 <option value=''>ALL</option>
@@ -289,11 +289,13 @@ export default function BudgetManagement(props: Props) {
           </div>
         </div>
         <div className='mt-5 overflow-x-auto'>
-          <table className='w-full table-auto border-collapse text-nowrap'>
+          <table className='text-nowrap w-full table-auto border-collapse'>
             <thead>
-              <tr className='border-b border-b-primary-1 py-3'>
+              <tr className='border-b-primary-1 border-b py-3'>
                 <th
-                  className='w-1/4 pb-2 text-center font-medium text-black-600'
+                  className='
+                  text-black-600 w-1/4 pb-2 text-center font-medium
+                '
                 >
                   {title}
                 </th>
@@ -301,21 +303,21 @@ export default function BudgetManagement(props: Props) {
                   <>
                     <th
                       className='
-                        w-1/4 pb-2 text-center font-medium text-black-600
+                        text-black-600 w-1/4 pb-2 text-center font-medium
                       '
                     >
                       予算
                     </th>
                     <th
                       className='
-                        w-1/4 pb-2 text-center font-medium text-black-600
+                        text-black-600 w-1/4 pb-2 text-center font-medium
                       '
                     >
                       使用額
                     </th>
                     <th
                       className='
-                        w-1/4 pb-2 text-center font-medium text-black-600
+                        text-black-600 w-1/4 pb-2 text-center font-medium
                       '
                     >
                       残高
@@ -336,7 +338,7 @@ export default function BudgetManagement(props: Props) {
                   >
                     <td className='flex justify-center gap-2 py-3'>
                       <div
-                        className='text-center text-primary-1'
+                        className='text-primary-1 text-center'
                         onClick={() => handleRowClick(item)}
                       >
                         {item.name}
@@ -365,7 +367,7 @@ export default function BudgetManagement(props: Props) {
                   </tr>
                 ))}
               {showBudgetColumns && displayItems && displayItems.length > 0 && (
-                <tr className='border-t border-t-primary-1'>
+                <tr className='border-t-primary-1 border-t'>
                   <td className='py-3 text-center font-bold'>合計</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalBudget)}</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalExpense)}</td>

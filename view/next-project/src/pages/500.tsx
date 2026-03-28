@@ -6,7 +6,9 @@ export default function Custom500() {
   return (
     <div className='flex h-screen flex-col'>
       <header
-        className='flex h-16 w-full items-center justify-center bg-primary-4'
+        className='
+        bg-primary-4 flex h-16 w-full items-center justify-center
+      '
       >
         <div
           className='
@@ -19,7 +21,9 @@ export default function Custom500() {
             alt='FinanSu'
             width={150}
             height={40}
-            className='size-fit'
+            className='
+            size-fit
+          '
           />
         </div>
       </header>

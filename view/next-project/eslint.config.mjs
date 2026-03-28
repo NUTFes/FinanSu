@@ -1,7 +1,7 @@
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import nextVitals from 'eslint-config-next/core-web-vitals';
-import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import _import from 'eslint-plugin-import';
 import storybook from 'eslint-plugin-storybook';
 import unusedImports from 'eslint-plugin-unused-imports';
@@ -16,16 +16,6 @@ const __dirname = path.dirname(__filename);
 export default defineConfig([
   ...nextVitals,
   ...storybook.configs['flat/recommended'],
-
-  {
-    extends: [eslintPluginBetterTailwindcss.configs['recommended-warn']],
-    settings: {
-      'better-tailwindcss': {
-        // Tailwind CSS v4: CSS-based configuration entry file
-        entryPoint: 'src/styles/globals.css',
-      },
-    },
-  },
 
   globalIgnores([
     // Default ignores of eslint-config-next
@@ -132,4 +122,5 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': 'off',
     },
   },
+  eslintConfigPrettier,
 ]);

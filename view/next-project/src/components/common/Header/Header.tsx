@@ -32,8 +32,8 @@ const Header = (props: HeaderProps) => {
     <>
       <div
         className='
-          fixed top-0 left-0 z-10 flex h-16 w-full flex-row items-center gap-5
-          border-b-2 border-primary-1 bg-primary-4 px-3
+          border-primary-1 bg-primary-4 fixed left-0 top-0 z-10 flex h-16 w-full flex-row
+          items-center gap-5 border-b-2 px-3
           md:px-10
         '
       >
@@ -42,7 +42,7 @@ const Header = (props: HeaderProps) => {
             if (onSideNavOpen) onSideNavOpen();
           }}
           className='
-            hidden text-white-0
+            text-white-0 hidden
             md:block
           '
         >
@@ -59,12 +59,14 @@ const Header = (props: HeaderProps) => {
             alt='logo'
             width={150}
             height={40}
-            className='size-fit'
+            className='
+            size-fit
+          '
           />
         </div>
         <div
           className='
-            ml-auto flex flex-row items-center gap-5 text-lg text-white-0
+            text-white-0 ml-auto flex flex-row items-center gap-5 text-lg
           '
         >
           <UserDropdown

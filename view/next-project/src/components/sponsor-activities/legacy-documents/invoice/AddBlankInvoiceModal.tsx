@@ -181,15 +181,17 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
         </div>
         <p
           className='
-            mx-auto mb-4 w-fit text-2xl/8 font-thin tracking-widest
-            text-black-600
+            text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin
+            tracking-widest
           '
         >
           請求書の発行（手入力）
         </p>
 
         <div
-          className='flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4'
+          className='
+          flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4
+        '
         >
           <div className='w-1/2 overflow-y-auto pr-4'>
             <div className='grid grid-cols-1 gap-4'>
@@ -256,7 +258,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   <div className='col-span-1'></div>
                 </div>
 
-                <div className='mb-4 max-h-75 space-y-2 overflow-y-auto'>
+                <div className='max-h-75 mb-4 space-y-2 overflow-y-auto'>
                   {items.map((item) => (
                     <div
                       key={item.id}

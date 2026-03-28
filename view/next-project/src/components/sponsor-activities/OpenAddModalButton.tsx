@@ -21,8 +21,8 @@ export default function OpenAddModalButton(props: Props) {
     <>
       <AddButton
         className='
-          fixed right-4 bottom-4
-          md:static md:right-auto md:bottom-auto md:z-auto
+          fixed bottom-4 right-4
+          md:static md:bottom-auto md:right-auto md:z-auto
         '
         onClick={() => {
           setIsOpen(true);

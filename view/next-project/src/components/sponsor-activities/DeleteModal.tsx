@@ -26,8 +26,8 @@ const SponsorActivitiesDeleteModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='w-fit px-15 py-12.5' onClick={onClose}>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>本当に削除しますか？</div>
+    <Modal className='px-15 py-12.5 w-fit' onClick={onClose}>
+      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>本当に削除しますか？</div>
       <div className='flex flex-row justify-center gap-4'>
         <OutlinePrimaryButton onClick={onClose}>キャンセル</OutlinePrimaryButton>
         <PrimaryButton

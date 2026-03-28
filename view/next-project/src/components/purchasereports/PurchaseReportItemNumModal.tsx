@@ -97,8 +97,8 @@ export default function PurchaseReportItemNumModal() {
         <div className='ml-auto w-fit'>
           <CloseButton onClick={closeModal} />
         </div>
-        <p className='mx-auto mb-10 w-fit text-xl text-black-600'>購入報告単体で登録</p>
-        <p className='mx-auto w-fit text-black-600'>報告する物品の個数を入力してください</p>
+        <p className='text-black-600 mx-auto mb-10 w-fit text-xl'>購入報告単体で登録</p>
+        <p className='text-black-600 mx-auto w-fit'>報告する物品の個数を入力してください</p>
         <div>
           <div className='my-10 flex justify-center gap-5'>
             <p className='text-black-600'>購入物品数</p>
