@@ -1,17 +1,10 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { RecoilRoot } from 'recoil';
 import { Header } from '@components/common';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof Header> = {
   title: 'FinanSu/common/Header',
   component: Header,
-  decorators: [
-    (Story) => (
-      <RecoilRoot>
-        <Story />
-      </RecoilRoot>
-    ),
-  ],
   tags: ['autodocs'],
   argTypes: {},
 };

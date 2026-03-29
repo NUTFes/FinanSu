@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { AddButton } from '../common';
 import { Department } from '@/type/common';
+import { AddButton } from '@components/common';
 import AddModal from '@components/teacher/AddModal';
 
 interface Props {

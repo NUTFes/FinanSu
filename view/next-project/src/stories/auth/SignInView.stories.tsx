@@ -1,17 +1,10 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { RecoilRoot } from 'recoil';
 import { SignInView } from '@components/auth';
+
+import type { Meta, StoryFn } from '@storybook/react';
 
 const meta: Meta<typeof SignInView> = {
   title: 'FinanSu/auth/SignInView',
   component: SignInView,
-  decorators: [
-    (Story) => (
-      <RecoilRoot>
-        <Story />
-      </RecoilRoot>
-    ),
-  ],
   tags: ['autodocs'],
   argTypes: {},
 };

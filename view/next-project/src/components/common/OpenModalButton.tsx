@@ -1,9 +1,7 @@
-import { ChakraProvider, Button } from '@chakra-ui/react';
 import * as React from 'react';
 import { useState } from 'react';
 
 import RegistModal from './RegistModal';
-import theme from '@assets/theme';
 
 interface Props {
   width?: string;
@@ -17,17 +15,20 @@ const OpenModalButton: React.FC<Props> = ({ children, width, height }) => {
     setShowModal(true);
   };
   return (
-    <ChakraProvider theme={theme}>
-      <Button
-        color='white'
-        bgGradient='linear(to-br, primary.1, primary.2)'
+    <>
+      <button
+        className='
+          bg-linear-to-br from-primary-1 to-primary-2 text-white-0 hover:from-primary-2 hover:to-primary-1
+          rounded-md px-4
+          py-2 transition-all
+        '
         style={{ height, width }}
         onClick={ShowModal}
       >
         {children}
-      </Button>
+      </button>
       <RegistModal openModal={showModal} setShowModal={setShowModal} />
-    </ChakraProvider>
+    </>
   );
 };
 

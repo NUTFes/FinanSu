@@ -1,5 +1,6 @@
 import router from 'next/router';
 import { useState } from 'react';
+
 import { Expense, PurchaseOrder, PurchaseReportView } from '@/type/common';
 import { put } from '@/utils/api/purchaseOrder';
 import {
@@ -47,11 +48,15 @@ export const DetailEditModal: React.FC<{
       <div className='ml-auto w-fit'>
         <CloseButton onClick={setIsOpen} />
       </div>
-      <div className='mx-auto mb-10 w-fit text-xl text-black-600'>
+      <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>
         <p>購入した局と期限日を修正</p>
       </div>
-      <div className='mx-auto my-6 grid w-9/10 grid-cols-4 items-center justify-items-center gap-4'>
-        <p className='text-lg text-black-600'>購入した局</p>
+      <div
+        className='
+          w-9/10 mx-auto my-6 grid grid-cols-4 place-items-center gap-4
+        '
+      >
+        <p className='text-black-600 text-lg'>購入した局</p>
         <div className='col-span-3 w-full'>
           <Select
             value={formData.expenseID}
@@ -65,7 +70,7 @@ export const DetailEditModal: React.FC<{
             {!expenses.length && <option>局・団体が登録されていません</option>}
           </Select>
         </div>
-        <p className='text-lg text-black-600'>期限日</p>
+        <p className='text-black-600 text-lg'>期限日</p>
         <div className='col-span-3 w-full'>
           <Input
             type='date'

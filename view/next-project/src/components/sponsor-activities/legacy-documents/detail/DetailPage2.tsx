@@ -1,0 +1,435 @@
+import { clsx } from 'clsx';
+import { saveAs } from 'file-saver';
+import Image from 'next/image';
+import { FC, useEffect, useState } from 'react';
+import { FaCheckCircle, FaChevronCircleLeft } from 'react-icons/fa';
+import { FiPlusSquare } from 'react-icons/fi';
+import { RiCloseCircleLine } from 'react-icons/ri';
+
+import {
+  DeleteButton,
+  EditButton,
+  Input,
+  Loading,
+  OutlinePrimaryButton,
+  PrimaryButton,
+  Select,
+} from '@/components/common';
+import { del, post, put } from '@/utils/api/api_methods';
+import { DESIGN_PROGRESSES } from '@constants/designProgresses';
+import { SponsorActivityInformation, SponsorActivityView } from '@type/common';
+
+import UplaodFileModal from './UploadFileModal';
+
+interface ModalProps {
+  setPageNum: (isOpen: number) => void;
+  children?: React.ReactNode;
+  id: React.ReactNode;
+  sponsorActivitiesViewItem: SponsorActivityView;
+  year: string;
+  setIsChange: (isChange: boolean) => void;
+  setSponsorActivitiesView: (sponsorActivitiesView: SponsorActivityView) => void;
+}
+
+const DetailPage2: FC<ModalProps> = (props) => {
+  const { year } = props;
+  const toPage1 = () => {
+    props.setPageNum(1);
+  };
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [editActivityInformation, setEditActivityInformation] =
+    useState<SponsorActivityInformation>();
+  const [activityInformationData, setActivityInformationData] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [sponsorActivityInformations, setSponsorActivityInformations] = useState<
+    SponsorActivityInformation[]
+  >(props.sponsorActivitiesViewItem.sponsorActivityInformations || []);
+  const [isEditInformations, setIsEditInformations] = useState<boolean[]>(
+    sponsorActivityInformations.map(() => {
+      return false;
+    }),
+  );
+
+  useEffect(() => {
+    const newSponsorActivitiesView = {
+      ...props.sponsorActivitiesViewItem,
+      sponsorActivityInformations: sponsorActivityInformations,
+    };
+    props.setSponsorActivitiesView(newSponsorActivitiesView);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sponsorActivityInformations]);
+
+  const designProgresses =
+    sponsorActivityInformations &&
+    sponsorActivityInformations.map((activityInformation) => {
+      const designProgress = DESIGN_PROGRESSES.filter(
+        (design) => design.id === activityInformation.designProgress,
+      );
+      return designProgress[0];
+    });
+
+  const fileURLs =
+    sponsorActivityInformations &&
+    sponsorActivityInformations.map((activityInformation) => {
+      const bucketName = activityInformation.bucketName;
+      const fileName = activityInformation.fileName;
+      return `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/${bucketName}/${year}/advertisements/${fileName}`;
+    });
+
+  const download = async (url: string, fileName: string) => {
+    setIsLoading(true);
+    const response = await fetch(url);
+    const blob = await response.blob();
+    saveAs(blob, fileName);
+    setIsLoading(false);
+  };
+
+  const handleDelete = async (id: number, activityInformation: SponsorActivityInformation) => {
+    //オブジェクト削除
+    const formData = new FormData();
+    formData.append('fileName', `${activityInformation.fileName}`);
+    formData.append('year', year);
+
+    const deleteSponsorActivityInformationUrl =
+      process.env.CSR_API_URI + '/activity_informations/' + String(id);
+    const newSponsorActivityInformations = sponsorActivityInformations.filter(
+      (sponsorActivityInformation) => sponsorActivityInformation.id !== id,
+    );
+    if (activityInformation.fileName === '') {
+      await del(deleteSponsorActivityInformationUrl);
+    } else {
+      const confirm = window.confirm('本当に削除してよろしいですか？');
+      if (confirm) {
+        await fetch('/api/advertisements', {
+          method: 'DELETE',
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              return true;
+            } else {
+              alert('削除に失敗');
+              return false;
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+        await del(deleteSponsorActivityInformationUrl);
+      } else {
+        window.alert('キャンセルしました');
+        return;
+      }
+    }
+    setSponsorActivityInformations(newSponsorActivityInformations);
+    props.setIsChange(true);
+  };
+
+  const createInfomation = async () => {
+    const sponsorActivitiesUrl = process.env.CSR_API_URI + '/activity_informations';
+    const nullData = {
+      activityID: props.sponsorActivitiesViewItem.sponsorActivity.id || 0,
+      bucketName: '',
+      fileName: '',
+      fileType: '',
+      designProgress: 1,
+      fileInformation: '',
+    };
+    const createdInfo = await post(sponsorActivitiesUrl, nullData);
+    const newSponsorActivityInformations = [...sponsorActivityInformations, createdInfo];
+    setSponsorActivityInformations(newSponsorActivityInformations);
+    setIsEditInformations([...isEditInformations, false]);
+    props.setIsChange(true);
+  };
+
+  const handleUpdateProgress = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    activityInformation: SponsorActivityInformation,
+  ) => {
+    const sponsorActivitiesUrl =
+      process.env.CSR_API_URI + '/activity_informations/' + activityInformation.id;
+    const updateActivityInformation = {
+      ...activityInformation,
+      designProgress: Number(e.target.value),
+    };
+    await put(sponsorActivitiesUrl, updateActivityInformation);
+    const newSponsorActivityInformations = sponsorActivityInformations.map(
+      (sponsorActivityInformation) => {
+        if (sponsorActivityInformation.id === activityInformation.id) {
+          return updateActivityInformation;
+        }
+        return sponsorActivityInformation;
+      },
+    );
+    setSponsorActivityInformations(newSponsorActivityInformations);
+    props.setIsChange(true);
+  };
+
+  const handleUpdateInformation = async (activityInformation: SponsorActivityInformation) => {
+    const sponsorActivitiesUrl =
+      process.env.CSR_API_URI + '/activity_informations/' + activityInformation.id;
+    const updateActivityInformation = {
+      ...activityInformation,
+      fileInformation: activityInformationData,
+    };
+    await put(sponsorActivitiesUrl, updateActivityInformation);
+    const newSponsorActivityInformations = sponsorActivityInformations.map(
+      (sponsorActivityInformation) => {
+        if (sponsorActivityInformation.id === activityInformation.id) {
+          return updateActivityInformation;
+        }
+        return sponsorActivityInformation;
+      },
+    );
+    setSponsorActivityInformations(newSponsorActivityInformations);
+    props.setIsChange(true);
+    setIsEditInformations(
+      isEditInformations.map(() => {
+        return false;
+      }),
+    );
+  };
+
+  return (
+    <>
+      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>協賛スタイル</p>
+      <table className='mb-4 w-full table-fixed border-collapse'>
+        <thead>
+          <tr className='border-b-primary-1 border-b py-3'>
+            <th className='w-1/4 px-6 pb-2'>
+              <div className='text-black-600 text-center text-sm'>協賛内容</div>
+            </th>
+            <th className='w-1/4 px-6 pb-2'>
+              <div className='text-black-600 text-center text-sm'>オプション</div>
+            </th>
+            <th className='w-1/4 px-6 pb-2'>
+              <div className='text-black-600 text-center text-sm'>値段</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.sponsorActivitiesViewItem.styleDetail ? (
+            props.sponsorActivitiesViewItem.styleDetail.map((styleDetail, index) => (
+              <tr
+                key={index}
+                className={clsx({
+                  'border-b-primary-1 border-b':
+                    index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
+                })}
+              >
+                <td className='py-3'>
+                  <div className='text-center text-sm'>{styleDetail.sponsorStyle.style}</div>
+                </td>
+                <td className='py-3'>
+                  <div className='text-center text-sm'>{styleDetail.sponsorStyle.feature}</div>
+                </td>
+                <td className='py-3'>
+                  <div className='text-center text-sm'>{styleDetail.sponsorStyle.price} 円</div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr className='border-b-primary-1 border-b'>
+              <td colSpan={3} className='py-3'>
+                <div className='text-center text-sm text-red-500'>
+                  協賛スタイルを登録してください
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>広告デザイン</p>
+      <div className='max-h-60 overflow-auto'>
+        {sponsorActivityInformations &&
+          sponsorActivityInformations.map((activityInformation, index) => (
+            <>
+              <div
+                className='
+                  border-primary-1 m-0 flex flex-row-reverse border-t p-0
+                '
+              >
+                <div className='mt-2 w-1/12'>
+                  <button className=''>
+                    <DeleteButton
+                      onClick={() => handleDelete(activityInformation.id || 0, activityInformation)}
+                    />
+                  </button>
+                </div>
+                <div className='w-11/12' />
+              </div>
+              <div className='flex flex-col flex-wrap justify-center'>
+                <div className='my-1 flex justify-center'>
+                  <div className='flex w-fit items-center justify-center gap-3'>
+                    <p className='w-25 text-black-600 whitespace-nowrap'>広告状況</p>
+                    <Select
+                      value={designProgresses[index].id}
+                      className='w-28 py-2'
+                      onChange={(e) => {
+                        handleUpdateProgress(e, activityInformation);
+                      }}
+                    >
+                      {DESIGN_PROGRESSES.map((designProgress) => {
+                        return (
+                          <option value={designProgress.id} key={designProgress.id}>
+                            {designProgress.state}
+                          </option>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                </div>
+                <div className='my-1 ml-4 flex flex-wrap justify-center gap-7'>
+                  <div className='flex items-center justify-center gap-3'>
+                    <p className='text-black-600'>情報</p>
+                    {isEditInformations[index] ? (
+                      <>
+                        <Input
+                          value={activityInformationData}
+                          className='w-40'
+                          onChange={(e) => {
+                            setActivityInformationData(e.target.value);
+                          }}
+                        />
+                        <RiCloseCircleLine
+                          size={'32px'}
+                          color={'gray'}
+                          className='cursor-pointer'
+                          onClick={() => {
+                            setIsEditInformations(
+                              isEditInformations.map(() => {
+                                return false;
+                              }),
+                            );
+                          }}
+                        />
+                        <FaCheckCircle
+                          size={'28px'}
+                          className='cursor-pointer'
+                          onClick={() => {
+                            handleUpdateInformation(activityInformation);
+                          }}
+                        />
+                      </>
+                    ) : activityInformation.fileInformation.trim() === '' ? (
+                      <p className='w-30 border-primary-1 border-b'>&emsp; &emsp;</p>
+                    ) : (
+                      <p className='border-primary-1 border-b'>
+                        {activityInformation.fileInformation}
+                      </p>
+                    )}
+                    {!isEditInformations[index] && (
+                      <EditButton
+                        onClick={() => {
+                          const newIsEditInformations = isEditInformations.map(
+                            (isEditInformation, editIndex) => {
+                              return index === editIndex;
+                            },
+                          );
+                          setActivityInformationData(activityInformation.fileInformation || '');
+                          setIsEditInformations(newIsEditInformations);
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className='flex flex-wrap justify-center'>
+                {activityInformation?.fileType === 'application/pdf' &&
+                  activityInformation?.fileName && (
+                    <embed src={fileURLs && fileURLs[index]} type='application/pdf' width='200' />
+                  )}
+                {activityInformation.fileType !== 'application/pdf' &&
+                  activityInformation.fileName && (
+                    <Image
+                      src={fileURLs && fileURLs[index]}
+                      alt='Picture of the author'
+                      width={160}
+                      height={160}
+                      style={{ width: 'auto', height: 'auto' }}
+                    />
+                  )}
+              </div>
+              <div className='my-1 flex flex-wrap justify-center gap-7'>
+                {activityInformation.fileName !== '' && (
+                  <div className='my-2 flex flex-wrap justify-center gap-2'>
+                    <OutlinePrimaryButton
+                      className='p-1'
+                      onClick={() => {
+                        setEditActivityInformation(activityInformation);
+                        setIsOpen(true);
+                      }}
+                    >
+                      変更
+                    </OutlinePrimaryButton>
+                    <PrimaryButton
+                      onClick={() =>
+                        fileURLs && download(fileURLs[index], activityInformation.fileName || '')
+                      }
+                      disabled={isLoading}
+                    >
+                      ダウンロード
+                    </PrimaryButton>
+                  </div>
+                )}
+                {activityInformation.fileName === '' && (
+                  <div className='my-2 flex flex-wrap justify-center gap-2'>
+                    <OutlinePrimaryButton
+                      className='mx-auto my-2'
+                      onClick={() => {
+                        setEditActivityInformation(activityInformation);
+                        setIsOpen(true);
+                      }}
+                    >
+                      広告登録
+                    </OutlinePrimaryButton>
+                  </div>
+                )}
+              </div>
+              {isLoading && <Loading />}
+            </>
+          ))}
+        <div
+          className='
+            border-primary-1 my-1 flex flex-wrap justify-center gap-7 border-t
+            p-2
+          '
+        >
+          <button
+            className='
+              hover:bg-grey-300
+              rounded-sm
+            '
+          >
+            <FiPlusSquare size={30} onClick={() => createInfomation()} />
+          </button>
+        </div>
+      </div>
+      <div className='mt-2'>
+        <button
+          onClick={() => toPage1()}
+          className='
+            hover:bg-grey-300
+            rounded-full
+          '
+        >
+          <FaChevronCircleLeft size={30} />
+        </button>
+      </div>
+      {isOpen && (
+        <UplaodFileModal
+          setIsOpen={setIsOpen}
+          id={props.sponsorActivitiesViewItem.sponsorActivity.id || 0}
+          activityInformation={editActivityInformation}
+          sponsorActivityInformations={sponsorActivityInformations}
+          setSponsorActivityInformations={setSponsorActivityInformations}
+          setIsChange={props.setIsChange}
+          year={year}
+        />
+      )}
+    </>
+  );
+};
+
+export default DetailPage2;

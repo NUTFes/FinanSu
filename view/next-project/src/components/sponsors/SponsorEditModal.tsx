@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -46,25 +45,25 @@ export default function SponsorEditModal(props: Props) {
           <CloseButton onClick={() => props.setIsOpen(false)} />
         </div>
       </div>
-      <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>企業情報編集</h1>
-      <div className='my-6 grid grid-cols-5 items-center justify-items-center gap-4'>
-        <p className='col-span-1 text-black-600'>企業名</p>
+      <h1 className='text-black-600 mx-auto mb-10 w-fit text-xl'>企業情報編集</h1>
+      <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
+        <p className='text-black-600 col-span-1'>企業名</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.name} onChange={handler('name')} />
         </div>
-        <p className='col-span-1 text-black-600'>電話番号</p>
+        <p className='text-black-600 col-span-1'>電話番号</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.tel} onChange={handler('tel')} />
         </div>
-        <p className='col-span-1 text-black-600'>メール</p>
+        <p className='text-black-600 col-span-1'>メール</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.email} onChange={handler('email')} />
         </div>
-        <p className='col-span-1 text-black-600'>住所</p>
+        <p className='text-black-600 col-span-1'>住所</p>
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.address} onChange={handler('address')} />
         </div>
-        <p className='col-span-1 text-black-600'>代表者</p>
+        <p className='text-black-600 col-span-1'>代表者</p>
         <div className='col-span-4 w-full'>
           <Input
             className='w-full'
@@ -74,11 +73,11 @@ export default function SponsorEditModal(props: Props) {
         </div>
       </div>
       <label>
-        <div className='my-6 flex w-full justify-center '>
+        <div className='my-6 flex w-full justify-center'>
           <div>
             <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
           </div>
-          <p className='ml-4 text-black-600 '>
+          <p className='text-black-600 ml-4'>
             企業名が正確である。※株式会社などがついている正しいものか
           </p>
         </div>

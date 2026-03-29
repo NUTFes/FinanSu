@@ -1,15 +1,16 @@
 # FinanSu
 
-FinanSu は、NUTFes/NUTMeg の財務管理システムです。OpenAPI 駆動開発により、Go + Next.js で構築されています。
+FinanSu は、NUTFes/NUTMEG の財務管理システムです。OpenAPI 駆動開発により、Go + Next.js で構築されています。
 
 ## 技術スタック (Tech Stack)
 
 ### Backend (API)
 
 - **Language**: Go 1.23+ with Echo framework
-- **Database**: MySQL 8.0 + GORM
+- **Database**: MySQL 8.0 + Goqu
 - **Storage**: MinIO (S3-compatible)
 - **Code Generation**: oapi-codegen (OpenAPI)
+- **Dependency Injection**: google/wire
 - **Testing**: Go test with testfixtures
 
 ### Frontend (View)
@@ -106,6 +107,7 @@ graph TB
             Domain[Domain Models]
         end
         Generated[Generated Code<br/>OpenAPI]
+        DI[DI Container<br/>Wire]
     end
 
     subgraph "Infrastructure"
@@ -132,6 +134,11 @@ graph TB
     UseCases --> Domain
     Repositories --> MySQL
     Controllers --> MinIO
+
+    %% Dependency Injection
+    DI -.-> Controllers
+    DI -.-> UseCases
+    DI -.-> Repositories
 
     %% Code Generation
     OpenAPI --> Generated
@@ -162,7 +169,11 @@ graph TB
 ### アーキテクチャの特徴
 
 1. **OpenAPI 駆動開発**: 全ての型安全性が OpenAPI 仕様から生成
+   - OpenAPI 仕様からサーバーコード・TypeScript hooks を自動生成
+   - 生成されたハンドラーインターフェースに準拠した実装
 2. **Clean Architecture**: バックエンドは依存関係逆転により保守性を確保
+   - **依存性注入**: google/wire による自動依存解決
+   - 各層（Handler/UseCase/Repository）が疎結合で独立
 3. **型安全性**: フロントエンドからバックエンドまで一貫した型チェック
 4. **コンテナ化**: Docker Compose による一貫した開発環境
 
@@ -173,7 +184,11 @@ graph TB
   ├── main.go       # エントリーポイント
   ├── drivers/      # インフラ層 (DB, MinIO, server)
   ├── externals/    # コントローラー・リポジトリ
+  │   ├── handler/  # HTTPハンドラー（各層にwire.goあり）
+  │   └── repository/
   ├── internals/    # ドメイン・ユースケース
+  │   ├── di/       # 依存性注入の設定 (wire.go)
+  │   └── usecase/
   └── generated/    # OpenAPI自動生成コード
 
 /view/next-project/ # Next.js frontend
@@ -192,8 +207,19 @@ graph TB
 
 1. `/openapi/openapi.yaml` を編集して API 変更
 2. `make gen` で Go server コードと TypeScript hooks を再生成
-3. サーバーサイドロジックを controllers/use cases で実装
+   - `api/generated/openapi_gen.go`: サーバーコード・型定義・ルーティング
+   - `view/next-project/src/generated/`: TypeScript hooks
+3. サーバーサイドロジックを handlers/use cases で実装
+   - Handler は OpenAPI で生成されたインターフェースに準拠
+   - `generated.RegisterHandlers()` で自動的にルーティング登録
 4. 生成された hooks を React コンポーネントで使用
+
+### 依存性注入 (DI) ワークフロー
+
+- **Wire による自動依存解決**: `api/internals/di/wire.go` で各層の依存関係を統合
+- 各層に `wire.go` を配置し、ProviderSet を定義
+- `main.go` で `di.InitializeServer()` を呼び出すだけで全ての依存関係が解決
+- テスタビリティとメンテナンス性の向上
 
 ### 環境管理
 

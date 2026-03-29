@@ -1,4 +1,0 @@
-.root {
-  @apply mx-auto h-full bg-white-0 transition-colors duration-150;
-  max-width: 2460px;
-}

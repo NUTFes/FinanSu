@@ -1,4 +1,5 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
+
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
@@ -25,7 +26,7 @@ const DeleteConfirmModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>項目の削除</div>
+      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>項目の削除</div>
       <div className='mx-auto my-5 w-fit text-center'>
         <p className='text-lg'>この収支項目を削除しますか？</p>
         <p className='mt-2 text-sm text-red-600'>この操作は取り消せません。</p>

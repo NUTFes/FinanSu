@@ -1,4 +1,5 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
+
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 
 interface ModalProps {
@@ -24,7 +25,7 @@ const UncheckConfirmModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>確認状態の変更</div>
+      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>確認状態の変更</div>
       <div className='mx-auto my-5 w-fit text-center'>
         <p className='text-lg'>この項目を未確認状態に変更しますか？</p>
         <p className='mt-5 text-sm text-red-600'>

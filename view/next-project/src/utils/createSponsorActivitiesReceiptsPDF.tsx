@@ -2,22 +2,29 @@
 /* eslint-disable jsx-a11y/alt-text */
 import {
   Document,
-  Page,
-  Text,
   Font,
-  View,
-  pdf,
-  StyleSheet,
-  PDFViewer,
   Image,
+  Page,
+  pdf,
+  PDFViewer,
+  StyleSheet,
+  Text,
+  View,
 } from '@react-pdf/renderer';
 import React from 'react';
-import { formatDateToJapanese, calculateYearInfo } from './dateConverter';
+
 import { SponsorActivityView } from '@type/common';
+
+import { calculateYearInfo, formatDateToJapanese } from './dateConverter';
 
 Font.register({
   family: 'NotoSansJP',
-  src: 'https://fonts.gstatic.com/ea/notosansjapanese/v6/NotoSansJP-Regular.woff2',
+  src: '/fonts/NotoSansJP-Regular.ttf',
+});
+
+Font.registerEmojiSource({
+  format: 'png',
+  url: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/',
 });
 
 const styles = StyleSheet.create({

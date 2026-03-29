@@ -1,23 +1,17 @@
-import { Noto_Sans_JP } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { RiAddCircleLine } from 'react-icons/ri';
-import { useRecoilValue } from 'recoil';
+
 import { Card, Loading, PrimaryButton } from '@/components/common';
 import MainLayout from '@/components/layout/MainLayout';
 import TableSection from '@/components/mypage/TableSection';
 import { useGetFestivalItemsDetailsUserId } from '@/generated/hooks';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { User } from '@/type/common';
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  weight: ['100', '400', '700'],
-});
 
 const MyPage = () => {
   const router = useRouter();
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
 
   useEffect(() => {
@@ -40,9 +34,9 @@ const MyPage = () => {
   return (
     <MainLayout>
       <Card>
-        <div className={`mx-5 mt-10 min-h-[calc(100vh-12rem)] ${notoSansJP.className}`}>
+        <div className='mx-5 mt-10 min-h-[calc(100vh-12rem)]'>
           <div className='mb-8 flex items-center justify-between'>
-            <h2 className='text-2xl font-thin text-[#333]'>My Page</h2>
+            <h2 className='text-black-300 text-2xl font-thin'>My Page</h2>
             {resData && (
               <PrimaryButton onClick={handleCreatePurchaseReport}>
                 <div className='flex items-center gap-2'>

@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { Dispatch, FC, SetStateAction } from 'react';
+
 import { multiDel } from '@api/api_methods';
 import { Modal, CloseButton, OutlinePrimaryButton, PrimaryButton } from '@components/common';
 import { User } from '@type/common';
@@ -31,13 +32,18 @@ const UsersDeleteModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='font-thin md:w-1/2'>
+    <Modal
+      className='
+        font-thin
+        md:w-1/2
+      '
+    >
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl  text-black-600'>ユーザーの削除</div>
+      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>ユーザーの削除</div>
       <div className='mx-auto my-5 w-fit text-xl'>下記のユーザーを削除してよろしいですか？</div>
       <div className='m-4 flex max-h-60 flex-col overflow-y-auto'>
         {props.deleteUsers?.users.map((user) => {

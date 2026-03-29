@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
-import DeleteModal from '../users/DeleteModal';
+
 import { User } from '@type/common';
+
+import DeleteModal from '../users/DeleteModal';
 
 interface Props {
   children?: React.ReactNode;
@@ -19,7 +21,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
     if (props.isDisabled) {
       return 'cursor-default opacity-25';
     } else {
-      return 'cursor-pointer hover:bg-gradient-to-br hover:from-red-600 hover:to-red-500';
+      return 'cursor-pointer hover:bg-linear-to-br hover:from-red-600 hover:to-red-500';
     }
   }, [props.isDisabled]);
 
@@ -27,7 +29,11 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
     <>
       <button
         disabled={props.isDisabled}
-        className={`${buttonClass} flex h-9 w-9 min-w-0 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 p-0`}
+        className={`
+          ${buttonClass}
+          size-9 bg-linear-to-br flex min-w-0 items-center justify-center
+          rounded-full from-red-500 to-red-600 p-0
+        `}
         onClick={onOpen}
         suppressHydrationWarning
       >

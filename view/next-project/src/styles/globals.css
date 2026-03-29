@@ -1,3 +1,95 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
+    'Hiragino Sans', sans-serif;
+
+  --color-primary-1: #56daff;
+  --color-primary-2: #1dbcc5;
+  --color-primary-3: #e2e8f0;
+  --color-primary-4: #023859;
+  --color-primary-5: #04668c;
+
+  --color-accent-1: #e4434e;
+  --color-accent-2: #ff5b6c;
+
+  --color-base-1: #2e373f;
+  --color-base-2: #fff;
+
+  --color-black-0: #000;
+  --color-black-300: #333;
+  --color-black-600: #666;
+  --color-black-900: #999;
+
+  --color-grey-50: #f9fafb;
+  --color-grey-100: #f3f4f6;
+  --color-grey-200: #e5e7eb;
+  --color-grey-300: #d1d5db;
+
+  --color-white-0: #fff;
+  --color-white-100: #f2f2f2;
+
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+
+  --color-affairs: #3ca249;
+  --color-relation: #4f6fac;
+  --color-information: #e35874;
+  --color-finance: #eb6100;
+  --color-planning: #603085;
+  --color-production: #b2ac0f;
+
+  /* カスタム幅 */
+  --width-1\/7: 14.2857143%;
+  --width-2\/7: 28.5714286%;
+  --width-3\/7: 42.8571429%;
+  --width-4\/7: 57.1428571%;
+  --width-5\/7: 71.4285714%;
+  --width-6\/7: 85.7142857%;
+  --width-1\/8: 12.5%;
+  --width-2\/8: 25%;
+  --width-3\/8: 37.5%;
+  --width-4\/8: 50%;
+  --width-5\/8: 62.5%;
+  --width-6\/8: 75%;
+  --width-7\/8: 87.5%;
+}
+
+@utility text-shadow {
+  text-shadow: 0px 2px 3px darkgrey;
+}
+
+@utility text-shadow-md {
+  text-shadow: 0px 3px 3px darkgrey;
+}
+
+@utility text-shadow-logo {
+  text-shadow: 4px 2px 0px #333;
+}
+
+@utility text-shadow-none {
+  text-shadow: none;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  body {
+    font-family: var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
+      'Hiragino Sans', sans-serif;
+  }
+}

@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
 
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { get, post } from '@api/api_methods';
 import { post as postItem, put } from '@api/purchaseItem';
 import { post as postOrder } from '@api/purchaseOrder';
@@ -36,7 +35,7 @@ interface ModalProps {
 }
 
 export default function PurchaseReportAddModal(props: ModalProps) {
-  const [user] = useRecoilState(userAtom);
+  const user = useCurrentUser();
 
   const router = useRouter();
 
@@ -134,6 +133,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
       // 購入申請を新しく作成したかどうかで判断
       props.purchaseOrder ? createNonePurchaseItems() : getPurchaseItems();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, getPurchaseItems]);
 
   // 購入報告用のhandler
@@ -214,7 +214,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
     <>
-      <div className='mx-auto my-6 grid w-9/10 grid-cols-5 gap-4'>
+      <div className='w-9/10 mx-auto my-6 grid grid-cols-5 gap-4'>
         <p className='text-black-600'>物品名</p>
         <div className='col-span-4 w-full'>
           <Input
@@ -277,13 +277,18 @@ export default function PurchaseReportAddModal(props: ModalProps) {
               }}
             />
           </div>
-          <div className='mx-auto mb-10 w-fit text-xl text-black-600'>購入物品の登録</div>
+          <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>購入物品の登録</div>
           <Stepper stepNum={props.purchaseItemNum} activeStep={activeStep} isDone={isDone}>
             {!isDone && <>{content(formDataList[activeStep - 1])}</>}
           </Stepper>
           {isDone ? (
             <>
-              <div className='mx-auto mb-10 mt-3 grid w-9/10 grid-cols-5 items-center justify-items-center gap-4'>
+              <div
+                className='
+                  w-9/10 mx-auto mb-10 mt-3 grid grid-cols-5 place-items-center
+                  gap-4
+                '
+              >
                 <p className='text-black-600'>割引</p>
                 <div className='col-span-4 w-full'>
                   <Input

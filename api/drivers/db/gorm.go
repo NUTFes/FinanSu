@@ -1,10 +1,10 @@
 package db
 
 import (
-  "fmt"
-  "gorm.io/driver/mysql"
-  "gorm.io/gorm"
-  "os"
+	"fmt"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"os"
 )
 
 type gormClient struct {

@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 
-import s from './Layout.module.css';
 import SponsorAddModal from '@/components/sponsors/SponsorAddModal';
 import PurchaseReportAddModal from '@components/purchasereports/AddModal';
 import PurchaseOrderListModal from '@components/purchasereports/PurchaseOrderListModal';
@@ -25,7 +24,7 @@ const ModalUI: React.FC = () => {
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className={s.root}>
+    <div className='size-full bg-white-0 transition-colors duration-150'>
       <main>{children}</main>
       <ModalUI />
     </div>

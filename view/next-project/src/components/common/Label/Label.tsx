@@ -1,8 +1,7 @@
-import { Box, ChakraProvider } from '@chakra-ui/react';
+import clsx from 'clsx';
 import React, { useMemo } from 'react';
 
 import { LabelProps } from './Label.type';
-import theme from '@/assets/theme';
 
 const Label: React.FC<LabelProps> = (props) => {
   const {
@@ -11,73 +10,65 @@ const Label: React.FC<LabelProps> = (props) => {
     padding = 'default',
     corner = 'round',
     isOutline = false,
-    ...rest
   } = props;
 
   const bgColor = useMemo(() => {
     if (isOutline) {
-      return 'transparent';
+      return 'bg-transparent';
     }
-    return color;
+    return `bg-${color}`;
   }, [color, isOutline]);
 
   const borderColor = useMemo(() => {
     if (isOutline) {
-      return color;
+      return `border-${color}`;
     }
-    return 'transparent';
+    return 'border-transparent';
   }, [color, isOutline]);
 
   const textColor = useMemo(() => {
     if (isOutline) {
-      return color;
+      return `text-${color}`;
     }
-    return 'white';
+    return 'text-white-0';
   }, [color, isOutline]);
 
   const paddingValue = useMemo(() => {
     if (padding === 'default') {
-      return '1';
+      return 'py-1 px-2';
     }
     if (padding === 'small') {
-      return '0';
+      return 'py-0 px-0';
     }
     if (padding === 'large') {
-      return '2';
+      return 'py-2 px-4';
     }
-    return padding;
+    return `py-${padding} px-${padding}`;
   }, [padding]);
 
   const borderRadius = useMemo(() => {
     if (corner === 'round') {
-      return 'full';
+      return 'rounded-full';
     }
     if (corner === 'square') {
-      return 'none';
+      return 'rounded-none';
     }
     return corner;
   }, [corner]);
 
   return (
-    <ChakraProvider theme={theme}>
-      <Box
-        as='span'
-        {...rest}
-        fontSize='small'
-        bgColor={bgColor}
-        border='1px'
-        borderColor={borderColor}
-        color={textColor}
-        py={paddingValue}
-        px={Number(paddingValue) * 2}
-        borderRadius={borderRadius}
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-      >
-        {children}
-      </Box>
-    </ChakraProvider>
+    <span
+      className={clsx(
+        'inline-flex items-center justify-center border text-sm',
+        bgColor,
+        borderColor,
+        textColor,
+        paddingValue,
+        borderRadius,
+      )}
+    >
+      {children}
+    </span>
   );
 };
 

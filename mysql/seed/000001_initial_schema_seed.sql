@@ -450,6 +450,12 @@ VALUES
     ("企業協賛金", NOW(), NOW());
 
 INSERT INTO
+    income_income_expenditure_managements (income_expenditure_id, income_id, created_at, updated_at)
+VALUES
+    (1, 4, NOW(), NOW()),
+    (2, 6, NOW(), NOW());
+
+INSERT INTO
     buildings (name)
 VALUES
     ('機械・建設棟'),

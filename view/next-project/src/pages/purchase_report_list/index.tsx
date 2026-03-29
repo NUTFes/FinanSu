@@ -1,25 +1,27 @@
 import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
-import { useCallback, useState, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TbDownload } from 'react-icons/tb';
-import { useRecoilValue } from 'recoil';
+
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
 import {
   useGetBuyReportsDetails,
+  useGetUsers,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
-import type {
-  GetBuyReportsDetailsParams,
-  BuyReportDetail,
-  PutBuyReportStatusBuyReportIdBody,
-} from '@/generated/model';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
+
+import type {
+  BuyReportDetail,
+  GetBuyReportsDetailsParams,
+  PutBuyReportStatusBuyReportIdBody,
+} from '@/generated/model';
 
 export default function PurchaseReports() {
   const router = useRouter();
@@ -29,7 +31,10 @@ export default function PurchaseReports() {
     error: yearPeriodsError,
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
+  const [selectedYear, setSelectedYear] = useState<number>(
+    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
+  );
 
   user?.roleID === 1 && router.push('/my_page');
 
@@ -39,10 +44,6 @@ export default function PurchaseReports() {
       setSelectedYear(latestYear);
     }
   }, [yearPeriods]);
-
-  const [selectedYear, setSelectedYear] = useState<number>(
-    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
-  );
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = { year: selectedYear };
 
   const {
@@ -52,6 +53,34 @@ export default function PurchaseReports() {
     mutate: mutateBuyReportData,
   } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+
+  const paidByUserIds = useMemo(
+    () => [
+      ...new Set(
+        buyReports.map((report) => report.paidByUserId).filter((id): id is number => !!id),
+      ),
+    ],
+    [buyReports],
+  );
+
+  const userParams = useMemo(
+    () => (paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined),
+    [paidByUserIds],
+  );
+
+  const { data: userData } = useGetUsers(userParams, {
+    swr: {
+      enabled: !!userParams,
+    },
+  });
+
+  const userNameMap = useMemo(
+    () =>
+      Object.fromEntries(
+        (userData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name]),
+      ),
+    [userData],
+  );
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
@@ -156,13 +185,27 @@ export default function PurchaseReports() {
 
   return (
     <MainLayout>
-      <div className='flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4'>
+      <div
+        className='
+          flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4
+        '
+      >
         <Card w='flex flex-col w-full md:w-fit'>
-          <div className='mx-4 mt-8 md:mx-8 md:mt-16'>
-            <div className='flex flex-col items-center gap-6 md:flex-row'>
+          <div
+            className='
+              mx-4 mt-8
+              md:mx-8 md:mt-16
+            '
+          >
+            <div
+              className='
+                flex flex-col items-center gap-6
+                md:flex-row
+              '
+            >
               <Title title={'購入報告一覧'} />
               <select
-                className='border-b border-black-0'
+                className='border-black-0 border-b'
                 defaultValue={selectedYear}
                 onChange={async (e) => {
                   setSelectedYear(Number(e.target.value));
@@ -183,58 +226,139 @@ export default function PurchaseReports() {
               </PrimaryButton>
             </div>
           </div>
-          <div className='mt-2 flex-1 overflow-auto p-4 md:p-8'>
+          <div
+            className='
+              mt-2 flex-1 overflow-auto p-4
+              md:p-8
+            '
+          >
             <div className='min-w-max'>
               <table className='mb-5 table-auto border-collapse'>
                 <thead>
-                  <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                  <tr className='border-b-primary-1 border-b py-3'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       日付
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       局名
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       部門
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       物品
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       立替者
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       金額
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       封詰め
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                        font-normal
+                      '
+                    >
                       清算完了
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm text-black-600'></th>
+                    <th
+                      className='
+                        text-black-600 whitespace-nowrap px-4 pb-2 text-sm
+                      '
+                    ></th>
                   </tr>
                 </thead>
                 <tbody>
                   {buyReports && buyReports.length > 0 ? (
                     buyReports.map((report) => (
                       <tr key={report.id}>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td
+                          className='
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
+                          '
+                        >
                           {formatDate(report.reportDate ?? '')}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td
+                          className='
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
+                          '
+                        >
                           {report.financialRecordName}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td
+                          className='
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
+                          '
+                        >
                           {report.divisionName}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td
+                          className='
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
+                          '
+                        >
                           {report.festivalItemName}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
-                          {report.paidBy}
+                        <td
+                          className='
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
+                          '
+                        >
+                          {(report.paidByUserId ? userNameMap[report.paidByUserId] : undefined) ??
+                            report.paidBy ??
+                            '-'}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td
+                          className='
+                            text-black-600 whitespace-nowrap px-4 py-3 text-center
+                            text-sm
+                          '
+                        >
                           {formatAmount(report.amount ?? 0)}
                         </td>
                         <td className='px-4 py-2 text-center'>
@@ -289,8 +413,8 @@ export default function PurchaseReports() {
                     ))
                   ) : (
                     <tr>
-                      <td className='border-b border-primary-1 px-1 py-3' colSpan={9}>
-                        <div className='text-center text-sm text-black-600'>データがありません</div>
+                      <td className='border-primary-1 border-b px-1 py-3' colSpan={9}>
+                        <div className='text-black-600 text-center text-sm'>データがありません</div>
                       </td>
                     </tr>
                   )}

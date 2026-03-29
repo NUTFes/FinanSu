@@ -1,17 +1,18 @@
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import { ChakraProvider, Button } from '@chakra-ui/react';
 import * as React from 'react';
-
-import theme from '@assets/theme';
+import { RiArrowDropDownLine } from 'react-icons/ri';
 
 class PulldownButton extends React.Component {
   render() {
     return (
-      <ChakraProvider theme={theme}>
-        <Button background='transparent' w='25px' h='25px' p='0' minWidth='0' borderRadius='full'>
-          <ChevronDownIcon />
-        </Button>
-      </ChakraProvider>
+      <button
+        className='
+          size-6 flex min-w-0 items-center justify-center rounded-full
+          bg-transparent p-0
+          hover:bg-gray-100
+        '
+      >
+        <RiArrowDropDownLine size={20} />
+      </button>
     );
   }
 }

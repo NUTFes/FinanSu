@@ -7,6 +7,7 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	goqu "github.com/doug-martin/goqu/v9"
 )
 
 type userRepository struct {
@@ -17,6 +18,7 @@ type userRepository struct {
 type UserRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
+	FindByIDs(context.Context, []int) (*sql.Rows, error)
 	Create(context.Context, string, string, string) error
 	Update(context.Context, string, string, string, string) error
 	Destroy(context.Context, string) error
@@ -39,6 +41,21 @@ func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
 func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
 	query := "SELECT * FROM users WHERE id = " + id
 	return ur.crud.ReadByID(c, query)
+}
+
+// 複数件取得
+func (ur *userRepository) FindByIDs(c context.Context, ids []int) (*sql.Rows, error) {
+	ds := dialect.
+		From("users").
+		Select("users.*").
+		Where(goqu.I("users.id").In(ids))
+
+	query, _, err := ds.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	return ur.crud.Read(c, query)
 }
 
 // 作成

@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { MultiSelect } from '@components/common';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof MultiSelect> = {
   title: 'FinanSu/common/MultiSelect',

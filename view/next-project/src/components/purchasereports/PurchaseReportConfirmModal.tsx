@@ -1,9 +1,8 @@
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RiExternalLinkLine, RiFileCopyLine } from 'react-icons/ri';
 
-import { Modal, PrimaryButton, CloseButton, Tooltip } from '@components/common';
+import { CloseButton, Modal, PrimaryButton, Tooltip } from '@components/common';
 import ReceiptModal from '@components/purchasereports/ReceiptModal';
 import { PurchaseItem } from '@type/common';
 
@@ -15,8 +14,6 @@ interface ModalProps {
 }
 
 export default function PurchaseItemNumModal(props: ModalProps) {
-  const router = useRouter();
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = () => {
     setIsOpen(true);
@@ -41,61 +38,81 @@ export default function PurchaseItemNumModal(props: ModalProps) {
     return (
       <table className='table-fixed border-collapse'>
         <thead>
-          <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+          <tr className='border-b-primary-1 border-b py-3'>
             {tableColumns.map((tableColumn: string) => (
               <th key={tableColumn} className='border-b-primary-1 px-6 pb-2'>
-                <div className='text-center text-sm text-black-600'>{tableColumn}</div>
+                <div className='text-black-600 text-center text-sm'>{tableColumn}</div>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+        <tbody>
           {purchaseItems.map((purchaseItem, index) => (
             <tr key={purchaseItem.id}>
               <td
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pb-4 pt-3'
+                    : `
+                    border-b py-3
+                  `,
                 )}
               >
-                <div className='text-center text-sm text-black-300'>{purchaseItem.item}</div>
+                <div className='text-black-300 text-center text-sm'>{purchaseItem.item}</div>
               </td>
               <td
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pb-4 pt-3'
+                    : `
+                    border-b py-3
+                  `,
                 )}
               >
-                <div className='text-center text-sm text-black-300'>{purchaseItem.price}</div>
+                <div className='text-black-300 text-center text-sm'>{purchaseItem.price}</div>
               </td>
               <td
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pb-4 pt-3'
+                    : `
+                    border-b py-3
+                  `,
                 )}
               >
-                <div className='text-center text-sm text-black-300'>{purchaseItem.quantity}</div>
+                <div className='text-black-300 text-center text-sm'>{purchaseItem.quantity}</div>
               </td>
               <td
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pb-4 pt-3'
+                    : `
+                    border-b py-3
+                  `,
                 )}
               >
-                <div className='text-center text-sm text-black-300'>{purchaseItem.detail}</div>
+                <div className='text-black-300 text-center text-sm'>{purchaseItem.detail}</div>
               </td>
               <td
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                  index === purchaseItems.length - 1
+                    ? 'pb-4 pt-3'
+                    : `
+                    border-b py-3
+                  `,
                 )}
               >
-                <div className='text-center text-sm text-black-300'>
+                <div className='text-black-300 text-center text-sm'>
                   {purchaseItem.url && (
                     <div className='flex justify-center'>
                       <a
@@ -133,18 +150,24 @@ export default function PurchaseItemNumModal(props: ModalProps) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className='mb-10 grid w-full justify-items-center text-xl text-black-600'>購入申請</div>
+      <div
+        className='
+          text-black-600 mb-10 grid w-full justify-items-center text-xl
+        '
+      >
+        購入申請
+      </div>
       <div className='flex flex-col items-center gap-5'>
-        <div className='mx-auto w-fit font-bold text-black-300'>購入物品</div>
+        <div className='text-black-300 mx-auto w-fit font-bold'>購入物品</div>
         <div className='max-h-60 w-full overflow-scroll'>
           {PurchaseItemTable(reportedPurchaseItems)}
         </div>
-        <div className='mx-auto w-fit font-bold text-black-300'>登録しなかった物品</div>
+        <div className='text-black-300 mx-auto w-fit font-bold'>登録しなかった物品</div>
         {notReportedPurchaseItems.length === 0 ? (
-          <div className='mx-auto w-fit text-black-300'>登録しなかった物品はありません</div>
+          <div className='text-black-300 mx-auto w-fit'>登録しなかった物品はありません</div>
         ) : (
           <>
-            <div className='mx-auto w-fit font-bold text-black-300'>
+            <div className='text-black-300 mx-auto w-fit font-bold'>
               購入しなかったものとして処理します
             </div>
             <div className='w-full'>{PurchaseItemTable(notReportedPurchaseItems)}</div>

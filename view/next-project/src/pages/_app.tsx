@@ -1,21 +1,34 @@
-import { ChakraProvider } from '@chakra-ui/react';
-import type { AppProps } from 'next/app';
+import { Noto_Sans_JP } from 'next/font/google';
 import Head from 'next/head';
 import { NuqsAdapter } from 'nuqs/adapters/next/pages';
-import { RecoilRoot } from 'recoil';
 
+import { ToastProvider } from '@/hooks/useToast';
 import Layout from '@components/layout/Layout';
 import { ManagedUIContext } from '@components/ui/context';
 
-import 'tailwindcss/tailwind.css';
+import type { AppProps } from 'next/app';
+
+import '@/styles/globals.css';
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-noto-sans-jp',
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <RecoilRoot>
-      <ChakraProvider>
-        <Head>
-          <link rel='icon' href='/favicon.ico' />
-        </Head>
+    <ToastProvider>
+      <Head>
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+      <main
+        className={`
+          ${notoSansJP.className}
+          ${notoSansJP.variable}
+          h-full
+        `}
+      >
         <ManagedUIContext>
           <Layout>
             <NuqsAdapter>
@@ -23,8 +36,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             </NuqsAdapter>
           </Layout>
         </ManagedUIContext>
-      </ChakraProvider>
-    </RecoilRoot>
+      </main>
+    </ToastProvider>
   );
 }
 

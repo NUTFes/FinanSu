@@ -1,13 +1,13 @@
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import formatNumber from '../common/Formatter';
-import { usePostFestivalItems, usePostFinancialRecords, usePostDivisions } from '@/generated/hooks';
-import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
+
+import { usePostDivisions, usePostFestivalItems, usePostFinancialRecords } from '@/generated/hooks';
 import { Year } from '@/type/common';
-import { PrimaryButton, Input, Modal } from '@components/common';
+import { Input, Modal, PrimaryButton } from '@components/common';
+
+import formatNumber from '../common/Formatter';
+
+import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
 
 interface FinancialRecordWithId extends FinancialRecord {
   id: number;
@@ -32,8 +32,6 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
   const [divisionName, setDivisionName] = useState(div?.name ?? '');
   const [festivalItemName, setFestivalItemName] = useState('');
   const [amount, setAmount] = useState<number | null>(null);
-
-  const router = useRouter();
 
   const closeModal = () => {
     props.setShowModal(false);
@@ -94,9 +92,10 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error: any) {
-      console.error('登録エラー:', error.message);
-      alert(`登録エラー: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      console.error('登録エラー:', errorMessage);
+      alert(`登録エラー: ${errorMessage}`);
     }
   };
 
@@ -135,7 +134,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           <Input
             value={financialRecordName}
             readOnly
-            className='bg-gray-100 pointer-events-none border-0'
+            className='pointer-events-none border-0 bg-gray-100'
           />
         </div>
         <p>申請部門名</p>
@@ -156,7 +155,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           <Input
             value={financialRecordName}
             readOnly
-            className='bg-gray-100 pointer-events-none border-0'
+            className='pointer-events-none border-0 bg-gray-100'
           />
         </div>
         <p>申請部門名</p>
@@ -164,7 +163,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           <Input
             value={divisionName}
             readOnly
-            className='bg-gray-100 pointer-events-none border-0'
+            className='pointer-events-none border-0 bg-gray-100'
           />
         </div>
         <p>申請物品名</p>
@@ -206,7 +205,11 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           {phase === 2 && '申請部門登録'}
           {phase === 3 && '申請物品登録'}
         </div>
-        <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+        <div
+          className='
+            text-black-600 my-10 grid grid-cols-5 place-items-center gap-5
+          '
+        >
           {content}
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>

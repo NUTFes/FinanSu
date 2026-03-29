@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import formatNumber from '../common/Formatter';
+
 import {
-  useGetFinancialRecordsId,
   useGetDivisionsId,
   useGetFestivalItemsId,
-  usePutFinancialRecordsId,
+  useGetFinancialRecordsId,
   usePutDivisionsId,
   usePutFestivalItemsId,
+  usePutFinancialRecordsId,
 } from '@/generated/hooks';
+import { Input, Modal, PrimaryButton } from '@components/common';
+
+import formatNumber from '../common/Formatter';
+
 import type { Division, FestivalItem, FinancialRecord } from '@/generated/model';
-import { PrimaryButton, Input, Modal } from '@components/common';
 
 export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -88,8 +90,9 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error: any) {
-      alert(`登録エラー: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      alert(`登録エラー: ${errorMessage}`);
     }
   };
 
@@ -219,7 +222,11 @@ const EditBudgetManagementModal: FC<ModalProps> = (props) => {
           {phase === 2 && '申請部門編集'}
           {phase === 3 && '申請物品編集'}
         </div>
-        <div className='my-10 grid grid-cols-5 items-center justify-items-center gap-5 text-black-600'>
+        <div
+          className='
+            text-black-600 my-10 grid grid-cols-5 place-items-center gap-5
+          '
+        >
           {content}
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>

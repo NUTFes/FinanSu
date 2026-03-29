@@ -1,19 +1,16 @@
+import { useEffect, useState } from 'react';
+
 import {
-  Box,
-  Button,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
-  Select,
-  VStack,
-  Spinner,
-  FormErrorMessage,
-  RadioGroup,
+  OutlinePrimaryButton,
   Radio,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+  RadioGroup,
+  Select,
+  Spinner,
+} from '@/components/common';
 import { IncomeReceiveOption } from '@/generated/model/incomeReceiveOption';
 import { PrimaryButton } from '@components/common';
 
@@ -149,23 +146,23 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
 
   if (isLoading) {
     return (
-      <Box className='flex h-40 items-center justify-center'>
+      <div className='flex h-40 items-center justify-center'>
         <Spinner size='xl' />
         <p className='ml-3'>データを読み込み中...</p>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box>
+    <div>
       <form className='space-y-6'>
-        <VStack spacing={4} align='stretch'>
+        <div className='flex flex-col gap-4'>
           {/* 収入タイプ選択フォーム */}
           <FormField id='incomeType' label='収入の種類' isRequired>
             {isIncomeTypesLoading ? (
               <div className='flex items-center'>
-                <Spinner size='sm' mr={2} />
-                <Text>収入の種類を読み込み中...</Text>
+                <Spinner size='sm' className='mr-2' />
+                <span>収入の種類を読み込み中...</span>
               </div>
             ) : (
               <Select
@@ -203,7 +200,6 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
               value={formData.amount.toLocaleString()}
               onChange={handleAmountChange}
               placeholder='金額を入力してください'
-              required
             />
             {formErrors.amountError && (
               <FormErrorMessage>{formErrors.amountError}</FormErrorMessage>
@@ -221,34 +217,26 @@ const FundInformationForm: React.FC<FundInformationFormProps> = ({
                 }))
               }
             >
-              <Stack direction='row'>
-                <Radio value='transfer'>振込</Radio>
-                <Radio value='hand'>手渡し</Radio>
-              </Stack>
+              <Radio value='transfer'>振込</Radio>
+              <Radio value='hand'>手渡し</Radio>
             </RadioGroup>
           </FormField>
-        </VStack>
+        </div>
       </form>
 
       {/* フォームアクション */}
-      <Box className='mt-6 flex justify-center space-x-4'>
+      <div className='mt-6 flex justify-center space-x-4'>
         <div className='flex flex-col gap-2'>
           <PrimaryButton disabled={!isFormValid} className='mx-auto' onClick={handleSubmit}>
-            {isProcessing ? <Spinner size='sm' color='white' mr={2} /> : null}
+            {isProcessing ? <Spinner size='sm' color='white' className='mr-2' /> : null}
             {submitButtonText}
           </PrimaryButton>
-          <Button
-            className='underline underline-offset-[5px]'
-            colorScheme='red'
-            variant='ghost'
-            onClick={onCancel}
-            isDisabled={isProcessing}
-          >
+          <OutlinePrimaryButton onClick={onCancel} disabled={isProcessing}>
             キャンセル
-          </Button>
+          </OutlinePrimaryButton>
         </div>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

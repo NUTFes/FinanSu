@@ -18,7 +18,7 @@ export default function Modal(props: Props) {
 
   useEffect(stopScrollingBackContent, []);
 
-  const preventCloseModalEvent = (event: any) => {
+  const preventCloseModalEvent = (event: React.MouseEvent) => {
     event.stopPropagation();
   };
 
@@ -29,7 +29,11 @@ export default function Modal(props: Props) {
   return (
     <>
       <div
-        className='fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black-300/50 outline-none focus:outline-none'
+        className='
+          bg-black-300/50 outline-hidden focus:outline-hidden fixed inset-0 z-50 flex
+          items-center justify-center overflow-y-auto
+          overflow-x-hidden
+        '
         onClick={props.onClick}
       >
         <div

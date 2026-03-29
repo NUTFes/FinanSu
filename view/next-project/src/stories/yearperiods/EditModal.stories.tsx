@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import { EditModal } from '@components/yearperiods';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof EditModal> = {
   title: 'FinanSu/yearperiods/EditModal',

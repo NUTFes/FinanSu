@@ -1,13 +1,10 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import s from './MainLayout.module.css';
-import { authAtom, userAtom } from '@/store/atoms';
-import 'tailwindcss/tailwind.css';
-import { Header, SideNav } from '@components/common';
-import { User } from '@type/common';
+import { useEffect, useState } from 'react';
+
+import { useAuthStore, useUserStore } from '@/store';
+import { Header, Loading, SideNav } from '@components/common';
 import { get_with_token_valid } from '@utils/api/api_methods';
 
 interface LayoutProps {
@@ -16,34 +13,59 @@ interface LayoutProps {
 
 export default function MainLayout(props: LayoutProps) {
   const router = useRouter();
-  const [auth, setAuth] = useRecoilState(authAtom);
-  const [_, setUser] = useRecoilState(userAtom);
+  const { isSignIn, accessToken, resetAuth, _hasHydrated: authHasHydrated } = useAuthStore();
+  const { resetUser, _hasHydrated: userHasHydrated } = useUserStore();
   const [isSideNavOpen, setIsSideNavOpen] = useState(true);
 
+  const isLoginPage = router.pathname === '/';
+
+  const [isChecking, setIsChecking] = useState(true);
+
+  const hasHydrated = authHasHydrated && userHasHydrated;
+
   useEffect(() => {
-    const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
-    get_with_token_valid(getCurrentUserUrl, auth.accessToken).then((result) => {
-      if (!result) {
-        localStorage.clear();
-        const authData = {
-          isSignIn: false,
-          accessToken: '',
-        };
-        setAuth(authData);
-        setUser({} as User);
-        router.push('/');
-      } else {
-        if (router.isReady) {
-          if (!auth.isSignIn) {
-            router.push('/');
-            localStorage.clear();
-          } else if (auth.isSignIn === true && router.pathname == '/') {
-            router.push('/purchaseorders');
-          }
-        }
+    if (!hasHydrated) return;
+
+    const validateSession = async () => {
+      if (!isSignIn || !accessToken) {
+        await handleLogout();
+        return;
       }
-    });
-  }, [router]);
+
+      const getCurrentUserUrl = process.env.CSR_API_URI + '/current_user';
+      const isValid = await get_with_token_valid(getCurrentUserUrl, accessToken);
+
+      if (!isValid) {
+        await handleLogout();
+      } else {
+        if (isLoginPage) {
+          await router.push('/my_page');
+        }
+        setIsChecking(false);
+      }
+    };
+
+    const handleLogout = async () => {
+      resetAuth();
+      resetUser();
+
+      if (!isLoginPage) {
+        await router.push('/');
+      }
+      setIsChecking(false);
+    };
+
+    validateSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasHydrated, isLoginPage, isSignIn, accessToken, resetAuth, resetUser]);
+
+  if (!hasHydrated || isChecking) {
+    return (
+      <div className='flex h-screen w-screen items-center justify-center'>
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -52,23 +74,35 @@ export default function MainLayout(props: LayoutProps) {
         <meta name='' content='' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div className={clsx('h-screen w-full')}>
-        <div className={clsx('h-16 w-full')}>
-          <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
-        </div>
-        <div className={clsx(s.parent)}>
-          <div
-            className={clsx(
-              { 'invisible opacity-0 md:visible md:opacity-100': isSideNavOpen },
-              { 'visible opacity-100 md:invisible md:opacity-0': !isSideNavOpen },
-              'transition-all',
-            )}
-          >
-            <SideNav />
+      <div className='flex h-screen w-full flex-col overflow-hidden bg-gray-50'>
+        {!isLoginPage && (
+          <div className='h-16 w-full shrink-0'>
+            <Header onSideNavOpen={() => setIsSideNavOpen(!isSideNavOpen)} />
           </div>
-          <div className={clsx('h-full w-full', { 'md:w-7/8': isSideNavOpen }, s.content)}>
-            {props.children}
-          </div>
+        )}
+        <div className='relative flex flex-1 overflow-hidden'>
+          {!isLoginPage && (
+            <aside
+              className={clsx(
+                'bg-primary-4 z-20 transition-all duration-300 ease-in-out',
+                'md:static md:block md:h-full',
+                isSideNavOpen
+                  ? 'md:w-52 md:translate-x-0 md:opacity-100'
+                  : `
+                    md:w-0 md:-translate-x-full md:overflow-hidden md:opacity-0
+                  `,
+                'fixed bottom-0 right-0 top-16',
+                !isSideNavOpen
+                  ? 'w-52 translate-x-0 shadow-xl'
+                  : `
+                  w-0 translate-x-full
+                `,
+              )}
+            >
+              <SideNav />
+            </aside>
+          )}
+          <main className={clsx('relative w-full flex-1 overflow-y-auto')}>{props.children}</main>
         </div>
       </div>
     </>

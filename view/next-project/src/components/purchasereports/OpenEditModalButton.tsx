@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { useState } from 'react';
 
-import { DetailEditModal } from './DetailEditModal';
 import { Expense, PurchaseReportView } from '@/type/common';
 import { CloseButton, EditButton, Modal, PrimaryButton } from '@components/common';
 import EditModal from '@components/purchasereports/EditModal';
+
+import { DetailEditModal } from './DetailEditModal';
 
 interface Props {
   children?: React.ReactNode;
@@ -14,7 +14,7 @@ interface Props {
   isDisabled: boolean;
 }
 
-const InitialModal: React.FC<{ setStep: (step: string) => void; closeModal: () => void }> = ({
+const InitialModal: React.FC<{ setStep: (_step: string) => void; closeModal: () => void }> = ({
   setStep,
   closeModal,
 }) => (
@@ -22,7 +22,7 @@ const InitialModal: React.FC<{ setStep: (step: string) => void; closeModal: () =
     <div className='ml-auto w-fit'>
       <CloseButton onClick={closeModal} />
     </div>
-    <div className='mx-auto mb-6 w-fit text-xl text-black-600'>
+    <div className='text-black-600 mx-auto mb-6 w-fit text-xl'>
       <p>購入報告の修正</p>
     </div>
     <div className='flex justify-center gap-2 pb-4'>

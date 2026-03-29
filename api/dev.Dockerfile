@@ -1,23 +1,21 @@
-FROM golang:latest
+FROM golang:1.25.5-alpine
 
-WORKDIR /app
-COPY . /app
+RUN apk add --no-cache bash tzdata
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y locales \
-  && locale-gen ja_JP.UTF-8 \
-  && echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc
+RUN addgroup -g 1000 gouser && \
+    adduser -u 1000 -G gouser -s /bin/bash -D gouser
 
-RUN export LANG=C.UTF-8
-RUN export LANGUAGE=en_US:
-
+ENV GOCACHE=/go/cache
+ENV GOMODCACHE=/go/pkg/mod
 ENV CGO_ENABLED=0
 ENV GOOS=linux
-#ENV GOARCH=amd64
+ENV TZ=Asia/Tokyo
 
-RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.2.0
+RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.2.0 && \
+    go install github.com/air-verse/air@latest
 
-# Airをインストール
-RUN go install github.com/air-verse/air@latest
+USER gouser
+
+WORKDIR /app
+
 CMD ["air", "-c", ".air.toml"]

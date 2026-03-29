@@ -1,5 +1,6 @@
-import type { Meta } from '@storybook/react';
 import FinanSuButton from '@components/common/FinanSuButton';
+
+import type { Meta } from '@storybook/react';
 
 const meta: Meta<typeof FinanSuButton> = {
   component: FinanSuButton,
@@ -20,7 +21,7 @@ const meta: Meta<typeof FinanSuButton> = {
     shape: {
       control: {
         type: 'select',
-        options: ['rounded', 'pill'],
+        options: ['rounded-lg', 'pill'],
       },
     },
     textAlign: {
@@ -44,7 +45,7 @@ export const Primary = {
   args: {
     size: 'small',
     color: 'primary',
-    shape: 'rounded',
+    shape: 'rounded-lg',
     textAlign: 'center',
     children: <p>test</p>,
     hover: true,
@@ -55,7 +56,7 @@ export const Secondary = {
   args: {
     size: 'medium',
     color: 'secondary',
-    shape: 'rounded',
+    shape: 'rounded-lg',
     textAlign: 'center',
     hover: true,
     children: 'test',
@@ -66,7 +67,7 @@ export const Thirdry = {
   args: {
     size: 'large',
     color: 'thirdry',
-    shape: 'rounded',
+    shape: 'rounded-lg',
     textAlign: 'center',
     hover: true,
     children: 'test',

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import s from './PullDown.module.css';
 
@@ -17,12 +17,7 @@ function PullDown(props: Props): JSX.Element {
     (props.className ? ` ${props.className}` : '');
   return (
     <div className={clsx(s.customSelect, 'w-75')}>
-      <select
-        placeholder={props.placeholder}
-        className={clsx(s.select, className)}
-        value={props.value}
-        onChange={props.onChange}
-      >
+      <select className={clsx(s.select, className)} value={props.value} onChange={props.onChange}>
         {props.children}
       </select>
     </div>

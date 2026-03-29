@@ -1,16 +1,18 @@
 import { NextRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
+
 import {
+  useGetBuyReportsId,
+  useGetDivisionsId,
   useGetDivisionsUsers,
   useGetFestivalItemsUsers,
-  useGetBuyReportsId,
   usePostBuyReports,
   usePutBuyReportsId,
 } from '@/generated/hooks';
 import { DivisionOption, FestivalItemOption } from '@/generated/model';
+import { useCurrentUser } from '@/store';
+
 import type { BuyReport, PostBuyReportsBody, PutBuyReportsIdBody } from '@/generated/model';
-import { userAtom } from '@/store/atoms';
 
 const API_ERROR_MESSAGES = {
   MISSING_ID: '更新対象のIDがありません',
@@ -47,7 +49,11 @@ export const usePurchaseReportForm = (router: NextRouter) => {
   const reportId = reportIdParam ? Number(reportIdParam) : undefined;
   const isEditMode = from === 'purchase_report_list';
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
+  const year = new Date().getFullYear();
+  const userId = user?.id || 0;
+  const userName = user?.name || '';
+
   const [departments, setDepartments] = useState<DivisionOption[]>([]);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [festivalItems, setFestivalItems] = useState<FestivalItemOption[]>([]);
@@ -59,11 +65,9 @@ export const usePurchaseReportForm = (router: NextRouter) => {
   const [purchaseReport, setPurchaseReport] = useState<BuyReport>({
     festivalItemID: 0,
     amount: 0,
-    paidBy: '',
+    paidBy: userName,
+    paidByUserId: userId || undefined,
   });
-
-  const year = new Date().getFullYear();
-  const userId = user?.id || 0;
 
   // 編集モードの場合、購入報告データを取得
   const { data: buyReportData, isLoading: isReportDataLoading } = useGetBuyReportsId(
@@ -74,6 +78,12 @@ export const usePurchaseReportForm = (router: NextRouter) => {
       },
     },
   );
+
+  const { data: divisionData } = useGetDivisionsId(activeDivisionId, {
+    swr: {
+      enabled: isEditMode && !!activeDivisionId,
+    },
+  });
 
   const { divisionsData, festivalItemsData } = useReportFormData(
     userId,
@@ -93,6 +103,7 @@ export const usePurchaseReportForm = (router: NextRouter) => {
         festivalItemID: buyReportWithDiv.festivalItemID || 0,
         amount: buyReportWithDiv.amount || 0,
         paidBy: buyReportWithDiv.paidBy || '',
+        paidByUserId: buyReportWithDiv.paidByUserId,
       });
 
       // 部門IDのセット
@@ -101,6 +112,16 @@ export const usePurchaseReportForm = (router: NextRouter) => {
       }
     }
   }, [buyReportData, isEditMode]);
+
+  // 新規作成時はログインユーザーを立替者として自動設定
+  useEffect(() => {
+    if (isEditMode) return;
+    setPurchaseReport((prev) => ({
+      ...prev,
+      paidBy: userName,
+      paidByUserId: userId,
+    }));
+  }, [isEditMode, userId, userName]);
 
   // 部門データの設定（新規作成時のみ）
   useEffect(() => {
@@ -130,18 +151,15 @@ export const usePurchaseReportForm = (router: NextRouter) => {
           findFestivalItemName(festivalItemsData.data, purchaseReport.festivalItemID),
         );
       }
-
-      // 部門名を取得
-      if (isEditMode && activeDivisionId && festivalItemsData.data.length > 0) {
-        const divisionInfo = festivalItemsData.data[0] as FestivalItemOption & {
-          divisionName?: string;
-        };
-        if (divisionInfo.divisionName) {
-          setDivisionName(divisionInfo.divisionName);
-        }
-      }
     }
   }, [festivalItemsData, isEditMode, purchaseReport.festivalItemID, activeDivisionId]);
+
+  // 編集モード時の部門名を取得
+  useEffect(() => {
+    if (isEditMode && divisionData?.data?.name) {
+      setDivisionName(divisionData.data.name);
+    }
+  }, [divisionData, isEditMode]);
 
   // 購入報告の作成（新規作成時）
   const { trigger: submitBuyReport, isMutating: isSubmitting } = usePostBuyReports();
@@ -195,6 +213,7 @@ export const usePurchaseReportForm = (router: NextRouter) => {
         festivalItemID: purchaseReport.festivalItemID,
         amount: purchaseReport.amount,
         paidBy: purchaseReport.paidBy,
+        paidByUserId: purchaseReport.paidByUserId,
       },
       ...(uploadedFile && { file: uploadedFile }),
     };
