@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"slices"
 	"strings"
 	"unicode/utf8"
 
@@ -211,10 +212,8 @@ func (s *sponsorUseCase) CreateSponsorsByCsv(c context.Context, csvFile io.Reade
 			continue
 		}
 
-		for j := range record {
-			if isEmpty(record[j]) {
-				return nil, fmt.Errorf("空のレコードがあります。")
-			}
+		if slices.ContainsFunc(record, isEmpty) {
+			return nil, fmt.Errorf("空のレコードがあります。")
 		}
 
 		sponsor := domain.Sponsor{

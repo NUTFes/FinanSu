@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -40,7 +41,7 @@ func (dr *divisionRepository) AllByPeriodAndFinancialRecord(
 ) (*sql.Rows, error) {
 
 	var conditions []string
-	var args []interface{}
+	var args []any
 
 	if year != "" {
 		conditions = append(conditions, "years.year = ?")
@@ -213,10 +214,10 @@ type Division = generated.Division
 
 // NOTE: getの共通部分抜き出し
 func makeSelectDivisionsSQL(conditions []string) string {
-	condition := ""
+	var condition strings.Builder
 	if len(conditions) > 0 {
 		for _, c := range conditions {
-			condition += fmt.Sprintf(" AND %s", c)
+			condition.WriteString(fmt.Sprintf(" AND %s", c))
 		}
 	}
 
@@ -254,7 +255,7 @@ func makeSelectDivisionsSQL(conditions []string) string {
 		WHERE 1=1
 		%s
 		ORDER BY divisions.id DESC
-	`, condition)
+	`, condition.String())
 }
 
 var selectDivisionOptionsQuery = dialect.From("divisions").
