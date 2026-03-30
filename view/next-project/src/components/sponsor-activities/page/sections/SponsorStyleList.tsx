@@ -14,7 +14,7 @@ export default function SponsorStyleList({
   alignClassName = 'justify-center',
 }: SponsorStyleListProps) {
   if (!styles || styles.length === 0) {
-    return <p className='text-sm text-black-600'>未定</p>;
+    return <p className='text-black-600 text-sm'>未定</p>;
   }
 
   const orderedStyles = styles
@@ -46,13 +46,13 @@ export default function SponsorStyleList({
             `}
           >
             {styleLink.category === 'goods' ? (
-              <MdInventory2 className='shrink-0 text-black-600' size={16} />
+              <MdInventory2 className='text-black-600 shrink-0' size={16} />
             ) : (
-              <MdAttachMoney className='shrink-0 text-black-600' size={16} />
+              <MdAttachMoney className='text-black-600 shrink-0' size={16} />
             )}
             <span
               className={`
-                block min-w-0 truncate text-sm text-black-600
+                text-black-600 block min-w-0 truncate text-sm
                 ${textMaxWidthClassName}
               `}
               title={label || '-'}

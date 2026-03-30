@@ -88,8 +88,8 @@ export default function TeachersList(props: Props) {
             <Title title={'教員一覧'} />
             <select
               className='
-                mx-auto my-4 w-fit
-                md:mx-10 md:my-0 md:w-100
+                md:w-100 mx-auto my-4
+                w-fit md:mx-10 md:my-0
               '
               value={selectedDepartment?.id}
               onChange={(e) => {
@@ -124,8 +124,8 @@ export default function TeachersList(props: Props) {
               md:w-full
             '
           >
-            <thead className='text-sm text-black-600'>
-              <tr className='border-b border-b-primary-1 py-3'>
+            <thead className='text-black-600 text-sm'>
+              <tr className='border-b-primary-1 border-b py-3'>
                 <th className='w-1/6'>
                   <p>氏名</p>
                 </th>
@@ -159,7 +159,7 @@ export default function TeachersList(props: Props) {
                     key={index}
                     className={clsx(
                       index !== teachers.length - 1 && 'border-b',
-                      'text-sm text-black-600',
+                      'text-black-600 text-sm',
                     )}
                   >
                     <td className='py-3 text-center'>
@@ -227,7 +227,7 @@ export default function TeachersList(props: Props) {
       </Card>
       <div
         className='
-          fixed right-4 bottom-4
+          fixed bottom-4 right-4
           md:hidden
         '
       >

@@ -193,18 +193,18 @@ const DetailPage2: FC<ModalProps> = (props) => {
 
   return (
     <>
-      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛スタイル</p>
+      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>協賛スタイル</p>
       <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border-b border-b-primary-1 py-3'>
+          <tr className='border-b-primary-1 border-b py-3'>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>協賛内容</div>
+              <div className='text-black-600 text-center text-sm'>協賛内容</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>オプション</div>
+              <div className='text-black-600 text-center text-sm'>オプション</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>値段</div>
+              <div className='text-black-600 text-center text-sm'>値段</div>
             </th>
           </tr>
         </thead>
@@ -214,7 +214,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
               <tr
                 key={index}
                 className={clsx({
-                  'border-b border-b-primary-1':
+                  'border-b-primary-1 border-b':
                     index === props.sponsorActivitiesViewItem.styleDetail.length - 1,
                 })}
               >
@@ -230,7 +230,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
               </tr>
             ))
           ) : (
-            <tr className='border-b border-b-primary-1'>
+            <tr className='border-b-primary-1 border-b'>
               <td colSpan={3} className='py-3'>
                 <div className='text-center text-sm text-red-500'>
                   協賛スタイルを登録してください
@@ -240,14 +240,14 @@ const DetailPage2: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
-      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>広告デザイン</p>
+      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>広告デザイン</p>
       <div className='max-h-60 overflow-auto'>
         {sponsorActivityInformations &&
           sponsorActivityInformations.map((activityInformation, index) => (
             <>
               <div
                 className='
-                  m-0 flex flex-row-reverse border-t border-primary-1 p-0
+                  border-primary-1 m-0 flex flex-row-reverse border-t p-0
                 '
               >
                 <div className='mt-2 w-1/12'>
@@ -262,7 +262,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
               <div className='flex flex-col flex-wrap justify-center'>
                 <div className='my-1 flex justify-center'>
                   <div className='flex w-fit items-center justify-center gap-3'>
-                    <p className='w-25 whitespace-nowrap text-black-600'>広告状況</p>
+                    <p className='w-25 text-black-600 whitespace-nowrap'>広告状況</p>
                     <Select
                       value={designProgresses[index].id}
                       className='w-28 py-2'
@@ -313,9 +313,9 @@ const DetailPage2: FC<ModalProps> = (props) => {
                         />
                       </>
                     ) : activityInformation.fileInformation.trim() === '' ? (
-                      <p className='w-30 border-b border-primary-1'>&emsp; &emsp;</p>
+                      <p className='w-30 border-primary-1 border-b'>&emsp; &emsp;</p>
                     ) : (
-                      <p className='border-b border-primary-1'>
+                      <p className='border-primary-1 border-b'>
                         {activityInformation.fileInformation}
                       </p>
                     )}
@@ -392,14 +392,14 @@ const DetailPage2: FC<ModalProps> = (props) => {
           ))}
         <div
           className='
-            my-1 flex flex-wrap justify-center gap-7 border-t border-primary-1
+            border-primary-1 my-1 flex flex-wrap justify-center gap-7 border-t
             p-2
           '
         >
           <button
             className='
-              rounded-sm
               hover:bg-grey-300
+              rounded-sm
             '
           >
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
@@ -410,8 +410,8 @@ const DetailPage2: FC<ModalProps> = (props) => {
         <button
           onClick={() => toPage1()}
           className='
-            rounded-full
             hover:bg-grey-300
+            rounded-full
           '
         >
           <FaChevronCircleLeft size={30} />

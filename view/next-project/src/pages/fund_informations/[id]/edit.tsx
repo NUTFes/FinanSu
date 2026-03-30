@@ -241,7 +241,7 @@ const EditFundInformation = () => {
       <div className={`flex h-[calc(100vh-4rem)] items-center justify-center`}>
         <div
           className='
-            w-full max-w-[60%] min-w-75 px-4 py-8
+            min-w-75 w-full max-w-[60%] px-4 py-8
             sm:px-6
             lg:px-8
           '

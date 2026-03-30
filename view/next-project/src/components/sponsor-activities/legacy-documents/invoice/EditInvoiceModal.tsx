@@ -64,7 +64,7 @@ export default function EditInvoiceModal(props: ModalProps) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div className='mx-auto mb-10 w-fit text-xl text-black-600'>請求書の修正</div>
+      <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>請求書の修正</div>
       <div className=''>
         <div className='my-4 grid grid-cols-5 place-items-center gap-2'>
           <p className='text-black-600'>企業名</p>
@@ -83,12 +83,12 @@ export default function EditInvoiceModal(props: ModalProps) {
         <div className='max-h-48 overflow-y-auto'>
           <table className='mb-4 w-full table-fixed border-collapse'>
             <thead>
-              <tr className='border-b border-b-primary-1 py-3'>
+              <tr className='border-b-primary-1 border-b py-3'>
                 <th className='w-3/4 px-6 pb-2'>
-                  <div className='text-center text-sm text-black-600'>協賛内容(オプション）</div>
+                  <div className='text-black-600 text-center text-sm'>協賛内容(オプション）</div>
                 </th>
                 <th className='w-1/4 px-6 pb-2'>
-                  <div className='text-center text-sm text-black-600'>値段</div>
+                  <div className='text-black-600 text-center text-sm'>値段</div>
                 </th>
               </tr>
             </thead>
@@ -98,7 +98,7 @@ export default function EditInvoiceModal(props: ModalProps) {
                   <tr
                     key={index}
                     className={clsx({
-                      'border-b border-b-primary-1':
+                      'border-b-primary-1 border-b':
                         index === editInvoice.invoiceSponsorStyle.length - 1,
                     })}
                   >

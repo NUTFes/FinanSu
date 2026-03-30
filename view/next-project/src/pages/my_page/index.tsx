@@ -55,7 +55,7 @@ const MyPage = () => {
         <div className='mx-5 mt-10 min-h-[calc(100vh-12rem)]'>
           <div className='mb-8 flex items-center justify-between'>
             <div className='flex items-center gap-4'>
-              <h2 className='text-2xl font-thin text-black-300'>My Page</h2>
+              <h2 className='text-black-300 text-2xl font-thin'>My Page</h2>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}

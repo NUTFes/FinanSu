@@ -26,7 +26,7 @@ export default function ReceiptModal(props: ModalProps) {
       </div>
       <div
         className={clsx(`
-          mb-10 grid w-full justify-items-center text-xl text-black-600
+          text-black-600 mb-10 grid w-full justify-items-center text-xl
         `)}
       >
         レシートの処理
@@ -34,9 +34,11 @@ export default function ReceiptModal(props: ModalProps) {
       <div className={clsx('mb-4 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
-          <div className={clsx(`
-            h-100 w-full text-center text-base text-black-300
-          `)}>
+          <div
+            className={clsx(`
+            h-100 text-black-300 w-full text-center text-base
+          `)}
+          >
             お疲れ様でした。
             <br />
             レシートの裏面に以下のIDを書いて所定の場所に保管してください。
@@ -45,7 +47,7 @@ export default function ReceiptModal(props: ModalProps) {
           </div>
           <div
             className={clsx(`
-              my-6 h-100 w-full text-center text-5xl font-bold text-black-300
+              h-100 text-black-300 my-6 w-full text-center text-5xl font-bold
             `)}
           >
             ID: {props.purchaseReportId}
@@ -54,12 +56,12 @@ export default function ReceiptModal(props: ModalProps) {
         <div className={clsx('col-span-1 grid')} />
       </div>
       <div className={clsx('grid w-full grid-cols-12 pb-5')}>
-        <div className={clsx('col-span-1 grid h-100')} />
+        <div className={clsx('h-100 col-span-1 grid')} />
         <div
           className={clsx(
             `
-              text-md col-span-10 grid h-100 w-full justify-items-center pr-3
-              text-black-600
+              text-md h-100 text-black-600 col-span-10 grid w-full justify-items-center
+              pr-3
             `,
           )}
         >
@@ -76,7 +78,7 @@ export default function ReceiptModal(props: ModalProps) {
             </div>
           </div>
         </div>
-        <div className={clsx('col-span-1 grid h-100')} />
+        <div className={clsx('h-100 col-span-1 grid')} />
       </div>
     </Modal>
   );

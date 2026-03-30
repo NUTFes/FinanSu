@@ -77,24 +77,24 @@ const Sponsorship: NextPage = () => {
             '
           >
             <thead>
-              <tr className='border-b border-b-primary-1 py-3'>
+              <tr className='border-b-primary-1 border-b py-3'>
                 <th className='w-1/8 border-b-primary-1 pb-2'>
-                  <div className='mr-1 text-center text-sm text-black-600'>企業名</div>
+                  <div className='text-black-600 mr-1 text-center text-sm'>企業名</div>
                 </th>
                 <th className='w-1/8 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>電話番号</div>
+                  <div className='text-black-600 text-center text-sm'>電話番号</div>
                 </th>
-                <th className='w-1/6 border-b-primary-1 pb-2'>
-                  <div className='text-center text-sm text-black-600'>メール</div>
+                <th className='border-b-primary-1 w-1/6 pb-2'>
+                  <div className='text-black-600 text-center text-sm'>メール</div>
                 </th>
-                <th className='w-1/6 border-b-primary-1 pb-2'>
+                <th className='border-b-primary-1 w-1/6 pb-2'>
                   <div className='text-center'>住所</div>
                 </th>
                 <th className='w-1/8 border-b-primary-1 pb-2'>
-                  <div className='text-center text-black-600'>代表者</div>
+                  <div className='text-black-600 text-center'>代表者</div>
                 </th>
-                <th className='w-1/12 border-b-primary-1 pb-2'>
-                  <div className='text-center text-black-600'></div>
+                <th className='border-b-primary-1 w-1/12 pb-2'>
+                  <div className='text-black-600 text-center'></div>
                 </th>
               </tr>
             </thead>
@@ -106,19 +106,19 @@ const Sponsorship: NextPage = () => {
                     key={sponsor.id}
                   >
                     <td className='py-3'>
-                      <div className='text-center text-black-300'>{sponsor.name}</div>
+                      <div className='text-black-300 text-center'>{sponsor.name}</div>
                     </td>
                     <td>
-                      <div className='text-center text-black-300'>{sponsor.tel}</div>
+                      <div className='text-black-300 text-center'>{sponsor.tel}</div>
                     </td>
                     <td>
-                      <div className='text-center text-black-300'>{sponsor.email}</div>
+                      <div className='text-black-300 text-center'>{sponsor.email}</div>
                     </td>
                     <td>
-                      <div className='text-center text-black-300'>{sponsor.address}</div>
+                      <div className='text-black-300 text-center'>{sponsor.address}</div>
                     </td>
                     <td>
-                      <div className='text-center text-black-300'>{sponsor.representative}</div>
+                      <div className='text-black-300 text-center'>{sponsor.representative}</div>
                     </td>
                     <td>
                       <div className='flex gap-3'>
@@ -131,7 +131,7 @@ const Sponsorship: NextPage = () => {
               ) : (
                 <tr>
                   <td colSpan={6} className='py-3'>
-                    <div className='text-center text-black-300'>データがありません</div>
+                    <div className='text-black-300 text-center'>データがありません</div>
                   </td>
                 </tr>
               )}
@@ -141,7 +141,7 @@ const Sponsorship: NextPage = () => {
       </Card>
       <div
         className='
-          fixed right-4 bottom-4
+          fixed bottom-4 right-4
           md:hidden
         '
       >

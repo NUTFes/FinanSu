@@ -42,7 +42,7 @@ export default function Periods() {
           />
           <p
             className='
-              text-2xl text-black-600
+              text-black-600 text-2xl
               md:text-3xl
             '
           >
@@ -73,10 +73,10 @@ export default function Periods() {
             <div className='my-10 flex w-full flex-col items-center'>
               <div className='mb-10 flex flex-col gap-6'>
                 <div className='my-2 flex flex-col items-center'>
-                  <p className='text-md whitespace-nowrap text-black-300'>
+                  <p className='text-md text-black-300 whitespace-nowrap'>
                     登録しているメールアドレスを入力してください。
                   </p>
-                  <p className='text-md whitespace-nowrap text-black-300'>
+                  <p className='text-md text-black-300 whitespace-nowrap'>
                     パスワードリセットフォームをお送りします。
                   </p>
                 </div>
@@ -85,12 +85,12 @@ export default function Periods() {
                     grid grid-cols-3 items-center justify-items-end gap-5
                   '
                 >
-                  <p className='text-md whitespace-nowrap text-black-300'>メールアドレス</p>
+                  <p className='text-md text-black-300 whitespace-nowrap'>メールアドレス</p>
                   <input
                     type='email'
                     placeholder='test@example.com'
                     className='
-                      col-span-2 w-full border-b border-b-primary-1 p-1
+                      border-b-primary-1 col-span-2 w-full border-b p-1
                     '
                     onChange={(e) => {
                       setEmail(e.target.value);

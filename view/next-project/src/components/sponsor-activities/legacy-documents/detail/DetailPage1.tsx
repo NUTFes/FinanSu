@@ -31,7 +31,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
     <>
       <p
         className='
-          mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest text-black-600
+          text-black-600 mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest
         '
       >
         協賛活動の詳細
@@ -39,51 +39,51 @@ const DetailPage1: FC<ModalProps> = (props) => {
       <div className='my-7 flex flex-wrap justify-center gap-7'>
         <div className='flex gap-3'>
           <p className='text-black-600'>作成日</p>
-          <p className='border-b border-primary-1'>
+          <p className='border-primary-1 border-b'>
             {formatDate(props.sponsorActivitiesViewItem.sponsorActivity.createdAt || '')}
           </p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>回収状況</p>
-          <p className='border-b border-primary-1'>
+          <p className='border-primary-1 border-b'>
             {props.sponsorActivitiesViewItem.sponsorActivity.isDone ? '回収済み' : '未回収'}
           </p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>担当者名</p>
-          <p className='border-b border-primary-1'>{props.sponsorActivitiesViewItem.user.name}</p>
+          <p className='border-primary-1 border-b'>{props.sponsorActivitiesViewItem.user.name}</p>
         </div>
       </div>
       <div className='my-7 flex flex-wrap justify-center gap-7'>
         <div className='flex gap-3'>
           <p className='text-black-600'>オプション</p>
-          <p className='border-b border-primary-1'>
+          <p className='border-primary-1 border-b'>
             {props.sponsorActivitiesViewItem.sponsorActivity.feature}
           </p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>交通費</p>
-          <p className='border-b border-primary-1'>
+          <p className='border-primary-1 border-b'>
             {props.sponsorActivitiesViewItem.sponsorActivity.expense}円
           </p>
         </div>
         <div className='flex gap-3'>
           <p className='text-black-600'>デザイン</p>
-          <p className='border-b border-primary-1'>
+          <p className='border-primary-1 border-b'>
             {DESIGNERS[props.sponsorActivitiesViewItem.sponsorActivity.design]}
           </p>
         </div>
       </div>
-      <p className='mx-auto my-3 w-fit text-xl text-black-600'>広告データurl</p>
+      <p className='text-black-600 mx-auto my-3 w-fit text-xl'>広告データurl</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border-b border-b-primary-1 py-3'></tr>
+          <tr className='border-b-primary-1 border-b py-3'></tr>
         </thead>
         <tbody>
-          <tr className='border-b border-b-primary-1'>
+          <tr className='border-b-primary-1 border-b'>
             <td className='py-3'>
               <div>
-                <div className='border-primary-1 text-center text-black-600'>
+                <div className='border-primary-1 text-black-600 text-center'>
                   {props.sponsorActivitiesViewItem.sponsorActivity.url === '' && <p>なし</p>}
                   {props.sponsorActivitiesViewItem.sponsorActivity.url !== '' && (
                     <a
@@ -99,13 +99,13 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>備考</p>
+      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border-b border-b-primary-1 py-3'></tr>
+          <tr className='border-b-primary-1 border-b py-3'></tr>
         </thead>
         <tbody>
-          <tr className='border-b border-b-primary-1'>
+          <tr className='border-b-primary-1 border-b'>
             <td className='py-3'>
               <div>
                 <p
@@ -122,29 +122,29 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='mx-auto mt-7 mb-2 w-fit text-xl text-black-600'>協賛企業</p>
+      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
-          <tr className='border-b border-b-primary-1 py-3'>
+          <tr className='border-b-primary-1 border-b py-3'>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>企業名</div>
+              <div className='text-black-600 text-center text-sm'>企業名</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>電話番号</div>
+              <div className='text-black-600 text-center text-sm'>電話番号</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>メール</div>
+              <div className='text-black-600 text-center text-sm'>メール</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>住所</div>
+              <div className='text-black-600 text-center text-sm'>住所</div>
             </th>
             <th className='w-1/4 px-6 pb-2'>
-              <div className='text-center text-sm text-black-600'>代表者名</div>
+              <div className='text-black-600 text-center text-sm'>代表者名</div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr className='border-b border-b-primary-1'>
+          <tr className='border-b-primary-1 border-b'>
             <td className='py-3'>
               <div className='text-center text-sm'>
                 {props.sponsorActivitiesViewItem.sponsor.name}
@@ -192,8 +192,8 @@ const DetailPage1: FC<ModalProps> = (props) => {
         <button
           onClick={() => toPage2()}
           className='
-            rounded-full
             hover:bg-grey-300
+            rounded-full
           '
         >
           <FaChevronCircleRight size={30} />

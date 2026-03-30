@@ -22,8 +22,8 @@ const DeleteButton = (props: Props) => {
       disabled={isDisabled}
       className={`
         ${buttonClass}
-        flex size-6 min-w-0 items-center justify-center rounded-full
-        bg-linear-to-br from-red-500 to-red-600 p-0
+        size-6 bg-linear-to-br flex min-w-0 items-center justify-center
+        rounded-full from-red-500 to-red-600 p-0
       `}
       onClick={onClick}
       suppressHydrationWarning
