@@ -5,7 +5,7 @@ import { RiAddCircleLine } from 'react-icons/ri';
 import { Card, Loading, PrimaryButton } from '@/components/common';
 import MainLayout from '@/components/layout/MainLayout';
 import TableSection from '@/components/mypage/TableSection';
-import { useGetFestivalItemsDetailsUserId } from '@/generated/hooks';
+import { useGetFestivalItemsDetailsUserId, useGetYearsPeriods } from '@/generated/hooks';
 import { useCurrentUser } from '@/store';
 import { User } from '@/type/common';
 
@@ -13,30 +13,61 @@ const MyPage = () => {
   const router = useRouter();
   const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 
   useEffect(() => {
     setCurrentUser(user);
   }, [user]);
 
+  const {
+    data: yearPeriodsData,
+    isLoading: isYearPeriodsLoading,
+    error: yearPeriodsError,
+  } = useGetYearsPeriods();
+
+  const yearPeriods = yearPeriodsData?.data;
+
+  useEffect(() => {
+    if (yearPeriods && yearPeriods.length > 0) {
+      const latestYear = Math.max(...yearPeriods.map((yp) => yp.year));
+      setSelectedYear(latestYear);
+    }
+  }, [yearPeriods]);
+
   const userId = currentUser?.id || 0;
-  const year = new Date().getFullYear();
   const { data, error, isLoading } = useGetFestivalItemsDetailsUserId(userId, {
-    year,
+    year: selectedYear,
   });
 
   const handleCreatePurchaseReport = () => {
-    router.push('/create_purchase_report');
+    router.push({
+      pathname: '/create_purchase_report',
+      query: { year: selectedYear },
+    });
   };
 
-  if (isLoading) return <Loading />;
-  if (error) return <div>エラーが発生しました</div>;
+  if (isLoading || isYearPeriodsLoading) return <Loading />;
+  if (error || yearPeriodsError) return <div>エラーが発生しました</div>;
   const resData = data?.data;
   return (
     <MainLayout>
       <Card>
         <div className='mx-5 mt-10 min-h-[calc(100vh-12rem)]'>
           <div className='mb-8 flex items-center justify-between'>
-            <h2 className='text-black-300 text-2xl font-thin'>My Page</h2>
+            <div className='flex items-center gap-4'>
+              <h2 className='text-black-300 text-2xl font-thin'>My Page</h2>
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className='border-black-300 border-b'
+              >
+                {yearPeriods?.map((yp) => (
+                  <option key={yp.year} value={yp.year}>
+                    {yp.year}年度
+                  </option>
+                ))}
+              </select>
+            </div>
             {resData && (
               <PrimaryButton onClick={handleCreatePurchaseReport}>
                 <div className='flex items-center gap-2'>

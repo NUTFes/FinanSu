@@ -45,12 +45,12 @@ const useReportFormData = (
 
 export const usePurchaseReportForm = (router: NextRouter) => {
   // URLパラメータの取得
-  const { from, id: reportIdParam } = router.query;
+  const { from, id: reportIdParam, year: yearParam } = router.query;
   const reportId = reportIdParam ? Number(reportIdParam) : undefined;
   const isEditMode = from === 'purchase_report_list';
 
   const user = useCurrentUser();
-  const year = new Date().getFullYear();
+  const year = typeof yearParam === 'string' ? Number(yearParam) : new Date().getFullYear();
   const userId = user?.id || 0;
   const userName = user?.name || '';
 

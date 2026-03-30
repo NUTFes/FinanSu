@@ -1,17 +1,29 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import { YearPeriods } from '@/generated/model/yearPeriods';
 import { AddButton, OutlinePrimaryButton, Title } from '@components/common';
 
 interface FundInformationHeaderProps {
   totalBalance: number;
+  selectedYear: number;
+  yearPeriods?: YearPeriods[];
+  onYearChange: (year: number) => void;
 }
 
-const FundInformationHeader: React.FC<FundInformationHeaderProps> = ({ totalBalance }) => {
+const FundInformationHeader: React.FC<FundInformationHeaderProps> = ({
+  totalBalance,
+  selectedYear,
+  yearPeriods,
+  onYearChange,
+}) => {
   const router = useRouter();
 
   const handleCreateClick = () => {
-    router.push('/fund_informations/create');
+    router.push({
+      pathname: '/fund_informations/create',
+      query: { year: selectedYear },
+    });
   };
 
   return (
@@ -21,7 +33,20 @@ const FundInformationHeader: React.FC<FundInformationHeaderProps> = ({ totalBala
         md:flex-row md:items-center md:justify-between
       '
     >
-      <Title title={'収支管理'} />
+      <div className='flex items-center gap-4'>
+        <Title title={'収支管理'} />
+        <select
+          value={selectedYear}
+          onChange={(e) => onYearChange(Number(e.target.value))}
+          className='border-black-300 border-b'
+        >
+          {yearPeriods?.map((yp) => (
+            <option key={yp.year} value={yp.year}>
+              {yp.year}年度
+            </option>
+          ))}
+        </select>
+      </div>
       <Title className='gap-0 text-xl'>
         残高<span className='ml-1'>{totalBalance.toLocaleString()}</span>
       </Title>
@@ -38,7 +63,7 @@ const FundInformationHeader: React.FC<FundInformationHeaderProps> = ({ totalBala
           '
         >
           <a
-            href={`${process.env.CSR_API_URI}/income_expenditure_management/csv/download?year=2025`}
+            href={`${process.env.CSR_API_URI}/income_expenditure_management/csv/download?year=${selectedYear}`}
             download
           >
             CSVダウンロード
