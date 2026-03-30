@@ -59,7 +59,7 @@ const MyPage = () => {
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className='border-b border-black-300'
+                className='border-black-300 border-b'
               >
                 {yearPeriods?.map((yp) => (
                   <option key={yp.year} value={yp.year}>

@@ -234,8 +234,8 @@ export default function BudgetManagement(props: Props) {
                 value={selectedYear.year}
                 onChange={handleYearChange}
                 className='
-                  border-b border-black-300
-                  focus:outline-hidden
+                  border-black-300 focus:outline-hidden
+                  border-b
                 '
               >
                 {years &&

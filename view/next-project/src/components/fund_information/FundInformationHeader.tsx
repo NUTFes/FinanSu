@@ -38,7 +38,7 @@ const FundInformationHeader: React.FC<FundInformationHeaderProps> = ({
         <select
           value={selectedYear}
           onChange={(e) => onYearChange(Number(e.target.value))}
-          className='border-b border-black-300'
+          className='border-black-300 border-b'
         >
           {yearPeriods?.map((yp) => (
             <option key={yp.year} value={yp.year}>
