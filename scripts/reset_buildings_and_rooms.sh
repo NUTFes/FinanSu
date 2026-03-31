@@ -3,11 +3,6 @@
 set -eu
 
 MYSQL_HOST="db"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" <<'SQL'
-SET FOREIGN_KEY_CHECKS = 0;
-DELETE FROM room_teachers;
-DELETE FROM rooms;
-SET FOREIGN_KEY_CHECKS = 1;
-SQL
-
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < "$SCRIPT_DIR/reset_buildings_and_rooms.sql"
