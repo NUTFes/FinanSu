@@ -19,4 +19,4 @@ jobs:
           fail_level: error
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
-          golangci_lint_flags: "--config=../.golangci.yml"
+          golangci_lint_flags: "--config=.golangci.yml"

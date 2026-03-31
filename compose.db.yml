@@ -11,7 +11,7 @@ services:
     volumes:
       - ./mysql/seed:/seed # 初期データ
       - ./scripts:/scripts # スクリプト
-      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "3306:3306"
     restart: always
