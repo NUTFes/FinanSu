@@ -6,9 +6,8 @@
 -- buildingsテーブルにunit_numberカラムを追加
 ALTER TABLE buildings ADD COLUMN unit_number TINYINT UNSIGNED NOT NULL DEFAULT 0;
 
--- room系マスタはシードで再投入する前提で空にする
-DELETE FROM room_teachers;
-DELETE FROM rooms;
+-- room系データが残っている環境では、事前に `make reset-buildings-and-rooms` を実行して
+-- room_teachers / rooms を空にしてから、このマイグレーションを適用する
 
 -- roomsテーブルの構造変更の準備
 ALTER TABLE rooms ADD COLUMN building_id INT(10) UNSIGNED NOT NULL;

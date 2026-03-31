@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+MYSQL_HOST="db"
+
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" <<'SQL'
+SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM room_teachers;
+DELETE FROM rooms;
+SET FOREIGN_KEY_CHECKS = 1;
+SQL
+
