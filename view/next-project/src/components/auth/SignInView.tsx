@@ -55,14 +55,14 @@ export default function SignInView() {
             <p
               className='
                 md:text-md
-                text-sm whitespace-nowrap text-black-300
+                text-black-300 whitespace-nowrap text-sm
               '
             >
               メールアドレス
             </p>
             <input
               type='text'
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               {...register('email', {
                 required: 'メールアドレスは必須です',
                 pattern: {
@@ -75,14 +75,14 @@ export default function SignInView() {
             <p
               className='
                 md:text-md
-                text-sm whitespace-nowrap text-black-300
+                text-black-300 whitespace-nowrap text-sm
               '
             >
               パスワード
             </p>
             <input
               type='password'
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               {...register('password', {
                 required: 'パスワードは必須です',
                 minLength: {

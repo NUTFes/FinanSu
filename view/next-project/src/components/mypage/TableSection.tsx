@@ -30,12 +30,12 @@ const convertDate = (date: string) => {
 // テーブルヘッダー
 const TableHeader: React.FC = () => (
   <thead className='bg-gray-100'>
-    <tr className='border-b border-primary-1 py-3 text-sm'>
-      <th className='w-1/3 py-2 pr-4 pl-14 text-left font-normal text-black-600'>物品名</th>
-      <th className='w-1/8 p-2 text-left font-normal text-black-600'>予算</th>
-      <th className='w-1/8 p-2 text-left font-normal text-black-600'>使用額</th>
-      <th className='w-1/8 p-2 text-left font-normal text-black-600'>残高</th>
-      <th className='p-2 text-left font-normal text-black-600'></th>
+    <tr className='border-primary-1 border-b py-3 text-sm'>
+      <th className='text-black-600 w-1/3 py-2 pl-14 pr-4 text-left font-normal'>物品名</th>
+      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>予算</th>
+      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>使用額</th>
+      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>残高</th>
+      <th className='text-black-600 p-2 text-left font-normal'></th>
     </tr>
   </thead>
 );
@@ -66,7 +66,7 @@ const TableItem: React.FC<TableItemProps> = ({
           if (hasSubitems) toggleItem(item.festivalItemName || '');
         }}
       >
-        <td className='py-4 pr-4 pl-8 text-left align-top text-black-300'>
+        <td className='text-black-300 py-4 pl-8 pr-4 text-left align-top'>
           {hasSubitems && (
             <span className='inline-flex items-center gap-1'>
               <span className='flex items-center text-blue-500'>
@@ -82,7 +82,7 @@ const TableItem: React.FC<TableItemProps> = ({
             </span>
           )}
           {!hasSubitems && (
-            <span className='text-sm text-black-300'>
+            <span className='text-black-300 text-sm'>
               {truncateItemName(item?.festivalItemName || '')}
             </span>
           )}
@@ -116,8 +116,8 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateI
       <td colSpan={5}>
         <div
           className='
-            flex w-full justify-start px-2
-            md:w-9/10
+            md:w-9/10 flex w-full justify-start
+            px-2
           '
         >
           <div
@@ -127,24 +127,24 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateI
           >
             <table
               className='
-                w-full table-auto text-sm wrap-break-word whitespace-normal
-                text-black-300
+                wrap-break-word text-black-300 w-full table-auto whitespace-normal
+                text-sm
               '
               onClick={(e) => e.stopPropagation()}
             >
               <tbody>
                 {items.map((item) => (
                   <tr key={item.buyReportName}>
-                    <td className='w-[30%] p-2 text-left text-nowrap'>
+                    <td className='text-nowrap w-[30%] p-2 text-left'>
                       {truncateItemName(itemsName || '')}
                     </td>
-                    <td className='w-[15%] p-2 text-center text-nowrap'>
+                    <td className='text-nowrap w-[15%] p-2 text-center'>
                       {convertDate(item?.reportDate ?? '')}
                     </td>
-                    <td className='w-[15%] p-2 text-center text-nowrap'>
+                    <td className='text-nowrap w-[15%] p-2 text-center'>
                       {item.buyReportName || '-'}
                     </td>
-                    <td className='w-[15%] p-2 text-center text-nowrap'>
+                    <td className='text-nowrap w-[15%] p-2 text-center'>
                       {item.amount ? item.amount.toLocaleString() : '-'}
                     </td>
                     <td className='w-[15%] p-2'>
@@ -170,7 +170,7 @@ interface TableFooterProps {
 
 const TableFooter: React.FC<TableFooterProps> = ({ totalBudget, totalUsed, totalRemaining }) => (
   <tfoot>
-    <tr className='border-t border-primary-1'>
+    <tr className='border-primary-1 border-t'>
       <td className='px-2 py-4 text-left'>合計</td>
       <td className='px-2 py-4'>{totalBudget.toLocaleString()}</td>
       <td className='px-2 py-4'>{totalUsed.toLocaleString()}</td>
@@ -198,12 +198,12 @@ const TableSection: React.FC<TableSectionProps> = ({ festivalItemDetails }) => {
 
   return (
     <div className='mb-8'>
-      <h3 className='mb-2 text-base font-light text-black-300'>
+      <h3 className='text-black-300 mb-2 text-base font-light'>
         {festivalItemDetails.divisionName}
       </h3>
 
       <div className='w-full overflow-x-auto'>
-        <table className='min-w-full table-fixed text-nowrap'>
+        <table className='text-nowrap min-w-full table-fixed'>
           <TableHeader />
           <tbody className='align-top'>
             {festivalItemDetails.festivalItems &&

@@ -16,29 +16,29 @@ interface FundInformationTableProps {
 
 const TableHeader = () => (
   <thead>
-    <tr className='border-b border-b-primary-1'>
+    <tr className='border-b-primary-1 border-b'>
       <th className='w-[15%] pb-2'>
-        <div className='text-center text-sm font-normal text-black-600'>日付</div>
+        <div className='text-black-600 text-center text-sm font-normal'>日付</div>
       </th>
       <th className='w-[15%] pb-2'>
-        <div className='text-left text-sm font-normal text-black-600'>
+        <div className='text-black-600 text-left text-sm font-normal'>
           局名 <br /> or 収入内容
         </div>
       </th>
       <th className='w-[15%] pb-2'>
-        <div className='text-left text-sm font-normal text-black-600'>
+        <div className='text-black-600 text-left text-sm font-normal'>
           購入物品 <br /> or 会社名
         </div>
       </th>
       <th className='w-[15%] pb-2'>
-        <div className='text-center text-sm font-normal text-black-600'>金額</div>
+        <div className='text-black-600 text-center text-sm font-normal'>金額</div>
       </th>
       <th className='w-[15%] pb-2'>
-        <div className='text-center text-sm font-normal text-black-600'>残高</div>
+        <div className='text-black-600 text-center text-sm font-normal'>残高</div>
       </th>
       <th className='w-[10%] pb-2'></th>
       <th className='w-[5%] pb-2'>
-        <div className='text-center text-sm font-normal text-black-600'>確認</div>
+        <div className='text-black-600 text-center text-sm font-normal'>確認</div>
       </th>
     </tr>
   </thead>
@@ -139,13 +139,13 @@ const FundInformationRow = ({
     <>
       <tr className={clsx(!isLastItem && 'border-b')}>
         <td className='py-3'>
-          <div className='text-center text-sm text-black-600'>{formatDate(fundItem.date)}</div>
+          <div className='text-black-600 text-center text-sm'>{formatDate(fundItem.date)}</div>
         </td>
         <td>
-          <div className='text-left text-sm text-black-600'>{fundItem.content.split(' ')[0]}</div>
+          <div className='text-black-600 text-left text-sm'>{fundItem.content.split(' ')[0]}</div>
         </td>
         <td>
-          <div className='text-left text-sm text-black-600'>
+          <div className='text-black-600 text-left text-sm'>
             {fundItem.content.split(' ').slice(1).join(' ') || fundItem.detail || ''}
           </div>
         </td>
@@ -155,7 +155,7 @@ const FundInformationRow = ({
           </div>
         </td>
         <td>
-          <div className='text-center text-sm text-black-600'>
+          <div className='text-black-600 text-center text-sm'>
             {fundItem.currentBalance.toLocaleString()}
           </div>
         </td>
@@ -200,10 +200,10 @@ const FundInformationRow = ({
 };
 
 const EmptyRow = () => (
-  <tr className='border-b border-primary-1'>
+  <tr className='border-primary-1 border-b'>
     <td className='px-1 py-3' colSpan={8}>
       <div className='flex justify-center'>
-        <div className='text-sm text-black-600'>データがありません</div>
+        <div className='text-black-600 text-sm'>データがありません</div>
       </div>
     </td>
   </tr>

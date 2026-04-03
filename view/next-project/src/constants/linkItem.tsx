@@ -57,7 +57,7 @@ export const RelationLinkItems: LinkItemProps[] = [
   {
     name: '協賛活動',
     icon: <MdOutlineWorkOutline className='mx-2 text-xl' />,
-    href: '/sponsoractivities',
+    href: '/sponsor-activities',
   },
   {
     name: '協賛スタイル',

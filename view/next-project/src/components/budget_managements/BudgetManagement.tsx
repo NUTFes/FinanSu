@@ -16,6 +16,7 @@ import type {
   FinancialRecord,
   GetDivisionsParams,
   GetFestivalItemsParams,
+  GetFinancialRecordsParams,
 } from '@/generated/model';
 
 interface FinancialRecordWithId extends FinancialRecord {
@@ -37,24 +38,31 @@ export default function BudgetManagement(props: Props) {
     divisionId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
     festivalItemId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
   });
+
+  const [selectedYear, setSelectedYear] = useState<Year>(
+    // 本番環境では、2025のyear_idを1にします
+    //TODO: マジックナンバーみたいになってるから後でいい感じにしましょう
+    years ? years[years.length - 1] : { id: 1, year: 2025 },
+  );
+
+  const financialRecordsParams: GetFinancialRecordsParams = {
+    year: selectedYear.year,
+  };
   const divisionsParams: GetDivisionsParams = {
+    year: selectedYear.year,
     financial_record_id: financialRecordId ?? undefined,
   };
   const festivalItemsParams: GetFestivalItemsParams = {
+    year: selectedYear.year,
     division_id: divisionId ?? undefined,
   };
-
-  const [selectedYear, _setSelectedYear] = useState<Year>(
-    // 本番環境では、2025のyear_idを1にします
-    years ? years[years.length - 1] : { id: 1, year: 2025 },
-  );
 
   const {
     data: financialRecordData,
     isLoading: isFinancialRecordLoading,
     error: financialRecordError,
     mutate: mutateFinancialRecords,
-  } = useGetFinancialRecords();
+  } = useGetFinancialRecords(financialRecordsParams);
   const {
     data: divisionsData,
     isLoading: isDivisionsLoading,
@@ -82,6 +90,13 @@ export default function BudgetManagement(props: Props) {
   let totalBudget = 0;
   let totalExpense = 0;
   let totalBalance = 0;
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const chosenYear = years.find((year) => year.year === Number(e.target.value));
+    if (!chosenYear) return;
+    setSelectedYear(chosenYear);
+    setQueryState({ financialRecordId: null, divisionId: null, festivalItemId: null });
+  };
 
   const handleFinancialRecordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const frId = e.target.value ? parseInt(e.target.value, 10) : null;
@@ -214,13 +229,31 @@ export default function BudgetManagement(props: Props) {
         >
           <div className='flex flex-col gap-4 py-2'>
             <div className='flex gap-3'>
+              <span className='text-base font-light'>年度</span>
+              <select
+                value={selectedYear.year}
+                onChange={handleYearChange}
+                className='
+                  border-black-300 focus:outline-hidden
+                  border-b
+                '
+              >
+                {years &&
+                  years.map((year) => (
+                    <option key={year.id} value={year.year}>
+                      {year.year}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className='flex gap-3'>
               <span className='text-base font-light'>申請する局</span>
               <select
                 value={financialRecordId ?? ''}
                 onChange={handleFinancialRecordChange}
                 className='
-                  border-b border-black-300
-                  focus:outline-hidden
+                  border-black-300 focus:outline-hidden
+                  border-b
                 '
               >
                 <option value=''>ALL</option>
@@ -243,8 +276,8 @@ export default function BudgetManagement(props: Props) {
                 value={divisionId ?? ''}
                 onChange={handleDivisionChange}
                 className='
-                  border-b border-black-300
-                  focus:outline-hidden
+                  border-black-300 focus:outline-hidden
+                  border-b
                 '
               >
                 <option value=''>ALL</option>
@@ -289,31 +322,35 @@ export default function BudgetManagement(props: Props) {
           </div>
         </div>
         <div className='mt-5 overflow-x-auto'>
-          <table className='w-full table-auto border-collapse text-nowrap'>
+          <table className='text-nowrap w-full table-auto border-collapse'>
             <thead>
-              <tr className='border-b border-b-primary-1 py-3'>
-                <th className='
-                  w-1/4 pb-2 text-center font-medium text-black-600
-                '>{title}</th>
+              <tr className='border-b-primary-1 border-b py-3'>
+                <th
+                  className='
+                  text-black-600 w-1/4 pb-2 text-center font-medium
+                '
+                >
+                  {title}
+                </th>
                 {showBudgetColumns && (
                   <>
                     <th
                       className='
-                        w-1/4 pb-2 text-center font-medium text-black-600
+                        text-black-600 w-1/4 pb-2 text-center font-medium
                       '
                     >
                       予算
                     </th>
                     <th
                       className='
-                        w-1/4 pb-2 text-center font-medium text-black-600
+                        text-black-600 w-1/4 pb-2 text-center font-medium
                       '
                     >
                       使用額
                     </th>
                     <th
                       className='
-                        w-1/4 pb-2 text-center font-medium text-black-600
+                        text-black-600 w-1/4 pb-2 text-center font-medium
                       '
                     >
                       残高
@@ -334,7 +371,7 @@ export default function BudgetManagement(props: Props) {
                   >
                     <td className='flex justify-center gap-2 py-3'>
                       <div
-                        className='text-center text-primary-1'
+                        className='text-primary-1 text-center'
                         onClick={() => handleRowClick(item)}
                       >
                         {item.name}
@@ -363,7 +400,7 @@ export default function BudgetManagement(props: Props) {
                   </tr>
                 ))}
               {showBudgetColumns && displayItems && displayItems.length > 0 && (
-                <tr className='border-t border-t-primary-1'>
+                <tr className='border-t-primary-1 border-t'>
                   <td className='py-3 text-center font-bold'>合計</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalBudget)}</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalExpense)}</td>

@@ -26,7 +26,7 @@ export default function Home() {
             />
             <p
               className='
-                text-2xl text-black-600
+                text-black-600 text-2xl
                 md:text-3xl
               '
             >
@@ -58,7 +58,7 @@ export default function Home() {
             />
             <p
               className='
-                text-2xl text-black-600
+                text-black-600 text-2xl
                 md:text-3xl
               '
             >

@@ -65,7 +65,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <div className='fixed right-4 bottom-4 z-9999 flex flex-col gap-2'>
+      <div className='z-9999 fixed bottom-4 right-4 flex flex-col gap-2'>
         {toasts.map((toast) => {
           const config = statusConfig[toast.status];
           return (
@@ -73,8 +73,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               key={toast.id}
               className={`
                 ${config.bgColor}
-                flex max-w-md min-w-75 items-start gap-3 rounded-lg p-4
-                text-white-0 shadow-lg transition-all duration-300
+                min-w-75 text-white-0 flex max-w-md items-start gap-3 rounded-lg
+                p-4 shadow-lg transition-all duration-300
               `}
               role='alert'
             >

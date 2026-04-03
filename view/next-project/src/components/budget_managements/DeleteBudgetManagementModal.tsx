@@ -73,9 +73,11 @@ const DeleteBudgetManagementModal: FC<ModalProps> = (props) => {
           {phase === 2 && '申請部門削除'}
           {phase === 3 && '申請物品削除'}
         </div>
-        <div className='
-          my-10 grid-cols-5 place-items-center gap-5 text-black-600
-        '>
+        <div
+          className='
+          text-black-600 my-10 grid-cols-5 place-items-center gap-5
+        '
+        >
           <div className='mx-auto my-5 w-fit text-xl'>{name}を削除しますか？</div>
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>

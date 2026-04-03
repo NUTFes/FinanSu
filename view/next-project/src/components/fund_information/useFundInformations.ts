@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router';
-import { useState, useMemo, useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import {
-  useGetIncomeExpenditureManagements,
-  useGetIncomes,
-  usePostIncomes,
-  useGetIncomesId,
-  putIncomesId,
   deleteIncomesId,
   putIncomeExpenditureManagementsCheckId,
+  putIncomesId,
+  useGetIncomeExpenditureManagements,
+  useGetIncomes,
+  useGetIncomesId,
   useGetYears,
+  usePostIncomes,
 } from '@/generated/hooks';
 import { Income } from '@/generated/model/income';
 import { IncomeCategory } from '@/generated/model/incomeCategory';
@@ -24,32 +24,28 @@ export type FundInformationFormData = {
 };
 
 // 年度IDの取得 とりあえず
-function useCurrentYearId() {
+function useSelectedYearId(selectedYear?: number) {
   const { data: yearData } = useGetYears();
 
   return useMemo(() => {
-    if (!yearData?.data || yearData.data.length === 0) {
+    if (!yearData?.data.length || !selectedYear) {
       return null;
     }
 
     // YearPeriods型だとid取れなそう？
+    // TODO: APIの型定義を見直すか、フロント側で必要な型を定義して変換することを検討
     type YearData = { id: number; year: number; createdAt: string; updatedAt: string };
 
-    const sortedYears = [...yearData.data]
-      .sort((a, b) => b.year - a.year)
-      .map((year) => year as unknown as YearData);
+    const years = yearData.data as unknown as YearData[];
+    const matchedYear = years.find((year) => year.year === selectedYear);
 
-    if (!sortedYears.length || !sortedYears[0].id) {
-      return null;
-    }
-
-    const latestYearData = sortedYears[0];
-    return latestYearData.id;
-  }, [yearData]);
+    return matchedYear?.id ?? null;
+  }, [yearData, selectedYear]);
 }
 
-export function useFundInformations(id?: number) {
+export function useFundInformations(option?: { id?: number; selectedYear?: number }) {
   const router = useRouter();
+  const { id, selectedYear } = option ?? {};
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -59,7 +55,7 @@ export function useFundInformations(id?: number) {
     isLoading: isLoadingManagements,
     error: managementsError,
     mutate: refreshManagements,
-  } = useGetIncomeExpenditureManagements();
+  } = useGetIncomeExpenditureManagements(selectedYear ? { year: selectedYear } : undefined);
 
   // 収入カテゴリーの取得
   const {
@@ -71,7 +67,7 @@ export function useFundInformations(id?: number) {
   // 年度一覧の取得
   const { isLoading: isLoadingYears, error: yearsError } = useGetYears();
 
-  const currentYearId = useCurrentYearId();
+  const currentYearId = useSelectedYearId(selectedYear);
 
   // IDが指定されている場合、特定の収入データを取得
   const {

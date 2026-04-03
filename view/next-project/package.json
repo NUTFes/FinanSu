@@ -17,7 +17,7 @@
   "dependencies": {
     "@fontsource/noto-sans-jp": "^4.5.2",
     "@pdf-lib/fontkit": "^1.1.1",
-    "@react-pdf/renderer": "^3.4.0",
+    "@react-pdf/renderer": "^4.3.2",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/formidable": "^3.4.5",
     "@types/react-select": "^5.0.1",
@@ -75,17 +75,9 @@
     "orval": "^7.3.0",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
-    "prettier-plugin-tailwindcss": "^0.7.2",
+    "prettier-plugin-tailwindcss": "^0.2.8",
     "storybook": "^8.1.3",
     "typescript": "^5.9.3"
-  },
-  "prettier": {
-    "trailingComma": "all",
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "printWidth": 100
   },
   "browserslist": {
     "production": [

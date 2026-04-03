@@ -5,18 +5,26 @@ import { PrimaryButton } from '@/components/common';
 export default function Custom500() {
   return (
     <div className='flex h-screen flex-col'>
-      <header className='
-        flex h-16 w-full items-center justify-center bg-primary-4
-      '>
+      <header
+        className='
+        bg-primary-4 flex h-16 w-full items-center justify-center
+      '
+      >
         <div
           className='
             w-24
             md:w-40
           '
         >
-          <Image src='/logo.svg' alt='FinanSu' width={150} height={40} className='
+          <Image
+            src='/logo.svg'
+            alt='FinanSu'
+            width={150}
+            height={40}
+            className='
             size-fit
-          ' />
+          '
+          />
         </div>
       </header>
       <main

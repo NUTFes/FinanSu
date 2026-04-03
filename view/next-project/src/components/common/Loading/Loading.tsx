@@ -24,9 +24,9 @@ function Loading(props: Props) {
     <>
       <div
         className='
-          fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden
-          overflow-y-auto bg-black-300/50 outline-hidden
-          focus:outline-hidden
+          bg-black-300/50 outline-hidden focus:outline-hidden fixed inset-0 z-50 flex
+          items-center justify-center overflow-y-auto
+          overflow-x-hidden
         '
       >
         <div className='relative mx-auto flex items-center gap-2'>
