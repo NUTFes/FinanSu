@@ -17,7 +17,7 @@ type userUseCase struct {
 }
 
 type UserUseCase interface {
-	GetUsers(context.Context) ([]domain.User, error)
+	GetUsers(context.Context, *[]int) ([]domain.User, error)
 	GetUserByID(context.Context, string) (domain.User, error)
 	CreateUser(context.Context, string, string, string) (domain.User, error)
 	UpdateUser(context.Context, string, string, string, string) (domain.User, error)
@@ -30,12 +30,21 @@ func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository
 	return &userUseCase{userRep: userRep, sessionRep: sessionRep}
 }
 
-func (u *userUseCase) GetUsers(c context.Context) ([]domain.User, error) {
-
+func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
 	user := domain.User{}
 	var users []domain.User
 
-	rows, err := u.userRep.All(c)
+	var rows *sql.Rows
+	var err error
+
+	if ids == nil {
+		rows, err = u.userRep.All(c)
+	} else if len(*ids) == 0 {
+		return []domain.User{}, nil
+	} else {
+		rows, err = u.userRep.FindByIDs(c, *ids)
+	}
+
 	if err != nil {
 		return nil, err
 	}

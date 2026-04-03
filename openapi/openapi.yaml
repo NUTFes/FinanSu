@@ -2047,13 +2047,41 @@ paths:
       tags:
         - user
       description: userの一覧を取得
+      parameters:
+        - name: ids
+          in: query
+          description: user id一覧（複数指定可）.未指定時は全件取得
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: integer
+            example: [1, 2]
       responses:
         "200":
           description: userの一覧を取得
-          # content:
-          #   "*/*":
-          #     schema:
-          #       type: array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/user"
+                example:
+                - id: 1
+                  name: 技大太郎1
+                  bureauID: 1
+                  roleID: 1
+                  isDeleted: false
+                  createdAt: 2026-01-01T00:00:00Z
+                  updatedAt: 2026-01-01T00:00:00Z
+                - id: 2
+                  name: 技大太郎2
+                  bureauID: 1
+                  roleID: 1
+                  isDeleted: false
+                  createdAt: 2026-01-02T00:00:00Z
+                  updatedAt: 2026-01-02T00:00:00Z
     post:
       tags:
         - user
@@ -2524,21 +2552,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - activityStatus
-                - feasibilityStatus
-                - designProgress
-              properties:
-                activityStatus:
-                  $ref: "#/components/schemas/ActivityStatus"
-                feasibilityStatus:
-                  $ref: "#/components/schemas/FeasibilityStatus"
-                designProgress:
-                  $ref: "#/components/schemas/DesignProgress"
-                remarks:
-                  type: string
-                  example: "電話にて確認済み"
+              $ref: "#/components/schemas/UpdateSponsorshipActivityStatusRequest"
       responses:
         "200":
           description: Updated
@@ -3362,9 +3376,25 @@ components:
                 type: integer
                 example: 1
               category:
-                type: string
-                enum: ["money", "goods"]
-                example: "money"
+                $ref: "#/components/schemas/SponsorStyleCategory"
+
+    UpdateSponsorshipActivityStatusRequest:
+      type: object
+      description: ステータス更新時のリクエストボディ
+      required:
+        - activityStatus
+        - feasibilityStatus
+        - designProgress
+      properties:
+        activityStatus:
+          $ref: "#/components/schemas/ActivityStatus"
+        feasibilityStatus:
+          $ref: "#/components/schemas/FeasibilityStatus"
+        designProgress:
+          $ref: "#/components/schemas/DesignProgress"
+        remarks:
+          type: string
+          example: "電話にて確認済み"
 
     UpdateSponsorshipActivityRequest:
       type: object
@@ -3405,9 +3435,7 @@ components:
                 type: integer
                 example: 1
               category:
-                type: string
-                enum: ["money", "goods"]
-                example: "money"
+                $ref: "#/components/schemas/SponsorStyleCategory"
 
     ActivitySponsorStyleLink:
       type: object
@@ -3420,9 +3448,7 @@ components:
           type: integer
           example: 2
         category:
-          type: string
-          enum: ["money", "goods"]
-          example: "money"
+          $ref: "#/components/schemas/SponsorStyleCategory"
         style:
           $ref: "#/components/schemas/sponsorStyle"
 
@@ -3438,5 +3464,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/SponsorshipActivity"
+
+    SponsorStyleCategory:
+      type: string
+      description: 協賛スタイルのカテゴリー（お金か物品か）
+      enum:
+        - money
+        - goods
 
 x-original-swagger-version: "2.0"

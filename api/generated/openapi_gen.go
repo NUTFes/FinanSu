@@ -13,12 +13,6 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
-// Defines values for ActivitySponsorStyleLinkCategory.
-const (
-	ActivitySponsorStyleLinkCategoryGoods ActivitySponsorStyleLinkCategory = "goods"
-	ActivitySponsorStyleLinkCategoryMoney ActivitySponsorStyleLinkCategory = "money"
-)
-
 // Defines values for ActivityStatus.
 const (
 	ActivityStatusConfirmed        ActivityStatus = "confirmed"
@@ -29,12 +23,6 @@ const (
 	ActivityStatusReceiptSent      ActivityStatus = "receipt_sent"
 	ActivityStatusRejected         ActivityStatus = "rejected"
 	ActivityStatusUnstarted        ActivityStatus = "unstarted"
-)
-
-// Defines values for CreateSponsorshipActivityRequestSponsorStyleDetailsCategory.
-const (
-	CreateSponsorshipActivityRequestSponsorStyleDetailsCategoryGoods CreateSponsorshipActivityRequestSponsorStyleDetailsCategory = "goods"
-	CreateSponsorshipActivityRequestSponsorStyleDetailsCategoryMoney CreateSponsorshipActivityRequestSponsorStyleDetailsCategory = "money"
 )
 
 // Defines values for DesignProgress.
@@ -52,10 +40,10 @@ const (
 	Unstarted  FeasibilityStatus = "unstarted"
 )
 
-// Defines values for UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory.
+// Defines values for SponsorStyleCategory.
 const (
-	Goods UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory = "goods"
-	Money UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory = "money"
+	Goods SponsorStyleCategory = "goods"
+	Money SponsorStyleCategory = "money"
 )
 
 // Defines values for BuyReportInformationStatus.
@@ -93,14 +81,12 @@ const (
 
 // ActivitySponsorStyleLink 協賛活動とプランの紐付け情報
 type ActivitySponsorStyleLink struct {
-	Category       *ActivitySponsorStyleLinkCategory `json:"category,omitempty"`
-	Id             *int                              `json:"id,omitempty"`
-	SponsorStyleId *int                              `json:"sponsorStyleId,omitempty"`
-	Style          *SponsorStyle                     `json:"style,omitempty"`
+	// Category 協賛スタイルのカテゴリー（お金か物品か）
+	Category       *SponsorStyleCategory `json:"category,omitempty"`
+	Id             *int                  `json:"id,omitempty"`
+	SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
+	Style          *SponsorStyle         `json:"style,omitempty"`
 }
-
-// ActivitySponsorStyleLinkCategory defines model for ActivitySponsorStyleLink.Category.
-type ActivitySponsorStyleLinkCategory string
 
 // ActivityStatus 活動ステータス
 type ActivityStatus string
@@ -120,21 +106,22 @@ type CreateSponsorshipActivityRequest struct {
 
 	// SponsorStyleDetails 登録したい協賛プラン情報のリスト
 	SponsorStyleDetails *[]struct {
-		Category       *CreateSponsorshipActivityRequestSponsorStyleDetailsCategory `json:"category,omitempty"`
-		SponsorStyleId *int                                                         `json:"sponsorStyleId,omitempty"`
+		// Category 協賛スタイルのカテゴリー（お金か物品か）
+		Category       *SponsorStyleCategory `json:"category,omitempty"`
+		SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
 	} `json:"sponsorStyleDetails,omitempty"`
 	UserId        int `json:"userId"`
 	YearPeriodsId int `json:"yearPeriodsId"`
 }
-
-// CreateSponsorshipActivityRequestSponsorStyleDetailsCategory defines model for CreateSponsorshipActivityRequest.SponsorStyleDetails.Category.
-type CreateSponsorshipActivityRequestSponsorStyleDetailsCategory string
 
 // DesignProgress デザイン進捗
 type DesignProgress string
 
 // FeasibilityStatus 協賛可否
 type FeasibilityStatus string
+
+// SponsorStyleCategory 協賛スタイルのカテゴリー（お金か物品か）
+type SponsorStyleCategory string
 
 // SponsorshipActivitiesResponse 協賛活動一覧のレスポンス
 type SponsorshipActivitiesResponse struct {
@@ -183,15 +170,26 @@ type UpdateSponsorshipActivityRequest struct {
 
 	// SponsorStyleDetails 更新したい協賛プラン情報のリスト（全置換）
 	SponsorStyleDetails *[]struct {
-		Category       *UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory `json:"category,omitempty"`
-		SponsorStyleId *int                                                         `json:"sponsorStyleId,omitempty"`
+		// Category 協賛スタイルのカテゴリー（お金か物品か）
+		Category       *SponsorStyleCategory `json:"category,omitempty"`
+		SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
 	} `json:"sponsorStyleDetails,omitempty"`
 	UserId        int `json:"userId"`
 	YearPeriodsId int `json:"yearPeriodsId"`
 }
 
-// UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory defines model for UpdateSponsorshipActivityRequest.SponsorStyleDetails.Category.
-type UpdateSponsorshipActivityRequestSponsorStyleDetailsCategory string
+// UpdateSponsorshipActivityStatusRequest ステータス更新時のリクエストボディ
+type UpdateSponsorshipActivityStatusRequest struct {
+	// ActivityStatus 活動ステータス
+	ActivityStatus ActivityStatus `json:"activityStatus"`
+
+	// DesignProgress デザイン進捗
+	DesignProgress DesignProgress `json:"designProgress"`
+
+	// FeasibilityStatus 協賛可否
+	FeasibilityStatus FeasibilityStatus `json:"feasibilityStatus"`
+	Remarks           *string           `json:"remarks,omitempty"`
+}
 
 // Activity defines model for activity.
 type Activity struct {
@@ -776,19 +774,6 @@ type GetSponsorshipActivitiesExportParams struct {
 	SponsorStyleIds   *[]int             `form:"sponsor_style_ids,omitempty" json:"sponsor_style_ids,omitempty"`
 }
 
-// PutSponsorshipActivitiesIdStatusJSONBody defines parameters for PutSponsorshipActivitiesIdStatus.
-type PutSponsorshipActivitiesIdStatusJSONBody struct {
-	// ActivityStatus 活動ステータス
-	ActivityStatus ActivityStatus `json:"activityStatus"`
-
-	// DesignProgress デザイン進捗
-	DesignProgress DesignProgress `json:"designProgress"`
-
-	// FeasibilityStatus 協賛可否
-	FeasibilityStatus FeasibilityStatus `json:"feasibilityStatus"`
-	Remarks           *string           `json:"remarks,omitempty"`
-}
-
 // PostTeachersParams defines parameters for PostTeachers.
 type PostTeachersParams struct {
 	// Name 名前
@@ -840,6 +825,12 @@ type PutTeachersIdParams struct {
 // PostUploadFileMultipartBody defines parameters for PostUploadFile.
 type PostUploadFileMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
+}
+
+// GetUsersParams defines parameters for GetUsers.
+type GetUsersParams struct {
+	// Ids user id一覧（複数指定可）.未指定時は全件取得
+	Ids *[]int `form:"ids,omitempty" json:"ids,omitempty"`
 }
 
 // PostUsersParams defines parameters for PostUsers.
@@ -948,7 +939,7 @@ type PostSponsorshipActivitiesJSONRequestBody = CreateSponsorshipActivityRequest
 type PutSponsorshipActivitiesIdJSONRequestBody = UpdateSponsorshipActivityRequest
 
 // PutSponsorshipActivitiesIdStatusJSONRequestBody defines body for PutSponsorshipActivitiesIdStatus for application/json ContentType.
-type PutSponsorshipActivitiesIdStatusJSONRequestBody PutSponsorshipActivitiesIdStatusJSONBody
+type PutSponsorshipActivitiesIdStatusJSONRequestBody = UpdateSponsorshipActivityStatusRequest
 
 // PostSponsorstylesJSONRequestBody defines body for PostSponsorstyles for application/json ContentType.
 type PostSponsorstylesJSONRequestBody = SponsorStyle
@@ -1272,7 +1263,7 @@ type ServerInterface interface {
 	PostUploadFile(ctx echo.Context) error
 
 	// (GET /users)
-	GetUsers(ctx echo.Context) error
+	GetUsers(ctx echo.Context, params GetUsersParams) error
 
 	// (POST /users)
 	PostUsers(ctx echo.Context, params PostUsersParams) error
@@ -3201,8 +3192,17 @@ func (w *ServerInterfaceWrapper) PostUploadFile(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetUsers(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUsersParams
+	// ------------- Optional query parameter "ids" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "ids", ctx.QueryParams(), &params.Ids)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter ids: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetUsers(ctx)
+	err = w.Handler.GetUsers(ctx, params)
 	return err
 }
 

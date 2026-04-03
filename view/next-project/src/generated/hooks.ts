@@ -90,6 +90,7 @@ import type {
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
   GetUsersId200,
+  GetUsersParams,
   Income,
   IncomeCategory,
   IncomeExpenditureManagementDetails,
@@ -134,7 +135,6 @@ import type {
   PutIncomeExpenditureManagementsCheckId200,
   PutIncomeExpenditureManagementsCheckIdBody,
   PutSponsorsId200,
-  PutSponsorshipActivitiesIdStatusBody,
   PutSponsorstylesId200,
   PutTeachersId200,
   PutTeachersIdParams,
@@ -149,6 +149,7 @@ import type {
   SponsorshipActivity,
   Teacher,
   UpdateSponsorshipActivityRequest,
+  UpdateSponsorshipActivityStatusRequest,
   User,
   YearPeriods,
 } from './model';
@@ -6365,7 +6366,7 @@ export const usePostUploadFile = <TError = unknown>(options?: {
  * userの一覧を取得
  */
 export type getUsersResponse200 = {
-  data: void;
+  data: User[];
   status: 200;
 };
 
@@ -6374,34 +6375,56 @@ export type getUsersResponseSuccess = getUsersResponse200 & {
 };
 export type getUsersResponse = getUsersResponseSuccess;
 
-export const getGetUsersUrl = () => {
-  return `/users`;
+export const getGetUsersUrl = (params?: GetUsersParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ['ids'];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/users?${stringifiedParams}` : `/users`;
 };
 
-export const getUsers = async (options?: RequestInit): Promise<getUsersResponse> => {
-  return customFetch<getUsersResponse>(getGetUsersUrl(), {
+export const getUsers = async (
+  params?: GetUsersParams,
+  options?: RequestInit,
+): Promise<getUsersResponse> => {
+  return customFetch<getUsersResponse>(getGetUsersUrl(params), {
     ...options,
     method: 'GET',
   });
 };
 
-export const getGetUsersKey = () => [`/users`] as const;
+export const getGetUsersKey = (params?: GetUsersParams) =>
+  [`/users`, ...(params ? [params] : [])] as const;
 
 export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>;
 export type GetUsersQueryError = unknown;
 
-export const useGetUsers = <TError = unknown>(options?: {
-  swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & {
-    swrKey?: Key;
-    enabled?: boolean;
-  };
-  request?: SecondParameter<typeof customFetch>;
-}) => {
+export const useGetUsers = <TError = unknown>(
+  params?: GetUsersParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
   const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersKey() : null));
-  const swrFn = () => getUsers(requestOptions);
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersKey(params) : null));
+  const swrFn = () => getUsers(params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
@@ -7736,7 +7759,7 @@ export const getPutSponsorshipActivitiesIdStatusUrl = (id: number) => {
 
 export const putSponsorshipActivitiesIdStatus = async (
   id: number,
-  putSponsorshipActivitiesIdStatusBody: PutSponsorshipActivitiesIdStatusBody,
+  updateSponsorshipActivityStatusRequest: UpdateSponsorshipActivityStatusRequest,
   options?: RequestInit,
 ): Promise<putSponsorshipActivitiesIdStatusResponse> => {
   return customFetch<putSponsorshipActivitiesIdStatusResponse>(
@@ -7745,7 +7768,7 @@ export const putSponsorshipActivitiesIdStatus = async (
       ...options,
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(putSponsorshipActivitiesIdStatusBody),
+      body: JSON.stringify(updateSponsorshipActivityStatusRequest),
     },
   );
 };
@@ -7754,7 +7777,7 @@ export const getPutSponsorshipActivitiesIdStatusMutationFetcher = (
   id: number,
   options?: SecondParameter<typeof customFetch>,
 ) => {
-  return (_: Key, { arg }: { arg: PutSponsorshipActivitiesIdStatusBody }) => {
+  return (_: Key, { arg }: { arg: UpdateSponsorshipActivityStatusRequest }) => {
     return putSponsorshipActivitiesIdStatus(id, arg, options);
   };
 };
@@ -7776,7 +7799,7 @@ export const usePutSponsorshipActivitiesIdStatus = <TError = unknown>(
       Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>,
       TError,
       Key,
-      PutSponsorshipActivitiesIdStatusBody,
+      UpdateSponsorshipActivityStatusRequest,
       Awaited<ReturnType<typeof putSponsorshipActivitiesIdStatus>>
     > & { swrKey?: string };
     request?: SecondParameter<typeof customFetch>;
