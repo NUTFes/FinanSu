@@ -11,7 +11,6 @@ import {
   Textarea,
   DeleteButton,
   AddButton,
-  Select,
 } from '@components/common';
 import { SponsorStyle } from '@type/common';
 
@@ -151,22 +150,40 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
     [sponsorStyles],
   );
 
+  const styleDatalist = useMemo(
+    () => ({
+      key: 'blank-invoice-style-options',
+      data: styleOptions.map((opt, index) => ({
+        id: index,
+        name: opt.label,
+      })),
+    }),
+    [styleOptions],
+  );
+
+  const findMatchedStyleOption = useCallback(
+    (inputValue: string) =>
+      styleOptions.find((opt) => opt.label === inputValue || opt.value === inputValue),
+    [styleOptions],
+  );
+
   const onItemStyleChange = useCallback(
-    (id: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selected = styleOptions.find((opt) => opt.value === e.target.value);
+    (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = e.target.value;
+      const selected = findMatchedStyleOption(inputValue);
       setItems((prevItems) =>
         prevItems.map((item) =>
           item.id === id
             ? {
                 ...item,
-                styleName: selected?.value || '',
-                price: selected?.price ?? 0,
+                styleName: inputValue,
+                price: selected?.price ?? item.price,
               }
             : item,
         ),
       );
     },
-    [styleOptions],
+    [findMatchedStyleOption],
   );
 
   const isFormValid = useMemo(() => {
@@ -268,14 +285,13 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                       '
                     >
                       <div className='col-span-5'>
-                        <Select value={item.styleName} onChange={onItemStyleChange(item.id)}>
-                          <option value=''>協賛内容を選択</option>
-                          {styleOptions.map((opt) => (
-                            <option key={opt.value + opt.label} value={opt.value}>
-                              {opt.label}
-                            </option>
-                          ))}
-                        </Select>
+                        <Input
+                          type='text'
+                          value={item.styleName}
+                          onChange={onItemStyleChange(item.id)}
+                          placeholder='協賛内容を入力'
+                          datalist={styleDatalist}
+                        />
                       </div>
                       <div className='col-span-2'>
                         <Input
