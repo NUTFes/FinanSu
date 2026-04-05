@@ -15,7 +15,7 @@ import {
 } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
 
-import { buildInvoiceFromActivity } from './progressReportPdfUtils';
+import { buildInvoiceFromActivity, getActivityAmountFromApi } from './progressReportPdfUtils';
 
 interface ProgressReportInvoicePdfModalProps {
   activity: SponsorshipActivity;
@@ -30,6 +30,7 @@ export default function ProgressReportInvoicePdfModal({
 }: ProgressReportInvoicePdfModalProps) {
   const today = getToday();
   const baseInvoice = useMemo(() => buildInvoiceFromActivity(activity), [activity]);
+  const totalPrice = useMemo(() => getActivityAmountFromApi(activity), [activity]);
   const [issuedDate, setIssuedDate] = useState(today);
   const [deadline, setDeadline] = useState(today);
   const [subject, setSubject] = useState(baseInvoice.subject);
@@ -99,6 +100,13 @@ export default function ProgressReportInvoicePdfModal({
                 />
                 <p className='mb-2 ml-1 text-sm text-gray-600'>担当者名(実行委員)</p>
                 <Input type='text' value={invoice.fesStuffName} readOnly className='mb-3 w-full' />
+                <p className='mb-2 ml-1 text-sm text-gray-600'>合計金額</p>
+                <Input
+                  type='text'
+                  value={`¥ ${totalPrice.toLocaleString()}`}
+                  readOnly
+                  className='mb-3 w-full bg-gray-50'
+                />
                 <p className='mb-2 ml-1 text-sm text-gray-600'>備考</p>
                 <Textarea
                   value={remark}

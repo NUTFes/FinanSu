@@ -13,6 +13,10 @@ const formatInvoiceStyleName = (style?: SponsorStyle) => {
   return style.feature ? `${style.style}(${style.feature})` : style.style;
 };
 
+export const getActivityAmountFromApi = (activity: SponsorshipActivity): number => {
+  return activity.sponsorStyles?.reduce((sum, link) => sum + (link.style?.price ?? 0), 0) ?? 0;
+};
+
 const toCommonSponsorStyle = (activity: SponsorshipActivity, sponsorStyleId: number): SponsorStyle => {
   const matchedStyle = activity.sponsorStyles?.find((link) => link.sponsorStyleId === sponsorStyleId)?.style;
 
@@ -92,7 +96,7 @@ export const buildInvoiceFromActivity = (activity: SponsorshipActivity): Invoice
     unitPrice: link.style?.price ?? 0,
   }));
 
-  const totalPrice = invoiceSponsorStyle.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = getActivityAmountFromApi(activity);
 
   return {
     sponsorName: activity.sponsor?.name ?? '',

@@ -8,7 +8,7 @@ import {
 } from '@/utils/createSponsorActivitiesReceiptsPDF';
 import { getToday } from '@/utils/dateConverter';
 
-import { buildLegacySponsorActivityView } from './progressReportPdfUtils';
+import { buildLegacySponsorActivityView, getActivityAmountFromApi } from './progressReportPdfUtils';
 
 interface ProgressReportReceiptPdfModalProps {
   activity: SponsorshipActivity;
@@ -25,6 +25,7 @@ export default function ProgressReportReceiptPdfModal({
   const [issuedDate, setIssuedDate] = useState(today);
   const [paymentDay, setPaymentDay] = useState(today);
   const sponsorActivityView = useMemo(() => buildLegacySponsorActivityView(activity), [activity]);
+  const totalPrice = useMemo(() => getActivityAmountFromApi(activity), [activity]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -65,6 +66,13 @@ export default function ProgressReportReceiptPdfModal({
                 value={paymentDay}
                 onChange={(event) => setPaymentDay(event.target.value)}
                 className='mb-6 w-full'
+              />
+              <p className='mb-2 ml-1 text-sm text-gray-600'>合計金額</p>
+              <Input
+                type='text'
+                value={`¥ ${totalPrice.toLocaleString()}`}
+                readOnly
+                className='mb-6 w-full bg-gray-50'
               />
 
               <div className='mt-4 flex justify-center gap-4'>
