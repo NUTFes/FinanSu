@@ -77,7 +77,6 @@ export default function ProgressReportLayout({
         errors={errors}
         onClose={onCloseModal}
         onSubmit={onSubmit}
-        onDocumentPlaceholder={onDocumentPlaceholder}
       />
     </MainLayout>
   );

@@ -14,6 +14,7 @@ import {
   Select,
   Spinner,
 } from '@/components/common';
+import ProgressReportDocumentButtons from '@/components/progress-report/ProgressReportDocumentButtons';
 import type { SponsorshipActivity } from '@/generated/model';
 import {
   ACTIVITY_STATUS_LABELS,
@@ -25,9 +26,6 @@ import ProgressReportFieldRow from '@/components/progress-report/ProgressReportF
 
 const READ_ONLY_FIELD_CLASS_NAME =
   'pointer-events-none w-full rounded-none border-0 border-b border-[#56daff] bg-transparent px-0 py-1 text-base text-[#666666] shadow-none focus:border-[#56daff] focus:ring-0';
-
-const OUTLINE_ACTION_CLASS_NAME =
-  'min-w-28 justify-center border-[#56daff] px-6 py-1.5 text-[#56daff] font-normal';
 
 const PRIMARY_ACTION_CLASS_NAME = 'min-w-36 justify-center px-8 py-2 font-normal';
 
@@ -43,7 +41,6 @@ interface ProgressReportModalProps {
   errors: FieldErrors<SponsorshipActivityProgressReportFormValues>;
   onClose: () => void;
   onSubmit: (values: SponsorshipActivityProgressReportFormValues) => Promise<void>;
-  onDocumentPlaceholder: (documentType: 'receipt' | 'invoice') => void;
 }
 
 export default function ProgressReportModal({
@@ -58,7 +55,6 @@ export default function ProgressReportModal({
   errors,
   onClose,
   onSubmit,
-  onDocumentPlaceholder,
 }: ProgressReportModalProps) {
   if (!isOpen) return null;
 
@@ -198,22 +194,7 @@ export default function ProgressReportModal({
               )}
             />
 
-            <div className='flex flex-wrap justify-center gap-3 pt-1'>
-              <OutlinePrimaryButton
-                className={OUTLINE_ACTION_CLASS_NAME + ' min-w-32'}
-                onClick={() => onDocumentPlaceholder('receipt')}
-                disabled={isUpdating}
-              >
-                領収書発行
-              </OutlinePrimaryButton>
-              <OutlinePrimaryButton
-                className={OUTLINE_ACTION_CLASS_NAME + ' min-w-32'}
-                onClick={() => onDocumentPlaceholder('invoice')}
-                disabled={isUpdating}
-              >
-                請求書発行
-              </OutlinePrimaryButton>
-            </div>
+            <ProgressReportDocumentButtons activity={activity} disabled={isUpdating} />
 
             <Controller
               name='remarks'
