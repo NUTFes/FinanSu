@@ -8,13 +8,14 @@ import type { SponsorshipActivity } from '@/generated/model';
 import type { SponsorshipActivityProgressReportFormValues } from '@/utils/sponsorshipActivityProgressReport';
 import { Loading } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
+import type { SponsorStyle } from '@type/common';
 
 interface ProgressReportLayoutProps {
   activities: SponsorshipActivity[];
   isActivitiesLoading: boolean;
   hasActivitiesError: boolean;
   onSelectActivity: (activityId: number) => void;
-  onDocumentPlaceholder: (documentType: 'receipt' | 'invoice') => void;
+  sponsorStyles: SponsorStyle[];
   isModalOpen: boolean;
   isActivityLoading: boolean;
   hasActivityError: boolean;
@@ -33,7 +34,7 @@ export default function ProgressReportLayout({
   isActivitiesLoading,
   hasActivitiesError,
   onSelectActivity,
-  onDocumentPlaceholder,
+  sponsorStyles,
   isModalOpen,
   isActivityLoading,
   hasActivityError,
@@ -55,7 +56,7 @@ export default function ProgressReportLayout({
       {isActivitiesLoading && <Loading />}
       <div className='min-h-[calc(100vh-4rem)] px-4 py-10 md:px-8 md:py-16'>
         <div className='mx-auto mt-14 max-w-[860px] rounded-2xl border border-[#e5e7eb] bg-white px-8 py-8 shadow-[0_4px_14px_rgba(0,0,0,0.12)] md:px-12'>
-          <ProgressReportHeader onDocumentPlaceholder={onDocumentPlaceholder} />
+          <ProgressReportHeader sponsorStyles={sponsorStyles} />
           <ProgressReportTable
             activities={activities}
             isLoading={isActivitiesLoading}

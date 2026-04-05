@@ -132,16 +132,6 @@ const ProgressReportPage: NextPage = () => {
       .join('　');
   }, [selectedSponsorStyleDetails, sponsorStyleOptions]);
 
-  const handleDocumentPlaceholder = (documentType: 'receipt' | 'invoice') => {
-    toast({
-      title: documentType === 'receipt' ? '領収書発行は未接続です' : '請求書発行は未接続です',
-      description: '発行 API は未接続のため、将来の拡張用プレースホルダーとして保持しています。',
-      status: 'info',
-      duration: 4000,
-      isClosable: true,
-    });
-  };
-
   const onSubmit = async (values: SponsorshipActivityProgressReportFormValues) => {
     if (!activity || selectedActivityId === null) {
       toast({
@@ -188,7 +178,7 @@ const ProgressReportPage: NextPage = () => {
       onSelectActivity={(activityId) => {
         setSelectedActivityId(activityId);
       }}
-      onDocumentPlaceholder={handleDocumentPlaceholder}
+      sponsorStyles={sponsorStylesResponse?.data ?? []}
       isModalOpen={isModalOpen}
       isActivityLoading={isActivityLoading}
       hasActivityError={Boolean(activityError)}
