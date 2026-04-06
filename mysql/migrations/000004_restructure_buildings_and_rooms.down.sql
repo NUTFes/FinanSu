@@ -6,9 +6,11 @@
 -- - 旧スキーマ向けのマスタデータは mysql/seed/... を再投入して復元する（本番もシード更新とセット想定）。
 --
 -- campus_donations に削除したカラムを復元
+ALTER TABLE campus_donations MODIFY COLUMN received_at VARCHAR(255) NOT NULL;
 ALTER TABLE campus_donations ADD COLUMN remark VARCHAR(255);
 ALTER TABLE campus_donations ADD COLUMN is_first_check BOOLEAN;
 ALTER TABLE campus_donations ADD COLUMN is_last_check BOOLEAN;
+ALTER TABLE teachers ADD COLUMN room VARCHAR(255);
 
 -- rooms 参照の子から空にする
 TRUNCATE TABLE room_teachers;
