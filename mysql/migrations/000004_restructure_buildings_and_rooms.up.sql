@@ -34,3 +34,4 @@ ALTER TABLE campus_donations DROP COLUMN is_last_check;
 ALTER TABLE campus_donations DROP COLUMN is_first_check;
 ALTER TABLE campus_donations DROP COLUMN remark;
 ALTER TABLE campus_donations MODIFY COLUMN received_at DATE NOT NULL;
+ALTER TABLE teachers DROP COLUMN room;
