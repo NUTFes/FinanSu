@@ -44,7 +44,7 @@ func (fir *festivalItemRepository) AllByPeriodAndDivision(
 	divisionId string,
 ) (*sql.Rows, error) {
 	var conditions []string
-	var args []interface{}
+	var args []any
 
 	if divisionId != "" {
 		conditions = append(conditions, "divisions.id = ?")
