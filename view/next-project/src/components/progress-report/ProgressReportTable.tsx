@@ -4,6 +4,7 @@ import {
   ACTIVITY_STATUS_LABELS,
   DESIGN_PROGRESS_LABELS,
 } from '@/utils/sponsorshipActivityProgressReport';
+import { MdAttachMoney, MdInventory2 } from 'react-icons/md';
 
 const toActivityStatusLabel = (status?: ActivityStatus) => {
   if (!status) return '未定';
@@ -20,19 +21,24 @@ const formatSponsorStyleLabel = (activity: SponsorshipActivity) => {
 
   return (
     <div className='space-y-1'>
-      {activity.sponsorStyles.map((sponsorStyleLink, index) => (
-        <div key={`${activity.id}-${sponsorStyleLink.sponsorStyleId}-${index}`}>
-          {`${
-            sponsorStyleLink.category === 'money'
-              ? '金'
-              : sponsorStyleLink.category === 'goods'
-                ? '物'
-                : ''
-          } ${sponsorStyleLink.style?.style ?? ''}${
-            sponsorStyleLink.style?.feature ? ` ${sponsorStyleLink.style.feature}` : ''
-          }`.trim()}
-        </div>
-      ))}
+      {activity.sponsorStyles.map((sponsorStyleLink, index) => {
+        const label = [sponsorStyleLink.style?.style, sponsorStyleLink.style?.feature]
+          .filter(Boolean)
+          .join(' ');
+        return (
+          <div
+            key={`${activity.id}-${sponsorStyleLink.sponsorStyleId}-${index}`}
+            className='flex items-center justify-center gap-1'
+          >
+            {sponsorStyleLink.category === 'goods' ? (
+              <MdInventory2 className='shrink-0 text-[#666666]' size={16} />
+            ) : (
+              <MdAttachMoney className='shrink-0 text-[#666666]' size={16} />
+            )}
+            <span>{label || '-'}</span>
+          </div>
+        );
+      })}
     </div>
   );
 };
