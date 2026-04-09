@@ -55,7 +55,7 @@ export default function ProgressReportLayout({
       </Head>
       {isActivitiesLoading && <Loading />}
       <div className='min-h-[calc(100vh-4rem)] px-4 py-10 md:px-8 md:py-16'>
-        <div className='mx-auto mt-14 max-w-[860px] rounded-2xl border border-[#e5e7eb] bg-white px-8 py-8 shadow-[0_4px_14px_rgba(0,0,0,0.12)] md:px-12'>
+        <div className='mx-auto mt-14 max-w-[1280px] rounded-2xl border border-[#e5e7eb] bg-white px-8 py-8 shadow-[0_4px_14px_rgba(0,0,0,0.12)] md:px-12'>
           <ProgressReportHeader sponsorStyles={sponsorStyles} />
           <ProgressReportTable
             activities={activities}
