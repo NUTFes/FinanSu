@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 import { EditButton, Spinner } from '@/components/common';
 import { ActivityStatus, DesignProgress, type SponsorshipActivity } from '@/generated/model';
 import {
@@ -43,6 +47,12 @@ const formatSponsorStyleLabel = (activity: SponsorshipActivity) => {
   );
 };
 
+interface TooltipState {
+  name: string;
+  x: number;
+  y: number;
+}
+
 interface ProgressReportTableProps {
   activities: SponsorshipActivity[];
   isLoading: boolean;
@@ -56,8 +66,19 @@ export default function ProgressReportTable({
   hasError,
   onSelectActivity,
 }: ProgressReportTableProps) {
+  const [tooltip, setTooltip] = useState<TooltipState | null>(null);
+
   return (
     <div className='overflow-auto'>
+      {tooltip && (
+        <div
+          className='pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg border border-[rgb(86,218,255)]/40 bg-white px-3 py-1.5 text-xs text-[#444444] shadow-[0_4px_14px_rgba(0,0,0,0.1)] transition-opacity duration-150'
+          style={{ left: tooltip.x, top: tooltip.y - 8 }}
+        >
+          {tooltip.name}
+          <div className='absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-[rgb(86,218,255)]/40' />
+        </div>
+      )}
       <table className='w-full table-auto border-collapse'>
         <thead>
           <tr className='border-b border-[rgb(86,218,255)]/60'>
@@ -112,8 +133,24 @@ export default function ProgressReportTable({
             activities.length > 0 &&
             activities.map((item) => (
               <tr key={item.id} className='border-b border-[#e5e7eb]/80 hover:bg-[#f9fafb]'>
-                <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
-                  {item.sponsor?.name ?? '-'}
+                <td className='px-4 py-3 text-center text-sm text-[#666666]'>
+                  <div
+                    className='mx-auto max-w-[10rem] cursor-default truncate'
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget;
+                      if (item.sponsor?.name && el.scrollWidth > el.clientWidth) {
+                        const rect = el.getBoundingClientRect();
+                        setTooltip({
+                          name: item.sponsor.name,
+                          x: rect.left + rect.width / 2,
+                          y: rect.top,
+                        });
+                      }
+                    }}
+                    onMouseLeave={() => setTooltip(null)}
+                  >
+                    {item.sponsor?.name ?? '-'}
+                  </div>
                 </td>
                 <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
                   {item.sponsor?.representative ?? '-'}
