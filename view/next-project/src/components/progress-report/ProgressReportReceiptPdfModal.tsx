@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { CloseButton, Input, Modal, OutlinePrimaryButton, PrimaryButton } from '@/components/common';
-import type { SponsorshipActivity } from '@/generated/model';
 import {
-  PreviewPDF,
-  createSponsorActivitiesPDF,
-} from '@/utils/createSponsorActivitiesReceiptsPDF';
+  CloseButton,
+  Input,
+  Modal,
+  OutlinePrimaryButton,
+  PrimaryButton,
+} from '@/components/common';
+import type { SponsorshipActivity } from '@/generated/model';
+import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesReceiptsPDF';
 import { getToday } from '@/utils/dateConverter';
 
 import { buildLegacySponsorActivityView, getActivityAmountFromApi } from './progressReportPdfUtils';

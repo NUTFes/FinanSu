@@ -82,22 +82,22 @@ export default function ProgressReportTable({
       <table className='w-full table-auto border-collapse'>
         <thead>
           <tr className='border-b border-[rgb(86,218,255)]/60'>
-            <th className='px-4 pb-2 text-center text-sm font-normal whitespace-nowrap text-[#666666]'>
+            <th className='whitespace-nowrap px-4 pb-2 text-center text-sm font-normal text-[#666666]'>
               企業名
             </th>
-            <th className='px-4 pb-2 text-center text-sm font-normal whitespace-nowrap text-[#666666]'>
+            <th className='whitespace-nowrap px-4 pb-2 text-center text-sm font-normal text-[#666666]'>
               代表者
             </th>
-            <th className='px-4 pb-2 text-center text-sm font-normal whitespace-nowrap text-[#666666]'>
+            <th className='whitespace-nowrap px-4 pb-2 text-center text-sm font-normal text-[#666666]'>
               e-mail
             </th>
-            <th className='px-4 pb-2 text-center text-sm font-normal whitespace-nowrap text-[#666666]'>
+            <th className='whitespace-nowrap px-4 pb-2 text-center text-sm font-normal text-[#666666]'>
               ステータス
             </th>
-            <th className='px-4 pb-2 text-center text-sm font-normal whitespace-nowrap text-[#666666]'>
+            <th className='whitespace-nowrap px-4 pb-2 text-center text-sm font-normal text-[#666666]'>
               協賛スタイル
             </th>
-            <th className='px-4 pb-2 text-center text-sm font-normal whitespace-nowrap text-[#666666]'>
+            <th className='whitespace-nowrap px-4 pb-2 text-center text-sm font-normal text-[#666666]'>
               デザイン
             </th>
             <th className='px-4 py-3 text-center text-sm font-normal text-[#666666]'></th>
@@ -132,7 +132,10 @@ export default function ProgressReportTable({
             !hasError &&
             activities.length > 0 &&
             activities.map((item, index) => (
-              <tr key={item.id ?? index} className='border-b border-[#e5e7eb]/80 hover:bg-[#f9fafb]'>
+              <tr
+                key={item.id ?? index}
+                className='border-b border-[#e5e7eb]/80 hover:bg-[#f9fafb]'
+              >
                 <td className='px-4 py-3 text-center text-sm text-[#666666]'>
                   <div
                     className='mx-auto max-w-[14rem] cursor-default truncate'
@@ -171,16 +174,16 @@ export default function ProgressReportTable({
                     {item.sponsor?.representative ?? '-'}
                   </div>
                 </td>
-                <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
+                <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-[#666666]'>
                   {item.sponsor?.email ?? '-'}
                 </td>
-                <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
+                <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-[#666666]'>
                   {toActivityStatusLabel(item.activityStatus)}
                 </td>
                 <td className='px-4 py-3 text-center text-sm text-[#666666]'>
                   {formatSponsorStyleLabel(item)}
                 </td>
-                <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
+                <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-[#666666]'>
                   {toDesignProgressLabel(item.designProgress)}
                 </td>
                 <td className='px-4 py-3 text-center'>

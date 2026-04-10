@@ -21,8 +21,13 @@ export const getActivityAmountFromApi = (activity: SponsorshipActivity): number 
   );
 };
 
-const toCommonSponsorStyle = (activity: SponsorshipActivity, sponsorStyleId: number): SponsorStyle => {
-  const matchedStyle = activity.sponsorStyles?.find((link) => link.sponsorStyleId === sponsorStyleId)?.style;
+const toCommonSponsorStyle = (
+  activity: SponsorshipActivity,
+  sponsorStyleId: number,
+): SponsorStyle => {
+  const matchedStyle = activity.sponsorStyles?.find(
+    (link) => link.sponsorStyleId === sponsorStyleId,
+  )?.style;
 
   return {
     id: matchedStyle?.id ?? sponsorStyleId,
@@ -38,18 +43,18 @@ export const buildLegacySponsorActivityView = (
   const styleDetail: SponsorStyleDetail[] = (activity.sponsorStyles ?? [])
     .filter((link) => link.category === 'money')
     .map((link, index) => {
-    const sponsorStyleId = link.sponsorStyleId ?? index;
-    const activityStyle: ActivityStyle = {
-      id: link.id ?? index,
-      activityID: activity.id ?? 0,
-      sponsorStyleID: sponsorStyleId,
-    };
+      const sponsorStyleId = link.sponsorStyleId ?? index;
+      const activityStyle: ActivityStyle = {
+        id: link.id ?? index,
+        activityID: activity.id ?? 0,
+        sponsorStyleID: sponsorStyleId,
+      };
 
-    return {
-      activityStyle,
-      sponsorStyle: toCommonSponsorStyle(activity, sponsorStyleId),
-    };
-  });
+      return {
+        activityStyle,
+        sponsorStyle: toCommonSponsorStyle(activity, sponsorStyleId),
+      };
+    });
 
   return {
     user: {
@@ -89,20 +94,20 @@ export const buildInvoiceFromActivity = (activity: SponsorshipActivity): Invoice
   const invoiceSponsorStyle: InvoiceSponsorStyle[] = (activity.sponsorStyles ?? [])
     .filter((link) => link.category === 'money')
     .map((link) => ({
-    styleName: formatInvoiceStyleName(
-      link.style
-        ? {
-            id: link.style.id,
-            style: link.style.style,
-            feature: link.style.feature,
-            price: link.style.price,
-          }
-        : undefined,
-    ),
-    price: link.style?.price ?? 0,
-    quantity: 1,
-    unitPrice: link.style?.price ?? 0,
-  }));
+      styleName: formatInvoiceStyleName(
+        link.style
+          ? {
+              id: link.style.id,
+              style: link.style.style,
+              feature: link.style.feature,
+              price: link.style.price,
+            }
+          : undefined,
+      ),
+      price: link.style?.price ?? 0,
+      quantity: 1,
+      unitPrice: link.style?.price ?? 0,
+    }));
 
   const totalPrice = getActivityAmountFromApi(activity);
 

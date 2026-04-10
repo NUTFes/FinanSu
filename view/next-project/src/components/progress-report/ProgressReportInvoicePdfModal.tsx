@@ -9,10 +9,7 @@ import {
   Textarea,
 } from '@/components/common';
 import type { SponsorshipActivity } from '@/generated/model';
-import {
-  PreviewPDF,
-  createSponsorActivitiesPDF,
-} from '@/utils/createSponsorActivitiesInvoicesPDF';
+import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
 
 import { buildInvoiceFromActivity, getActivityAmountFromApi } from './progressReportPdfUtils';

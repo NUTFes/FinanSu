@@ -156,7 +156,9 @@ export default function ProgressReportModal({
                 {activity.sponsorStyles && activity.sponsorStyles.length > 0 ? (
                   activity.sponsorStyles.map((link, index) => (
                     <div key={`${link.sponsorStyleId}-${index}`}>
-                      {`${link.category === 'money' ? '金' : '物'}　${link.style?.style ?? ''}${link.style?.feature ? `　${link.style.feature}` : ''}`}
+                      {`${link.category === 'money' ? '金' : '物'}　${link.style?.style ?? ''}${
+                        link.style?.feature ? `　${link.style.feature}` : ''
+                      }`}
                     </div>
                   ))
                 ) : (
@@ -215,14 +217,14 @@ export default function ProgressReportModal({
           </div>
 
           {Object.keys(errors).length > 0 && (
-            <div className='mt-6 rounded-2xl bg-[rgb(228,67,78)]/8 px-4 py-3 text-sm text-[#e4434e]'>
+            <div className='bg-[rgb(228,67,78)]/8 mt-6 rounded-2xl px-4 py-3 text-sm text-[#e4434e]'>
               入力内容を確認してください。
             </div>
           )}
 
           <div className='mt-8 flex flex-wrap justify-center gap-8'>
             <OutlinePrimaryButton
-              className='min-w-20 justify-center border-[#56daff] px-7 py-2 text-[#56daff] font-normal'
+              className='min-w-20 justify-center border-[#56daff] px-7 py-2 font-normal text-[#56daff]'
               onClick={onClose}
               disabled={isUpdating}
             >
