@@ -79,19 +79,21 @@ const ProgressReportPage: NextPage = () => {
     [activity, sponsorStylesResponse?.data],
   );
 
+  const defaultFormValues: SponsorshipActivityProgressReportFormValues = {
+    designProgress: DesignProgress.unstarted,
+    activityStatus: ActivityStatus.unstarted,
+    feasibilityStatus: FeasibilityStatus.unstarted,
+    remarks: '',
+    sponsorStyleDetails: [],
+  };
+
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<SponsorshipActivityProgressReportFormValues>({
-    defaultValues: {
-      designProgress: DesignProgress.unstarted,
-      activityStatus: ActivityStatus.unstarted,
-      feasibilityStatus: FeasibilityStatus.unstarted,
-      remarks: '',
-      sponsorStyleDetails: [],
-    },
+    defaultValues: defaultFormValues,
   });
 
   const selectedSponsorStyleDetails = useWatch({
@@ -110,13 +112,7 @@ const ProgressReportPage: NextPage = () => {
   const closeModal = () => {
     setSelectedActivityId(null);
     initializedActivityIdRef.current = null;
-    reset({
-      designProgress: DesignProgress.unstarted,
-      activityStatus: ActivityStatus.unstarted,
-      feasibilityStatus: FeasibilityStatus.unstarted,
-      remarks: '',
-      sponsorStyleDetails: [],
-    });
+    reset(defaultFormValues);
   };
 
   const formattedSponsorStyles = useMemo(() => {

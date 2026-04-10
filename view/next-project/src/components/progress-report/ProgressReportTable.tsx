@@ -131,8 +131,8 @@ export default function ProgressReportTable({
           {!isLoading &&
             !hasError &&
             activities.length > 0 &&
-            activities.map((item) => (
-              <tr key={item.id} className='border-b border-[#e5e7eb]/80 hover:bg-[#f9fafb]'>
+            activities.map((item, index) => (
+              <tr key={item.id ?? index} className='border-b border-[#e5e7eb]/80 hover:bg-[#f9fafb]'>
                 <td className='px-4 py-3 text-center text-sm text-[#666666]'>
                   <div
                     className='mx-auto max-w-[14rem] cursor-default truncate'
@@ -187,9 +187,9 @@ export default function ProgressReportTable({
                   <div className='flex justify-center'>
                     <EditButton
                       onClick={() => {
-                        if (item.id) onSelectActivity(item.id);
+                        if (item.id != null) onSelectActivity(item.id);
                       }}
-                      isDisabled={!item.id}
+                      isDisabled={item.id == null}
                     />
                   </div>
                 </td>

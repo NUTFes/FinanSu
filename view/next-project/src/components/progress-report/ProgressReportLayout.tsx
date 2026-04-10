@@ -6,7 +6,6 @@ import ProgressReportModal from '@/components/progress-report/ProgressReportModa
 import ProgressReportTable from '@/components/progress-report/ProgressReportTable';
 import type { SponsorshipActivity } from '@/generated/model';
 import type { SponsorshipActivityProgressReportFormValues } from '@/utils/sponsorshipActivityProgressReport';
-import { Loading } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import type { SponsorStyle } from '@type/common';
 
@@ -53,7 +52,6 @@ export default function ProgressReportLayout({
         <title>進捗報告ページ</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
-      {isActivitiesLoading && <Loading />}
       <div className='min-h-[calc(100vh-4rem)] px-4 py-10 md:px-8 md:py-16'>
         <div className='mx-auto mt-14 max-w-[1280px] rounded-2xl border border-[#e5e7eb] bg-white px-8 py-8 shadow-[0_4px_14px_rgba(0,0,0,0.12)] md:px-12'>
           <ProgressReportHeader sponsorStyles={sponsorStyles} />
