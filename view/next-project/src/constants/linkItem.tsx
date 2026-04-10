@@ -49,7 +49,7 @@ export const FinanceLinkItems: LinkItemProps[] = [
 
 export const RelationLinkItems: LinkItemProps[] = [
   {
-    name: '渉外局',
+    name: '産学局',
     icon: <IoIosArrowDropup className='mx-2 text-xl' />,
     href: '',
     isParent: true,
