@@ -23,7 +23,7 @@ export default function ProgressReportDocumentButtons({
 
   return (
     <>
-      <div className='flex flex-wrap justify-center gap-3 pt-1'>
+      <div className='flex flex-wrap justify-start gap-3 pt-1'>
         <OutlinePrimaryButton
           className={OUTLINE_ACTION_CLASS_NAME + ' min-w-32'}
           onClick={() => setIsReceiptModalOpen(true)}

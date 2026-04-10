@@ -48,7 +48,6 @@ export default function ProgressReportModal({
   isLoading,
   hasError,
   activity,
-  formattedSponsorStyles,
   isUpdating,
   control,
   handleSubmit,
@@ -63,7 +62,7 @@ export default function ProgressReportModal({
   return (
     <Modal
       onClick={onClose}
-      className='w-[min(94vw,540px)] rounded-[24px] bg-[#f2f2f2] px-6 py-8 md:px-10 md:py-10'
+      className='w-[min(94vw,540px)] rounded-[24px] bg-white px-6 py-8 md:px-10 md:py-10'
     >
       {isLoading && (
         <div className='flex h-52 items-center justify-center'>
@@ -152,20 +151,19 @@ export default function ProgressReportModal({
               )}
             />
 
-            <Controller
-              name='sponsorStyleDetails'
-              control={control}
-              render={() => (
-                <ProgressReportFieldRow id='sponsorStyleDetails' label='協賛スタイル' required>
-                  <Input
-                    id='sponsorStyleDetails'
-                    readOnly
-                    value={formattedSponsorStyles}
-                    className={READ_ONLY_FIELD_CLASS_NAME}
-                  />
-                </ProgressReportFieldRow>
-              )}
-            />
+            <ProgressReportFieldRow id='sponsorStyleDetails' label='協賛スタイル' required>
+              <div className='border-b border-[#56daff] py-1 text-base text-[#666666]'>
+                {activity.sponsorStyles && activity.sponsorStyles.length > 0 ? (
+                  activity.sponsorStyles.map((link, index) => (
+                    <div key={`${link.sponsorStyleId}-${index}`}>
+                      {`${link.category === 'money' ? '金' : '物'}　${link.style?.style ?? ''}${link.style?.feature ? `　${link.style.feature}` : ''}`}
+                    </div>
+                  ))
+                ) : (
+                  <span>未定</span>
+                )}
+              </div>
+            </ProgressReportFieldRow>
 
             <Controller
               name='designProgress'
@@ -194,7 +192,10 @@ export default function ProgressReportModal({
               )}
             />
 
-            <ProgressReportDocumentButtons activity={activity} disabled={isUpdating} />
+            <div className='grid grid-cols-[96px_minmax(0,1fr)] items-center gap-4'>
+              <div />
+              <ProgressReportDocumentButtons activity={activity} disabled={isUpdating} />
+            </div>
 
             <Controller
               name='remarks'
