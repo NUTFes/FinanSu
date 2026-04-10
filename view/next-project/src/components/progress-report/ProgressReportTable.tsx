@@ -135,7 +135,7 @@ export default function ProgressReportTable({
               <tr key={item.id} className='border-b border-[#e5e7eb]/80 hover:bg-[#f9fafb]'>
                 <td className='px-4 py-3 text-center text-sm text-[#666666]'>
                   <div
-                    className='mx-auto max-w-[10rem] cursor-default truncate'
+                    className='mx-auto max-w-[14rem] cursor-default truncate'
                     onMouseEnter={(e) => {
                       const el = e.currentTarget;
                       if (item.sponsor?.name && el.scrollWidth > el.clientWidth) {
@@ -152,8 +152,24 @@ export default function ProgressReportTable({
                     {item.sponsor?.name ?? '-'}
                   </div>
                 </td>
-                <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
-                  {item.sponsor?.representative ?? '-'}
+                <td className='px-4 py-3 text-center text-sm text-[#666666]'>
+                  <div
+                    className='mx-auto max-w-[8rem] cursor-default truncate'
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget;
+                      if (item.sponsor?.representative && el.scrollWidth > el.clientWidth) {
+                        const rect = el.getBoundingClientRect();
+                        setTooltip({
+                          name: item.sponsor.representative,
+                          x: rect.left + rect.width / 2,
+                          y: rect.top,
+                        });
+                      }
+                    }}
+                    onMouseLeave={() => setTooltip(null)}
+                  >
+                    {item.sponsor?.representative ?? '-'}
+                  </div>
                 </td>
                 <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
                   {item.sponsor?.email ?? '-'}
