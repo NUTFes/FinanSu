@@ -34,13 +34,13 @@ export const DESIGN_PROGRESS_LABELS: Record<DesignProgress, string> = {
 
 export const ACTIVITY_STATUS_LABELS: Record<ActivityStatus, string> = {
   [ActivityStatus.unstarted]: '未着手',
-  [ActivityStatus.material_sent]: '資料送付済',
-  [ActivityStatus.forms_sent]: '申込書送付済',
-  [ActivityStatus.confirmed]: '協賛確定',
-  [ActivityStatus.invoice_sent]: '請求書送付済',
-  [ActivityStatus.payment_confirmed]: '入金確認済',
-  [ActivityStatus.receipt_sent]: '領収書送付済',
-  [ActivityStatus.rejected]: '辞退・却下',
+  [ActivityStatus.material_sent]: '資料送付済み',
+  [ActivityStatus.forms_sent]: 'Forms送付済み',
+  [ActivityStatus.confirmed]: '協賛内容確定',
+  [ActivityStatus.invoice_sent]: '請求書送付済み',
+  [ActivityStatus.payment_confirmed]: '協賛金入金確認済み',
+  [ActivityStatus.receipt_sent]: '領収書送付済み',
+  [ActivityStatus.rejected]: '協賛不可',
 };
 
 export const FEASIBILITY_STATUS_LABELS: Record<FeasibilityStatus, string> = {
