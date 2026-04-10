@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
 import { OutlinePrimaryButton } from '@/components/common';
-import type { SponsorshipActivity } from '@/generated/model';
+
 
 import ProgressReportInvoicePdfModal from './ProgressReportInvoicePdfModal';
 import ProgressReportReceiptPdfModal from './ProgressReportReceiptPdfModal';
+
+import type { SponsorshipActivity } from '@/generated/model';
 
 const OUTLINE_ACTION_CLASS_NAME =
   'min-w-28 justify-center border-[#56daff] px-6 py-1.5 text-[#56daff] font-normal';

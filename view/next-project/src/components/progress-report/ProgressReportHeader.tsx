@@ -5,6 +5,7 @@ import {
   AddBlankInvoiceModal,
   AddBlankReceiptModal,
 } from '@/components/sponsor-activities/legacy-documents';
+
 import type { SponsorStyle } from '@/type/common';
 
 interface ProgressReportHeaderProps {

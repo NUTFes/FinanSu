@@ -7,11 +7,12 @@ import {
   OutlinePrimaryButton,
   PrimaryButton,
 } from '@/components/common';
-import type { SponsorshipActivity } from '@/generated/model';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesReceiptsPDF';
 import { getToday } from '@/utils/dateConverter';
 
 import { buildLegacySponsorActivityView, getActivityAmountFromApi } from './progressReportPdfUtils';
+
+import type { SponsorshipActivity } from '@/generated/model';
 
 interface ProgressReportReceiptPdfModalProps {
   activity: SponsorshipActivity;

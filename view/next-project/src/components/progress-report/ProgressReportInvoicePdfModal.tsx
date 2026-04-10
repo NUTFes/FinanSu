@@ -8,11 +8,12 @@ import {
   PrimaryButton,
   Textarea,
 } from '@/components/common';
-import type { SponsorshipActivity } from '@/generated/model';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { getToday } from '@/utils/dateConverter';
 
 import { buildInvoiceFromActivity, getActivityAmountFromApi } from './progressReportPdfUtils';
+
+import type { SponsorshipActivity } from '@/generated/model';
 
 interface ProgressReportInvoicePdfModalProps {
   activity: SponsorshipActivity;

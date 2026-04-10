@@ -9,8 +9,8 @@ import {
   usePutSponsorshipActivitiesId,
 } from '@/generated/hooks';
 import { ActivityStatus, DesignProgress, FeasibilityStatus } from '@/generated/model';
-import { useCurrentUser, useUserStore } from '@/store';
 import { useToast } from '@/hooks/useToast';
+import { useCurrentUser, useUserStore } from '@/store';
 import {
   SPONSOR_STYLE_CATEGORY_LABELS,
   SponsorshipActivityProgressReportFormValues,

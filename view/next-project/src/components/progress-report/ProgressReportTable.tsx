@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { MdAttachMoney, MdInventory2 } from 'react-icons/md';
 
 import { EditButton, Spinner } from '@/components/common';
 import { ActivityStatus, DesignProgress, type SponsorshipActivity } from '@/generated/model';
@@ -8,7 +9,6 @@ import {
   ACTIVITY_STATUS_LABELS,
   DESIGN_PROGRESS_LABELS,
 } from '@/utils/sponsorshipActivityProgressReport';
-import { MdAttachMoney, MdInventory2 } from 'react-icons/md';
 
 const toActivityStatusLabel = (status?: ActivityStatus) => {
   if (!status) return '未定';

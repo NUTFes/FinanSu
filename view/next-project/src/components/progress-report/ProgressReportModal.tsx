@@ -15,14 +15,15 @@ import {
   Spinner,
 } from '@/components/common';
 import ProgressReportDocumentButtons from '@/components/progress-report/ProgressReportDocumentButtons';
-import type { SponsorshipActivity } from '@/generated/model';
+import ProgressReportFieldRow from '@/components/progress-report/ProgressReportFieldRow';
 import {
   ACTIVITY_STATUS_LABELS,
   DESIGN_PROGRESS_LABELS,
   type SponsorshipActivityProgressReportFormValues,
 } from '@/utils/sponsorshipActivityProgressReport';
 
-import ProgressReportFieldRow from '@/components/progress-report/ProgressReportFieldRow';
+import type { SponsorshipActivity } from '@/generated/model';
+
 
 const READ_ONLY_FIELD_CLASS_NAME =
   'pointer-events-none w-full rounded-none border-0 border-b border-[#56daff] bg-transparent px-0 py-1 text-base text-[#666666] shadow-none focus:border-[#56daff] focus:ring-0';
