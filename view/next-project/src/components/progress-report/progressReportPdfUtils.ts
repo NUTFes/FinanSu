@@ -14,7 +14,11 @@ const formatInvoiceStyleName = (style?: SponsorStyle) => {
 };
 
 export const getActivityAmountFromApi = (activity: SponsorshipActivity): number => {
-  return activity.sponsorStyles?.reduce((sum, link) => sum + (link.style?.price ?? 0), 0) ?? 0;
+  return (
+    activity.sponsorStyles
+      ?.filter((link) => link.category === 'money')
+      .reduce((sum, link) => sum + (link.style?.price ?? 0), 0) ?? 0
+  );
 };
 
 const toCommonSponsorStyle = (activity: SponsorshipActivity, sponsorStyleId: number): SponsorStyle => {
@@ -31,7 +35,9 @@ const toCommonSponsorStyle = (activity: SponsorshipActivity, sponsorStyleId: num
 export const buildLegacySponsorActivityView = (
   activity: SponsorshipActivity,
 ): SponsorActivityView => {
-  const styleDetail: SponsorStyleDetail[] = (activity.sponsorStyles ?? []).map((link, index) => {
+  const styleDetail: SponsorStyleDetail[] = (activity.sponsorStyles ?? [])
+    .filter((link) => link.category === 'money')
+    .map((link, index) => {
     const sponsorStyleId = link.sponsorStyleId ?? index;
     const activityStyle: ActivityStyle = {
       id: link.id ?? index,
@@ -80,7 +86,9 @@ export const buildLegacySponsorActivityView = (
 };
 
 export const buildInvoiceFromActivity = (activity: SponsorshipActivity): Invoice => {
-  const invoiceSponsorStyle: InvoiceSponsorStyle[] = (activity.sponsorStyles ?? []).map((link) => ({
+  const invoiceSponsorStyle: InvoiceSponsorStyle[] = (activity.sponsorStyles ?? [])
+    .filter((link) => link.category === 'money')
+    .map((link) => ({
     styleName: formatInvoiceStyleName(
       link.style
         ? {
