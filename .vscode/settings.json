@@ -28,5 +28,6 @@
   },
   "tailwindCSS.includeLanguages": {
     "plaintext": "html"
-  }
+  },
+  "js/ts.tsdk.path": "view/next-project/node_modules/typescript/lib"
 }
