@@ -104,9 +104,9 @@ export default function SponsorActivitiesDesktopSection({
                 '
                 key={activity.id}
               >
-                <td className='
-                  py-3 pr-4 pl-8 text-center text-sm text-black-600
-                '>
+                <td
+                  className='py-3 pr-4 pl-8 text-center text-sm text-black-600'
+                >
                   <span className='block truncate' title={activity.sponsor?.name || '-'}>
                     {activity.sponsor?.name || '-'}
                   </span>
@@ -179,10 +179,9 @@ export default function SponsorActivitiesDesktopSection({
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={7}
-                className='pt-3 pr-8 text-right text-sm text-black-600'
-              >
+              <td colSpan={7} className='
+                pt-3 pr-8 text-right text-sm text-black-600
+              '>
                 合計金額：{totalAmount.toLocaleString()} 円
               </td>
             </tr>
