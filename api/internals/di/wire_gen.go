@@ -43,6 +43,8 @@ func InitializeServer() (*ServerComponents, error) {
 	objectHandleRepository := repository.NewObjectHandleRepository(mcClient)
 	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository, incomeExpenditureManagementRepository)
+	campusDonationRepository := repository.NewCampusDonationRepository(client, crud)
+	campusDonationUseCase := usecase.NewCampusDonationUseCase(campusDonationRepository)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)
 	divisionRepository := repository.NewDivisionRepository(client, crud)
@@ -72,7 +74,7 @@ func InitializeServer() (*ServerComponents, error) {
 	yearUseCase := usecase.NewYearUseCase(yearRepository)
 	sponsorshipActivityRepository := repository.NewSponsorshipActivityRepository(client, crud)
 	sponsorshipActivityUseCase := usecase.NewSponsorshipActivityUseCase(sponsorshipActivityRepository, transactionRepository)
-	handlerHandler := handler.NewHandler(activityUseCase, activityInformationUseCase, activityStyleUseCase, bureauUseCase, buyReportUseCase, departmentUseCase, divisionUseCase, festivalItemUseCase, financialRecordUseCase, incomeUseCase, incomeExpenditureManagementUseCase, mailAuthUseCase, objectUploadUseCase, passwordResetTokenUseCase, sponsorUseCase, sponsorStyleUseCase, teacherUseCase, userUseCase, yearUseCase, sponsorshipActivityUseCase)
+	handlerHandler := handler.NewHandler(activityUseCase, activityInformationUseCase, activityStyleUseCase, bureauUseCase, buyReportUseCase, campusDonationUseCase, departmentUseCase, divisionUseCase, festivalItemUseCase, financialRecordUseCase, incomeUseCase, incomeExpenditureManagementUseCase, mailAuthUseCase, objectUploadUseCase, passwordResetTokenUseCase, sponsorUseCase, sponsorStyleUseCase, teacherUseCase, userUseCase, yearUseCase, sponsorshipActivityUseCase)
 	echo := ProvideServer(handlerHandler)
 	serverComponents := ProvideServerComponents(client, echo)
 	return serverComponents, nil
