@@ -43,7 +43,7 @@ const UsersDeleteModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>ユーザーの削除</div>
+      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>ユーザーの削除</div>
       <div className='mx-auto my-5 w-fit text-xl'>下記のユーザーを削除してよろしいですか？</div>
       <div className='m-4 flex max-h-60 flex-col overflow-y-auto'>
         {props.deleteUsers?.users.map((user) => {

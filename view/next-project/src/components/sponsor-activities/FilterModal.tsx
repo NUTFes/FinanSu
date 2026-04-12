@@ -42,26 +42,26 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
         <div>
           <div
             className='
-              flex rounded-md p-2
-              hover:bg-white-100
+              hover:bg-white-100 flex rounded-md
+              p-2
             '
           >
             <input type='checkbox' onChange={onToggleAll} checked={isAllStyleCheck} id='all' />
-            <label htmlFor='all' className='mx-2 w-full text-black-300'>
+            <label htmlFor='all' className='text-black-300 mx-2 w-full'>
               すべて （{selectedStyleIds.length > 0 ? SELECT + selectedStyleIds.length : NOT_SELECT}
               ）
             </label>
           </div>
           <div
             className='
-            max-h-28 overflow-y-auto rounded-md border-2 bg-white-0
+            bg-white-0 max-h-28 overflow-y-auto rounded-md border-2
           '
           >
             {styleOptions.map((style) => (
               <div
                 className='
-                  flex p-2
-                  hover:bg-white-100
+                  hover:bg-white-100 flex
+                  p-2
                 '
                 key={style.id}
               >
@@ -76,7 +76,7 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
                 <label
                   htmlFor={String(style.id)}
                   className='
-                  mx-2 w-full text-black-300
+                  text-black-300 mx-2 w-full
                 '
                 >
                   {style.style}/{style.feature}/{style.price}円
@@ -321,7 +321,7 @@ const FilterModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='w-full max-w-2xl px-15 py-12.5' onClick={onClose}>
+    <Modal className='px-15 py-12.5 w-full max-w-2xl' onClick={onClose}>
       <form onSubmit={filterHandler}>
         <div
           onClick={preventCloseModalClick}
@@ -335,13 +335,13 @@ const FilterModal: FC<ModalProps> = (props) => {
           </div>
           <div className='mx-auto mb-5 flex w-fit flex-col gap-2.5 text-center'>
             <Title title='協賛フィルター' className='text-3xl' />
-            <p className='text-sm text-black-300'>条件を指定して表示内容を絞り込めます</p>
+            <p className='text-black-300 text-sm'>条件を指定して表示内容を絞り込めます</p>
           </div>
           <div
             className='
-              mx-auto mb-8 grid w-full grid-cols-[7rem_minmax(0,1fr)]
-              items-center gap-5
-              [&>p]:text-center [&>p]:whitespace-nowrap [&>p]:text-black-600
+              [&>p]:text-black-600 mx-auto mb-8 grid w-full
+              grid-cols-[7rem_minmax(0,1fr)] items-center
+              gap-5 [&>p]:whitespace-nowrap [&>p]:text-center
             '
           >
             <StyleSelectionSection

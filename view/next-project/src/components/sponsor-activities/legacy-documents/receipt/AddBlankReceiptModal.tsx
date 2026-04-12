@@ -44,8 +44,8 @@ export default function AddBlankReceiptModal({ setIsOpen }: ModalProps) {
         </div>
         <p
           className='
-            mx-auto mb-4 w-fit text-2xl/8 font-thin tracking-widest
-            text-black-600
+            text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin
+            tracking-widest
           '
         >
           協賛領収書の発行（手入力）

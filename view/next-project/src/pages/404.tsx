@@ -7,7 +7,7 @@ export default function Custom404() {
     <div className='flex h-screen flex-col'>
       <header
         className='
-        flex h-16 w-full items-center justify-center bg-primary-4
+        bg-primary-4 flex h-16 w-full items-center justify-center
       '
       >
         <div

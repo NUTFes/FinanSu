@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { Title } from '@/components/common';
@@ -13,7 +14,13 @@ import { useToast } from '@/hooks/useToast';
 const CreateFundInformation = () => {
   const toast = useToast();
   const [error, setError] = useState<string | null>(null);
-  const { createFundInformation, incomeCategories, isLoading } = useFundInformations();
+  const router = useRouter();
+  const { year: yearParam } = router.query;
+  const selectedYear =
+    typeof yearParam === 'string' ? parseInt(yearParam, 10) : new Date().getFullYear();
+  const { createFundInformation, incomeCategories, isLoading } = useFundInformations({
+    selectedYear,
+  });
 
   const incomeTypes = incomeCategories.map((income) => income.name).filter(Boolean) || [];
 
@@ -66,7 +73,7 @@ const CreateFundInformation = () => {
       <div className={`flex h-[calc(100vh-4rem)] items-center justify-center`}>
         <div
           className='
-            w-full max-w-[60%] min-w-75 px-4 py-8
+            min-w-75 w-full max-w-[60%] px-4 py-8
             sm:px-6
             lg:px-8
           '

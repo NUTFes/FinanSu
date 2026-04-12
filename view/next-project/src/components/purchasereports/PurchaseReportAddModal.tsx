@@ -214,7 +214,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
     <>
-      <div className='mx-auto my-6 grid w-9/10 grid-cols-5 gap-4'>
+      <div className='w-9/10 mx-auto my-6 grid grid-cols-5 gap-4'>
         <p className='text-black-600'>物品名</p>
         <div className='col-span-4 w-full'>
           <Input
@@ -277,7 +277,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
               }}
             />
           </div>
-          <div className='mx-auto mb-10 w-fit text-xl text-black-600'>購入物品の登録</div>
+          <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>購入物品の登録</div>
           <Stepper stepNum={props.purchaseItemNum} activeStep={activeStep} isDone={isDone}>
             {!isDone && <>{content(formDataList[activeStep - 1])}</>}
           </Stepper>
@@ -285,7 +285,7 @@ export default function PurchaseReportAddModal(props: ModalProps) {
             <>
               <div
                 className='
-                  mx-auto mt-3 mb-10 grid w-9/10 grid-cols-5 place-items-center
+                  w-9/10 mx-auto mb-10 mt-3 grid grid-cols-5 place-items-center
                   gap-4
                 '
               >

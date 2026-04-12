@@ -163,9 +163,9 @@ const UplaodFileModal: FC<ModalProps> = (props) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <Modal className='md:mt-5 md:h-6/12 md:w-4/12'>
+    <Modal className='md:h-6/12 md:mt-5 md:w-4/12'>
       <div className='w-full'>
-        <div className='mr-5 ml-auto w-fit'>
+        <div className='ml-auto mr-5 w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
         </div>
       </div>

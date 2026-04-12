@@ -21,15 +21,15 @@ export default function SimpleSidebar() {
   const [isRelationItemsShow, setIsRelationItemsShow] = useReducer((state) => !state, false);
 
   return (
-    <div className='h-full w-52 bg-primary-4'>
-      <div className='border-b-2 border-primary-1'>
+    <div className='bg-primary-4 h-full w-52'>
+      <div className='border-primary-1 border-b-2'>
         {MyPageLinkItems.map((link) => (
           <NavItem key={link.name} icon={link.icon} href={link.href} currentPath={router.pathname}>
             {link.name}
           </NavItem>
         ))}
       </div>
-      <div className='border-b-2 border-primary-1'>
+      <div className='border-primary-1 border-b-2'>
         {FinanceLinkItems.map((link) => (
           <NavItem
             key={link.name}
@@ -44,7 +44,7 @@ export default function SimpleSidebar() {
           </NavItem>
         ))}
       </div>
-      <div className='border-b-2 border-primary-1'>
+      <div className='border-primary-1 border-b-2'>
         {RelationLinkItems.map((link) => (
           <NavItem
             key={link.name}
@@ -83,7 +83,7 @@ const NavItem = (props: NavItemProps) => {
         <div
           className={clsx(
             className +
-              ` cursor-pointer ${!props.isShow && 'border-b-2 border-dashed border-primary-1'}`,
+              ` cursor-pointer ${!props.isShow && 'border-primary-1 border-b-2 border-dashed'}`,
           )}
           onClick={props.onClick}
         >

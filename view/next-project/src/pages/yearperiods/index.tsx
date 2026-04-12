@@ -91,19 +91,19 @@ export default function Periods(props: Props) {
           <table className='mb-5 w-full table-auto border-collapse'>
             <thead>
               <tr>
-                <th className='w-1/4 border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>ID</p>
+                <th className='border-b-primary-1 w-1/4 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>ID</p>
                 </th>
-                <th className='w-1/4 border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>年度</p>
+                <th className='border-b-primary-1 w-1/4 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>年度</p>
                 </th>
-                <th className='w-1/4 border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>開始日</p>
+                <th className='border-b-primary-1 w-1/4 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>開始日</p>
                 </th>
-                <th className='w-1/4 border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>終了日</p>
+                <th className='border-b-primary-1 w-1/4 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>終了日</p>
                 </th>
-                <th className='w-1/4 border-b border-b-primary-1 py-3'></th>
+                <th className='border-b-primary-1 w-1/4 border-b py-3'></th>
               </tr>
             </thead>
             <tbody>
@@ -113,61 +113,61 @@ export default function Periods(props: Props) {
                     <td
                       className={clsx(
                         'px-1 py-3',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
                         index === formatYearPeriods.length - 1
-                          ? 'pt-3 pb-4'
+                          ? 'pb-4 pt-3'
                           : `
                           border-b py-3
                         `,
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearPeriod.id}</p>
+                      <p className='text-black-600 text-center text-sm'>{yearPeriod.id}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
                         index === formatYearPeriods.length - 1
-                          ? 'pt-3 pb-4'
+                          ? 'pb-4 pt-3'
                           : `
                           border-b py-3
                         `,
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearPeriod.year}</p>
+                      <p className='text-black-600 text-center text-sm'>{yearPeriod.year}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
                         index === formatYearPeriods.length - 1
-                          ? 'pt-3 pb-4'
+                          ? 'pb-4 pt-3'
                           : `
                           border-b py-3
                         `,
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearPeriod.startedAt}</p>
+                      <p className='text-black-600 text-center text-sm'>{yearPeriod.startedAt}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
                         index === formatYearPeriods.length - 1
-                          ? 'pt-3 pb-4'
+                          ? 'pb-4 pt-3'
                           : `
                           border-b py-3
                         `,
                       )}
                     >
-                      <p className='text-center text-sm text-black-600'>{yearPeriod.endedAt}</p>
+                      <p className='text-black-600 text-center text-sm'>{yearPeriod.endedAt}</p>
                     </td>
                     <td
                       className={clsx(
                         'px-1',
-                        index === 0 ? 'pt-4 pb-3' : 'py-3',
+                        index === 0 ? 'pb-3 pt-4' : 'py-3',
                         index === formatYearPeriods.length - 1
-                          ? 'pt-3 pb-4'
+                          ? 'pb-4 pt-3'
                           : `
                           border-b py-3
                         `,
@@ -185,10 +185,10 @@ export default function Periods(props: Props) {
                   </tr>
                 ))}
               {!formatYearPeriods && (
-                <tr className='border-b border-primary-1'>
+                <tr className='border-primary-1 border-b'>
                   <td className='px-1 py-3' colSpan={4}>
                     <div className='flex justify-center'>
-                      <div className='text-sm text-black-600'>データがありません</div>
+                      <div className='text-black-600 text-sm'>データがありません</div>
                     </div>
                   </td>
                 </tr>

@@ -38,59 +38,59 @@ export default function SponsorActivitiesDesktopSection({
       <div className='min-w-[980px]'>
         <table className='mb-2 min-w-full table-fixed border-collapse'>
           <thead>
-            <tr className='border-b border-b-primary-1 py-3'>
+            <tr className='border-b-primary-1 border-b py-3'>
               <th
                 className='
-                  w-[22%] pr-4 pb-2 pl-8 text-center text-sm font-normal
-                  whitespace-nowrap text-black-600
+                  text-black-600 w-[22%] whitespace-nowrap pb-2 pl-8 pr-4 text-center
+                  text-sm font-normal
                 '
               >
                 企業名
               </th>
               <th
                 className='
-                  w-[12%] px-4 pb-2 text-center text-sm font-normal
-                  whitespace-nowrap text-black-600
+                  text-black-600 w-[12%] whitespace-nowrap px-4 pb-2 text-center
+                  text-sm font-normal
                 '
               >
                 担当者
               </th>
               <th
                 className='
-                  w-[12%] px-4 pb-2 text-center text-sm font-normal
-                  whitespace-nowrap text-black-600
+                  text-black-600 w-[12%] whitespace-nowrap px-4 pb-2 text-center
+                  text-sm font-normal
                 '
               >
                 ステータス
               </th>
               <th
                 className='
-                  w-[12%] px-4 pb-2 text-center text-sm font-normal
-                  whitespace-nowrap text-black-600
+                  text-black-600 w-[12%] whitespace-nowrap px-4 pb-2 text-center
+                  text-sm font-normal
                 '
               >
                 協賛可否
               </th>
               <th
                 className='
-                  w-[24%] px-4 pb-2 text-center text-sm font-normal
-                  whitespace-nowrap text-black-600
+                  text-black-600 w-[24%] whitespace-nowrap px-4 pb-2 text-center
+                  text-sm font-normal
                 '
               >
                 協賛スタイル
               </th>
               <th
                 className='
-                  w-[10%] px-4 pb-2 text-center text-sm font-normal
-                  whitespace-nowrap text-black-600
+                  text-black-600 w-[10%] whitespace-nowrap px-4 pb-2 text-center
+                  text-sm font-normal
                 '
               >
                 デザイン
               </th>
               <th
                 className='
-                  w-[8%] pr-8 pb-2 pl-4 text-center text-sm whitespace-nowrap
-                  text-black-600
+                  text-black-600 w-[8%] whitespace-nowrap pb-2 pl-4 pr-8 text-center
+                  text-sm
                 '
               ></th>
             </tr>
@@ -99,38 +99,38 @@ export default function SponsorActivitiesDesktopSection({
             {sponsorshipActivities.map((activity) => (
               <tr
                 className='
-                  border-b
                   hover:bg-grey-100
+                  border-b
                 '
                 key={activity.id}
               >
-                <td className='py-3 pr-4 pl-8 text-center text-sm text-black-600'>
+                <td className='text-black-600 py-3 pl-8 pr-4 text-center text-sm'>
                   <span className='block truncate' title={activity.sponsor?.name || '-'}>
                     {activity.sponsor?.name || '-'}
                   </span>
                 </td>
-                <td className='px-4 py-3 text-center text-sm text-black-600'>
+                <td className='text-black-600 px-4 py-3 text-center text-sm'>
                   <span className='block truncate' title={activity.user?.name || '-'}>
                     {activity.user?.name || '-'}
                   </span>
                 </td>
                 <td
                   className='
-                    px-4 py-3 text-center text-sm whitespace-nowrap
-                    text-black-600
+                    text-black-600 whitespace-nowrap px-4 py-3 text-center
+                    text-sm
                   '
                 >
                   {getActivityStatusLabel(activity.activityStatus)}
                 </td>
                 <td
                   className='
-                    px-4 py-3 text-center text-sm whitespace-nowrap
-                    text-black-600
+                    text-black-600 whitespace-nowrap px-4 py-3 text-center
+                    text-sm
                   '
                 >
                   {getFeasibilityStatusLabel(activity.feasibilityStatus)}
                 </td>
-                <td className='px-4 py-3 text-center text-sm text-black-600'>
+                <td className='text-black-600 px-4 py-3 text-center text-sm'>
                   <SponsorStyleList
                     styles={activity.sponsorStyles}
                     textMaxWidthClassName='max-w-[16rem]'
@@ -138,13 +138,13 @@ export default function SponsorActivitiesDesktopSection({
                 </td>
                 <td
                   className='
-                    px-4 py-3 text-center text-sm whitespace-nowrap
-                    text-black-600
+                    text-black-600 whitespace-nowrap px-4 py-3 text-center
+                    text-sm
                   '
                 >
                   {getDesignProgressLabel(activity.designProgress)}
                 </td>
-                <td className='py-3 pr-8 pl-4'>
+                <td className='py-3 pl-4 pr-8'>
                   <div className='flex justify-center gap-2'>
                     <div>
                       <OpenEditModalButton
@@ -170,7 +170,7 @@ export default function SponsorActivitiesDesktopSection({
             {sponsorshipActivities.length === 0 && (
               <tr>
                 <td colSpan={7} className='py-3'>
-                  <div className='text-center text-sm text-black-600'>データがありません</div>
+                  <div className='text-black-600 text-center text-sm'>データがありません</div>
                 </td>
               </tr>
             )}
@@ -180,7 +180,7 @@ export default function SponsorActivitiesDesktopSection({
               <td
                 colSpan={7}
                 className='
-                pt-3 pr-8 text-right text-sm text-black-600
+                text-black-600 pr-8 pt-3 text-right text-sm
               '
               >
                 合計金額：{totalAmount.toLocaleString()} 円

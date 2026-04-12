@@ -83,8 +83,8 @@ export default function Users(props: Props) {
             <Title title={'ユーザー一覧'} />
             <select
               className='
-                mx-auto my-4 w-fit
-                md:mx-10 md:my-0 md:w-100
+                md:w-100 mx-auto my-4
+                w-fit md:mx-10 md:my-0
               '
               value={selectedBureau}
               onChange={(e) => setSelectedBureau(Number(e.target.value))}
@@ -102,17 +102,17 @@ export default function Users(props: Props) {
           <table className='mb-5 w-full table-auto border-collapse'>
             <thead>
               <tr>
-                <th className='border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>氏名</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>氏名</p>
                 </th>
-                <th className='border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>学科</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>学科</p>
                 </th>
-                <th className='border-b border-b-primary-1 py-3'>
-                  <p className='text-center text-sm text-black-600'>権限</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>権限</p>
                 </th>
-                <th className='border-b border-b-primary-1 py-3' />
-                <th className='border-b border-b-primary-1 py-3'>
+                <th className='border-b-primary-1 border-b py-3' />
+                <th className='border-b-primary-1 border-b py-3'>
                   <div className='flex justify-center'>
                     <OpenDeleteModalButton
                       isDisabled={deleteUsers.ids.length == 0}
@@ -128,52 +128,52 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1 py-3',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === filterUsers.length - 1
-                        ? 'pt-3 pb-4'
+                        ? 'pb-4 pt-3'
                         : `
                         border-b py-3
                       `,
                     )}
                   >
-                    <p className='text-center text-sm text-black-600'>{user.name}</p>
+                    <p className='text-black-600 text-center text-sm'>{user.name}</p>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === filterUsers.length - 1
-                        ? 'pt-3 pb-4'
+                        ? 'pb-4 pt-3'
                         : `
                         border-b py-3
                       `,
                     )}
                   >
-                    <p className='text-center text-sm text-black-600'>
+                    <p className='text-black-600 text-center text-sm'>
                       {bureaus.find((bureau) => bureau.id === user.bureauID)?.name}
                     </p>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === filterUsers.length - 1
-                        ? 'pt-3 pb-4'
+                        ? 'pb-4 pt-3'
                         : `
                         border-b py-3
                       `,
                     )}
                   >
-                    <p className='text-center text-sm text-black-600'>
+                    <p className='text-black-600 text-center text-sm'>
                       {ROLES.find((role) => role.id === user.roleID)?.name}
                     </p>
                   </td>
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === filterUsers.length - 1
-                        ? 'pt-3 pb-4'
+                        ? 'pb-4 pt-3'
                         : `
                         border-b py-3
                       `,
@@ -185,10 +185,10 @@ export default function Users(props: Props) {
                   </td>
                   <td
                     className={clsx(
-                      'px-1 text-center text-sm text-black-600',
-                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      'text-black-600 px-1 text-center text-sm',
+                      index === 0 ? 'pb-3 pt-4' : 'py-3',
                       index === filterUsers.length - 1
-                        ? 'pt-3 pb-4'
+                        ? 'pb-4 pt-3'
                         : `
                         border-b py-3
                       `,

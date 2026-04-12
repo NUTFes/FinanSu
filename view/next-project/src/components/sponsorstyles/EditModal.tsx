@@ -84,7 +84,7 @@ export default function EditModal(props: ModalProps) {
           />
         </div>
       </div>
-      <div className='mx-auto mb-10 w-fit text-xl text-black-600'>協賛スタイルの修正</div>
+      <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>協賛スタイルの修正</div>
       <div className=''>
         {content(formData)}
         <div className='flex flex-row justify-center gap-5'>

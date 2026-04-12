@@ -84,13 +84,13 @@ export default function SignUpView() {
             <p
               className='
                 md:text-md
-                text-sm whitespace-nowrap text-black-300
+                text-black-300 whitespace-nowrap text-sm
               '
             >
               名前
             </p>
             <input
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='text'
               value={postUserData.name}
               onChange={userDataHandler('name')}
@@ -98,13 +98,13 @@ export default function SignUpView() {
             <p
               className='
                 md:text-md
-                text-sm whitespace-nowrap text-black-300
+                text-black-300 whitespace-nowrap text-sm
               '
             >
               学科
             </p>
             <select
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               value={postUserData.bureauID}
               onChange={userDataHandler('bureauID')}
             >
@@ -117,13 +117,13 @@ export default function SignUpView() {
             <p
               className='
                 md:text-md
-                text-sm whitespace-nowrap text-black-300
+                text-black-300 whitespace-nowrap text-sm
               '
             >
               メールアドレス
             </p>
             <input
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='text'
               {...register('email', {
                 required: 'メールアドレスは必須です。',
@@ -137,13 +137,13 @@ export default function SignUpView() {
             <p
               className='
                 md:text-md
-                text-sm whitespace-nowrap text-black-300
+                text-black-300 whitespace-nowrap text-sm
               '
             >
               パスワード
             </p>
             <input
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='password'
               {...register('password', {
                 required: 'パスワードは必須です。',
@@ -156,13 +156,13 @@ export default function SignUpView() {
             <p
               className='
                 md:text-md
-                text-sm whitespace-nowrap text-black-300
+                text-black-300 whitespace-nowrap text-sm
               '
             >
               パスワード確認
             </p>
             <input
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='password'
               {...register('passwordConfirmation', {
                 validate: {

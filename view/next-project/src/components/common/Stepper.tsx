@@ -15,11 +15,11 @@ interface ContentProps {
 // すでに登録が済んでいるステップの要素
 const ActiveContent = React.memo(function activeContent(props: ContentProps) {
   return (
-    <div className={clsx('relative flex items-center text-white-0')}>
+    <div className={clsx('text-white-0 relative flex items-center')}>
       <div
         className={clsx(
           `
-            size-12 rounded-full border-2 border-primary-1 bg-primary-1 py-3
+            size-12 border-primary-1 bg-primary-1 rounded-full border-2 py-3
             transition duration-500 ease-in-out
           `,
         )}
@@ -33,16 +33,16 @@ const ActiveContent = React.memo(function activeContent(props: ContentProps) {
 // 登録が済んでいないステップの要素
 const DeActiveContent = React.memo(function activeContent(props: ContentProps) {
   return (
-    <div className={clsx('relative flex items-center text-white-0')}>
+    <div className={clsx('text-white-0 relative flex items-center')}>
       <div
         className={clsx(
           `
-            size-12 rounded-full border-2 border-primary-1 py-3 transition
+            size-12 border-primary-1 rounded-full border-2 py-3 transition
             duration-500 ease-in-out
           `,
         )}
       >
-        <div className={clsx('relative grid justify-items-center text-primary-1')}>
+        <div className={clsx('text-primary-1 relative grid justify-items-center')}>
           {props.stepNum}
         </div>
       </div>

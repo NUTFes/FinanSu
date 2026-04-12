@@ -29,9 +29,9 @@ const UserDropdown = (props: Props) => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className='
-          flex items-center gap-1 rounded-md border border-white-0
-          bg-transparent px-3 py-2 text-white-0 transition-colors
-          hover:bg-white-0 hover:text-primary-4
+          border-white-0 text-white-0 hover:bg-white-0 hover:text-primary-4 flex items-center
+          gap-1 rounded-md border bg-transparent px-3
+          py-2 transition-colors
         '
       >
         <div className='flex flex-row items-center gap-3'>
@@ -52,14 +52,14 @@ const UserDropdown = (props: Props) => {
       {isOpen && (
         <div
           className='
-            absolute right-0 z-50 mt-2 w-48 rounded-md border bg-white-0 py-1
+            bg-white-0 absolute right-0 z-50 mt-2 w-48 rounded-md border py-1
             shadow-lg
           '
         >
           <span
             suppressHydrationWarning
             className='
-              mx-auto block w-fit pb-2 text-black-300
+              text-black-300 mx-auto block w-fit pb-2
               md:hidden
             '
           >
@@ -71,7 +71,7 @@ const UserDropdown = (props: Props) => {
               setIsOpen(false);
             }}
             className='
-              w-full px-4 py-2 text-left text-primary-4 transition-colors
+              text-primary-4 w-full px-4 py-2 text-left transition-colors
               hover:bg-gray-100
             '
           >
