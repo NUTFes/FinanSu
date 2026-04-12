@@ -52,9 +52,11 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
               ）
             </label>
           </div>
-          <div className='
+          <div
+            className='
             max-h-28 overflow-y-auto rounded-md border-2 bg-white-0
-          '>
+          '
+          >
             {styleOptions.map((style) => (
               <div
                 className='
@@ -71,9 +73,12 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
                   }}
                   id={String(style.id)}
                 />
-                <label htmlFor={String(style.id)} className='
+                <label
+                  htmlFor={String(style.id)}
+                  className='
                   mx-2 w-full text-black-300
-                '>
+                '
+                >
                   {style.style}/{style.feature}/{style.price}円
                 </label>
               </div>

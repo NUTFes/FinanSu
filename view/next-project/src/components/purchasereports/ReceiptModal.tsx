@@ -34,9 +34,11 @@ export default function ReceiptModal(props: ModalProps) {
       <div className={clsx('mb-4 grid grid-cols-12 gap-4')}>
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
-          <div className={clsx(`
+          <div
+            className={clsx(`
             h-100 w-full text-center text-base text-black-300
-          `)}>
+          `)}
+          >
             お疲れ様でした。
             <br />
             レシートの裏面に以下のIDを書いて所定の場所に保管してください。
