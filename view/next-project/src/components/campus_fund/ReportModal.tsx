@@ -1,25 +1,76 @@
+import { format } from 'date-fns';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { FaRegCalendarAlt } from 'react-icons/fa';
-import { PrimaryButton, Modal, Title, CloseButton, Input } from '@components/common';
+
+import {
+  CampusFundFormData,
+  CreateCampusDonationPayload,
+  CampusFundTeacher,
+} from '@/components/campus_fund/types';
 import { useCurrentUser } from '@/store';
-import 'react-datepicker/dist/react-datepicker.css';
+import { PrimaryButton, Modal, Title, CloseButton, Input } from '@components/common';
 import formatNumber from '@components/common/Formatter';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   building: string | null;
-  teacher: { name: string; room: string } | null;
+  teacher: CampusFundTeacher | null;
+  yearId: number | null;
   onBack?: () => void;
 }
 
-const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [amount, setAmount] = useState<string>('');
+const ReportModal = ({ isOpen, onClose, building, teacher, yearId, onBack }: Props) => {
+  const initialFormData: CampusFundFormData = {
+    receivedAt: new Date(),
+    price: '',
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
   const user = useCurrentUser();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
+
+  const handleSubmit = async () => {
+    if (!teacher || !formData.receivedAt || !formData.price || !user?.id || !yearId) return;
+
+    try {
+      setErrorMessage('');
+      setIsSubmitting(true);
+
+      const payload: CreateCampusDonationPayload = {
+        userId: user.id,
+        teacherId: Number(teacher.teacherId),
+        yearId: yearId,
+        price: Number(formData.price.replace(/,/g, '')),
+        receivedAt: format(formData.receivedAt, 'yyyy-MM-dd'),
+      };
+      console.log('送信データ:', payload);
+      setFormData({
+        receivedAt: new Date(),
+        price: '',
+      });
+      onClose();
+      alert('募金の登録が完了しました！');
+    } catch (error) {
+      setErrorMessage('募金の登録に失敗しました。');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isSubmitDisabled =
+    !teacher ||
+    !formData.receivedAt ||
+    !formData.price ||
+    Number(formData.price.replace(/,/g, '')) <= 0 ||
+    !user?.id ||
+    !yearId;
 
   return (
     <Modal onClick={onClose} className='w-full max-w-xs sm:max-w-md md:max-w-xl'>
@@ -29,24 +80,27 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
         </div>
         <Title>{building}</Title>
         <p className='mt-4 text-center text-sm text-gray-600 md:text-lg'>
-          {teacher ? `${teacher.room} ${teacher.name}` : ''}
+          {teacher ? `${teacher.roomName} ${teacher.teacherName}` : ''}
         </p>
+        {errorMessage && <p className='mt-2 text-center text-sm text-red-500'>{errorMessage}</p>}
         <div className='mt-12 space-y-6'>
           <div className='flex flex-col items-start gap-2 sm:flex-row sm:items-center'>
             <label className='min-w-20 text-xs font-bold text-gray-600 sm:text-right md:text-sm'>
               日時
             </label>
-            <div className='relative z-2 w-full'>
+            <div className='z-2 relative w-full'>
               <DatePicker
-                selected={selectedDate}
-                onChange={(date: Date | null) => setSelectedDate(date)}
+                selected={formData.receivedAt}
+                onChange={(date: Date | null) =>
+                  setFormData((prev) => ({ ...prev, receivedAt: date }))
+                }
                 dateFormat='yyyy/MM/dd'
                 placeholderText='日付を選択'
                 className='w-full border-b border-gray-400 pr-10 text-sm focus:border-teal-400 focus:outline-none md:text-base'
                 popperPlacement='bottom'
                 popperClassName='z-datepicker-gal'
               />
-              <FaRegCalendarAlt className='pointer-events-none absolute right-2 top-1/2 size-5 -translate-y-1/2 text-gray-400' />
+              <FaRegCalendarAlt className='size-5 pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-400' />
             </div>
           </div>
 
@@ -67,14 +121,14 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
             </label>
             <Input
               placeholder='金額を入力'
-              value={amount}
+              value={formData.price}
               onChange={(e) => {
                 const value = e.target.value.replace(/,/g, '');
                 if (!isNaN(Number(value))) {
-                  setAmount(formatNumber(Number(value)));
+                  setFormData((prev) => ({ ...prev, price: formatNumber(Number(value)) }));
                 }
               }}
-              className='border-gray-400 border-b text-sm focus:border-teal-400 focus:outline-none md:text-base'
+              className='border-b border-gray-400 text-sm focus:border-teal-400 focus:outline-none md:text-base'
             />
           </div>
 
@@ -86,7 +140,9 @@ const ReportModal = ({ isOpen, onClose, building, teacher, onBack }: Props) => {
             >
               戻る
             </button>
-            <PrimaryButton onClick={onClose}>追加する</PrimaryButton>
+            <PrimaryButton onClick={handleSubmit} disabled={isSubmitDisabled || isSubmitting}>
+              {isSubmitting ? '登録中...' : '登録する'}
+            </PrimaryButton>
           </div>
         </div>
       </div>
