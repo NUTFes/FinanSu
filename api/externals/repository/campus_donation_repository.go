@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -75,15 +74,5 @@ func (cdr *campusDonationRepository) AllBuildingTotalsByYear(
 		return nil, err
 	}
 
-	stmt, err := cdr.crud.Prepare(c, query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := stmt.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}()
-
-	return stmt.QueryContext(c, args...)
+	return cdr.client.DB().QueryContext(c, query, args...)
 }
