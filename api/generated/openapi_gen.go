@@ -276,6 +276,24 @@ type BuyReportWithDivisionId struct {
 	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
 }
 
+// CampusDonationBuildingFloor 各号棟の指定フロア教員情報
+type CampusDonationBuildingFloor struct {
+	BuildingId   int                     `json:"buildingId"`
+	BuildingName string                  `json:"buildingName"`
+	Donations    []CampusDonationTeacher `json:"donations"`
+	FloorNumber  string                  `json:"floorNumber"`
+	UnitNumber   int                     `json:"unitNumber"`
+}
+
+// CampusDonationTeacher 棟・階ごとの教員別募金情報
+type CampusDonationTeacher struct {
+	IsBlack     bool   `json:"isBlack"`
+	RoomName    string `json:"roomName"`
+	TeacherId   int    `json:"teacherId"`
+	TeacherName string `json:"teacherName"`
+	TotalPrice  int    `json:"totalPrice"`
+}
+
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
 type DestroyTeacherIDs struct {
 	DeleteIDs []float32 `json:"deleteIDs"`
@@ -1060,6 +1078,9 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /campus_donations/years/{year}/buildings/{building_id}/floors/{floor_number})
+	GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber(ctx echo.Context, year int, buildingId int, floorNumber string) error
 
 	// (GET /current_user)
 	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
@@ -1887,6 +1908,38 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Path parameter "building_id" -------------
+	var buildingId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "building_id", ctx.Param("building_id"), &buildingId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter building_id: %s", err))
+	}
+
+	// ------------- Path parameter "floor_number" -------------
+	var floorNumber string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "floor_number", ctx.Param("floor_number"), &floorNumber, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_number: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber(ctx, year, buildingId, floorNumber)
 	return err
 }
 
@@ -3513,6 +3566,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/campus_donations/years/:year/buildings/:building_id/floors/:floor_number", wrapper.GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber)
 	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)

@@ -1,0 +1,24 @@
+- id: 1
+  building_id: 1
+  floor_number: "5"
+  room_name: "501"
+
+- id: 2
+  building_id: 1
+  floor_number: "5"
+  room_name: "502"
+
+- id: 3
+  building_id: 2
+  floor_number: "5"
+  room_name: "501"
+
+- id: 4
+  building_id: 2
+  floor_number: "4"
+  room_name: "401"
+
+- id: 5
+  building_id: 3
+  floor_number: "5"
+  room_name: "501"

@@ -1,0 +1,41 @@
+- id: 1
+  user_id: 1
+  teacher_id: 1
+  year_id: 1
+  price: 3000
+  received_at: 2025-05-01
+
+- id: 2
+  user_id: 1
+  teacher_id: 1
+  year_id: 1
+  price: 2000
+  received_at: 2025-05-02
+
+- id: 3
+  user_id: 2
+  teacher_id: 3
+  year_id: 1
+  price: 7000
+  received_at: 2025-05-03
+
+- id: 4
+  user_id: 2
+  teacher_id: 4
+  year_id: 1
+  price: 9000
+  received_at: 2025-05-04
+
+- id: 5
+  user_id: 1
+  teacher_id: 5
+  year_id: 1
+  price: 4000
+  received_at: 2025-05-05
+
+- id: 6
+  user_id: 1
+  teacher_id: 3
+  year_id: 2
+  price: 8000
+  received_at: 2024-05-06

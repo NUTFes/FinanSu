@@ -2,6 +2,7 @@ package test
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/di"
 	testfixtures "github.com/go-testfixtures/testfixtures/v3"
 	"github.com/stretchr/testify/assert"
@@ -38,6 +40,18 @@ func TestMain(m *testing.M) {
 		log.Fatal(err)
 	}
 	if err = os.Setenv("NUTMEG_DB_NAME", "finansu_test_db"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("MINIO_ENDPOINT", "minio:9000"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("MINIO_ACCESS_KEY", "user"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("MINIO_SECRET_KEY", "password"); err != nil {
+		log.Fatal(err)
+	}
+	if err = os.Setenv("MINIO_USE_SSL", "false"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -195,4 +209,79 @@ func TestAddUserHandler(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, r.StatusCode)
 	assert.Contains(t, string(body), "窪坂駿吾")
+}
+
+func TestGetCampusDonationBuildingFloorsHandler(t *testing.T) {
+	prepareTestDatabase(t)
+
+	serverComponents, err := di.InitializeServer()
+	if err != nil {
+		t.Errorf("Error initializing server: %s", err)
+		return
+	}
+
+	testServer := httptest.NewServer(serverComponents.Echo)
+	t.Cleanup(func() {
+		testServer.Close()
+		serverComponents.Client.CloseDB()
+	})
+
+	r, err := http.Get(testServer.URL + "/campus_donations/years/2025/buildings/1/floors/5")
+	if err != nil {
+		t.Errorf("Error making request: %s", err)
+		return
+	}
+
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			t.Errorf("Error closing response body: %s", err)
+		}
+	}()
+
+	var buildingFloors []generated.CampusDonationBuildingFloor
+	if err := json.NewDecoder(r.Body).Decode(&buildingFloors); err != nil {
+		t.Errorf("Error decoding response body: %s", err)
+		return
+	}
+
+	assert.Equal(t, http.StatusOK, r.StatusCode)
+	assert.Equal(t, []generated.CampusDonationBuildingFloor{
+		{
+			BuildingId:   1,
+			BuildingName: "学内募金API確認棟",
+			UnitNumber:   1,
+			FloorNumber:  "5",
+			Donations: []generated.CampusDonationTeacher{
+				{
+					RoomName:    "501",
+					TeacherId:   1,
+					TeacherName: "学内募金API確認教員A",
+					TotalPrice:  5000,
+					IsBlack:     false,
+				},
+				{
+					RoomName:    "502",
+					TeacherId:   2,
+					TeacherName: "学内募金API確認教員B",
+					TotalPrice:  0,
+					IsBlack:     true,
+				},
+			},
+		},
+		{
+			BuildingId:   2,
+			BuildingName: "学内募金API確認棟",
+			UnitNumber:   2,
+			FloorNumber:  "5",
+			Donations: []generated.CampusDonationTeacher{
+				{
+					RoomName:    "501",
+					TeacherId:   3,
+					TeacherName: "学内募金API確認教員C",
+					TotalPrice:  7000,
+					IsBlack:     false,
+				},
+			},
+		},
+	}, buildingFloors)
 }

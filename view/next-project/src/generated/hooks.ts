@@ -19,6 +19,7 @@ import type {
   BuyReportDetail,
   BuyReportSummary,
   BuyReportWithDivisionId,
+  CampusDonationBuildingFloor,
   CreateSponsorshipActivityRequest,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
@@ -4081,6 +4082,103 @@ export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
   const swrKey =
     swrOptions?.swrKey ?? (() => (isEnabled ? getGetFinancialRecordsCsvDownloadKey(params) : null));
   const swrFn = () => getFinancialRecordsCsvDownload(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 指定した棟に紐づく各号棟の指定フロア教員情報を取得
+ */
+export type getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse200 = {
+  data: CampusDonationBuildingFloor[];
+  status: 200;
+};
+
+export type getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponseSuccess =
+  getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse200 & {
+    headers: Headers;
+  };
+export type getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse =
+  getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponseSuccess;
+
+export const getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberUrl = (
+  year: number,
+  buildingId: number,
+  floorNumber: string,
+) => {
+  return `/campus_donations/years/${year}/buildings/${buildingId}/floors/${floorNumber}`;
+};
+
+export const getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber = async (
+  year: number,
+  buildingId: number,
+  floorNumber: string,
+  options?: RequestInit,
+): Promise<getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse> => {
+  return customFetch<getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse>(
+    getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberUrl(
+      year,
+      buildingId,
+      floorNumber,
+    ),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberKey = (
+  year: number,
+  buildingId: number,
+  floorNumber: string,
+) => [`/campus_donations/years/${year}/buildings/${buildingId}/floors/${floorNumber}`] as const;
+
+export type GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber>>
+  >;
+export type GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberQueryError = unknown;
+
+export const useGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber = <
+  TError = unknown,
+>(
+  year: number,
+  buildingId: number,
+  floorNumber: string,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!(year && buildingId && floorNumber);
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberKey(
+            year,
+            buildingId,
+            floorNumber,
+          )
+        : null);
+  const swrFn = () =>
+    getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber(
+      year,
+      buildingId,
+      floorNumber,
+      requestOptions,
+    );
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

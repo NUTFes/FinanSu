@@ -1286,6 +1286,39 @@ paths:
               schema:
                 type: string
                 format: binary
+  /campus_donations/years/{year}/buildings/{building_id}/floors/{floor_number}:
+    get:
+      tags:
+        - campus_donation
+      description: 指定した棟に紐づく各号棟の指定フロア教員情報を取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+        - name: building_id
+          in: path
+          description: building_id
+          required: true
+          schema:
+            type: integer
+        - name: floor_number
+          in: path
+          description: floor_number
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 指定した棟に紐づく各号棟の指定フロア教員情報を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/campusDonationBuildingFloor"
   /income_expenditure_management/csv/download:
     get:
       tags:
@@ -2807,6 +2840,57 @@ components:
       required:
         - unsettledAmount
         - unpackedAmount
+    campusDonationTeacher:
+      description: 棟・階ごとの教員別募金情報
+      type: object
+      properties:
+        roomName:
+          type: string
+          example: "501"
+        teacherId:
+          type: integer
+          example: 1
+        teacherName:
+          type: string
+          example: 技大太郎
+        totalPrice:
+          type: integer
+          example: 5000
+        isBlack:
+          type: boolean
+          example: false
+      required:
+        - roomName
+        - teacherId
+        - teacherName
+        - totalPrice
+        - isBlack
+    campusDonationBuildingFloor:
+      description: 各号棟の指定フロア教員情報
+      type: object
+      properties:
+        buildingId:
+          type: integer
+          example: 1
+        buildingName:
+          type: string
+          example: 機械・建設棟
+        unitNumber:
+          type: integer
+          example: 1
+        floorNumber:
+          type: string
+          example: "5"
+        donations:
+          type: array
+          items:
+            $ref: "#/components/schemas/campusDonationTeacher"
+      required:
+        - buildingId
+        - buildingName
+        - unitNumber
+        - floorNumber
+        - donations
     division:
       required:
         - name
