@@ -33,6 +33,7 @@ export default function ProgressReportInvoicePdfModal({
   const [deadline, setDeadline] = useState(today);
   const [subject, setSubject] = useState(baseInvoice.subject);
   const [remark, setRemark] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -116,9 +117,18 @@ export default function ProgressReportInvoicePdfModal({
               <div className='mt-4 flex justify-center gap-4'>
                 <OutlinePrimaryButton onClick={onClose}>戻る</OutlinePrimaryButton>
                 <PrimaryButton
+                  disabled={isGenerating}
                   onClick={async () => {
-                    await createSponsorActivitiesPDF(invoice, deadline, issuedDate);
-                    onClose();
+                    if (isGenerating) return;
+                    setIsGenerating(true);
+                    try {
+                      await createSponsorActivitiesPDF(invoice, deadline, issuedDate);
+                      onClose();
+                    } catch (error) {
+                      console.error('Failed to generate invoice PDF:', error);
+                    } finally {
+                      setIsGenerating(false);
+                    }
                   }}
                 >
                   請求書ダウンロード

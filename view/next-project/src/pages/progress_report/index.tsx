@@ -140,6 +140,17 @@ const ProgressReportPage: NextPage = () => {
       return;
     }
 
+    if (!activity.yearPeriodsId || !activity.sponsorId || !activity.userId) {
+      toast({
+        title: 'データエラー',
+        description: '協賛活動の更新に必要な関連IDが不足しています。管理者にお問い合わせください。',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
       const payload = buildSponsorshipActivityProgressReportPayload(activity, values);
       await updateSponsorshipActivity(payload);
@@ -158,7 +169,7 @@ const ProgressReportPage: NextPage = () => {
       console.error('Failed to update sponsorship activity progress report:', error);
       toast({
         title: '更新に失敗しました',
-        description: '入力内容を確認して、しばらくしてから再度お試しください。',
+        description: 'しばらくしてから再度お試しください。',
         status: 'error',
         duration: 5000,
         isClosable: true,

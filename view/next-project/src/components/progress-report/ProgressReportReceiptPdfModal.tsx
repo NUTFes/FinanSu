@@ -28,6 +28,7 @@ export default function ProgressReportReceiptPdfModal({
   const today = getToday();
   const [issuedDate, setIssuedDate] = useState(today);
   const [paymentDay, setPaymentDay] = useState(today);
+  const [isGenerating, setIsGenerating] = useState(false);
   const sponsorActivityView = useMemo(() => buildLegacySponsorActivityView(activity), [activity]);
   const totalPrice = useMemo(() => getActivityAmountFromApi(activity), [activity]);
 
@@ -82,9 +83,18 @@ export default function ProgressReportReceiptPdfModal({
               <div className='mt-4 flex justify-center gap-4'>
                 <OutlinePrimaryButton onClick={onClose}>戻る</OutlinePrimaryButton>
                 <PrimaryButton
+                  disabled={isGenerating}
                   onClick={async () => {
-                    await createSponsorActivitiesPDF(sponsorActivityView, issuedDate, paymentDay);
-                    onClose();
+                    if (isGenerating) return;
+                    setIsGenerating(true);
+                    try {
+                      await createSponsorActivitiesPDF(sponsorActivityView, issuedDate, paymentDay);
+                      onClose();
+                    } catch (error) {
+                      console.error('Failed to generate receipt PDF:', error);
+                    } finally {
+                      setIsGenerating(false);
+                    }
                   }}
                 >
                   領収書ダウンロード

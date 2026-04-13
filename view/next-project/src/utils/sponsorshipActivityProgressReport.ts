@@ -104,7 +104,7 @@ export const mergeSponsorStyleOptions = (
 ): SponsorStyleOption[] => {
   const merged = new Map<number, SponsorStyleOption>();
 
-  [...primary, ...fallback].forEach((option) => {
+  [...fallback, ...primary].forEach((option) => {
     merged.set(option.id, option);
   });
 
@@ -148,7 +148,7 @@ export const buildSponsorshipActivityProgressReportPayload = (
     activityStatus: values.activityStatus,
     feasibilityStatus: values.feasibilityStatus,
     designProgress: values.designProgress,
-    remarks: values.remarks.trim() ? values.remarks : undefined,
+    remarks: values.remarks.trim() ? values.remarks.trim() : undefined,
     sponsorStyleDetails: values.sponsorStyleDetails.map((detail) => ({
       sponsorStyleId: detail.sponsorStyleId,
       category: detail.category,

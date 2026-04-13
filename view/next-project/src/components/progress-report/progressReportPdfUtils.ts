@@ -21,22 +21,6 @@ export const getActivityAmountFromApi = (activity: SponsorshipActivity): number 
   );
 };
 
-const toCommonSponsorStyle = (
-  activity: SponsorshipActivity,
-  sponsorStyleId: number,
-): SponsorStyle => {
-  const matchedStyle = activity.sponsorStyles?.find(
-    (link) => link.sponsorStyleId === sponsorStyleId,
-  )?.style;
-
-  return {
-    id: matchedStyle?.id ?? sponsorStyleId,
-    style: matchedStyle?.style ?? '協賛内容',
-    feature: matchedStyle?.feature ?? '',
-    price: matchedStyle?.price ?? 0,
-  };
-};
-
 export const buildLegacySponsorActivityView = (
   activity: SponsorshipActivity,
 ): SponsorActivityView => {
@@ -52,7 +36,12 @@ export const buildLegacySponsorActivityView = (
 
       return {
         activityStyle,
-        sponsorStyle: toCommonSponsorStyle(activity, sponsorStyleId),
+        sponsorStyle: {
+          id: sponsorStyleId,
+          style: link.style?.style ?? '協賛内容',
+          feature: link.style?.feature ?? '',
+          price: link.style?.price ?? 0,
+        },
       };
     });
 
@@ -97,7 +86,6 @@ export const buildInvoiceFromActivity = (activity: SponsorshipActivity): Invoice
       styleName: formatInvoiceStyleName(
         link.style
           ? {
-              id: link.style.id,
               style: link.style.style,
               feature: link.style.feature,
               price: link.style.price,
