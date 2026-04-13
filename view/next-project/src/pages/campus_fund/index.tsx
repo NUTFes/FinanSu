@@ -59,21 +59,27 @@ const CampusFund = () => {
 
   return (
     <MainLayout>
-      <div className='mx-auto max-w-[1200px] p-2 md:p-8'>
-        <p className='mt-8 text-center text-2xl font-bold text-[#26C1CE]'>総募金額</p>
-        <p className='mb-8 text-center text-5xl font-bold text-[#04668C] md:text-6xl'>
-          ¥{formatNumber(totalAmount)}
-        </p>
-        <div className='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'>
+      <div className='mb-10 mt-8 flex flex-col items-center px-6'>
+        <div className='mb-10 flex flex-col items-center'>
+          <p className='text-primary-5 mb-2 text-sm font-medium'>総募金額</p>
+          <p className='text-primary-5 text-center text-5xl font-normal md:text-6xl'>
+            ¥{formatNumber(totalAmount)}
+          </p>
+        </div>
+        <div className='mx-auto flex w-full max-w-3xl flex-wrap justify-center gap-7'>
           {buildings.map((building) => (
             <button
               type='button'
               key={building.buildingName}
-              className='min-w-0 rounded-md border border-gray-200 bg-white p-4 text-center transition hover:bg-[#f0f9fa] hover:shadow-md'
+              className='flex h-36 w-44 flex-col items-center justify-center rounded-2xl bg-white px-4 text-center shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl'
               onClick={() => handleBuildingClick(building)}
             >
-              <p className='text-lg font-bold'>{building.buildingName}</p>
-              <p className='text-xl text-[#26C1CE]'>¥{formatNumber(building.totalPrice)}</p>
+              <p className='text-primary-4 min-h-10 text-center text-lg font-light leading-tight'>
+                {building.buildingName}
+              </p>
+              <p className='text-primary-2 mt-5 text-3xl font-normal'>
+                ¥{formatNumber(building.totalPrice)}
+              </p>
             </button>
           ))}
         </div>
