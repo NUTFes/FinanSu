@@ -1,6 +1,5 @@
 import Head from 'next/head';
 
-
 import ProgressReportHeader from '@/components/progress-report/ProgressReportHeader';
 import ProgressReportModal from '@/components/progress-report/ProgressReportModal';
 import ProgressReportTable from '@/components/progress-report/ProgressReportTable';
@@ -21,7 +20,6 @@ interface ProgressReportLayoutProps {
   isActivityLoading: boolean;
   hasActivityError: boolean;
   activity?: SponsorshipActivity;
-  formattedSponsorStyles: string;
   isUpdating: boolean;
   control: Control<SponsorshipActivityProgressReportFormValues>;
   handleSubmit: UseFormHandleSubmit<SponsorshipActivityProgressReportFormValues>;
@@ -40,7 +38,6 @@ export default function ProgressReportLayout({
   isActivityLoading,
   hasActivityError,
   activity,
-  formattedSponsorStyles,
   isUpdating,
   control,
   handleSubmit,
@@ -71,7 +68,6 @@ export default function ProgressReportLayout({
         isLoading={isActivityLoading}
         hasError={hasActivityError}
         activity={activity}
-        formattedSponsorStyles={formattedSponsorStyles}
         isUpdating={isUpdating}
         control={control}
         handleSubmit={handleSubmit}

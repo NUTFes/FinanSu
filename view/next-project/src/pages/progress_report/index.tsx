@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import ProgressReportLayout from '@/components/progress-report/ProgressReportLayout';
 import {
@@ -12,13 +12,9 @@ import { ActivityStatus, DesignProgress, FeasibilityStatus } from '@/generated/m
 import { useToast } from '@/hooks/useToast';
 import { useCurrentUser, useUserStore } from '@/store';
 import {
-  SPONSOR_STYLE_CATEGORY_LABELS,
   SponsorshipActivityProgressReportFormValues,
   buildSponsorshipActivityProgressReportPayload,
-  extractSponsorStyleOptions,
-  extractSponsorStyleOptionsFromActivity,
   getDefaultProgressReportValues,
-  mergeSponsorStyleOptions,
 } from '@/utils/sponsorshipActivityProgressReport';
 
 import type { NextPage } from 'next';
@@ -70,14 +66,6 @@ const ProgressReportPage: NextPage = () => {
     usePutSponsorshipActivitiesId(selectedActivityId ?? 0);
 
   const activity = activityResponse?.data;
-  const sponsorStyleOptions = useMemo(
-    () =>
-      mergeSponsorStyleOptions(
-        extractSponsorStyleOptions(sponsorStylesResponse?.data),
-        extractSponsorStyleOptionsFromActivity(activity),
-      ),
-    [activity, sponsorStylesResponse?.data],
-  );
 
   const defaultFormValues: SponsorshipActivityProgressReportFormValues = {
     designProgress: DesignProgress.unstarted,
@@ -96,11 +84,6 @@ const ProgressReportPage: NextPage = () => {
     defaultValues: defaultFormValues,
   });
 
-  const selectedSponsorStyleDetails = useWatch({
-    control,
-    name: 'sponsorStyleDetails',
-  });
-
   useEffect(() => {
     if (!activity?.id) return;
     if (initializedActivityIdRef.current === activity.id) return;
@@ -114,19 +97,6 @@ const ProgressReportPage: NextPage = () => {
     initializedActivityIdRef.current = null;
     reset(defaultFormValues);
   };
-
-  const formattedSponsorStyles = useMemo(() => {
-    if ((selectedSponsorStyleDetails ?? []).length === 0) return '未定';
-
-    return (selectedSponsorStyleDetails ?? [])
-      .map((detail) => {
-        const style = sponsorStyleOptions.find((option) => option.id === detail.sponsorStyleId);
-        const categoryLabel = SPONSOR_STYLE_CATEGORY_LABELS[detail.category];
-        const styleLabel = style?.style ?? `スタイルID:${detail.sponsorStyleId}`;
-        return `${categoryLabel} ${styleLabel}`;
-      })
-      .join('　');
-  }, [selectedSponsorStyleDetails, sponsorStyleOptions]);
 
   const onSubmit = async (values: SponsorshipActivityProgressReportFormValues) => {
     if (!activity || selectedActivityId === null) {
@@ -154,17 +124,6 @@ const ProgressReportPage: NextPage = () => {
     try {
       const payload = buildSponsorshipActivityProgressReportPayload(activity, values);
       await updateSponsorshipActivity(payload);
-      await Promise.all([mutateActivities(), mutateActivityDetail()]);
-
-      toast({
-        title: '更新しました',
-        description: '進捗報告を更新しました。',
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
-      });
-
-      closeModal();
     } catch (error) {
       console.error('Failed to update sponsorship activity progress report:', error);
       toast({
@@ -174,7 +133,22 @@ const ProgressReportPage: NextPage = () => {
         duration: 5000,
         isClosable: true,
       });
+      return;
     }
+
+    toast({
+      title: '更新しました',
+      description: '進捗報告を更新しました。',
+      status: 'success',
+      duration: 4000,
+      isClosable: true,
+    });
+
+    closeModal();
+
+    await Promise.all([mutateActivities(), mutateActivityDetail()]).catch((error) => {
+      console.error('Failed to revalidate after update:', error);
+    });
   };
 
   return (
@@ -190,7 +164,6 @@ const ProgressReportPage: NextPage = () => {
       isActivityLoading={isActivityLoading}
       hasActivityError={Boolean(activityError)}
       activity={activity}
-      formattedSponsorStyles={formattedSponsorStyles}
       isUpdating={isUpdating}
       control={control}
       handleSubmit={handleSubmit}

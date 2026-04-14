@@ -83,9 +83,9 @@ export default function ProgressReportReceiptPdfModal({
               <div className='mt-4 flex justify-center gap-4'>
                 <OutlinePrimaryButton onClick={onClose}>戻る</OutlinePrimaryButton>
                 <PrimaryButton
-                  disabled={isGenerating}
+                  disabled={isGenerating || !issuedDate || !paymentDay}
                   onClick={async () => {
-                    if (isGenerating) return;
+                    if (isGenerating || !issuedDate || !paymentDay) return;
                     setIsGenerating(true);
                     try {
                       await createSponsorActivitiesPDF(sponsorActivityView, issuedDate, paymentDay);

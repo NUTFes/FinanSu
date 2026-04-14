@@ -2,7 +2,6 @@ import { FormControl, FormErrorMessage, FormLabel } from '@/components/common';
 
 import type { ReactNode } from 'react';
 
-
 interface ProgressReportFieldRowProps {
   id: string;
   label: string;

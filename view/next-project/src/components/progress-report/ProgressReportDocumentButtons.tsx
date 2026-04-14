@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { OutlinePrimaryButton } from '@/components/common';
 
-
 import ProgressReportInvoicePdfModal from './ProgressReportInvoicePdfModal';
 import ProgressReportReceiptPdfModal from './ProgressReportReceiptPdfModal';
 

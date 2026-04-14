@@ -24,7 +24,6 @@ import {
 
 import type { SponsorshipActivity } from '@/generated/model';
 
-
 const READ_ONLY_FIELD_CLASS_NAME =
   'pointer-events-none w-full rounded-none border-0 border-b border-[#56daff] bg-transparent px-0 py-1 text-base text-[#666666] shadow-none focus:border-[#56daff] focus:ring-0';
 
@@ -35,7 +34,6 @@ interface ProgressReportModalProps {
   isLoading: boolean;
   hasError: boolean;
   activity?: SponsorshipActivity;
-  formattedSponsorStyles: string;
   isUpdating: boolean;
   control: Control<SponsorshipActivityProgressReportFormValues>;
   handleSubmit: UseFormHandleSubmit<SponsorshipActivityProgressReportFormValues>;
