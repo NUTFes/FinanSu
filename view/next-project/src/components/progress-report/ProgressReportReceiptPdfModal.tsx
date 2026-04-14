@@ -29,6 +29,7 @@ export default function ProgressReportReceiptPdfModal({
   const [issuedDate, setIssuedDate] = useState(today);
   const [paymentDay, setPaymentDay] = useState(today);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
   const sponsorActivityView = useMemo(() => buildLegacySponsorActivityView(activity), [activity]);
   const totalPrice = useMemo(() => getActivityAmountFromApi(activity), [activity]);
 
@@ -86,12 +87,14 @@ export default function ProgressReportReceiptPdfModal({
                   disabled={isGenerating || !issuedDate || !paymentDay}
                   onClick={async () => {
                     if (isGenerating || !issuedDate || !paymentDay) return;
+                    setGenerationError(null);
                     setIsGenerating(true);
                     try {
                       await createSponsorActivitiesPDF(sponsorActivityView, issuedDate, paymentDay);
                       onClose();
                     } catch (error) {
                       console.error('Failed to generate receipt PDF:', error);
+                      setGenerationError('領収書PDFの生成に失敗しました。再度お試しください。');
                     } finally {
                       setIsGenerating(false);
                     }
@@ -100,6 +103,7 @@ export default function ProgressReportReceiptPdfModal({
                   領収書ダウンロード
                 </PrimaryButton>
               </div>
+              {generationError && <p className='mt-2 text-sm text-red-600'>{generationError}</p>}
             </div>
           </div>
 
