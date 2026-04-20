@@ -98,12 +98,15 @@ export const createPurchaseReportFormPdf = async (
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText(BUREAUS[purchaseReportViews.reportUser.bureauID].name, {
-    x: 100,
-    y: height - 95,
-    size: fontSizes[0],
-    font: fontData,
-  });
+  page.drawText(
+    BUREAUS.find((b) => b.id === purchaseReportViews.reportUser.bureauID)?.name ?? '不明',
+    {
+      x: 100,
+      y: height - 95,
+      size: fontSizes[0],
+      font: fontData,
+    },
+  );
   page.drawText('(担当:' + purchaseReportViews.reportUser.name + ')', {
     x: 150,
     y: height - 95,

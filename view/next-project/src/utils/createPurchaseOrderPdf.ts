@@ -132,7 +132,7 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText(BUREAUS[purchaseOrdersViews.user.bureauID].name, {
+  page.drawText(BUREAUS.find((b) => b.id === purchaseOrdersViews.user.bureauID)?.name ?? '不明', {
     x: 100,
     y: height - 95,
     size: fontSizes[0],
