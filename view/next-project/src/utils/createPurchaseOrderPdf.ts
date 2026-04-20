@@ -1,7 +1,7 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
 
-import { BUREAUS } from '@/constants/bureaus';
+import { getBureauName } from '@/constants/bureaus';
 
 import { PurchaseOrderView } from '../type/common';
 
@@ -132,9 +132,9 @@ export const createPurchasOrderFormPdf = async (purchaseOrdersViews: PurchaseOrd
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText(BUREAUS.find((b) => b.id === purchaseOrdersViews.user.bureauID)?.name ?? '不明', {
+  page.drawText(getBureauName(purchaseOrdersViews.user.bureauID), {
     x: 100,
-    y: height - 95,
+    y: height - 125,
     size: fontSizes[0],
     font: fontData,
   });

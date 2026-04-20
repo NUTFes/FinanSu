@@ -1,4 +1,4 @@
-import { BUREAUS } from '@/constants/bureaus';
+import { getBureauName } from '@/constants/bureaus';
 import { SponsorshipActivity } from '@/generated/model';
 
 import { createCsv, createCsvData } from './createCsv';
@@ -42,7 +42,7 @@ export const createSponsorshipActivityCsv = async (activities: SponsorshipActivi
         label: '所属局',
         getCustomValue: (activity) => {
           const bureauId = activity.user?.bureauID;
-          return BUREAUS.find((bureau) => bureau.id === bureauId)?.name ?? '';
+          return getBureauName(bureauId ?? 0);
         },
       },
       {

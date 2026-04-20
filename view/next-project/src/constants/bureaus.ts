@@ -68,3 +68,7 @@ export const BUREAUS_WITH_EN = [
     name_en: 'industry-university',
   },
 ];
+
+export const getBureauName = (bureauID: number): string => {
+  return BUREAUS.find((b) => b.id === bureauID)?.name ?? '不明';
+};

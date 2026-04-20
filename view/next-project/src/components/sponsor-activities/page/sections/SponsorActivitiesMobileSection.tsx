@@ -56,7 +56,7 @@ export default function SponsorActivitiesMobileSection({
             <div className='flex flex-col gap-3 p-4'>
               <div className='text-black-300 text-lg font-medium'>
                 <Tooltip text={activity.sponsor?.name || '-'}>
-                  <div className='truncate'>{activity.sponsor?.name}</div>
+                  <div className='truncate'>{activity.sponsor?.name || '-'}</div>
                 </Tooltip>
               </div>
               <div

@@ -1,4 +1,4 @@
-import { BUREAUS } from '@/constants/bureaus';
+import { getBureauName } from '@/constants/bureaus';
 
 import { createCsv, createCsvData } from './createCsv';
 import { SponsorActivityView } from '../type/common';
@@ -30,8 +30,7 @@ export const createPresentationCsv = async (activityViews: SponsorActivityView[]
         label: '担当者名',
       },
       {
-        getCustomValue: (row) =>
-          BUREAUS.find((bureau) => bureau.id === row.user.bureauID)?.name || '',
+        getCustomValue: (row) => getBureauName(row.user.bureauID),
         label: '所属局',
       },
       {
