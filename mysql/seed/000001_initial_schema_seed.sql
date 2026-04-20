@@ -137,7 +137,8 @@ VALUES
     ('財務局'),
     ('企画局'),
     ('制作局'),
-    ('情報局');
+    ('情報局'),
+    ('産学局');
 
 INSERT INTO
     departments (name)

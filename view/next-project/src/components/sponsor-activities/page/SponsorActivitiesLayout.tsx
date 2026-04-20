@@ -55,7 +55,7 @@ export default function SponsorActivitiesLayout({
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       {isLoading && <Loading />}
-      <Card>
+      <Card w='w-full'>
         <SponsorActivitiesHeader
           sponsorStyles={sponsorStyles}
           sponsors={sponsors}
