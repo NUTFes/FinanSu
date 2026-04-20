@@ -108,14 +108,17 @@ export default function SponsorActivitiesDesktopSection({
                 <td className='text-black-600 py-3 pl-8 pr-4 text-center text-sm'>
                   <div className='flex justify-center'>
                     <Tooltip text={activity.sponsor?.name || '-'}>
-                      <span className='block max-w-48 truncate'>
+                      <span className='max-w-48 block truncate'>
                         {activity.sponsor?.name || '-'}
                       </span>
                     </Tooltip>
                   </div>
                 </td>
                 <td className='text-black-600 px-4 py-3 text-center text-sm'>
-                  <span className='block max-w-32 truncate mx-auto' title={activity.user?.name || '-'}>
+                  <span
+                    className='max-w-32 mx-auto block truncate'
+                    title={activity.user?.name || '-'}
+                  >
                     {activity.user?.name || '-'}
                   </span>
                 </td>
