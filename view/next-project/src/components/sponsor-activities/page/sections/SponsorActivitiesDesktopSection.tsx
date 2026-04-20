@@ -4,7 +4,6 @@ import {
   getDesignProgressLabel,
   getFeasibilityStatusLabel,
 } from '@/utils/sponsorshipActivity';
-import { Tooltip } from '@components/common';
 import { Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
 
 import { OpenDeleteModalButton, OpenEditModalButton } from '../..';
@@ -107,18 +106,16 @@ export default function SponsorActivitiesDesktopSection({
               >
                 <td className='text-black-600 py-3 pl-8 pr-4 text-center text-sm'>
                   <div className='flex justify-center'>
-                    <Tooltip text={activity.sponsor?.name || '-'}>
-                      <span className='max-w-48 block truncate'>
-                        {activity.sponsor?.name || '-'}
-                      </span>
-                    </Tooltip>
+                    <span className='max-w-48 block truncate' title={activity.sponsor?.name || '-'}>
+                      {activity.sponsor?.name || '-'}
+                    </span>
                   </div>
                 </td>
                 <td className='text-black-600 px-4 py-3 text-center text-sm'>
                   <div className='flex justify-center'>
-                    <Tooltip text={activity.user?.name || '-'}>
-                      <span className='max-w-32 block truncate'>{activity.user?.name || '-'}</span>
-                    </Tooltip>
+                    <span className='max-w-32 block truncate' title={activity.user?.name || '-'}>
+                      {activity.user?.name || '-'}
+                    </span>
                   </div>
                 </td>
                 <td
