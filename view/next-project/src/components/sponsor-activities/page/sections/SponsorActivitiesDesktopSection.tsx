@@ -35,7 +35,7 @@ export default function SponsorActivitiesDesktopSection({
         md:block md:px-6
       '
     >
-      <div className='min-w-245'>
+      <div className='min-w-[980px]'>
         <table className='mb-2 min-w-full table-fixed border-collapse'>
           <thead>
             <tr className='border-b-primary-1 border-b py-3'>
