@@ -4,7 +4,7 @@ import {
   getDesignProgressLabel,
   getFeasibilityStatusLabel,
 } from '@/utils/sponsorshipActivity';
-import { Card } from '@components/common';
+import { Card, Tooltip } from '@components/common';
 import { Sponsor, SponsorStyle, User, YearPeriod } from '@type/common';
 
 import { OpenAddModalButton, OpenDeleteModalButton, OpenEditModalButton } from '../..';
@@ -54,7 +54,11 @@ export default function SponsorActivitiesMobileSection({
         {sponsorshipActivities.map((activity) => (
           <Card key={activity.id}>
             <div className='flex flex-col gap-3 p-4'>
-              <div className='text-black-300 text-lg font-medium'>{activity.sponsor?.name}</div>
+              <div className='text-black-300 text-lg font-medium'>
+                <Tooltip text={activity.sponsor?.name || '-'}>
+                  <div className='truncate'>{activity.sponsor?.name}</div>
+                </Tooltip>
+              </div>
               <div
                 className='
                   text-black-600 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2
