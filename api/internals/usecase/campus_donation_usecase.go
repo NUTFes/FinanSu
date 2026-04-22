@@ -6,7 +6,6 @@ import (
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
-	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 )
 
@@ -38,16 +37,12 @@ func (cdu *campusDonationUseCase) GetBuildingTotalsByYear(
 
 	buildingTotals := make([]generated.BuildingTotal, 0)
 	for rows.Next() {
-		var row domain.CampusDonationBuildingTotalRow
-		if err := rows.Scan(&row.ID, &row.Name, &row.TotalPrice); err != nil {
+		var buildingTotal generated.BuildingTotal
+		if err := rows.Scan(&buildingTotal.Id, &buildingTotal.Name, &buildingTotal.TotalPrice); err != nil {
 			return nil, errors.Wrap(err, "failed to scan campus donation building total")
 		}
 
-		buildingTotals = append(buildingTotals, generated.BuildingTotal{
-			Id:         row.ID,
-			Name:       row.Name,
-			TotalPrice: row.TotalPrice,
-		})
+		buildingTotals = append(buildingTotals, buildingTotal)
 	}
 
 	if err := rows.Err(); err != nil {
