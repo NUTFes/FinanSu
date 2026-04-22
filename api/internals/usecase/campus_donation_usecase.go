@@ -6,7 +6,6 @@ import (
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
-	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 )
 
@@ -42,44 +41,31 @@ func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 	buildingIndexByID := make(map[int]int)
 
 	for rows.Next() {
-		var row domain.CampusDonationBuildingFloorRow
+		var buildingFloor generated.CampusDonationBuildingFloor
+		var donation generated.CampusDonationTeacher
 		if err := rows.Scan(
-			&row.BuildingID,
-			&row.BuildingName,
-			&row.UnitNumber,
-			&row.FloorNumber,
-			&row.RoomName,
-			&row.TeacherID,
-			&row.TeacherName,
-			&row.TotalPrice,
-			&row.IsBlack,
+			&buildingFloor.BuildingId,
+			&buildingFloor.BuildingName,
+			&buildingFloor.UnitNumber,
+			&buildingFloor.FloorNumber,
+			&donation.RoomName,
+			&donation.TeacherId,
+			&donation.TeacherName,
+			&donation.TotalPrice,
+			&donation.IsBlack,
 		); err != nil {
 			return nil, errors.Wrap(err, "failed to scan campus donation building floor row")
 		}
 
-		index, ok := buildingIndexByID[row.BuildingID]
+		index, ok := buildingIndexByID[buildingFloor.BuildingId]
 		if !ok {
-			buildingFloors = append(buildingFloors, generated.CampusDonationBuildingFloor{
-				BuildingId:   row.BuildingID,
-				BuildingName: row.BuildingName,
-				UnitNumber:   row.UnitNumber,
-				FloorNumber:  row.FloorNumber,
-				Donations:    []generated.CampusDonationTeacher{},
-			})
+			buildingFloor.Donations = []generated.CampusDonationTeacher{}
+			buildingFloors = append(buildingFloors, buildingFloor)
 			index = len(buildingFloors) - 1
-			buildingIndexByID[row.BuildingID] = index
+			buildingIndexByID[buildingFloor.BuildingId] = index
 		}
 
-		buildingFloors[index].Donations = append(
-			buildingFloors[index].Donations,
-			generated.CampusDonationTeacher{
-				RoomName:    row.RoomName,
-				TeacherId:   row.TeacherID,
-				TeacherName: row.TeacherName,
-				TotalPrice:  row.TotalPrice,
-				IsBlack:     row.IsBlack,
-			},
-		)
+		buildingFloors[index].Donations = append(buildingFloors[index].Donations, donation)
 	}
 
 	if err := rows.Err(); err != nil {
