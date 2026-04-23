@@ -14,6 +14,7 @@ type campusDonationBuildingGroup struct {
 	Name string
 }
 
+// NOTICE: ここに含まれない棟名はすべて「その他」として扱う。
 var campusDonationBuildingGroups = []campusDonationBuildingGroup{
 	{ID: 1, Name: "機械・建設棟"},
 	{ID: 2, Name: "電気棟"},
