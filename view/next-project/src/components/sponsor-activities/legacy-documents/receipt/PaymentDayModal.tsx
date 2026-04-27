@@ -37,12 +37,7 @@ export default function PaymentDayModal(props: ModalProps) {
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p
-          className='
-            text-black-600 mx-auto mb-7 w-fit text-2xl/8 font-thin
-            tracking-widest
-          '
-        >
+        <p className='text-black-600 mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest'>
           入金日を入力
         </p>
         <div className='col-span-4 w-full'>
@@ -53,12 +48,7 @@ export default function PaymentDayModal(props: ModalProps) {
             className='w-full'
           />
         </div>
-        <div
-          className='
-            my-5 hidden justify-center
-            md:flex
-          '
-        >
+        <div className='my-5 hidden justify-center md:flex'>
           <PrimaryButton
             onClick={async () => {
               createSponsorActivitiesPDF(
@@ -72,12 +62,7 @@ export default function PaymentDayModal(props: ModalProps) {
             領収書ダウンロード
           </PrimaryButton>
         </div>
-        <div
-          className='
-            h-84 justify-center overflow-x-auto
-            md:flex
-          '
-        >
+        <div className='h-84 justify-center overflow-x-auto md:flex'>
           <PreviewPDF
             sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
             date={today}

@@ -81,28 +81,14 @@ export default function SignUpView() {
       <div className='my-16 flex w-full flex-col items-center'>
         <div className='mb-10 flex flex-col gap-3'>
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
-            <p
-              className='
-                md:text-md
-                text-black-300 whitespace-nowrap text-sm
-              '
-            >
-              名前
-            </p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>名前</p>
             <input
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='text'
               value={postUserData.name}
               onChange={userDataHandler('name')}
             />
-            <p
-              className='
-                md:text-md
-                text-black-300 whitespace-nowrap text-sm
-              '
-            >
-              学科
-            </p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>学科</p>
             <select
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
               value={postUserData.bureauID}
@@ -114,14 +100,7 @@ export default function SignUpView() {
                 </option>
               ))}
             </select>
-            <p
-              className='
-                md:text-md
-                text-black-300 whitespace-nowrap text-sm
-              '
-            >
-              メールアドレス
-            </p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>メールアドレス</p>
             <input
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='text'
@@ -134,14 +113,7 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p
-              className='
-                md:text-md
-                text-black-300 whitespace-nowrap text-sm
-              '
-            >
-              パスワード
-            </p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>パスワード</p>
             <input
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='password'
@@ -153,14 +125,7 @@ export default function SignUpView() {
                 },
               })}
             />
-            <p
-              className='
-                md:text-md
-                text-black-300 whitespace-nowrap text-sm
-              '
-            >
-              パスワード確認
-            </p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>パスワード確認</p>
             <input
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='password'

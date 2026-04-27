@@ -85,12 +85,12 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
   return (
     <Modal onClick={onClose} className='w-[calc(100vw-2rem)] max-w-sm sm:max-w-md md:max-w-xl'>
       <div className='relative p-3 md:p-5'>
-        <div className='absolute right-2 top-2 z-10'>
+        <div className='absolute top-2 right-2 z-10'>
           <CloseButton onClick={onClose} />
         </div>
         <div className='px-9 md:px-12'>
           <Title className='flex-wrap gap-3 text-center text-xl md:flex-nowrap md:gap-5 md:text-2xl'>
-            <span className='wrap-break-word leading-snug'>{building || '建物名未設定'}</span>
+            <span className='leading-snug wrap-break-word'>{building || '建物名未設定'}</span>
             <select
               className='w-auto border-b border-gray-400 bg-transparent text-sm font-normal outline-none'
               value={selectedFloor}
@@ -122,7 +122,7 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
                   <td className='px-2 py-2'>{teacher.unitNumber}</td>
                   <td className='px-2 py-2'>{teacher.roomName}</td>
                   <td className='px-2 py-2'>{teacher.teacherName}</td>
-                  <td className='whitespace-nowrap px-2 py-2'>
+                  <td className='px-2 py-2 whitespace-nowrap'>
                     {teacher.price !== null ? `¥${formatNumber(teacher.price)}` : '-'}
                   </td>
                   <td className='px-2 py-2'>

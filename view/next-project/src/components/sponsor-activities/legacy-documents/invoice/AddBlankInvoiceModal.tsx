@@ -179,20 +179,11 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p
-          className='
-            text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin
-            tracking-widest
-          '
-        >
+        <p className='text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin tracking-widest'>
           請求書の発行（手入力）
         </p>
 
-        <div
-          className='
-          flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4
-        '
-        >
+        <div className='flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4'>
           <div className='w-1/2 overflow-y-auto pr-4'>
             <div className='grid grid-cols-1 gap-4'>
               <div>
@@ -246,11 +237,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   <p className='ml-1 text-sm text-gray-600'>協賛内容リスト</p>
                 </div>
 
-                <div
-                  className='
-                    mb-2 grid grid-cols-12 gap-2 px-2 text-xs text-gray-600
-                  '
-                >
+                <div className='mb-2 grid grid-cols-12 gap-2 px-2 text-xs text-gray-600'>
                   <div className='col-span-5 text-center'>概要</div>
                   <div className='col-span-2 text-center'>数量</div>
                   <div className='col-span-2 text-center'>単価</div>
@@ -258,14 +245,11 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   <div className='col-span-1'></div>
                 </div>
 
-                <div className='max-h-75 mb-4 space-y-2 overflow-y-auto'>
+                <div className='mb-4 max-h-75 space-y-2 overflow-y-auto'>
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className='
-                        grid grid-cols-12 items-center gap-2 rounded-sm
-                        bg-gray-50 p-2
-                      '
+                      className='grid grid-cols-12 items-center gap-2 rounded-sm bg-gray-50 p-2'
                     >
                       <div className='col-span-5'>
                         <Select value={item.styleName} onChange={onItemStyleChange(item.id)}>
@@ -299,10 +283,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                       <div className='col-span-1 flex justify-center'>
                         <button
                           type='button'
-                          className='
-                            text-red-500
-                            hover:text-red-700
-                          '
+                          className='text-red-500 hover:text-red-700'
                           onClick={() => removeItem(item.id)}
                           disabled={items.length === 1}
                           title='削除'
@@ -314,10 +295,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   ))}
                   <div className='flex justify-center'>
                     <AddButton
-                      className='
-                        flex items-center text-sm text-blue-500
-                        hover:underline
-                      '
+                      className='flex items-center text-sm text-blue-500 hover:underline'
                       onClick={addItem}
                     >
                       項目追加
@@ -348,11 +326,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
             </div>
           </div>
 
-          <div
-            className='
-              flex w-1/2 flex-col overflow-hidden border-l border-gray-200 pl-4
-            '
-          >
+          <div className='flex w-1/2 flex-col overflow-hidden border-l border-gray-200 pl-4'>
             <div className='flex-1 overflow-hidden'>
               <PreviewPDF
                 invoiceItem={createInvoiceData()}

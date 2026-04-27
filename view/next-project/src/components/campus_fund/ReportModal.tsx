@@ -75,7 +75,7 @@ const ReportModal = ({ isOpen, onClose, building, teacher, yearId, onBack }: Pro
   return (
     <Modal onClick={handleClose} className='w-[calc(100vw-2rem)] max-w-sm sm:max-w-md md:max-w-xl'>
       <div className='relative p-5'>
-        <div className='absolute right-2 top-2'>
+        <div className='absolute top-2 right-2'>
           <CloseButton onClick={handleClose} />
         </div>
         <Title>{building}</Title>

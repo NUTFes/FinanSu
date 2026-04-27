@@ -65,7 +65,7 @@ const CampusFund = () => {
 
   return (
     <MainLayout>
-      <div className='mb-10 mt-8 flex flex-col items-center px-6'>
+      <div className='mt-8 mb-10 flex flex-col items-center px-6'>
         <div className='mb-10 flex flex-col items-center'>
           <p className='text-primary-5 mb-2 text-sm font-medium'>総募金額</p>
           <p className='text-primary-5 text-center text-5xl font-normal md:text-6xl'>
@@ -80,7 +80,7 @@ const CampusFund = () => {
               className='flex h-24 w-full flex-col items-center justify-center rounded-xl bg-white px-3 text-center shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl md:h-36 md:w-44 md:rounded-2xl md:px-4'
               onClick={() => handleBuildingClick(building)}
             >
-              <p className='text-primary-4 min-h-8 text-center text-sm font-light leading-tight md:text-lg'>
+              <p className='text-primary-4 min-h-8 text-center text-sm leading-tight font-light md:text-lg'>
                 {building.buildingName}
               </p>
               <p className='text-primary-2 mt-1 text-2xl font-normal md:mt-5 md:text-3xl'>

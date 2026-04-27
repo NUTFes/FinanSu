@@ -31,10 +31,10 @@ const convertDate = (date: string) => {
 const TableHeader: React.FC = () => (
   <thead className='bg-gray-100'>
     <tr className='border-primary-1 border-b py-3 text-sm'>
-      <th className='text-black-600 w-1/3 py-2 pl-14 pr-4 text-left font-normal'>物品名</th>
-      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>予算</th>
-      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>使用額</th>
-      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>残高</th>
+      <th className='text-black-600 w-1/3 py-2 pr-4 pl-14 text-left font-normal'>物品名</th>
+      <th className='text-black-600 w-1/8 p-2 text-left font-normal'>予算</th>
+      <th className='text-black-600 w-1/8 p-2 text-left font-normal'>使用額</th>
+      <th className='text-black-600 w-1/8 p-2 text-left font-normal'>残高</th>
       <th className='text-black-600 p-2 text-left font-normal'></th>
     </tr>
   </thead>
@@ -59,14 +59,12 @@ const TableItem: React.FC<TableItemProps> = ({
   return (
     <>
       <tr
-        className={`
-          ${hasSubitems ? 'cursor-pointer' : ''}
-        `}
+        className={` ${hasSubitems ? 'cursor-pointer' : ''} `}
         onClick={() => {
           if (hasSubitems) toggleItem(item.festivalItemName || '');
         }}
       >
-        <td className='text-black-300 py-4 pl-8 pr-4 text-left align-top'>
+        <td className='text-black-300 py-4 pr-4 pl-8 text-left align-top'>
           {hasSubitems && (
             <span className='inline-flex items-center gap-1'>
               <span className='flex items-center text-blue-500'>
@@ -114,37 +112,25 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateI
   return (
     <tr>
       <td colSpan={5}>
-        <div
-          className='
-            md:w-9/10 flex w-full justify-start
-            px-2
-          '
-        >
-          <div
-            className='
-              mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3
-            '
-          >
+        <div className='flex w-full justify-start px-2 md:w-9/10'>
+          <div className='mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3'>
             <table
-              className='
-                wrap-break-word text-black-300 w-full table-auto whitespace-normal
-                text-sm
-              '
+              className='text-black-300 w-full table-auto text-sm wrap-break-word whitespace-normal'
               onClick={(e) => e.stopPropagation()}
             >
               <tbody>
                 {items.map((item) => (
                   <tr key={item.buyReportName}>
-                    <td className='text-nowrap w-[30%] p-2 text-left'>
+                    <td className='w-[30%] p-2 text-left text-nowrap'>
                       {truncateItemName(itemsName || '')}
                     </td>
-                    <td className='text-nowrap w-[15%] p-2 text-center'>
+                    <td className='w-[15%] p-2 text-center text-nowrap'>
                       {convertDate(item?.reportDate ?? '')}
                     </td>
-                    <td className='text-nowrap w-[15%] p-2 text-center'>
+                    <td className='w-[15%] p-2 text-center text-nowrap'>
                       {item.buyReportName || '-'}
                     </td>
-                    <td className='text-nowrap w-[15%] p-2 text-center'>
+                    <td className='w-[15%] p-2 text-center text-nowrap'>
                       {item.amount ? item.amount.toLocaleString() : '-'}
                     </td>
                     <td className='w-[15%] p-2'>
@@ -203,7 +189,7 @@ const TableSection: React.FC<TableSectionProps> = ({ festivalItemDetails }) => {
       </h3>
 
       <div className='w-full overflow-x-auto'>
-        <table className='text-nowrap min-w-full table-fixed'>
+        <table className='min-w-full table-fixed text-nowrap'>
           <TableHeader />
           <tbody className='align-top'>
             {festivalItemDetails.festivalItems &&

@@ -19,19 +19,9 @@ export default function Home() {
               alt='logo'
               width={150}
               height={40}
-              className='
-                h-fit w-40
-                md:w-48
-              '
+              className='h-fit w-40 md:w-48'
             />
-            <p
-              className='
-                text-black-600 text-2xl
-                md:text-3xl
-              '
-            >
-              ログイン
-            </p>
+            <p className='text-black-600 text-2xl md:text-3xl'>ログイン</p>
           </div>
           <SignInView />
           <hr className='border-black-300' />
@@ -51,19 +41,9 @@ export default function Home() {
               alt='logo'
               width={150}
               height={40}
-              className='
-                h-fit w-40
-                md:w-48
-              '
+              className='h-fit w-40 md:w-48'
             />
-            <p
-              className='
-                text-black-600 text-2xl
-                md:text-3xl
-              '
-            >
-              新規登録
-            </p>
+            <p className='text-black-600 text-2xl md:text-3xl'>新規登録</p>
           </div>
           <SignUpView />
           <hr className='border-black-300' />
@@ -77,12 +57,7 @@ export default function Home() {
   };
   return (
     <LoginLayout>
-      <div
-        className='
-          m-4 w-fit rounded-lg px-5 shadow-md
-          md:m-8 md:w-1/2 md:px-10
-        '
-      >
+      <div className='m-4 w-fit rounded-lg px-5 shadow-md md:m-8 md:w-1/2 md:px-10'>
         {cardContent(isMember)}
       </div>
     </LoginLayout>

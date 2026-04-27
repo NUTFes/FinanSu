@@ -52,14 +52,7 @@ export default function SignInView() {
       <div className='my-16 flex w-full flex-col items-center'>
         <div className='mb-10 flex flex-col gap-3'>
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
-            <p
-              className='
-                md:text-md
-                text-black-300 whitespace-nowrap text-sm
-              '
-            >
-              メールアドレス
-            </p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>メールアドレス</p>
             <input
               type='text'
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
@@ -72,14 +65,7 @@ export default function SignInView() {
                 },
               })}
             />
-            <p
-              className='
-                md:text-md
-                text-black-300 whitespace-nowrap text-sm
-              '
-            >
-              パスワード
-            </p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>パスワード</p>
             <input
               type='password'
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
