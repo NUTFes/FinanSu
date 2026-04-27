@@ -51,7 +51,7 @@ export const FinanceLinkItems: LinkItemProps[] = [
 
 export const RelationLinkItems: LinkItemProps[] = [
   {
-    name: '渉外局',
+    name: '産学局',
     icon: <IoIosArrowDropup className='mx-2 text-xl' />,
     href: '',
     isParent: true,
@@ -60,6 +60,11 @@ export const RelationLinkItems: LinkItemProps[] = [
     name: '協賛活動',
     icon: <MdOutlineWorkOutline className='mx-2 text-xl' />,
     href: '/sponsor-activities',
+  },
+  {
+    name: '進捗報告',
+    icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
+    href: '/progress_report',
   },
   {
     name: '協賛スタイル',

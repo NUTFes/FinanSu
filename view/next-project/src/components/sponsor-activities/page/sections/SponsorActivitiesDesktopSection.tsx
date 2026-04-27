@@ -29,8 +29,13 @@ export default function SponsorActivitiesDesktopSection({
   fetchSponsorshipActivities,
 }: SponsorActivitiesDesktopSectionProps) {
   return (
-    <div className='mb-2 hidden overflow-x-auto px-4 py-5 md:block md:px-6'>
-      <div className='min-w-[980px]'>
+    <div
+      className='
+        mb-2 hidden overflow-x-auto px-4 py-5
+        md:block md:px-6
+      '
+    >
+      <div className='min-w-245'>
         <table className='mb-2 min-w-full table-fixed border-collapse'>
           <thead>
             <tr className='border-b-primary-1 border-b py-3'>
@@ -57,16 +62,26 @@ export default function SponsorActivitiesDesktopSection({
           </thead>
           <tbody>
             {sponsorshipActivities.map((activity) => (
-              <tr className='hover:bg-grey-100 border-b' key={activity.id}>
-                <td className='text-black-600 py-3 pr-4 pl-8 text-center text-sm'>
-                  <span className='block truncate' title={activity.sponsor?.name || '-'}>
-                    {activity.sponsor?.name || '-'}
-                  </span>
+              <tr
+                className='
+                  hover:bg-grey-100
+                  border-b
+                '
+                key={activity.id}
+              >
+                <td className='text-black-600 py-3 pl-8 pr-4 text-center text-sm'>
+                  <div className='flex justify-center'>
+                    <span className='max-w-48 block truncate' title={activity.sponsor?.name || '-'}>
+                      {activity.sponsor?.name || '-'}
+                    </span>
+                  </div>
                 </td>
                 <td className='text-black-600 px-4 py-3 text-center text-sm'>
-                  <span className='block truncate' title={activity.user?.name || '-'}>
-                    {activity.user?.name || '-'}
-                  </span>
+                  <div className='flex justify-center'>
+                    <span className='max-w-32 block truncate' title={activity.user?.name || '-'}>
+                      {activity.user?.name || '-'}
+                    </span>
+                  </div>
                 </td>
                 <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                   {getActivityStatusLabel(activity.activityStatus)}

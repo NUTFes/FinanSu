@@ -25,6 +25,10 @@ export const BUREAUS = [
     id: 6,
     name: '情報局',
   },
+  {
+    id: 7,
+    name: '産学局',
+  },
 ] as Bureau[];
 
 export const BUREAUS_WITH_EN = [
@@ -57,5 +61,10 @@ export const BUREAUS_WITH_EN = [
     id: 6,
     name: '情報局',
     name_en: 'information',
+  },
+  {
+    id: 7,
+    name: '産学局',
+    name_en: 'industry-university',
   },
 ];

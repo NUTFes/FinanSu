@@ -86,7 +86,6 @@ import type {
   GetMailAuthIsSignin200,
   GetSponsorshipActivitiesExportParams,
   GetSponsorshipActivitiesParams,
-  GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
   GetUsersId200,
@@ -5523,7 +5522,7 @@ export const useGetSponsorsPeriodsYear = <TError = unknown>(
  * sponsorstyleの一覧の取得
  */
 export type getSponsorstylesResponse200 = {
-  data: GetSponsorstyles200;
+  data: SponsorStyle[];
   status: 200;
 };
 
