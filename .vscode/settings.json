@@ -2,6 +2,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "prettier.requireConfig": true,
+  "prettier.prettierPath": "${workspaceFolder}/view/next-project/node_modules/prettier/index.cjs",
   "eslint.workingDirectories": ["./view/next-project"],
   "eslint.useFlatConfig": true,
   "editor.codeActionsOnSave": {
