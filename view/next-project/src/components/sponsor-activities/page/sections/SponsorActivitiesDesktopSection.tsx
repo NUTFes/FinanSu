@@ -29,12 +29,7 @@ export default function SponsorActivitiesDesktopSection({
   fetchSponsorshipActivities,
 }: SponsorActivitiesDesktopSectionProps) {
   return (
-    <div
-      className='
-        mb-2 hidden overflow-x-auto px-4 py-5
-        md:block md:px-6
-      '
-    >
+    <div className='mb-2 hidden overflow-x-auto px-4 py-5 md:block md:px-6'>
       <div className='min-w-245'>
         <table className='mb-2 min-w-full table-fixed border-collapse'>
           <thead>
@@ -62,23 +57,17 @@ export default function SponsorActivitiesDesktopSection({
           </thead>
           <tbody>
             {sponsorshipActivities.map((activity) => (
-              <tr
-                className='
-                  hover:bg-grey-100
-                  border-b
-                '
-                key={activity.id}
-              >
-                <td className='text-black-600 py-3 pl-8 pr-4 text-center text-sm'>
+              <tr className='hover:bg-grey-100 border-b' key={activity.id}>
+                <td className='text-black-600 py-3 pr-4 pl-8 text-center text-sm'>
                   <div className='flex justify-center'>
-                    <span className='max-w-48 block truncate' title={activity.sponsor?.name || '-'}>
+                    <span className='block max-w-48 truncate' title={activity.sponsor?.name || '-'}>
                       {activity.sponsor?.name || '-'}
                     </span>
                   </div>
                 </td>
                 <td className='text-black-600 px-4 py-3 text-center text-sm'>
                   <div className='flex justify-center'>
-                    <span className='max-w-32 block truncate' title={activity.user?.name || '-'}>
+                    <span className='block max-w-32 truncate' title={activity.user?.name || '-'}>
                       {activity.user?.name || '-'}
                     </span>
                   </div>
