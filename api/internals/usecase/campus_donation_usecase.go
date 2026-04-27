@@ -99,15 +99,10 @@ func groupBuildingTotalsByDisplayGroup(buildingTotals []generated.BuildingTotal)
 
 	groupedBuildingTotals := make([]generated.BuildingTotal, 0, len(campusDonationBuildingGroups))
 	for _, group := range campusDonationBuildingGroups {
-		totalPrice, ok := totalPriceByGroupID[group.ID]
-		if !ok {
-			continue
-		}
-
 		groupedBuildingTotals = append(groupedBuildingTotals, generated.BuildingTotal{
 			Id:         group.ID,
 			Name:       group.Name,
-			TotalPrice: totalPrice,
+			TotalPrice: totalPriceByGroupID[group.ID],
 		})
 	}
 
