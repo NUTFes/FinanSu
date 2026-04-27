@@ -41,6 +41,7 @@ func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 
 	query, args, err := dialect.
 		From(goqu.T("buildings")).
+		// NOTICE: 指定されたbuilding_idを代表値として、同じ棟名の全号棟を取得する。
 		InnerJoin(
 			goqu.T("buildings").As("selected_building"),
 			goqu.On(

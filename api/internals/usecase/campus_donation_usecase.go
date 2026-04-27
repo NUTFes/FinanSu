@@ -57,15 +57,7 @@ func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 			return nil, errors.Wrap(err, "failed to scan campus donation building floor row")
 		}
 
-		index, ok := buildingIndexByID[buildingFloor.BuildingId]
-		if !ok {
-			buildingFloor.Donations = []generated.CampusDonationTeacher{}
-			buildingFloors = append(buildingFloors, buildingFloor)
-			index = len(buildingFloors) - 1
-			buildingIndexByID[buildingFloor.BuildingId] = index
-		}
-
-		buildingFloors[index].Donations = append(buildingFloors[index].Donations, donation)
+		buildingFloors = appendBuildingFloorDonation(buildingFloors, buildingIndexByID, buildingFloor, donation)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -73,4 +65,23 @@ func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 	}
 
 	return buildingFloors, nil
+}
+
+func appendBuildingFloorDonation(
+	buildingFloors []generated.CampusDonationBuildingFloor,
+	buildingIndexByID map[int]int,
+	buildingFloor generated.CampusDonationBuildingFloor,
+	donation generated.CampusDonationTeacher,
+) []generated.CampusDonationBuildingFloor {
+	index, ok := buildingIndexByID[buildingFloor.BuildingId]
+	if !ok {
+		buildingFloor.Donations = []generated.CampusDonationTeacher{}
+		buildingFloors = append(buildingFloors, buildingFloor)
+		index = len(buildingFloors) - 1
+		buildingIndexByID[buildingFloor.BuildingId] = index
+	}
+
+	buildingFloors[index].Donations = append(buildingFloors[index].Donations, donation)
+
+	return buildingFloors
 }
