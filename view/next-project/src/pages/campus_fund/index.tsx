@@ -40,7 +40,11 @@ const CampusFund = () => {
     { buildingName: '総合研究棟', totalPrice: 41000 },
     { buildingName: '原子力・システム安全棟', totalPrice: 8500 },
     { buildingName: '事務局棟', totalPrice: 64000 },
-    { buildingName: 'センター', totalPrice: 121000 },
+    { buildingName: '極限エネルギ密度工学研究センター', totalPrice: 1000 },
+    { buildingName: '工作センター', totalPrice: 10000 },
+    { buildingName: '大型実験棟', totalPrice: 12000 },
+    { buildingName: '分析計測センター', totalPrice: 21000 },
+    { buildingName: 'その他', totalPrice: 0 },
   ];
 
   // 総募金額を計算
@@ -66,18 +70,18 @@ const CampusFund = () => {
             ¥{formatNumber(totalAmount)}
           </p>
         </div>
-        <div className='mx-auto flex w-full max-w-3xl flex-wrap justify-center gap-7'>
+        <div className='mx-auto grid w-full max-w-3xl grid-cols-2 gap-3 md:flex md:flex-wrap md:justify-center md:gap-7'>
           {buildings.map((building) => (
             <button
               type='button'
               key={building.buildingName}
-              className='flex h-36 w-44 flex-col items-center justify-center rounded-2xl bg-white px-4 text-center shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl'
+              className='flex h-24 w-full flex-col items-center justify-center rounded-xl bg-white px-3 text-center shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl md:h-36 md:w-44 md:rounded-2xl md:px-4'
               onClick={() => handleBuildingClick(building)}
             >
-              <p className='text-primary-4 min-h-10 text-center text-lg font-light leading-tight'>
+              <p className='text-primary-4 min-h-8 text-center text-sm font-light leading-tight md:text-lg'>
                 {building.buildingName}
               </p>
-              <p className='text-primary-2 mt-5 text-3xl font-normal'>
+              <p className='text-primary-2 mt-1 text-2xl font-normal md:mt-5 md:text-3xl'>
                 ¥{formatNumber(building.totalPrice)}
               </p>
             </button>

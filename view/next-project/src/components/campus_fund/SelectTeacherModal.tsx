@@ -31,7 +31,7 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
       roomName: '103号室',
       floorNumber: '1F',
       unitNumber: 1,
-      price: null,
+      price: 0,
       isBlack: false,
     },
     {
@@ -83,44 +83,47 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <Modal onClick={onClose} className='w-full max-w-xs sm:max-w-md md:max-w-xl'>
-      <div className='relative p-5'>
-        <div className='absolute right-2 top-2'>
+    <Modal onClick={onClose} className='w-[calc(100vw-2rem)] max-w-sm sm:max-w-md md:max-w-xl'>
+      <div className='relative p-3 md:p-5'>
+        <div className='absolute right-2 top-2 z-10'>
           <CloseButton onClick={onClose} />
         </div>
-        <Title>
-          {building || '建物名未設定'}
-          <select
-            className='ml-4 inline-block w-auto border-b border-gray-300 bg-transparent text-xs outline-none md:text-sm'
-            value={selectedFloor}
-            onChange={(e) => setSelectedFloor(e.target.value)}
-          >
-            {floorOptions.map((floor) => (
-              <option key={floor} value={floor}>
-                {floor}
-              </option>
-            ))}
-          </select>
-        </Title>
+        <div className='px-9 md:px-12'>
+          <Title className='flex-wrap gap-3 text-center text-xl md:flex-nowrap md:gap-5 md:text-2xl'>
+            <span className='wrap-break-word leading-snug'>{building || '建物名未設定'}</span>
+            <select
+              className='w-auto border-b border-gray-400 bg-transparent text-sm font-normal outline-none'
+              value={selectedFloor}
+              onChange={(e) => setSelectedFloor(e.target.value)}
+            >
+              {floorOptions.map((floor) => (
+                <option key={floor} value={floor}>
+                  {floor}
+                </option>
+              ))}
+            </select>
+          </Title>
+        </div>
+
         <div className='mt-4 overflow-x-auto'>
-          <table className='w-full table-auto text-left text-xs md:text-sm'>
+          <table className='text-black-300 w-full table-auto text-center text-xs md:text-sm'>
             <thead>
-              <tr className='border-b border-gray-200'>
-                <th className='px-2 py-2 font-semibold'>何号棟</th>
-                <th className='px-2 py-2 font-semibold'>居室</th>
-                <th className='px-2 py-2 font-semibold'>教員名</th>
-                <th className='px-2 py-2 font-semibold'>金額</th>
+              <tr className='border-primary-1 border-b'>
+                <th className='text-black-600 px-2 py-2 font-normal'>号棟</th>
+                <th className='text-black-600 px-2 py-2 font-normal'>居室</th>
+                <th className='text-black-600 px-2 py-2 font-normal'>教員名</th>
+                <th className='text-black-600 px-2 py-2 font-normal'>金額</th>
                 <th className='px-2 py-2' />
               </tr>
             </thead>
             <tbody>
               {filteredTeachers.map((teacher) => (
-                <tr key={teacher.roomName} className='border-b last:border-0'>
+                <tr key={teacher.roomName}>
                   <td className='px-2 py-2'>{teacher.unitNumber}</td>
                   <td className='px-2 py-2'>{teacher.roomName}</td>
                   <td className='px-2 py-2'>{teacher.teacherName}</td>
-                  <td className='px-2 py-2'>
-                    {teacher.price ? `¥${formatNumber(teacher.price)}` : '-'}
+                  <td className='whitespace-nowrap px-2 py-2'>
+                    {teacher.price !== null ? `¥${formatNumber(teacher.price)}` : '-'}
                   </td>
                   <td className='px-2 py-2'>
                     <EditButton size='S' onClick={() => onSelect(teacher)} />
@@ -128,6 +131,11 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr className='border-primary-1 border-t'>
+                <td colSpan={5} className='py-1' />
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>

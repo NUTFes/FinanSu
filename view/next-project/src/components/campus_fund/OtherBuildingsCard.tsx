@@ -24,7 +24,10 @@ const OtherBuildingsCard = ({ teachers }: Props) => (
         </thead>
         <tbody>
           {teachers.map((teacher, index) => (
-            <tr key={`${teacher.building}-${teacher.room}-${index}`} className='border-b last:border-0'>
+            <tr
+              key={`${teacher.building}-${teacher.room}-${index}`}
+              className='border-b last:border-0'
+            >
               <td className='px-2 py-2'>{teacher.building}</td>
               <td className='px-2 py-2'>{teacher.room}</td>
               <td className='px-2 py-2'>{teacher.name}</td>
