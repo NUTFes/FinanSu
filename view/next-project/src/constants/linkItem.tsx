@@ -43,7 +43,9 @@ export const FinanceLinkItems: LinkItemProps[] = [
   {
     name: '教員一覧',
     icon: <FaChalkboardTeacher className='mx-2 text-xl' />,
-    href: '/teachers',
+    // スキーマ変更に伴い、APIのエラーが発生しているため、一時的にリンクを無効化する
+    // href: '/teachers',
+    href: '',
   },
 ];
 
