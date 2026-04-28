@@ -55,7 +55,6 @@ const ReportModal = ({ isOpen, onClose, building, teacher, yearId, onBack }: Pro
         price: Number(formData.price.replace(/,/g, '')),
         receivedAt: format(formData.receivedAt, 'yyyy-MM-dd'),
       };
-      console.log('送信データ:', payload);
       setFormData({
         receivedAt: new Date(),
         price: '',

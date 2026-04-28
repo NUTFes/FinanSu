@@ -106,13 +106,13 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building }: Props) => {
         </div>
 
         <div className='mt-4 overflow-x-auto'>
-          <table className='text-black-300 w-full table-auto text-center text-xs md:text-sm'>
+          <table className='w-full table-auto text-center text-xs text-gray-700 md:text-sm'>
             <thead>
               <tr className='border-primary-1 border-b'>
-                <th className='text-black-600 px-2 py-2 font-normal'>号棟</th>
-                <th className='text-black-600 px-2 py-2 font-normal'>居室</th>
-                <th className='text-black-600 px-2 py-2 font-normal'>教員名</th>
-                <th className='text-black-600 px-2 py-2 font-normal'>金額</th>
+                <th className='px-2 py-2 font-normal text-gray-700'>号棟</th>
+                <th className='px-2 py-2 font-normal text-gray-700'>居室</th>
+                <th className='px-2 py-2 font-normal text-gray-700'>教員名</th>
+                <th className='px-2 py-2 font-normal text-gray-700'>金額</th>
                 <th className='px-2 py-2' />
               </tr>
             </thead>
