@@ -9,12 +9,10 @@ import { useGetYears } from '@/generated/hooks';
 import type { CampusFundBuildingSummary, CampusFundTeacher } from '@/components/campus_fund/types';
 
 const CampusFund = () => {
-  const [selectedBuilding, setSelectedBuilding] = useState(
-    null as CampusFundBuildingSummary | null,
-  );
+  const [selectedBuilding, setSelectedBuilding] = useState<CampusFundBuildingSummary | null>(null);
   const [isSelectTeacherOpen, setIsSelectTeacherOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [selectedTeacher, setSelectedTeacher] = useState(null as CampusFundTeacher | null);
+  const [selectedTeacher, setSelectedTeacher] = useState<CampusFundTeacher | null>(null);
   const { data: yearData } = useGetYears();
 
   const latestYear = useMemo(() => {

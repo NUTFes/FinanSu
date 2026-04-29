@@ -32,7 +32,7 @@ export interface CampusFundFloorGroup {
 // フォーム入力中のstate用
 export interface CampusFundFormData {
   receivedAt: Date | null;
-  price: string;
+  price: number | null;
 }
 
 // APIに送る用
