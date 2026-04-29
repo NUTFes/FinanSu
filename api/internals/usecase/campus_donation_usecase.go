@@ -14,7 +14,7 @@ type campusDonationUseCase struct {
 }
 
 type CampusDonationUseCase interface {
-	GetBuildingFloorDonationsByYear(context.Context, int, int, string) ([]generated.CampusDonationBuildingFloor, error)
+	GetBuildingFloorDonationsByYear(context.Context, int, string, *string) ([]generated.CampusDonationBuildingFloor, error)
 }
 
 func NewCampusDonationUseCase(rep rep.CampusDonationRepository) CampusDonationUseCase {
@@ -24,10 +24,10 @@ func NewCampusDonationUseCase(rep rep.CampusDonationRepository) CampusDonationUs
 func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 	ctx context.Context,
 	year int,
-	buildingID int,
 	floorNumber string,
+	groupKey *string,
 ) ([]generated.CampusDonationBuildingFloor, error) {
-	rows, err := cdu.rep.GetBuildingFloorDonationsByYear(ctx, year, buildingID, floorNumber)
+	rows, err := cdu.rep.GetBuildingFloorDonationsByYear(ctx, year, floorNumber, groupKey)
 	if err != nil {
 		return nil, err
 	}

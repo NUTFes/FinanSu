@@ -13,7 +13,7 @@ type campusDonationRepository struct {
 }
 
 type CampusDonationRepository interface {
-	GetBuildingFloorDonationsByYear(context.Context, int, int, string) (*sql.Rows, error)
+	GetBuildingFloorDonationsByYear(context.Context, int, string, *string) (*sql.Rows, error)
 }
 
 func NewCampusDonationRepository(c db.Client) CampusDonationRepository {
@@ -23,8 +23,8 @@ func NewCampusDonationRepository(c db.Client) CampusDonationRepository {
 func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 	ctx context.Context,
 	year int,
-	buildingID int,
 	floorNumber string,
+	groupKey *string,
 ) (*sql.Rows, error) {
 	donationTotalsByTeacher := dialect.
 		Select(
@@ -39,16 +39,8 @@ func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 		Where(goqu.I("years.year").Eq(year)).
 		GroupBy(goqu.I("campus_donations.teacher_id"))
 
-	query, args, err := dialect.
+	queryDataset := dialect.
 		From(goqu.T("buildings")).
-		// NOTICE: 指定されたbuilding_idを代表値として、同じ棟名の全号棟を取得する。
-		InnerJoin(
-			goqu.T("buildings").As("selected_building"),
-			goqu.On(
-				goqu.I("buildings.name").Eq(goqu.I("selected_building.name")),
-				goqu.I("selected_building.id").Eq(buildingID),
-			),
-		).
 		InnerJoin(
 			goqu.T("rooms"),
 			goqu.On(goqu.I("rooms.building_id").Eq(goqu.I("buildings.id"))),
@@ -79,10 +71,16 @@ func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 		Where(goqu.I("rooms.floor_number").Eq(floorNumber)).
 		Order(
 			goqu.I("buildings.unit_number").Asc(),
+			goqu.I("buildings.id").Asc(),
 			goqu.I("rooms.room_name").Asc(),
 			goqu.I("teachers.name").Asc(),
-		).
-		ToSQL()
+		)
+
+	if groupKey != nil && *groupKey != "" {
+		queryDataset = queryDataset.Where(goqu.I("buildings.group_key").Eq(*groupKey))
+	}
+
+	query, args, err := queryDataset.ToSQL()
 	if err != nil {
 		return nil, err
 	}

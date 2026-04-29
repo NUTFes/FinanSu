@@ -72,6 +72,7 @@ import type {
   GetBuyReportsCsvDownloadParams,
   GetBuyReportsDetailsParams,
   GetBuyReportsSummaryParams,
+  GetCampusDonationsYearsYearFloorsFloorNumberParams,
   GetDepartments200,
   GetDepartmentsId200,
   GetDivisionsParams,
@@ -4092,40 +4093,48 @@ export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
 };
 
 /**
- * 指定した棟に紐づく各号棟の指定フロア教員情報を取得
+ * 指定したグループの棟または全棟の指定フロア教員情報を取得
  */
-export type getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse200 = {
+export type getCampusDonationsYearsYearFloorsFloorNumberResponse200 = {
   data: CampusDonationBuildingFloor[];
   status: 200;
 };
 
-export type getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponseSuccess =
-  getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse200 & {
+export type getCampusDonationsYearsYearFloorsFloorNumberResponseSuccess =
+  getCampusDonationsYearsYearFloorsFloorNumberResponse200 & {
     headers: Headers;
   };
-export type getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse =
-  getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponseSuccess;
+export type getCampusDonationsYearsYearFloorsFloorNumberResponse =
+  getCampusDonationsYearsYearFloorsFloorNumberResponseSuccess;
 
-export const getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberUrl = (
+export const getGetCampusDonationsYearsYearFloorsFloorNumberUrl = (
   year: number,
-  buildingId: number,
   floorNumber: string,
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
 ) => {
-  return `/campus_donations/years/${year}/buildings/${buildingId}/floors/${floorNumber}`;
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/campus_donations/years/${year}/floors/${floorNumber}?${stringifiedParams}`
+    : `/campus_donations/years/${year}/floors/${floorNumber}`;
 };
 
-export const getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber = async (
+export const getCampusDonationsYearsYearFloorsFloorNumber = async (
   year: number,
-  buildingId: number,
   floorNumber: string,
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
   options?: RequestInit,
-): Promise<getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse> => {
-  return customFetch<getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberResponse>(
-    getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberUrl(
-      year,
-      buildingId,
-      floorNumber,
-    ),
+): Promise<getCampusDonationsYearsYearFloorsFloorNumberResponse> => {
+  return customFetch<getCampusDonationsYearsYearFloorsFloorNumberResponse>(
+    getGetCampusDonationsYearsYearFloorsFloorNumberUrl(year, floorNumber, params),
     {
       ...options,
       method: 'GET',
@@ -4133,27 +4142,25 @@ export const getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber = a
   );
 };
 
-export const getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberKey = (
+export const getGetCampusDonationsYearsYearFloorsFloorNumberKey = (
   year: number,
-  buildingId: number,
   floorNumber: string,
-) => [`/campus_donations/years/${year}/buildings/${buildingId}/floors/${floorNumber}`] as const;
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
+) =>
+  [`/campus_donations/years/${year}/floors/${floorNumber}`, ...(params ? [params] : [])] as const;
 
-export type GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberQueryResult =
-  NonNullable<
-    Awaited<ReturnType<typeof getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber>>
-  >;
-export type GetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberQueryError = unknown;
+export type GetCampusDonationsYearsYearFloorsFloorNumberQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsYearsYearFloorsFloorNumber>>
+>;
+export type GetCampusDonationsYearsYearFloorsFloorNumberQueryError = unknown;
 
-export const useGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber = <
-  TError = unknown,
->(
+export const useGetCampusDonationsYearsYearFloorsFloorNumber = <TError = unknown>(
   year: number,
-  buildingId: number,
   floorNumber: string,
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
   options?: {
     swr?: SWRConfiguration<
-      Awaited<ReturnType<typeof getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber>>,
+      Awaited<ReturnType<typeof getCampusDonationsYearsYearFloorsFloorNumber>>,
       TError
     > & { swrKey?: Key; enabled?: boolean };
     request?: SecondParameter<typeof customFetch>;
@@ -4161,24 +4168,15 @@ export const useGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber 
 ) => {
   const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && !!(year && buildingId && floorNumber);
+  const isEnabled = swrOptions?.enabled !== false && !!(year && floorNumber);
   const swrKey =
     swrOptions?.swrKey ??
     (() =>
       isEnabled
-        ? getGetCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumberKey(
-            year,
-            buildingId,
-            floorNumber,
-          )
+        ? getGetCampusDonationsYearsYearFloorsFloorNumberKey(year, floorNumber, params)
         : null);
   const swrFn = () =>
-    getCampusDonationsYearsYearBuildingsBuildingIdFloorsFloorNumber(
-      year,
-      buildingId,
-      floorNumber,
-      requestOptions,
-    );
+    getCampusDonationsYearsYearFloorsFloorNumber(year, floorNumber, params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

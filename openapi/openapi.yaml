@@ -1286,21 +1286,15 @@ paths:
               schema:
                 type: string
                 format: binary
-  /campus_donations/years/{year}/buildings/{building_id}/floors/{floor_number}:
+  /campus_donations/years/{year}/floors/{floor_number}:
     get:
       tags:
         - campus_donation
-      description: 指定した棟に紐づく各号棟の指定フロア教員情報を取得
+      description: 指定したグループの棟または全棟の指定フロア教員情報を取得
       parameters:
         - name: year
           in: path
           description: year
-          required: true
-          schema:
-            type: integer
-        - name: building_id
-          in: path
-          description: building_id
           required: true
           schema:
             type: integer
@@ -1310,9 +1304,15 @@ paths:
           required: true
           schema:
             type: string
+        - name: group_key
+          in: query
+          description: group_key
+          required: false
+          schema:
+            $ref: "#/components/schemas/campusDonationBuildingGroupKey"
       responses:
         "200":
-          description: 指定した棟に紐づく各号棟の指定フロア教員情報を取得
+          description: 指定したグループの棟または全棟の指定フロア教員情報を取得
           content:
             application/json:
               schema:
@@ -2891,6 +2891,23 @@ components:
         - unitNumber
         - floorNumber
         - donations
+    campusDonationBuildingGroupKey:
+      description: 学内募金で表示する棟グループのキー
+      type: string
+      enum:
+        - mechanical_civil_engineering
+        - electrical_engineering
+        - biology
+        - environmental_system
+        - materials_management_information
+        - general_research
+        - nuclear_system_safety
+        - administration
+        - extreme_energy_density_research_center
+        - machine_shop
+        - large_experiment
+        - analysis_instrumentation_center
+        - other
     division:
       required:
         - name
