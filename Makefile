@@ -134,6 +134,9 @@ create-migration: ## マイグレーションファイルの作成
 seed-db: ## シードデータの投入 (Shell script)
 	docker compose -f compose.db.yml run --rm db bash ./scripts/seed.sh
 
+reset-buildings-and-rooms: ## 000004適用前にroom系データを空にする
+	docker compose -f compose.db.yml run --rm db bash ./scripts/reset_buildings_and_rooms.sh
+
 seed: ## テストデータの投入 (Go script)
 	docker compose run --rm api go mod tidy
 	docker compose run --rm api go run /app/tools/seeds/teacher_seeds.go
