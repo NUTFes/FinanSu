@@ -15,6 +15,7 @@ var RepositoryProviderSet = wire.NewSet(
 	NewBudgetRepository,
 	NewBureauRepository,
 	NewBuyReportRepository,
+	NewCampusDonationRepository,
 	NewDepartmentRepository,
 	NewDivisionRepository,
 	NewExpenseRepository,

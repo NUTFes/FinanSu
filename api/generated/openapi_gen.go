@@ -53,6 +53,23 @@ const (
 	N2    BuyReportInformationStatus = "清算完了"
 )
 
+// Defines values for CampusDonationBuildingGroupKey.
+const (
+	Administration                     CampusDonationBuildingGroupKey = "administration"
+	AnalysisInstrumentationCenter      CampusDonationBuildingGroupKey = "analysis_instrumentation_center"
+	Biology                            CampusDonationBuildingGroupKey = "biology"
+	ElectricalEngineering              CampusDonationBuildingGroupKey = "electrical_engineering"
+	EnvironmentalSystem                CampusDonationBuildingGroupKey = "environmental_system"
+	ExtremeEnergyDensityResearchCenter CampusDonationBuildingGroupKey = "extreme_energy_density_research_center"
+	GeneralResearch                    CampusDonationBuildingGroupKey = "general_research"
+	LargeExperiment                    CampusDonationBuildingGroupKey = "large_experiment"
+	MachineShop                        CampusDonationBuildingGroupKey = "machine_shop"
+	MaterialsManagementInformation     CampusDonationBuildingGroupKey = "materials_management_information"
+	MechanicalCivilEngineering         CampusDonationBuildingGroupKey = "mechanical_civil_engineering"
+	NuclearSystemSafety                CampusDonationBuildingGroupKey = "nuclear_system_safety"
+	Other                              CampusDonationBuildingGroupKey = "other"
+)
+
 // Defines values for IncomeReceiveOption.
 const (
 	Hand     IncomeReceiveOption = "hand"
@@ -274,6 +291,27 @@ type BuyReportWithDivisionId struct {
 	Id             *int    `json:"id,omitempty"`
 	PaidBy         *string `json:"paidBy,omitempty"`
 	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
+}
+
+// CampusDonationBuildingFloor 各号棟の指定フロア教員情報
+type CampusDonationBuildingFloor struct {
+	BuildingId   int                     `json:"buildingId"`
+	BuildingName string                  `json:"buildingName"`
+	Donations    []CampusDonationTeacher `json:"donations"`
+	FloorNumber  string                  `json:"floorNumber"`
+	UnitNumber   int                     `json:"unitNumber"`
+}
+
+// CampusDonationBuildingGroupKey 学内募金で表示する棟グループのキー
+type CampusDonationBuildingGroupKey string
+
+// CampusDonationTeacher 棟・階ごとの教員別募金情報
+type CampusDonationTeacher struct {
+	IsBlack     bool   `json:"isBlack"`
+	RoomName    string `json:"roomName"`
+	TeacherId   int    `json:"teacherId"`
+	TeacherName string `json:"teacherName"`
+	TotalPrice  int    `json:"totalPrice"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
@@ -594,6 +632,12 @@ type PutBuyReportsIdMultipartBody struct {
 
 	// File 購入報告書のファイル、ない場合更新しないようにする
 	File *openapi_types.File `json:"file,omitempty"`
+}
+
+// GetCampusDonationsYearsYearFloorsFloorNumberParams defines parameters for GetCampusDonationsYearsYearFloorsFloorNumber.
+type GetCampusDonationsYearsYearFloorsFloorNumberParams struct {
+	// GroupKey group_key
+	GroupKey *CampusDonationBuildingGroupKey `form:"group_key,omitempty" json:"group_key,omitempty"`
 }
 
 // GetCurrentUserParams defines parameters for GetCurrentUser.
@@ -1060,6 +1104,9 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (GET /campus_donations/years/{year}/floors/{floor_number})
+	GetCampusDonationsYearsYearFloorsFloorNumber(ctx echo.Context, year int, floorNumber string, params GetCampusDonationsYearsYearFloorsFloorNumberParams) error
 
 	// (GET /current_user)
 	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
@@ -1887,6 +1934,39 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCampusDonationsYearsYearFloorsFloorNumber converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsYearsYearFloorsFloorNumber(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Path parameter "floor_number" -------------
+	var floorNumber string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "floor_number", ctx.Param("floor_number"), &floorNumber, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_number: %s", err))
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCampusDonationsYearsYearFloorsFloorNumberParams
+	// ------------- Optional query parameter "group_key" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "group_key", ctx.QueryParams(), &params.GroupKey)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter group_key: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsYearsYearFloorsFloorNumber(ctx, year, floorNumber, params)
 	return err
 }
 
@@ -3513,6 +3593,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/campus_donations/years/:year/floors/:floor_number", wrapper.GetCampusDonationsYearsYearFloorsFloorNumber)
 	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)

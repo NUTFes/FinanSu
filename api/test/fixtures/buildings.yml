@@ -1,0 +1,14 @@
+- id: 1
+  name: 学内募金API確認棟
+  unit_number: 1
+  group_key: campus_donation_test
+
+- id: 2
+  name: 学内募金API確認棟
+  unit_number: 2
+  group_key: campus_donation_test
+
+- id: 3
+  name: 学内募金API確認別棟
+  unit_number: 1
+  group_key: campus_donation_other_test

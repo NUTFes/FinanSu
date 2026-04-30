@@ -1,0 +1,34 @@
+- id: 1
+  name: 学内募金API確認教員A
+  position: 教授
+  department_id: 1
+  is_black: false
+  remark: 学内募金API確認用
+
+- id: 2
+  name: 学内募金API確認教員B
+  position: 准教授
+  department_id: 1
+  is_black: true
+  remark: 学内募金API確認用
+
+- id: 3
+  name: 学内募金API確認教員C
+  position: 助教
+  department_id: 1
+  is_black: false
+  remark: 学内募金API確認用
+
+- id: 4
+  name: 学内募金API確認教員D
+  position: 教授
+  department_id: 1
+  is_black: false
+  remark: 別フロア確認用
+
+- id: 5
+  name: 学内募金API確認教員E
+  position: 教授
+  department_id: 1
+  is_black: false
+  remark: 別棟確認用

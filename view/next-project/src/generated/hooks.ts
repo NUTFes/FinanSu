@@ -19,6 +19,7 @@ import type {
   BuyReportDetail,
   BuyReportSummary,
   BuyReportWithDivisionId,
+  CampusDonationBuildingFloor,
   CreateSponsorshipActivityRequest,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
@@ -71,6 +72,7 @@ import type {
   GetBuyReportsCsvDownloadParams,
   GetBuyReportsDetailsParams,
   GetBuyReportsSummaryParams,
+  GetCampusDonationsYearsYearFloorsFloorNumberParams,
   GetDepartments200,
   GetDepartmentsId200,
   GetDivisionsParams,
@@ -4080,6 +4082,100 @@ export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
   const swrKey =
     swrOptions?.swrKey ?? (() => (isEnabled ? getGetFinancialRecordsCsvDownloadKey(params) : null));
   const swrFn = () => getFinancialRecordsCsvDownload(params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 指定したグループの棟または全棟の指定フロア教員情報を取得
+ */
+export type getCampusDonationsYearsYearFloorsFloorNumberResponse200 = {
+  data: CampusDonationBuildingFloor[];
+  status: 200;
+};
+
+export type getCampusDonationsYearsYearFloorsFloorNumberResponseSuccess =
+  getCampusDonationsYearsYearFloorsFloorNumberResponse200 & {
+    headers: Headers;
+  };
+export type getCampusDonationsYearsYearFloorsFloorNumberResponse =
+  getCampusDonationsYearsYearFloorsFloorNumberResponseSuccess;
+
+export const getGetCampusDonationsYearsYearFloorsFloorNumberUrl = (
+  year: number,
+  floorNumber: string,
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/campus_donations/years/${year}/floors/${floorNumber}?${stringifiedParams}`
+    : `/campus_donations/years/${year}/floors/${floorNumber}`;
+};
+
+export const getCampusDonationsYearsYearFloorsFloorNumber = async (
+  year: number,
+  floorNumber: string,
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
+  options?: RequestInit,
+): Promise<getCampusDonationsYearsYearFloorsFloorNumberResponse> => {
+  return customFetch<getCampusDonationsYearsYearFloorsFloorNumberResponse>(
+    getGetCampusDonationsYearsYearFloorsFloorNumberUrl(year, floorNumber, params),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetCampusDonationsYearsYearFloorsFloorNumberKey = (
+  year: number,
+  floorNumber: string,
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
+) =>
+  [`/campus_donations/years/${year}/floors/${floorNumber}`, ...(params ? [params] : [])] as const;
+
+export type GetCampusDonationsYearsYearFloorsFloorNumberQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsYearsYearFloorsFloorNumber>>
+>;
+export type GetCampusDonationsYearsYearFloorsFloorNumberQueryError = unknown;
+
+export const useGetCampusDonationsYearsYearFloorsFloorNumber = <TError = unknown>(
+  year: number,
+  floorNumber: string,
+  params?: GetCampusDonationsYearsYearFloorsFloorNumberParams,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getCampusDonationsYearsYearFloorsFloorNumber>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!(year && floorNumber);
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetCampusDonationsYearsYearFloorsFloorNumberKey(year, floorNumber, params)
+        : null);
+  const swrFn = () =>
+    getCampusDonationsYearsYearFloorsFloorNumber(year, floorNumber, params, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
