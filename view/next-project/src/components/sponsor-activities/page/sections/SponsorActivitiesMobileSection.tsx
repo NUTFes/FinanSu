@@ -31,12 +31,7 @@ export default function SponsorActivitiesMobileSection({
 }: SponsorActivitiesMobileSectionProps) {
   return (
     <>
-      <div
-        className='
-          mx-6
-          md:hidden
-        '
-      >
+      <div className='mx-6 md:hidden'>
         <OpenAddModalButton
           users={users}
           sponsors={sponsors}
@@ -45,22 +40,12 @@ export default function SponsorActivitiesMobileSection({
           onSaved={fetchSponsorshipActivities}
         />
       </div>
-      <div
-        className='
-          mx-6 mb-7
-          md:hidden
-        '
-      >
+      <div className='mx-6 mb-7 md:hidden'>
         {sponsorshipActivities.map((activity) => (
           <Card key={activity.id}>
             <div className='flex flex-col gap-3 p-4'>
               <div className='text-black-300 text-lg font-medium'>{activity.sponsor?.name}</div>
-              <div
-                className='
-                  text-black-600 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2
-                  text-sm
-                '
-              >
+              <div className='text-black-600 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm'>
                 <span>担当者</span>
                 <span>{activity.user?.name || '-'}</span>
                 <span>ステータス</span>

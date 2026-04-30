@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
-    'Hiragino Sans', sans-serif;
+  --font-sans:
+    var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans',
+    sans-serif;
 
   --color-primary-1: #56daff;
   --color-primary-2: #1dbcc5;
@@ -90,7 +91,8 @@
   }
 
   body {
-    font-family: var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
+    font-family:
+      var(--font-noto-sans-jp), 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
       'Hiragino Sans', sans-serif;
   }
 }

@@ -51,11 +51,7 @@ export const DetailEditModal: React.FC<{
       <div className='text-black-600 mx-auto mb-10 w-fit text-xl'>
         <p>購入した局と期限日を修正</p>
       </div>
-      <div
-        className='
-          w-9/10 mx-auto my-6 grid grid-cols-4 place-items-center gap-4
-        '
-      >
+      <div className='mx-auto my-6 grid w-9/10 grid-cols-4 place-items-center gap-4'>
         <p className='text-black-600 text-lg'>購入した局</p>
         <div className='col-span-3 w-full'>
           <Select

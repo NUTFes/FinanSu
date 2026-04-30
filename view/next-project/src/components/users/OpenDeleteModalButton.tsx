@@ -29,11 +29,7 @@ const OpenDeleteModalButton: React.FC<Props> = (props) => {
     <>
       <button
         disabled={props.isDisabled}
-        className={`
-          ${buttonClass}
-          size-9 bg-linear-to-br flex min-w-0 items-center justify-center
-          rounded-full from-red-500 to-red-600 p-0
-        `}
+        className={` ${buttonClass} flex size-9 min-w-0 items-center justify-center rounded-full bg-linear-to-br from-red-500 to-red-600 p-0`}
         onClick={onOpen}
         suppressHydrationWarning
       >

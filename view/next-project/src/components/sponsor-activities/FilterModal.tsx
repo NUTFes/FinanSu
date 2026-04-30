@@ -40,31 +40,16 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
       <p>協賛スタイル</p>
       <div className='w-full'>
         <div>
-          <div
-            className='
-              hover:bg-white-100 flex rounded-md
-              p-2
-            '
-          >
+          <div className='hover:bg-white-100 flex rounded-md p-2'>
             <input type='checkbox' onChange={onToggleAll} checked={isAllStyleCheck} id='all' />
             <label htmlFor='all' className='text-black-300 mx-2 w-full'>
               すべて （{selectedStyleIds.length > 0 ? SELECT + selectedStyleIds.length : NOT_SELECT}
               ）
             </label>
           </div>
-          <div
-            className='
-            bg-white-0 max-h-28 overflow-y-auto rounded-md border-2
-          '
-          >
+          <div className='bg-white-0 max-h-28 overflow-y-auto rounded-md border-2'>
             {styleOptions.map((style) => (
-              <div
-                className='
-                  hover:bg-white-100 flex
-                  p-2
-                '
-                key={style.id}
-              >
+              <div className='hover:bg-white-100 flex p-2' key={style.id}>
                 <input
                   type='checkbox'
                   checked={selectedStyleIdSet.has(style.id)}
@@ -73,12 +58,7 @@ const StyleSelectionSection: FC<StyleSelectionSectionProps> = ({
                   }}
                   id={String(style.id)}
                 />
-                <label
-                  htmlFor={String(style.id)}
-                  className='
-                  text-black-300 mx-2 w-full
-                '
-                >
+                <label htmlFor={String(style.id)} className='text-black-300 mx-2 w-full'>
                   {style.style}/{style.feature}/{style.price}円
                 </label>
               </div>
@@ -321,7 +301,7 @@ const FilterModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='px-15 py-12.5 w-full max-w-2xl' onClick={onClose}>
+    <Modal className='w-full max-w-2xl px-15 py-12.5' onClick={onClose}>
       <form onSubmit={filterHandler}>
         <div
           onClick={preventCloseModalClick}
@@ -337,13 +317,7 @@ const FilterModal: FC<ModalProps> = (props) => {
             <Title title='協賛フィルター' className='text-3xl' />
             <p className='text-black-300 text-sm'>条件を指定して表示内容を絞り込めます</p>
           </div>
-          <div
-            className='
-              [&>p]:text-black-600 mx-auto mb-8 grid w-full
-              grid-cols-[7rem_minmax(0,1fr)] items-center
-              gap-5 [&>p]:whitespace-nowrap [&>p]:text-center
-            '
-          >
+          <div className='[&>p]:text-black-600 mx-auto mb-8 grid w-full grid-cols-[7rem_minmax(0,1fr)] items-center gap-5 [&>p]:text-center [&>p]:whitespace-nowrap'>
             <StyleSelectionSection
               styleOptions={styleOptions}
               selectedStyleIds={draftFilterData.styleIds}

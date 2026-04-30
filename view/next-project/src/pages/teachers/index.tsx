@@ -79,18 +79,10 @@ export default function TeachersList(props: Props) {
       </Head>
       <Card>
         <div className='mx-5 mt-10'>
-          <div
-            className='
-              flex flex-col
-              md:flex-row
-            '
-          >
+          <div className='flex flex-col md:flex-row'>
             <Title title={'教員一覧'} />
             <select
-              className='
-                md:w-100 mx-auto my-4
-                w-fit md:mx-10 md:my-0
-              '
+              className='mx-auto my-4 w-fit md:mx-10 md:my-0 md:w-100'
               value={selectedDepartment?.id}
               onChange={(e) => {
                 const selectDepartment = departments.find((department) => {
@@ -108,22 +100,12 @@ export default function TeachersList(props: Props) {
               })}
             </select>
           </div>
-          <div
-            className='
-              hidden justify-end
-              md:flex
-            '
-          >
+          <div className='hidden justify-end md:flex'>
             <OpenAddModalButton departments={props.departments}>教員登録</OpenAddModalButton>
           </div>
         </div>
         <div className='mb-2 overflow-scroll p-5'>
-          <table
-            className='
-              mb-5 w-max table-auto border-collapse
-              md:w-full
-            '
-          >
+          <table className='mb-5 w-max table-auto border-collapse md:w-full'>
             <thead className='text-black-600 text-sm'>
               <tr className='border-b-primary-1 border-b py-3'>
                 <th className='w-1/6'>
@@ -225,12 +207,7 @@ export default function TeachersList(props: Props) {
           </table>
         </div>
       </Card>
-      <div
-        className='
-          fixed bottom-4 right-4
-          md:hidden
-        '
-      >
+      <div className='fixed right-4 bottom-4 md:hidden'>
         <OpenAddModalButton departments={props.departments} />
       </div>
     </MainLayout>
