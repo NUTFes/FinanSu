@@ -1286,6 +1286,27 @@ paths:
               schema:
                 type: string
                 format: binary
+  /campus_donations/buildings/{year}:
+    get:
+      tags:
+        - campus_donation
+      description: 年度ごとの各棟の合計募金額を取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度ごとの各棟の合計募金額を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/buildingTotal"
   /income_expenditure_management/csv/download:
     get:
       tags:
@@ -2674,6 +2695,23 @@ components:
         sponsorStyleID:
           type: integer
           example: 1
+    buildingTotal:
+      description: 棟ごとの合計募金額
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 電気棟
+        totalPrice:
+          type: integer
+          example: 12000
+      required:
+        - id
+        - name
+        - totalPrice
     buyReport:
       description: 購入報告の際のパラメータ
       type: object

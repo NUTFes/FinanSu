@@ -219,6 +219,13 @@ type ActivityStyle struct {
 	SponsorStyleID int `json:"sponsorStyleID"`
 }
 
+// BuildingTotal 棟ごとの合計募金額
+type BuildingTotal struct {
+	Id         int    `json:"id"`
+	Name       string `json:"name"`
+	TotalPrice int    `json:"totalPrice"`
+}
+
 // BuyReport 購入報告の際のパラメータ
 type BuyReport struct {
 	Amount         int     `json:"amount"`
@@ -1061,6 +1068,9 @@ type ServerInterface interface {
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
 
+	// (GET /campus_donations/buildings/{year})
+	GetCampusDonationsBuildingsYear(ctx echo.Context, year int) error
+
 	// (GET /current_user)
 	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
 
@@ -1887,6 +1897,22 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// GetCampusDonationsBuildingsYear converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingsYear(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsBuildingsYear(ctx, year)
 	return err
 }
 
@@ -3513,6 +3539,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.GET(baseURL+"/campus_donations/buildings/:year", wrapper.GetCampusDonationsBuildingsYear)
 	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
