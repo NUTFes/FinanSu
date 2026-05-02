@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -192,10 +193,10 @@ var selectFestivalItemGroupSQL = `
 `
 
 func makeSelectFinancialRecordDetailsSQL(conditions []string) string {
-	condition := ""
+	var condition strings.Builder
 	if len(conditions) > 0 {
 		for _, c := range conditions {
-			condition += fmt.Sprintf(" AND %s", c)
+			condition.WriteString(fmt.Sprintf(" AND %s", c))
 		}
 	}
 	return fmt.Sprintf(`
@@ -229,7 +230,7 @@ func makeSelectFinancialRecordDetailsSQL(conditions []string) string {
 	GROUP BY
 		financial_records.id
 	ORDER BY
-		financial_records.id`, selectFestivalItemGroupSQL, condition)
+		financial_records.id`, selectFestivalItemGroupSQL, condition.String())
 }
 
 // CSV用の予算・部門を取得するクエリ
