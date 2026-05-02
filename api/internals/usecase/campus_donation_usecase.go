@@ -2,10 +2,14 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"time"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
 	"github.com/NUTFes/FinanSu/api/generated"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
+	openapiTypes "github.com/oapi-codegen/runtime/types"
 	"github.com/pkg/errors"
 )
 
@@ -14,20 +18,60 @@ type campusDonationUseCase struct {
 }
 
 type CampusDonationUseCase interface {
-	GetBuildingFloorDonationsByYear(context.Context, int, string, *string) ([]generated.CampusDonationBuildingFloor, error)
+	CreateCampusDonation(context.Context, generated.CampusDonationRequest) (generated.CampusDonation, error)
+	UpdateCampusDonation(context.Context, int, generated.CampusDonationRequest) (generated.CampusDonation, error)
+	GetBuildingFloorDonationsByYear(context.Context, int, *string, *string) ([]generated.CampusDonationBuildingFloor, error)
 }
 
 func NewCampusDonationUseCase(rep rep.CampusDonationRepository) CampusDonationUseCase {
 	return &campusDonationUseCase{rep: rep}
 }
 
+func (cdu *campusDonationUseCase) CreateCampusDonation(
+	ctx context.Context,
+	request generated.CampusDonationRequest,
+) (generated.CampusDonation, error) {
+	donation := campusDonationRequestToDomain(request)
+
+	id, err := cdu.rep.Create(ctx, donation)
+	if err != nil {
+		return generated.CampusDonation{}, err
+	}
+
+	createdDonation, err := cdu.rep.FindByID(ctx, id)
+	if err != nil {
+		return generated.CampusDonation{}, err
+	}
+
+	return domainCampusDonationToGenerated(createdDonation)
+}
+
+func (cdu *campusDonationUseCase) UpdateCampusDonation(
+	ctx context.Context,
+	id int,
+	request generated.CampusDonationRequest,
+) (generated.CampusDonation, error) {
+	donation := campusDonationRequestToDomain(request)
+
+	if err := cdu.rep.Update(ctx, id, donation); err != nil {
+		return generated.CampusDonation{}, err
+	}
+
+	updatedDonation, err := cdu.rep.FindByID(ctx, id)
+	if err != nil {
+		return generated.CampusDonation{}, err
+	}
+
+	return domainCampusDonationToGenerated(updatedDonation)
+}
+
 func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 	ctx context.Context,
 	year int,
-	floorNumber string,
 	groupKey *string,
+	floorNumber *string,
 ) ([]generated.CampusDonationBuildingFloor, error) {
-	rows, err := cdu.rep.GetBuildingFloorDonationsByYear(ctx, year, floorNumber, groupKey)
+	rows, err := cdu.rep.GetBuildingFloorDonationsByYear(ctx, year, groupKey, floorNumber)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +82,7 @@ func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 	}()
 
 	buildingFloors := make([]generated.CampusDonationBuildingFloor, 0)
-	buildingIndexByID := make(map[int]int)
+	buildingFloorIndex := make(map[string]int)
 
 	for rows.Next() {
 		var buildingFloor generated.CampusDonationBuildingFloor
@@ -57,7 +101,7 @@ func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 			return nil, errors.Wrap(err, "failed to scan campus donation building floor row")
 		}
 
-		buildingFloors = appendBuildingFloorDonation(buildingFloors, buildingIndexByID, buildingFloor, donation)
+		buildingFloors = appendBuildingFloorDonation(buildingFloors, buildingFloorIndex, buildingFloor, donation)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -69,19 +113,46 @@ func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 
 func appendBuildingFloorDonation(
 	buildingFloors []generated.CampusDonationBuildingFloor,
-	buildingIndexByID map[int]int,
+	buildingFloorIndex map[string]int,
 	buildingFloor generated.CampusDonationBuildingFloor,
 	donation generated.CampusDonationTeacher,
 ) []generated.CampusDonationBuildingFloor {
-	index, ok := buildingIndexByID[buildingFloor.BuildingId]
+	indexKey := fmt.Sprintf("%d:%s", buildingFloor.BuildingId, buildingFloor.FloorNumber)
+	index, ok := buildingFloorIndex[indexKey]
 	if !ok {
 		buildingFloor.Donations = []generated.CampusDonationTeacher{}
 		buildingFloors = append(buildingFloors, buildingFloor)
 		index = len(buildingFloors) - 1
-		buildingIndexByID[buildingFloor.BuildingId] = index
+		buildingFloorIndex[indexKey] = index
 	}
 
 	buildingFloors[index].Donations = append(buildingFloors[index].Donations, donation)
 
 	return buildingFloors
+}
+
+func campusDonationRequestToDomain(request generated.CampusDonationRequest) domain.CampusDonation {
+	return domain.CampusDonation{
+		UserID:     request.UserId,
+		TeacherID:  request.TeacherId,
+		YearID:     request.YearId,
+		Price:      request.Price,
+		ReceivedAt: request.ReceivedAt.String(),
+	}
+}
+
+func domainCampusDonationToGenerated(donation domain.CampusDonation) (generated.CampusDonation, error) {
+	receivedAt, err := time.Parse(openapiTypes.DateFormat, donation.ReceivedAt)
+	if err != nil {
+		return generated.CampusDonation{}, err
+	}
+
+	return generated.CampusDonation{
+		Id:         donation.ID,
+		UserId:     donation.UserID,
+		TeacherId:  donation.TeacherID,
+		YearId:     donation.YearID,
+		Price:      donation.Price,
+		ReceivedAt: openapiTypes.Date{Time: receivedAt},
+	}, nil
 }

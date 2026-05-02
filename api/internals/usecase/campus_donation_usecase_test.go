@@ -10,12 +10,12 @@ import (
 func TestAppendBuildingFloorDonation(t *testing.T) {
 	t.Parallel()
 
-	buildingIndexByID := make(map[int]int)
+	buildingFloorIndex := make(map[string]int)
 	var buildingFloors []generated.CampusDonationBuildingFloor
 
 	buildingFloors = appendBuildingFloorDonation(
 		buildingFloors,
-		buildingIndexByID,
+		buildingFloorIndex,
 		generated.CampusDonationBuildingFloor{
 			BuildingId:   1,
 			BuildingName: "機械・建設棟",
@@ -32,7 +32,7 @@ func TestAppendBuildingFloorDonation(t *testing.T) {
 	)
 	buildingFloors = appendBuildingFloorDonation(
 		buildingFloors,
-		buildingIndexByID,
+		buildingFloorIndex,
 		generated.CampusDonationBuildingFloor{
 			BuildingId:   1,
 			BuildingName: "機械・建設棟",
@@ -49,7 +49,7 @@ func TestAppendBuildingFloorDonation(t *testing.T) {
 	)
 	buildingFloors = appendBuildingFloorDonation(
 		buildingFloors,
-		buildingIndexByID,
+		buildingFloorIndex,
 		generated.CampusDonationBuildingFloor{
 			BuildingId:   2,
 			BuildingName: "機械・建設棟",

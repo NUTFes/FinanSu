@@ -226,7 +226,7 @@ func TestGetCampusDonationBuildingFloorsHandler(t *testing.T) {
 		serverComponents.Client.CloseDB()
 	})
 
-	r, err := http.Get(testServer.URL + "/campus_donations/years/2025/floors/5?group_key=campus_donation_test")
+	r, err := http.Get(testServer.URL + "/campus_donations/years/2025/group_keys/campus_donation_test/floors?floor_number=5")
 	if err != nil {
 		t.Errorf("Error making request: %s", err)
 		return
@@ -286,7 +286,7 @@ func TestGetCampusDonationBuildingFloorsHandler(t *testing.T) {
 	}, buildingFloors)
 }
 
-func TestGetCampusDonationBuildingFloorsHandlerWithoutGroupKey(t *testing.T) {
+func TestGetCampusDonationBuildingFloorsHandlerWithoutFloorNumber(t *testing.T) {
 	prepareTestDatabase(t)
 
 	serverComponents, err := di.InitializeServer()
@@ -301,7 +301,7 @@ func TestGetCampusDonationBuildingFloorsHandlerWithoutGroupKey(t *testing.T) {
 		serverComponents.Client.CloseDB()
 	})
 
-	r, err := http.Get(testServer.URL + "/campus_donations/years/2025/floors/5")
+	r, err := http.Get(testServer.URL + "/campus_donations/years/2025/group_keys/campus_donation_test/floors")
 	if err != nil {
 		t.Errorf("Error making request: %s", err)
 		return
@@ -344,16 +344,16 @@ func TestGetCampusDonationBuildingFloorsHandlerWithoutGroupKey(t *testing.T) {
 			},
 		},
 		{
-			BuildingId:   3,
-			BuildingName: "学内募金API確認別棟",
-			UnitNumber:   1,
-			FloorNumber:  "5",
+			BuildingId:   2,
+			BuildingName: "学内募金API確認棟",
+			UnitNumber:   2,
+			FloorNumber:  "4",
 			Donations: []generated.CampusDonationTeacher{
 				{
-					RoomName:    "501",
-					TeacherId:   5,
-					TeacherName: "学内募金API確認教員E",
-					TotalPrice:  4000,
+					RoomName:    "401",
+					TeacherId:   4,
+					TeacherName: "学内募金API確認教員D",
+					TotalPrice:  9000,
 					IsBlack:     false,
 				},
 			},

@@ -293,6 +293,27 @@ type BuyReportWithDivisionId struct {
 	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
 }
 
+// CampusDonation defines model for campusDonation.
+type CampusDonation struct {
+	// Id 学内募金ID
+	Id int `json:"id"`
+
+	// Price 募金金額
+	Price int `json:"price"`
+
+	// ReceivedAt 受領日
+	ReceivedAt openapi_types.Date `json:"receivedAt"`
+
+	// TeacherId 募金対象の教員ID
+	TeacherId int `json:"teacherId"`
+
+	// UserId 募金を登録・更新したユーザーID
+	UserId int `json:"userId"`
+
+	// YearId 年度ID
+	YearId int `json:"yearId"`
+}
+
 // CampusDonationBuildingFloor 各号棟の指定フロア教員情報
 type CampusDonationBuildingFloor struct {
 	BuildingId   int                     `json:"buildingId"`
@@ -304,6 +325,24 @@ type CampusDonationBuildingFloor struct {
 
 // CampusDonationBuildingGroupKey 学内募金で表示する棟グループのキー
 type CampusDonationBuildingGroupKey string
+
+// CampusDonationRequest defines model for campusDonationRequest.
+type CampusDonationRequest struct {
+	// Price 募金金額
+	Price int `json:"price"`
+
+	// ReceivedAt 受領日
+	ReceivedAt openapi_types.Date `json:"receivedAt"`
+
+	// TeacherId 募金対象の教員ID
+	TeacherId int `json:"teacherId"`
+
+	// UserId 募金を登録・更新したユーザーID
+	UserId int `json:"userId"`
+
+	// YearId 年度ID
+	YearId int `json:"yearId"`
+}
 
 // CampusDonationTeacher 棟・階ごとの教員別募金情報
 type CampusDonationTeacher struct {
@@ -634,10 +673,10 @@ type PutBuyReportsIdMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
 }
 
-// GetCampusDonationsYearsYearFloorsFloorNumberParams defines parameters for GetCampusDonationsYearsYearFloorsFloorNumber.
-type GetCampusDonationsYearsYearFloorsFloorNumberParams struct {
-	// GroupKey group_key
-	GroupKey *CampusDonationBuildingGroupKey `form:"group_key,omitempty" json:"group_key,omitempty"`
+// GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams defines parameters for GetCampusDonationsYearsYearGroupKeysGroupKeyFloors.
+type GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams struct {
+	// FloorNumber floor_number
+	FloorNumber *string `form:"floor_number,omitempty" json:"floor_number,omitempty"`
 }
 
 // GetCurrentUserParams defines parameters for GetCurrentUser.
@@ -940,6 +979,12 @@ type PostBuyReportsMultipartRequestBody PostBuyReportsMultipartBody
 // PutBuyReportsIdMultipartRequestBody defines body for PutBuyReportsId for multipart/form-data ContentType.
 type PutBuyReportsIdMultipartRequestBody PutBuyReportsIdMultipartBody
 
+// PostCampusDonationsJSONRequestBody defines body for PostCampusDonations for application/json ContentType.
+type PostCampusDonationsJSONRequestBody = CampusDonationRequest
+
+// PutCampusDonationsIdJSONRequestBody defines body for PutCampusDonationsId for application/json ContentType.
+type PutCampusDonationsIdJSONRequestBody = CampusDonationRequest
+
 // PostDivisionsJSONRequestBody defines body for PostDivisions for application/json ContentType.
 type PostDivisionsJSONRequestBody = Division
 
@@ -1105,8 +1150,14 @@ type ServerInterface interface {
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
 
-	// (GET /campus_donations/years/{year}/floors/{floor_number})
-	GetCampusDonationsYearsYearFloorsFloorNumber(ctx echo.Context, year int, floorNumber string, params GetCampusDonationsYearsYearFloorsFloorNumberParams) error
+	// (POST /campus_donations)
+	PostCampusDonations(ctx echo.Context) error
+
+	// (GET /campus_donations/years/{year}/group_keys/{group_key}/floors)
+	GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx echo.Context, year int, groupKey CampusDonationBuildingGroupKey, params GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams) error
+
+	// (PUT /campus_donations/{id})
+	PutCampusDonationsId(ctx echo.Context, id int) error
 
 	// (GET /current_user)
 	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
@@ -1937,8 +1988,17 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 	return err
 }
 
-// GetCampusDonationsYearsYearFloorsFloorNumber converts echo context to params.
-func (w *ServerInterfaceWrapper) GetCampusDonationsYearsYearFloorsFloorNumber(ctx echo.Context) error {
+// PostCampusDonations converts echo context to params.
+func (w *ServerInterfaceWrapper) PostCampusDonations(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostCampusDonations(ctx)
+	return err
+}
+
+// GetCampusDonationsYearsYearGroupKeysGroupKeyFloors converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "year" -------------
 	var year int
@@ -1948,25 +2008,41 @@ func (w *ServerInterfaceWrapper) GetCampusDonationsYearsYearFloorsFloorNumber(ct
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
 	}
 
-	// ------------- Path parameter "floor_number" -------------
-	var floorNumber string
+	// ------------- Path parameter "group_key" -------------
+	var groupKey CampusDonationBuildingGroupKey
 
-	err = runtime.BindStyledParameterWithOptions("simple", "floor_number", ctx.Param("floor_number"), &floorNumber, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_number: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetCampusDonationsYearsYearFloorsFloorNumberParams
-	// ------------- Optional query parameter "group_key" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "group_key", ctx.QueryParams(), &params.GroupKey)
+	err = runtime.BindStyledParameterWithOptions("simple", "group_key", ctx.Param("group_key"), &groupKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter group_key: %s", err))
 	}
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams
+	// ------------- Optional query parameter "floor_number" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "floor_number", ctx.QueryParams(), &params.FloorNumber)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_number: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetCampusDonationsYearsYearFloorsFloorNumber(ctx, year, floorNumber, params)
+	err = w.Handler.GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx, year, groupKey, params)
+	return err
+}
+
+// PutCampusDonationsId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutCampusDonationsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutCampusDonationsId(ctx, id)
 	return err
 }
 
@@ -3593,7 +3669,9 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
-	router.GET(baseURL+"/campus_donations/years/:year/floors/:floor_number", wrapper.GetCampusDonationsYearsYearFloorsFloorNumber)
+	router.POST(baseURL+"/campus_donations", wrapper.PostCampusDonations)
+	router.GET(baseURL+"/campus_donations/years/:year/group_keys/:group_key/floors", wrapper.GetCampusDonationsYearsYearGroupKeysGroupKeyFloors)
+	router.PUT(baseURL+"/campus_donations/:id", wrapper.PutCampusDonationsId)
 	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
