@@ -7,6 +7,10 @@ import (
 	"github.com/NUTFes/FinanSu/api/generated"
 )
 
+func intPtr(value int) *int {
+	return &value
+}
+
 func TestAppendBuildingFloorDonation(t *testing.T) {
 	t.Parallel()
 
@@ -26,7 +30,7 @@ func TestAppendBuildingFloorDonation(t *testing.T) {
 			RoomName:    "501",
 			TeacherId:   1,
 			TeacherName: "学内募金API確認教員A",
-			TotalPrice:  5000,
+			TotalPrice:  intPtr(5000),
 			IsBlack:     false,
 		},
 	)
@@ -43,7 +47,7 @@ func TestAppendBuildingFloorDonation(t *testing.T) {
 			RoomName:    "502",
 			TeacherId:   2,
 			TeacherName: "学内募金API確認教員B",
-			TotalPrice:  0,
+			TotalPrice:  nil,
 			IsBlack:     true,
 		},
 	)
@@ -60,7 +64,7 @@ func TestAppendBuildingFloorDonation(t *testing.T) {
 			RoomName:    "501",
 			TeacherId:   3,
 			TeacherName: "学内募金API確認教員C",
-			TotalPrice:  7000,
+			TotalPrice:  intPtr(7000),
 			IsBlack:     false,
 		},
 	)
@@ -76,14 +80,14 @@ func TestAppendBuildingFloorDonation(t *testing.T) {
 					RoomName:    "501",
 					TeacherId:   1,
 					TeacherName: "学内募金API確認教員A",
-					TotalPrice:  5000,
+					TotalPrice:  intPtr(5000),
 					IsBlack:     false,
 				},
 				{
 					RoomName:    "502",
 					TeacherId:   2,
 					TeacherName: "学内募金API確認教員B",
-					TotalPrice:  0,
+					TotalPrice:  nil,
 					IsBlack:     true,
 				},
 			},
@@ -98,7 +102,7 @@ func TestAppendBuildingFloorDonation(t *testing.T) {
 					RoomName:    "501",
 					TeacherId:   3,
 					TeacherName: "学内募金API確認教員C",
-					TotalPrice:  7000,
+					TotalPrice:  intPtr(7000),
 					IsBlack:     false,
 				},
 			},

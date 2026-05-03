@@ -143,7 +143,7 @@ func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 			goqu.I("rooms.room_name").As("room_name"),
 			goqu.I("teachers.id").As("teacher_id"),
 			goqu.I("teachers.name").As("teacher_name"),
-			goqu.COALESCE(goqu.I("donation_totals.total_price"), 0).As("total_price"),
+			goqu.I("donation_totals.total_price").As("total_price"),
 			goqu.COALESCE(goqu.I("teachers.is_black"), false).As("is_black"),
 		).
 		Order(

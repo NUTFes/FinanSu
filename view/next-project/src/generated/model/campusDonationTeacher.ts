@@ -13,6 +13,7 @@ export interface CampusDonationTeacher {
   roomName: string;
   teacherId: number;
   teacherName: string;
-  totalPrice: number;
+  /** @nullable */
+  totalPrice: number | null;
   isBlack: boolean;
 }

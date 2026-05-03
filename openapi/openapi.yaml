@@ -2965,6 +2965,7 @@ components:
           example: 技大太郎
         totalPrice:
           type: integer
+          nullable: true
           example: 5000
         isBlack:
           type: boolean

@@ -350,7 +350,7 @@ type CampusDonationTeacher struct {
 	RoomName    string `json:"roomName"`
 	TeacherId   int    `json:"teacherId"`
 	TeacherName string `json:"teacherName"`
-	TotalPrice  int    `json:"totalPrice"`
+	TotalPrice  *int   `json:"totalPrice"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
