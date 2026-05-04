@@ -16,16 +16,17 @@ import {
 } from '@/components/common';
 import ProgressReportDocumentButtons from '@/components/progress-report/ProgressReportDocumentButtons';
 import ProgressReportFieldRow from '@/components/progress-report/ProgressReportFieldRow';
+import { FEASIBILITY_STATUS_OPTIONS } from '@/utils/sponsorshipActivity';
 import {
   ACTIVITY_STATUS_LABELS,
   DESIGN_PROGRESS_LABELS,
   type SponsorshipActivityProgressReportFormValues,
 } from '@/utils/sponsorshipActivityProgressReport';
 
-import type { SponsorshipActivity } from '@/generated/model';
+import type { ActivityStatus, SponsorshipActivity } from '@/generated/model';
 
 const READ_ONLY_FIELD_CLASS_NAME =
-  'pointer-events-none w-full rounded-none border-0 border-b border-[#56daff] bg-transparent px-0 py-1 text-base text-[#666666] shadow-none focus:border-[#56daff] focus:ring-0';
+  'w-full rounded-none border-0 border-b border-[#56daff] bg-transparent px-0 py-1 text-base text-[#666666] shadow-none focus:border-[#56daff] focus:ring-0';
 
 const PRIMARY_ACTION_CLASS_NAME = 'min-w-36 justify-center px-8 py-2 font-normal';
 
@@ -40,6 +41,7 @@ interface ProgressReportModalProps {
   errors: FieldErrors<SponsorshipActivityProgressReportFormValues>;
   onClose: () => void;
   onSubmit: (values: SponsorshipActivityProgressReportFormValues) => Promise<void>;
+  onActivityStatusChange: (status: ActivityStatus) => void;
 }
 
 export default function ProgressReportModal({
@@ -53,6 +55,7 @@ export default function ProgressReportModal({
   errors,
   onClose,
   onSubmit,
+  onActivityStatusChange,
 }: ProgressReportModalProps) {
   if (!isOpen) return null;
 
@@ -97,30 +100,19 @@ export default function ProgressReportModal({
 
           <div className='space-y-6'>
             <ProgressReportFieldRow id='representative' label='代表者' required>
-              <Input
-                id='representative'
-                readOnly
-                value={sponsor?.representative ?? ''}
-                className={READ_ONLY_FIELD_CLASS_NAME}
-              />
+              <div className={`${READ_ONLY_FIELD_CLASS_NAME} break-words`}>
+                {sponsor?.representative ?? ''}
+              </div>
             </ProgressReportFieldRow>
 
             <ProgressReportFieldRow id='phone' label='電話' required>
-              <Input
-                id='phone'
-                readOnly
-                value={sponsor?.tel ?? ''}
-                className={READ_ONLY_FIELD_CLASS_NAME}
-              />
+              <div className={READ_ONLY_FIELD_CLASS_NAME}>{sponsor?.tel ?? ''}</div>
             </ProgressReportFieldRow>
 
             <ProgressReportFieldRow id='email' label='メール' required>
-              <Input
-                id='email'
-                readOnly
-                value={sponsor?.email ?? ''}
-                className={READ_ONLY_FIELD_CLASS_NAME}
-              />
+              <div className={`${READ_ONLY_FIELD_CLASS_NAME} break-all`}>
+                {sponsor?.email ?? ''}
+              </div>
             </ProgressReportFieldRow>
 
             <Controller
@@ -137,10 +129,31 @@ export default function ProgressReportModal({
                   <Select
                     id='activityStatus'
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(e) => onActivityStatusChange(e.target.value as ActivityStatus)}
                     className='h-11 py-0 text-base'
                   >
                     {Object.entries(ACTIVITY_STATUS_LABELS).map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </Select>
+                </ProgressReportFieldRow>
+              )}
+            />
+
+            <Controller
+              name='feasibilityStatus'
+              control={control}
+              render={({ field }) => (
+                <ProgressReportFieldRow id='feasibilityStatus' label='協賛可否'>
+                  <Select
+                    id='feasibilityStatus'
+                    value={field.value}
+                    onChange={field.onChange}
+                    className='h-11 py-0 text-base'
+                  >
+                    {FEASIBILITY_STATUS_OPTIONS.map(({ value, label }) => (
                       <option key={value} value={value}>
                         {label}
                       </option>
