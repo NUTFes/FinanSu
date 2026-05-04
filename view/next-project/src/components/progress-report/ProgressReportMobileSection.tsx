@@ -58,7 +58,9 @@ export default function ProgressReportMobileSection({
               </div>
               <div className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm text-[#666666]'>
                 <span>代表者</span>
-                <span>{item.sponsor?.representative ?? '-'}</span>
+                <span className='min-w-0 break-words'>{item.sponsor?.representative ?? '-'}</span>
+                <span>e-mail</span>
+                <span className='min-w-0 break-all'>{item.sponsor?.email ?? '-'}</span>
                 <span>ステータス</span>
                 <span>{toActivityStatusLabel(item.activityStatus)}</span>
                 <span>デザイン</span>

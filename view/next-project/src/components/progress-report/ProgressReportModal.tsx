@@ -100,30 +100,19 @@ export default function ProgressReportModal({
 
           <div className='space-y-6'>
             <ProgressReportFieldRow id='representative' label='代表者' required>
-              <Input
-                id='representative'
-                readOnly
-                value={sponsor?.representative ?? ''}
-                className={READ_ONLY_FIELD_CLASS_NAME}
-              />
+              <div className={`${READ_ONLY_FIELD_CLASS_NAME} break-words`}>
+                {sponsor?.representative ?? ''}
+              </div>
             </ProgressReportFieldRow>
 
             <ProgressReportFieldRow id='phone' label='電話' required>
-              <Input
-                id='phone'
-                readOnly
-                value={sponsor?.tel ?? ''}
-                className={READ_ONLY_FIELD_CLASS_NAME}
-              />
+              <div className={READ_ONLY_FIELD_CLASS_NAME}>{sponsor?.tel ?? ''}</div>
             </ProgressReportFieldRow>
 
             <ProgressReportFieldRow id='email' label='メール' required>
-              <Input
-                id='email'
-                readOnly
-                value={sponsor?.email ?? ''}
-                className={READ_ONLY_FIELD_CLASS_NAME}
-              />
+              <div className={`${READ_ONLY_FIELD_CLASS_NAME} break-all`}>
+                {sponsor?.email ?? ''}
+              </div>
             </ProgressReportFieldRow>
 
             <Controller
