@@ -174,8 +174,24 @@ export default function ProgressReportTable({
                     {item.sponsor?.representative ?? '-'}
                   </div>
                 </td>
-                <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
-                  {item.sponsor?.email ?? '-'}
+                <td className='px-4 py-3 text-center text-sm text-[#666666]'>
+                  <div
+                    className='mx-auto max-w-[14rem] cursor-default truncate'
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget;
+                      if (item.sponsor?.email && el.scrollWidth > el.clientWidth) {
+                        const rect = el.getBoundingClientRect();
+                        setTooltip({
+                          name: item.sponsor.email,
+                          x: rect.left + rect.width / 2,
+                          y: rect.top,
+                        });
+                      }
+                    }}
+                    onMouseLeave={() => setTooltip(null)}
+                  >
+                    {item.sponsor?.email ?? '-'}
+                  </div>
                 </td>
                 <td className='px-4 py-3 text-center text-sm whitespace-nowrap text-[#666666]'>
                   {toActivityStatusLabel(item.activityStatus)}

@@ -2,10 +2,11 @@ import Head from 'next/head';
 
 import ProgressReportHeader from '@/components/progress-report/ProgressReportHeader';
 import ProgressReportModal from '@/components/progress-report/ProgressReportModal';
+import ProgressReportMobileSection from '@/components/progress-report/ProgressReportMobileSection';
 import ProgressReportTable from '@/components/progress-report/ProgressReportTable';
 import MainLayout from '@components/layout/MainLayout';
 
-import type { SponsorshipActivity } from '@/generated/model';
+import type { ActivityStatus, SponsorshipActivity } from '@/generated/model';
 import type { SponsorshipActivityProgressReportFormValues } from '@/utils/sponsorshipActivityProgressReport';
 import type { SponsorStyle } from '@type/common';
 import type { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form';
@@ -26,6 +27,7 @@ interface ProgressReportLayoutProps {
   errors: FieldErrors<SponsorshipActivityProgressReportFormValues>;
   onCloseModal: () => void;
   onSubmit: (values: SponsorshipActivityProgressReportFormValues) => Promise<void>;
+  onActivityStatusChange: (status: ActivityStatus) => void;
 }
 
 export default function ProgressReportLayout({
@@ -44,6 +46,7 @@ export default function ProgressReportLayout({
   errors,
   onCloseModal,
   onSubmit,
+  onActivityStatusChange,
 }: ProgressReportLayoutProps) {
   return (
     <MainLayout>
@@ -54,12 +57,20 @@ export default function ProgressReportLayout({
       <div className='min-h-[calc(100vh-4rem)] px-4 py-10 md:px-8 md:py-16'>
         <div className='mx-auto mt-14 max-w-[1280px] rounded-2xl border border-[#e5e7eb] bg-white px-8 py-8 shadow-[0_4px_14px_rgba(0,0,0,0.12)] md:px-12'>
           <ProgressReportHeader sponsorStyles={sponsorStyles} />
-          <ProgressReportTable
+          <ProgressReportMobileSection
             activities={activities}
             isLoading={isActivitiesLoading}
             hasError={hasActivitiesError}
             onSelectActivity={onSelectActivity}
           />
+          <div className='hidden md:block'>
+            <ProgressReportTable
+              activities={activities}
+              isLoading={isActivitiesLoading}
+              hasError={hasActivitiesError}
+              onSelectActivity={onSelectActivity}
+            />
+          </div>
         </div>
       </div>
 
@@ -74,6 +85,7 @@ export default function ProgressReportLayout({
         errors={errors}
         onClose={onCloseModal}
         onSubmit={onSubmit}
+        onActivityStatusChange={onActivityStatusChange}
       />
     </MainLayout>
   );
