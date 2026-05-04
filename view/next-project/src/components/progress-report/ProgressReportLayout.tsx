@@ -1,8 +1,8 @@
 import Head from 'next/head';
 
 import ProgressReportHeader from '@/components/progress-report/ProgressReportHeader';
-import ProgressReportModal from '@/components/progress-report/ProgressReportModal';
 import ProgressReportMobileSection from '@/components/progress-report/ProgressReportMobileSection';
+import ProgressReportModal from '@/components/progress-report/ProgressReportModal';
 import ProgressReportTable from '@/components/progress-report/ProgressReportTable';
 import MainLayout from '@components/layout/MainLayout';
 

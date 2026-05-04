@@ -16,12 +16,12 @@ import {
 } from '@/components/common';
 import ProgressReportDocumentButtons from '@/components/progress-report/ProgressReportDocumentButtons';
 import ProgressReportFieldRow from '@/components/progress-report/ProgressReportFieldRow';
+import { FEASIBILITY_STATUS_OPTIONS } from '@/utils/sponsorshipActivity';
 import {
   ACTIVITY_STATUS_LABELS,
   DESIGN_PROGRESS_LABELS,
   type SponsorshipActivityProgressReportFormValues,
 } from '@/utils/sponsorshipActivityProgressReport';
-import { FEASIBILITY_STATUS_OPTIONS } from '@/utils/sponsorshipActivity';
 
 import type { ActivityStatus, SponsorshipActivity } from '@/generated/model';
 

@@ -53,9 +53,7 @@ export default function ProgressReportMobileSection({
         activities.map((item) => (
           <Card key={item.id}>
             <div className='flex flex-col gap-3 p-4'>
-              <div className='text-lg font-medium text-[#444444]'>
-                {item.sponsor?.name ?? '-'}
-              </div>
+              <div className='text-lg font-medium text-[#444444]'>{item.sponsor?.name ?? '-'}</div>
               <div className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm text-[#666666]'>
                 <span>代表者</span>
                 <span className='min-w-0 break-words'>{item.sponsor?.representative ?? '-'}</span>
