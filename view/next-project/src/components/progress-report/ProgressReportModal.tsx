@@ -26,7 +26,7 @@ import {
 import type { ActivityStatus, SponsorshipActivity } from '@/generated/model';
 
 const READ_ONLY_FIELD_CLASS_NAME =
-  'pointer-events-none w-full rounded-none border-0 border-b border-[#56daff] bg-transparent px-0 py-1 text-base text-[#666666] shadow-none focus:border-[#56daff] focus:ring-0';
+  'w-full rounded-none border-0 border-b border-[#56daff] bg-transparent px-0 py-1 text-base text-[#666666] shadow-none focus:border-[#56daff] focus:ring-0';
 
 const PRIMARY_ACTION_CLASS_NAME = 'min-w-36 justify-center px-8 py-2 font-normal';
 

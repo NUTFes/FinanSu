@@ -50,8 +50,8 @@ export default function ProgressReportMobileSection({
       )}
       {!isLoading &&
         !hasError &&
-        activities.map((item) => (
-          <Card key={item.id}>
+        activities.map((item, index) => (
+          <Card key={item.id ?? index}>
             <div className='flex flex-col gap-3 p-4'>
               <div className='text-lg font-medium text-[#444444]'>{item.sponsor?.name ?? '-'}</div>
               <div className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm text-[#666666]'>
