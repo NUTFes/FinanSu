@@ -86,7 +86,10 @@ export default function SponsorActivities(props: Props) {
 
   useEffect(() => {
     if (!_hasHydrated) return;
-    if (!user?.roleID) return;
+    if (!user?.roleID) {
+      router.push('/');
+      return;
+    }
     if (user.roleID !== 2 && user.roleID !== 3) {
       router.push('/my_page');
     }
