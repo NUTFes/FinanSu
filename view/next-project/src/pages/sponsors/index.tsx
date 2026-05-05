@@ -1,10 +1,12 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
 import { useGetSponsorsPeriodsYear, useGetYearsPeriods } from '@/generated/hooks';
+import { useCurrentUser, useUserStore } from '@/store';
 import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
@@ -14,6 +16,18 @@ import type { NextPage } from 'next';
 const date = new Date();
 
 const Sponsorship: NextPage = () => {
+  const router = useRouter();
+  const user = useCurrentUser();
+  const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  useEffect(() => {
+    if (!_hasHydrated) return;
+    if (!user?.roleID) return;
+    if (user.roleID !== 2 && user.roleID !== 3) {
+      router.push('/my_page');
+    }
+  }, [_hasHydrated, user?.roleID, router]);
+
   const {
     data: yearPeriodsData,
     isLoading: isYearPeriodsLoading,
@@ -32,6 +46,8 @@ const Sponsorship: NextPage = () => {
   } = useGetSponsorsPeriodsYear(Number(selectedYear));
   const sponsors = sponsorsData?.data;
 
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
   if (isYearPeriodsLoading || isSponsorsLoading) return <Loading />;
   if (yearPeriodsError || sponsorsError) return <div>error...</div>;
 
