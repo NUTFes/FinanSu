@@ -193,7 +193,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
 
   return (
     <>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>協賛スタイル</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>協賛スタイル</p>
       <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
           <tr className='border-b-primary-1 border-b py-3'>
@@ -240,7 +240,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>広告デザイン</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>広告デザイン</p>
       <div className='max-h-60 overflow-auto'>
         {sponsorActivityInformations &&
           sponsorActivityInformations.map((activityInformation, index) => (

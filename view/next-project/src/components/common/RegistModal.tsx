@@ -128,7 +128,7 @@ const RegistModal: FC<ModalProps> = (props) => {
           </div>
         </div>
       </div>
-      <div className='mb-10 mt-5 flex justify-center'>
+      <div className='mt-5 mb-10 flex justify-center'>
         <RegistButton
           width='220px'
           onClick={() => {

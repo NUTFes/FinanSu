@@ -95,7 +95,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>備考</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border-b-primary-1 border-b py-3'></tr>
@@ -118,7 +118,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>協賛企業</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border-b-primary-1 border-b py-3'>

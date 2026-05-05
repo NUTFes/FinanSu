@@ -226,7 +226,7 @@ interface StyleFieldRowProps {
 
 function StyleFieldRow(props: StyleFieldRowProps) {
   return (
-    <div className='border-primary-1 min-h-10 flex items-stretch rounded-md border'>
+    <div className='border-primary-1 flex min-h-10 items-stretch rounded-md border'>
       <div className='text-black-600 flex w-10 shrink-0 items-center justify-center'>
         {props.categoryLabel}
       </div>
@@ -695,7 +695,7 @@ export default function SponsorActivityForm(props: Props) {
         <div className='mb-4 text-center text-sm text-red-600'>{model.errorMessage}</div>
       )}
 
-      <div className='gap-17.5 mt-5 flex flex-row justify-center'>
+      <div className='mt-5 flex flex-row justify-center gap-17.5'>
         <OutlinePrimaryButton onClick={model.onClose}>戻る</OutlinePrimaryButton>
         <PrimaryButton onClick={model.submit} disabled={model.isSubmitting}>
           {props.submitLabel}

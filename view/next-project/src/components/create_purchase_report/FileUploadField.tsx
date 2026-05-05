@@ -33,7 +33,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       />
       {uploadedFile ? (
         <div
-          className='min-h-10 flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 bg-[#E7E7E7] p-2 transition-colors hover:bg-gray-300'
+          className='flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-gray-200 bg-[#E7E7E7] p-2 transition-colors hover:bg-gray-300'
           onClick={handleFileUploadClick}
         >
           <span className='ml-2 min-w-0 flex-1 truncate'>{uploadedFile.name}</span>

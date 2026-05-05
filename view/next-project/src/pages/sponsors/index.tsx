@@ -129,7 +129,7 @@ const Sponsorship: NextPage = () => {
           </table>
         </div>
       </Card>
-      <div className='fixed bottom-4 right-4 md:hidden'>
+      <div className='fixed right-4 bottom-4 md:hidden'>
         <OpenAddModalButton />
       </div>
     </MainLayout>

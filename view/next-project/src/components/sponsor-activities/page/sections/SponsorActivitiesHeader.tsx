@@ -83,7 +83,7 @@ export default function SponsorActivitiesHeader({
                   <MdFilterList size='22' color='#666666' />
                 </button>
                 {isFiltered && (
-                  <div className='absolute -right-0.5 -top-0.5'>
+                  <div className='absolute -top-0.5 -right-0.5'>
                     <MdCircle color='rgb(4 102 140)' size={8} />
                   </div>
                 )}
@@ -109,7 +109,7 @@ export default function SponsorActivitiesHeader({
                 });
               }}
             >
-              <MdOutlineFileDownload size='20' className='mr-1 mt-0.5' />
+              <MdOutlineFileDownload size='20' className='mt-0.5 mr-1' />
               CSVダウンロード
             </PrimaryButton>
           </div>

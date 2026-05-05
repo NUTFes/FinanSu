@@ -76,7 +76,7 @@ const DetailPage1: FC<DetailModalProps> = (props) => {
 
   return (
     <>
-      <div className='w-9/10 mx-auto mb-10 grid grid-cols-4 justify-items-end gap-x-10 gap-y-3'>
+      <div className='mx-auto mb-10 grid w-9/10 grid-cols-4 justify-items-end gap-x-10 gap-y-3'>
         <p className='text-black-600'>ID</p>
         <div className='border-b-primary-1 w-full border-b text-right'>
           <p>{props.purchaseReportViewItem && props.purchaseReportViewItem.purchaseReport.id}</p>

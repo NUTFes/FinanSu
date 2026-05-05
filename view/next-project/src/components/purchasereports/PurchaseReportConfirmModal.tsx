@@ -52,8 +52,8 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.item}</div>
@@ -61,8 +61,8 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.price}</div>
@@ -70,8 +70,8 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.quantity}</div>
@@ -79,8 +79,8 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.detail}</div>
@@ -88,8 +88,8 @@ export default function PurchaseItemNumModal(props: ModalProps) {
               <td
                 className={clsx(
                   'px-4',
-                  index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                  index === 0 ? 'pt-4 pb-3' : 'py-3',
+                  index === purchaseItems.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>

@@ -14,7 +14,7 @@ function Tooltip(props: Props): JSX.Element {
         <span className='whitespace-no-wrap bg-black-600 text-white-0 relative z-10 rounded-md p-2 text-xs leading-none shadow-lg'>
           {props.text}
         </span>
-        <div className='bg-black-600 size-3 -mt-2 rotate-45'></div>
+        <div className='bg-black-600 -mt-2 size-3 rotate-45'></div>
       </div>
     </div>
   );

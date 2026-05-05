@@ -216,7 +216,7 @@ export default function ProgressReportModal({
           </div>
 
           {Object.keys(errors).length > 0 && (
-            <div className='bg-[rgb(228,67,78)]/8 mt-6 rounded-2xl px-4 py-3 text-sm text-[#e4434e]'>
+            <div className='mt-6 rounded-2xl bg-[rgb(228,67,78)]/8 px-4 py-3 text-sm text-[#e4434e]'>
               入力内容を確認してください。
             </div>
           )}

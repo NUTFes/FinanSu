@@ -89,7 +89,7 @@ export default function MainLayout(props: LayoutProps) {
                 isSideNavOpen
                   ? 'md:w-52 md:translate-x-0 md:opacity-100'
                   : `md:w-0 md:-translate-x-full md:overflow-hidden md:opacity-0`,
-                'fixed bottom-0 right-0 top-16',
+                'fixed top-16 right-0 bottom-0',
                 !isSideNavOpen ? 'w-52 translate-x-0 shadow-xl' : `w-0 translate-x-full`,
               )}
             >

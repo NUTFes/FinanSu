@@ -130,7 +130,7 @@ export default function PurchaseItemNumModal() {
           </div>
         </div>
       </div>
-      <div className={clsx(`max-h-2/3 mb-4 grid grid-cols-12 gap-4 overflow-scroll`)}>
+      <div className={clsx(`mb-4 grid max-h-2/3 grid-cols-12 gap-4 overflow-scroll`)}>
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
           <div className={clsx('mb-2 w-full p-5')}>
@@ -164,8 +164,8 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
                         {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
@@ -181,8 +181,8 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
                         <div className={clsx(`text-black-600 text-center text-sm`)}>
@@ -196,8 +196,8 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
                         <div className={clsx(`text-black-600 text-center text-sm`)}>
@@ -208,8 +208,8 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
                         <div className={clsx(`text-black-600 text-center text-sm`)}>
@@ -225,8 +225,8 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
                         <div className={clsx(`text-black-600 text-center text-sm`)}>
@@ -236,8 +236,8 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
                         <div className={clsx(`text-black-600 text-center text-sm`)}>
@@ -262,14 +262,14 @@ export default function PurchaseItemNumModal() {
         <div className={clsx('col-span-1 grid')} />
       </div>
       <div className={clsx('grid w-full grid-cols-12 pb-5')}>
-        <div className={clsx('h-100 col-span-1 grid')} />
+        <div className={clsx('col-span-1 grid h-100')} />
         <div
           className={clsx(
-            `text-md text-black-600 h-100 col-span-10 grid w-full justify-items-center pr-3`,
+            `text-md text-black-600 col-span-10 grid h-100 w-full justify-items-center pr-3`,
           )}
         >
           <div
-            className={clsx(`text-md text-black-600 h-100 grid w-full justify-items-center pb-3`)}
+            className={clsx(`text-md text-black-600 grid h-100 w-full justify-items-center pb-3`)}
           >
             申請を選択してください
           </div>
@@ -305,7 +305,7 @@ export default function PurchaseItemNumModal() {
             </div>
           </div>
         </div>
-        <div className={clsx('h-100 col-span-1 grid')} />
+        <div className={clsx('col-span-1 grid h-100')} />
       </div>
       <div className={clsx('grid justify-items-center px-1')}></div>
     </Modal>

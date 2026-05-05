@@ -228,7 +228,7 @@ export default function BudgetManagement(props: Props) {
               <select
                 value={selectedYear.year}
                 onChange={handleYearChange}
-                className='border-black-300 focus:outline-hidden border-b'
+                className='border-black-300 border-b focus:outline-hidden'
               >
                 {years &&
                   years.map((year) => (
@@ -243,7 +243,7 @@ export default function BudgetManagement(props: Props) {
               <select
                 value={financialRecordId ?? ''}
                 onChange={handleFinancialRecordChange}
-                className='border-black-300 focus:outline-hidden border-b'
+                className='border-black-300 border-b focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {financialRecords &&
@@ -259,7 +259,7 @@ export default function BudgetManagement(props: Props) {
               <select
                 value={divisionId ?? ''}
                 onChange={handleDivisionChange}
-                className='border-black-300 focus:outline-hidden border-b'
+                className='border-black-300 border-b focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {divisions &&
@@ -290,7 +290,7 @@ export default function BudgetManagement(props: Props) {
           </div>
         </div>
         <div className='mt-5 overflow-x-auto'>
-          <table className='text-nowrap w-full table-auto border-collapse'>
+          <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
               <tr className='border-b-primary-1 border-b py-3'>
                 <th className='text-black-600 w-1/4 pb-2 text-center font-medium'>{title}</th>

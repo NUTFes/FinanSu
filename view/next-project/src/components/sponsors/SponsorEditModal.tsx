@@ -41,7 +41,7 @@ export default function SponsorEditModal(props: Props) {
   return (
     <Modal className='md:w-1/2' onClick={closeModal}>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <CloseButton onClick={() => props.setIsOpen(false)} />
         </div>
       </div>

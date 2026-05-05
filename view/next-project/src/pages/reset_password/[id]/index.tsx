@@ -100,7 +100,7 @@ export default function ResetPassword(props: Props) {
                 <div className='my-20 flex w-full flex-col items-center'>
                   <div className='mb-10 flex flex-col gap-3'>
                     <div className='grid grid-cols-3 place-items-center gap-5'>
-                      <p className='md:text-md text-black-300 whitespace-nowrap text-sm'>
+                      <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>
                         パスワード
                       </p>
                       <input
@@ -114,7 +114,7 @@ export default function ResetPassword(props: Props) {
                           },
                         })}
                       />
-                      <p className='md:text-md text-black-300 whitespace-nowrap text-sm'>
+                      <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>
                         パスワード確認
                       </p>
                       <input
@@ -159,10 +159,10 @@ export default function ResetPassword(props: Props) {
         ) : (
           <div className='my-20 flex w-full flex-col items-center'>
             <div className='mb-10 flex flex-col items-center gap-3'>
-              <p className='text-black-300 whitespace-nowrap text-lg'>
+              <p className='text-black-300 text-lg whitespace-nowrap'>
                 リンクが無効もしくは、有効期限が切れています。
               </p>
-              <p className='text-black-300 whitespace-nowrap text-lg'>
+              <p className='text-black-300 text-lg whitespace-nowrap'>
                 再度パスワードリセットメールを送信して下さい。
               </p>
             </div>

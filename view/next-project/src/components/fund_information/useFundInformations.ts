@@ -113,12 +113,15 @@ export function useFundInformations(option?: { id?: number; selectedYear?: numbe
 
   // 収入カテゴリーの名前とIDのマッピング
   const incomeTypeIdMap = useMemo(() => {
-    return incomeCategories.reduce((acc, income) => {
-      if (income.name && income.id) {
-        acc[income.name] = income.id;
-      }
-      return acc;
-    }, {} as Record<string, number>);
+    return incomeCategories.reduce(
+      (acc, income) => {
+        if (income.name && income.id) {
+          acc[income.name] = income.id;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
   }, [incomeCategories]);
 
   // 現在編集中の収入データ

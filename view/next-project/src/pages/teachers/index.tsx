@@ -82,7 +82,7 @@ export default function TeachersList(props: Props) {
           <div className='flex flex-col md:flex-row'>
             <Title title={'教員一覧'} />
             <select
-              className='md:w-100 mx-auto my-4 w-fit md:mx-10 md:my-0'
+              className='mx-auto my-4 w-fit md:mx-10 md:my-0 md:w-100'
               value={selectedDepartment?.id}
               onChange={(e) => {
                 const selectDepartment = departments.find((department) => {
@@ -207,7 +207,7 @@ export default function TeachersList(props: Props) {
           </table>
         </div>
       </Card>
-      <div className='fixed bottom-4 right-4 md:hidden'>
+      <div className='fixed right-4 bottom-4 md:hidden'>
         <OpenAddModalButton departments={props.departments} />
       </div>
     </MainLayout>

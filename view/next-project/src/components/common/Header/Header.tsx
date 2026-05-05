@@ -30,7 +30,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <div className='border-primary-1 bg-primary-4 fixed left-0 top-0 z-10 flex h-16 w-full flex-row items-center gap-5 border-b-2 px-3 md:px-10'>
+      <div className='border-primary-1 bg-primary-4 fixed top-0 left-0 z-10 flex h-16 w-full flex-row items-center gap-5 border-b-2 px-3 md:px-10'>
         <button
           onClick={() => {
             if (onSideNavOpen) onSideNavOpen();

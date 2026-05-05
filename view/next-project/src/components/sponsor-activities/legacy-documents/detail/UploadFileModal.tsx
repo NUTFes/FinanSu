@@ -194,7 +194,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-5/12' onClick={onClose}>
+    <Modal className='md:mt-5 md:h-6/12 md:w-5/12' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />

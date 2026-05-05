@@ -19,7 +19,7 @@ export default function ProgressReportHeader({ sponsorStyles }: ProgressReportHe
   return (
     <>
       <div className='mb-4 flex flex-wrap items-center justify-between gap-3'>
-        <div className='text-2xl font-thin leading-8 tracking-[0.2em] text-[#666666]'>進捗報告</div>
+        <div className='text-2xl leading-8 font-thin tracking-[0.2em] text-[#666666]'>進捗報告</div>
         <div className='flex flex-wrap gap-3'>
           <OutlinePrimaryButton
             className='text-md min-w-52 justify-center border-[#56daff] px-4 py-1.5 font-normal text-[#56daff]'
