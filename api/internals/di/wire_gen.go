@@ -43,7 +43,7 @@ func InitializeServer() (*ServerComponents, error) {
 	objectHandleRepository := repository.NewObjectHandleRepository(mcClient)
 	incomeExpenditureManagementRepository := repository.NewIncomeExpenditureManagementRepository(client, crud)
 	buyReportUseCase := usecase.NewBuyReportUseCase(buyReportRepository, transactionRepository, objectHandleRepository, incomeExpenditureManagementRepository)
-	campusDonationRepository := repository.NewCampusDonationRepository(client, crud)
+	campusDonationRepository := repository.NewCampusDonationRepository(client)
 	campusDonationUseCase := usecase.NewCampusDonationUseCase(campusDonationRepository)
 	departmentRepository := repository.NewDepartmentRepository(client, crud)
 	departmentUseCase := usecase.NewDepartmentUseCase(departmentRepository)

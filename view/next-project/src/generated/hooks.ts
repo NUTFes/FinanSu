@@ -20,6 +20,10 @@ import type {
   BuyReportDetail,
   BuyReportSummary,
   BuyReportWithDivisionId,
+  CampusDonation,
+  CampusDonationBuildingFloor,
+  CampusDonationBuildingGroupKey,
+  CampusDonationRequest,
   CreateSponsorshipActivityRequest,
   DeleteActivitiesId200,
   DeleteActivityInformationsId200,
@@ -72,6 +76,7 @@ import type {
   GetBuyReportsCsvDownloadParams,
   GetBuyReportsDetailsParams,
   GetBuyReportsSummaryParams,
+  GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams,
   GetDepartments200,
   GetDepartmentsId200,
   GetDivisionsParams,
@@ -4091,6 +4096,103 @@ export const useGetFinancialRecordsCsvDownload = <TError = unknown>(
 };
 
 /**
+ * 指定した棟グループの教員別募金情報を取得
+ */
+export type getCampusDonationsYearsYearGroupKeysGroupKeyFloorsResponse200 = {
+  data: CampusDonationBuildingFloor[];
+  status: 200;
+};
+
+export type getCampusDonationsYearsYearGroupKeysGroupKeyFloorsResponseSuccess =
+  getCampusDonationsYearsYearGroupKeysGroupKeyFloorsResponse200 & {
+    headers: Headers;
+  };
+export type getCampusDonationsYearsYearGroupKeysGroupKeyFloorsResponse =
+  getCampusDonationsYearsYearGroupKeysGroupKeyFloorsResponseSuccess;
+
+export const getGetCampusDonationsYearsYearGroupKeysGroupKeyFloorsUrl = (
+  year: number,
+  groupKey: CampusDonationBuildingGroupKey,
+  params?: GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/campus_donations/years/${year}/group_keys/${groupKey}/floors?${stringifiedParams}`
+    : `/campus_donations/years/${year}/group_keys/${groupKey}/floors`;
+};
+
+export const getCampusDonationsYearsYearGroupKeysGroupKeyFloors = async (
+  year: number,
+  groupKey: CampusDonationBuildingGroupKey,
+  params?: GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams,
+  options?: RequestInit,
+): Promise<getCampusDonationsYearsYearGroupKeysGroupKeyFloorsResponse> => {
+  return customFetch<getCampusDonationsYearsYearGroupKeysGroupKeyFloorsResponse>(
+    getGetCampusDonationsYearsYearGroupKeysGroupKeyFloorsUrl(year, groupKey, params),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetCampusDonationsYearsYearGroupKeysGroupKeyFloorsKey = (
+  year: number,
+  groupKey: CampusDonationBuildingGroupKey,
+  params?: GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams,
+) =>
+  [
+    `/campus_donations/years/${year}/group_keys/${groupKey}/floors`,
+    ...(params ? [params] : []),
+  ] as const;
+
+export type GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsYearsYearGroupKeysGroupKeyFloors>>
+>;
+export type GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsQueryError = unknown;
+
+export const useGetCampusDonationsYearsYearGroupKeysGroupKeyFloors = <TError = unknown>(
+  year: number,
+  groupKey: CampusDonationBuildingGroupKey,
+  params?: GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getCampusDonationsYearsYearGroupKeysGroupKeyFloors>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!(year && groupKey);
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetCampusDonationsYearsYearGroupKeysGroupKeyFloorsKey(year, groupKey, params)
+        : null);
+  const swrFn = () =>
+    getCampusDonationsYearsYearGroupKeysGroupKeyFloors(year, groupKey, params, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * 年度ごとの各棟の合計募金額を取得
  */
 export type getCampusDonationsBuildingsYearResponse200 = {
@@ -4148,6 +4250,144 @@ export const useGetCampusDonationsBuildingsYear = <TError = unknown>(
   const swrFn = () => getCampusDonationsBuildingsYear(year, requestOptions);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 学内募金の登録
+ */
+export type postCampusDonationsResponse200 = {
+  data: CampusDonation;
+  status: 200;
+};
+
+export type postCampusDonationsResponseSuccess = postCampusDonationsResponse200 & {
+  headers: Headers;
+};
+export type postCampusDonationsResponse = postCampusDonationsResponseSuccess;
+
+export const getPostCampusDonationsUrl = () => {
+  return `/campus_donations`;
+};
+
+export const postCampusDonations = async (
+  campusDonationRequest: CampusDonationRequest,
+  options?: RequestInit,
+): Promise<postCampusDonationsResponse> => {
+  return customFetch<postCampusDonationsResponse>(getPostCampusDonationsUrl(), {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(campusDonationRequest),
+  });
+};
+
+export const getPostCampusDonationsMutationFetcher = (
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, { arg }: { arg: CampusDonationRequest }) => {
+    return postCampusDonations(arg, options);
+  };
+};
+export const getPostCampusDonationsMutationKey = () => [`/campus_donations`] as const;
+
+export type PostCampusDonationsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postCampusDonations>>
+>;
+export type PostCampusDonationsMutationError = unknown;
+
+export const usePostCampusDonations = <TError = unknown>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postCampusDonations>>,
+    TError,
+    Key,
+    CampusDonationRequest,
+    Awaited<ReturnType<typeof postCampusDonations>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostCampusDonationsMutationKey();
+  const swrFn = getPostCampusDonationsMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * 学内募金の更新
+ */
+export type putCampusDonationsIdResponse200 = {
+  data: CampusDonation;
+  status: 200;
+};
+
+export type putCampusDonationsIdResponseSuccess = putCampusDonationsIdResponse200 & {
+  headers: Headers;
+};
+export type putCampusDonationsIdResponse = putCampusDonationsIdResponseSuccess;
+
+export const getPutCampusDonationsIdUrl = (id: number) => {
+  return `/campus_donations/${id}`;
+};
+
+export const putCampusDonationsId = async (
+  id: number,
+  campusDonationRequest: CampusDonationRequest,
+  options?: RequestInit,
+): Promise<putCampusDonationsIdResponse> => {
+  return customFetch<putCampusDonationsIdResponse>(getPutCampusDonationsIdUrl(id), {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(campusDonationRequest),
+  });
+};
+
+export const getPutCampusDonationsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, { arg }: { arg: CampusDonationRequest }) => {
+    return putCampusDonationsId(id, arg, options);
+  };
+};
+export const getPutCampusDonationsIdMutationKey = (id: number) =>
+  [`/campus_donations/${id}`] as const;
+
+export type PutCampusDonationsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putCampusDonationsId>>
+>;
+export type PutCampusDonationsIdMutationError = unknown;
+
+export const usePutCampusDonationsId = <TError = unknown>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putCampusDonationsId>>,
+      TError,
+      Key,
+      CampusDonationRequest,
+      Awaited<ReturnType<typeof putCampusDonationsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPutCampusDonationsIdMutationKey(id);
+  const swrFn = getPutCampusDonationsIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,

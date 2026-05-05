@@ -457,25 +457,25 @@ VALUES
     (2, 6, NOW(), NOW());
 
 INSERT INTO
-    buildings (name, unit_number)
+    buildings (name, unit_number, group_key)
 VALUES
-    ('機械・建設棟', 1),
-    ('機械・建設棟', 2),
-    ('機械・建設棟', 3),
-    ('電気棟', 1),
-    ('電気棟', 2),
-    ('生物棟', 1),
-    ('環境・システム棟', 1),
-    ('物質・材料経営情報棟', 1),
-    ('物質・材料経営情報棟', 2),
-    ('総合研究棟', 1),
-    ('原子力・システム安全棟', 1),
-    ('事務局棟', 1),
-    ('極限エネルギ密度工学研究センター', 1),
-    ('工作センター', 1),
-    ('大型実験棟', 1),
-    ('分析計測センター', 1),
-    ('その他', 1);
+    ('機械・建設棟', 1, 'mechanical_civil_engineering'),
+    ('機械・建設棟', 2, 'mechanical_civil_engineering'),
+    ('機械・建設棟', 3, 'mechanical_civil_engineering'),
+    ('電気棟', 1, 'electrical_engineering'),
+    ('電気棟', 2, 'electrical_engineering'),
+    ('生物棟', 1, 'biology'),
+    ('環境・システム棟', 1, 'environmental_system'),
+    ('物質・材料経営情報棟', 1, 'materials_management_information'),
+    ('物質・材料経営情報棟', 2, 'materials_management_information'),
+    ('総合研究棟', 1, 'general_research'),
+    ('原子力・システム安全棟', 1, 'nuclear_system_safety'),
+    ('事務局棟', 1, 'administration'),
+    ('極限エネルギ密度工学研究センター', 1, 'extreme_energy_density_research_center'),
+    ('工作センター', 1, 'machine_shop'),
+    ('大型実験棟', 1, 'large_experiment'),
+    ('分析計測センター', 1, 'analysis_instrumentation_center'),
+    ('その他', 1, 'other');
 
 INSERT INTO
     campus_donations (user_id, teacher_id, year_id, price, received_at)

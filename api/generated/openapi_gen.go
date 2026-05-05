@@ -53,6 +53,23 @@ const (
 	N2    BuyReportInformationStatus = "清算完了"
 )
 
+// Defines values for CampusDonationBuildingGroupKey.
+const (
+	Administration                     CampusDonationBuildingGroupKey = "administration"
+	AnalysisInstrumentationCenter      CampusDonationBuildingGroupKey = "analysis_instrumentation_center"
+	Biology                            CampusDonationBuildingGroupKey = "biology"
+	ElectricalEngineering              CampusDonationBuildingGroupKey = "electrical_engineering"
+	EnvironmentalSystem                CampusDonationBuildingGroupKey = "environmental_system"
+	ExtremeEnergyDensityResearchCenter CampusDonationBuildingGroupKey = "extreme_energy_density_research_center"
+	GeneralResearch                    CampusDonationBuildingGroupKey = "general_research"
+	LargeExperiment                    CampusDonationBuildingGroupKey = "large_experiment"
+	MachineShop                        CampusDonationBuildingGroupKey = "machine_shop"
+	MaterialsManagementInformation     CampusDonationBuildingGroupKey = "materials_management_information"
+	MechanicalCivilEngineering         CampusDonationBuildingGroupKey = "mechanical_civil_engineering"
+	NuclearSystemSafety                CampusDonationBuildingGroupKey = "nuclear_system_safety"
+	Other                              CampusDonationBuildingGroupKey = "other"
+)
+
 // Defines values for IncomeReceiveOption.
 const (
 	Hand     IncomeReceiveOption = "hand"
@@ -281,6 +298,66 @@ type BuyReportWithDivisionId struct {
 	Id             *int    `json:"id,omitempty"`
 	PaidBy         *string `json:"paidBy,omitempty"`
 	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
+}
+
+// CampusDonation defines model for campusDonation.
+type CampusDonation struct {
+	// Id 学内募金ID
+	Id int `json:"id"`
+
+	// Price 募金金額
+	Price int `json:"price"`
+
+	// ReceivedAt 受領日
+	ReceivedAt openapi_types.Date `json:"receivedAt"`
+
+	// TeacherId 募金対象の教員ID
+	TeacherId int `json:"teacherId"`
+
+	// UserId 募金を登録・更新したユーザーID
+	UserId int `json:"userId"`
+
+	// YearId 年度ID
+	YearId int `json:"yearId"`
+}
+
+// CampusDonationBuildingFloor 各号棟の指定フロア教員情報
+type CampusDonationBuildingFloor struct {
+	BuildingId   int                     `json:"buildingId"`
+	BuildingName string                  `json:"buildingName"`
+	Donations    []CampusDonationTeacher `json:"donations"`
+	FloorNumber  string                  `json:"floorNumber"`
+	UnitNumber   int                     `json:"unitNumber"`
+}
+
+// CampusDonationBuildingGroupKey 学内募金で表示する棟グループのキー
+type CampusDonationBuildingGroupKey string
+
+// CampusDonationRequest defines model for campusDonationRequest.
+type CampusDonationRequest struct {
+	// Price 募金金額
+	Price int `json:"price"`
+
+	// ReceivedAt 受領日
+	ReceivedAt openapi_types.Date `json:"receivedAt"`
+
+	// TeacherId 募金対象の教員ID
+	TeacherId int `json:"teacherId"`
+
+	// UserId 募金を登録・更新したユーザーID
+	UserId int `json:"userId"`
+
+	// YearId 年度ID
+	YearId int `json:"yearId"`
+}
+
+// CampusDonationTeacher 棟・階ごとの教員別募金情報
+type CampusDonationTeacher struct {
+	IsBlack     bool   `json:"isBlack"`
+	RoomName    string `json:"roomName"`
+	TeacherId   int    `json:"teacherId"`
+	TeacherName string `json:"teacherName"`
+	TotalPrice  *int   `json:"totalPrice"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
@@ -603,6 +680,12 @@ type PutBuyReportsIdMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
 }
 
+// GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams defines parameters for GetCampusDonationsYearsYearGroupKeysGroupKeyFloors.
+type GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams struct {
+	// FloorNumber floor_number
+	FloorNumber *string `form:"floor_number,omitempty" json:"floor_number,omitempty"`
+}
+
 // GetCurrentUserParams defines parameters for GetCurrentUser.
 type GetCurrentUserParams struct {
 	AccessToken *string `json:"Access-Token,omitempty"`
@@ -903,6 +986,12 @@ type PostBuyReportsMultipartRequestBody PostBuyReportsMultipartBody
 // PutBuyReportsIdMultipartRequestBody defines body for PutBuyReportsId for multipart/form-data ContentType.
 type PutBuyReportsIdMultipartRequestBody PutBuyReportsIdMultipartBody
 
+// PostCampusDonationsJSONRequestBody defines body for PostCampusDonations for application/json ContentType.
+type PostCampusDonationsJSONRequestBody = CampusDonationRequest
+
+// PutCampusDonationsIdJSONRequestBody defines body for PutCampusDonationsId for application/json ContentType.
+type PutCampusDonationsIdJSONRequestBody = CampusDonationRequest
+
 // PostDivisionsJSONRequestBody defines body for PostDivisions for application/json ContentType.
 type PostDivisionsJSONRequestBody = Division
 
@@ -1068,8 +1157,17 @@ type ServerInterface interface {
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
 
+	// (POST /campus_donations)
+	PostCampusDonations(ctx echo.Context) error
+
 	// (GET /campus_donations/buildings/{year})
 	GetCampusDonationsBuildingsYear(ctx echo.Context, year int) error
+
+	// (GET /campus_donations/years/{year}/group_keys/{group_key}/floors)
+	GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx echo.Context, year int, groupKey CampusDonationBuildingGroupKey, params GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams) error
+
+	// (PUT /campus_donations/{id})
+	PutCampusDonationsId(ctx echo.Context, id int) error
 
 	// (GET /current_user)
 	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
@@ -1900,6 +1998,15 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 	return err
 }
 
+// PostCampusDonations converts echo context to params.
+func (w *ServerInterfaceWrapper) PostCampusDonations(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostCampusDonations(ctx)
+	return err
+}
+
 // GetCampusDonationsBuildingsYear converts echo context to params.
 func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingsYear(ctx echo.Context) error {
 	var err error
@@ -1913,6 +2020,55 @@ func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingsYear(ctx echo.Contex
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetCampusDonationsBuildingsYear(ctx, year)
+	return err
+}
+
+// GetCampusDonationsYearsYearGroupKeysGroupKeyFloors converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Path parameter "group_key" -------------
+	var groupKey CampusDonationBuildingGroupKey
+
+	err = runtime.BindStyledParameterWithOptions("simple", "group_key", ctx.Param("group_key"), &groupKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter group_key: %s", err))
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams
+	// ------------- Optional query parameter "floor_number" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "floor_number", ctx.QueryParams(), &params.FloorNumber)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_number: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx, year, groupKey, params)
+	return err
+}
+
+// PutCampusDonationsId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutCampusDonationsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutCampusDonationsId(ctx, id)
 	return err
 }
 
@@ -3539,7 +3695,10 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.POST(baseURL+"/campus_donations", wrapper.PostCampusDonations)
 	router.GET(baseURL+"/campus_donations/buildings/:year", wrapper.GetCampusDonationsBuildingsYear)
+	router.GET(baseURL+"/campus_donations/years/:year/group_keys/:group_key/floors", wrapper.GetCampusDonationsYearsYearGroupKeysGroupKeyFloors)
+	router.PUT(baseURL+"/campus_donations/:id", wrapper.PutCampusDonationsId)
 	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
