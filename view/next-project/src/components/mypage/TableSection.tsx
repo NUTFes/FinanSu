@@ -32,9 +32,9 @@ const TableHeader: React.FC = () => (
   <thead className='bg-gray-100'>
     <tr className='border-primary-1 border-b py-3 text-sm'>
       <th className='text-black-600 w-1/3 py-2 pl-14 pr-4 text-left font-normal'>物品名</th>
-      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>予算</th>
-      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>使用額</th>
-      <th className='w-1/8 text-black-600 p-2 text-left font-normal'>残高</th>
+      <th className='text-black-600 w-1/8 p-2 text-left font-normal'>予算</th>
+      <th className='text-black-600 w-1/8 p-2 text-left font-normal'>使用額</th>
+      <th className='text-black-600 w-1/8 p-2 text-left font-normal'>残高</th>
       <th className='text-black-600 p-2 text-left font-normal'></th>
     </tr>
   </thead>
@@ -59,9 +59,7 @@ const TableItem: React.FC<TableItemProps> = ({
   return (
     <>
       <tr
-        className={`
-          ${hasSubitems ? 'cursor-pointer' : ''}
-        `}
+        className={` ${hasSubitems ? 'cursor-pointer' : ''} `}
         onClick={() => {
           if (hasSubitems) toggleItem(item.festivalItemName || '');
         }}
@@ -114,22 +112,10 @@ const TableSubItem: React.FC<TableSubItemProps> = ({ items, itemsName, truncateI
   return (
     <tr>
       <td colSpan={5}>
-        <div
-          className='
-            md:w-9/10 flex w-full justify-start
-            px-2
-          '
-        >
-          <div
-            className='
-              mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3
-            '
-          >
+        <div className='md:w-9/10 flex w-full justify-start px-2'>
+          <div className='mx-6 w-full overflow-auto rounded-md bg-[#F3F3F3] px-10 py-3'>
             <table
-              className='
-                wrap-break-word text-black-300 w-full table-auto whitespace-normal
-                text-sm
-              '
+              className='text-black-300 wrap-break-word w-full table-auto whitespace-normal text-sm'
               onClick={(e) => e.stopPropagation()}
             >
               <tbody>

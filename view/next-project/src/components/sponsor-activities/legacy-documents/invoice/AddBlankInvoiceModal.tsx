@@ -11,7 +11,6 @@ import {
   Textarea,
   DeleteButton,
   AddButton,
-  Select,
 } from '@components/common';
 import { SponsorStyle } from '@type/common';
 
@@ -151,22 +150,40 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
     [sponsorStyles],
   );
 
+  const styleDatalist = useMemo(
+    () => ({
+      key: 'blank-invoice-style-options',
+      data: styleOptions.map((opt, index) => ({
+        id: index,
+        name: opt.label,
+      })),
+    }),
+    [styleOptions],
+  );
+
+  const findMatchedStyleOption = useCallback(
+    (inputValue: string) =>
+      styleOptions.find((opt) => opt.label === inputValue || opt.value === inputValue),
+    [styleOptions],
+  );
+
   const onItemStyleChange = useCallback(
-    (id: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selected = styleOptions.find((opt) => opt.value === e.target.value);
+    (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = e.target.value;
+      const selected = findMatchedStyleOption(inputValue);
       setItems((prevItems) =>
         prevItems.map((item) =>
           item.id === id
             ? {
                 ...item,
-                styleName: selected?.value || '',
-                price: selected?.price ?? 0,
+                styleName: inputValue,
+                price: selected?.price ?? item.price,
               }
             : item,
         ),
       );
     },
-    [styleOptions],
+    [findMatchedStyleOption],
   );
 
   const isFormValid = useMemo(() => {
@@ -179,20 +196,11 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p
-          className='
-            text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin
-            tracking-widest
-          '
-        >
+        <p className='text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin tracking-widest'>
           請求書の発行（手入力）
         </p>
 
-        <div
-          className='
-          flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4
-        '
-        >
+        <div className='flex h-[calc(100%-4rem)] flex-1 gap-4 overflow-hidden p-4'>
           <div className='w-1/2 overflow-y-auto pr-4'>
             <div className='grid grid-cols-1 gap-4'>
               <div>
@@ -246,11 +254,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   <p className='ml-1 text-sm text-gray-600'>協賛内容リスト</p>
                 </div>
 
-                <div
-                  className='
-                    mb-2 grid grid-cols-12 gap-2 px-2 text-xs text-gray-600
-                  '
-                >
+                <div className='mb-2 grid grid-cols-12 gap-2 px-2 text-xs text-gray-600'>
                   <div className='col-span-5 text-center'>概要</div>
                   <div className='col-span-2 text-center'>数量</div>
                   <div className='col-span-2 text-center'>単価</div>
@@ -262,20 +266,16 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className='
-                        grid grid-cols-12 items-center gap-2 rounded-sm
-                        bg-gray-50 p-2
-                      '
+                      className='grid grid-cols-12 items-center gap-2 rounded-sm bg-gray-50 p-2'
                     >
                       <div className='col-span-5'>
-                        <Select value={item.styleName} onChange={onItemStyleChange(item.id)}>
-                          <option value=''>協賛内容を選択</option>
-                          {styleOptions.map((opt) => (
-                            <option key={opt.value + opt.label} value={opt.value}>
-                              {opt.label}
-                            </option>
-                          ))}
-                        </Select>
+                        <Input
+                          type='text'
+                          value={item.styleName}
+                          onChange={onItemStyleChange(item.id)}
+                          placeholder='協賛内容を入力'
+                          datalist={styleDatalist}
+                        />
                       </div>
                       <div className='col-span-2'>
                         <Input
@@ -299,10 +299,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                       <div className='col-span-1 flex justify-center'>
                         <button
                           type='button'
-                          className='
-                            text-red-500
-                            hover:text-red-700
-                          '
+                          className='text-red-500 hover:text-red-700'
                           onClick={() => removeItem(item.id)}
                           disabled={items.length === 1}
                           title='削除'
@@ -314,10 +311,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
                   ))}
                   <div className='flex justify-center'>
                     <AddButton
-                      className='
-                        flex items-center text-sm text-blue-500
-                        hover:underline
-                      '
+                      className='flex items-center text-sm text-blue-500 hover:underline'
                       onClick={addItem}
                     >
                       項目追加
@@ -348,11 +342,7 @@ export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: Modal
             </div>
           </div>
 
-          <div
-            className='
-              flex w-1/2 flex-col overflow-hidden border-l border-gray-200 pl-4
-            '
-          >
+          <div className='flex w-1/2 flex-col overflow-hidden border-l border-gray-200 pl-4'>
             <div className='flex-1 overflow-hidden'>
               <PreviewPDF
                 invoiceItem={createInvoiceData()}

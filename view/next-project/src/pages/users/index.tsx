@@ -82,10 +82,7 @@ export default function Users(props: Props) {
           <div className='flex'>
             <Title title={'ユーザー一覧'} />
             <select
-              className='
-                md:w-100 mx-auto my-4
-                w-fit md:mx-10 md:my-0
-              '
+              className='md:w-100 mx-auto my-4 w-fit md:mx-10 md:my-0'
               value={selectedBureau}
               onChange={(e) => setSelectedBureau(Number(e.target.value))}
             >
@@ -129,11 +126,7 @@ export default function Users(props: Props) {
                     className={clsx(
                       'px-1 py-3',
                       index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                     )}
                   >
                     <p className='text-black-600 text-center text-sm'>{user.name}</p>
@@ -142,11 +135,7 @@ export default function Users(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                     )}
                   >
                     <p className='text-black-600 text-center text-sm'>
@@ -157,11 +146,7 @@ export default function Users(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                     )}
                   >
                     <p className='text-black-600 text-center text-sm'>
@@ -172,11 +157,7 @@ export default function Users(props: Props) {
                     className={clsx(
                       'px-1',
                       index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                     )}
                   >
                     <div className='flex justify-end'>
@@ -187,11 +168,7 @@ export default function Users(props: Props) {
                     className={clsx(
                       'text-black-600 px-1 text-center text-sm',
                       index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === filterUsers.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                     )}
                   >
                     <input

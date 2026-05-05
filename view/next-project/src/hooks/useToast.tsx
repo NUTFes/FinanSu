@@ -71,11 +71,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           return (
             <div
               key={toast.id}
-              className={`
-                ${config.bgColor}
-                min-w-75 text-white-0 flex max-w-md items-start gap-3 rounded-lg
-                p-4 shadow-lg transition-all duration-300
-              `}
+              className={` ${config.bgColor} text-white-0 min-w-75 flex max-w-md items-start gap-3 rounded-lg p-4 shadow-lg transition-all duration-300`}
               role='alert'
             >
               <div className='shrink-0'>{config.icon}</div>
@@ -88,10 +84,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               {toast.isClosable !== false && (
                 <button
                   onClick={() => removeToast(toast.id)}
-                  className='
-                    shrink-0 opacity-70 transition-opacity
-                    hover:opacity-100
-                  '
+                  className='shrink-0 opacity-70 transition-opacity hover:opacity-100'
                   aria-label='Close'
                 >
                   <IoMdCloseCircle className='size-5' />

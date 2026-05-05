@@ -28,21 +28,11 @@ const UserDropdown = (props: Props) => {
     <div ref={dropdownRef} className='relative'>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='
-          border-white-0 text-white-0 hover:bg-white-0 hover:text-primary-4 flex items-center
-          gap-1 rounded-md border bg-transparent px-3
-          py-2 transition-colors
-        '
+        className='border-white-0 text-white-0 hover:bg-white-0 hover:text-primary-4 flex items-center gap-1 rounded-md border bg-transparent px-3 py-2 transition-colors'
       >
         <div className='flex flex-row items-center gap-3'>
           {props.children}
-          <span
-            suppressHydrationWarning
-            className='
-              hidden text-base font-bold
-              md:block
-            '
-          >
+          <span suppressHydrationWarning className='hidden text-base font-bold md:block'>
             {props.title}
           </span>
         </div>
@@ -50,18 +40,10 @@ const UserDropdown = (props: Props) => {
       </button>
 
       {isOpen && (
-        <div
-          className='
-            bg-white-0 absolute right-0 z-50 mt-2 w-48 rounded-md border py-1
-            shadow-lg
-          '
-        >
+        <div className='bg-white-0 absolute right-0 z-50 mt-2 w-48 rounded-md border py-1 shadow-lg'>
           <span
             suppressHydrationWarning
-            className='
-              text-black-300 mx-auto block w-fit pb-2
-              md:hidden
-            '
+            className='text-black-300 mx-auto block w-fit pb-2 md:hidden'
           >
             {props.title}
           </span>
@@ -70,10 +52,7 @@ const UserDropdown = (props: Props) => {
               props.onClick?.();
               setIsOpen(false);
             }}
-            className='
-              text-primary-4 w-full px-4 py-2 text-left transition-colors
-              hover:bg-gray-100
-            '
+            className='text-primary-4 w-full px-4 py-2 text-left transition-colors hover:bg-gray-100'
           >
             ログアウト
           </button>

@@ -38,23 +38,14 @@ export default function SponsorStyleList({
         const label = [styleName, styleFeature].filter(Boolean).join(' ');
 
         return (
-          <div
-            key={key}
-            className={`
-              flex min-w-0 items-center gap-1
-              ${alignClassName}
-            `}
-          >
+          <div key={key} className={`flex min-w-0 items-center gap-1 ${alignClassName} `}>
             {styleLink.category === 'goods' ? (
               <MdInventory2 className='text-black-600 shrink-0' size={16} />
             ) : (
               <MdAttachMoney className='text-black-600 shrink-0' size={16} />
             )}
             <span
-              className={`
-                text-black-600 block min-w-0 truncate text-sm
-                ${textMaxWidthClassName}
-              `}
+              className={`text-black-600 block min-w-0 truncate text-sm ${textMaxWidthClassName} `}
               title={label || '-'}
             >
               {label || '-'}

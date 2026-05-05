@@ -12,6 +12,7 @@ export * from './activitySponsorStyleLink';
 export * from './activitySponsorStyleLinkCategory';
 export * from './activityStatus';
 export * from './activityStyle';
+export * from './buildingTotal';
 export * from './buyReport';
 export * from './buyReportDetail';
 export * from './buyReportInformation';

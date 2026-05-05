@@ -15,6 +15,7 @@ import type {
   Activity,
   ActivityInformation,
   ActivityStyle,
+  BuildingTotal,
   BuyReport,
   BuyReportDetail,
   BuyReportSummary,
@@ -91,7 +92,6 @@ import type {
   GetMailAuthIsSignin200,
   GetSponsorshipActivitiesExportParams,
   GetSponsorshipActivitiesParams,
-  GetSponsorstyles200,
   GetSponsorstylesId200,
   GetTeachersFundRegisteredYear200,
   GetUsersId200,
@@ -4193,6 +4193,71 @@ export const useGetCampusDonationsYearsYearGroupKeysGroupKeyFloors = <TError = u
 };
 
 /**
+ * 年度ごとの各棟の合計募金額を取得
+ */
+export type getCampusDonationsBuildingsYearResponse200 = {
+  data: BuildingTotal[];
+  status: 200;
+};
+
+export type getCampusDonationsBuildingsYearResponseSuccess =
+  getCampusDonationsBuildingsYearResponse200 & {
+    headers: Headers;
+  };
+export type getCampusDonationsBuildingsYearResponse =
+  getCampusDonationsBuildingsYearResponseSuccess;
+
+export const getGetCampusDonationsBuildingsYearUrl = (year: number) => {
+  return `/campus_donations/buildings/${year}`;
+};
+
+export const getCampusDonationsBuildingsYear = async (
+  year: number,
+  options?: RequestInit,
+): Promise<getCampusDonationsBuildingsYearResponse> => {
+  return customFetch<getCampusDonationsBuildingsYearResponse>(
+    getGetCampusDonationsBuildingsYearUrl(year),
+    {
+      ...options,
+      method: 'GET',
+    },
+  );
+};
+
+export const getGetCampusDonationsBuildingsYearKey = (year: number) =>
+  [`/campus_donations/buildings/${year}`] as const;
+
+export type GetCampusDonationsBuildingsYearQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCampusDonationsBuildingsYear>>
+>;
+export type GetCampusDonationsBuildingsYearQueryError = unknown;
+
+export const useGetCampusDonationsBuildingsYear = <TError = unknown>(
+  year: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getCampusDonationsBuildingsYear>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!year;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetCampusDonationsBuildingsYearKey(year) : null));
+  const swrFn = () => getCampusDonationsBuildingsYear(year, requestOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * 学内募金の登録
  */
 export type postCampusDonationsResponse200 = {
@@ -5763,7 +5828,7 @@ export const useGetSponsorsPeriodsYear = <TError = unknown>(
  * sponsorstyleの一覧の取得
  */
 export type getSponsorstylesResponse200 = {
-  data: GetSponsorstyles200;
+  data: SponsorStyle[];
   status: 200;
 };
 

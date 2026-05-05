@@ -205,11 +205,7 @@ const AddBudgetManagementModal: FC<ModalProps> = (props) => {
           {phase === 2 && '申請部門登録'}
           {phase === 3 && '申請物品登録'}
         </div>
-        <div
-          className='
-            text-black-600 my-10 grid grid-cols-5 place-items-center gap-5
-          '
-        >
+        <div className='text-black-600 my-10 grid grid-cols-5 place-items-center gap-5'>
           {content}
         </div>
         <div className='flex flex-col items-center justify-center gap-4'>

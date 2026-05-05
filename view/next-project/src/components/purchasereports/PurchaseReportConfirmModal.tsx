@@ -53,11 +53,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1
-                    ? 'pb-4 pt-3'
-                    : `
-                    border-b py-3
-                  `,
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.item}</div>
@@ -66,11 +62,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1
-                    ? 'pb-4 pt-3'
-                    : `
-                    border-b py-3
-                  `,
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.price}</div>
@@ -79,11 +71,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1
-                    ? 'pb-4 pt-3'
-                    : `
-                    border-b py-3
-                  `,
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.quantity}</div>
@@ -92,11 +80,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1
-                    ? 'pb-4 pt-3'
-                    : `
-                    border-b py-3
-                  `,
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>{purchaseItem.detail}</div>
@@ -105,11 +89,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
                 className={clsx(
                   'px-4',
                   index === 0 ? 'pb-3 pt-4' : 'py-3',
-                  index === purchaseItems.length - 1
-                    ? 'pb-4 pt-3'
-                    : `
-                    border-b py-3
-                  `,
+                  index === purchaseItems.length - 1 ? 'pb-4 pt-3' : `border-b py-3`,
                 )}
               >
                 <div className='text-black-300 text-center text-sm'>
@@ -150,13 +130,7 @@ export default function PurchaseItemNumModal(props: ModalProps) {
           <CloseButton onClick={onClose} />
         </div>
       </div>
-      <div
-        className='
-          text-black-600 mb-10 grid w-full justify-items-center text-xl
-        '
-      >
-        購入申請
-      </div>
+      <div className='text-black-600 mb-10 grid w-full justify-items-center text-xl'>購入申請</div>
       <div className='flex flex-col items-center gap-5'>
         <div className='text-black-300 mx-auto w-fit font-bold'>購入物品</div>
         <div className='max-h-60 w-full overflow-scroll'>

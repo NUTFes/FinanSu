@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
@@ -44,6 +45,17 @@ func (h *Handler) GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(
 	}
 
 	return c.JSON(http.StatusOK, buildingFloors)
+}
+
+// router.GET(baseURL+"/campus_donations/buildings/:year", wrapper.GetCampusDonationsBuildingsYear)
+func (h *Handler) GetCampusDonationsBuildingsYear(c echo.Context, year int) error {
+	yearStr := strconv.Itoa(year)
+	buildingTotals, err := h.campusDonationUseCase.GetBuildingTotalsByYear(c.Request().Context(), yearStr)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, buildingTotals)
 }
 
 // router.PUT(baseURL+"/campus_donations/:id", wrapper.PutCampusDonationsId)

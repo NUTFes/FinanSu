@@ -18,10 +18,7 @@ const ActiveContent = React.memo(function activeContent(props: ContentProps) {
     <div className={clsx('text-white-0 relative flex items-center')}>
       <div
         className={clsx(
-          `
-            size-12 border-primary-1 bg-primary-1 rounded-full border-2 py-3
-            transition duration-500 ease-in-out
-          `,
+          `border-primary-1 bg-primary-1 size-12 rounded-full border-2 py-3 transition duration-500 ease-in-out`,
         )}
       >
         <div className={clsx('relative grid justify-items-center')}>{props.stepNum}</div>
@@ -36,10 +33,7 @@ const DeActiveContent = React.memo(function activeContent(props: ContentProps) {
     <div className={clsx('text-white-0 relative flex items-center')}>
       <div
         className={clsx(
-          `
-            size-12 border-primary-1 rounded-full border-2 py-3 transition
-            duration-500 ease-in-out
-          `,
+          `border-primary-1 size-12 rounded-full border-2 py-3 transition duration-500 ease-in-out`,
         )}
       >
         <div className={clsx('text-primary-1 relative grid justify-items-center')}>
@@ -67,10 +61,7 @@ function Stepper(props: Props): JSX.Element {
                   <ActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
-                      `
-                        flex-auto border-t-2 border-gray-300 transition
-                        duration-500 ease-in-out
-                      `,
+                      `flex-auto border-t-2 border-gray-300 transition duration-500 ease-in-out`,
                     )}
                   />
                 </>
@@ -91,10 +82,7 @@ function Stepper(props: Props): JSX.Element {
                   <ActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
-                      `
-                        flex-auto border-t-2 border-gray-300 transition
-                        duration-500 ease-in-out
-                      `,
+                      `flex-auto border-t-2 border-gray-300 transition duration-500 ease-in-out`,
                     )}
                   />
                 </>
@@ -105,10 +93,7 @@ function Stepper(props: Props): JSX.Element {
                   <DeActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
-                      `
-                        flex-auto border-t-2 border-gray-300 transition
-                        duration-500 ease-in-out
-                      `,
+                      `flex-auto border-t-2 border-gray-300 transition duration-500 ease-in-out`,
                     )}
                   />
                 </>

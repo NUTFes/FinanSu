@@ -33,6 +33,7 @@
     "nuqs": "^2.2.3",
     "pdf-lib": "^1.17.1",
     "react": "19.2.3",
+    "react-datepicker": "^8.3.0",
     "react-dom": "19.2.3",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.31.1",
@@ -73,8 +74,8 @@
     "globals": "^17.0.0",
     "orval": "^7.3.0",
     "postcss": "^8.4.14",
-    "prettier": "^2.7.1",
-    "prettier-plugin-tailwindcss": "^0.2.8",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.7.3",
     "storybook": "^8.1.3",
     "typescript": "^5.9.3"
   },
@@ -94,5 +95,6 @@
     "overrides": {
       "@types/react": "19.2.8"
     }
-  }
+  },
+  "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
 }
