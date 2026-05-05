@@ -53,6 +53,7 @@ export default function Periods(props: Props) {
   }, [_hasHydrated, user?.roleID, router]);
 
   if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
 
   return (
     <MainLayout>

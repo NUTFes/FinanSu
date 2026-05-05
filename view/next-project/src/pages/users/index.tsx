@@ -60,6 +60,7 @@ export default function Users(props: Props) {
   });
 
   if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
 
   return (
     <MainLayout>
