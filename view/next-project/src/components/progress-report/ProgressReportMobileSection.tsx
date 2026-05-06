@@ -35,18 +35,18 @@ export default function ProgressReportMobileSection({
   return (
     <div className='mb-4 md:hidden'>
       {isLoading && (
-        <div className='flex items-center justify-center gap-2 py-8 text-sm text-[#666666]'>
+        <div className='text-black-600 flex items-center justify-center gap-2 py-8 text-sm'>
           <Spinner size='sm' />
           読み込み中...
         </div>
       )}
       {!isLoading && hasError && (
-        <p className='py-8 text-center text-sm text-[#e4434e]'>
+        <p className='text-accent-1 py-8 text-center text-sm'>
           進捗報告一覧の取得に失敗しました。ページを更新してください。
         </p>
       )}
       {!isLoading && !hasError && activities.length === 0 && (
-        <p className='py-8 text-center text-sm text-[#666666]'>データがありません</p>
+        <p className='text-black-600 py-8 text-center text-sm'>データがありません</p>
       )}
       {!isLoading &&
         !hasError &&
@@ -54,7 +54,7 @@ export default function ProgressReportMobileSection({
           <Card key={item.id ?? index}>
             <div className='flex flex-col gap-3 p-4'>
               <div className='text-lg font-medium text-[#444444]'>{item.sponsor?.name ?? '-'}</div>
-              <div className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm text-[#666666]'>
+              <div className='text-black-600 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm'>
                 <span>代表者</span>
                 <span className='min-w-0 break-words'>{item.sponsor?.representative ?? '-'}</span>
                 <span>e-mail</span>
@@ -66,7 +66,7 @@ export default function ProgressReportMobileSection({
               </div>
               {item.sponsorStyles && item.sponsorStyles.length > 0 && (
                 <div>
-                  <p className='mb-1 text-sm text-[#666666]'>協賛スタイル</p>
+                  <p className='text-black-600 mb-1 text-sm'>協賛スタイル</p>
                   <div className='space-y-1'>
                     {item.sponsorStyles.map((link, index) => {
                       const label = [link.style?.style, link.style?.feature]
@@ -75,7 +75,7 @@ export default function ProgressReportMobileSection({
                       return (
                         <div
                           key={`${item.id}-${link.sponsorStyleId}-${index}`}
-                          className='flex items-center gap-1 text-sm text-[#666666]'
+                          className='text-black-600 flex items-center gap-1 text-sm'
                         >
                           {link.category === 'goods' ? (
                             <MdInventory2 className='shrink-0' size={16} />

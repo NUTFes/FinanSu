@@ -138,7 +138,7 @@ export default function ProgressReportTable({
               >
                 <td className='px-4 py-3 text-center text-sm text-[#666666]'>
                   <div
-                    className='mx-auto max-w-[14rem] cursor-default truncate'
+                    className='mx-auto max-w-56 cursor-default truncate'
                     onMouseEnter={(e) => {
                       const el = e.currentTarget;
                       if (item.sponsor?.name && el.scrollWidth > el.clientWidth) {
@@ -157,7 +157,7 @@ export default function ProgressReportTable({
                 </td>
                 <td className='px-4 py-3 text-center text-sm text-[#666666]'>
                   <div
-                    className='mx-auto max-w-[8rem] cursor-default truncate'
+                    className='mx-auto max-w-32 cursor-default truncate'
                     onMouseEnter={(e) => {
                       const el = e.currentTarget;
                       if (item.sponsor?.representative && el.scrollWidth > el.clientWidth) {
@@ -176,7 +176,7 @@ export default function ProgressReportTable({
                 </td>
                 <td className='px-4 py-3 text-center text-sm text-[#666666]'>
                   <div
-                    className='mx-auto max-w-[14rem] cursor-default truncate'
+                    className='mx-auto max-w-56 cursor-default truncate'
                     onMouseEnter={(e) => {
                       const el = e.currentTarget;
                       if (item.sponsor?.email && el.scrollWidth > el.clientWidth) {
