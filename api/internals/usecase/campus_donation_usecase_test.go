@@ -127,19 +127,19 @@ func TestGroupBuildingTotalsByDisplayGroup(t *testing.T) {
 
 	got := groupBuildingTotalsByDisplayGroup(buildingTotals)
 	want := []generated.BuildingTotal{
-		{Id: 1, Name: "機械・建設棟", TotalPrice: 3000},
-		{Id: 2, Name: "電気棟", TotalPrice: 3000},
-		{Id: 3, Name: "生物棟", TotalPrice: 0},
-		{Id: 4, Name: "環境・システム棟", TotalPrice: 0},
-		{Id: 5, Name: "物質・材料経営情報棟", TotalPrice: 0},
-		{Id: 6, Name: "総合研究棟", TotalPrice: 0},
-		{Id: 7, Name: "原子力・システム安全棟", TotalPrice: 0},
-		{Id: 8, Name: "事務局棟", TotalPrice: 0},
-		{Id: 9, Name: "極限エネルギ密度工学研究センター", TotalPrice: 0},
-		{Id: 10, Name: "工作センター", TotalPrice: 0},
-		{Id: 11, Name: "大型実験棟", TotalPrice: 0},
-		{Id: 12, Name: "分析計測センター", TotalPrice: 0},
-		{Id: 999, Name: "その他", TotalPrice: 900},
+		{Id: 1, Name: "機械・建設棟", GroupKey: generated.MechanicalCivilEngineering, TotalPrice: 3000},
+		{Id: 2, Name: "電気棟", GroupKey: generated.ElectricalEngineering, TotalPrice: 3000},
+		{Id: 3, Name: "生物棟", GroupKey: generated.Biology, TotalPrice: 0},
+		{Id: 4, Name: "環境・システム棟", GroupKey: generated.EnvironmentalSystem, TotalPrice: 0},
+		{Id: 5, Name: "物質・材料経営情報棟", GroupKey: generated.MaterialsManagementInformation, TotalPrice: 0},
+		{Id: 6, Name: "総合研究棟", GroupKey: generated.GeneralResearch, TotalPrice: 0},
+		{Id: 7, Name: "原子力・システム安全棟", GroupKey: generated.NuclearSystemSafety, TotalPrice: 0},
+		{Id: 8, Name: "事務局棟", GroupKey: generated.Administration, TotalPrice: 0},
+		{Id: 9, Name: "極限エネルギ密度工学研究センター", GroupKey: generated.ExtremeEnergyDensityResearchCenter, TotalPrice: 0},
+		{Id: 10, Name: "工作センター", GroupKey: generated.MachineShop, TotalPrice: 0},
+		{Id: 11, Name: "大型実験棟", GroupKey: generated.LargeExperiment, TotalPrice: 0},
+		{Id: 12, Name: "分析計測センター", GroupKey: generated.AnalysisInstrumentationCenter, TotalPrice: 0},
+		{Id: 999, Name: "その他", GroupKey: generated.Other, TotalPrice: 900},
 	}
 
 	if len(got) != len(want) {

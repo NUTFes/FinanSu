@@ -14,25 +14,26 @@ import (
 )
 
 type campusDonationBuildingGroup struct {
-	ID   int
-	Name string
+	ID       int
+	Name     string
+	GroupKey generated.CampusDonationBuildingGroupKey
 }
 
 // NOTICE: ここに含まれない棟名はすべて「その他」として扱う。
 var campusDonationBuildingGroups = []campusDonationBuildingGroup{
-	{ID: 1, Name: "機械・建設棟"},
-	{ID: 2, Name: "電気棟"},
-	{ID: 3, Name: "生物棟"},
-	{ID: 4, Name: "環境・システム棟"},
-	{ID: 5, Name: "物質・材料経営情報棟"},
-	{ID: 6, Name: "総合研究棟"},
-	{ID: 7, Name: "原子力・システム安全棟"},
-	{ID: 8, Name: "事務局棟"},
-	{ID: 9, Name: "極限エネルギ密度工学研究センター"},
-	{ID: 10, Name: "工作センター"},
-	{ID: 11, Name: "大型実験棟"},
-	{ID: 12, Name: "分析計測センター"},
-	{ID: 999, Name: "その他"},
+	{ID: 1, Name: "機械・建設棟", GroupKey: generated.MechanicalCivilEngineering},
+	{ID: 2, Name: "電気棟", GroupKey: generated.ElectricalEngineering},
+	{ID: 3, Name: "生物棟", GroupKey: generated.Biology},
+	{ID: 4, Name: "環境・システム棟", GroupKey: generated.EnvironmentalSystem},
+	{ID: 5, Name: "物質・材料経営情報棟", GroupKey: generated.MaterialsManagementInformation},
+	{ID: 6, Name: "総合研究棟", GroupKey: generated.GeneralResearch},
+	{ID: 7, Name: "原子力・システム安全棟", GroupKey: generated.NuclearSystemSafety},
+	{ID: 8, Name: "事務局棟", GroupKey: generated.Administration},
+	{ID: 9, Name: "極限エネルギ密度工学研究センター", GroupKey: generated.ExtremeEnergyDensityResearchCenter},
+	{ID: 10, Name: "工作センター", GroupKey: generated.MachineShop},
+	{ID: 11, Name: "大型実験棟", GroupKey: generated.LargeExperiment},
+	{ID: 12, Name: "分析計測センター", GroupKey: generated.AnalysisInstrumentationCenter},
+	{ID: 999, Name: "その他", GroupKey: generated.Other},
 }
 
 var campusDonationBuildingGroupByName = map[string]campusDonationBuildingGroup{
@@ -239,6 +240,7 @@ func groupBuildingTotalsByDisplayGroup(buildingTotals []generated.BuildingTotal)
 		groupedBuildingTotals = append(groupedBuildingTotals, generated.BuildingTotal{
 			Id:         group.ID,
 			Name:       group.Name,
+			GroupKey:   group.GroupKey,
 			TotalPrice: totalPriceByGroupID[group.ID],
 		})
 	}

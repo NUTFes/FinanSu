@@ -238,9 +238,11 @@ type ActivityStyle struct {
 
 // BuildingTotal 棟ごとの合計募金額
 type BuildingTotal struct {
-	Id         int    `json:"id"`
-	Name       string `json:"name"`
-	TotalPrice int    `json:"totalPrice"`
+	// GroupKey 学内募金で表示する棟グループのキー
+	GroupKey   CampusDonationBuildingGroupKey `json:"groupKey"`
+	Id         int                            `json:"id"`
+	Name       string                         `json:"name"`
+	TotalPrice int                            `json:"totalPrice"`
 }
 
 // BuyReport 購入報告の際のパラメータ
