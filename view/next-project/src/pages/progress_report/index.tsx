@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import ProgressReportLayout from '@/components/progress-report/ProgressReportLayout';
@@ -79,6 +79,8 @@ const ProgressReportPage: NextPage = () => {
     control,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<SponsorshipActivityProgressReportFormValues>({
     defaultValues: defaultFormValues,
@@ -97,6 +99,18 @@ const ProgressReportPage: NextPage = () => {
     initializedActivityIdRef.current = null;
     reset(defaultFormValues);
   };
+
+  const handleActivityStatusChange = useCallback(
+    (status: ActivityStatus) => {
+      setValue('activityStatus', status);
+      if (status === ActivityStatus.rejected) {
+        if (getValues('feasibilityStatus') === FeasibilityStatus.unstarted) {
+          setValue('feasibilityStatus', FeasibilityStatus.impossible);
+        }
+      }
+    },
+    [setValue, getValues],
+  );
 
   const onSubmit = async (values: SponsorshipActivityProgressReportFormValues) => {
     if (!activity || selectedActivityId === null) {
@@ -170,6 +184,7 @@ const ProgressReportPage: NextPage = () => {
       errors={errors}
       onCloseModal={closeModal}
       onSubmit={onSubmit}
+      onActivityStatusChange={handleActivityStatusChange}
     />
   );
 };
