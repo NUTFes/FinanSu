@@ -14,6 +14,11 @@ export interface CampusDonationTeacher {
   teacherId: number;
   teacherName: string;
   /** @nullable */
-  totalPrice: number | null;
+  price: number | null;
   isBlack: boolean;
+  /**
+   * 対象年度に登録済みの学内募金ID
+   * @nullable
+   */
+  campusDonationId: number | null;
 }

@@ -355,11 +355,13 @@ type CampusDonationRequest struct {
 
 // CampusDonationTeacher 棟・階ごとの教員別募金情報
 type CampusDonationTeacher struct {
-	IsBlack     bool   `json:"isBlack"`
-	RoomName    string `json:"roomName"`
-	TeacherId   int    `json:"teacherId"`
-	TeacherName string `json:"teacherName"`
-	TotalPrice  *int   `json:"totalPrice"`
+	// CampusDonationId 対象年度に登録済みの学内募金ID
+	CampusDonationId *int   `json:"campusDonationId"`
+	IsBlack          bool   `json:"isBlack"`
+	Price            *int   `json:"price"`
+	RoomName         string `json:"roomName"`
+	TeacherId        int    `json:"teacherId"`
+	TeacherName      string `json:"teacherName"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.

@@ -105,18 +105,18 @@ func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 	groupKey *string,
 	floorNumber *string,
 ) (*sql.Rows, error) {
-	donationTotalsByTeacher := dialect.
+	donationsByTeacher := dialect.
 		Select(
 			goqu.I("campus_donations.teacher_id").As("teacher_id"),
-			goqu.SUM(goqu.I("campus_donations.price")).As("total_price"),
+			goqu.I("campus_donations.id").As("campus_donation_id"),
+			goqu.I("campus_donations.price").As("price"),
 		).
 		From(goqu.T("campus_donations")).
 		InnerJoin(
 			goqu.T("years"),
 			goqu.On(goqu.I("campus_donations.year_id").Eq(goqu.I("years.id"))),
 		).
-		Where(goqu.I("years.year").Eq(year)).
-		GroupBy(goqu.I("campus_donations.teacher_id"))
+		Where(goqu.I("years.year").Eq(year))
 
 	queryDataset := dialect.
 		From(goqu.T("buildings")).
@@ -133,8 +133,8 @@ func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 			goqu.On(goqu.I("teachers.id").Eq(goqu.I("room_teachers.teacher_id"))),
 		).
 		LeftJoin(
-			donationTotalsByTeacher.As("donation_totals"),
-			goqu.On(goqu.I("donation_totals.teacher_id").Eq(goqu.I("teachers.id"))),
+			donationsByTeacher.As("donations"),
+			goqu.On(goqu.I("donations.teacher_id").Eq(goqu.I("teachers.id"))),
 		).
 		Select(
 			goqu.I("buildings.id").As("building_id"),
@@ -144,7 +144,8 @@ func (cdr *campusDonationRepository) GetBuildingFloorDonationsByYear(
 			goqu.I("rooms.room_name").As("room_name"),
 			goqu.I("teachers.id").As("teacher_id"),
 			goqu.I("teachers.name").As("teacher_name"),
-			goqu.I("donation_totals.total_price").As("total_price"),
+			goqu.I("donations.campus_donation_id").As("campus_donation_id"),
+			goqu.I("donations.price").As("price"),
 			goqu.COALESCE(goqu.I("teachers.is_black"), false).As("is_black"),
 		).
 		Order(

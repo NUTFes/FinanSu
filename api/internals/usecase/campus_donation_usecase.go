@@ -134,7 +134,8 @@ func (cdu *campusDonationUseCase) GetBuildingFloorDonationsByYear(
 			&donation.RoomName,
 			&donation.TeacherId,
 			&donation.TeacherName,
-			&donation.TotalPrice,
+			&donation.CampusDonationId,
+			&donation.Price,
 			&donation.IsBlack,
 		); err != nil {
 			return nil, errors.Wrap(err, "failed to scan campus donation building floor row")

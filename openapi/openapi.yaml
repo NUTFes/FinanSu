@@ -3006,18 +3006,24 @@ components:
         teacherName:
           type: string
           example: 技大太郎
-        totalPrice:
+        price:
           type: integer
           nullable: true
           example: 5000
         isBlack:
           type: boolean
           example: false
+        campusDonationId:
+          type: integer
+          nullable: true
+          description: 対象年度に登録済みの学内募金ID
+          example: 1
       required:
         - roomName
         - teacherId
         - teacherName
-        - totalPrice
+        - campusDonationId
+        - price
         - isBlack
     campusDonationBuildingFloor:
       description: 各号棟の指定フロア教員情報
