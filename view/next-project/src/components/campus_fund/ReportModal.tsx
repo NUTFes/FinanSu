@@ -2,9 +2,11 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
-import { CampusFundFormData, CampusFundTeacher } from '@/components/campus_fund/types';
+import { usePostCampusDonations, usePutCampusDonationsId } from '@/generated/hooks';
 import { useCurrentUser } from '@/store';
 import { PrimaryButton, Modal, Title, CloseButton } from '@components/common';
+
+import type { CampusDonationRequest, CampusDonationTeacher } from '@/generated/model';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -12,22 +14,43 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   building: string | null;
-  teacher: CampusFundTeacher | null;
+  teacher: CampusDonationTeacher | null;
   yearId: number | null;
+  onSubmitted?: () => void | Promise<void>;
   onBack?: () => void;
 }
 
-const ReportModal = ({ isOpen, onClose, building, teacher, yearId, onBack }: Props) => {
-  const initialFormData: CampusFundFormData = {
-    receivedAt: new Date(),
-    price: null,
-  };
+type DonationFormData = {
+  receivedAt: Date | null;
+  price: number | null;
+};
 
-  const [formData, setFormData] = useState(initialFormData);
-  const user = useCurrentUser();
+const createInitialFormData = (): DonationFormData => ({
+  receivedAt: new Date(),
+  price: null,
+});
+
+const ReportModal = ({
+  isOpen,
+  onClose,
+  building,
+  teacher,
+  yearId,
+  onSubmitted,
+  onBack,
+}: Props) => {
+  const [formData, setFormData] = useState<DonationFormData>(createInitialFormData);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
+  const user = useCurrentUser();
+  const { trigger: createCampusDonation } = usePostCampusDonations();
+  const { trigger: updateCampusDonation } = usePutCampusDonationsId(teacher?.campusDonationId ?? 0);
+
+  const isSubmitDisabled =
+    !teacher || !formData.receivedAt || formData.price === null || !user?.id || !yearId;
+  const isUpdate = !!teacher?.campusDonationId;
 
   if (!isOpen) return null;
 
@@ -43,10 +66,22 @@ const ReportModal = ({ isOpen, onClose, building, teacher, yearId, onBack }: Pro
       setErrorMessage('');
       setIsSubmitting(true);
 
-      setFormData({
-        receivedAt: new Date(),
-        price: null,
-      });
+      const payload: CampusDonationRequest = {
+        userId: user.id,
+        teacherId: teacher.teacherId,
+        yearId,
+        price: formData.price,
+        receivedAt: format(formData.receivedAt, 'yyyy-MM-dd'),
+      };
+
+      if (isUpdate) {
+        await updateCampusDonation(payload);
+      } else {
+        await createCampusDonation(payload);
+      }
+
+      await onSubmitted?.();
+      setFormData(createInitialFormData());
       handleClose();
       alert('募金の登録が完了しました！');
     } catch {
@@ -55,9 +90,6 @@ const ReportModal = ({ isOpen, onClose, building, teacher, yearId, onBack }: Pro
       setIsSubmitting(false);
     }
   };
-
-  const isSubmitDisabled =
-    !teacher || !formData.receivedAt || formData.price === null || !user?.id || !yearId;
 
   return (
     <Modal onClick={handleClose} className='w-[calc(100vw-2rem)] max-w-sm sm:max-w-md md:max-w-xl'>
@@ -122,7 +154,7 @@ const ReportModal = ({ isOpen, onClose, building, teacher, yearId, onBack }: Pro
               戻る
             </button>
             <PrimaryButton onClick={handleSubmit} disabled={isSubmitDisabled || isSubmitting}>
-              {isSubmitting ? '登録中...' : '登録する'}
+              {isSubmitting ? '登録中...' : isUpdate ? '更新する' : '登録する'}
             </PrimaryButton>
           </div>
         </div>
