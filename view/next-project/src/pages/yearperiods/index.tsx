@@ -1,16 +1,16 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 
 import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
 import OpenDeleteModalButton from '@/components/yearperiods/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/yearperiods/OpenEditModalButton';
-import { useCurrentUser } from '@/store';
+import { useCurrentUser, useUserStore } from '@/store';
 import { get } from '@api/api_methods';
-import { Card, Title } from '@components/common';
+import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
-import { User, YearPeriod } from '@type/common';
+import { YearPeriod } from '@type/common';
 
 interface Props {
   yearPeriods: YearPeriod[];
@@ -32,7 +32,7 @@ export default function Periods(props: Props) {
   const router = useRouter();
 
   const user = useCurrentUser();
-  const [currentUser, setCurrentUser] = useState<User>();
+  const _hasHydrated = useUserStore((state) => state._hasHydrated);
 
   const formatYearPeriods =
     yearPeriods &&
@@ -45,26 +45,18 @@ export default function Periods(props: Props) {
     });
 
   useEffect(() => {
-    setCurrentUser(user);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // ログイン中のユーザの権限
-  const isDeveloperOrAdimin = useMemo(() => {
-    if (currentUser?.roleID === 2 || currentUser?.roleID === 3) {
-      return true;
-    } else {
-      return false;
+    if (!_hasHydrated) return;
+    if (!user?.roleID) {
+      router.push('/');
+      return;
     }
-  }, [currentUser?.roleID]);
-
-  useEffect(() => {
-    if (!currentUser?.roleID) return;
-    if (!isDeveloperOrAdimin) {
-      router.push('/purchaseorders');
+    if (user.roleID !== 2 && user.roleID !== 3) {
+      router.push('/my_page');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDeveloperOrAdimin, currentUser?.roleID]);
+  }, [_hasHydrated, user?.roleID, router]);
+
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
 
   return (
     <MainLayout>
