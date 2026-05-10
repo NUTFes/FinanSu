@@ -5,6 +5,7 @@
  * FinanSu APIドキュメント
  * OpenAPI spec version: 2.0.0
  */
+import type { CampusDonationBuildingGroupKey } from './campusDonationBuildingGroupKey';
 
 /**
  * 棟ごとの合計募金額
@@ -12,5 +13,6 @@
 export interface BuildingTotal {
   id: number;
   name: string;
+  groupKey: CampusDonationBuildingGroupKey;
   totalPrice: number;
 }

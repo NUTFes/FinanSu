@@ -2169,20 +2169,20 @@ paths:
                 items:
                   $ref: "#/components/schemas/user"
                 example:
-                - id: 1
-                  name: 技大太郎1
-                  bureauID: 1
-                  roleID: 1
-                  isDeleted: false
-                  createdAt: 2026-01-01T00:00:00Z
-                  updatedAt: 2026-01-01T00:00:00Z
-                - id: 2
-                  name: 技大太郎2
-                  bureauID: 1
-                  roleID: 1
-                  isDeleted: false
-                  createdAt: 2026-01-02T00:00:00Z
-                  updatedAt: 2026-01-02T00:00:00Z
+                  - id: 1
+                    name: 技大太郎1
+                    bureauID: 1
+                    roleID: 1
+                    isDeleted: false
+                    createdAt: 2026-01-01T00:00:00Z
+                    updatedAt: 2026-01-01T00:00:00Z
+                  - id: 2
+                    name: 技大太郎2
+                    bureauID: 1
+                    roleID: 1
+                    isDeleted: false
+                    createdAt: 2026-01-02T00:00:00Z
+                    updatedAt: 2026-01-02T00:00:00Z
     post:
       tags:
         - user
@@ -2783,12 +2783,15 @@ components:
         name:
           type: string
           example: 電気棟
+        groupKey:
+          $ref: "#/components/schemas/campusDonationBuildingGroupKey"
         totalPrice:
           type: integer
           example: 12000
       required:
         - id
         - name
+        - groupKey
         - totalPrice
     buyReport:
       description: 購入報告の際のパラメータ
@@ -3003,18 +3006,24 @@ components:
         teacherName:
           type: string
           example: 技大太郎
-        totalPrice:
+        price:
           type: integer
           nullable: true
           example: 5000
         isBlack:
           type: boolean
           example: false
+        campusDonationId:
+          type: integer
+          nullable: true
+          description: 対象年度に登録済みの学内募金ID
+          example: 1
       required:
         - roomName
         - teacherId
         - teacherName
-        - totalPrice
+        - campusDonationId
+        - price
         - isBlack
     campusDonationBuildingFloor:
       description: 各号棟の指定フロア教員情報
