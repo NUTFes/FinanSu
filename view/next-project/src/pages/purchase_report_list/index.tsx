@@ -100,7 +100,10 @@ export default function PurchaseReports() {
     const seen = new Set<string>();
     return buyReports
       .map((r) => r.paidBy)
-      .filter((name): name is string => !!name && !userNames.has(name) && !seen.has(name) && !!seen.add(name));
+      .filter(
+        (name): name is string =>
+          !!name && !userNames.has(name) && !seen.has(name) && !!seen.add(name),
+      );
   }, [buyReports, users]);
 
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {

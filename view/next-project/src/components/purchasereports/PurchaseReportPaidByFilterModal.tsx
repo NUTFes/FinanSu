@@ -139,55 +139,57 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
               {draftPaidBy ?? '絞り込みなし'}
             </button>
           </div>
-          {isNameDropdownOpen && <div className='overflow-hidden rounded-2xl bg-black-300 shadow-lg'>
-            <div className='px-3 pb-2 pt-3'>
-              <div className='flex items-center gap-2 rounded-full border border-black-600 px-3 py-1.5'>
-                <RiSearchLine size={14} className='shrink-0 text-black-900' />
-                <input
-                  type='text'
-                  placeholder='Search'
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className='w-full bg-black-300 text-sm text-white-0 outline-none placeholder:text-black-900 [font-family:"Noto_Sans_JP"]'
-                />
+          {isNameDropdownOpen && (
+            <div className='overflow-hidden rounded-2xl bg-black-300 shadow-lg'>
+              <div className='px-3 pb-2 pt-3'>
+                <div className='flex items-center gap-2 rounded-full border border-black-600 px-3 py-1.5'>
+                  <RiSearchLine size={14} className='shrink-0 text-black-900' />
+                  <input
+                    type='text'
+                    placeholder='Search'
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className='w-full bg-black-300 text-sm text-white-0 outline-none placeholder:text-black-900 [font-family:"Noto_Sans_JP"]'
+                  />
+                </div>
               </div>
-            </div>
-            <ul className='max-h-48 overflow-y-auto'>
-              <li className='border-b border-black-600'>
-                <button
-                  type='button'
-                  className={`w-full px-4 py-2 text-left text-sm [font-family:"Noto_Sans_JP"] ${
-                    draftPaidBy == null && draftPaidByUserId == null
-                      ? 'bg-primary-5 text-white-0'
-                      : 'text-white-0 hover:bg-black-600'
-                  }`}
-                  onClick={() => handleSelectOption(null, null)}
-                >
-                  絞り込みなし
-                </button>
-              </li>
-              {filteredOptions.map((opt) => (
-                <li key={opt.userId != null ? `user:${opt.userId}` : `legacy:${opt.paidBy}`}>
+              <ul className='max-h-48 overflow-y-auto'>
+                <li className='border-b border-black-600'>
                   <button
                     type='button'
                     className={`w-full px-4 py-2 text-left text-sm [font-family:"Noto_Sans_JP"] ${
-                      isSelected(opt.userId, opt.paidBy)
+                      draftPaidBy == null && draftPaidByUserId == null
                         ? 'bg-primary-5 text-white-0'
                         : 'text-white-0 hover:bg-black-600'
                     }`}
-                    onClick={() => handleSelectOption(opt.userId, opt.paidBy)}
+                    onClick={() => handleSelectOption(null, null)}
                   >
-                    {opt.label}
+                    絞り込みなし
                   </button>
                 </li>
-              ))}
-              {filteredOptions.length === 0 && (
-                <li className='px-4 py-2 text-sm text-black-900 [font-family:"Noto_Sans_JP"]'>
-                  該当なし
-                </li>
-              )}
-            </ul>
-          </div>}
+                {filteredOptions.map((opt) => (
+                  <li key={opt.userId != null ? `user:${opt.userId}` : `legacy:${opt.paidBy}`}>
+                    <button
+                      type='button'
+                      className={`w-full px-4 py-2 text-left text-sm [font-family:"Noto_Sans_JP"] ${
+                        isSelected(opt.userId, opt.paidBy)
+                          ? 'bg-primary-5 text-white-0'
+                          : 'text-white-0 hover:bg-black-600'
+                      }`}
+                      onClick={() => handleSelectOption(opt.userId, opt.paidBy)}
+                    >
+                      {opt.label}
+                    </button>
+                  </li>
+                ))}
+                {filteredOptions.length === 0 && (
+                  <li className='px-4 py-2 text-sm text-black-900 [font-family:"Noto_Sans_JP"]'>
+                    該当なし
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
       <div className='mt-6 flex justify-center'>
