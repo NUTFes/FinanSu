@@ -95,6 +95,8 @@ export default function PurchaseReports() {
 
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
+  const userNameMap = useMemo(() => Object.fromEntries(users.map((u) => [u.id, u.name])), [users]);
+
   const legacyPaidByOptions = useMemo(() => {
     const userNames = new Set(users.map((u) => u.name));
     const seen = new Set<string>();
