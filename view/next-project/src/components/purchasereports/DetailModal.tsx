@@ -32,7 +32,7 @@ const DetailModal: FC<ModalProps> = (props) => {
         <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
       </div>
       <div className='mx-auto mb-10 w-fit'>
-        <p className='text-2xl text-black-600'>報告の詳細</p>
+        <p className='text-black-600 text-2xl'>報告の詳細</p>
       </div>
       {pageNum === 1 && (
         <DetailPage1

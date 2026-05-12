@@ -11,8 +11,8 @@ export default function PurchaseItemNumModal() {
       <div className='ml-auto w-fit'>
         <CloseButton onClick={closeModal} />
       </div>
-      <p className='mx-auto mb-10 w-fit text-xl text-black-600'>購入報告の登録</p>
-      <div className='mb-10 flex flex-col items-center gap-2 text-black-600'>
+      <p className='text-black-600 mx-auto mb-10 w-fit text-xl'>購入報告の登録</p>
+      <div className='text-black-600 mb-10 flex flex-col items-center gap-2'>
         <p>申請した物品としていない物品を同時に購入した場合は</p>
         <p>2回に分けて登録をお願いします</p>
       </div>

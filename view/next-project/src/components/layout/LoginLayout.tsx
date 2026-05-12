@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ type LayoutProps = {
 function LoginLayout({ children }: LayoutProps): JSX.Element {
   return (
     <>
-      <div className='flex h-16 w-full items-center justify-center bg-primary-4'>
+      <div className='bg-primary-4 flex h-16 w-full items-center justify-center'>
         <div className='w-24 md:w-40'>
           <Image src='/logo.svg' alt='logo' width={150} height={40} className='size-fit' />
         </div>

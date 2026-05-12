@@ -3,9 +3,8 @@ import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { put } from '@api/api_methods';
+import { Modal, Input, CloseButton, PrimaryButton } from '@components/common';
 import { YearPeriod } from '@type/common';
-
-import { Modal, Input, CloseButton, PrimaryButton } from '../common';
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -66,13 +65,13 @@ export default function EditModal(props: ModalProps) {
   return (
     <Modal className='md:w-1/2'>
       <div className='w-full'>
-        <div className='ml-auto mr-5 w-fit'>
+        <div className='mr-5 ml-auto w-fit'>
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <h1 className='mx-auto mb-10 w-fit text-xl text-black-600'>年度の編集</h1>
+      <h1 className='text-black-600 mx-auto mb-10 w-fit text-xl'>年度の編集</h1>
       <div className='my-6 grid grid-cols-5 place-items-center gap-4'>
-        <p className='col-span-1 text-black-600'>年度</p>
+        <p className='text-black-600 col-span-1'>年度</p>
         <div className='col-span-4 h-12 w-full'>
           <Input
             className='w-full'
@@ -82,7 +81,7 @@ export default function EditModal(props: ModalProps) {
           />
           <p className='text-xs text-red-500'>{flashMessage}</p>
         </div>
-        <p className='col-span-1 text-black-600'>開始日</p>
+        <p className='text-black-600 col-span-1'>開始日</p>
         <div className='col-span-4 w-full'>
           <Input
             type='date'

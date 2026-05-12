@@ -2,13 +2,13 @@ import { Context } from 'vm';
 
 import Image from 'next/image';
 import Router from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoginLayout from '@/components/layout/LoginLayout';
 import { PasswordResetData } from '@/type/common';
 import { resetPassword, resetPasswordTokenValid } from '@/utils/api/resetPassword';
-import { PrimaryButton, Link, Loading, PrimaryLink } from '@components/common';
+import { Link, Loading, PrimaryButton, PrimaryLink } from '@components/common';
 
 interface Props {
   isTokenValid: boolean;
@@ -57,7 +57,7 @@ export default function ResetPassword(props: Props) {
     mode: 'all',
   });
 
-  const onSubmit = async (data: { password: string; confirmPassword: string }) => {
+  const onSubmit = async (_data: { password: string; confirmPassword: string }) => {
     setIsLoading(true);
     const postData: PasswordResetData = {
       ...postPasswordData,
@@ -91,7 +91,7 @@ export default function ResetPassword(props: Props) {
             height={40}
             className='h-fit w-40 md:w-48'
           />
-          <p className='text-2xl text-black-600 md:text-3xl'>パスワードの変更</p>
+          <p className='text-black-600 text-2xl md:text-3xl'>パスワードの変更</p>
         </div>
         {isTokenValid ? (
           <div>
@@ -100,12 +100,12 @@ export default function ResetPassword(props: Props) {
                 <div className='my-20 flex w-full flex-col items-center'>
                   <div className='mb-10 flex flex-col gap-3'>
                     <div className='grid grid-cols-3 place-items-center gap-5'>
-                      <p className='md:text-md whitespace-nowrap text-sm text-black-300'>
+                      <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>
                         パスワード
                       </p>
                       <input
                         type='password'
-                        className='col-span-2 w-full border-b border-b-primary-1 p-1'
+                        className='border-b-primary-1 col-span-2 w-full border-b p-1'
                         {...register('password', {
                           required: 'パスワードは必須です。',
                           minLength: {
@@ -114,12 +114,12 @@ export default function ResetPassword(props: Props) {
                           },
                         })}
                       />
-                      <p className='md:text-md whitespace-nowrap text-sm text-black-300'>
+                      <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>
                         パスワード確認
                       </p>
                       <input
                         type='password'
-                        className='col-span-2 w-full border-b border-b-primary-1 p-1'
+                        className='border-b-primary-1 col-span-2 w-full border-b p-1'
                         {...register('confirmPassword', {
                           required: 'パスワードは必須です。',
                           minLength: {
@@ -159,10 +159,10 @@ export default function ResetPassword(props: Props) {
         ) : (
           <div className='my-20 flex w-full flex-col items-center'>
             <div className='mb-10 flex flex-col items-center gap-3'>
-              <p className='whitespace-nowrap text-lg text-black-300'>
+              <p className='text-black-300 text-lg whitespace-nowrap'>
                 リンクが無効もしくは、有効期限が切れています。
               </p>
-              <p className='whitespace-nowrap text-lg text-black-300'>
+              <p className='text-black-300 text-lg whitespace-nowrap'>
                 再度パスワードリセットメールを送信して下さい。
               </p>
             </div>

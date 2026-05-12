@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface Props {
   size?: 'small' | 'medium' | 'large';
   color?: 'primary' | 'secondary' | 'thirdry' | 'Red';
-  shape?: 'rounded' | 'pill';
+  shape?: 'rounded-lg' | 'pill';
   textAlign?: 'left' | 'center' | 'right';
   hover?: boolean;
   className?: string;
@@ -33,7 +33,7 @@ function FinanSuButton(props: Props): JSX.Element {
 
   switch (props.color) {
     case 'primary':
-      colorClass = 'bg-gradient-to-br from-primary-1 to-primary-2 text-white-0 font-bold text-md';
+      colorClass = 'bg-linear-to-br from-primary-1 to-primary-2 text-white-0 font-bold text-md';
       break;
     case 'secondary':
       colorClass = 'bg-primary-2 text-white-0 font-bold text-md';
@@ -42,12 +42,12 @@ function FinanSuButton(props: Props): JSX.Element {
       colorClass = 'bg-primary-3';
       break;
     case 'Red':
-      colorClass = 'bg-gradient-to-br from-red-500 to-red-600 text-white-0 font-bold text-md';
+      colorClass = 'bg-linear-to-br from-red-500 to-red-600 text-white-0 font-bold text-md';
       break;
   }
 
   switch (props.shape) {
-    case 'rounded':
+    case 'rounded-lg':
       shapeClass = 'rounded-lg';
       break;
     case 'pill':
@@ -69,14 +69,20 @@ function FinanSuButton(props: Props): JSX.Element {
 
   switch (props.hover) {
     case true:
-      hoverClass = 'hover:bg-gradient-to-br hover:from-primary-2 hover:to-primary-1';
+      hoverClass = 'hover:bg-linear-to-br hover:from-primary-2 hover:to-primary-1';
       break;
     case false:
       hoverClass = '';
       break;
   }
 
-  const className = `${sizeClass} ${colorClass} ${shapeClass} ${textAlignClass} ${hoverClass}`;
+  const className = `
+    ${sizeClass}
+    ${colorClass}
+    ${shapeClass}
+    ${textAlignClass}
+    ${hoverClass}
+  `;
 
   return (
     <button className={clsx(className)} onClick={props.onClick}>

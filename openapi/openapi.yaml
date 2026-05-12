@@ -1286,6 +1286,105 @@ paths:
               schema:
                 type: string
                 format: binary
+  /campus_donations/years/{year}/group_keys/{group_key}/floors:
+    get:
+      tags:
+        - campus_donation
+      description: 指定した棟グループの教員別募金情報を取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+        - name: group_key
+          in: path
+          description: group_key
+          required: true
+          schema:
+            $ref: "#/components/schemas/campusDonationBuildingGroupKey"
+        - name: floor_number
+          in: query
+          description: floor_number
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 指定した棟グループの教員別募金情報を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/campusDonationBuildingFloor"
+  /campus_donations/buildings/{year}:
+    get:
+      tags:
+        - campus_donation
+      description: 年度ごとの各棟の合計募金額を取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度ごとの各棟の合計募金額を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/buildingTotal"
+  /campus_donations:
+    post:
+      tags:
+        - campus_donation
+      description: 学内募金の登録
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/campusDonationRequest"
+        required: true
+      responses:
+        "200":
+          description: 登録された学内募金が返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/campusDonation"
+      x-codegen-request-body-name: campusDonationRequest
+  /campus_donations/{id}:
+    put:
+      tags:
+        - campus_donation
+      description: 学内募金の更新
+      parameters:
+        - name: id
+          in: path
+          description: 学内募金ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/campusDonationRequest"
+        required: true
+      responses:
+        "200":
+          description: 更新された学内募金が返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/campusDonation"
+      x-codegen-request-body-name: campusDonationRequest
   /income_expenditure_management/csv/download:
     get:
       tags:
@@ -1741,7 +1840,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  $ref: "#/components/schemas/sponsorStyle"
     post:
       tags:
         - sponsorstyle
@@ -2047,13 +2148,41 @@ paths:
       tags:
         - user
       description: userの一覧を取得
+      parameters:
+        - name: ids
+          in: query
+          description: user id一覧（複数指定可）.未指定時は全件取得
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: integer
+            example: [1, 2]
       responses:
         "200":
           description: userの一覧を取得
-          # content:
-          #   "*/*":
-          #     schema:
-          #       type: array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/user"
+                example:
+                  - id: 1
+                    name: 技大太郎1
+                    bureauID: 1
+                    roleID: 1
+                    isDeleted: false
+                    createdAt: 2026-01-01T00:00:00Z
+                    updatedAt: 2026-01-01T00:00:00Z
+                  - id: 2
+                    name: 技大太郎2
+                    bureauID: 1
+                    roleID: 1
+                    isDeleted: false
+                    createdAt: 2026-01-02T00:00:00Z
+                    updatedAt: 2026-01-02T00:00:00Z
     post:
       tags:
         - user
@@ -2352,6 +2481,229 @@ paths:
               schema:
                 type: object
 
+  /sponsorship_activities:
+    get:
+      tags:
+        - sponsorship_activity
+      summary: 協賛活動一覧取得
+      description: |
+        年度、キーワード、ステータス、担当者、協賛プランなどで絞り込み、指定順序でソートして一覧を取得。
+        合計金額（totalAmount）も返却。
+      parameters:
+        - name: year_periods_id
+          in: query
+          description: 年度期間ID (指定なし時は最新年度)
+          required: false
+          schema:
+            type: integer
+        - name: keyword
+          in: query
+          description: 検索キーワード（企業名、担当者名など）
+          required: false
+          schema:
+            type: string
+        - name: activity_status
+          in: query
+          description: 活動ステータス (ActivityStatusの値を指定)
+          required: false
+          schema:
+            $ref: "#/components/schemas/ActivityStatus"
+        - name: feasibility_status
+          in: query
+          description: 協賛可否ステータス (FeasibilityStatusの値を指定)
+          required: false
+          schema:
+            $ref: "#/components/schemas/FeasibilityStatus"
+        - name: user_id
+          in: query
+          description: 担当者ID
+          required: false
+          schema:
+            type: integer
+        - name: sponsor_style_ids
+          in: query
+          description: "協賛プランID（複数指定可）"
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: sort
+          in: query
+          description: "ソート対象カラム (例: updated_at, created_at, sponsor_id)"
+          required: false
+          schema:
+            type: string
+            default: updated_at
+        - name: order
+          in: query
+          description: ソート順序 (asc または desc)
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SponsorshipActivitiesResponse"
+    post:
+      tags:
+        - sponsorship_activity
+      summary: 協賛活動の新規作成
+      description: 新しい協賛活動データを作成。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSponsorshipActivityRequest"
+      responses:
+        "200":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SponsorshipActivity"
+
+  /sponsorship_activities/{id}:
+    get:
+      tags:
+        - sponsorship_activity
+      summary: 協賛活動詳細取得
+      description: 指定IDの協賛活動データを取得。
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SponsorshipActivity"
+    put:
+      tags:
+        - sponsorship_activity
+      summary: 協賛活動の更新（全項目）
+      description: 指定IDの協賛活動データを更新（基本情報・プランなど）。
+      parameters:
+        - name: id
+          in: path
+          description: 協賛活動ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSponsorshipActivityRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SponsorshipActivity"
+    delete:
+      tags:
+        - sponsorship_activity
+      summary: 協賛活動の削除
+      description: 指定IDの協賛活動データを物理削除。
+      parameters:
+        - name: id
+          in: path
+          description: 協賛活動ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /sponsorship_activities/{id}/status:
+    put:
+      tags:
+        - sponsorship_activity
+      summary: 協賛活動ステータスの更新
+      description: ステータス、可否、デザイン進捗、備考のみを更新。
+      parameters:
+        - name: id
+          in: path
+          description: 協賛活動ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSponsorshipActivityStatusRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SponsorshipActivity"
+
+  /sponsorship_activities/export:
+    get:
+      tags:
+        - sponsorship_activity
+      summary: CSVエクスポート
+      description: 検索条件に一致するデータをCSV形式でダウンロード。
+      parameters:
+        - name: year_periods_id
+          in: query
+          schema:
+            type: integer
+        - name: keyword
+          in: query
+          schema:
+            type: string
+        - name: activity_status
+          in: query
+          schema:
+            $ref: "#/components/schemas/ActivityStatus"
+        - name: feasibility_status
+          in: query
+          schema:
+            $ref: "#/components/schemas/FeasibilityStatus"
+        - name: user_id
+          in: query
+          schema:
+            type: integer
+        - name: sponsor_style_ids
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+      responses:
+        "200":
+          description: OK (CSV Data)
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+
 components:
   schemas:
     activity:
@@ -2421,6 +2773,26 @@ components:
         sponsorStyleID:
           type: integer
           example: 1
+    buildingTotal:
+      description: 棟ごとの合計募金額
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 電気棟
+        groupKey:
+          $ref: "#/components/schemas/campusDonationBuildingGroupKey"
+        totalPrice:
+          type: integer
+          example: 12000
+      required:
+        - id
+        - name
+        - groupKey
+        - totalPrice
     buyReport:
       description: 購入報告の際のパラメータ
       type: object
@@ -2443,7 +2815,6 @@ components:
       required:
         - festivalItemID
         - amount
-        - paidBy
     buyReportInformation:
       description: マイページで表示する購入報告の情報
       type: object
@@ -2485,6 +2856,9 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
     buyReportDetail:
       description: 購入報告ページで表示する詳細情報
       type: object
@@ -2510,6 +2884,9 @@ components:
         paidBy:
           type: string
           example: 企画局_技大太郎
+        paidByUserId:
+          type: integer
+          example: 1
         isPacked:
           type: boolean
           example: false
@@ -2551,6 +2928,146 @@ components:
       required:
         - unsettledAmount
         - unpackedAmount
+    campusDonationRequest:
+      type: object
+      required:
+        - userId
+        - teacherId
+        - yearId
+        - price
+        - receivedAt
+      properties:
+        userId:
+          type: integer
+          description: 募金を登録・更新したユーザーID
+          example: 1
+        teacherId:
+          type: integer
+          description: 募金対象の教員ID
+          example: 1
+        yearId:
+          type: integer
+          description: 年度ID
+          example: 1
+        price:
+          type: integer
+          description: 募金金額
+          example: 2000
+        receivedAt:
+          type: string
+          format: date
+          description: 受領日
+          example: 2026-04-28
+    campusDonation:
+      type: object
+      required:
+        - id
+        - userId
+        - teacherId
+        - yearId
+        - price
+        - receivedAt
+      properties:
+        id:
+          type: integer
+          description: 学内募金ID
+          example: 1
+        userId:
+          type: integer
+          description: 募金を登録・更新したユーザーID
+          example: 1
+        teacherId:
+          type: integer
+          description: 募金対象の教員ID
+          example: 1
+        yearId:
+          type: integer
+          description: 年度ID
+          example: 1
+        price:
+          type: integer
+          description: 募金金額
+          example: 2000
+        receivedAt:
+          type: string
+          format: date
+          description: 受領日
+          example: 2026-04-28
+    campusDonationTeacher:
+      description: 棟・階ごとの教員別募金情報
+      type: object
+      properties:
+        roomName:
+          type: string
+          example: "501"
+        teacherId:
+          type: integer
+          example: 1
+        teacherName:
+          type: string
+          example: 技大太郎
+        price:
+          type: integer
+          nullable: true
+          example: 5000
+        isBlack:
+          type: boolean
+          example: false
+        campusDonationId:
+          type: integer
+          nullable: true
+          description: 対象年度に登録済みの学内募金ID
+          example: 1
+      required:
+        - roomName
+        - teacherId
+        - teacherName
+        - campusDonationId
+        - price
+        - isBlack
+    campusDonationBuildingFloor:
+      description: 各号棟の指定フロア教員情報
+      type: object
+      properties:
+        buildingId:
+          type: integer
+          example: 1
+        buildingName:
+          type: string
+          example: 機械・建設棟
+        unitNumber:
+          type: integer
+          example: 1
+        floorNumber:
+          type: string
+          example: "5"
+        donations:
+          type: array
+          items:
+            $ref: "#/components/schemas/campusDonationTeacher"
+      required:
+        - buildingId
+        - buildingName
+        - unitNumber
+        - floorNumber
+        - donations
+    campusDonationBuildingGroupKey:
+      description: 学内募金で表示する棟グループのキー
+      type: string
+      enum:
+        - mechanical_civil_engineering
+        - electrical_engineering
+        - biology
+        - environmental_system
+        - materials_management_information
+        - general_research
+        - nuclear_system_safety
+        - administration
+        - extreme_energy_density_research_center
+        - machine_shop
+        - large_experiment
+        - analysis_instrumentation_center
+        - other
     division:
       required:
         - name
@@ -3007,5 +3524,213 @@ components:
         - isDeleted
         - createdAt
         - updatedAt
+
+    ActivityStatus:
+      type: string
+      description: 活動ステータス
+      enum:
+        - unstarted
+        - material_sent
+        - forms_sent
+        - confirmed
+        - invoice_sent
+        - payment_confirmed
+        - receipt_sent
+        - rejected
+
+    FeasibilityStatus:
+      type: string
+      description: 協賛可否
+      enum:
+        - unstarted
+        - possible
+        - impossible
+
+    DesignProgress:
+      type: string
+      description: デザイン進捗
+      enum:
+        - unstarted
+        - created_by_student
+        - created_by_company
+        - completed
+
+    SponsorshipActivity:
+      type: object
+      description: 協賛活動データの詳細情報
+      properties:
+        id:
+          type: integer
+          example: 1
+        yearPeriodsId:
+          type: integer
+          example: 5
+        sponsorId:
+          type: integer
+          example: 101
+        userId:
+          type: integer
+          example: 5
+        activityStatus:
+          $ref: "#/components/schemas/ActivityStatus"
+        feasibilityStatus:
+          $ref: "#/components/schemas/FeasibilityStatus"
+        designProgress:
+          $ref: "#/components/schemas/DesignProgress"
+        remarks:
+          type: string
+          example: "パンフレットと物品の併用プランです"
+        sponsor:
+          $ref: "#/components/schemas/sponsor"
+        user:
+          $ref: "#/components/schemas/user"
+        sponsorStyles:
+          type: array
+          description: 紐づく協賛プランの内訳リスト
+          items:
+            $ref: "#/components/schemas/ActivitySponsorStyleLink"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-05-01T09:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-05-20T10:00:00Z"
+
+    CreateSponsorshipActivityRequest:
+      type: object
+      description: 新規作成時のリクエストボディ
+      required:
+        - yearPeriodsId
+        - sponsorId
+        - userId
+        - activityStatus
+        - feasibilityStatus
+        - designProgress
+      properties:
+        yearPeriodsId:
+          type: integer
+          example: 5
+        sponsorId:
+          type: integer
+          example: 101
+        userId:
+          type: integer
+          example: 5
+        activityStatus:
+          $ref: "#/components/schemas/ActivityStatus"
+        feasibilityStatus:
+          $ref: "#/components/schemas/FeasibilityStatus"
+        designProgress:
+          $ref: "#/components/schemas/DesignProgress"
+        remarks:
+          type: string
+          example: "特になし"
+        sponsorStyleDetails:
+          type: array
+          description: 登録したい協賛プラン情報のリスト
+          items:
+            type: object
+            properties:
+              sponsorStyleId:
+                type: integer
+                example: 1
+              category:
+                $ref: "#/components/schemas/SponsorStyleCategory"
+
+    UpdateSponsorshipActivityStatusRequest:
+      type: object
+      description: ステータス更新時のリクエストボディ
+      required:
+        - activityStatus
+        - feasibilityStatus
+        - designProgress
+      properties:
+        activityStatus:
+          $ref: "#/components/schemas/ActivityStatus"
+        feasibilityStatus:
+          $ref: "#/components/schemas/FeasibilityStatus"
+        designProgress:
+          $ref: "#/components/schemas/DesignProgress"
+        remarks:
+          type: string
+          example: "電話にて確認済み"
+
+    UpdateSponsorshipActivityRequest:
+      type: object
+      description: 更新時のリクエストボディ
+      required:
+        - yearPeriodsId
+        - sponsorId
+        - userId
+        - activityStatus
+        - feasibilityStatus
+        - designProgress
+      properties:
+        yearPeriodsId:
+          type: integer
+          example: 5
+        sponsorId:
+          type: integer
+          example: 101
+        userId:
+          type: integer
+          example: 5
+        activityStatus:
+          $ref: "#/components/schemas/ActivityStatus"
+        feasibilityStatus:
+          $ref: "#/components/schemas/FeasibilityStatus"
+        designProgress:
+          $ref: "#/components/schemas/DesignProgress"
+        remarks:
+          type: string
+          example: "更新しました"
+        sponsorStyleDetails:
+          type: array
+          description: 更新したい協賛プラン情報のリスト（全置換）
+          items:
+            type: object
+            properties:
+              sponsorStyleId:
+                type: integer
+                example: 1
+              category:
+                $ref: "#/components/schemas/SponsorStyleCategory"
+
+    ActivitySponsorStyleLink:
+      type: object
+      description: 協賛活動とプランの紐付け情報
+      properties:
+        id:
+          type: integer
+          example: 10
+        sponsorStyleId:
+          type: integer
+          example: 2
+        category:
+          $ref: "#/components/schemas/SponsorStyleCategory"
+        style:
+          $ref: "#/components/schemas/sponsorStyle"
+
+    SponsorshipActivitiesResponse:
+      type: object
+      description: 協賛活動一覧のレスポンス
+      properties:
+        totalAmount:
+          type: integer
+          description: 該当データの協賛金額合計
+          example: 350000
+        activities:
+          type: array
+          items:
+            $ref: "#/components/schemas/SponsorshipActivity"
+
+    SponsorStyleCategory:
+      type: string
+      description: 協賛スタイルのカテゴリー（お金か物品か）
+      enum:
+        - money
+        - goods
 
 x-original-swagger-version: "2.0"

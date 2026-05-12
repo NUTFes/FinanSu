@@ -1,8 +1,8 @@
-import { useQueryStates, parseAsInteger } from 'nuqs';
+import { parseAsInteger, useQueryStates } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 
 import OpenAddModalButton from '@/components/budget_managements/OpenAddModalButton';
-import { Card, Title, Loading } from '@/components/common';
+import { Card, Loading, Title } from '@/components/common';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { useGetDivisions, useGetFestivalItems, useGetFinancialRecords } from '@/generated/hooks';
 import { Year } from '@/type/common';
@@ -16,6 +16,7 @@ import type {
   FinancialRecord,
   GetDivisionsParams,
   GetFestivalItemsParams,
+  GetFinancialRecordsParams,
 } from '@/generated/model';
 
 interface FinancialRecordWithId extends FinancialRecord {
@@ -37,24 +38,31 @@ export default function BudgetManagement(props: Props) {
     divisionId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
     festivalItemId: parseAsInteger.withOptions({ history: 'push', shallow: true }),
   });
-  const divisionsParams: GetDivisionsParams = {
-    financial_record_id: financialRecordId ?? undefined,
-  };
-  const festivalItemsParams: GetFestivalItemsParams = {
-    division_id: divisionId ?? undefined,
-  };
 
   const [selectedYear, setSelectedYear] = useState<Year>(
     // 本番環境では、2025のyear_idを1にします
+    //TODO: マジックナンバーみたいになってるから後でいい感じにしましょう
     years ? years[years.length - 1] : { id: 1, year: 2025 },
   );
+
+  const financialRecordsParams: GetFinancialRecordsParams = {
+    year: selectedYear.year,
+  };
+  const divisionsParams: GetDivisionsParams = {
+    year: selectedYear.year,
+    financial_record_id: financialRecordId ?? undefined,
+  };
+  const festivalItemsParams: GetFestivalItemsParams = {
+    year: selectedYear.year,
+    division_id: divisionId ?? undefined,
+  };
 
   const {
     data: financialRecordData,
     isLoading: isFinancialRecordLoading,
     error: financialRecordError,
     mutate: mutateFinancialRecords,
-  } = useGetFinancialRecords();
+  } = useGetFinancialRecords(financialRecordsParams);
   const {
     data: divisionsData,
     isLoading: isDivisionsLoading,
@@ -82,6 +90,13 @@ export default function BudgetManagement(props: Props) {
   let totalBudget = 0;
   let totalExpense = 0;
   let totalBalance = 0;
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const chosenYear = years.find((year) => year.year === Number(e.target.value));
+    if (!chosenYear) return;
+    setSelectedYear(chosenYear);
+    setQueryState({ financialRecordId: null, divisionId: null, festivalItemId: null });
+  };
 
   const handleFinancialRecordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const frId = e.target.value ? parseInt(e.target.value, 10) : null;
@@ -148,7 +163,7 @@ export default function BudgetManagement(props: Props) {
     }
   }, [financialRecordId, divisionId, selectedYear.id, financialRecords, divisions]);
 
-  const handleRowClick = (item: any) => {
+  const handleRowClick = (item: { id?: number }) => {
     if (financialRecordId === null) {
       setQueryState({ financialRecordId: item.id, divisionId: null, festivalItemId: null });
       return;
@@ -209,11 +224,26 @@ export default function BudgetManagement(props: Props) {
         <div className='mb-4 flex flex-col items-center md:flex-row md:justify-between'>
           <div className='flex flex-col gap-4 py-2'>
             <div className='flex gap-3'>
+              <span className='text-base font-light'>年度</span>
+              <select
+                value={selectedYear.year}
+                onChange={handleYearChange}
+                className='border-black-300 border-b focus:outline-hidden'
+              >
+                {years &&
+                  years.map((year) => (
+                    <option key={year.id} value={year.year}>
+                      {year.year}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className='flex gap-3'>
               <span className='text-base font-light'>申請する局</span>
               <select
                 value={financialRecordId ?? ''}
                 onChange={handleFinancialRecordChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='border-black-300 border-b focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {financialRecords &&
@@ -224,12 +254,12 @@ export default function BudgetManagement(props: Props) {
                   ))}
               </select>
             </div>
-            <div className={`flex gap-3 ${financialRecordId !== null ? 'visible' : 'invisible'}`}>
+            <div className={`flex gap-3 ${financialRecordId !== null ? 'visible' : `invisible`} `}>
               <span className='text-base font-light'>申請する部門</span>
               <select
                 value={divisionId ?? ''}
                 onChange={handleDivisionChange}
-                className='border-b border-black-300 focus:outline-none'
+                className='border-black-300 border-b focus:outline-hidden'
               >
                 <option value=''>ALL</option>
                 {divisions &&
@@ -262,13 +292,13 @@ export default function BudgetManagement(props: Props) {
         <div className='mt-5 overflow-x-auto'>
           <table className='w-full table-auto border-collapse text-nowrap'>
             <thead>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                <th className='w-1/4 pb-2 text-center font-medium text-black-600'>{title}</th>
+              <tr className='border-b-primary-1 border-b py-3'>
+                <th className='text-black-600 w-1/4 pb-2 text-center font-medium'>{title}</th>
                 {showBudgetColumns && (
                   <>
-                    <th className='w-1/4 pb-2 text-center font-medium text-black-600'>予算</th>
-                    <th className='w-1/4 pb-2 text-center font-medium text-black-600'>使用額</th>
-                    <th className='w-1/4 pb-2 text-center font-medium text-black-600'>残高</th>
+                    <th className='text-black-600 w-1/4 pb-2 text-center font-medium'>予算</th>
+                    <th className='text-black-600 w-1/4 pb-2 text-center font-medium'>使用額</th>
+                    <th className='text-black-600 w-1/4 pb-2 text-center font-medium'>残高</th>
                   </>
                 )}
               </tr>
@@ -280,11 +310,11 @@ export default function BudgetManagement(props: Props) {
                     key={item.id}
                     className={`cursor-pointer ${
                       index !== displayItems.length - 1 ? 'border-b' : ''
-                    }`}
+                    } `}
                   >
                     <td className='flex justify-center gap-2 py-3'>
                       <div
-                        className='text-center text-primary-1'
+                        className='text-primary-1 text-center'
                         onClick={() => handleRowClick(item)}
                       >
                         {item.name}
@@ -313,7 +343,7 @@ export default function BudgetManagement(props: Props) {
                   </tr>
                 ))}
               {showBudgetColumns && displayItems && displayItems.length > 0 && (
-                <tr className='border border-x-white-0 border-b-white-0 border-t-primary-1'>
+                <tr className='border-t-primary-1 border-t'>
                   <td className='py-3 text-center font-bold'>合計</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalBudget)}</td>
                   <td className='py-3 text-center font-bold'>{formatNumber(totalExpense)}</td>
@@ -324,7 +354,7 @@ export default function BudgetManagement(props: Props) {
                 <tr>
                   <td
                     colSpan={showBudgetColumns ? 4 : 1}
-                    className='text-gray-500 px-4 py-6 text-center text-sm'
+                    className='px-4 py-6 text-center text-sm text-gray-500'
                   >
                     データがありません
                   </td>

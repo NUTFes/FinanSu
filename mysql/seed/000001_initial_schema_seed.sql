@@ -141,7 +141,8 @@ VALUES
     ('財務局'),
     ('企画局'),
     ('制作局'),
-    ('情報局');
+    ('情報局'),
+    ('産学局');
 
 INSERT INTO
     departments (name)
@@ -460,45 +461,28 @@ VALUES
     (2, 6, NOW(), NOW());
 
 INSERT INTO
-    buildings (name)
+    buildings (name, unit_number, group_key)
 VALUES
-    ('機械・建設棟'),
-    ('電気棟'),
-    ('生物棟'),
-    ('環境・システム棟'),
-    ('物質・材料経営情報棟'),
-    ('総合研究棟'),
-    ('原子力・システム安全棟'),
-    ('事務局棟'),
-    ('極限エネルギ密度工学研究センター'),
-    ('工作センター'),
-    ('大型実験棟'),
-    ('分析計測センター'),
-    ('その他');
+    ('機械・建設棟', 1, 'mechanical_civil_engineering'),
+    ('機械・建設棟', 2, 'mechanical_civil_engineering'),
+    ('機械・建設棟', 3, 'mechanical_civil_engineering'),
+    ('電気棟', 1, 'electrical_engineering'),
+    ('電気棟', 2, 'electrical_engineering'),
+    ('生物棟', 1, 'biology'),
+    ('環境・システム棟', 1, 'environmental_system'),
+    ('物質・材料経営情報棟', 1, 'materials_management_information'),
+    ('物質・材料経営情報棟', 2, 'materials_management_information'),
+    ('総合研究棟', 1, 'general_research'),
+    ('原子力・システム安全棟', 1, 'nuclear_system_safety'),
+    ('事務局棟', 1, 'administration'),
+    ('極限エネルギ密度工学研究センター', 1, 'extreme_energy_density_research_center'),
+    ('工作センター', 1, 'machine_shop'),
+    ('大型実験棟', 1, 'large_experiment'),
+    ('分析計測センター', 1, 'analysis_instrumentation_center'),
+    ('その他', 1, 'other');
 
 INSERT INTO
-    building_units (building_id, unit_number)
+    campus_donations (user_id, teacher_id, year_id, price, received_at)
 VALUES
-    (1, "1号棟"),
-    (1, "2号棟"),
-    (1, "3号棟"),
-    (2, "1号棟"),
-    (2, "2号棟"),
-    (3, "1号棟"),
-    (4, "1号棟"),
-    (5, "1号棟"),
-    (5, "2号棟"),
-    (6, "1号棟"),
-    (7, "1号棟"),
-    (8, "1号棟"),
-    (9, "1号棟"),
-    (10, "1号棟"),
-    (11, "1号棟"),
-    (12, "1号棟"),
-    (13, "1号棟");
-
-INSERT INTO
-    campus_donations (user_id, teacher_id, year_id, price, remark, is_first_check, is_last_check, received_at)
-VALUES
-    (1, 1, 1, 2000, "nothing", false, false, '2023-02-22'),
-    (2, 2, 1, 2000, "nothing", false, false, '2022-02-22');
+    (1, 1, 1, 2000, '2023-02-22'),
+    (2, 2, 1, 2000, '2022-02-22');

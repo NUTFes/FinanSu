@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
 
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { get } from '@api/api_methods';
 import { Card, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -42,7 +41,7 @@ export default function TeachersList(props: Props) {
     departments[0],
   );
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
   const [currentUser, setCurrentUser] = useState<User>();
   const isDisabled = !(
     currentUser?.roleID === 2 ||
@@ -58,6 +57,7 @@ export default function TeachersList(props: Props) {
 
   useEffect(() => {
     setCurrentUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -68,6 +68,7 @@ export default function TeachersList(props: Props) {
             return teacher.departmentID === selectedDepartment?.id;
           });
     setFilterTeachers(newFilterTeachers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDepartment]);
 
   return (
@@ -81,7 +82,7 @@ export default function TeachersList(props: Props) {
           <div className='flex flex-col md:flex-row'>
             <Title title={'教員一覧'} />
             <select
-              className='md:w-100 mx-auto my-4 w-fit md:mx-10 md:my-0'
+              className='mx-auto my-4 w-fit md:mx-10 md:my-0 md:w-100'
               value={selectedDepartment?.id}
               onChange={(e) => {
                 const selectDepartment = departments.find((department) => {
@@ -105,8 +106,8 @@ export default function TeachersList(props: Props) {
         </div>
         <div className='mb-2 overflow-scroll p-5'>
           <table className='mb-5 w-max table-auto border-collapse md:w-full'>
-            <thead className='text-sm text-black-600'>
-              <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
+            <thead className='text-black-600 text-sm'>
+              <tr className='border-b-primary-1 border-b py-3'>
                 <th className='w-1/6'>
                   <p>氏名</p>
                 </th>
@@ -133,14 +134,14 @@ export default function TeachersList(props: Props) {
                 </th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {filterTeachers &&
                 filterTeachers.map((teacher, index) => (
                   <tr
                     key={index}
                     className={clsx(
                       index !== teachers.length - 1 && 'border-b',
-                      'text-sm text-black-600',
+                      'text-black-600 text-sm',
                     )}
                   >
                     <td className='py-3 text-center'>
@@ -182,7 +183,7 @@ export default function TeachersList(props: Props) {
                         <input
                           checked={deleteTeachers.ids.includes(teacher.id || 0)}
                           type='checkbox'
-                          onChange={(e) => {
+                          onChange={(_e) => {
                             deleteTeachers.ids.includes(teacher.id || 0)
                               ? setDeleteTeachers({
                                   teachers: deleteTeachers.teachers.filter((selectedTeacher) => {
@@ -206,7 +207,7 @@ export default function TeachersList(props: Props) {
           </table>
         </div>
       </Card>
-      <div className='fixed bottom-4 right-4 md:hidden'>
+      <div className='fixed right-4 bottom-4 md:hidden'>
         <OpenAddModalButton departments={props.departments} />
       </div>
     </MainLayout>

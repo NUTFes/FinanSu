@@ -1,10 +1,13 @@
 import clsx from 'clsx';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 import OpenDeleteModalButton from '@/components/sponsorstyles/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsorstyles/OpenEditModalButton';
+import { useCurrentUser, useUserStore } from '@/store';
 import { get } from '@api/api_methods';
-import { Card, Title } from '@components/common';
+import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsorstyles/OpenAddModalButton';
 import { SponsorStyle } from '@type/common';
@@ -26,6 +29,24 @@ export const getServerSideProps = async () => {
 export default function SponsorStyleList(props: Props) {
   const sponsorStyleList: SponsorStyle[] = props.sponsorstyles;
 
+  const router = useRouter();
+  const user = useCurrentUser();
+  const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  useEffect(() => {
+    if (!_hasHydrated) return;
+    if (!user?.roleID) {
+      router.push('/');
+      return;
+    }
+    if (user.roleID !== 2 && user.roleID !== 3) {
+      router.push('/my_page');
+    }
+  }, [_hasHydrated, user?.roleID, router]);
+
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
+
   return (
     <MainLayout>
       <Head>
@@ -45,34 +66,34 @@ export default function SponsorStyleList(props: Props) {
           <table className='mb-5 w-full table-fixed border-collapse'>
             <thead>
               <tr>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'>協賛内容</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>協賛内容</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='mr-1 text-center text-sm text-black-600'>オプション</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 mr-1 text-center text-sm'>オプション</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'>金額</p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'>金額</p>
                 </th>
-                <th className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                  <p className='text-center text-sm text-black-600'></p>
+                <th className='border-b-primary-1 border-b py-3'>
+                  <p className='text-black-600 text-center text-sm'></p>
                 </th>
               </tr>
             </thead>
-            <tbody className='border border-x-white-0 border-b-primary-1 border-t-white-0'>
+            <tbody>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
                 <tr
-                  className={clsx(index !== sponsorStyleList.length - 1 && 'border-b')}
+                  className={clsx(index !== sponsorStyleList.length - 1 && `border-b`)}
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.style}</p>
+                    <p className='text-black-600 text-center text-sm'>{sponsorStyleItem.style}</p>
                   </td>
                   <td>
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.feature}</p>
+                    <p className='text-black-600 text-center text-sm'>{sponsorStyleItem.feature}</p>
                   </td>
                   <td className='py-3'>
-                    <p className='text-center text-sm text-black-600'>{sponsorStyleItem.price}</p>
+                    <p className='text-black-600 text-center text-sm'>{sponsorStyleItem.price}</p>
                   </td>
                   <td>
                     <div className='flex flex-row gap-3'>
@@ -89,7 +110,7 @@ export default function SponsorStyleList(props: Props) {
           </table>
         </div>
       </Card>
-      <div className='fixed bottom-4 right-4 md:hidden'>
+      <div className='fixed right-4 bottom-4 md:hidden'>
         <OpenAddModalButton />
       </div>
     </MainLayout>

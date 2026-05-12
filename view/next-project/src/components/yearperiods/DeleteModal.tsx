@@ -32,8 +32,8 @@ const DeleteModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>年度の削除</div>
-      <div className='mx-auto my-5 w-fit text-xl text-black-600'>{props.yearPeriod.year}年度</div>
+      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>年度の削除</div>
+      <div className='text-black-600 mx-auto my-5 w-fit text-xl'>{props.yearPeriod.year}年度</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
       <div className=''>
         <div className='flex flex-row justify-center gap-5'>

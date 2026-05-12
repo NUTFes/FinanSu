@@ -21,7 +21,7 @@ export default function Home() {
               height={40}
               className='h-fit w-40 md:w-48'
             />
-            <p className='text-2xl text-black-600 md:text-3xl'>ログイン</p>
+            <p className='text-black-600 text-2xl md:text-3xl'>ログイン</p>
           </div>
           <SignInView />
           <hr className='border-black-300' />
@@ -43,7 +43,7 @@ export default function Home() {
               height={40}
               className='h-fit w-40 md:w-48'
             />
-            <p className='text-2xl text-black-600 md:text-3xl'>新規登録</p>
+            <p className='text-black-600 text-2xl md:text-3xl'>新規登録</p>
           </div>
           <SignUpView />
           <hr className='border-black-300' />

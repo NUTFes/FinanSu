@@ -12,7 +12,7 @@ import {
   Select,
 } from '@components/common';
 import { useUI } from '@components/ui/context';
-import { PurchaseOrder, User, PurchaseItem, Expense, YearPeriod } from '@type/common';
+import { Expense, PurchaseItem, PurchaseOrder, User, YearPeriod } from '@type/common';
 
 import PurchaseReportAddModal from './PurchaseReportAddModal';
 
@@ -49,6 +49,7 @@ export default function PurchaseItemNumModal() {
       setYearPeriods(res);
     };
     getPeriods();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -100,18 +101,18 @@ export default function PurchaseItemNumModal() {
 
   return (
     <Modal className='mt-32 overflow-scroll md:h-5/6 md:w-3/4'>
-      <div className={clsx('w-full ')}>
+      <div className={clsx('w-full')}>
         <div className={clsx('mr-5 grid w-full justify-items-end')}>
           <CloseButton onClick={closeModal} />
         </div>
       </div>
-      <div className={clsx('mb-10 grid w-full justify-items-center text-xl text-black-600')}>
+      <div className={clsx(`text-black-600 mb-10 grid w-full justify-items-center text-xl`)}>
         購入申請
       </div>
       <div className='mb-2 flex w-full justify-items-center'>
         <div className='mx-auto flex w-1/2 justify-items-center'>
           <div className='flex w-1/2 items-center justify-center'>
-            <p className=' text-black-600'>年度</p>
+            <p className='text-black-600'>年度</p>
           </div>
           <div className='w-1/2'>
             <Select
@@ -129,55 +130,49 @@ export default function PurchaseItemNumModal() {
           </div>
         </div>
       </div>
-      <div className={clsx('max-h-2/3 mb-4 grid grid-cols-12 gap-4 overflow-scroll')}>
+      <div className={clsx(`mb-4 grid max-h-2/3 grid-cols-12 gap-4 overflow-scroll`)}>
         <div className={clsx('col-span-1 grid')} />
         <div className={clsx('col-span-10 grid')}>
           <div className={clsx('mb-2 w-full p-5')}>
-            <table className={clsx('w-max table-fixed border-collapse md:w-full')}>
+            <table className={clsx(`w-max table-fixed border-collapse md:w-full`)}>
               <thead>
-                <tr
-                  className={clsx(
-                    'border border-x-white-0 border-b-primary-1 border-t-white-0 py-3',
-                  )}
-                >
+                <tr className={clsx('border-b-primary-1 border-b py-3')}>
                   <th className={clsx('px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>選択</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>選択</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>局</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>局</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>金額</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>金額</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>物品名</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>物品名</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>品数</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>品数</div>
                   </th>
                   <th className={clsx('border-b-primary-1 px-6 pb-2')}>
-                    <div className={clsx('text-center text-sm text-black-600')}>申請日</div>
+                    <div className={clsx('text-black-600 text-center text-sm')}>申請日</div>
                   </th>
                 </tr>
               </thead>
-              <tbody
-                className={clsx('border border-x-white-0 border-b-primary-1 border-t-white-0')}
-              >
+              <tbody className={clsx('border-b-primary-1 border-b')}>
                 {purchaseOrderView &&
                   purchaseOrderView.map((purchaseOrderItem, index) => (
                     <tr key={purchaseOrderItem.purchaseOrder?.id}>
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
                         {/* <div className={clsx('text-center text-sm text-black-600')} onClick={handler}> */}
-                        <div className={clsx('text-center text-sm text-black-600')}>
+                        <div className={clsx(`text-black-600 text-center text-sm`)}>
                           {purchaseOrderItem.purchaseItem && (
                             <Radio
-                              value={purchaseOrderItem.purchaseOrder?.id}
+                              value={String(purchaseOrderItem.purchaseOrder?.id ?? '')}
                               onClick={handler(purchaseOrderItem.purchaseItem.length)}
                             />
                           )}
@@ -186,11 +181,11 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
-                        <div className={clsx('text-center text-sm text-black-600')}>
+                        <div className={clsx(`text-black-600 text-center text-sm`)}>
                           {
                             expenses.find(
                               (expense) => expense.id === purchaseOrderItem.purchaseOrder.expenseID,
@@ -201,11 +196,11 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
-                        <div className={clsx('text-center text-sm text-black-600')}>
+                        <div className={clsx(`text-black-600 text-center text-sm`)}>
                           {purchaseOrderItem.purchaseItem &&
                             calcTotalFee(purchaseOrderItem.purchaseItem)}
                         </div>
@@ -213,11 +208,11 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
-                        <div className={clsx('text-center text-sm text-black-600')}>
+                        <div className={clsx(`text-black-600 text-center text-sm`)}>
                           {purchaseOrderItem.purchaseItem &&
                             purchaseOrderItem.purchaseItem.map((purchaseItem) => (
                               <div key={purchaseItem.id}>
@@ -230,22 +225,22 @@ export default function PurchaseItemNumModal() {
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
-                        <div className={clsx('text-center text-sm text-black-600')}>
+                        <div className={clsx(`text-black-600 text-center text-sm`)}>
                           {purchaseOrderItem.purchaseItem && purchaseOrderItem.purchaseItem.length}
                         </div>
                       </td>
                       <td
                         className={clsx(
                           'px-4',
-                          index === 0 ? 'pb-3 pt-4' : 'py-3',
-                          index === purchaseOrderView.length - 1 ? 'pb-4 pt-3' : 'border-b py-3',
+                          index === 0 ? 'pt-4 pb-3' : 'py-3',
+                          index === purchaseOrderView.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                         )}
                       >
-                        <div className={clsx('text-center text-sm text-black-600')}>
+                        <div className={clsx(`text-black-600 text-center text-sm`)}>
                           {formatDate(purchaseOrderItem.purchaseOrder?.createdAt)}
                         </div>
                       </td>
@@ -254,7 +249,7 @@ export default function PurchaseItemNumModal() {
                 {!purchaseOrderView && (
                   <tr>
                     <td className={clsx('px-4 py-3')} colSpan={6}>
-                      <div className={clsx('text-center text-sm text-black-600')}>
+                      <div className={clsx('text-black-600 text-center text-sm')}>
                         申請がありません
                       </div>
                     </td>
@@ -264,17 +259,17 @@ export default function PurchaseItemNumModal() {
             </table>
           </div>
         </div>
-        <div className={clsx('col-span-1 grid ')} />
+        <div className={clsx('col-span-1 grid')} />
       </div>
       <div className={clsx('grid w-full grid-cols-12 pb-5')}>
-        <div className={clsx('h-100 col-span-1 grid')} />
+        <div className={clsx('col-span-1 grid h-100')} />
         <div
           className={clsx(
-            'text-md h-100 col-span-10 grid w-full justify-items-center pr-3 text-black-600',
+            `text-md text-black-600 col-span-10 grid h-100 w-full justify-items-center pr-3`,
           )}
         >
           <div
-            className={clsx('text-md h-100 grid w-full justify-items-center pb-3 text-black-600')}
+            className={clsx(`text-md text-black-600 grid h-100 w-full justify-items-center pb-3`)}
           >
             申請を選択してください
           </div>
@@ -310,7 +305,7 @@ export default function PurchaseItemNumModal() {
             </div>
           </div>
         </div>
-        <div className={clsx('h-100 col-span-1 grid')} />
+        <div className={clsx('col-span-1 grid h-100')} />
       </div>
       <div className={clsx('grid justify-items-center px-1')}></div>
     </Modal>

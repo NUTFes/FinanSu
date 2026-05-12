@@ -10,6 +10,7 @@ type Handler struct {
 	activityStyleUseCase               usecase.ActivityStyleUseCase
 	bureauUseCase                      usecase.BureauUseCase
 	buyReportUseCase                   usecase.BuyReportUseCase
+	campusDonationUseCase              usecase.CampusDonationUseCase
 	departmentUseCase                  usecase.DepartmentUseCase
 	divisionUseCase                    usecase.DivisionUseCase
 	festivalItemUseCase                usecase.FestivalItemUseCase
@@ -24,6 +25,7 @@ type Handler struct {
 	teacherUseCase                     usecase.TeacherUseCase
 	userUseCase                        usecase.UserUseCase
 	yearUseCase                        usecase.YearUseCase
+	sponsorshipActivityUseCase         usecase.SponsorshipActivityUseCase
 }
 
 func NewHandler(
@@ -32,6 +34,7 @@ func NewHandler(
 	activityStyleUseCase usecase.ActivityStyleUseCase,
 	bureauUseCase usecase.BureauUseCase,
 	buyReportUseCase usecase.BuyReportUseCase,
+	campusDonationUseCase usecase.CampusDonationUseCase,
 	departmentUseCase usecase.DepartmentUseCase,
 	divisionUseCase usecase.DivisionUseCase,
 	festivalItemUseCase usecase.FestivalItemUseCase,
@@ -46,6 +49,7 @@ func NewHandler(
 	teacherUseCase usecase.TeacherUseCase,
 	userUseCase usecase.UserUseCase,
 	yearUseCase usecase.YearUseCase,
+	sponsorshipActivityUseCase usecase.SponsorshipActivityUseCase,
 ) *Handler {
 	return &Handler{
 		activityUseCase:                    activityUseCase,
@@ -53,6 +57,7 @@ func NewHandler(
 		activityStyleUseCase:               activityStyleUseCase,
 		bureauUseCase:                      bureauUseCase,
 		buyReportUseCase:                   buyReportUseCase,
+		campusDonationUseCase:              campusDonationUseCase,
 		departmentUseCase:                  departmentUseCase,
 		divisionUseCase:                    divisionUseCase,
 		festivalItemUseCase:                festivalItemUseCase,
@@ -67,5 +72,6 @@ func NewHandler(
 		teacherUseCase:                     teacherUseCase,
 		userUseCase:                        userUseCase,
 		yearUseCase:                        yearUseCase,
+		sponsorshipActivityUseCase:         sponsorshipActivityUseCase,
 	}
 }

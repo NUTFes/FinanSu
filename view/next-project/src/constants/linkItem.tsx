@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { AiOutlineGift } from 'react-icons/ai';
 import { BsBuilding, BsVectorPen } from 'react-icons/bs';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import { HiOutlineDocumentText, HiCurrencyDollar } from 'react-icons/hi';
@@ -34,22 +35,23 @@ export const FinanceLinkItems: LinkItemProps[] = [
     icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
     href: '/purchase_report_list',
   },
-  //TODO:募金実装時に戻す
-  // {
-  //   name: '学内募金',
-  //   icon: <LiaDonateSolid className='mx-2 text-xl' />,
-  //   href: '',
-  // },
+  {
+    name: '学内募金',
+    icon: <AiOutlineGift className='mx-2 text-xl' />,
+    href: '/campus_fund',
+  },
   {
     name: '教員一覧',
     icon: <FaChalkboardTeacher className='mx-2 text-xl' />,
-    href: '/teachers',
+    // スキーマ変更に伴い、APIのエラーが発生しているため、一時的にリンクを無効化する
+    // href: '/teachers',
+    href: '',
   },
 ];
 
 export const RelationLinkItems: LinkItemProps[] = [
   {
-    name: '渉外局',
+    name: '産学局',
     icon: <IoIosArrowDropup className='mx-2 text-xl' />,
     href: '',
     isParent: true,
@@ -57,7 +59,12 @@ export const RelationLinkItems: LinkItemProps[] = [
   {
     name: '協賛活動',
     icon: <MdOutlineWorkOutline className='mx-2 text-xl' />,
-    href: '/sponsoractivities',
+    href: '/sponsor-activities',
+  },
+  {
+    name: '進捗報告',
+    icon: <HiOutlineDocumentText className='mx-2 text-xl' />,
+    href: '/progress_report',
   },
   {
     name: '協賛スタイル',

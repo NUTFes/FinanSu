@@ -42,6 +42,3 @@ jobs:
       - name: Lint
         working-directory: view/next-project
         run: pnpm run lint:fix
-      - uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: formatted by workflow

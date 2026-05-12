@@ -1,8 +1,4 @@
-import clsx from 'clsx';
-import React from 'react';
-
-import s from './Input.module.css';
-
+import type { JSX } from 'react';
 interface Props {
   className?: string;
   placeholder?: string;
@@ -20,12 +16,12 @@ interface Props {
 
 function Input(props: Props): JSX.Element {
   const className =
-    'rounded-full border border-primary-1 py-2 px-4 w-full' +
+    'rounded-full border border-primary-1 py-2 px-4 w-full focus:outline-none focus:border-primary-1 focus:ring-1 focus:ring-primary-1' +
     (props.className ? ` ${props.className}` : '');
   return (
     <div>
       <input
-        className={clsx(s.input, className)}
+        className={className}
         placeholder={props.placeholder}
         id={props.id}
         value={props.value}

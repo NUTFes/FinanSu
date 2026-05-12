@@ -30,7 +30,7 @@ const SponsorStyleDeleteModal: FC<ModalProps> = (props) => {
           <CloseButton onClick={() => props.setShowModal(false)} />
         </div>
       </div>
-      <div className='mx-auto mb-5 w-fit text-xl text-black-600'>協賛スタイルの削除</div>
+      <div className='text-black-600 mx-auto mb-5 w-fit text-xl'>協賛スタイルの削除</div>
       <div className='mx-auto my-5 w-fit text-xl'>削除しますか？</div>
       <div className=''>
         <div className='flex flex-row justify-center gap-5'>

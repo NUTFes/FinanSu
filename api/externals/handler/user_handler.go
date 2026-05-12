@@ -10,8 +10,8 @@ import (
 )
 
 // router.GET(baseURL+"/users", wrapper.GetUsers)
-func (h *Handler) GetUsers(c echo.Context) error {
-	users, err := h.userUseCase.GetUsers(c.Request().Context())
+func (h *Handler) GetUsers(c echo.Context, params generated.GetUsersParams) error {
+	users, err := h.userUseCase.GetUsers(c.Request().Context(), params.Ids)
 	if err != nil {
 		return err
 	}

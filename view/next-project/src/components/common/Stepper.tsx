@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface Props {
   stepNum: number;
@@ -15,10 +15,10 @@ interface ContentProps {
 // すでに登録が済んでいるステップの要素
 const ActiveContent = React.memo(function activeContent(props: ContentProps) {
   return (
-    <div className={clsx('relative flex items-center text-white-0')}>
+    <div className={clsx('text-white-0 relative flex items-center')}>
       <div
         className={clsx(
-          'size-12 rounded-full border-2 border-primary-1 bg-primary-1 py-3 transition duration-500 ease-in-out',
+          `border-primary-1 bg-primary-1 size-12 rounded-full border-2 py-3 transition duration-500 ease-in-out`,
         )}
       >
         <div className={clsx('relative grid justify-items-center')}>{props.stepNum}</div>
@@ -30,13 +30,13 @@ const ActiveContent = React.memo(function activeContent(props: ContentProps) {
 // 登録が済んでいないステップの要素
 const DeActiveContent = React.memo(function activeContent(props: ContentProps) {
   return (
-    <div className={clsx('relative flex items-center text-white-0')}>
+    <div className={clsx('text-white-0 relative flex items-center')}>
       <div
         className={clsx(
-          'size-12 rounded-full border-2 border-primary-1 py-3 transition duration-500 ease-in-out',
+          `border-primary-1 size-12 rounded-full border-2 py-3 transition duration-500 ease-in-out`,
         )}
       >
-        <div className={clsx('relative grid justify-items-center text-primary-1')}>
+        <div className={clsx('text-primary-1 relative grid justify-items-center')}>
           {props.stepNum}
         </div>
       </div>
@@ -61,7 +61,7 @@ function Stepper(props: Props): JSX.Element {
                   <ActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
-                      'border-gray-300 flex-auto border-t-2 transition duration-500 ease-in-out',
+                      `flex-auto border-t-2 border-gray-300 transition duration-500 ease-in-out`,
                     )}
                   />
                 </>
@@ -82,7 +82,7 @@ function Stepper(props: Props): JSX.Element {
                   <ActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
-                      'border-gray-300 flex-auto border-t-2 transition duration-500 ease-in-out',
+                      `flex-auto border-t-2 border-gray-300 transition duration-500 ease-in-out`,
                     )}
                   />
                 </>
@@ -93,7 +93,7 @@ function Stepper(props: Props): JSX.Element {
                   <DeActiveContent stepNum={step} key={step} />
                   <div
                     className={clsx(
-                      'border-gray-300 flex-auto border-t-2 transition duration-500 ease-in-out',
+                      `flex-auto border-t-2 border-gray-300 transition duration-500 ease-in-out`,
                     )}
                   />
                 </>

@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { TbDownload } from 'react-icons/tb';
-import { useRecoilValue } from 'recoil';
 
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
@@ -244,7 +243,7 @@ export default function PurchaseReports() {
             <div className='flex flex-col items-center gap-6 md:flex-row'>
               <Title title={'購入報告一覧'} />
               <select
-                className='border-b border-black-0'
+                className='border-black-0 border-b'
                 defaultValue={selectedYear}
                 onChange={async (e) => {
                   setSelectedYear(Number(e.target.value));
@@ -292,17 +291,17 @@ export default function PurchaseReports() {
             <div className='min-w-max'>
               <table className='mb-5 table-auto border-collapse'>
                 <thead>
-                  <tr className='border border-x-white-0 border-b-primary-1 border-t-white-0 py-3'>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                  <tr className='border-b-primary-1 border-b py-3'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       日付
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       局名
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       部門
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       物品
                     </th>
                     <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
@@ -318,16 +317,16 @@ export default function PurchaseReports() {
                         </button>
                       </div>
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       金額
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       封詰め
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       清算完了
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm text-black-600'></th>
+                    <th className='text-black-600 px-4 pb-2 text-sm whitespace-nowrap'></th>
                   </tr>
                 </thead>
 
@@ -335,22 +334,24 @@ export default function PurchaseReports() {
                   {buyReports && buyReports.length > 0 ? (
                     buyReports.map((report) => (
                       <tr key={report.id}>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {formatDate(report.reportDate ?? '')}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {report.financialRecordName}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {report.divisionName}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {report.festivalItemName}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
-                          {report.paidBy}
+                        <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
+                          {(report.paidByUserId ? userNameMap[report.paidByUserId] : undefined) ??
+                            report.paidBy ??
+                            '-'}
                         </td>
-                        <td className='whitespace-nowrap px-4 py-3 text-center text-sm text-black-600'>
+                        <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {formatAmount(report.amount ?? 0)}
                         </td>
 
@@ -408,8 +409,8 @@ export default function PurchaseReports() {
                     ))
                   ) : (
                     <tr>
-                      <td className='border-b border-primary-1 px-1 py-3' colSpan={9}>
-                        <div className='text-center text-sm text-black-600'>データがありません</div>
+                      <td className='border-primary-1 border-b px-1 py-3' colSpan={9}>
+                        <div className='text-black-600 text-center text-sm'>データがありません</div>
                       </td>
                     </tr>
                   )}

@@ -1,21 +1,19 @@
 import Router from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 
-import { authAtom, userAtom } from '@/store/atoms';
+import { useAuthStore, useUserStore } from '@/store';
 import { get_with_token } from '@api/api_methods';
 import { signIn } from '@api/signIn';
+import { PrimaryButton } from '@components/common';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignIn } from '@type/common';
-
-import { PrimaryButton } from '../common';
 
 export default function SignInView() {
   // ログイン中フラグ
   const [isSignInNow, setIsSignInNow] = useState<boolean>(false);
-  const [, setAuth] = useRecoilState(authAtom);
-  const [, setUser] = useRecoilState(userAtom);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const setUser = useUserStore((state) => state.setUser);
 
   const {
     register,
@@ -54,10 +52,10 @@ export default function SignInView() {
       <div className='my-16 flex w-full flex-col items-center'>
         <div className='mb-10 flex flex-col gap-3'>
           <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
-            <p className='md:text-md whitespace-nowrap text-sm text-black-300'>メールアドレス</p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>メールアドレス</p>
             <input
               type='text'
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               {...register('email', {
                 required: 'メールアドレスは必須です',
                 pattern: {
@@ -67,10 +65,10 @@ export default function SignInView() {
                 },
               })}
             />
-            <p className='md:text-md whitespace-nowrap text-sm text-black-300'>パスワード</p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>パスワード</p>
             <input
               type='password'
-              className='col-span-2 w-full border-b border-b-primary-1 p-1'
+              className='border-b-primary-1 col-span-2 w-full border-b p-1'
               {...register('password', {
                 required: 'パスワードは必須です',
                 minLength: {

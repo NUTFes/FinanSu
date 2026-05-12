@@ -6,10 +6,44 @@ package generated
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/oapi-codegen/runtime"
 	openapi_types "github.com/oapi-codegen/runtime/types"
+)
+
+// Defines values for ActivityStatus.
+const (
+	ActivityStatusConfirmed        ActivityStatus = "confirmed"
+	ActivityStatusFormsSent        ActivityStatus = "forms_sent"
+	ActivityStatusInvoiceSent      ActivityStatus = "invoice_sent"
+	ActivityStatusMaterialSent     ActivityStatus = "material_sent"
+	ActivityStatusPaymentConfirmed ActivityStatus = "payment_confirmed"
+	ActivityStatusReceiptSent      ActivityStatus = "receipt_sent"
+	ActivityStatusRejected         ActivityStatus = "rejected"
+	ActivityStatusUnstarted        ActivityStatus = "unstarted"
+)
+
+// Defines values for DesignProgress.
+const (
+	DesignProgressCompleted        DesignProgress = "completed"
+	DesignProgressCreatedByCompany DesignProgress = "created_by_company"
+	DesignProgressCreatedByStudent DesignProgress = "created_by_student"
+	DesignProgressUnstarted        DesignProgress = "unstarted"
+)
+
+// Defines values for FeasibilityStatus.
+const (
+	Impossible FeasibilityStatus = "impossible"
+	Possible   FeasibilityStatus = "possible"
+	Unstarted  FeasibilityStatus = "unstarted"
+)
+
+// Defines values for SponsorStyleCategory.
+const (
+	Goods SponsorStyleCategory = "goods"
+	Money SponsorStyleCategory = "money"
 )
 
 // Defines values for BuyReportInformationStatus.
@@ -17,6 +51,23 @@ const (
 	Empty BuyReportInformationStatus = "確認中"
 	N1    BuyReportInformationStatus = "封詰め"
 	N2    BuyReportInformationStatus = "清算完了"
+)
+
+// Defines values for CampusDonationBuildingGroupKey.
+const (
+	Administration                     CampusDonationBuildingGroupKey = "administration"
+	AnalysisInstrumentationCenter      CampusDonationBuildingGroupKey = "analysis_instrumentation_center"
+	Biology                            CampusDonationBuildingGroupKey = "biology"
+	ElectricalEngineering              CampusDonationBuildingGroupKey = "electrical_engineering"
+	EnvironmentalSystem                CampusDonationBuildingGroupKey = "environmental_system"
+	ExtremeEnergyDensityResearchCenter CampusDonationBuildingGroupKey = "extreme_energy_density_research_center"
+	GeneralResearch                    CampusDonationBuildingGroupKey = "general_research"
+	LargeExperiment                    CampusDonationBuildingGroupKey = "large_experiment"
+	MachineShop                        CampusDonationBuildingGroupKey = "machine_shop"
+	MaterialsManagementInformation     CampusDonationBuildingGroupKey = "materials_management_information"
+	MechanicalCivilEngineering         CampusDonationBuildingGroupKey = "mechanical_civil_engineering"
+	NuclearSystemSafety                CampusDonationBuildingGroupKey = "nuclear_system_safety"
+	Other                              CampusDonationBuildingGroupKey = "other"
 )
 
 // Defines values for IncomeReceiveOption.
@@ -38,6 +89,124 @@ const (
 	GetActivitiesFilteredDetailsYearParamsIsDoneFalse GetActivitiesFilteredDetailsYearParamsIsDone = "false"
 	GetActivitiesFilteredDetailsYearParamsIsDoneTrue  GetActivitiesFilteredDetailsYearParamsIsDone = "true"
 )
+
+// Defines values for GetSponsorshipActivitiesParamsOrder.
+const (
+	Asc  GetSponsorshipActivitiesParamsOrder = "asc"
+	Desc GetSponsorshipActivitiesParamsOrder = "desc"
+)
+
+// ActivitySponsorStyleLink 協賛活動とプランの紐付け情報
+type ActivitySponsorStyleLink struct {
+	// Category 協賛スタイルのカテゴリー（お金か物品か）
+	Category       *SponsorStyleCategory `json:"category,omitempty"`
+	Id             *int                  `json:"id,omitempty"`
+	SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
+	Style          *SponsorStyle         `json:"style,omitempty"`
+}
+
+// ActivityStatus 活動ステータス
+type ActivityStatus string
+
+// CreateSponsorshipActivityRequest 新規作成時のリクエストボディ
+type CreateSponsorshipActivityRequest struct {
+	// ActivityStatus 活動ステータス
+	ActivityStatus ActivityStatus `json:"activityStatus"`
+
+	// DesignProgress デザイン進捗
+	DesignProgress DesignProgress `json:"designProgress"`
+
+	// FeasibilityStatus 協賛可否
+	FeasibilityStatus FeasibilityStatus `json:"feasibilityStatus"`
+	Remarks           *string           `json:"remarks,omitempty"`
+	SponsorId         int               `json:"sponsorId"`
+
+	// SponsorStyleDetails 登録したい協賛プラン情報のリスト
+	SponsorStyleDetails *[]struct {
+		// Category 協賛スタイルのカテゴリー（お金か物品か）
+		Category       *SponsorStyleCategory `json:"category,omitempty"`
+		SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
+	} `json:"sponsorStyleDetails,omitempty"`
+	UserId        int `json:"userId"`
+	YearPeriodsId int `json:"yearPeriodsId"`
+}
+
+// DesignProgress デザイン進捗
+type DesignProgress string
+
+// FeasibilityStatus 協賛可否
+type FeasibilityStatus string
+
+// SponsorStyleCategory 協賛スタイルのカテゴリー（お金か物品か）
+type SponsorStyleCategory string
+
+// SponsorshipActivitiesResponse 協賛活動一覧のレスポンス
+type SponsorshipActivitiesResponse struct {
+	Activities *[]SponsorshipActivity `json:"activities,omitempty"`
+
+	// TotalAmount 該当データの協賛金額合計
+	TotalAmount *int `json:"totalAmount,omitempty"`
+}
+
+// SponsorshipActivity 協賛活動データの詳細情報
+type SponsorshipActivity struct {
+	// ActivityStatus 活動ステータス
+	ActivityStatus *ActivityStatus `json:"activityStatus,omitempty"`
+	CreatedAt      *time.Time      `json:"createdAt,omitempty"`
+
+	// DesignProgress デザイン進捗
+	DesignProgress *DesignProgress `json:"designProgress,omitempty"`
+
+	// FeasibilityStatus 協賛可否
+	FeasibilityStatus *FeasibilityStatus `json:"feasibilityStatus,omitempty"`
+	Id                *int               `json:"id,omitempty"`
+	Remarks           *string            `json:"remarks,omitempty"`
+	Sponsor           *Sponsor           `json:"sponsor,omitempty"`
+	SponsorId         *int               `json:"sponsorId,omitempty"`
+
+	// SponsorStyles 紐づく協賛プランの内訳リスト
+	SponsorStyles *[]ActivitySponsorStyleLink `json:"sponsorStyles,omitempty"`
+	UpdatedAt     *time.Time                  `json:"updatedAt,omitempty"`
+	User          *User                       `json:"user,omitempty"`
+	UserId        *int                        `json:"userId,omitempty"`
+	YearPeriodsId *int                        `json:"yearPeriodsId,omitempty"`
+}
+
+// UpdateSponsorshipActivityRequest 更新時のリクエストボディ
+type UpdateSponsorshipActivityRequest struct {
+	// ActivityStatus 活動ステータス
+	ActivityStatus ActivityStatus `json:"activityStatus"`
+
+	// DesignProgress デザイン進捗
+	DesignProgress DesignProgress `json:"designProgress"`
+
+	// FeasibilityStatus 協賛可否
+	FeasibilityStatus FeasibilityStatus `json:"feasibilityStatus"`
+	Remarks           *string           `json:"remarks,omitempty"`
+	SponsorId         int               `json:"sponsorId"`
+
+	// SponsorStyleDetails 更新したい協賛プラン情報のリスト（全置換）
+	SponsorStyleDetails *[]struct {
+		// Category 協賛スタイルのカテゴリー（お金か物品か）
+		Category       *SponsorStyleCategory `json:"category,omitempty"`
+		SponsorStyleId *int                  `json:"sponsorStyleId,omitempty"`
+	} `json:"sponsorStyleDetails,omitempty"`
+	UserId        int `json:"userId"`
+	YearPeriodsId int `json:"yearPeriodsId"`
+}
+
+// UpdateSponsorshipActivityStatusRequest ステータス更新時のリクエストボディ
+type UpdateSponsorshipActivityStatusRequest struct {
+	// ActivityStatus 活動ステータス
+	ActivityStatus ActivityStatus `json:"activityStatus"`
+
+	// DesignProgress デザイン進捗
+	DesignProgress DesignProgress `json:"designProgress"`
+
+	// FeasibilityStatus 協賛可否
+	FeasibilityStatus FeasibilityStatus `json:"feasibilityStatus"`
+	Remarks           *string           `json:"remarks,omitempty"`
+}
 
 // Activity defines model for activity.
 type Activity struct {
@@ -67,13 +236,22 @@ type ActivityStyle struct {
 	SponsorStyleID int `json:"sponsorStyleID"`
 }
 
+// BuildingTotal 棟ごとの合計募金額
+type BuildingTotal struct {
+	// GroupKey 学内募金で表示する棟グループのキー
+	GroupKey   CampusDonationBuildingGroupKey `json:"groupKey"`
+	Id         int                            `json:"id"`
+	Name       string                         `json:"name"`
+	TotalPrice int                            `json:"totalPrice"`
+}
+
 // BuyReport 購入報告の際のパラメータ
 type BuyReport struct {
-	Amount         int    `json:"amount"`
-	FestivalItemID int    `json:"festivalItemID"`
-	Id             *int   `json:"id,omitempty"`
-	PaidBy         string `json:"paidBy"`
-	PaidByUserId   *int   `json:"paidByUserId,omitempty"`
+	Amount         int     `json:"amount"`
+	FestivalItemID int     `json:"festivalItemID"`
+	Id             *int    `json:"id,omitempty"`
+	PaidBy         *string `json:"paidBy,omitempty"`
+	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
 }
 
 // BuyReportDetail 購入報告ページで表示する詳細情報
@@ -88,6 +266,7 @@ type BuyReportDetail struct {
 	IsPacked            bool    `json:"isPacked"`
 	IsSettled           bool    `json:"isSettled"`
 	PaidBy              string  `json:"paidBy"`
+	PaidByUserId        *int    `json:"paidByUserId,omitempty"`
 	ReportDate          string  `json:"reportDate"`
 	Year                *int    `json:"year,omitempty"`
 }
@@ -120,6 +299,69 @@ type BuyReportWithDivisionId struct {
 	FestivalItemID *int    `json:"festivalItemID,omitempty"`
 	Id             *int    `json:"id,omitempty"`
 	PaidBy         *string `json:"paidBy,omitempty"`
+	PaidByUserId   *int    `json:"paidByUserId,omitempty"`
+}
+
+// CampusDonation defines model for campusDonation.
+type CampusDonation struct {
+	// Id 学内募金ID
+	Id int `json:"id"`
+
+	// Price 募金金額
+	Price int `json:"price"`
+
+	// ReceivedAt 受領日
+	ReceivedAt openapi_types.Date `json:"receivedAt"`
+
+	// TeacherId 募金対象の教員ID
+	TeacherId int `json:"teacherId"`
+
+	// UserId 募金を登録・更新したユーザーID
+	UserId int `json:"userId"`
+
+	// YearId 年度ID
+	YearId int `json:"yearId"`
+}
+
+// CampusDonationBuildingFloor 各号棟の指定フロア教員情報
+type CampusDonationBuildingFloor struct {
+	BuildingId   int                     `json:"buildingId"`
+	BuildingName string                  `json:"buildingName"`
+	Donations    []CampusDonationTeacher `json:"donations"`
+	FloorNumber  string                  `json:"floorNumber"`
+	UnitNumber   int                     `json:"unitNumber"`
+}
+
+// CampusDonationBuildingGroupKey 学内募金で表示する棟グループのキー
+type CampusDonationBuildingGroupKey string
+
+// CampusDonationRequest defines model for campusDonationRequest.
+type CampusDonationRequest struct {
+	// Price 募金金額
+	Price int `json:"price"`
+
+	// ReceivedAt 受領日
+	ReceivedAt openapi_types.Date `json:"receivedAt"`
+
+	// TeacherId 募金対象の教員ID
+	TeacherId int `json:"teacherId"`
+
+	// UserId 募金を登録・更新したユーザーID
+	UserId int `json:"userId"`
+
+	// YearId 年度ID
+	YearId int `json:"yearId"`
+}
+
+// CampusDonationTeacher 棟・階ごとの教員別募金情報
+type CampusDonationTeacher struct {
+	// CampusDonationId 対象年度に登録済みの学内募金ID
+	CampusDonationId *int   `json:"campusDonationId"`
+	IsBlack          bool   `json:"isBlack"`
+	Price            *int   `json:"price"`
+	RoomName         string `json:"roomName"`
+	TeacherId        int    `json:"teacherId"`
+	TeacherName      string `json:"teacherName"`
 }
 
 // DestroyTeacherIDs defines model for destroyTeacherIDs.
@@ -442,6 +684,12 @@ type PutBuyReportsIdMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
 }
 
+// GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams defines parameters for GetCampusDonationsYearsYearGroupKeysGroupKeyFloors.
+type GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams struct {
+	// FloorNumber floor_number
+	FloorNumber *string `form:"floor_number,omitempty" json:"floor_number,omitempty"`
+}
+
 // GetCurrentUserParams defines parameters for GetCurrentUser.
 type GetCurrentUserParams struct {
 	AccessToken *string `json:"Access-Token,omitempty"`
@@ -580,6 +828,46 @@ type PostPasswordResetIdValidParams struct {
 	Token *string `form:"token,omitempty" json:"token,omitempty"`
 }
 
+// GetSponsorshipActivitiesParams defines parameters for GetSponsorshipActivities.
+type GetSponsorshipActivitiesParams struct {
+	// YearPeriodsId 年度期間ID (指定なし時は最新年度)
+	YearPeriodsId *int `form:"year_periods_id,omitempty" json:"year_periods_id,omitempty"`
+
+	// Keyword 検索キーワード（企業名、担当者名など）
+	Keyword *string `form:"keyword,omitempty" json:"keyword,omitempty"`
+
+	// ActivityStatus 活動ステータス (ActivityStatusの値を指定)
+	ActivityStatus *ActivityStatus `form:"activity_status,omitempty" json:"activity_status,omitempty"`
+
+	// FeasibilityStatus 協賛可否ステータス (FeasibilityStatusの値を指定)
+	FeasibilityStatus *FeasibilityStatus `form:"feasibility_status,omitempty" json:"feasibility_status,omitempty"`
+
+	// UserId 担当者ID
+	UserId *int `form:"user_id,omitempty" json:"user_id,omitempty"`
+
+	// SponsorStyleIds 協賛プランID（複数指定可）
+	SponsorStyleIds *[]int `form:"sponsor_style_ids,omitempty" json:"sponsor_style_ids,omitempty"`
+
+	// Sort ソート対象カラム (例: updated_at, created_at, sponsor_id)
+	Sort *string `form:"sort,omitempty" json:"sort,omitempty"`
+
+	// Order ソート順序 (asc または desc)
+	Order *GetSponsorshipActivitiesParamsOrder `form:"order,omitempty" json:"order,omitempty"`
+}
+
+// GetSponsorshipActivitiesParamsOrder defines parameters for GetSponsorshipActivities.
+type GetSponsorshipActivitiesParamsOrder string
+
+// GetSponsorshipActivitiesExportParams defines parameters for GetSponsorshipActivitiesExport.
+type GetSponsorshipActivitiesExportParams struct {
+	YearPeriodsId     *int               `form:"year_periods_id,omitempty" json:"year_periods_id,omitempty"`
+	Keyword           *string            `form:"keyword,omitempty" json:"keyword,omitempty"`
+	ActivityStatus    *ActivityStatus    `form:"activity_status,omitempty" json:"activity_status,omitempty"`
+	FeasibilityStatus *FeasibilityStatus `form:"feasibility_status,omitempty" json:"feasibility_status,omitempty"`
+	UserId            *int               `form:"user_id,omitempty" json:"user_id,omitempty"`
+	SponsorStyleIds   *[]int             `form:"sponsor_style_ids,omitempty" json:"sponsor_style_ids,omitempty"`
+}
+
 // PostTeachersParams defines parameters for PostTeachers.
 type PostTeachersParams struct {
 	// Name 名前
@@ -631,6 +919,12 @@ type PutTeachersIdParams struct {
 // PostUploadFileMultipartBody defines parameters for PostUploadFile.
 type PostUploadFileMultipartBody struct {
 	File *openapi_types.File `json:"file,omitempty"`
+}
+
+// GetUsersParams defines parameters for GetUsers.
+type GetUsersParams struct {
+	// Ids user id一覧（複数指定可）.未指定時は全件取得
+	Ids *[]int `form:"ids,omitempty" json:"ids,omitempty"`
 }
 
 // PostUsersParams defines parameters for PostUsers.
@@ -696,6 +990,12 @@ type PostBuyReportsMultipartRequestBody PostBuyReportsMultipartBody
 // PutBuyReportsIdMultipartRequestBody defines body for PutBuyReportsId for multipart/form-data ContentType.
 type PutBuyReportsIdMultipartRequestBody PutBuyReportsIdMultipartBody
 
+// PostCampusDonationsJSONRequestBody defines body for PostCampusDonations for application/json ContentType.
+type PostCampusDonationsJSONRequestBody = CampusDonationRequest
+
+// PutCampusDonationsIdJSONRequestBody defines body for PutCampusDonationsId for application/json ContentType.
+type PutCampusDonationsIdJSONRequestBody = CampusDonationRequest
+
 // PostDivisionsJSONRequestBody defines body for PostDivisions for application/json ContentType.
 type PostDivisionsJSONRequestBody = Division
 
@@ -731,6 +1031,15 @@ type PostSponsorsJSONRequestBody = Sponsor
 
 // PutSponsorsIdJSONRequestBody defines body for PutSponsorsId for application/json ContentType.
 type PutSponsorsIdJSONRequestBody = Sponsor
+
+// PostSponsorshipActivitiesJSONRequestBody defines body for PostSponsorshipActivities for application/json ContentType.
+type PostSponsorshipActivitiesJSONRequestBody = CreateSponsorshipActivityRequest
+
+// PutSponsorshipActivitiesIdJSONRequestBody defines body for PutSponsorshipActivitiesId for application/json ContentType.
+type PutSponsorshipActivitiesIdJSONRequestBody = UpdateSponsorshipActivityRequest
+
+// PutSponsorshipActivitiesIdStatusJSONRequestBody defines body for PutSponsorshipActivitiesIdStatus for application/json ContentType.
+type PutSponsorshipActivitiesIdStatusJSONRequestBody = UpdateSponsorshipActivityStatusRequest
 
 // PostSponsorstylesJSONRequestBody defines body for PostSponsorstyles for application/json ContentType.
 type PostSponsorstylesJSONRequestBody = SponsorStyle
@@ -851,6 +1160,18 @@ type ServerInterface interface {
 
 	// (PUT /buy_reports/{id})
 	PutBuyReportsId(ctx echo.Context, id int) error
+
+	// (POST /campus_donations)
+	PostCampusDonations(ctx echo.Context) error
+
+	// (GET /campus_donations/buildings/{year})
+	GetCampusDonationsBuildingsYear(ctx echo.Context, year int) error
+
+	// (GET /campus_donations/years/{year}/group_keys/{group_key}/floors)
+	GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx echo.Context, year int, groupKey CampusDonationBuildingGroupKey, params GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams) error
+
+	// (PUT /campus_donations/{id})
+	PutCampusDonationsId(ctx echo.Context, id int) error
 
 	// (GET /current_user)
 	GetCurrentUser(ctx echo.Context, params GetCurrentUserParams) error
@@ -992,6 +1313,27 @@ type ServerInterface interface {
 
 	// (PUT /sponsors/{id})
 	PutSponsorsId(ctx echo.Context, id int) error
+	// 協賛活動一覧取得
+	// (GET /sponsorship_activities)
+	GetSponsorshipActivities(ctx echo.Context, params GetSponsorshipActivitiesParams) error
+	// 協賛活動の新規作成
+	// (POST /sponsorship_activities)
+	PostSponsorshipActivities(ctx echo.Context) error
+	// CSVエクスポート
+	// (GET /sponsorship_activities/export)
+	GetSponsorshipActivitiesExport(ctx echo.Context, params GetSponsorshipActivitiesExportParams) error
+	// 協賛活動の削除
+	// (DELETE /sponsorship_activities/{id})
+	DeleteSponsorshipActivitiesId(ctx echo.Context, id int) error
+	// 協賛活動詳細取得
+	// (GET /sponsorship_activities/{id})
+	GetSponsorshipActivitiesId(ctx echo.Context, id int) error
+	// 協賛活動の更新（全項目）
+	// (PUT /sponsorship_activities/{id})
+	PutSponsorshipActivitiesId(ctx echo.Context, id int) error
+	// 協賛活動ステータスの更新
+	// (PUT /sponsorship_activities/{id}/status)
+	PutSponsorshipActivitiesIdStatus(ctx echo.Context, id int) error
 
 	// (GET /sponsorstyles)
 	GetSponsorstyles(ctx echo.Context) error
@@ -1033,7 +1375,7 @@ type ServerInterface interface {
 	PostUploadFile(ctx echo.Context) error
 
 	// (GET /users)
-	GetUsers(ctx echo.Context) error
+	GetUsers(ctx echo.Context, params GetUsersParams) error
 
 	// (POST /users)
 	PostUsers(ctx echo.Context, params PostUsersParams) error
@@ -1657,6 +1999,80 @@ func (w *ServerInterfaceWrapper) PutBuyReportsId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutBuyReportsId(ctx, id)
+	return err
+}
+
+// PostCampusDonations converts echo context to params.
+func (w *ServerInterfaceWrapper) PostCampusDonations(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostCampusDonations(ctx)
+	return err
+}
+
+// GetCampusDonationsBuildingsYear converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsBuildingsYear(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsBuildingsYear(ctx, year)
+	return err
+}
+
+// GetCampusDonationsYearsYearGroupKeysGroupKeyFloors converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// ------------- Path parameter "group_key" -------------
+	var groupKey CampusDonationBuildingGroupKey
+
+	err = runtime.BindStyledParameterWithOptions("simple", "group_key", ctx.Param("group_key"), &groupKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter group_key: %s", err))
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCampusDonationsYearsYearGroupKeysGroupKeyFloorsParams
+	// ------------- Optional query parameter "floor_number" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "floor_number", ctx.QueryParams(), &params.FloorNumber)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor_number: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCampusDonationsYearsYearGroupKeysGroupKeyFloors(ctx, year, groupKey, params)
+	return err
+}
+
+// PutCampusDonationsId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutCampusDonationsId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutCampusDonationsId(ctx, id)
 	return err
 }
 
@@ -2497,6 +2913,199 @@ func (w *ServerInterfaceWrapper) PutSponsorsId(ctx echo.Context) error {
 	return err
 }
 
+// GetSponsorshipActivities converts echo context to params.
+func (w *ServerInterfaceWrapper) GetSponsorshipActivities(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetSponsorshipActivitiesParams
+	// ------------- Optional query parameter "year_periods_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year_periods_id", ctx.QueryParams(), &params.YearPeriodsId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_periods_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "keyword" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "keyword", ctx.QueryParams(), &params.Keyword)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter keyword: %s", err))
+	}
+
+	// ------------- Optional query parameter "activity_status" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "activity_status", ctx.QueryParams(), &params.ActivityStatus)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter activity_status: %s", err))
+	}
+
+	// ------------- Optional query parameter "feasibility_status" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "feasibility_status", ctx.QueryParams(), &params.FeasibilityStatus)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter feasibility_status: %s", err))
+	}
+
+	// ------------- Optional query parameter "user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "user_id", ctx.QueryParams(), &params.UserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "sponsor_style_ids" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "sponsor_style_ids", ctx.QueryParams(), &params.SponsorStyleIds)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter sponsor_style_ids: %s", err))
+	}
+
+	// ------------- Optional query parameter "sort" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "sort", ctx.QueryParams(), &params.Sort)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter sort: %s", err))
+	}
+
+	// ------------- Optional query parameter "order" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "order", ctx.QueryParams(), &params.Order)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter order: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetSponsorshipActivities(ctx, params)
+	return err
+}
+
+// PostSponsorshipActivities converts echo context to params.
+func (w *ServerInterfaceWrapper) PostSponsorshipActivities(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostSponsorshipActivities(ctx)
+	return err
+}
+
+// GetSponsorshipActivitiesExport converts echo context to params.
+func (w *ServerInterfaceWrapper) GetSponsorshipActivitiesExport(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetSponsorshipActivitiesExportParams
+	// ------------- Optional query parameter "year_periods_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "year_periods_id", ctx.QueryParams(), &params.YearPeriodsId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year_periods_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "keyword" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "keyword", ctx.QueryParams(), &params.Keyword)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter keyword: %s", err))
+	}
+
+	// ------------- Optional query parameter "activity_status" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "activity_status", ctx.QueryParams(), &params.ActivityStatus)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter activity_status: %s", err))
+	}
+
+	// ------------- Optional query parameter "feasibility_status" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "feasibility_status", ctx.QueryParams(), &params.FeasibilityStatus)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter feasibility_status: %s", err))
+	}
+
+	// ------------- Optional query parameter "user_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "user_id", ctx.QueryParams(), &params.UserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "sponsor_style_ids" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "sponsor_style_ids", ctx.QueryParams(), &params.SponsorStyleIds)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter sponsor_style_ids: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetSponsorshipActivitiesExport(ctx, params)
+	return err
+}
+
+// DeleteSponsorshipActivitiesId converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteSponsorshipActivitiesId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteSponsorshipActivitiesId(ctx, id)
+	return err
+}
+
+// GetSponsorshipActivitiesId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetSponsorshipActivitiesId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetSponsorshipActivitiesId(ctx, id)
+	return err
+}
+
+// PutSponsorshipActivitiesId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutSponsorshipActivitiesId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutSponsorshipActivitiesId(ctx, id)
+	return err
+}
+
+// PutSponsorshipActivitiesIdStatus converts echo context to params.
+func (w *ServerInterfaceWrapper) PutSponsorshipActivitiesIdStatus(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PutSponsorshipActivitiesIdStatus(ctx, id)
+	return err
+}
+
 // GetSponsorstyles converts echo context to params.
 func (w *ServerInterfaceWrapper) GetSponsorstyles(ctx echo.Context) error {
 	var err error
@@ -2769,8 +3378,17 @@ func (w *ServerInterfaceWrapper) PostUploadFile(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetUsers(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUsersParams
+	// ------------- Optional query parameter "ids" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "ids", ctx.QueryParams(), &params.Ids)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter ids: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetUsers(ctx)
+	err = w.Handler.GetUsers(ctx, params)
 	return err
 }
 
@@ -3081,6 +3699,10 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/buy_reports/:id", wrapper.DeleteBuyReportsId)
 	router.GET(baseURL+"/buy_reports/:id", wrapper.GetBuyReportsId)
 	router.PUT(baseURL+"/buy_reports/:id", wrapper.PutBuyReportsId)
+	router.POST(baseURL+"/campus_donations", wrapper.PostCampusDonations)
+	router.GET(baseURL+"/campus_donations/buildings/:year", wrapper.GetCampusDonationsBuildingsYear)
+	router.GET(baseURL+"/campus_donations/years/:year/group_keys/:group_key/floors", wrapper.GetCampusDonationsYearsYearGroupKeysGroupKeyFloors)
+	router.PUT(baseURL+"/campus_donations/:id", wrapper.PutCampusDonationsId)
 	router.GET(baseURL+"/current_user", wrapper.GetCurrentUser)
 	router.GET(baseURL+"/departments", wrapper.GetDepartments)
 	router.POST(baseURL+"/departments", wrapper.PostDepartments)
@@ -3128,6 +3750,13 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/sponsors/:id", wrapper.DeleteSponsorsId)
 	router.GET(baseURL+"/sponsors/:id", wrapper.GetSponsorsId)
 	router.PUT(baseURL+"/sponsors/:id", wrapper.PutSponsorsId)
+	router.GET(baseURL+"/sponsorship_activities", wrapper.GetSponsorshipActivities)
+	router.POST(baseURL+"/sponsorship_activities", wrapper.PostSponsorshipActivities)
+	router.GET(baseURL+"/sponsorship_activities/export", wrapper.GetSponsorshipActivitiesExport)
+	router.DELETE(baseURL+"/sponsorship_activities/:id", wrapper.DeleteSponsorshipActivitiesId)
+	router.GET(baseURL+"/sponsorship_activities/:id", wrapper.GetSponsorshipActivitiesId)
+	router.PUT(baseURL+"/sponsorship_activities/:id", wrapper.PutSponsorshipActivitiesId)
+	router.PUT(baseURL+"/sponsorship_activities/:id/status", wrapper.PutSponsorshipActivitiesIdStatus)
 	router.GET(baseURL+"/sponsorstyles", wrapper.GetSponsorstyles)
 	router.POST(baseURL+"/sponsorstyles", wrapper.PostSponsorstyles)
 	router.DELETE(baseURL+"/sponsorstyles/:id", wrapper.DeleteSponsorstylesId)

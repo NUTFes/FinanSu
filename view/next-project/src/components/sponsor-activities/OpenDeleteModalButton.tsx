@@ -1,0 +1,27 @@
+import { useState } from 'react';
+
+import { DeleteButton } from '@components/common';
+
+import DeleteModal from './DeleteModal';
+
+interface Props {
+  children?: React.ReactNode;
+  id: number | string;
+  isDisabled?: boolean;
+  onDeleted?: () => Promise<void> | void;
+}
+
+const OpenDeleteModalButton: React.FC<Props> = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  return (
+    <>
+      <DeleteButton onClick={onOpen} isDisabled={props.isDisabled} />
+      {isOpen && <DeleteModal id={props.id} setShowModal={setIsOpen} onDeleted={props.onDeleted} />}
+    </>
+  );
+};
+
+export default OpenDeleteModalButton;
