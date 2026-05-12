@@ -27,12 +27,7 @@ const FundInformationHeader: React.FC<FundInformationHeaderProps> = ({
   };
 
   return (
-    <div
-      className='
-        flex flex-col items-center gap-4
-        md:flex-row md:items-center md:justify-between
-      '
-    >
+    <div className='flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between'>
       <div className='flex items-center gap-4'>
         <Title title={'収支管理'} />
         <select
@@ -50,18 +45,8 @@ const FundInformationHeader: React.FC<FundInformationHeaderProps> = ({
       <Title className='gap-0 text-xl'>
         残高<span className='ml-1'>{totalBalance.toLocaleString()}</span>
       </Title>
-      <div
-        className='
-          flex w-full flex-col gap-2
-          md:w-auto md:flex-row md:items-center
-        '
-      >
-        <OutlinePrimaryButton
-          className='
-            w-full
-            md:w-fit
-          '
-        >
+      <div className='flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center'>
+        <OutlinePrimaryButton className='w-full md:w-fit'>
           <a
             href={`${process.env.CSR_API_URI}/income_expenditure_management/csv/download?year=${selectedYear}`}
             download

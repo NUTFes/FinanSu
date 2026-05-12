@@ -10,6 +10,7 @@ type Handler struct {
 	activityStyleUseCase               usecase.ActivityStyleUseCase
 	bureauUseCase                      usecase.BureauUseCase
 	buyReportUseCase                   usecase.BuyReportUseCase
+	campusDonationUseCase              usecase.CampusDonationUseCase
 	departmentUseCase                  usecase.DepartmentUseCase
 	divisionUseCase                    usecase.DivisionUseCase
 	festivalItemUseCase                usecase.FestivalItemUseCase
@@ -33,6 +34,7 @@ func NewHandler(
 	activityStyleUseCase usecase.ActivityStyleUseCase,
 	bureauUseCase usecase.BureauUseCase,
 	buyReportUseCase usecase.BuyReportUseCase,
+	campusDonationUseCase usecase.CampusDonationUseCase,
 	departmentUseCase usecase.DepartmentUseCase,
 	divisionUseCase usecase.DivisionUseCase,
 	festivalItemUseCase usecase.FestivalItemUseCase,
@@ -55,6 +57,7 @@ func NewHandler(
 		activityStyleUseCase:               activityStyleUseCase,
 		bureauUseCase:                      bureauUseCase,
 		buyReportUseCase:                   buyReportUseCase,
+		campusDonationUseCase:              campusDonationUseCase,
 		departmentUseCase:                  departmentUseCase,
 		divisionUseCase:                    divisionUseCase,
 		festivalItemUseCase:                festivalItemUseCase,

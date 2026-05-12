@@ -82,31 +82,16 @@ export default function ResetPassword(props: Props) {
 
   return (
     <LoginLayout>
-      <div
-        className='
-          m-4 w-fit rounded-lg px-5 shadow-md
-          md:m-8 md:w-1/2 md:px-10
-        '
-      >
+      <div className='m-4 w-fit rounded-lg px-5 shadow-md md:m-8 md:w-1/2 md:px-10'>
         <div className='mt-8 flex items-center justify-center gap-2'>
           <Image
             src='/logo-black.svg'
             alt='logo'
             width={150}
             height={40}
-            className='
-              h-fit w-40
-              md:w-48
-            '
+            className='h-fit w-40 md:w-48'
           />
-          <p
-            className='
-              text-black-600 text-2xl
-              md:text-3xl
-            '
-          >
-            パスワードの変更
-          </p>
+          <p className='text-black-600 text-2xl md:text-3xl'>パスワードの変更</p>
         </div>
         {isTokenValid ? (
           <div>
@@ -115,19 +100,12 @@ export default function ResetPassword(props: Props) {
                 <div className='my-20 flex w-full flex-col items-center'>
                   <div className='mb-10 flex flex-col gap-3'>
                     <div className='grid grid-cols-3 place-items-center gap-5'>
-                      <p
-                        className='
-                          md:text-md
-                          text-black-300 whitespace-nowrap text-sm
-                        '
-                      >
+                      <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>
                         パスワード
                       </p>
                       <input
                         type='password'
-                        className='
-                          border-b-primary-1 col-span-2 w-full border-b p-1
-                        '
+                        className='border-b-primary-1 col-span-2 w-full border-b p-1'
                         {...register('password', {
                           required: 'パスワードは必須です。',
                           minLength: {
@@ -136,19 +114,12 @@ export default function ResetPassword(props: Props) {
                           },
                         })}
                       />
-                      <p
-                        className='
-                          md:text-md
-                          text-black-300 whitespace-nowrap text-sm
-                        '
-                      >
+                      <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>
                         パスワード確認
                       </p>
                       <input
                         type='password'
-                        className='
-                          border-b-primary-1 col-span-2 w-full border-b p-1
-                        '
+                        className='border-b-primary-1 col-span-2 w-full border-b p-1'
                         {...register('confirmPassword', {
                           required: 'パスワードは必須です。',
                           minLength: {
@@ -161,11 +132,7 @@ export default function ResetPassword(props: Props) {
                         })}
                       />
                     </div>
-                    <div
-                      className='
-                      mb-5 flex flex-col items-center justify-center
-                    '
-                    >
+                    <div className='mb-5 flex flex-col items-center justify-center'>
                       <p className='text-red-500'>{errors.password && errors.password.message}</p>
                       <p className='text-red-500'>
                         {errors.confirmPassword && errors.confirmPassword.type === 'correct' && (
@@ -192,10 +159,10 @@ export default function ResetPassword(props: Props) {
         ) : (
           <div className='my-20 flex w-full flex-col items-center'>
             <div className='mb-10 flex flex-col items-center gap-3'>
-              <p className='text-black-300 whitespace-nowrap text-lg'>
+              <p className='text-black-300 text-lg whitespace-nowrap'>
                 リンクが無効もしくは、有効期限が切れています。
               </p>
-              <p className='text-black-300 whitespace-nowrap text-lg'>
+              <p className='text-black-300 text-lg whitespace-nowrap'>
                 再度パスワードリセットメールを送信して下さい。
               </p>
             </div>

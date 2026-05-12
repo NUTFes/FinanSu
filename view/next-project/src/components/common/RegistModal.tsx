@@ -90,13 +90,7 @@ const RegistModal: FC<ModalProps> = (props) => {
     <Modal onClick={closeModal} className='w-full max-w-md'>
       <div className='p-3'>
         <div className='mt-5 flex justify-end'>
-          <div
-            className='
-              hover:bg-primary-3 mr-5 cursor-pointer
-              rounded-sm
-            '
-            onClick={closeModal}
-          >
+          <div className='hover:bg-primary-3 mr-5 cursor-pointer rounded-sm' onClick={closeModal}>
             <RiCloseCircleLine size={'23px'} color={'gray'} />
           </div>
         </div>
@@ -105,13 +99,7 @@ const RegistModal: FC<ModalProps> = (props) => {
           <div className='flex flex-col gap-4'>
             <div className='flex items-center'>
               <span className='text-black-600 mr-3'>年度</span>
-              <Select
-                value={formData.yearID}
-                onChange={handler('yearID')}
-                className='
-                w-56
-              '
-              >
+              <Select value={formData.yearID} onChange={handler('yearID')} className='w-56'>
                 {yearList.map((data) => (
                   <option key={data.id} value={data.id}>
                     {data.year}
@@ -121,13 +109,7 @@ const RegistModal: FC<ModalProps> = (props) => {
             </div>
             <div className='flex items-center'>
               <span className='text-black-600 mr-3'>項目</span>
-              <Select
-                value={formData.sourceID}
-                onChange={handler('sourceID')}
-                className='
-                w-56
-              '
-              >
+              <Select value={formData.sourceID} onChange={handler('sourceID')} className='w-56'>
                 {sourceList.map((source) => (
                   <option key={source.id} value={source.id}>
                     {source.name}
@@ -146,7 +128,7 @@ const RegistModal: FC<ModalProps> = (props) => {
           </div>
         </div>
       </div>
-      <div className='mb-10 mt-5 flex justify-center'>
+      <div className='mt-5 mb-10 flex justify-center'>
         <RegistButton
           width='220px'
           onClick={() => {

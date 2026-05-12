@@ -23,31 +23,16 @@ export default function Periods() {
 
   return (
     <LoginLayout>
-      <div
-        className='
-          m-4 w-fit rounded-lg px-4 shadow-md
-          md:m-8 md:w-1/2 md:px-10
-        '
-      >
+      <div className='m-4 w-fit rounded-lg px-4 shadow-md md:m-8 md:w-1/2 md:px-10'>
         <div className='mt-8 flex items-center justify-center gap-2'>
           <Image
             src='/logo-black.svg'
             alt='logo'
             width={150}
             height={40}
-            className='
-              h-fit w-40
-              md:w-48
-            '
+            className='h-fit w-40 md:w-48'
           />
-          <p
-            className='
-              text-black-600 text-2xl
-              md:text-3xl
-            '
-          >
-            パスワードの変更
-          </p>
+          <p className='text-black-600 text-2xl md:text-3xl'>パスワードの変更</p>
         </div>
         {isSubmitted ? (
           <div className='my-20 flex w-full flex-col items-center'>
@@ -80,18 +65,12 @@ export default function Periods() {
                     パスワードリセットフォームをお送りします。
                   </p>
                 </div>
-                <div
-                  className='
-                    grid grid-cols-3 items-center justify-items-end gap-5
-                  '
-                >
+                <div className='grid grid-cols-3 items-center justify-items-end gap-5'>
                   <p className='text-md text-black-300 whitespace-nowrap'>メールアドレス</p>
                   <input
                     type='email'
                     placeholder='test@example.com'
-                    className='
-                      border-b-primary-1 col-span-2 w-full border-b p-1
-                    '
+                    className='border-b-primary-1 col-span-2 w-full border-b p-1'
                     onChange={(e) => {
                       setEmail(e.target.value);
                     }}

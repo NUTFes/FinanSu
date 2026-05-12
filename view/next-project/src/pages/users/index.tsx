@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
-import { useCurrentUser } from '@/store';
+import { useCurrentUser, useUserStore } from '@/store';
 import { get } from '@api/api_methods';
-import { Card, Title } from '@components/common';
+import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
 import OpenEditModalButton from '@components/users/OpenEditModalButton';
 import { ROLES } from '@constants/role';
@@ -36,13 +36,20 @@ export default function Users(props: Props) {
   const router = useRouter();
 
   const user = useCurrentUser();
-  const [currentUser, setCurrentUser] = useState<User>();
+  const _hasHydrated = useUserStore((state) => state._hasHydrated);
   const [selectedBureau, setSelectedBureau] = useState(0);
   const [filterUsers, setFilterUsers] = useState<User[]>(users);
 
   useEffect(() => {
-    setCurrentUser(user);
-  }, [user]);
+    if (!_hasHydrated) return;
+    if (!user?.roleID) {
+      router.push('/');
+      return;
+    }
+    if (user.roleID !== 2 && user.roleID !== 3) {
+      router.push('/my_page');
+    }
+  }, [_hasHydrated, user?.roleID, router]);
 
   useEffect(() => {
     const newFilterUsers =
@@ -55,20 +62,8 @@ export default function Users(props: Props) {
     ids: [],
   });
 
-  const isAdmin = useMemo(() => {
-    if (currentUser?.roleID === 2 || currentUser?.roleID === 3) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [currentUser?.roleID]);
-
-  useEffect(() => {
-    if (!currentUser?.roleID) return;
-    if (!isAdmin) {
-      router.push('/purchaseorders');
-    }
-  }, [isAdmin, currentUser?.roleID, router]);
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
 
   return (
     <MainLayout>
@@ -82,14 +77,11 @@ export default function Users(props: Props) {
           <div className='flex'>
             <Title title={'ユーザー一覧'} />
             <select
-              className='
-                md:w-100 mx-auto my-4
-                w-fit md:mx-10 md:my-0
-              '
+              className='mx-auto my-4 w-fit md:mx-10 md:my-0 md:w-100'
               value={selectedBureau}
               onChange={(e) => setSelectedBureau(Number(e.target.value))}
             >
-              <option value={0}>全ての学科</option>
+              <option value={0}>全ての局</option>
               {bureaus.map((bureau) => (
                 <option value={bureau.id} key={bureau.id}>
                   {bureau.name}
@@ -106,7 +98,7 @@ export default function Users(props: Props) {
                   <p className='text-black-600 text-center text-sm'>氏名</p>
                 </th>
                 <th className='border-b-primary-1 border-b py-3'>
-                  <p className='text-black-600 text-center text-sm'>学科</p>
+                  <p className='text-black-600 text-center text-sm'>局</p>
                 </th>
                 <th className='border-b-primary-1 border-b py-3'>
                   <p className='text-black-600 text-center text-sm'>権限</p>
@@ -128,12 +120,8 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1 py-3',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                     )}
                   >
                     <p className='text-black-600 text-center text-sm'>{user.name}</p>
@@ -141,12 +129,8 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                     )}
                   >
                     <p className='text-black-600 text-center text-sm'>
@@ -156,12 +140,8 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                     )}
                   >
                     <p className='text-black-600 text-center text-sm'>
@@ -171,12 +151,8 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'px-1',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                     )}
                   >
                     <div className='flex justify-end'>
@@ -186,12 +162,8 @@ export default function Users(props: Props) {
                   <td
                     className={clsx(
                       'text-black-600 px-1 text-center text-sm',
-                      index === 0 ? 'pb-3 pt-4' : 'py-3',
-                      index === filterUsers.length - 1
-                        ? 'pb-4 pt-3'
-                        : `
-                        border-b py-3
-                      `,
+                      index === 0 ? 'pt-4 pb-3' : 'py-3',
+                      index === filterUsers.length - 1 ? 'pt-3 pb-4' : `border-b py-3`,
                     )}
                   >
                     <input

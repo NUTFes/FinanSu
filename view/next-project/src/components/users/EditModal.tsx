@@ -13,7 +13,7 @@ interface ModalProps {
   user: User;
 }
 
-export default function FundInformationEditModal(props: ModalProps) {
+export default function UserEditModal(props: ModalProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<User>(props.user);
@@ -50,7 +50,7 @@ export default function FundInformationEditModal(props: ModalProps) {
         <div className='col-span-4 w-full'>
           <Input className='w-full' value={formData.name} onChange={handler('name')} />
         </div>
-        <p>学科</p>
+        <p>局</p>
         <div className='col-span-4 w-full'>
           <Select value={formData.bureauID} onChange={handler('bureauID')}>
             {props.bureaus.map((data) => (

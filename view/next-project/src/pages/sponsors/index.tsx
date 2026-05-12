@@ -1,10 +1,12 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import OpenDeleteModalButton from '@/components/sponsors/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsors/OpenEditModalButton';
 import { useGetSponsorsPeriodsYear, useGetYearsPeriods } from '@/generated/hooks';
+import { useCurrentUser, useUserStore } from '@/store';
 import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsors/OpenAddModalButton';
@@ -14,6 +16,21 @@ import type { NextPage } from 'next';
 const date = new Date();
 
 const Sponsorship: NextPage = () => {
+  const router = useRouter();
+  const user = useCurrentUser();
+  const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  useEffect(() => {
+    if (!_hasHydrated) return;
+    if (!user?.roleID) {
+      router.push('/');
+      return;
+    }
+    if (user.roleID !== 2 && user.roleID !== 3) {
+      router.push('/my_page');
+    }
+  }, [_hasHydrated, user?.roleID, router]);
+
   const {
     data: yearPeriodsData,
     isLoading: isYearPeriodsLoading,
@@ -32,6 +49,8 @@ const Sponsorship: NextPage = () => {
   } = useGetSponsorsPeriodsYear(Number(selectedYear));
   const sponsors = sponsorsData?.data;
 
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
   if (isYearPeriodsLoading || isSponsorsLoading) return <Loading />;
   if (yearPeriodsError || sponsorsError) return <div>error...</div>;
 
@@ -60,28 +79,18 @@ const Sponsorship: NextPage = () => {
                 })}
             </select>
           </div>
-          <div
-            className='
-              hidden justify-end
-              md:flex
-            '
-          >
+          <div className='hidden justify-end md:flex'>
             <OpenAddModalButton>協賛企業登録</OpenAddModalButton>
           </div>
         </div>
         <div className='mb-2 overflow-scroll p-5'>
-          <table
-            className='
-              mb-5 w-max table-auto border-collapse
-              md:w-full md:table-fixed
-            '
-          >
+          <table className='mb-5 w-max table-auto border-collapse md:w-full md:table-fixed'>
             <thead>
               <tr className='border-b-primary-1 border-b py-3'>
-                <th className='w-1/8 border-b-primary-1 pb-2'>
+                <th className='border-b-primary-1 w-1/8 pb-2'>
                   <div className='text-black-600 mr-1 text-center text-sm'>企業名</div>
                 </th>
-                <th className='w-1/8 border-b-primary-1 pb-2'>
+                <th className='border-b-primary-1 w-1/8 pb-2'>
                   <div className='text-black-600 text-center text-sm'>電話番号</div>
                 </th>
                 <th className='border-b-primary-1 w-1/6 pb-2'>
@@ -90,7 +99,7 @@ const Sponsorship: NextPage = () => {
                 <th className='border-b-primary-1 w-1/6 pb-2'>
                   <div className='text-center'>住所</div>
                 </th>
-                <th className='w-1/8 border-b-primary-1 pb-2'>
+                <th className='border-b-primary-1 w-1/8 pb-2'>
                   <div className='text-black-600 text-center'>代表者</div>
                 </th>
                 <th className='border-b-primary-1 w-1/12 pb-2'>
@@ -139,12 +148,7 @@ const Sponsorship: NextPage = () => {
           </table>
         </div>
       </Card>
-      <div
-        className='
-          fixed bottom-4 right-4
-          md:hidden
-        '
-      >
+      <div className='fixed right-4 bottom-4 md:hidden'>
         <OpenAddModalButton />
       </div>
     </MainLayout>

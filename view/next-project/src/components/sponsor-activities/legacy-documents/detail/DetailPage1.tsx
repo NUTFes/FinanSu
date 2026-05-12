@@ -29,11 +29,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
 
   return (
     <>
-      <p
-        className='
-          text-black-600 mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest
-        '
-      >
+      <p className='text-black-600 mx-auto mb-7 w-fit text-2xl/8 font-thin tracking-widest'>
         協賛活動の詳細
       </p>
       <div className='my-7 flex flex-wrap justify-center gap-7'>
@@ -99,7 +95,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>備考</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>備考</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border-b-primary-1 border-b py-3'></tr>
@@ -122,7 +118,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>協賛企業</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>協賛企業</p>
       <table className='w-full table-fixed border-collapse'>
         <thead>
           <tr className='border-b-primary-1 border-b py-3'>
@@ -173,12 +169,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <div
-        className='
-          mt-5 hidden justify-center gap-3
-          md:flex
-        '
-      >
+      <div className='mt-5 hidden justify-center gap-3 md:flex'>
         <OpenAddPdfDetailModalButton
           sponsorActivitiesViewItem={props.sponsorActivitiesViewItem}
           setIsOpen={props.setIsOpen}
@@ -189,13 +180,7 @@ const DetailPage1: FC<ModalProps> = (props) => {
         />
       </div>
       <div className='mt-2 flex justify-end'>
-        <button
-          onClick={() => toPage2()}
-          className='
-            hover:bg-grey-300
-            rounded-full
-          '
-        >
+        <button onClick={() => toPage2()} className='hover:bg-grey-300 rounded-full'>
           <FaChevronCircleRight size={30} />
         </button>
       </div>

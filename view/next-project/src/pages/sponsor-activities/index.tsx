@@ -1,8 +1,11 @@
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useReducer } from 'react';
 
+import { Loading } from '@/components/common';
 import SponsorActivitiesLayout from '@/components/sponsor-activities/page/SponsorActivitiesLayout';
 import { useSponsorActivitiesQuery } from '@/hooks/sponsor-activities/useSponsorActivitiesQuery';
 import { useSponsorsByYear } from '@/hooks/sponsor-activities/useSponsorsByYear';
+import { useCurrentUser, useUserStore } from '@/store';
 import { get } from '@/utils/api/api_methods';
 import {
   calculateActivitiesTotalAmount,
@@ -76,6 +79,21 @@ export async function getServerSideProps() {
 
 export default function SponsorActivities(props: Props) {
   const { sponsorStyles, sponsors, users, yearPeriods } = props;
+
+  const router = useRouter();
+  const user = useCurrentUser();
+  const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  useEffect(() => {
+    if (!_hasHydrated) return;
+    if (!user?.roleID) {
+      router.push('/');
+      return;
+    }
+    if (user.roleID !== 2 && user.roleID !== 3) {
+      router.push('/my_page');
+    }
+  }, [_hasHydrated, user?.roleID, router]);
 
   const selectableYearPeriods = useMemo(
     () =>
@@ -164,6 +182,9 @@ export default function SponsorActivities(props: Props) {
       payload: { ...filterData, sponsorId: 'all' },
     });
   }, [filterData, sponsorIdSetByYear]);
+
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
 
   return (
     <SponsorActivitiesLayout

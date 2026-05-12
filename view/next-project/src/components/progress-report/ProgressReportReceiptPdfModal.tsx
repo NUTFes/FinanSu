@@ -47,12 +47,7 @@ export default function ProgressReportReceiptPdfModal({
         <div className='ml-auto w-fit'>
           <CloseButton onClick={onClose} />
         </div>
-        <p
-          className='
-            text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin
-            tracking-widest
-          '
-        >
+        <p className='text-black-600 mx-auto mb-4 w-fit text-2xl/8 font-thin tracking-widest'>
           領収書の発行
         </p>
 

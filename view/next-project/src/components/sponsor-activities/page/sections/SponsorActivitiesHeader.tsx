@@ -50,30 +50,10 @@ export default function SponsorActivitiesHeader({
   fetchSponsorshipActivities,
 }: SponsorActivitiesHeaderProps) {
   return (
-    <div
-      className='
-        mx-4 mt-8
-        md:mx-8
-      '
-    >
-      <div
-        className='
-          flex flex-col gap-4
-          md:gap-3
-        '
-      >
-        <div
-          className='
-            flex flex-col gap-4
-            md:flex-row md:items-center
-          '
-        >
-          <div
-            className='
-              flex flex-col items-center gap-4
-              md:flex-row md:gap-11
-            '
-          >
+    <div className='mx-4 mt-8 md:mx-8'>
+      <div className='flex flex-col gap-4 md:gap-3'>
+        <div className='flex flex-col gap-4 md:flex-row md:items-center'>
+          <div className='flex flex-col items-center gap-4 md:flex-row md:gap-11'>
             <Title title={'協賛活動一覧'} />
             <div className='flex gap-2.5'>
               <select
@@ -95,10 +75,7 @@ export default function SponsorActivitiesHeader({
                 <button
                   type='button'
                   aria-label='協賛フィルターを開く'
-                  className='
-                    hover:bg-white-100 rounded-md
-                    p-1.5
-                  '
+                  className='hover:bg-white-100 rounded-md p-1.5'
                   onClick={() => {
                     onSetFilterOpen(!isFilterOpen);
                   }}
@@ -106,7 +83,7 @@ export default function SponsorActivitiesHeader({
                   <MdFilterList size='22' color='#666666' />
                 </button>
                 {isFiltered && (
-                  <div className='absolute -right-0.5 -top-0.5'>
+                  <div className='absolute -top-0.5 -right-0.5'>
                     <MdCircle color='rgb(4 102 140)' size={8} />
                   </div>
                 )}
@@ -123,10 +100,7 @@ export default function SponsorActivitiesHeader({
               )}
             </div>
             <PrimaryButton
-              className='
-                hidden w-fit whitespace-nowrap
-                md:flex
-              '
+              className='hidden w-fit whitespace-nowrap md:flex'
               onClick={async () => {
                 downloadFile({
                   downloadContent: await createSponsorshipActivityCsv(sponsorshipActivities),
@@ -135,17 +109,12 @@ export default function SponsorActivitiesHeader({
                 });
               }}
             >
-              <MdOutlineFileDownload size='20' className='mr-1 mt-0.5' />
+              <MdOutlineFileDownload size='20' className='mt-0.5 mr-1' />
               CSVダウンロード
             </PrimaryButton>
           </div>
         </div>
-        <div
-          className='
-            hidden
-            md:flex md:justify-end
-          '
-        >
+        <div className='hidden md:flex md:justify-end'>
           <OpenAddModalButton
             users={users}
             sponsors={sponsors}

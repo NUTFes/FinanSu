@@ -1286,6 +1286,105 @@ paths:
               schema:
                 type: string
                 format: binary
+  /campus_donations/years/{year}/group_keys/{group_key}/floors:
+    get:
+      tags:
+        - campus_donation
+      description: 指定した棟グループの教員別募金情報を取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+        - name: group_key
+          in: path
+          description: group_key
+          required: true
+          schema:
+            $ref: "#/components/schemas/campusDonationBuildingGroupKey"
+        - name: floor_number
+          in: query
+          description: floor_number
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 指定した棟グループの教員別募金情報を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/campusDonationBuildingFloor"
+  /campus_donations/buildings/{year}:
+    get:
+      tags:
+        - campus_donation
+      description: 年度ごとの各棟の合計募金額を取得
+      parameters:
+        - name: year
+          in: path
+          description: year
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 年度ごとの各棟の合計募金額を取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/buildingTotal"
+  /campus_donations:
+    post:
+      tags:
+        - campus_donation
+      description: 学内募金の登録
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/campusDonationRequest"
+        required: true
+      responses:
+        "200":
+          description: 登録された学内募金が返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/campusDonation"
+      x-codegen-request-body-name: campusDonationRequest
+  /campus_donations/{id}:
+    put:
+      tags:
+        - campus_donation
+      description: 学内募金の更新
+      parameters:
+        - name: id
+          in: path
+          description: 学内募金ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/campusDonationRequest"
+        required: true
+      responses:
+        "200":
+          description: 更新された学内募金が返ってくる
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/campusDonation"
+      x-codegen-request-body-name: campusDonationRequest
   /income_expenditure_management/csv/download:
     get:
       tags:
@@ -2070,20 +2169,20 @@ paths:
                 items:
                   $ref: "#/components/schemas/user"
                 example:
-                - id: 1
-                  name: 技大太郎1
-                  bureauID: 1
-                  roleID: 1
-                  isDeleted: false
-                  createdAt: 2026-01-01T00:00:00Z
-                  updatedAt: 2026-01-01T00:00:00Z
-                - id: 2
-                  name: 技大太郎2
-                  bureauID: 1
-                  roleID: 1
-                  isDeleted: false
-                  createdAt: 2026-01-02T00:00:00Z
-                  updatedAt: 2026-01-02T00:00:00Z
+                  - id: 1
+                    name: 技大太郎1
+                    bureauID: 1
+                    roleID: 1
+                    isDeleted: false
+                    createdAt: 2026-01-01T00:00:00Z
+                    updatedAt: 2026-01-01T00:00:00Z
+                  - id: 2
+                    name: 技大太郎2
+                    bureauID: 1
+                    roleID: 1
+                    isDeleted: false
+                    createdAt: 2026-01-02T00:00:00Z
+                    updatedAt: 2026-01-02T00:00:00Z
     post:
       tags:
         - user
@@ -2674,6 +2773,26 @@ components:
         sponsorStyleID:
           type: integer
           example: 1
+    buildingTotal:
+      description: 棟ごとの合計募金額
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 電気棟
+        groupKey:
+          $ref: "#/components/schemas/campusDonationBuildingGroupKey"
+        totalPrice:
+          type: integer
+          example: 12000
+      required:
+        - id
+        - name
+        - groupKey
+        - totalPrice
     buyReport:
       description: 購入報告の際のパラメータ
       type: object
@@ -2809,6 +2928,146 @@ components:
       required:
         - unsettledAmount
         - unpackedAmount
+    campusDonationRequest:
+      type: object
+      required:
+        - userId
+        - teacherId
+        - yearId
+        - price
+        - receivedAt
+      properties:
+        userId:
+          type: integer
+          description: 募金を登録・更新したユーザーID
+          example: 1
+        teacherId:
+          type: integer
+          description: 募金対象の教員ID
+          example: 1
+        yearId:
+          type: integer
+          description: 年度ID
+          example: 1
+        price:
+          type: integer
+          description: 募金金額
+          example: 2000
+        receivedAt:
+          type: string
+          format: date
+          description: 受領日
+          example: 2026-04-28
+    campusDonation:
+      type: object
+      required:
+        - id
+        - userId
+        - teacherId
+        - yearId
+        - price
+        - receivedAt
+      properties:
+        id:
+          type: integer
+          description: 学内募金ID
+          example: 1
+        userId:
+          type: integer
+          description: 募金を登録・更新したユーザーID
+          example: 1
+        teacherId:
+          type: integer
+          description: 募金対象の教員ID
+          example: 1
+        yearId:
+          type: integer
+          description: 年度ID
+          example: 1
+        price:
+          type: integer
+          description: 募金金額
+          example: 2000
+        receivedAt:
+          type: string
+          format: date
+          description: 受領日
+          example: 2026-04-28
+    campusDonationTeacher:
+      description: 棟・階ごとの教員別募金情報
+      type: object
+      properties:
+        roomName:
+          type: string
+          example: "501"
+        teacherId:
+          type: integer
+          example: 1
+        teacherName:
+          type: string
+          example: 技大太郎
+        price:
+          type: integer
+          nullable: true
+          example: 5000
+        isBlack:
+          type: boolean
+          example: false
+        campusDonationId:
+          type: integer
+          nullable: true
+          description: 対象年度に登録済みの学内募金ID
+          example: 1
+      required:
+        - roomName
+        - teacherId
+        - teacherName
+        - campusDonationId
+        - price
+        - isBlack
+    campusDonationBuildingFloor:
+      description: 各号棟の指定フロア教員情報
+      type: object
+      properties:
+        buildingId:
+          type: integer
+          example: 1
+        buildingName:
+          type: string
+          example: 機械・建設棟
+        unitNumber:
+          type: integer
+          example: 1
+        floorNumber:
+          type: string
+          example: "5"
+        donations:
+          type: array
+          items:
+            $ref: "#/components/schemas/campusDonationTeacher"
+      required:
+        - buildingId
+        - buildingName
+        - unitNumber
+        - floorNumber
+        - donations
+    campusDonationBuildingGroupKey:
+      description: 学内募金で表示する棟グループのキー
+      type: string
+      enum:
+        - mechanical_civil_engineering
+        - electrical_engineering
+        - biology
+        - environmental_system
+        - materials_management_information
+        - general_research
+        - nuclear_system_safety
+        - administration
+        - extreme_energy_density_research_center
+        - machine_shop
+        - large_experiment
+        - analysis_instrumentation_center
+        - other
     division:
       required:
         - name

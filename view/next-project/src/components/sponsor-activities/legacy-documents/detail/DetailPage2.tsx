@@ -193,7 +193,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
 
   return (
     <>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>協賛スタイル</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>協賛スタイル</p>
       <table className='mb-4 w-full table-fixed border-collapse'>
         <thead>
           <tr className='border-b-primary-1 border-b py-3'>
@@ -240,16 +240,12 @@ const DetailPage2: FC<ModalProps> = (props) => {
           )}
         </tbody>
       </table>
-      <p className='text-black-600 mx-auto mb-2 mt-7 w-fit text-xl'>広告デザイン</p>
+      <p className='text-black-600 mx-auto mt-7 mb-2 w-fit text-xl'>広告デザイン</p>
       <div className='max-h-60 overflow-auto'>
         {sponsorActivityInformations &&
           sponsorActivityInformations.map((activityInformation, index) => (
             <>
-              <div
-                className='
-                  border-primary-1 m-0 flex flex-row-reverse border-t p-0
-                '
-              >
+              <div className='border-primary-1 m-0 flex flex-row-reverse border-t p-0'>
                 <div className='mt-2 w-1/12'>
                   <button className=''>
                     <DeleteButton
@@ -262,7 +258,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
               <div className='flex flex-col flex-wrap justify-center'>
                 <div className='my-1 flex justify-center'>
                   <div className='flex w-fit items-center justify-center gap-3'>
-                    <p className='w-25 text-black-600 whitespace-nowrap'>広告状況</p>
+                    <p className='text-black-600 w-25 whitespace-nowrap'>広告状況</p>
                     <Select
                       value={designProgresses[index].id}
                       className='w-28 py-2'
@@ -313,7 +309,7 @@ const DetailPage2: FC<ModalProps> = (props) => {
                         />
                       </>
                     ) : activityInformation.fileInformation.trim() === '' ? (
-                      <p className='w-30 border-primary-1 border-b'>&emsp; &emsp;</p>
+                      <p className='border-primary-1 w-30 border-b'>&emsp; &emsp;</p>
                     ) : (
                       <p className='border-primary-1 border-b'>
                         {activityInformation.fileInformation}
@@ -390,30 +386,14 @@ const DetailPage2: FC<ModalProps> = (props) => {
               {isLoading && <Loading />}
             </>
           ))}
-        <div
-          className='
-            border-primary-1 my-1 flex flex-wrap justify-center gap-7 border-t
-            p-2
-          '
-        >
-          <button
-            className='
-              hover:bg-grey-300
-              rounded-sm
-            '
-          >
+        <div className='border-primary-1 my-1 flex flex-wrap justify-center gap-7 border-t p-2'>
+          <button className='hover:bg-grey-300 rounded-sm'>
             <FiPlusSquare size={30} onClick={() => createInfomation()} />
           </button>
         </div>
       </div>
       <div className='mt-2'>
-        <button
-          onClick={() => toPage1()}
-          className='
-            hover:bg-grey-300
-            rounded-full
-          '
-        >
+        <button onClick={() => toPage1()} className='hover:bg-grey-300 rounded-full'>
           <FaChevronCircleLeft size={30} />
         </button>
       </div>

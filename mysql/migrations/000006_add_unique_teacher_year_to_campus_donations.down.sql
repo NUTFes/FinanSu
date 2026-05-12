@@ -1,0 +1,2 @@
+ALTER TABLE campus_donations
+DROP INDEX idx_campus_donations_teacher_year;

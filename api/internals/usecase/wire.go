@@ -15,6 +15,7 @@ var UseCaseProviderSet = wire.NewSet(
 	NewBudgetUseCase,
 	NewBureauUseCase,
 	NewBuyReportUseCase,
+	NewCampusDonationUseCase,
 	NewDepartmentUseCase,
 	NewDivisionUseCase,
 	NewExpenseUseCase,

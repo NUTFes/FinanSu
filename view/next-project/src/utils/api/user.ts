@@ -13,8 +13,7 @@ export const post = async (url: string, data: User) => {
     },
     body: JSON.stringify(data),
   });
-  return await res;
-  // return await res.json();
+  return await res.json();
 };
 
 export const put = async (url: string, data: User) => {

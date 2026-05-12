@@ -177,11 +177,7 @@ export default function EditModal(props: ModalProps) {
 
   // 購入物品の情報
   const content = (data: PurchaseItem) => (
-    <div
-      className='
-      w-9/10 mx-auto my-6 grid grid-cols-4 place-items-center gap-4
-    '
-    >
+    <div className='mx-auto my-6 grid w-9/10 grid-cols-4 place-items-center gap-4'>
       <p className='text-black-600 text-lg'>物品名</p>
       <div className='col-span-3 w-full'>
         <Input
@@ -261,12 +257,7 @@ export default function EditModal(props: ModalProps) {
               {isDone ? (
                 // 編集完了した時に完了と戻るボタンを表示
                 <>
-                  <div
-                    className='
-                      w-9/10 mx-auto my-5 mb-6 grid grid-cols-4
-                      place-items-center gap-4
-                    '
-                  >
+                  <div className='mx-auto my-5 mb-6 grid w-9/10 grid-cols-4 place-items-center gap-4'>
                     <p className='text-black-600 text-lg'>割引</p>
                     <div className='col-span-3 w-full'>
                       <Input
@@ -325,7 +316,7 @@ export default function EditModal(props: ModalProps) {
                             戻る
                           </OutlinePrimaryButton>
                           <PrimaryButton
-                            className={'mx-2 pl-4 pr-2'}
+                            className={'mx-2 pr-2 pl-4'}
                             onClick={() => {
                               {
                                 activeStep === formDataList.length ? setIsDone(true) : nextStep();

@@ -194,7 +194,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
   };
 
   return (
-    <Modal className='md:h-6/12 md:mt-5 md:w-5/12' onClick={onClose}>
+    <Modal className='md:mt-5 md:h-6/12 md:w-5/12' onClick={onClose}>
       <div className='w-full'>
         <div className='ml-auto w-fit'>
           <RiCloseCircleLine size={'23px'} color={'gray'} onClick={onClose} />
@@ -205,11 +205,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
           type='file'
           ref={fileInputRef}
           onChange={handleFileChange}
-          className='
-            hover:file:bg-grey-300 file:mr-4 file:rounded-full file:border-0 file:px-4
-            file:py-2
-            file:text-sm
-          '
+          className='hover:file:bg-grey-300 file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm'
         />
         <p className='mt-2 text-sm text-red-500'>※ファイルサイズは1GB以下にしてください。</p>
         {isLoading && (
@@ -220,11 +216,7 @@ const UploadFileModal: FC<ModalProps> = (props) => {
           </div>
         )}
       </div>
-      <div
-        className='
-        my-2 flex h-60 w-full flex-wrap justify-center overflow-auto
-      '
-      >
+      <div className='my-2 flex h-60 w-full flex-wrap justify-center overflow-auto'>
         {preview.type === 'application/pdf' ? (
           <embed
             src={preview.uploadImageURL}

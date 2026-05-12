@@ -226,16 +226,8 @@ interface StyleFieldRowProps {
 
 function StyleFieldRow(props: StyleFieldRowProps) {
   return (
-    <div
-      className='
-      min-h-10 border-primary-1 flex items-stretch rounded-md border
-    '
-    >
-      <div
-        className='
-          text-black-600 flex w-10 shrink-0 items-center justify-center
-        '
-      >
+    <div className='border-primary-1 flex min-h-10 items-stretch rounded-md border'>
+      <div className='text-black-600 flex w-10 shrink-0 items-center justify-center'>
         {props.categoryLabel}
       </div>
       <div className='bg-grey-200 my-2 w-px shrink-0' />
@@ -626,24 +618,12 @@ export default function SponsorActivityForm(props: Props) {
   const model = useSponsorActivityFormModel(props);
 
   return (
-    <Modal
-      className='
-        w-[min(92vw,980px)] px-6 py-10
-        md:p-12
-      '
-      onClick={model.onClose}
-    >
+    <Modal className='w-[min(92vw,980px)] px-6 py-10 md:p-12' onClick={model.onClose}>
       <Title>
         <p>協賛企業</p>
         <p>修正・登録</p>
       </Title>
-      <div
-        className='
-          mx-auto mt-8 grid w-full grid-cols-[7rem_minmax(0,1fr)] items-start
-          gap-x-4 gap-y-5
-          [&>p]:whitespace-nowrap
-        '
-      >
+      <div className='mx-auto mt-8 grid w-full grid-cols-[7rem_minmax(0,1fr)] items-start gap-x-4 gap-y-5 [&>p]:whitespace-nowrap'>
         <CoreInfoFields
           selectableYearPeriods={model.selectableYearPeriods}
           selectedYearPeriodId={model.selectedYearPeriodId}
@@ -715,7 +695,7 @@ export default function SponsorActivityForm(props: Props) {
         <div className='mb-4 text-center text-sm text-red-600'>{model.errorMessage}</div>
       )}
 
-      <div className='gap-17.5 mt-5 flex flex-row justify-center'>
+      <div className='mt-5 flex flex-row justify-center gap-17.5'>
         <OutlinePrimaryButton onClick={model.onClose}>戻る</OutlinePrimaryButton>
         <PrimaryButton onClick={model.submit} disabled={model.isSubmitting}>
           {props.submitLabel}

@@ -1,10 +1,13 @@
 import clsx from 'clsx';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 import OpenDeleteModalButton from '@/components/sponsorstyles/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsorstyles/OpenEditModalButton';
+import { useCurrentUser, useUserStore } from '@/store';
 import { get } from '@api/api_methods';
-import { Card, Title } from '@components/common';
+import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsorstyles/OpenAddModalButton';
 import { SponsorStyle } from '@type/common';
@@ -26,6 +29,24 @@ export const getServerSideProps = async () => {
 export default function SponsorStyleList(props: Props) {
   const sponsorStyleList: SponsorStyle[] = props.sponsorstyles;
 
+  const router = useRouter();
+  const user = useCurrentUser();
+  const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  useEffect(() => {
+    if (!_hasHydrated) return;
+    if (!user?.roleID) {
+      router.push('/');
+      return;
+    }
+    if (user.roleID !== 2 && user.roleID !== 3) {
+      router.push('/my_page');
+    }
+  }, [_hasHydrated, user?.roleID, router]);
+
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
+
   return (
     <MainLayout>
       <Head>
@@ -37,12 +58,7 @@ export default function SponsorStyleList(props: Props) {
           <div className='flex'>
             <Title>協賛スタイル一覧</Title>
           </div>
-          <div
-            className='
-              hidden justify-end
-              md:flex
-            '
-          >
+          <div className='hidden justify-end md:flex'>
             <OpenAddModalButton>協賛スタイル登録</OpenAddModalButton>
           </div>
         </div>
@@ -67,12 +83,7 @@ export default function SponsorStyleList(props: Props) {
             <tbody>
               {sponsorStyleList.map((sponsorStyleItem, index) => (
                 <tr
-                  className={clsx(
-                    index !== sponsorStyleList.length - 1 &&
-                      `
-                    border-b
-                  `,
-                  )}
+                  className={clsx(index !== sponsorStyleList.length - 1 && `border-b`)}
                   key={sponsorStyleItem.id}
                 >
                   <td className='py-3'>
@@ -99,12 +110,7 @@ export default function SponsorStyleList(props: Props) {
           </table>
         </div>
       </Card>
-      <div
-        className='
-          fixed bottom-4 right-4
-          md:hidden
-        '
-      >
+      <div className='fixed right-4 bottom-4 md:hidden'>
         <OpenAddModalButton />
       </div>
     </MainLayout>
