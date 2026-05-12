@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 
 import { BUREAUS } from '@/constants/bureaus';
 import { useAuthStore, useUserStore } from '@/store';
-import { get } from '@api/api_methods';
 import { signUp } from '@api/signUp';
 import { post } from '@api/user';
 import { PrimaryButton } from '@components/common';
@@ -44,11 +43,14 @@ export default function SignUpView() {
     setIsSignUpNow(true);
     const userUrl: string = process.env.CSR_API_URI + '/users';
     const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
-    // userのpost時のResに登録したデータが返ってこないので以下で用意
-    const getRes = await get(userUrl);
-    const userID: number = getRes[getRes.length - 1].id + 1;
     // signIn には登録したuserのIDが必要なので先にUserをpost
-    await post(userUrl, postUserData);
+    const newUser = await post(userUrl, postUserData);
+    if (!newUser || !newUser.id) {
+      alert('ユーザーの作成に失敗しました。');
+      setIsSignUpNow(false);
+      return;
+    }
+    const userID: number = newUser.id;
     // signUp
     const req = await signUp(signUpUrl, data, userID);
     const res = await req.json();
