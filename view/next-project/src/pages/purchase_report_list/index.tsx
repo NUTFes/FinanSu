@@ -207,10 +207,12 @@ export default function PurchaseReports() {
 
     try {
       await trigger(putBuyReportStatusBuyReportIdBody);
+      mutateBuyReportData();
+      mutateBuyReportsSummary();
     } catch {
       console.error('Failed to update buy_reports:', statusError);
     }
-  }, [buyReportId, sealChecks, settlementChecks, trigger, statusError]);
+  }, [buyReportId, sealChecks, settlementChecks, trigger, statusError, mutateBuyReportData, mutateBuyReportsSummary]);
 
   useEffect(() => {
     updateStatus();
