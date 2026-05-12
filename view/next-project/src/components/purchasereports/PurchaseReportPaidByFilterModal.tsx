@@ -1,11 +1,11 @@
 import React, { FC, useMemo, useState } from 'react';
-import { RiSearchLine } from 'react-icons/ri';
+import Select, { SingleValue } from 'react-select';
 
 import { normalizePaidBy } from '@/utils/purchaseReportFilters';
-import { CloseButton, Modal, OutlinePrimaryButton, Select } from '@components/common';
+import { CloseButton, Modal, OutlinePrimaryButton, Select as CommonSelect } from '@components/common';
 import { Bureau, User } from '@type/common';
 
-import s from './PurchaseReportPaidByFilterModal.module.css';
+type NameOption = { value: string; label: string };
 
 interface PurchaseReportPaidByFilterModalProps {
   onClose: () => void;
@@ -39,8 +39,6 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     selectedPaidByUserId ?? null,
   );
   const [draftPaidBy, setDraftPaidBy] = useState<string | null>(normalizePaidBy(selectedPaidBy));
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isNameDropdownOpen, setIsNameDropdownOpen] = useState(false);
 
   const labelClassName = 'mb-2 text-sm text-black-600 [font-family:"Noto_Sans_JP"]';
   const selectTextClassName = 'text-black-600 [font-family:"Noto_Sans_JP"]';
@@ -59,26 +57,25 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     return users.filter((user) => user.bureauID === draftBureauId);
   }, [draftBureauId, users]);
 
-  const filteredOptions = useMemo(() => {
-    const q = searchQuery.toLowerCase();
-    const legacy = legacyPaidByOptions
-      .filter((name) => name.toLowerCase().includes(q))
-      .map((name) => ({ label: name, userId: null as number | null, paidBy: name }));
-    const userOpts = filteredUsers
-      .filter((u) => {
-        const bureauName = bureauNameMap.get(u.bureauID) ?? '';
-        return `${bureauName} ${u.name}`.toLowerCase().includes(q);
-      })
-      .map((u) => {
+  const nameOptions = useMemo(
+    (): NameOption[] => [
+      { value: '', label: '絞り込みなし' },
+      ...legacyPaidByOptions.map((name) => ({ value: `legacy:${name}`, label: name })),
+      ...filteredUsers.map((u) => {
         const bureauName = bureauNameMap.get(u.bureauID);
-        return {
-          label: draftBureauId || !bureauName ? u.name : `${bureauName} ${u.name}`,
-          userId: u.id,
-          paidBy: u.name,
-        };
-      });
-    return [...legacy, ...userOpts];
-  }, [searchQuery, filteredUsers, legacyPaidByOptions, bureauNameMap, draftBureauId]);
+        const label = draftBureauId || !bureauName ? u.name : `${bureauName} ${u.name}`;
+        return { value: `user:${u.id}`, label };
+      }),
+    ],
+    [filteredUsers, legacyPaidByOptions, bureauNameMap, draftBureauId],
+  );
+
+  const nameSelectValue =
+    draftPaidByUserId != null
+      ? (nameOptions.find((o) => o.value === `user:${draftPaidByUserId}`) ?? nameOptions[0])
+      : draftPaidBy != null
+        ? (nameOptions.find((o) => o.value === `legacy:${draftPaidBy}`) ?? nameOptions[0])
+        : nameOptions[0];
 
   const handleBureauChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
@@ -86,13 +83,21 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     setDraftBureauId(nextBureauId);
     setDraftPaidByUserId(null);
     setDraftPaidBy(null);
-    setSearchQuery('');
   };
 
-  const handleSelectOption = (userId: number | null, paidBy: string | null) => {
-    setDraftPaidByUserId(userId);
-    setDraftPaidBy(normalizePaidBy(paidBy));
-    setIsNameDropdownOpen(false);
+  const handleNameChange = (option: SingleValue<NameOption>) => {
+    const val = option?.value ?? '';
+    if (val === '') {
+      setDraftPaidByUserId(null);
+      setDraftPaidBy(null);
+    } else if (val.startsWith('user:')) {
+      const id = Number(val.slice(5));
+      setDraftPaidByUserId(id);
+      setDraftPaidBy(users.find((u) => u.id === id)?.name ?? null);
+    } else {
+      setDraftPaidByUserId(null);
+      setDraftPaidBy(val.slice(7));
+    }
   };
 
   const handleApply = () => {
@@ -103,9 +108,6 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
     });
   };
 
-  const isSelected = (userId: number | null, paidBy: string) =>
-    userId != null ? draftPaidByUserId === userId : draftPaidBy === paidBy;
-
   return (
     <Modal className='w-[90vw] max-w-[440px] p-6 shadow-lg' onClick={onClose}>
       <div className='flex justify-end'>
@@ -114,7 +116,7 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
       <div className='mt-2 space-y-5'>
         <div>
           <p className={labelClassName}>局名</p>
-          <Select
+          <CommonSelect
             className={selectTextClassName}
             value={draftBureauId ?? ''}
             onChange={handleBureauChange}
@@ -127,70 +129,37 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
                 {bureau.name}
               </option>
             ))}
-          </Select>
+          </CommonSelect>
         </div>
         <div>
           <p className={labelClassName}>氏名</p>
-          <div className={`${s.nameSelect} mb-2`}>
-            <button
-              type='button'
-              className='w-full rounded-full border border-primary-1 py-2 pl-4 pr-8 text-left text-black-600 [font-family:"Noto_Sans_JP"]'
-              onClick={() => setIsNameDropdownOpen((prev) => !prev)}
-            >
-              {draftPaidBy ?? '絞り込みなし'}
-            </button>
-          </div>
-          {isNameDropdownOpen && (
-            <div className='overflow-hidden rounded-2xl bg-black-300 shadow-lg'>
-              <div className='px-3 pb-2 pt-3'>
-                <div className='flex items-center gap-2 rounded-full border border-black-600 px-3 py-1.5'>
-                  <RiSearchLine size={14} className='shrink-0 text-black-900' />
-                  <input
-                    type='text'
-                    placeholder='Search'
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className='w-full bg-black-300 text-sm text-white-0 outline-none placeholder:text-black-900 [font-family:"Noto_Sans_JP"]'
-                  />
-                </div>
-              </div>
-              <ul className='max-h-48 overflow-y-auto'>
-                <li className='border-b border-black-600'>
-                  <button
-                    type='button'
-                    className={`w-full px-4 py-2 text-left text-sm [font-family:"Noto_Sans_JP"] ${
-                      draftPaidBy == null && draftPaidByUserId == null
-                        ? 'bg-primary-5 text-white-0'
-                        : 'text-white-0 hover:bg-black-600'
-                    }`}
-                    onClick={() => handleSelectOption(null, null)}
-                  >
-                    絞り込みなし
-                  </button>
-                </li>
-                {filteredOptions.map((opt) => (
-                  <li key={opt.userId != null ? `user:${opt.userId}` : `legacy:${opt.paidBy}`}>
-                    <button
-                      type='button'
-                      className={`w-full px-4 py-2 text-left text-sm [font-family:"Noto_Sans_JP"] ${
-                        isSelected(opt.userId, opt.paidBy)
-                          ? 'bg-primary-5 text-white-0'
-                          : 'text-white-0 hover:bg-black-600'
-                      }`}
-                      onClick={() => handleSelectOption(opt.userId, opt.paidBy)}
-                    >
-                      {opt.label}
-                    </button>
-                  </li>
-                ))}
-                {filteredOptions.length === 0 && (
-                  <li className='px-4 py-2 text-sm text-black-900 [font-family:"Noto_Sans_JP"]'>
-                    該当なし
-                  </li>
-                )}
-              </ul>
-            </div>
-          )}
+          <Select<NameOption>
+            instanceId='paid-by-name-select'
+            isSearchable
+            options={nameOptions}
+            value={nameSelectValue}
+            onChange={handleNameChange}
+            noOptionsMessage={() => '該当なし'}
+            menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
+            styles={{
+              control: (base, state) => ({
+                ...base,
+                borderRadius: '9999px',
+                borderColor: state.isFocused ? '#48b2cf' : '#56DAFF',
+                outline: state.isFocused ? '1.5px #48b2cf solid' : 'none',
+                boxShadow: 'none',
+                paddingTop: '0.25rem',
+                paddingBottom: '0.25rem',
+                paddingLeft: '0.75rem',
+                paddingRight: '0.25rem',
+                '&:hover': {
+                  borderColor: state.isFocused ? '#48b2cf' : '#56DAFF',
+                },
+              }),
+              indicatorSeparator: () => ({ display: 'none' }),
+              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+            }}
+          />
         </div>
       </div>
       <div className='mt-6 flex justify-center'>
