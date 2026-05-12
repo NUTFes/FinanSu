@@ -2,7 +2,12 @@ import React, { FC, useMemo, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 
 import { normalizePaidBy } from '@/utils/purchaseReportFilters';
-import { CloseButton, Modal, OutlinePrimaryButton, Select as CommonSelect } from '@components/common';
+import {
+  CloseButton,
+  Modal,
+  OutlinePrimaryButton,
+  Select as CommonSelect,
+} from '@components/common';
 import { Bureau, User } from '@type/common';
 
 type NameOption = { value: string; label: string };
@@ -72,10 +77,10 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
 
   const nameSelectValue =
     draftPaidByUserId != null
-      ? (nameOptions.find((o) => o.value === `user:${draftPaidByUserId}`) ?? nameOptions[0])
+      ? nameOptions.find((o) => o.value === `user:${draftPaidByUserId}`) ?? nameOptions[0]
       : draftPaidBy != null
-        ? (nameOptions.find((o) => o.value === `legacy:${draftPaidBy}`) ?? nameOptions[0])
-        : nameOptions[0];
+      ? nameOptions.find((o) => o.value === `legacy:${draftPaidBy}`) ?? nameOptions[0]
+      : nameOptions[0];
 
   const handleBureauChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
