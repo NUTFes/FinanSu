@@ -95,6 +95,14 @@ export default function PurchaseReports() {
 
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
+  const legacyPaidByOptions = useMemo(() => {
+    const userNames = new Set(users.map((u) => u.name));
+    const seen = new Set<string>();
+    return buyReports
+      .map((r) => r.paidBy)
+      .filter((name): name is string => !!name && !userNames.has(name) && !seen.has(name) && !!seen.add(name));
+  }, [buyReports, users]);
+
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
     ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
@@ -105,6 +113,7 @@ export default function PurchaseReports() {
     data: buyReportsSummaryData,
     isLoading: isBuyReportsSummaryLoading,
     error: buyReportsSummaryError,
+    mutate: mutateBuyReportsSummary,
   } = useGetBuyReportsSummary(getBuyReportsSummaryParams, {
     swr: { enabled: selectedYear > 0 },
   });
@@ -206,7 +215,8 @@ export default function PurchaseReports() {
 
   const onSuccess = useCallback(() => {
     mutateBuyReportData();
-  }, [mutateBuyReportData]);
+    mutateBuyReportsSummary();
+  }, [mutateBuyReportData, mutateBuyReportsSummary]);
 
   const downloadCSV = async () => {
     const url = `${process.env.CSR_API_URI}/buy_reports/csv/download?year=${selectedYear}`;
@@ -258,7 +268,6 @@ export default function PurchaseReports() {
 
           {isPaidByFilterOpen && (
             <PurchaseReportPaidByFilterModal
-              isOpen={isPaidByFilterOpen}
               onClose={() => setIsPaidByFilterOpen(false)}
               onApply={({ bureauId, paidByUserId, paidBy }) => {
                 setSelectedBureauId(bureauId);
@@ -268,6 +277,7 @@ export default function PurchaseReports() {
               }}
               bureaus={BUREAUS}
               users={users}
+              legacyPaidByOptions={legacyPaidByOptions}
               selectedBureauId={selectedBureauId}
               selectedPaidByUserId={selectedPaidByUserId}
               selectedPaidBy={selectedPaidBy}
