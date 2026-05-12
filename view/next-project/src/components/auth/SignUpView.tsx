@@ -45,6 +45,11 @@ export default function SignUpView() {
     const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
     // signIn には登録したuserのIDが必要なので先にUserをpost
     const newUser = await post(userUrl, postUserData);
+    if (!newUser || !newUser.id) {
+      alert('ユーザーの作成に失敗しました。');
+      setIsSignUpNow(false);
+      return;
+    }
     const userID: number = newUser.id;
     // signUp
     const req = await signUp(signUpUrl, data, userID);
