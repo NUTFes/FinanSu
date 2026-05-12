@@ -17,7 +17,7 @@ import {
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
-import { userAtom } from '@/store/atoms';
+import { useCurrentUser } from '@/store';
 import { buildPaidByFilterParams } from '@/utils/purchaseReportFilters';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
@@ -46,7 +46,7 @@ export default function PurchaseReports() {
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
 
-  const user = useRecoilValue(userAtom);
+  const user = useCurrentUser();
 
   const { data: usersResponse } = useGetUsers();
   const users = useMemo(() => {
