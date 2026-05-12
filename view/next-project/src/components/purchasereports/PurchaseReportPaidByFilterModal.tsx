@@ -3,7 +3,7 @@ import { RiSearchLine } from 'react-icons/ri';
 
 import { normalizePaidBy } from '@/utils/purchaseReportFilters';
 import { CloseButton, Modal, OutlinePrimaryButton, Select } from '@components/common';
-import s from '@components/common/Select/Select.module.css';
+import s from './PurchaseReportPaidByFilterModal.module.css';
 import { Bureau, User } from '@type/common';
 
 interface PurchaseReportPaidByFilterModalProps {
@@ -130,7 +130,7 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
         </div>
         <div>
           <p className={labelClassName}>氏名</p>
-          <div className={`${s.customSelect} mb-2`}>
+          <div className={`${s.nameSelect} mb-2`}>
             <button
               type='button'
               className='w-full rounded-full border border-primary-1 py-2 pl-4 pr-8 text-left text-black-600 [font-family:"Noto_Sans_JP"]'

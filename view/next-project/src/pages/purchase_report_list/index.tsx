@@ -32,6 +32,12 @@ import type {
 } from '@/generated/model';
 import type { User } from '@type/common';
 
+const isUser = (value: unknown): value is User => {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<User>;
+  return typeof candidate.id === 'number' && typeof candidate.name === 'string';
+};
+
 export default function PurchaseReports() {
   const router = useRouter();
   const {
@@ -44,11 +50,6 @@ export default function PurchaseReports() {
   const user = useRecoilValue(userAtom);
 
   const { data: usersResponse } = useGetUsers();
-  const isUser = (value: unknown): value is User => {
-    if (!value || typeof value !== 'object') return false;
-    const candidate = value as Partial<User>;
-    return typeof candidate.id === 'number' && typeof candidate.name === 'string';
-  };
   const users = useMemo(() => {
     const responseData: unknown = usersResponse?.data;
     if (Array.isArray(responseData)) return responseData.filter(isUser);
