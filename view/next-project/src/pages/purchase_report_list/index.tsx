@@ -212,7 +212,15 @@ export default function PurchaseReports() {
     } catch {
       console.error('Failed to update buy_reports:', statusError);
     }
-  }, [buyReportId, sealChecks, settlementChecks, trigger, statusError, mutateBuyReportData, mutateBuyReportsSummary]);
+  }, [
+    buyReportId,
+    sealChecks,
+    settlementChecks,
+    trigger,
+    statusError,
+    mutateBuyReportData,
+    mutateBuyReportsSummary,
+  ]);
 
   useEffect(() => {
     updateStatus();
@@ -306,12 +314,12 @@ export default function PurchaseReports() {
                     <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       物品
                     </th>
-                    <th className='whitespace-nowrap px-4 pb-2 text-sm font-normal text-black-600'>
+                    <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       <div className='flex items-center justify-center gap-1'>
                         <span>立替者</span>
                         <button
                           type='button'
-                          className='rounded-full p-0.5 text-black-600 hover:bg-white-100'
+                          className='text-black-600 hover:bg-white-100 rounded-full p-0.5'
                           onClick={() => setIsPaidByFilterOpen(true)}
                           aria-label='立替者の絞り込み'
                         >

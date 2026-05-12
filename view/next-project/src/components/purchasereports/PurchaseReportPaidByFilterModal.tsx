@@ -77,10 +77,10 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
 
   const nameSelectValue =
     draftPaidByUserId != null
-      ? nameOptions.find((o) => o.value === `user:${draftPaidByUserId}`) ?? nameOptions[0]
+      ? (nameOptions.find((o) => o.value === `user:${draftPaidByUserId}`) ?? nameOptions[0])
       : draftPaidBy != null
-      ? nameOptions.find((o) => o.value === `legacy:${draftPaidBy}`) ?? nameOptions[0]
-      : nameOptions[0];
+        ? (nameOptions.find((o) => o.value === `legacy:${draftPaidBy}`) ?? nameOptions[0])
+        : nameOptions[0];
 
   const handleBureauChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
