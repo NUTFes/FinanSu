@@ -3,8 +3,9 @@ import { RiSearchLine } from 'react-icons/ri';
 
 import { normalizePaidBy } from '@/utils/purchaseReportFilters';
 import { CloseButton, Modal, OutlinePrimaryButton, Select } from '@components/common';
-import s from './PurchaseReportPaidByFilterModal.module.css';
 import { Bureau, User } from '@type/common';
+
+import s from './PurchaseReportPaidByFilterModal.module.css';
 
 interface PurchaseReportPaidByFilterModalProps {
   onClose: () => void;
