@@ -168,7 +168,7 @@ export const createSponsorActivityFormPdf = async (
     size: fontSizes[0],
     font: fontData,
   });
-  page.drawText('E-mail：nutfes_shogai_kyosan@googlegroups.com', {
+  page.drawText('E-mail：nutfes_kyosan@googlegroups.com', {
     x: 340,
     y: height - 310,
     size: fontSizes[0],
