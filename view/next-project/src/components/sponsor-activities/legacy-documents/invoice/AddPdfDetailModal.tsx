@@ -13,6 +13,8 @@ import {
 
 import OpenEditInvoiceModalButton from './OpenEditInvoiceModalButton';
 
+const defaultDeadline = '2026-08-28';
+
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   sponsorActivitiesViewItem: SponsorActivityView;
@@ -51,7 +53,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
     fesStuffName: sponsorActivitiesViewItem.user.name,
     invoiceSponsorStyle: sponsorStyleFormatted(),
     issuedDate: getToday(),
-    deadline: getToday(),
+    deadline: defaultDeadline,
     remark: '',
     subject: '',
   });
