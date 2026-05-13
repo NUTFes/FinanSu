@@ -233,7 +233,7 @@ const MyDocument = (props: MyDocumentProps) => {
                     <Text>〒940-2188</Text>
                     <Text>新潟県長岡市上富岡町1603-1</Text>
                     <Text>長岡技術科学大学内</Text>
-                    <Text>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
+                    <Text>E-Mail : nutfes_kyosan@googlegroups.com</Text>
                   </View>
                 </View>
               </View>
