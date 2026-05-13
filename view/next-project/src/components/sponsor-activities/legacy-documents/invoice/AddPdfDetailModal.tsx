@@ -19,6 +19,8 @@ interface ModalProps {
   children?: React.ReactNode;
 }
 
+const defaultDeadline = '2026-08-28';
+
 export default function AddPdfDetailModal(props: ModalProps) {
   const { sponsorActivitiesViewItem } = props;
 
@@ -51,7 +53,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
     fesStuffName: sponsorActivitiesViewItem.user.name,
     invoiceSponsorStyle: sponsorStyleFormatted(),
     issuedDate: getToday(),
-    deadline: getToday(),
+    deadline: defaultDeadline,
     remark: '',
     subject: '',
   });

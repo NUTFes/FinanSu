@@ -21,6 +21,8 @@ interface ProgressReportInvoicePdfModalProps {
   onClose: () => void;
 }
 
+const defaultDeadline = '2026-08-28';
+
 export default function ProgressReportInvoicePdfModal({
   activity,
   isOpen,
@@ -30,7 +32,7 @@ export default function ProgressReportInvoicePdfModal({
   const baseInvoice = useMemo(() => buildInvoiceFromActivity(activity), [activity]);
   const totalPrice = useMemo(() => getActivityAmountFromApi(activity), [activity]);
   const [issuedDate, setIssuedDate] = useState(today);
-  const [deadline, setDeadline] = useState(today);
+  const [deadline, setDeadline] = useState(defaultDeadline);
   const [subject, setSubject] = useState(baseInvoice.subject);
   const [remark, setRemark] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -38,7 +40,7 @@ export default function ProgressReportInvoicePdfModal({
   useEffect(() => {
     if (!isOpen) return;
     setIssuedDate(today);
-    setDeadline(today);
+    setDeadline(defaultDeadline);
     setSubject(baseInvoice.subject);
     setRemark('');
   }, [isOpen, today, baseInvoice.subject]);
