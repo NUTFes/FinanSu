@@ -234,7 +234,7 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
                   <Text>新潟県長岡市上富岡町1603-1</Text>
                   <Text>長岡技術科学大学内</Text>
                 </View>
-                <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
+                <Text style={styles.text_S}>E-Mail : nutfes_kyosan@googlegroups.com</Text>
                 <Text>担当 : {invoiceItem.fesStuffName}</Text>
               </View>
             </View>
