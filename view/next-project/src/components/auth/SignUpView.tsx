@@ -90,7 +90,7 @@ export default function SignUpView() {
               value={postUserData.name}
               onChange={userDataHandler('name')}
             />
-            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>学科</p>
+            <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>所属局</p>
             <select
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
               value={postUserData.bureauID}
