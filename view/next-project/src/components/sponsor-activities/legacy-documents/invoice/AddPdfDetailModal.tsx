@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
 import { PreviewPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
-import { getToday } from '@/utils/dateConverter';
+import { defaultInvoiceDeadline, getToday } from '@/utils/dateConverter';
 import { CloseButton, Input, Modal, PrimaryButton } from '@components/common';
 import {
   SponsorActivityView,
@@ -12,8 +12,6 @@ import {
 } from '@type/common';
 
 import OpenEditInvoiceModalButton from './OpenEditInvoiceModalButton';
-
-const defaultDeadline = '2026-08-28';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -53,7 +51,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
     fesStuffName: sponsorActivitiesViewItem.user.name,
     invoiceSponsorStyle: sponsorStyleFormatted(),
     issuedDate: getToday(),
-    deadline: defaultDeadline,
+    deadline: defaultInvoiceDeadline,
     remark: '',
     subject: '',
   });

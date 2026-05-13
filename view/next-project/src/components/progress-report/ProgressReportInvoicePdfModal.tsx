@@ -9,7 +9,7 @@ import {
   Textarea,
 } from '@/components/common';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
-import { getToday } from '@/utils/dateConverter';
+import { defaultInvoiceDeadline, getToday } from '@/utils/dateConverter';
 
 import { buildInvoiceFromActivity, getActivityAmountFromApi } from './progressReportPdfUtils';
 
@@ -27,11 +27,10 @@ export default function ProgressReportInvoicePdfModal({
   onClose,
 }: ProgressReportInvoicePdfModalProps) {
   const today = getToday();
-  const defaultDeadline = '2026-08-28';
   const baseInvoice = useMemo(() => buildInvoiceFromActivity(activity), [activity]);
   const totalPrice = useMemo(() => getActivityAmountFromApi(activity), [activity]);
   const [issuedDate, setIssuedDate] = useState(today);
-  const [deadline, setDeadline] = useState(defaultDeadline);
+  const [deadline, setDeadline] = useState(defaultInvoiceDeadline);
   const [subject, setSubject] = useState(baseInvoice.subject);
   const [remark, setRemark] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -39,10 +38,10 @@ export default function ProgressReportInvoicePdfModal({
   useEffect(() => {
     if (!isOpen) return;
     setIssuedDate(today);
-    setDeadline(defaultDeadline);
+    setDeadline(defaultInvoiceDeadline);
     setSubject(baseInvoice.subject);
     setRemark('');
-  }, [isOpen, today, baseInvoice.subject, defaultDeadline]);
+  }, [isOpen, today, baseInvoice.subject]);
 
   if (!isOpen) return null;
 

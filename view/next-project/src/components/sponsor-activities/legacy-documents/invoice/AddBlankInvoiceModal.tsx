@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 
 import { Invoice } from '@/type/common';
 import { PreviewPDF, createSponsorActivitiesPDF } from '@/utils/createSponsorActivitiesInvoicesPDF';
-import { getToday } from '@/utils/dateConverter';
+import { defaultInvoiceDeadline, getToday } from '@/utils/dateConverter';
 import {
   Modal,
   Input,
@@ -28,15 +28,13 @@ interface ModalProps {
 
 const defaultAddress = '〒940-2188 新潟県長岡市上富岡町1360-1長岡技術科学大学内';
 const defaultSubject = '技大祭企業協賛';
-const defaultDeadline = '2026-08-28';
-
 export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: ModalProps) {
   const [form, setForm] = useState({
     sponsorName: '',
     managerName: '',
     subject: defaultSubject,
     issuedDate: getToday(),
-    deadline: defaultDeadline,
+    deadline: defaultInvoiceDeadline,
     fesStuffName: '',
     remark: '',
   });

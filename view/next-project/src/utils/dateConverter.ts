@@ -19,6 +19,8 @@ export const getToday = (): string => {
   ).padStart(2, '0')}`;
 };
 
+export const defaultInvoiceDeadline = '2026-08-28';
+
 /**
  * 日付から令和年度と技大祭回数を計算
  */
