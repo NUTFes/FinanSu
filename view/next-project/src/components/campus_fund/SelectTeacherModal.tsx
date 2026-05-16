@@ -31,7 +31,11 @@ const SelectTeacherModal = ({ isOpen, onClose, onSelect, building, year, groupKe
   });
 
   const buildingFloors = buildingFloorsData?.data ?? [];
-  const floorOptions = [...new Set(buildingFloors.map((floor) => floor.floorNumber))];
+  const floorOptions = [
+    ...new Set(
+      buildingFloors.map((floor) => floor.floorNumber).sort((a, b) => Number(a) - Number(b)),
+    ),
+  ];
   const filteredBuildingFloors = selectedFloor
     ? buildingFloors.filter((floor) => floor.floorNumber === selectedFloor)
     : buildingFloors;
