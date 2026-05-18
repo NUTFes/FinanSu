@@ -1,6 +1,6 @@
 export type PaidByFilterInput = {
   paidByUserId?: number | null;
-  paidBy?: string | null | undefined;
+  paidBy?: string | null;
 };
 
 export type PaidByFilterParams = {

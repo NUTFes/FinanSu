@@ -61,7 +61,7 @@ export default function PurchaseReports() {
 
   const [isPaidByFilterOpen, setIsPaidByFilterOpen] = useState(false);
   const [selectedBureauId, setSelectedBureauId] = useState<number | null>(null);
-  const [selectedPaidBy, setSelectedPaidBy] = useState<string | null | undefined>(undefined);
+  const [selectedPaidBy, setSelectedPaidBy] = useState<string | null>(null);
   const [selectedPaidByUserId, setSelectedPaidByUserId] = useState<number | null>(null);
 
   const paidByFilterParams = buildPaidByFilterParams({
@@ -69,9 +69,11 @@ export default function PurchaseReports() {
     paidBy: selectedPaidBy,
   });
 
+  // NOTE: selectedBureauId is a BUREAUS constant id and differs from financial_records.id,
+  // so it cannot be passed as financial_record_id until the page is wired to actual
+  // financial record ids (or the API accepts bureau_id directly).
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
-    ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
     ...paidByFilterParams,
   };
 
@@ -102,7 +104,6 @@ export default function PurchaseReports() {
 
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
-    ...(selectedBureauId != null ? { financial_record_id: selectedBureauId } : {}),
     ...paidByFilterParams,
   };
 
@@ -203,8 +204,8 @@ export default function PurchaseReports() {
       await trigger(putBuyReportStatusBuyReportIdBody);
       mutateBuyReportData();
       mutateBuyReportsSummary();
-    } catch {
-      console.error('Failed to update buy_reports:', statusError);
+    } catch (e) {
+      console.error('Failed to update buy_reports:', e, statusError);
     }
   }, [
     buyReportId,
