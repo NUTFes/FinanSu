@@ -109,7 +109,7 @@ export default function PurchaseReports() {
 
   const { data: usersResponse } = useGetUsers(
     paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined,
-    { swr: { enabled: selectedYear > 0 } },
+    { swr: { enabled: selectedYear > 0 && paidByUserIds.length > 0 } },
   );
   const users = usersResponse?.data ?? [];
 
