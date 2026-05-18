@@ -59,7 +59,11 @@ export default function PurchaseReports() {
     return [];
   }, [usersResponse]);
 
-  user?.roleID === 1 && router.push('/my_page');
+  useEffect(() => {
+    if (user?.roleID === 1) {
+      router.push('/my_page');
+    }
+  }, [router, user?.roleID]);
 
   const [selectedYear, setSelectedYear] = useState<number>(0);
 
@@ -259,11 +263,12 @@ export default function PurchaseReports() {
               <Title title={'購入報告一覧'} />
               <select
                 className='border-black-0 border-b'
-                value={selectedYear}
+                value={selectedYear || ''}
                 onChange={async (e) => {
                   setSelectedYear(Number(e.target.value));
                 }}
               >
+                <option value='' disabled />
                 {yearPeriods &&
                   yearPeriods.map((year) => {
                     return (

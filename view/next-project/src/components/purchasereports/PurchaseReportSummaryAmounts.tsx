@@ -16,14 +16,14 @@ export default function PurchaseReportSummaryAmounts({
         <span className='whitespace-nowrap'>：</span>
         <span className='min-w-[12ch] text-right whitespace-nowrap'>
           {unsettledAmountText}
-          <span className='ml-1'>円</span>
+          {unsettledAmountText !== '-' && <span className='ml-1'>円</span>}
         </span>
 
         <span className='whitespace-nowrap'>未封詰め金額</span>
         <span className='whitespace-nowrap'>：</span>
         <span className='min-w-[12ch] text-right whitespace-nowrap'>
           {unpackedAmountText}
-          <span className='ml-1'>円</span>
+          {unpackedAmountText !== '-' && <span className='ml-1'>円</span>}
         </span>
       </div>
     </div>
