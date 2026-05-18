@@ -91,7 +91,9 @@ export default function PurchaseReports() {
     isLoading: isBuyReportsLoading,
     error: buyReportsError,
     mutate: mutateBuyReportData,
-  } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
+  } = useGetBuyReportsDetails(getBuyReportsDetailsParams, {
+    swr: { enabled: selectedYear > 0 },
+  });
 
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
