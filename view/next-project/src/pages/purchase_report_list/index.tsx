@@ -102,12 +102,11 @@ export default function PurchaseReports() {
   const legacyPaidByOptions = useMemo(() => {
     const userNames = new Set(users.map((u) => u.name));
     const seen = new Set<string>();
-    return buyReports
-      .map((r) => r.paidBy)
-      .filter(
-        (name): name is string =>
-          !!name && !userNames.has(name) && !seen.has(name) && !!seen.add(name),
-      );
+    return buyReports.map((r) => r.paidBy).filter((name): name is string => {
+      if (!name || userNames.has(name) || seen.has(name)) return false;
+      seen.add(name);
+      return true;
+    });
   }, [buyReports, users]);
 
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
@@ -258,7 +257,7 @@ export default function PurchaseReports() {
               <Title title={'購入報告一覧'} />
               <select
                 className='border-black-0 border-b'
-                defaultValue={selectedYear}
+                value={selectedYear}
                 onChange={async (e) => {
                   setSelectedYear(Number(e.target.value));
                 }}

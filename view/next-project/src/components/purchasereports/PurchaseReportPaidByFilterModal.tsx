@@ -145,7 +145,7 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
             value={nameSelectValue}
             onChange={handleNameChange}
             noOptionsMessage={() => '該当なし'}
-            menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
+            menuPortalTarget={typeof window !== 'undefined' ? document.body : undefined}
             styles={{
               control: (base, state) => ({
                 ...base,
