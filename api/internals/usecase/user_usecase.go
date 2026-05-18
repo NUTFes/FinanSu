@@ -7,13 +7,16 @@ import (
 	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 )
 
 type userUseCase struct {
-	userRep    rep.UserRepository
-	sessionRep rep.SessionRepository
+	userRep         rep.UserRepository
+	sessionRep      rep.SessionRepository
+	userGroupRep    rep.UserGroupRepository
+	transactionRepo rep.TransactionRepository
 }
 
 type UserUseCase interface {
@@ -24,10 +27,11 @@ type UserUseCase interface {
 	DestroyUser(context.Context, string) error
 	DestroyMultiUsers(context.Context, []int) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
+	UpdateUserGroups(context.Context, int, []int) (*generated.UpdateUserGroupsResponse, error)
 }
 
-func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository) UserUseCase {
-	return &userUseCase{userRep: userRep, sessionRep: sessionRep}
+func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, transactionRepo rep.TransactionRepository) UserUseCase {
+	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, transactionRepo: transactionRepo}
 }
 
 func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
@@ -201,4 +205,67 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 		return user, err
 	}
 	return user, nil
+}
+
+// ユーザーの所属部門を差分更新する処理のメソッド
+func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, groupIDs []int) (updatedUserGroupsResponse *generated.UpdateUserGroupsResponse, err error) {
+	updatedUserGroupsResponse = &generated.UpdateUserGroupsResponse{GroupIds: []int{}}
+
+	// トランザクションを開始
+	tx, err := u.transactionRepo.StartTransaction(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = func(tx *sql.Tx) error {
+		// リクエストが空配列の場合の処理 -> 全削除
+		if len(groupIDs) == 0 {
+			if err := u.userGroupRep.DeleteAllByUserID(ctx, tx, userID); err != nil {
+				return err
+			}
+			return u.transactionRepo.Commit(ctx, tx)
+		}
+
+		// 差分更新の処理
+		// 既存の所属グループIDを取得
+		existingGroupIDs, err := u.userGroupRep.GetGroupIDs(ctx, userID)
+		if err != nil {
+			return err
+		}
+		// Diff メソッド
+		groupIDsToDelete, groupIDsToInsert := domain.GroupIDs(existingGroupIDs).Diff(domain.GroupIDs(groupIDs))
+
+		// 差分の一括追加
+		if len(groupIDsToInsert) > 0 {
+			if err := u.userGroupRep.BulkInsert(ctx, tx, userID, groupIDsToInsert); err != nil {
+				return err
+			}
+		}
+
+		// 差分の一括削除
+		if len(groupIDsToDelete) > 0 {
+			if err := u.userGroupRep.BulkDelete(ctx, tx, userID, groupIDsToDelete); err != nil {
+				return err
+			}
+		}
+
+		// コミット
+		return u.transactionRepo.Commit(ctx, tx)
+	}(tx)
+
+	// エラー時は ロールバック
+	if err != nil {
+		if rollbackErr := u.transactionRepo.RollBack(ctx, tx); rollbackErr != nil {
+			log.Println(rollbackErr)
+		}
+		return nil, err
+	}
+
+	// 更新後の所属グループIDを取得して返却
+	updatedUserGroupsResponse.GroupIds, err = u.userGroupRep.GetGroupIDs(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedUserGroupsResponse, nil
 }
