@@ -103,9 +103,7 @@ export default function PurchaseReports() {
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
   const paidByUserIds = useMemo(
-    () => [
-      ...new Set(buyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : []))),
-    ],
+    () => [...new Set(buyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : [])))],
     [buyReports],
   );
 
