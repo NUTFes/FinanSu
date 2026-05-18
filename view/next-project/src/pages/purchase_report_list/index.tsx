@@ -85,9 +85,16 @@ export default function PurchaseReports() {
   const financialRecordId =
     selectedBureauId != null ? (bureauToFinancialRecordId.get(selectedBureauId) ?? null) : null;
 
+  const hasSelectedBureauWithoutFinancialRecord =
+    selectedBureauId != null && financialRecordId == null;
+
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
-    ...(financialRecordId != null ? { financial_record_id: financialRecordId } : {}),
+    ...(financialRecordId != null
+      ? { financial_record_id: financialRecordId }
+      : hasSelectedBureauWithoutFinancialRecord
+        ? { financial_record_id: -1 }
+        : {}),
     ...paidByFilterParams,
   };
 
@@ -129,7 +136,11 @@ export default function PurchaseReports() {
 
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
-    ...(financialRecordId != null ? { financial_record_id: financialRecordId } : {}),
+    ...(financialRecordId != null
+      ? { financial_record_id: financialRecordId }
+      : hasSelectedBureauWithoutFinancialRecord
+        ? { financial_record_id: -1 }
+        : {}),
     ...paidByFilterParams,
   };
 

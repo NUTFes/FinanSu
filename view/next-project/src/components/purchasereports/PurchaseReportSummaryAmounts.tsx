@@ -11,7 +11,7 @@ export default function PurchaseReportSummaryAmounts({
 }: PurchaseReportSummaryAmountsProps) {
   return (
     <div className={className}>
-      <div className='text-black-600 inline-grid grid-cols-[auto_auto_auto] gap-1 [font-family:"Noto_Sans_JP"] text-sm leading-normal font-medium'>
+      <div className='text-black-600 inline-grid grid-cols-[auto_auto_auto] gap-1 text-sm leading-normal font-medium'>
         <span className='whitespace-nowrap'>未精算金額</span>
         <span className='whitespace-nowrap'>：</span>
         <span className='min-w-[12ch] text-right whitespace-nowrap'>

@@ -45,9 +45,9 @@ const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> 
   );
   const [draftPaidBy, setDraftPaidBy] = useState<string | null>(normalizePaidBy(selectedPaidBy));
 
-  const labelClassName = 'mb-2 text-sm text-black-600 [font-family:"Noto_Sans_JP"]';
-  const selectTextClassName = 'text-black-600 [font-family:"Noto_Sans_JP"]';
-  const optionClassName = 'text-black-600 [font-family:"Noto_Sans_JP"]';
+  const labelClassName = 'mb-2 text-sm text-black-600';
+  const selectTextClassName = 'text-black-600';
+  const optionClassName = 'text-black-600';
 
   const bureauNameMap = useMemo(
     () =>
