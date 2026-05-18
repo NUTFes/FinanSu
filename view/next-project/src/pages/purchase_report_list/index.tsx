@@ -13,6 +13,7 @@ import { BUREAUS } from '@/constants/bureaus';
 import {
   useGetBuyReportsDetails,
   useGetBuyReportsSummary,
+  useGetFinancialRecords,
   useGetUsers,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
@@ -41,9 +42,6 @@ export default function PurchaseReports() {
 
   const user = useCurrentUser();
 
-  const { data: usersResponse } = useGetUsers();
-  const users = usersResponse?.data ?? [];
-
   useEffect(() => {
     if (user?.roleID === 1) {
       router.push('/my_page');
@@ -69,11 +67,27 @@ export default function PurchaseReports() {
     paidBy: selectedPaidBy,
   });
 
-  // NOTE: selectedBureauId is a BUREAUS constant id and differs from financial_records.id,
-  // so it cannot be passed as financial_record_id until the page is wired to actual
-  // financial record ids (or the API accepts bureau_id directly).
+  const { data: financialRecordsData } = useGetFinancialRecords(
+    { year: selectedYear },
+    { swr: { enabled: selectedYear > 0 } },
+  );
+
+  const bureauToFinancialRecordId = useMemo(() => {
+    const records = financialRecordsData?.data?.financialRecords ?? [];
+    return new Map(
+      BUREAUS.flatMap((bureau) => {
+        const record = records.find((r) => r.name === bureau.name);
+        return record?.id != null ? ([[bureau.id, record.id]] as const) : [];
+      }),
+    );
+  }, [financialRecordsData]);
+
+  const financialRecordId =
+    selectedBureauId != null ? (bureauToFinancialRecordId.get(selectedBureauId) ?? null) : null;
+
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
+    ...(financialRecordId != null ? { financial_record_id: financialRecordId } : {}),
     ...paidByFilterParams,
   };
 
@@ -87,6 +101,19 @@ export default function PurchaseReports() {
   });
 
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+
+  const paidByUserIds = useMemo(
+    () => [
+      ...new Set(buyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : []))),
+    ],
+    [buyReports],
+  );
+
+  const { data: usersResponse } = useGetUsers(
+    paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined,
+    { swr: { enabled: selectedYear > 0 } },
+  );
+  const users = usersResponse?.data ?? [];
 
   const userNameMap = useMemo(() => Object.fromEntries(users.map((u) => [u.id, u.name])), [users]);
 
@@ -104,6 +131,7 @@ export default function PurchaseReports() {
 
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
+    ...(financialRecordId != null ? { financial_record_id: financialRecordId } : {}),
     ...paidByFilterParams,
   };
 
