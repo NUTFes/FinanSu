@@ -29,13 +29,6 @@ import type {
   GetBuyReportsSummaryParams,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
-import type { User } from '@type/common';
-
-const isUser = (value: unknown): value is User => {
-  if (!value || typeof value !== 'object') return false;
-  const candidate = value as Partial<User>;
-  return typeof candidate.id === 'number' && typeof candidate.name === 'string';
-};
 
 export default function PurchaseReports() {
   const router = useRouter();
@@ -49,15 +42,7 @@ export default function PurchaseReports() {
   const user = useCurrentUser();
 
   const { data: usersResponse } = useGetUsers();
-  const users = useMemo(() => {
-    const responseData: unknown = usersResponse?.data;
-    if (Array.isArray(responseData)) return responseData.filter(isUser);
-    if (responseData && typeof responseData === 'object') {
-      const nested = (responseData as { data?: unknown }).data;
-      if (Array.isArray(nested)) return nested.filter(isUser);
-    }
-    return [];
-  }, [usersResponse]);
+  const users = usersResponse?.data ?? [];
 
   useEffect(() => {
     if (user?.roleID === 1) {
