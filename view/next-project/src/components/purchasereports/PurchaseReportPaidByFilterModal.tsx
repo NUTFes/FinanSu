@@ -17,14 +17,14 @@ interface PurchaseReportPaidByFilterModalProps {
   onApply: (selection: {
     bureauId: number | null;
     paidByUserId: number | null;
-    paidBy: string | null | undefined;
+    paidBy: string | null;
   }) => void;
   bureaus: Bureau[];
   users: User[];
   legacyPaidByOptions: string[];
   selectedBureauId: number | null;
   selectedPaidByUserId: number | null;
-  selectedPaidBy: string | null | undefined;
+  selectedPaidBy: string | null;
 }
 
 const PurchaseReportPaidByFilterModal: FC<PurchaseReportPaidByFilterModalProps> = (props) => {
