@@ -86,3 +86,16 @@ func (h *Handler) GetCurrentUser(c echo.Context, params generated.GetCurrentUser
 		return c.JSON(http.StatusOK, user)
 	}
 }
+
+// ユーザーに紐づくグループの更新
+func (h *Handler) UpdateUserGroups(c echo.Context, userId int) error {
+	var updateUserGroupsRequest generated.UpdateUserGroupsRequest
+	if err := c.Bind(&updateUserGroupsRequest); err != nil {
+		return err
+	}
+	res, err := h.userUseCase.UpdateUserGroups(c.Request().Context(), userId, updateUserGroupsRequest.GroupIds)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, res)
+}
