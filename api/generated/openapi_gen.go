@@ -1407,8 +1407,8 @@ type ServerInterface interface {
 	// (PUT /users/{id})
 	PutUsersId(ctx echo.Context, id int, params PutUsersIdParams) error
 	// ユーザー所属部門の差分更新
-	// (PUT /users/{user_id}/groups)
-	UpdateUserGroups(ctx echo.Context, userId int) error
+	// (PUT /users/{user_id}/groups/{year})
+	UpdateUserGroups(ctx echo.Context, userId int, year int) error
 
 	// (GET /years)
 	GetYears(ctx echo.Context) error
@@ -3533,8 +3533,16 @@ func (w *ServerInterfaceWrapper) UpdateUserGroups(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
 	}
 
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.UpdateUserGroups(ctx, userId)
+	err = w.Handler.UpdateUserGroups(ctx, userId, year)
 	return err
 }
 
@@ -3810,7 +3818,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/users/:id", wrapper.DeleteUsersId)
 	router.GET(baseURL+"/users/:id", wrapper.GetUsersId)
 	router.PUT(baseURL+"/users/:id", wrapper.PutUsersId)
-	router.PUT(baseURL+"/users/:user_id/groups", wrapper.UpdateUserGroups)
+	router.PUT(baseURL+"/users/:user_id/groups/:year", wrapper.UpdateUserGroups)
 	router.GET(baseURL+"/years", wrapper.GetYears)
 	router.POST(baseURL+"/years", wrapper.PostYears)
 	router.GET(baseURL+"/years/periods", wrapper.GetYearsPeriods)

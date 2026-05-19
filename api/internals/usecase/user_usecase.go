@@ -16,6 +16,7 @@ type userUseCase struct {
 	userRep         rep.UserRepository
 	sessionRep      rep.SessionRepository
 	userGroupRep    rep.UserGroupRepository
+	divisionRep     rep.DivisionRepository
 	transactionRepo rep.TransactionRepository
 }
 
@@ -27,11 +28,11 @@ type UserUseCase interface {
 	DestroyUser(context.Context, string) error
 	DestroyMultiUsers(context.Context, []int) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
-	UpdateUserGroups(context.Context, int, []int) (*generated.UpdateUserGroupsResponse, error)
+	UpdateUserGroups(context.Context, int, int, []int) (*generated.UpdateUserGroupsResponse, error)
 }
 
-func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, transactionRepo rep.TransactionRepository) UserUseCase {
-	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, transactionRepo: transactionRepo}
+func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, transactionRepo rep.TransactionRepository) UserUseCase {
+	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, transactionRepo: transactionRepo}
 }
 
 func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
@@ -208,8 +209,26 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 }
 
 // ユーザーの所属部門を差分更新する処理のメソッド
-func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, groupIDs []int) (updatedUserGroupsResponse *generated.UpdateUserGroupsResponse, err error) {
+func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int, groupIDs []int) (updatedUserGroupsResponse *generated.UpdateUserGroupsResponse, err error) {
 	updatedUserGroupsResponse = &generated.UpdateUserGroupsResponse{GroupIds: []int{}}
+
+	// 指定された年度に存在するグループIDの取得
+	validGroupIDs, err := u.getValidGroupIDsByYear(ctx, year)
+	if err != nil {
+		return nil, err
+	}
+	if len(groupIDs) > 0 {
+		// リクエストの groupIDs が、指定された年度に存在するグループIDの中に全て含まれているかの検証
+		validGroupIDSet := make(map[int]struct{}, len(validGroupIDs))
+		for _, groupID := range validGroupIDs {
+			validGroupIDSet[groupID] = struct{}{}
+		}
+		for _, groupID := range groupIDs {
+			if _, ok := validGroupIDSet[groupID]; !ok {
+				return nil, errors.New("invalid group id")
+			}
+		}
+	}
 
 	// トランザクションを開始
 	tx, err := u.transactionRepo.StartTransaction(ctx)
@@ -218,21 +237,11 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, groupIDs
 	}
 
 	err = func(tx *sql.Tx) error {
-		// リクエストが空配列の場合の処理 -> 全削除
-		if len(groupIDs) == 0 {
-			if err := u.userGroupRep.DeleteAllByUserID(ctx, tx, userID); err != nil {
-				return err
-			}
-			return u.transactionRepo.Commit(ctx, tx)
-		}
-
-		// 差分更新の処理
-		// 既存の所属グループIDを取得
-		existingGroupIDs, err := u.userGroupRep.GetGroupIDs(ctx, userID)
+		existingGroupIDs, err := u.userGroupRep.GetGroupIDsByUserAndYear(ctx, userID, year)
 		if err != nil {
 			return err
 		}
-		// Diff メソッド
+		// Diff処理
 		groupIDsToDelete, groupIDsToInsert := domain.GroupIDs(existingGroupIDs).Diff(domain.GroupIDs(groupIDs))
 
 		// 差分の一括追加
@@ -262,10 +271,37 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, groupIDs
 	}
 
 	// 更新後の所属グループIDを取得して返却
-	updatedUserGroupsResponse.GroupIds, err = u.userGroupRep.GetGroupIDs(ctx, userID)
+	updatedUserGroupsResponse.GroupIds, err = u.userGroupRep.GetGroupIDsByUserAndYear(ctx, userID, year)
 	if err != nil {
 		return nil, err
 	}
 
 	return updatedUserGroupsResponse, nil
+}
+
+func (u *userUseCase) getValidGroupIDsByYear(ctx context.Context, year int) ([]int, error) {
+	rows, err := u.divisionRep.GetDivisionsYears(ctx, strconv.Itoa(year))
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	validGroupIDs := make([]int, 0)
+	for rows.Next() {
+		var divisionID int
+		var divisionName string
+		if err := rows.Scan(&divisionID, &divisionName); err != nil {
+			return nil, err
+		}
+		validGroupIDs = append(validGroupIDs, divisionID)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return validGroupIDs, nil
 }

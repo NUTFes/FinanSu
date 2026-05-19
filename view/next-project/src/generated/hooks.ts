@@ -7100,16 +7100,17 @@ export type updateUserGroupsResponseSuccess = updateUserGroupsResponse200 & {
 };
 export type updateUserGroupsResponse = updateUserGroupsResponseSuccess;
 
-export const getUpdateUserGroupsUrl = (userId: number) => {
-  return `/users/${userId}/groups`;
+export const getUpdateUserGroupsUrl = (userId: number, year: number) => {
+  return `/users/${userId}/groups/${year}`;
 };
 
 export const updateUserGroups = async (
   userId: number,
+  year: number,
   updateUserGroupsRequest: UpdateUserGroupsRequest,
   options?: RequestInit,
 ): Promise<updateUserGroupsResponse> => {
-  return customFetch<updateUserGroupsResponse>(getUpdateUserGroupsUrl(userId), {
+  return customFetch<updateUserGroupsResponse>(getUpdateUserGroupsUrl(userId, year), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -7119,14 +7120,15 @@ export const updateUserGroups = async (
 
 export const getUpdateUserGroupsMutationFetcher = (
   userId: number,
+  year: number,
   options?: SecondParameter<typeof customFetch>,
 ) => {
   return (_: Key, { arg }: { arg: UpdateUserGroupsRequest }) => {
-    return updateUserGroups(userId, arg, options);
+    return updateUserGroups(userId, year, arg, options);
   };
 };
-export const getUpdateUserGroupsMutationKey = (userId: number) =>
-  [`/users/${userId}/groups`] as const;
+export const getUpdateUserGroupsMutationKey = (userId: number, year: number) =>
+  [`/users/${userId}/groups/${year}`] as const;
 
 export type UpdateUserGroupsMutationResult = NonNullable<
   Awaited<ReturnType<typeof updateUserGroups>>
@@ -7138,6 +7140,7 @@ export type UpdateUserGroupsMutationError = unknown;
  */
 export const useUpdateUserGroups = <TError = unknown>(
   userId: number,
+  year: number,
   options?: {
     swr?: SWRMutationConfiguration<
       Awaited<ReturnType<typeof updateUserGroups>>,
@@ -7151,8 +7154,8 @@ export const useUpdateUserGroups = <TError = unknown>(
 ) => {
   const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getUpdateUserGroupsMutationKey(userId);
-  const swrFn = getUpdateUserGroupsMutationFetcher(userId, requestOptions);
+  const swrKey = swrOptions?.swrKey ?? getUpdateUserGroupsMutationKey(userId, year);
+  const swrFn = getUpdateUserGroupsMutationFetcher(userId, year, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 

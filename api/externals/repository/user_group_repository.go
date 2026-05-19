@@ -16,10 +16,9 @@ type userGroupRepository struct {
 }
 
 type UserGroupRepository interface {
-	GetGroupIDs(context.Context, int) ([]int, error)
+	GetGroupIDsByUserAndYear(context.Context, int, int) ([]int, error)
 	BulkInsert(context.Context, *sql.Tx, int, []int) error
 	BulkDelete(context.Context, *sql.Tx, int, []int) error
-	DeleteAllByUserID(context.Context, *sql.Tx, int) error
 }
 
 func NewUserGroupRepository(client db.Client, crud abstract.Crud) UserGroupRepository {
@@ -29,9 +28,15 @@ func NewUserGroupRepository(client db.Client, crud abstract.Crud) UserGroupRepos
 	}
 }
 
-// 指定した userID に紐づく group_id の一覧を返す。
-func (r *userGroupRepository) GetGroupIDs(ctx context.Context, userID int) ([]int, error) {
-	queryDataset := goqu.Dialect("mysql").From("user_groups").Select("group_id").Where(goqu.I("user_id").Eq(userID))
+// 指定した userID と year に紐づく group_id の一覧を返す。
+func (r *userGroupRepository) GetGroupIDsByUserAndYear(ctx context.Context, userID int, year int) ([]int, error) {
+	queryDataset := goqu.Dialect("mysql").From("user_groups").
+		Distinct().
+		Select(goqu.I("user_groups.group_id")).
+		Join(goqu.I("divisions"), goqu.On(goqu.I("user_groups.group_id").Eq(goqu.I("divisions.id")))).
+		Join(goqu.I("financial_records"), goqu.On(goqu.I("divisions.financial_record_id").Eq(goqu.I("financial_records.id")))).
+		Join(goqu.I("years"), goqu.On(goqu.I("financial_records.year_id").Eq(goqu.I("years.id")))).
+		Where(goqu.Ex{"user_groups.user_id": userID, "years.year": year})
 
 	query, args, err := queryDataset.ToSQL()
 	if err != nil {
@@ -95,19 +100,6 @@ func (r *userGroupRepository) BulkDelete(ctx context.Context, tx *sql.Tx, userID
 		goqu.I("user_id").Eq(userID),
 		goqu.I("group_id").In(groupIDs),
 	)
-
-	query, args, err := queryDataset.ToSQL()
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.ExecContext(ctx, query, args...)
-	return err
-}
-
-// 指定 userID に紐づくやつを削除します。
-func (r *userGroupRepository) DeleteAllByUserID(ctx context.Context, tx *sql.Tx, userID int) error {
-	queryDataset := goqu.Dialect("mysql").Delete("user_groups").Where(goqu.I("user_id").Eq(userID))
 
 	query, args, err := queryDataset.ToSQL()
 	if err != nil {

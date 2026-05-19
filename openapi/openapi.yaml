@@ -2308,7 +2308,7 @@ paths:
               schema:
                 type: object
 
-  /users/{user_id}/groups:
+  /users/{user_id}/groups/{year}:
     put:
       tags:
         - user
@@ -2319,6 +2319,12 @@ paths:
         - name: user_id
           in: path
           description: userのid
+          required: true
+          schema:
+            type: integer
+        - name: year
+          in: path
+          description: 対象年度
           required: true
           schema:
             type: integer
