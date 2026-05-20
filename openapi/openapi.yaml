@@ -2308,7 +2308,7 @@ paths:
               schema:
                 type: object
 
-  /users/{user_id}/groups/{year}:
+  /users/{user_id}/groups/year/{year}:
     put:
       tags:
         - user

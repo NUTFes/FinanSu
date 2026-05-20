@@ -1407,7 +1407,7 @@ type ServerInterface interface {
 	// (PUT /users/{id})
 	PutUsersId(ctx echo.Context, id int, params PutUsersIdParams) error
 	// ユーザー所属部門の差分更新
-	// (PUT /users/{user_id}/groups/{year})
+	// (PUT /users/{user_id}/groups/year/{year})
 	UpdateUserGroups(ctx echo.Context, userId int, year int) error
 
 	// (GET /years)
@@ -3818,7 +3818,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/users/:id", wrapper.DeleteUsersId)
 	router.GET(baseURL+"/users/:id", wrapper.GetUsersId)
 	router.PUT(baseURL+"/users/:id", wrapper.PutUsersId)
-	router.PUT(baseURL+"/users/:user_id/groups/:year", wrapper.UpdateUserGroups)
+	router.PUT(baseURL+"/users/:user_id/groups/year/:year", wrapper.UpdateUserGroups)
 	router.GET(baseURL+"/years", wrapper.GetYears)
 	router.POST(baseURL+"/years", wrapper.PostYears)
 	router.GET(baseURL+"/years/periods", wrapper.GetYearsPeriods)
