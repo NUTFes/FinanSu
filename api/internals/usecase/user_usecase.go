@@ -297,18 +297,18 @@ func (u *userUseCase) scanDivisionIDs(rows *sql.Rows) ([]int, error) {
 		}
 	}()
 
-	var ids []int
+	var divisionIDs []int
 	for rows.Next() {
 		var divisionID int
 		var divisionName string
 		if err := rows.Scan(&divisionID, &divisionName); err != nil {
 			return nil, err
 		}
-		ids = append(ids, divisionID)
+		divisionIDs = append(divisionIDs, divisionID)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return ids, nil
+	return divisionIDs, nil
 }
