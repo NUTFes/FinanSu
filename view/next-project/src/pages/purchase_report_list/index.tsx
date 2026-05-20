@@ -134,6 +134,42 @@ export default function PurchaseReports() {
       });
   }, [buyReports, users]);
 
+  const { data: allYearBuyReportsData } = useGetBuyReportsDetails(
+    { year: selectedYear },
+    { swr: { enabled: selectedYear > 0 } },
+  );
+  const allYearBuyReports = useMemo(
+    () => allYearBuyReportsData?.data ?? [],
+    [allYearBuyReportsData],
+  );
+
+  const modalPaidByUserIds = useMemo(
+    () => [
+      ...new Set(
+        allYearBuyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : [])),
+      ),
+    ],
+    [allYearBuyReports],
+  );
+
+  const { data: modalUsersResponse } = useGetUsers(
+    modalPaidByUserIds.length > 0 ? { ids: modalPaidByUserIds } : undefined,
+    { swr: { enabled: selectedYear > 0 && modalPaidByUserIds.length > 0 } },
+  );
+  const modalUsers = modalUsersResponse?.data ?? [];
+
+  const modalLegacyPaidByOptions = useMemo(() => {
+    const userNames = new Set(modalUsers.map((u) => u.name));
+    const seen = new Set<string>();
+    return allYearBuyReports
+      .map((r) => r.paidBy)
+      .filter((name): name is string => {
+        if (!name || userNames.has(name) || seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      });
+  }, [allYearBuyReports, modalUsers]);
+
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
     ...(financialRecordId != null
@@ -322,8 +358,8 @@ export default function PurchaseReports() {
                 setIsPaidByFilterOpen(false);
               }}
               bureaus={BUREAUS}
-              users={users}
-              legacyPaidByOptions={legacyPaidByOptions}
+              users={modalUsers}
+              legacyPaidByOptions={modalLegacyPaidByOptions}
               selectedBureauId={selectedBureauId}
               selectedPaidByUserId={selectedPaidByUserId}
               selectedPaidBy={selectedPaidBy}
