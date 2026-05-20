@@ -226,5 +226,7 @@ export * from './updateSponsorshipActivityRequest';
 export * from './updateSponsorshipActivityRequestSponsorStyleDetailsItem';
 export * from './updateSponsorshipActivityRequestSponsorStyleDetailsItemCategory';
 export * from './updateSponsorshipActivityStatusRequest';
+export * from './updateUserGroupsRequest';
+export * from './updateUserGroupsResponse';
 export * from './user';
 export * from './yearPeriods';
