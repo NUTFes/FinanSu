@@ -25,7 +25,6 @@ func (existing GroupIDs) Diff(requested GroupIDs) (toDeleteIDs []int, toInsertID
 	for _, id := range existing {
 		existMap[id] = struct{}{}
 	}
-
 	// リクエストされたグループを map に詰め込む
 	for _, id := range requested {
 		requestMap[id] = struct{}{}
@@ -37,7 +36,6 @@ func (existing GroupIDs) Diff(requested GroupIDs) (toDeleteIDs []int, toInsertID
 			toDeleteIDs = append(toDeleteIDs, id)
 		}
 	}
-
 	// 追加すべきIDを探す
 	for id := range requestMap {
 		if _, ok := existMap[id]; !ok {

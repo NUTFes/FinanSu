@@ -212,6 +212,17 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int, requestGroupIDs []int) (updatedUserGroupsResponse *generated.UpdateUserGroupsResponse, err error) {
 	updatedUserGroupsResponse = &generated.UpdateUserGroupsResponse{GroupIds: []int{}}
 
+	// リクエスト配列の重複排除
+	uniqueGroupIDs := make([]int, 0, len(requestGroupIDs))
+	seenGroupIDs := make(map[int]struct{}, len(requestGroupIDs))
+	for _, id := range requestGroupIDs {
+		if _, ok := seenGroupIDs[id]; !ok {
+			seenGroupIDs[id] = struct{}{}
+			uniqueGroupIDs = append(uniqueGroupIDs, id)
+		}
+	}
+	requestGroupIDs = uniqueGroupIDs
+
 	// 指定された年度に存在するグループIDの取得
 	validRows, err := u.divisionRep.GetDivisionsYears(ctx, strconv.Itoa(year))
 	if err != nil {
@@ -221,6 +232,7 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int
 	if err != nil {
 		return nil, err
 	}
+
 	// リクエストされた groupIDs が、指定された年度に存在するグループIDの中に全て含まれているかを調べる
 	if len(requestGroupIDs) > 0 {
 		validGroupIDSet := make(map[int]struct{}, len(validGroupIDs))
@@ -276,16 +288,7 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int
 	}
 
 	// 最新の所属グループIDを取得して返却
-	updatedRows, err := u.divisionRep.GetDivisionOptionsByUserId(ctx, strconv.Itoa(year), strconv.Itoa(userID))
-	if err != nil {
-		return nil, err
-	}
-	updatedGroupIDs, err := u.scanDivisionIDs(updatedRows)
-	if err != nil {
-		return nil, err
-	}
-
-	updatedUserGroupsResponse.GroupIds = updatedGroupIDs
+	updatedUserGroupsResponse.GroupIds = requestGroupIDs
 	return updatedUserGroupsResponse, nil
 }
 
@@ -300,8 +303,8 @@ func (u *userUseCase) scanDivisionIDs(rows *sql.Rows) ([]int, error) {
 	var divisionIDs []int
 	for rows.Next() {
 		var divisionID int
-		var divisionName string
-		if err := rows.Scan(&divisionID, &divisionName); err != nil {
+		var unusedName string
+		if err := rows.Scan(&divisionID, &unusedName); err != nil {
 			return nil, err
 		}
 		divisionIDs = append(divisionIDs, divisionID)
