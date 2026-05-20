@@ -15,34 +15,34 @@ type UserGroup struct {
 type GroupIDs []int
 
 // 現在の所属グループと、リクエストされたグループを比較し、削除すべきIDリストと、追加すべきIDリストを計算して返す
-func (existing GroupIDs) Diff(requested GroupIDs) (toDeleteIDs []int, toInsertIDs []int) {
+func (existingGroupIDs GroupIDs) Diff(requestedGroupIDs GroupIDs) (groupIDsToDelete []int, groupIDsToInsert []int) {
 
 	// map の準備
-	existMap := make(map[int]struct{}, len(existing))
-	requestMap := make(map[int]struct{}, len(requested))
+	existGroupIDMap := make(map[int]struct{}, len(existingGroupIDs))
+	requestGroupIDMap := make(map[int]struct{}, len(requestedGroupIDs))
 
 	// 現在の所属グループを map に詰め込む
-	for _, id := range existing {
-		existMap[id] = struct{}{}
+	for _, id := range existingGroupIDs {
+		existGroupIDMap[id] = struct{}{}
 	}
 	// リクエストされたグループを map に詰め込む
-	for _, id := range requested {
-		requestMap[id] = struct{}{}
+	for _, id := range requestedGroupIDs {
+		requestGroupIDMap[id] = struct{}{}
 	}
 
 	// 削除すべきIDを探す
-	for id := range existMap {
-		if _, ok := requestMap[id]; !ok {
-			toDeleteIDs = append(toDeleteIDs, id)
+	for id := range existGroupIDMap {
+		if _, ok := requestGroupIDMap[id]; !ok {
+			groupIDsToDelete = append(groupIDsToDelete, id)
 		}
 	}
 	// 追加すべきIDを探す
-	for id := range requestMap {
-		if _, ok := existMap[id]; !ok {
-			toInsertIDs = append(toInsertIDs, id)
+	for id := range requestGroupIDMap {
+		if _, ok := existGroupIDMap[id]; !ok {
+			groupIDsToInsert = append(groupIDsToInsert, id)
 		}
 	}
 
 	// 返却
-	return toDeleteIDs, toInsertIDs
+	return groupIDsToDelete, groupIDsToInsert
 }
