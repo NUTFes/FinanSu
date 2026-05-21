@@ -50,7 +50,8 @@ const Sponsorship: NextPage = () => {
   const sponsors = sponsorsData?.data;
 
   if (!_hasHydrated) return <Loading />;
-  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3 && user.roleID !== 4)) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3 && user.roleID !== 4))
+    return <Loading />;
   if (isYearPeriodsLoading || isSponsorsLoading) return <Loading />;
   if (yearPeriodsError || sponsorsError) return <div>error...</div>;
 

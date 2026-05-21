@@ -47,7 +47,14 @@ export default function ProgressReportInvoicePdfModal({
     setSubject(baseInvoice.subject);
     setFesStuffName(baseInvoice.fesStuffName);
     setRemark('');
-  }, [isOpen, today, baseInvoice.sponsorName, baseInvoice.managerName, baseInvoice.subject, baseInvoice.fesStuffName]);
+  }, [
+    isOpen,
+    today,
+    baseInvoice.sponsorName,
+    baseInvoice.managerName,
+    baseInvoice.subject,
+    baseInvoice.fesStuffName,
+  ]);
 
   if (!isOpen) return null;
 

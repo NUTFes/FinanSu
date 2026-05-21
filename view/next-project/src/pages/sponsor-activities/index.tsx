@@ -184,7 +184,8 @@ export default function SponsorActivities(props: Props) {
   }, [filterData, sponsorIdSetByYear]);
 
   if (!_hasHydrated) return <Loading />;
-  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3 && user.roleID !== 4)) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3 && user.roleID !== 4))
+    return <Loading />;
 
   return (
     <SponsorActivitiesLayout
