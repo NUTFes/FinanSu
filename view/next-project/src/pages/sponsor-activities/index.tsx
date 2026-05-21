@@ -90,7 +90,7 @@ export default function SponsorActivities(props: Props) {
       router.push('/');
       return;
     }
-    if (user.roleID !== 2 && user.roleID !== 3 && user.roleID !== 4) {
+    if (![2, 3, 4].includes(user.roleID)) {
       router.push('/my_page');
     }
   }, [_hasHydrated, user?.roleID, router]);
