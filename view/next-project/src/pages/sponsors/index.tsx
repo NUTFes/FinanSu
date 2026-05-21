@@ -36,10 +36,12 @@ const Sponsorship: NextPage = () => {
     isLoading: isYearPeriodsLoading,
     error: yearPeriodsError,
   } = useGetYearsPeriods();
-  const yearPeriods = yearPeriodsData?.data;
+  const yearPeriods = yearPeriodsData?.data ?? [];
 
   const [selectedYear, setSelectedYear] = useState<string>(
-    yearPeriods ? String(yearPeriods[yearPeriods.length - 1].year) : String(date.getFullYear()),
+    yearPeriods.length > 0
+      ? String(yearPeriods[yearPeriods.length - 1].year)
+      : String(date.getFullYear()),
   );
 
   const {
@@ -47,11 +49,10 @@ const Sponsorship: NextPage = () => {
     isLoading: isSponsorsLoading,
     error: sponsorsError,
   } = useGetSponsorsPeriodsYear(Number(selectedYear));
-  const sponsors = sponsorsData?.data;
+  const sponsors = sponsorsData?.data ?? [];
 
   if (!_hasHydrated) return <Loading />;
   if (!user?.roleID || ![2, 3, 4].includes(user.roleID)) return <Loading />;
-    return <Loading />;
   if (isYearPeriodsLoading || isSponsorsLoading) return <Loading />;
   if (yearPeriodsError || sponsorsError) return <div>error...</div>;
 
@@ -70,14 +71,13 @@ const Sponsorship: NextPage = () => {
               defaultValue={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              {yearPeriods &&
-                yearPeriods.map((year, index) => {
-                  return (
-                    <option value={year.year} key={index}>
-                      {year.year}年度
-                    </option>
-                  );
-                })}
+              {yearPeriods.map((year, index) => {
+                return (
+                  <option value={year.year} key={index}>
+                    {year.year}年度
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div className='hidden justify-end md:flex'>
@@ -109,7 +109,7 @@ const Sponsorship: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              {sponsors && sponsors.length > 0 ? (
+              {sponsors.length > 0 ? (
                 sponsors.map((sponsor, index) => (
                   <tr
                     className={clsx(index !== sponsors.length - 1 && 'border-b')}

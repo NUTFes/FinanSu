@@ -185,7 +185,6 @@ export default function SponsorActivities(props: Props) {
 
   if (!_hasHydrated) return <Loading />;
   if (!user?.roleID || ![2, 3, 4].includes(user.roleID)) return <Loading />;
-    return <Loading />;
 
   return (
     <SponsorActivitiesLayout
