@@ -59,7 +59,7 @@ export default function AddPdfDetailModal(props: ModalProps) {
   const handler =
     (input: string) =>
     (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-      setInvoiceDate({ ...invoiceData, [input]: e.target.value });
+      setInvoiceDate((prev) => ({ ...prev, [input]: e.target.value }));
     };
 
   const onClose = () => {
