@@ -26,7 +26,7 @@ const Sponsorship: NextPage = () => {
       router.push('/');
       return;
     }
-    if (user.roleID !== 2 && user.roleID !== 3) {
+    if (user.roleID !== 2 && user.roleID !== 4) {
       router.push('/my_page');
     }
   }, [_hasHydrated, user?.roleID, router]);
@@ -50,7 +50,7 @@ const Sponsorship: NextPage = () => {
   const sponsors = sponsorsData?.data;
 
   if (!_hasHydrated) return <Loading />;
-  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
+  if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 4)) return <Loading />;
   if (isYearPeriodsLoading || isSponsorsLoading) return <Loading />;
   if (yearPeriodsError || sponsorsError) return <div>error...</div>;
 
