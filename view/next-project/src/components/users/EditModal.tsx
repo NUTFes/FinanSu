@@ -119,11 +119,9 @@ export default function UserEditModal(props: ModalProps) {
           </Select>
         </div>
         <p>部門</p>
-        <div className='col-span-4 w-full flex flex-col gap-2'>
+        <div className='col-span-4 flex w-full flex-col gap-2'>
           {divisionsByBureau.map(([bureauName, divisions]) => {
-            const ids = divisions
-              .filter((d) => d.id !== undefined)
-              .map((d) => d.id as number);
+            const ids = divisions.filter((d) => d.id !== undefined).map((d) => d.id as number);
             const allSelected = ids.length > 0 && ids.every((id) => selectedGroupIds.includes(id));
             return (
               <div key={bureauName} className='border-primary-1 rounded-md border p-2'>
@@ -140,10 +138,7 @@ export default function UserEditModal(props: ModalProps) {
                 <div className='flex flex-wrap gap-x-4 gap-y-1'>
                   {divisions.map((division) =>
                     division.id !== undefined ? (
-                      <label
-                        key={division.id}
-                        className='flex cursor-pointer items-center gap-1'
-                      >
+                      <label key={division.id} className='flex cursor-pointer items-center gap-1'>
                         <input
                           type='checkbox'
                           checked={selectedGroupIds.includes(division.id)}
