@@ -1,38 +1,12 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { RiArrowDropDownLine } from 'react-icons/ri';
-import { components as reactSelectComponents, DropdownIndicatorProps, StylesConfig } from 'react-select';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
+import { BUREAUS } from '@/constants/bureaus';
 import { ROLES } from '@/constants/role';
 import { useGetDivisions, useGetDivisionsUsers, useUpdateUserGroups } from '@/generated/hooks';
 import { put } from '@api/user';
-import { CloseButton, Input, Modal, MultiSelect, PrimaryButton, Select } from '@components/common';
+import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { Bureau, User } from '@type/common';
-
-type DivisionOption = { value: string; label: string };
-
-const divisionSelectStyles: StylesConfig<DivisionOption, true> = {
-  control: (base, state) => ({
-    ...base,
-    borderRadius: '9999px',
-    borderColor: '#56daff',
-    boxShadow: state.isFocused ? '0 0 0 2px #56daff' : 'none',
-    '&:hover': { borderColor: '#56daff' },
-    padding: '0 0.5rem',
-    minHeight: '2.5rem',
-  }),
-  dropdownIndicator: (base) => ({
-    ...base,
-    padding: '0 0.75rem',
-  }),
-  indicatorSeparator: () => ({ display: 'none' }),
-};
-
-const DivisionDropdownIndicator = (props: DropdownIndicatorProps<DivisionOption, true>) => (
-  <reactSelectComponents.DropdownIndicator {...props}>
-    <RiArrowDropDownLine size={24} color='#6b7280' />
-  </reactSelectComponents.DropdownIndicator>
-);
 
 interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -50,7 +24,6 @@ export default function UserEditModal(props: ModalProps) {
   const [selectedGroupIds, setSelectedGroupIds] = useState<number[]>([]);
 
   const { data: allDivisionsData } = useGetDivisions();
-  const allDivisions = allDivisionsData?.data?.divisions ?? [];
 
   const { data: userDivisionsData } = useGetDivisionsUsers({ user_id: userId });
 
@@ -72,13 +45,37 @@ export default function UserEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const divisionOptions = allDivisions
-    .filter((d) => d.id !== undefined)
-    .map((d) => ({ value: String(d.id), label: d.name ?? '' }));
+  const divisionsByBureau = useMemo(() => {
+    const divisions = allDivisionsData?.data?.divisions ?? [];
+    const map = new Map<string, typeof divisions>();
+    for (const division of divisions) {
+      if (!division.financialRecord) continue;
+      const list = map.get(division.financialRecord) ?? [];
+      list.push(division);
+      map.set(division.financialRecord, list);
+    }
+    const bureauOrder = new Map(BUREAUS.map((b, i) => [b.name, i]));
+    return Array.from(map.entries()).sort(
+      ([a], [b]) => (bureauOrder.get(a) ?? Infinity) - (bureauOrder.get(b) ?? Infinity),
+    );
+  }, [allDivisionsData]);
 
-  const selectedOptions = divisionOptions.filter((opt) =>
-    selectedGroupIds.includes(Number(opt.value)),
-  );
+  const toggleDivision = (id: number) => {
+    setSelectedGroupIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  };
+
+  const toggleAllInBureau = (bureauName: string) => {
+    const ids = (divisionsByBureau.find(([name]) => name === bureauName)?.[1] ?? [])
+      .filter((d) => d.id !== undefined)
+      .map((d) => d.id as number);
+    setSelectedGroupIds((prev) => {
+      const allSelected = ids.every((id) => prev.includes(id));
+      const others = prev.filter((id) => !ids.includes(id));
+      return allSelected ? others : [...others, ...ids];
+    });
+  };
 
   const submitUser = async (data: User, id: number | string) => {
     const submitUserURL = process.env.CSR_API_URI + '/users/' + id;
@@ -122,15 +119,44 @@ export default function UserEditModal(props: ModalProps) {
           </Select>
         </div>
         <p>部門</p>
-        <div className='col-span-4 w-full'>
-          <MultiSelect
-            options={divisionOptions}
-            values={selectedOptions}
-            onChange={(opts) => setSelectedGroupIds(opts.map((o) => Number(o.value)))}
-            placeholder='部門を選択'
-            customStyles={divisionSelectStyles}
-            components={{ DropdownIndicator: DivisionDropdownIndicator }}
-          />
+        <div className='col-span-4 w-full flex flex-col gap-2'>
+          {divisionsByBureau.map(([bureauName, divisions]) => {
+            const ids = divisions
+              .filter((d) => d.id !== undefined)
+              .map((d) => d.id as number);
+            const allSelected = ids.length > 0 && ids.every((id) => selectedGroupIds.includes(id));
+            return (
+              <div key={bureauName} className='border-primary-1 rounded-md border p-2'>
+                <div className='mb-1 flex items-center justify-between'>
+                  <span className='text-black-600 text-sm font-medium'>{bureauName}</span>
+                  <button
+                    type='button'
+                    onClick={() => toggleAllInBureau(bureauName)}
+                    className='text-primary-1 text-xs hover:underline'
+                  >
+                    {allSelected ? '全て解除' : '全て選択'}
+                  </button>
+                </div>
+                <div className='flex flex-wrap gap-x-4 gap-y-1'>
+                  {divisions.map((division) =>
+                    division.id !== undefined ? (
+                      <label
+                        key={division.id}
+                        className='flex cursor-pointer items-center gap-1'
+                      >
+                        <input
+                          type='checkbox'
+                          checked={selectedGroupIds.includes(division.id)}
+                          onChange={() => toggleDivision(division.id as number)}
+                        />
+                        <span className='text-black-600 text-sm'>{division.name}</span>
+                      </label>
+                    ) : null,
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className='mx-auto mt-10 w-fit'>
