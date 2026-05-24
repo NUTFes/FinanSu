@@ -93,6 +93,9 @@ func (h *Handler) UpdateUserGroups(c echo.Context, userId int, year int) error {
 	if err := c.Bind(&updateUserGroupsRequest); err != nil {
 		return err
 	}
+	if updateUserGroupsRequest.GroupIds == nil {
+		return c.String(http.StatusBadRequest, "groupIds is required")
+	}
 	updatedUserGroups, err := h.userUseCase.UpdateUserGroups(c.Request().Context(), userId, year, updateUserGroupsRequest.GroupIds)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())

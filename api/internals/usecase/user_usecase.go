@@ -17,6 +17,7 @@ type userUseCase struct {
 	sessionRep      rep.SessionRepository
 	userGroupRep    rep.UserGroupRepository
 	divisionRep     rep.DivisionRepository
+	yearRep         rep.YearRepository
 	transactionRepo rep.TransactionRepository
 }
 
@@ -31,8 +32,8 @@ type UserUseCase interface {
 	UpdateUserGroups(context.Context, int, int, []int) (*generated.UpdateUserGroupsResponse, error)
 }
 
-func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, transactionRepo rep.TransactionRepository) UserUseCase {
-	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, transactionRepo: transactionRepo}
+func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, yearRep rep.YearRepository, transactionRepo rep.TransactionRepository) UserUseCase {
+	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, yearRep: yearRep, transactionRepo: transactionRepo}
 }
 
 func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
@@ -223,12 +224,58 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int
 	}
 	requestGroupIDs = uniqueGroupIDs
 
+	// ユーザー存在確認
+	userRow, err := u.userRep.Find(ctx, strconv.Itoa(userID))
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+	var userRecord domain.User
+	if err := userRow.Scan(
+		&userRecord.ID,
+		&userRecord.Name,
+		&userRecord.BureauID,
+		&userRecord.RoleID,
+		&userRecord.IsDeleted,
+		&userRecord.CreatedAt,
+		&userRecord.UpdatedAt,
+	); err != nil {
+		return nil, errors.New("user not found")
+	}
+
+	// 年度存在確認
+	yearRows, err := u.yearRep.All(ctx)
+	if err != nil {
+		return nil, errors.New("year not found")
+	}
+	defer func() {
+		if err := yearRows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+	isYearFound := false
+	for yearRows.Next() {
+		var yearRecord domain.Year
+		if err := yearRows.Scan(&yearRecord.ID, &yearRecord.Year, &yearRecord.CreatedAt, &yearRecord.UpdatedAt); err != nil {
+			return nil, errors.New("year not found")
+		}
+		if yearRecord.Year == year {
+			isYearFound = true
+			break
+		}
+	}
+	if err := yearRows.Err(); err != nil {
+		return nil, errors.New("year not found")
+	}
+	if !isYearFound {
+		return nil, errors.New("year not found")
+	}
+
 	// 指定された年度に存在するグループIDの取得
-	validRows, err := u.divisionRep.GetDivisionsYears(ctx, strconv.Itoa(year))
+	validGroupIdRows, err := u.divisionRep.GetDivisionsYears(ctx, strconv.Itoa(year))
 	if err != nil {
 		return nil, err
 	}
-	validGroupIDs, err := u.scanDivisionIDs(validRows)
+	validGroupIDs, err := u.scanDivisionIDs(validGroupIdRows)
 	if err != nil {
 		return nil, err
 	}
@@ -247,11 +294,11 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int
 	}
 
 	// 既存の所属グループIDを取得
-	existingRows, err := u.divisionRep.GetDivisionOptionsByUserId(ctx, strconv.Itoa(year), strconv.Itoa(userID))
+	existingGroupIdRows, err := u.divisionRep.GetDivisionOptionsByUserId(ctx, strconv.Itoa(year), strconv.Itoa(userID))
 	if err != nil {
 		return nil, err
 	}
-	existingGroupIDs, err := u.scanDivisionIDs(existingRows)
+	existingGroupIDs, err := u.scanDivisionIDs(existingGroupIdRows)
 	if err != nil {
 		return nil, err
 	}
@@ -287,7 +334,7 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int
 		return nil, err
 	}
 
-	// 最新の所属グループIDを取得して返却
+	// グループIDをそのまま返却
 	updatedUserGroupsResponse.GroupIds = requestGroupIDs
 	return updatedUserGroupsResponse, nil
 }
