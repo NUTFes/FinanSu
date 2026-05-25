@@ -7101,11 +7101,7 @@ export type updateUserGroupsResponseSuccess = updateUserGroupsResponse200 & {
 export type updateUserGroupsResponse = updateUserGroupsResponseSuccess;
 
 export const getUpdateUserGroupsUrl = (userId: number, year: number) => {
-<<<<<<< HEAD
-  return `/users/${userId}/groups/${year}`;
-=======
   return `/users/${userId}/groups/year/${year}`;
->>>>>>> origin/develop
 };
 
 export const updateUserGroups = async (
@@ -7132,11 +7128,7 @@ export const getUpdateUserGroupsMutationFetcher = (
   };
 };
 export const getUpdateUserGroupsMutationKey = (userId: number, year: number) =>
-<<<<<<< HEAD
-  [`/users/${userId}/groups/${year}`] as const;
-=======
   [`/users/${userId}/groups/year/${year}`] as const;
->>>>>>> origin/develop
 
 export type UpdateUserGroupsMutationResult = NonNullable<
   Awaited<ReturnType<typeof updateUserGroups>>

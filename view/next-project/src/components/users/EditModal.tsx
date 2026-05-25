@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'r
 
 import { BUREAUS } from '@/constants/bureaus';
 import { ROLES } from '@/constants/role';
-import { useGetDivisions, useGetDivisionsUsers, useUpdateUserGroups } from '@/generated/hooks';
+import { useGetDivisions, useGetDivisionsUsers, useGetYears, useUpdateUserGroups } from '@/generated/hooks';
 import { put } from '@api/user';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { Bureau, User } from '@type/common';
@@ -17,17 +17,23 @@ interface ModalProps {
 
 export default function UserEditModal(props: ModalProps) {
   const router = useRouter();
-  const currentYear = new Date().getFullYear();
   const userId = Number(props.id);
 
   const [formData, setFormData] = useState<User>(props.user);
   const [selectedGroupIds, setSelectedGroupIds] = useState<number[]>([]);
 
+  const { data: yearsData } = useGetYears();
+  const latestYear = useMemo(() => {
+    const years = yearsData?.data ?? [];
+    if (years.length === 0) return new Date().getFullYear();
+    return Math.max(...years.map((y) => y.year));
+  }, [yearsData]);
+
   const { data: allDivisionsData } = useGetDivisions();
 
   const { data: userDivisionsData } = useGetDivisionsUsers({ user_id: userId });
 
-  const { trigger: triggerUpdateGroups } = useUpdateUserGroups(userId, currentYear);
+  const { trigger: triggerUpdateGroups } = useUpdateUserGroups(userId, latestYear);
 
   useEffect(() => {
     const currentIds = userDivisionsData?.data?.map((d) => d.divisionId) ?? [];
