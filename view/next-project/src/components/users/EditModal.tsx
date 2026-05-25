@@ -31,7 +31,10 @@ export default function UserEditModal(props: ModalProps) {
 
   const { data: allDivisionsData } = useGetDivisions();
 
-  const { data: userDivisionsData } = useGetDivisionsUsers({ user_id: userId });
+  const { data: userDivisionsData } = useGetDivisionsUsers(
+    { user_id: userId, year: latestYear },
+    { swr: { enabled: !!yearsData } },
+  );
 
   const { trigger: triggerUpdateGroups } = useUpdateUserGroups(userId, latestYear);
 
