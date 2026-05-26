@@ -3,7 +3,12 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'r
 
 import { BUREAUS } from '@/constants/bureaus';
 import { ROLES } from '@/constants/role';
-import { useGetDivisions, useGetDivisionsUsers, useGetYears, useUpdateUserGroups } from '@/generated/hooks';
+import {
+  useGetDivisions,
+  useGetDivisionsUsers,
+  useGetYears,
+  useUpdateUserGroups,
+} from '@/generated/hooks';
 import { put } from '@api/user';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { Bureau, User } from '@type/common';
