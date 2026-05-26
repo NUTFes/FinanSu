@@ -34,7 +34,10 @@ export default function UserEditModal(props: ModalProps) {
     return Math.max(...years.map((y) => y.year));
   }, [yearsData]);
 
-  const { data: allDivisionsData } = useGetDivisions();
+  const { data: allDivisionsData } = useGetDivisions(
+    { year: latestYear },
+    { swr: { enabled: !!yearsData } },
+  );
 
   const { data: userDivisionsData } = useGetDivisionsUsers(
     { user_id: userId, year: latestYear },
@@ -44,7 +47,8 @@ export default function UserEditModal(props: ModalProps) {
   const { trigger: triggerUpdateGroups } = useUpdateUserGroups(userId, latestYear);
 
   useEffect(() => {
-    const currentIds = userDivisionsData?.data?.map((d) => d.divisionId) ?? [];
+    if (!userDivisionsData?.data) return;
+    const currentIds = userDivisionsData.data.map((d) => d.divisionId);
     setSelectedGroupIds(currentIds);
   }, [userDivisionsData]);
 
@@ -171,8 +175,13 @@ export default function UserEditModal(props: ModalProps) {
       <div className='mx-auto mt-10 w-fit'>
         <PrimaryButton
           onClick={async () => {
-            await submitUser(formData, props.id);
-            router.reload();
+            try {
+              await submitUser(formData, props.id);
+              router.reload();
+            } catch (error) {
+              console.error(error);
+              alert('ユーザー情報の更新に失敗しました。');
+            }
           }}
         >
           編集する
