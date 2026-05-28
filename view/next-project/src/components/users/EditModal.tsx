@@ -48,10 +48,10 @@ export default function UserEditModal(props: ModalProps) {
   const { trigger: triggerUpdateGroups } = useUpdateUserGroups(userId, latestYear);
 
   useEffect(() => {
-    if (!userDivisionsData?.data) return;
+    if (!userDivisionsData) return;
     if (isInitializedRef.current) return;
     isInitializedRef.current = true;
-    const currentIds = userDivisionsData.data.map((d) => d.divisionId);
+    const currentIds = (userDivisionsData.data ?? []).map((d) => d.divisionId);
     setSelectedGroupIds(currentIds);
   }, [userDivisionsData]);
 
