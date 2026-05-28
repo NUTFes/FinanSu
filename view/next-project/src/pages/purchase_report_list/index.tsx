@@ -114,11 +114,19 @@ export default function PurchaseReports() {
   const isBureauOnlyFilter =
     selectedBureauId != null && selectedPaidByUserId == null && selectedPaidBy == null;
 
+  const { data: allUsersForBureauResponse } = useGetUsers(undefined, {
+    swr: { enabled: isBureauOnlyFilter && selectedYear > 0 },
+  });
+  const allUsersForBureauFilter = useMemo(
+    () => allUsersForBureauResponse?.data ?? [],
+    [allUsersForBureauResponse],
+  );
+
   const displayedBuyReports = useMemo(() => {
     if (!isBureauOnlyFilter) return buyReports;
     return allYearBuyReports.filter((r) => {
       if (r.paidByUserId != null) return userBureauMap[r.paidByUserId] === selectedBureauId;
-      return modalUsers.some((u) => u.bureauID === selectedBureauId && u.name === r.paidBy);
+      return allUsersForBureauFilter.some((u) => u.bureauID === selectedBureauId && u.name === r.paidBy);
     });
   }, [
     isBureauOnlyFilter,
@@ -126,7 +134,7 @@ export default function PurchaseReports() {
     allYearBuyReports,
     userBureauMap,
     selectedBureauId,
-    modalUsers,
+    allUsersForBureauFilter,
   ]);
 
   const paidByUserIds = useMemo(
