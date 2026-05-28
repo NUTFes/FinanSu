@@ -29,20 +29,21 @@ export default function UserEditModal(props: ModalProps) {
   const isInitializedRef = useRef(false);
 
   const { data: yearsData } = useGetYears();
+  const years = useMemo(() => yearsData?.data ?? [], [yearsData]);
+  const hasAvailableYears = years.length > 0;
   const latestYear = useMemo(() => {
-    const years = yearsData?.data ?? [];
     if (years.length === 0) return new Date().getFullYear();
     return Math.max(...years.map((y) => y.year));
-  }, [yearsData]);
+  }, [years]);
 
   const { data: allDivisionsData } = useGetDivisions(
     { year: latestYear },
-    { swr: { enabled: !!yearsData } },
+    { swr: { enabled: hasAvailableYears } },
   );
 
   const { data: userDivisionsData } = useGetDivisionsUsers(
     { user_id: userId, year: latestYear },
-    { swr: { enabled: !!yearsData } },
+    { swr: { enabled: hasAvailableYears } },
   );
 
   const { trigger: triggerUpdateGroups } = useUpdateUserGroups(userId, latestYear);
