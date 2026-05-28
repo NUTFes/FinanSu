@@ -22,7 +22,7 @@ export default function EditInvoiceModal(props: ModalProps) {
         | React.ChangeEvent<HTMLInputElement>
         | React.ChangeEvent<HTMLTextAreaElement>,
     ) => {
-      setEditInvoice({ ...editInvoice, [input]: e.target.value });
+      setEditInvoice((prev) => ({ ...prev, [input]: e.target.value }));
     };
 
   const onChangeSponsorStyle = (inputInvoiceSponsorStyle: InvoiceSponsorStyle, index: number) => {
