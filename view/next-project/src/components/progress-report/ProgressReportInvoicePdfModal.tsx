@@ -31,7 +31,10 @@ export default function ProgressReportInvoicePdfModal({
   const totalPrice = useMemo(() => getActivityAmountFromApi(activity), [activity]);
   const [issuedDate, setIssuedDate] = useState(today);
   const [deadline, setDeadline] = useState(today);
+  const [sponsorName, setSponsorName] = useState(baseInvoice.sponsorName);
+  const [managerName, setManagerName] = useState(baseInvoice.managerName);
   const [subject, setSubject] = useState(baseInvoice.subject);
+  const [fesStuffName, setFesStuffName] = useState(baseInvoice.fesStuffName);
   const [remark, setRemark] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -39,9 +42,19 @@ export default function ProgressReportInvoicePdfModal({
     if (!isOpen) return;
     setIssuedDate(today);
     setDeadline(today);
+    setSponsorName(baseInvoice.sponsorName);
+    setManagerName(baseInvoice.managerName);
     setSubject(baseInvoice.subject);
+    setFesStuffName(baseInvoice.fesStuffName);
     setRemark('');
-  }, [isOpen, today, baseInvoice.subject]);
+  }, [
+    isOpen,
+    today,
+    baseInvoice.sponsorName,
+    baseInvoice.managerName,
+    baseInvoice.subject,
+    baseInvoice.fesStuffName,
+  ]);
 
   if (!isOpen) return null;
 
@@ -49,7 +62,10 @@ export default function ProgressReportInvoicePdfModal({
     ...baseInvoice,
     issuedDate,
     deadline,
+    sponsorName,
+    managerName,
     subject,
+    fesStuffName,
     remark,
   };
 
@@ -68,9 +84,19 @@ export default function ProgressReportInvoicePdfModal({
             <div className='grid grid-cols-1 gap-4'>
               <div>
                 <p className='mb-2 ml-1 text-sm text-gray-600'>企業名</p>
-                <Input type='text' value={invoice.sponsorName} readOnly className='mb-3 w-full' />
+                <Input
+                  type='text'
+                  value={sponsorName}
+                  onChange={(event) => setSponsorName(event.target.value)}
+                  className='mb-3 w-full'
+                />
                 <p className='mb-2 ml-1 text-sm text-gray-600'>担当者名(企業)</p>
-                <Input type='text' value={invoice.managerName} readOnly className='mb-3 w-full' />
+                <Input
+                  type='text'
+                  value={managerName}
+                  onChange={(event) => setManagerName(event.target.value)}
+                  className='mb-3 w-full'
+                />
                 <p className='mb-2 ml-1 text-sm text-gray-600'>件名</p>
                 <Input
                   type='text'
@@ -93,7 +119,12 @@ export default function ProgressReportInvoicePdfModal({
                   className='mb-3 w-full'
                 />
                 <p className='mb-2 ml-1 text-sm text-gray-600'>担当者名(実行委員)</p>
-                <Input type='text' value={invoice.fesStuffName} readOnly className='mb-3 w-full' />
+                <Input
+                  type='text'
+                  value={fesStuffName}
+                  onChange={(event) => setFesStuffName(event.target.value)}
+                  className='mb-3 w-full'
+                />
                 <p className='mb-2 ml-1 text-sm text-gray-600'>合計金額</p>
                 <Input
                   type='text'

@@ -155,6 +155,8 @@ import type {
   Teacher,
   UpdateSponsorshipActivityRequest,
   UpdateSponsorshipActivityStatusRequest,
+  UpdateUserGroupsRequest,
+  UpdateUserGroupsResponse,
   User,
   YearPeriods,
 } from './model';
@@ -7075,6 +7077,85 @@ export const useDeleteUsersId = <TError = unknown>(
 
   const swrKey = swrOptions?.swrKey ?? getDeleteUsersIdMutationKey(id);
   const swrFn = getDeleteUsersIdMutationFetcher(id, requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * userの所属部門を差分更新する。groupIds が空配列の場合は全削除する。
+ * @summary ユーザー所属部門の差分更新
+ */
+export type updateUserGroupsResponse200 = {
+  data: UpdateUserGroupsResponse;
+  status: 200;
+};
+
+export type updateUserGroupsResponseSuccess = updateUserGroupsResponse200 & {
+  headers: Headers;
+};
+export type updateUserGroupsResponse = updateUserGroupsResponseSuccess;
+
+export const getUpdateUserGroupsUrl = (userId: number, year: number) => {
+  return `/users/${userId}/groups/year/${year}`;
+};
+
+export const updateUserGroups = async (
+  userId: number,
+  year: number,
+  updateUserGroupsRequest: UpdateUserGroupsRequest,
+  options?: RequestInit,
+): Promise<updateUserGroupsResponse> => {
+  return customFetch<updateUserGroupsResponse>(getUpdateUserGroupsUrl(userId, year), {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(updateUserGroupsRequest),
+  });
+};
+
+export const getUpdateUserGroupsMutationFetcher = (
+  userId: number,
+  year: number,
+  options?: SecondParameter<typeof customFetch>,
+) => {
+  return (_: Key, { arg }: { arg: UpdateUserGroupsRequest }) => {
+    return updateUserGroups(userId, year, arg, options);
+  };
+};
+export const getUpdateUserGroupsMutationKey = (userId: number, year: number) =>
+  [`/users/${userId}/groups/year/${year}`] as const;
+
+export type UpdateUserGroupsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateUserGroups>>
+>;
+export type UpdateUserGroupsMutationError = unknown;
+
+/**
+ * @summary ユーザー所属部門の差分更新
+ */
+export const useUpdateUserGroups = <TError = unknown>(
+  userId: number,
+  year: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof updateUserGroups>>,
+      TError,
+      Key,
+      UpdateUserGroupsRequest,
+      Awaited<ReturnType<typeof updateUserGroups>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getUpdateUserGroupsMutationKey(userId, year);
+  const swrFn = getUpdateUserGroupsMutationFetcher(userId, year, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
