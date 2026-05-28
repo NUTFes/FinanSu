@@ -120,7 +120,14 @@ export default function PurchaseReports() {
       if (r.paidByUserId != null) return userBureauMap[r.paidByUserId] === selectedBureauId;
       return modalUsers.some((u) => u.bureauID === selectedBureauId && u.name === r.paidBy);
     });
-  }, [isBureauOnlyFilter, buyReports, allYearBuyReports, userBureauMap, selectedBureauId, modalUsers]);
+  }, [
+    isBureauOnlyFilter,
+    buyReports,
+    allYearBuyReports,
+    userBureauMap,
+    selectedBureauId,
+    modalUsers,
+  ]);
 
   const paidByUserIds = useMemo(
     () => [
@@ -227,9 +234,7 @@ export default function PurchaseReports() {
 
   const summaryUnsettledAmount = isBureauOnlyFilter
     ? formatAmount(
-        displayedBuyReports
-          .filter((r) => !r.isSettled)
-          .reduce((s, r) => s + (r.amount ?? 0), 0),
+        displayedBuyReports.filter((r) => !r.isSettled).reduce((s, r) => s + (r.amount ?? 0), 0),
       )
     : isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
       ? '-'
@@ -237,9 +242,7 @@ export default function PurchaseReports() {
 
   const summaryUnpackedAmount = isBureauOnlyFilter
     ? formatAmount(
-        displayedBuyReports
-          .filter((r) => !r.isPacked)
-          .reduce((s, r) => s + (r.amount ?? 0), 0),
+        displayedBuyReports.filter((r) => !r.isPacked).reduce((s, r) => s + (r.amount ?? 0), 0),
       )
     : isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
       ? '-'
