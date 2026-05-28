@@ -13,7 +13,6 @@ import { BUREAUS } from '@/constants/bureaus';
 import {
   useGetBuyReportsDetails,
   useGetBuyReportsSummary,
-  useGetFinancialRecords,
   useGetUsers,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
@@ -67,34 +66,8 @@ export default function PurchaseReports() {
     paidBy: selectedPaidBy,
   });
 
-  const { data: financialRecordsData } = useGetFinancialRecords(
-    { year: selectedYear },
-    { swr: { enabled: selectedYear > 0 } },
-  );
-
-  const bureauToFinancialRecordId = useMemo(() => {
-    const records = financialRecordsData?.data?.financialRecords ?? [];
-    return new Map(
-      BUREAUS.flatMap((bureau) => {
-        const record = records.find((r) => r.name === bureau.name);
-        return record?.id != null ? ([[bureau.id, record.id]] as const) : [];
-      }),
-    );
-  }, [financialRecordsData]);
-
-  const financialRecordId =
-    selectedBureauId != null ? (bureauToFinancialRecordId.get(selectedBureauId) ?? null) : null;
-
-  const hasSelectedBureauWithoutFinancialRecord =
-    selectedBureauId != null && financialRecordId == null;
-
   const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
     year: selectedYear,
-    ...(financialRecordId != null
-      ? { financial_record_id: financialRecordId }
-      : hasSelectedBureauWithoutFinancialRecord
-        ? { financial_record_id: -1 }
-        : {}),
     ...paidByFilterParams,
   };
 
@@ -109,32 +82,7 @@ export default function PurchaseReports() {
 
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
 
-  const paidByUserIds = useMemo(
-    () => [...new Set(buyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : [])))],
-    [buyReports],
-  );
-
-  const { data: usersResponse } = useGetUsers(
-    paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined,
-    { swr: { enabled: selectedYear > 0 && paidByUserIds.length > 0 } },
-  );
-  const users = usersResponse?.data ?? [];
-
-  const userNameMap = useMemo(() => Object.fromEntries(users.map((u) => [u.id, u.name])), [users]);
-
-  const legacyPaidByOptions = useMemo(() => {
-    const userNames = new Set(users.map((u) => u.name));
-    const seen = new Set<string>();
-    return buyReports
-      .map((r) => r.paidBy)
-      .filter((name): name is string => {
-        if (!name || userNames.has(name) || seen.has(name)) return false;
-        seen.add(name);
-        return true;
-      });
-  }, [buyReports, users]);
-
-  const { data: allYearBuyReportsData } = useGetBuyReportsDetails(
+  const { data: allYearBuyReportsData, isLoading: isAllYearLoading } = useGetBuyReportsDetails(
     { year: selectedYear },
     { swr: { enabled: selectedYear > 0 } },
   );
@@ -158,6 +106,39 @@ export default function PurchaseReports() {
   );
   const modalUsers = modalUsersResponse?.data ?? [];
 
+  const userBureauMap = useMemo(
+    () => Object.fromEntries(modalUsers.map((u) => [u.id, u.bureauID])),
+    [modalUsers],
+  );
+
+  const isBureauOnlyFilter =
+    selectedBureauId != null && selectedPaidByUserId == null && selectedPaidBy == null;
+
+  const displayedBuyReports = useMemo(() => {
+    if (!isBureauOnlyFilter) return buyReports;
+    return allYearBuyReports.filter((r) => {
+      if (r.paidByUserId != null) return userBureauMap[r.paidByUserId] === selectedBureauId;
+      return modalUsers.some((u) => u.bureauID === selectedBureauId && u.name === r.paidBy);
+    });
+  }, [isBureauOnlyFilter, buyReports, allYearBuyReports, userBureauMap, selectedBureauId, modalUsers]);
+
+  const paidByUserIds = useMemo(
+    () => [
+      ...new Set(
+        displayedBuyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : [])),
+      ),
+    ],
+    [displayedBuyReports],
+  );
+
+  const { data: usersResponse } = useGetUsers(
+    paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined,
+    { swr: { enabled: selectedYear > 0 && paidByUserIds.length > 0 } },
+  );
+  const users = usersResponse?.data ?? [];
+
+  const userNameMap = useMemo(() => Object.fromEntries(users.map((u) => [u.id, u.name])), [users]);
+
   const modalLegacyPaidByOptions = useMemo(() => {
     const userNames = new Set(modalUsers.map((u) => u.name));
     const seen = new Set<string>();
@@ -172,11 +153,6 @@ export default function PurchaseReports() {
 
   const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
     year: selectedYear,
-    ...(financialRecordId != null
-      ? { financial_record_id: financialRecordId }
-      : hasSelectedBureauWithoutFinancialRecord
-        ? { financial_record_id: -1 }
-        : {}),
     ...paidByFilterParams,
   };
 
@@ -194,15 +170,19 @@ export default function PurchaseReports() {
 
   // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
   useEffect(() => {
-    if (buyReports.length > 0) {
+    if (displayedBuyReports.length > 0) {
       setSealChecks(
-        Object.fromEntries(buyReports.map((report) => [report.id, report.isPacked ?? false])),
+        Object.fromEntries(
+          displayedBuyReports.map((report) => [report.id, report.isPacked ?? false]),
+        ),
       );
       setSettlementChecks(
-        Object.fromEntries(buyReports.map((report) => [report.id, report.isSettled ?? false])),
+        Object.fromEntries(
+          displayedBuyReports.map((report) => [report.id, report.isSettled ?? false]),
+        ),
       );
     }
-  }, [buyReports]);
+  }, [displayedBuyReports]);
 
   const updateSealCheck = (id: number) => {
     if (settlementChecks[id]) {
@@ -245,13 +225,23 @@ export default function PurchaseReports() {
 
   const buyReportsSummary = buyReportsSummaryData?.data;
 
-  const summaryUnsettledAmount =
-    isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
+  const summaryUnsettledAmount = isBureauOnlyFilter
+    ? formatAmount(
+        displayedBuyReports
+          .filter((r) => !r.isSettled)
+          .reduce((s, r) => s + (r.amount ?? 0), 0),
+      )
+    : isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
       ? '-'
       : formatAmount(buyReportsSummary.unsettledAmount ?? 0);
 
-  const summaryUnpackedAmount =
-    isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
+  const summaryUnpackedAmount = isBureauOnlyFilter
+    ? formatAmount(
+        displayedBuyReports
+          .filter((r) => !r.isPacked)
+          .reduce((s, r) => s + (r.amount ?? 0), 0),
+      )
+    : isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
       ? '-'
       : formatAmount(buyReportsSummary.unpackedAmount ?? 0);
 
@@ -310,7 +300,8 @@ export default function PurchaseReports() {
     }
   };
 
-  if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
+  if (isYearPeriodsLoading || isBuyReportsLoading || (isBureauOnlyFilter && isAllYearLoading))
+    return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
 
   return (
@@ -410,8 +401,8 @@ export default function PurchaseReports() {
                 </thead>
 
                 <tbody>
-                  {buyReports && buyReports.length > 0 ? (
-                    buyReports.map((report) => (
+                  {displayedBuyReports && displayedBuyReports.length > 0 ? (
+                    displayedBuyReports.map((report) => (
                       <tr key={report.id}>
                         <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {formatDate(report.reportDate ?? '')}
