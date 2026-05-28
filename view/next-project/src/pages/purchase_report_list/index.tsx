@@ -52,7 +52,7 @@ export default function PurchaseReports() {
   useEffect(() => {
     if (yearPeriods && yearPeriods.length > 0) {
       const latestYear = Math.max(...yearPeriods.map((period) => period.year));
-      setSelectedYear(latestYear);
+      setSelectedYear((prev) => (prev === 0 ? latestYear : prev));
     }
   }, [yearPeriods]);
 
@@ -104,7 +104,7 @@ export default function PurchaseReports() {
     modalPaidByUserIds.length > 0 ? { ids: modalPaidByUserIds } : undefined,
     { swr: { enabled: selectedYear > 0 && modalPaidByUserIds.length > 0 } },
   );
-  const modalUsers = modalUsersResponse?.data ?? [];
+  const modalUsers = useMemo(() => modalUsersResponse?.data ?? [], [modalUsersResponse]);
 
   const userBureauMap = useMemo(
     () => Object.fromEntries(modalUsers.map((u) => [u.id, u.bureauID])),
@@ -142,7 +142,7 @@ export default function PurchaseReports() {
     paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined,
     { swr: { enabled: selectedYear > 0 && paidByUserIds.length > 0 } },
   );
-  const users = usersResponse?.data ?? [];
+  const users = useMemo(() => usersResponse?.data ?? [], [usersResponse]);
 
   const userNameMap = useMemo(() => Object.fromEntries(users.map((u) => [u.id, u.name])), [users]);
 
@@ -268,6 +268,7 @@ export default function PurchaseReports() {
 
     try {
       await trigger(putBuyReportStatusBuyReportIdBody);
+      setBuyReportId(0);
       mutateBuyReportData();
       mutateBuyReportsSummary();
     } catch (e) {
@@ -279,6 +280,7 @@ export default function PurchaseReports() {
     settlementChecks,
     trigger,
     statusError,
+    setBuyReportId,
     mutateBuyReportData,
     mutateBuyReportsSummary,
   ]);
