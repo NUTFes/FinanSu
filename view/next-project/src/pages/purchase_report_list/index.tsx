@@ -126,7 +126,9 @@ export default function PurchaseReports() {
     if (!isBureauOnlyFilter) return buyReports;
     return allYearBuyReports.filter((r) => {
       if (r.paidByUserId != null) return userBureauMap[r.paidByUserId] === selectedBureauId;
-      return allUsersForBureauFilter.some((u) => u.bureauID === selectedBureauId && u.name === r.paidBy);
+      return allUsersForBureauFilter.some(
+        (u) => u.bureauID === selectedBureauId && u.name === r.paidBy,
+      );
     });
   }, [
     isBureauOnlyFilter,
