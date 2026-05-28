@@ -6,7 +6,7 @@ import { ROLES } from '@/constants/role';
 import {
   useGetDivisions,
   useGetDivisionsUsers,
-  useGetYears,
+  useGetYearsPeriods,
   useUpdateUserGroups,
 } from '@/generated/hooks';
 import { put } from '@api/user';
@@ -28,7 +28,7 @@ export default function UserEditModal(props: ModalProps) {
   const [selectedGroupIds, setSelectedGroupIds] = useState<number[] | null>(null);
   const isInitializedRef = useRef(false);
 
-  const { data: yearsData } = useGetYears();
+  const { data: yearsData } = useGetYearsPeriods();
   const years = useMemo(() => yearsData?.data ?? [], [yearsData]);
   const hasAvailableYears = years.length > 0;
   const latestYear = useMemo(() => {
