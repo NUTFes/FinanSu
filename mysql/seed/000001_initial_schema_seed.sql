@@ -31,7 +31,9 @@ INSERT INTO
     financial_records (name, year_id)
 VALUES
     ('総務局', 1),
-    ('渉外局', 1);
+    ('渉外局', 1),
+    ('情報局', 2),
+    ('企画局', 2);
 
 INSERT INTO
     divisions (name, financial_record_id)
@@ -39,7 +41,11 @@ VALUES
     ('衛生管理部門', 1),
     ('国際部門', 1),
     ('広報部門', 2),
-    ('ゲスト部門', 2);
+    ('ゲスト部門', 2),
+    ('GM2', 3),
+    ('FinanSu', 3),
+    ('お化け屋敷部門', 4),
+    ('ステージ部門', 4);
 
 INSERT INTO
     festival_items (name, memo, division_id)
@@ -68,7 +74,11 @@ INSERT INTO
 VALUES
     (1, 1),
     (1, 2),
-    (2, 3);
+    (2, 3),
+    (1, 8),
+    (2, 5),
+    (2, 6),
+    (1, 7);
 
 INSERT INTO
     buy_reports (festival_item_id, amount, memo, paid_by)
