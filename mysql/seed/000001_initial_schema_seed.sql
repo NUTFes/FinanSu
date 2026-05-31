@@ -194,12 +194,17 @@ VALUES
     ('2ページ', 'カラー', 30000),
     ('企業ブース', 'なし', 30000);
 
+-- カラムがそろってないので一旦コメントアウト
+/*
 INSERT INTO
     teachers (name, position, department_id, room, is_black, remark)
 VALUES
     ('test-name', 'test-position', 1, '605', false, 'test-remark'),
     ('test-teacher', 'test-position2', 1, '605', false, 'test-remark');
+*/
 
+-- カラムがそろってないので一旦コメントアウト
+/*
 INSERT INTO
     teachers (name, position, department_id, room, is_black, remark)
 VALUES
@@ -442,6 +447,7 @@ VALUES
     ('生物系', '系事務室', 12, '', false, ''),
     ('環境事務室', '系事務室', 12, '', false, ''),
     ('芳賀 仁', '助教', 12, '電気2号棟-364', false, '同窓会代表。局長が挨拶へ。学内募金は毎回断っている');
+*/
 
 INSERT INTO
     incomes (name, created_at, updated_at)
@@ -480,8 +486,20 @@ VALUES
     ('分析計測センター', 1, 'analysis_instrumentation_center'),
     ('その他', 1, 'other');
 
+-- カラムがそろってないので一旦コメントアウト
+/*
 INSERT INTO
     campus_donations (user_id, teacher_id, year_id, price, received_at)
 VALUES
     (1, 1, 1, 2000, '2023-02-22'),
     (2, 2, 1, 2000, '2022-02-22');
+*/
+
+-- sponsor を追加
+INSERT INTO
+    sponsors (name, tel, email, address, representative, created_at, updated_at)
+VALUES
+    ('株式会社ちくわ', '03-1234-5678', 'tikuwa@example.com', '新潟県長岡市1-1-1', '高橋 なおや', '2025-03-10 10:00:00', '2025-03-10 10:00:00'),
+    ('kubosaka物流株式会社', '03-2345-6789', 'kubosaka@logistics.example.com', '新潟県長岡市2-2-2', 'kubosaka', '2025-09-22 11:30:00', '2025-09-22 11:30:00'),
+    ('ウォルトクリエイト株式会社', '03-3456-7890', 'walt@next-create.example.com', '新潟県長岡市3-3-3', 'ウォルト', '2026-02-14 09:15:00', '2026-02-14 09:15:00'),
+    ('中田企画合同会社', '03-4567-8901', 'contact@nakata-planning.example.com', '新潟県長岡市4-4-4', '中田 慎吾', '2026-08-01 14:45:00', '2026-08-01 14:45:00');
