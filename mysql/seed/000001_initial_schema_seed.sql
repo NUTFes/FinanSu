@@ -1,10 +1,18 @@
 -- TODO: シードを整理する
 use finansu_db;
 
+-- yearを挿入
 INSERT INTO
     years (year)
 VALUES
-    (2025);
+    (2025),
+    (2026);
+
+INSERT INTO
+    year_periods (year_id, started_at, ended_at)
+VALUES
+    (1, '2024-12-15 00:00:00', '2025-12-15 00:00:00'),
+    (2, '2025-12-15 00:00:00', '2026-12-15 00:00:00');
 
 -- ユーザーを一括で挿入
 INSERT INTO
@@ -434,11 +442,6 @@ VALUES
     ('生物系', '系事務室', 12, '', false, ''),
     ('環境事務室', '系事務室', 12, '', false, ''),
     ('芳賀 仁', '助教', 12, '電気2号棟-364', false, '同窓会代表。局長が挨拶へ。学内募金は毎回断っている');
-
-INSERT INTO
-    year_periods (year_id, started_at, ended_at)
-VALUES
-    (1, '2024-11-15 00:00:00', '2025-11-15 00:00:00');
 
 INSERT INTO
     incomes (name, created_at, updated_at)
