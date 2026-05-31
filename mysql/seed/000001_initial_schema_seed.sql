@@ -503,3 +503,21 @@ VALUES
     ('kubosaka物流株式会社', '03-2345-6789', 'kubosaka@logistics.example.com', '新潟県長岡市2-2-2', 'kubosaka', '2025-09-22 11:30:00', '2025-09-22 11:30:00'),
     ('ウォルトクリエイト株式会社', '03-3456-7890', 'walt@next-create.example.com', '新潟県長岡市3-3-3', 'ウォルト', '2026-02-14 09:15:00', '2026-02-14 09:15:00'),
     ('中田企画合同会社', '03-4567-8901', 'contact@nakata-planning.example.com', '新潟県長岡市4-4-4', '中田 慎吾', '2026-08-01 14:45:00', '2026-08-01 14:45:00');
+
+-- sponsor_style を追加
+INSERT INTO
+    sponsorship_activities (year_periods_id, sponsor_id, user_id, activity_status, feasibility_status, design_progress, remarks)
+VALUES
+    (1, 1, 3, 'rejected', 'impossible', 'unstarted', '見送り'),
+    (1, 2, 2, 'receipt_sent', 'possible', 'completed', 'すべてが終わり'),
+    (2, 3, 3, 'confirmed', 'possible', 'unstarted', '請求書送付まで完了'),
+    (2, 4, 2, 'material_sent', 'unstarted', 'unstarted', '資料送付済み');
+
+-- activity_sponsor_style_links を追加
+INSERT INTO
+    activity_sponsor_style_links (sponsorship_activity_id, sponsor_style_id, category)
+VALUES
+    (2, 1, 'money'),
+    (2, 2, 'money'),
+    (3, 6, 'goods'),
+    (3, 4, 'money');
