@@ -13,6 +13,7 @@ export const post = async (url: string, data: User) => {
     },
     body: JSON.stringify(data),
   });
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
   return await res.json();
 };
 
@@ -29,5 +30,6 @@ export const put = async (url: string, data: User) => {
     },
     body: JSON.stringify(data),
   });
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
   return await res.json();
 };
