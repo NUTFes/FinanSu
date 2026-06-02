@@ -1,18 +1,24 @@
 import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { RiArrowDropDownLine } from 'react-icons/ri';
 import { TbDownload } from 'react-icons/tb';
 
 import DownloadButton from '@/components/common/DownloadButton';
 import PrimaryButton from '@/components/common/OutlinePrimaryButton/OutlinePrimaryButton';
 import { OpenCheckSettlementModalButton } from '@/components/purchasereports';
+import PurchaseReportPaidByFilterModal from '@/components/purchasereports/PurchaseReportPaidByFilterModal';
+import PurchaseReportSummaryAmounts from '@/components/purchasereports/PurchaseReportSummaryAmounts';
+import { BUREAUS } from '@/constants/bureaus';
 import {
   useGetBuyReportsDetails,
+  useGetBuyReportsSummary,
   useGetUsers,
   useGetYearsPeriods,
   usePutBuyReportStatusBuyReportId,
 } from '@/generated/hooks';
 import { useCurrentUser } from '@/store';
+import { buildPaidByFilterParams } from '@/utils/purchaseReportFilters';
 import { Card, Checkbox, EditButton, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalButton';
@@ -20,6 +26,7 @@ import OpenDeleteModalButton from '@components/purchasereports/OpenDeleteModalBu
 import type {
   BuyReportDetail,
   GetBuyReportsDetailsParams,
+  GetBuyReportsSummaryParams,
   PutBuyReportStatusBuyReportIdBody,
 } from '@/generated/model';
 
@@ -31,71 +38,168 @@ export default function PurchaseReports() {
     error: yearPeriodsError,
   } = useGetYearsPeriods();
   const yearPeriods = yearPeriodsData?.data;
-  const user = useCurrentUser();
-  const [selectedYear, setSelectedYear] = useState<number>(
-    yearPeriods && yearPeriods.length > 0 ? yearPeriods[yearPeriods.length - 1].year : 0,
-  );
 
-  user?.roleID === 1 && router.push('/my_page');
+  const user = useCurrentUser();
+
+  useEffect(() => {
+    if (user?.roleID === 1) {
+      router.push('/my_page');
+    }
+  }, [router, user?.roleID]);
+
+  const [selectedYear, setSelectedYear] = useState<number>(0);
 
   useEffect(() => {
     if (yearPeriods && yearPeriods.length > 0) {
       const latestYear = Math.max(...yearPeriods.map((period) => period.year));
-      setSelectedYear(latestYear);
+      setSelectedYear((prev) => (prev === 0 ? latestYear : prev));
     }
   }, [yearPeriods]);
-  const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = { year: selectedYear };
+
+  const [isPaidByFilterOpen, setIsPaidByFilterOpen] = useState(false);
+  const [selectedBureauId, setSelectedBureauId] = useState<number | null>(null);
+  const [selectedPaidBy, setSelectedPaidBy] = useState<string | null>(null);
+  const [selectedPaidByUserId, setSelectedPaidByUserId] = useState<number | null>(null);
+
+  const paidByFilterParams = buildPaidByFilterParams({
+    paidByUserId: selectedPaidByUserId,
+    paidBy: selectedPaidBy,
+  });
+
+  const getBuyReportsDetailsParams: GetBuyReportsDetailsParams = {
+    year: selectedYear,
+    ...paidByFilterParams,
+  };
 
   const {
     data: buyReportsData,
     isLoading: isBuyReportsLoading,
     error: buyReportsError,
     mutate: mutateBuyReportData,
-  } = useGetBuyReportsDetails(getBuyReportsDetailsParams);
+  } = useGetBuyReportsDetails(getBuyReportsDetailsParams, {
+    swr: { enabled: selectedYear > 0 },
+  });
+
   const buyReports = useMemo(() => buyReportsData?.data ?? [], [buyReportsData]);
+
+  const { data: allYearBuyReportsData, isLoading: isAllYearLoading } = useGetBuyReportsDetails(
+    { year: selectedYear },
+    { swr: { enabled: selectedYear > 0 } },
+  );
+  const allYearBuyReports = useMemo(
+    () => allYearBuyReportsData?.data ?? [],
+    [allYearBuyReportsData],
+  );
+
+  const modalPaidByUserIds = useMemo(
+    () => [
+      ...new Set(
+        allYearBuyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : [])),
+      ),
+    ],
+    [allYearBuyReports],
+  );
+
+  const { data: modalUsersResponse } = useGetUsers(
+    modalPaidByUserIds.length > 0 ? { ids: modalPaidByUserIds } : undefined,
+    { swr: { enabled: selectedYear > 0 && modalPaidByUserIds.length > 0 } },
+  );
+  const modalUsers = useMemo(() => modalUsersResponse?.data ?? [], [modalUsersResponse]);
+
+  const userBureauMap = useMemo(
+    () => Object.fromEntries(modalUsers.map((u) => [u.id, u.bureauID])),
+    [modalUsers],
+  );
+
+  const isBureauOnlyFilter =
+    selectedBureauId != null && selectedPaidByUserId == null && selectedPaidBy == null;
+
+  const { data: allUsersForBureauResponse } = useGetUsers(undefined, {
+    swr: { enabled: isBureauOnlyFilter && selectedYear > 0 },
+  });
+  const allUsersForBureauFilter = useMemo(
+    () => allUsersForBureauResponse?.data ?? [],
+    [allUsersForBureauResponse],
+  );
+
+  const displayedBuyReports = useMemo(() => {
+    if (!isBureauOnlyFilter) return buyReports;
+    return allYearBuyReports.filter((r) => {
+      if (r.paidByUserId != null) return userBureauMap[r.paidByUserId] === selectedBureauId;
+      return allUsersForBureauFilter.some(
+        (u) => u.bureauID === selectedBureauId && u.name === r.paidBy,
+      );
+    });
+  }, [
+    isBureauOnlyFilter,
+    buyReports,
+    allYearBuyReports,
+    userBureauMap,
+    selectedBureauId,
+    allUsersForBureauFilter,
+  ]);
 
   const paidByUserIds = useMemo(
     () => [
       ...new Set(
-        buyReports.map((report) => report.paidByUserId).filter((id): id is number => !!id),
+        displayedBuyReports.flatMap((r) => (r.paidByUserId != null ? [r.paidByUserId] : [])),
       ),
     ],
-    [buyReports],
+    [displayedBuyReports],
   );
 
-  const userParams = useMemo(
-    () => (paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined),
-    [paidByUserIds],
+  const { data: usersResponse } = useGetUsers(
+    paidByUserIds.length > 0 ? { ids: paidByUserIds } : undefined,
+    { swr: { enabled: selectedYear > 0 && paidByUserIds.length > 0 } },
   );
+  const users = useMemo(() => usersResponse?.data ?? [], [usersResponse]);
 
-  const { data: userData } = useGetUsers(userParams, {
-    swr: {
-      enabled: !!userParams,
-    },
+  const userNameMap = useMemo(() => Object.fromEntries(users.map((u) => [u.id, u.name])), [users]);
+
+  const modalLegacyPaidByOptions = useMemo(() => {
+    const userNames = new Set(modalUsers.map((u) => u.name));
+    const seen = new Set<string>();
+    return allYearBuyReports
+      .map((r) => r.paidBy)
+      .filter((name): name is string => {
+        if (!name || userNames.has(name) || seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      });
+  }, [allYearBuyReports, modalUsers]);
+
+  const getBuyReportsSummaryParams: GetBuyReportsSummaryParams = {
+    year: selectedYear,
+    ...paidByFilterParams,
+  };
+
+  const {
+    data: buyReportsSummaryData,
+    isLoading: isBuyReportsSummaryLoading,
+    error: buyReportsSummaryError,
+    mutate: mutateBuyReportsSummary,
+  } = useGetBuyReportsSummary(getBuyReportsSummaryParams, {
+    swr: { enabled: selectedYear > 0 },
   });
-
-  const userNameMap = useMemo(
-    () =>
-      Object.fromEntries(
-        (userData?.data ?? []).map((targetUser) => [targetUser.id, targetUser.name]),
-      ),
-    [userData],
-  );
 
   const [sealChecks, setSealChecks] = useState<Record<number, boolean>>({});
   const [settlementChecks, setSettlementChecks] = useState<Record<number, boolean>>({});
 
   // NOTE: 初回レンダリングだと値が取ってこれずundefinedになったのでuseEffectで取得している。
   useEffect(() => {
-    if (buyReports.length > 0) {
+    if (displayedBuyReports.length > 0) {
       setSealChecks(
-        Object.fromEntries(buyReports.map((report) => [report.id, report.isPacked ?? false])),
+        Object.fromEntries(
+          displayedBuyReports.map((report) => [report.id, report.isPacked ?? false]),
+        ),
       );
       setSettlementChecks(
-        Object.fromEntries(buyReports.map((report) => [report.id, report.isSettled ?? false])),
+        Object.fromEntries(
+          displayedBuyReports.map((report) => [report.id, report.isSettled ?? false]),
+        ),
       );
     }
-  }, [buyReports]);
+  }, [displayedBuyReports]);
 
   const updateSealCheck = (id: number) => {
     if (settlementChecks[id]) {
@@ -136,6 +240,24 @@ export default function PurchaseReports() {
     return amount.toLocaleString();
   }, []);
 
+  const buyReportsSummary = buyReportsSummaryData?.data;
+
+  const summaryUnsettledAmount = isBureauOnlyFilter
+    ? formatAmount(
+        displayedBuyReports.filter((r) => !r.isSettled).reduce((s, r) => s + (r.amount ?? 0), 0),
+      )
+    : isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
+      ? '-'
+      : formatAmount(buyReportsSummary.unsettledAmount ?? 0);
+
+  const summaryUnpackedAmount = isBureauOnlyFilter
+    ? formatAmount(
+        displayedBuyReports.filter((r) => !r.isPacked).reduce((s, r) => s + (r.amount ?? 0), 0),
+      )
+    : isBuyReportsSummaryLoading || buyReportsSummaryError || buyReportsSummary == null
+      ? '-'
+      : formatAmount(buyReportsSummary.unpackedAmount ?? 0);
+
   const download = async (url: string, fileName: string) => {
     const downloadPath = `${process.env.NEXT_PUBLIC_MINIO_ENDPONT}/finansu/${url}`;
     const response = await fetch(downloadPath);
@@ -156,10 +278,22 @@ export default function PurchaseReports() {
 
     try {
       await trigger(putBuyReportStatusBuyReportIdBody);
-    } catch {
-      console.error('Failed to update buy_reports:', statusError);
+      setBuyReportId(0);
+      mutateBuyReportData();
+      mutateBuyReportsSummary();
+    } catch (e) {
+      console.error('Failed to update buy_reports:', e, statusError);
     }
-  }, [buyReportId, sealChecks, settlementChecks, trigger, statusError]);
+  }, [
+    buyReportId,
+    sealChecks,
+    settlementChecks,
+    trigger,
+    statusError,
+    setBuyReportId,
+    mutateBuyReportData,
+    mutateBuyReportsSummary,
+  ]);
 
   useEffect(() => {
     updateStatus();
@@ -167,7 +301,8 @@ export default function PurchaseReports() {
 
   const onSuccess = useCallback(() => {
     mutateBuyReportData();
-  }, [mutateBuyReportData]);
+    mutateBuyReportsSummary();
+  }, [mutateBuyReportData, mutateBuyReportsSummary]);
 
   const downloadCSV = async () => {
     const url = `${process.env.CSR_API_URI}/buy_reports/csv/download?year=${selectedYear}`;
@@ -180,7 +315,8 @@ export default function PurchaseReports() {
     }
   };
 
-  if (isYearPeriodsLoading || isBuyReportsLoading) return <Loading />;
+  if (isYearPeriodsLoading || isBuyReportsLoading || (isBureauOnlyFilter && isAllYearLoading))
+    return <Loading />;
   if (yearPeriodsError || buyReportsError) return router.push('/500');
 
   return (
@@ -192,11 +328,12 @@ export default function PurchaseReports() {
               <Title title={'購入報告一覧'} />
               <select
                 className='border-black-0 border-b'
-                defaultValue={selectedYear}
+                value={selectedYear || ''}
                 onChange={async (e) => {
                   setSelectedYear(Number(e.target.value));
                 }}
               >
+                <option value='' disabled />
                 {yearPeriods &&
                   yearPeriods.map((year) => {
                     return (
@@ -210,8 +347,31 @@ export default function PurchaseReports() {
                 CSVダウンロード
                 <TbDownload className='ml-2' size={20} />
               </PrimaryButton>
+              <PurchaseReportSummaryAmounts
+                unsettledAmountText={summaryUnsettledAmount}
+                unpackedAmountText={summaryUnpackedAmount}
+              />
             </div>
           </div>
+
+          {isPaidByFilterOpen && (
+            <PurchaseReportPaidByFilterModal
+              onClose={() => setIsPaidByFilterOpen(false)}
+              onApply={({ bureauId, paidByUserId, paidBy }) => {
+                setSelectedBureauId(bureauId);
+                setSelectedPaidByUserId(paidByUserId ?? null);
+                setSelectedPaidBy(paidBy);
+                setIsPaidByFilterOpen(false);
+              }}
+              bureaus={BUREAUS}
+              users={modalUsers}
+              legacyPaidByOptions={modalLegacyPaidByOptions}
+              selectedBureauId={selectedBureauId}
+              selectedPaidByUserId={selectedPaidByUserId}
+              selectedPaidBy={selectedPaidBy}
+            />
+          )}
+
           <div className='mt-2 flex-1 overflow-auto p-4 md:p-8'>
             <div className='min-w-max'>
               <table className='mb-5 table-auto border-collapse'>
@@ -230,7 +390,17 @@ export default function PurchaseReports() {
                       物品
                     </th>
                     <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
-                      立替者
+                      <div className='flex items-center justify-center gap-1'>
+                        <span>立替者</span>
+                        <button
+                          type='button'
+                          className='text-black-600 hover:bg-white-100 rounded-full p-0.5'
+                          onClick={() => setIsPaidByFilterOpen(true)}
+                          aria-label='立替者の絞り込み'
+                        >
+                          <RiArrowDropDownLine size={20} />
+                        </button>
+                      </div>
                     </th>
                     <th className='text-black-600 px-4 pb-2 text-sm font-normal whitespace-nowrap'>
                       金額
@@ -244,9 +414,10 @@ export default function PurchaseReports() {
                     <th className='text-black-600 px-4 pb-2 text-sm whitespace-nowrap'></th>
                   </tr>
                 </thead>
+
                 <tbody>
-                  {buyReports && buyReports.length > 0 ? (
-                    buyReports.map((report) => (
+                  {displayedBuyReports && displayedBuyReports.length > 0 ? (
+                    displayedBuyReports.map((report) => (
                       <tr key={report.id}>
                         <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {formatDate(report.reportDate ?? '')}
@@ -268,6 +439,7 @@ export default function PurchaseReports() {
                         <td className='text-black-600 px-4 py-3 text-center text-sm whitespace-nowrap'>
                           {formatAmount(report.amount ?? 0)}
                         </td>
+
                         <td className='px-4 py-2 text-center'>
                           <Checkbox
                             className='accent-primary-5'
@@ -278,6 +450,7 @@ export default function PurchaseReports() {
                             }}
                           />
                         </td>
+
                         <td className='px-4 py-2 text-center'>
                           <OpenCheckSettlementModalButton
                             id={report.id ?? 0}
@@ -289,6 +462,7 @@ export default function PurchaseReports() {
                             disabled={!sealChecks[report.id ?? 0]}
                           />
                         </td>
+
                         <td>
                           <div className='flex'>
                             <div className='mx-1'>
