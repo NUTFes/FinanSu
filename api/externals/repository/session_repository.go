@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"fmt"
-)
 
+	"github.com/NUTFes/FinanSu/api/drivers/db"
+)
 
 type sessionRepository struct {
 	client db.Client
@@ -14,6 +14,7 @@ type sessionRepository struct {
 
 type SessionRepository interface {
 	Create(context.Context, string, string, string) error
+	CreateWithTx(context.Context, *sql.Tx, string, string, string) error
 	Destroy(context.Context, string) error
 	FindSessionByAccessToken(context.Context, string) *sql.Row
 	DestroyByUserID(context.Context, string) error
@@ -25,8 +26,18 @@ func NewSessionRepository(client db.Client) SessionRepository {
 
 // 作成
 func (r *sessionRepository) Create(c context.Context, authID string, userID string, accessToken string) error {
-	query := "insert into session (auth_id, user_id, access_token) values (" + authID + ", " + userID + ", '" + accessToken + "')"
-	_, err := r.client.DB().ExecContext(c, query)
+	query := "insert into session (auth_id, user_id, access_token) values (?, ?, ?)"
+	_, err := r.client.DB().ExecContext(c, query, authID, userID, accessToken)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("\x1b[36m%s\n", query)
+	return nil
+}
+
+func (r *sessionRepository) CreateWithTx(c context.Context, tx *sql.Tx, authID string, userID string, accessToken string) error {
+	query := "insert into session (auth_id, user_id, access_token) values (?, ?, ?)"
+	_, err := tx.ExecContext(c, query, authID, userID, accessToken)
 	if err != nil {
 		return err
 	}

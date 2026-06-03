@@ -1567,9 +1567,21 @@ paths:
           required: true
           schema:
             type: string
-        - name: user_id
+        - name: name
           in: query
-          description: user_id
+          description: name
+          required: true
+          schema:
+            type: string
+        - name: bureau_id
+          in: query
+          description: bureau_id
+          required: true
+          schema:
+            type: integer
+        - name: role_id
+          in: query
+          description: role_id
           required: true
           schema:
             type: integer

@@ -16,7 +16,15 @@ export type PostMailAuthSignupParams = {
    */
   password: string;
   /**
-   * user_id
+   * name
    */
-  user_id: number;
+  name: string;
+  /**
+   * bureau_id
+   */
+  bureau_id: number;
+  /**
+   * role_id
+   */
+  role_id: number;
 };

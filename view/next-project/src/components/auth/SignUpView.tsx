@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { BUREAUS } from '@/constants/bureaus';
 import { useAuthStore, useUserStore } from '@/store';
 import { signUp } from '@api/signUp';
-import { post } from '@api/user';
 import { PrimaryButton } from '@components/common';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignUp, User } from '@type/common';
@@ -41,27 +40,17 @@ export default function SignUpView() {
 
   const postUser = async (data: SignUp) => {
     setIsSignUpNow(true);
-    const userUrl: string = process.env.CSR_API_URI + '/users';
     const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
-    // signIn には登録したuserのIDが必要なので先にUserをpost
-    const newUser = await post(userUrl, postUserData);
-    if (!newUser || !newUser.id) {
-      alert('ユーザーの作成に失敗しました。');
-      setIsSignUpNow(false);
-      return;
-    }
-    const userID: number = newUser.id;
-    // signUp
-    const req = await signUp(signUpUrl, data, userID);
-    const res = await req.json();
-    // state用のuserのデータ
-    const userData: User = {
-      id: userID,
-      name: postUserData.name,
-      bureauID: Number(postUserData.bureauID),
-      roleID: postUserData.roleID,
-    };
+    const req = await signUp(signUpUrl, data, postUserData);
     if (req.status === 200) {
+      const res = await req.json();
+      // state用のuserのデータ
+      const userData: User = {
+        id: res.userID,
+        name: postUserData.name,
+        bureauID: Number(postUserData.bureauID),
+        roleID: Number(postUserData.roleID),
+      };
       // state用のauthのデータ
       const authData = {
         isSignIn: true,
@@ -69,7 +58,7 @@ export default function SignUpView() {
       };
       setAuth(authData);
       setUser(userData);
-      Router.push('/purchaseorders');
+      Router.push('/my_page');
     } else {
       alert(
         '新規登録に失敗しました。メールアドレスもしくはパスワードがすでに登録されている可能性があります',

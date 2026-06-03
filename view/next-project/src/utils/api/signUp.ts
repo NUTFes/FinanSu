@@ -1,9 +1,14 @@
-import { SignUp } from '@type/common';
+import { SignUp, User } from '@type/common';
 
-export const signUp = async (url: string, data: SignUp, userID: number) => {
-  const email = data.email;
-  const password = data.password;
-  const postUrl = url + '?email=' + email + '&password=' + password + '&user_id=' + userID;
+export const signUp = async (url: string, data: SignUp, user: User) => {
+  const params = new URLSearchParams({
+    email: data.email,
+    password: data.password,
+    name: user.name,
+    bureau_id: String(user.bureauID),
+    role_id: String(user.roleID),
+  });
+  const postUrl = url + '?' + params.toString();
   const res = await fetch(postUrl, {
     method: 'POST',
     mode: 'cors',

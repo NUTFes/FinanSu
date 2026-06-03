@@ -16,6 +16,7 @@ type mailAuthRepository struct {
 
 type MailAuthRepository interface {
 	CreateMailAuth(context.Context, string, string, string) (int64, error)
+	CreateMailAuthWithTx(context.Context, *sql.Tx, string, string, string) (int64, error)
 	FindMailAuthByEmail(context.Context, string) *sql.Row
 	FindMailAuthByID(context.Context, string) *sql.Row
 	ChangePasswordByUserID(context.Context, string, string) error
@@ -27,12 +28,20 @@ func NewMailAuthRepository(client db.Client, crud abstract.Crud) MailAuthReposit
 
 // 作成
 func (r *mailAuthRepository) CreateMailAuth(c context.Context, email string, password string, userID string) (int64, error) {
-	result, err := r.client.DB().ExecContext(c, "insert into mail_auth (email, password, user_id) values ('"+email+"','"+password+"',"+userID+")")
+	result, err := r.client.DB().ExecContext(c, "INSERT INTO mail_auth (email, password, user_id) VALUES (?, ?, ?)", email, password, userID)
 	if err != nil {
 		return 0, err
 	}
 	lastInsertID, err := result.LastInsertId()
 	return lastInsertID, err
+}
+
+func (r *mailAuthRepository) CreateMailAuthWithTx(c context.Context, tx *sql.Tx, email string, password string, userID string) (int64, error) {
+	result, err := tx.ExecContext(c, "INSERT INTO mail_auth (email, password, user_id) VALUES (?, ?, ?)", email, password, userID)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
 }
 
 // メールアドレスからmail_authを探してくる

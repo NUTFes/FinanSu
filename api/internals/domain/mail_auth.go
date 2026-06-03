@@ -15,6 +15,7 @@ type MailAuth struct {
 
 type Token struct {
 	AccessToken string `json:"accessToken"`
+	UserID      int    `json:"userID,omitempty"`
 }
 
 type IsSignIn struct {

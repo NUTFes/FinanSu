@@ -102,12 +102,12 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 
 func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {
 	latastUser := domain.User{}
-	err := u.userRep.Create(c, name, bureauID, roleID)
+	userID, err := u.userRep.Create(c, name, bureauID, roleID)
 	if err != nil {
 		return latastUser, err
 	}
 
-	row, err := u.userRep.FindNewRecord(c)
+	row, err := u.userRep.Find(c, strconv.FormatInt(userID, 10))
 	if err != nil {
 		return latastUser, err
 	}

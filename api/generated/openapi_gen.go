@@ -812,8 +812,14 @@ type PostMailAuthSignupParams struct {
 	// Password password
 	Password string `form:"password" json:"password"`
 
-	// UserId user_id
-	UserId int `form:"user_id" json:"user_id"`
+	// Name name
+	Name string `form:"name" json:"name"`
+
+	// BureauId bureau_id
+	BureauId int `form:"bureau_id" json:"bureau_id"`
+
+	// RoleId role_id
+	RoleId int `form:"role_id" json:"role_id"`
 }
 
 // PostPasswordResetRequestParams defines parameters for PostPasswordResetRequest.
@@ -2760,11 +2766,25 @@ func (w *ServerInterfaceWrapper) PostMailAuthSignup(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter password: %s", err))
 	}
 
-	// ------------- Required query parameter "user_id" -------------
+	// ------------- Required query parameter "name" -------------
 
-	err = runtime.BindQueryParameter("form", true, true, "user_id", ctx.QueryParams(), &params.UserId)
+	err = runtime.BindQueryParameter("form", true, true, "name", ctx.QueryParams(), &params.Name)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
+	}
+
+	// ------------- Required query parameter "bureau_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "bureau_id", ctx.QueryParams(), &params.BureauId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter bureau_id: %s", err))
+	}
+
+	// ------------- Required query parameter "role_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "role_id", ctx.QueryParams(), &params.RoleId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter role_id: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshaled arguments

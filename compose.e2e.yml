@@ -1,0 +1,124 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: finansu_db
+      MYSQL_USER: finansu
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Tokyo
+    volumes:
+      - e2e-db-data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    image: migrate/migrate:latest
+    volumes:
+      - ./mysql/migrations:/migrations
+    command:
+      [
+        "-path",
+        "/migrations",
+        "-database",
+        "mysql://finansu:password@tcp(db:3306)/finansu_db",
+        "up",
+      ]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  seed:
+    image: mysql:8.0
+    volumes:
+      - ./mysql/e2e_seed.sql:/e2e_seed.sql
+    command: >
+      bash -lc '
+        mysql -h db -u finansu -ppassword finansu_db < /e2e_seed.sql
+      '
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  minio:
+    image: minio/minio:latest
+    command: "server /data --console-address :9001"
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+
+  api:
+    build:
+      context: ./api
+      dockerfile: dev.Dockerfile
+    user: root
+    volumes:
+      - ./api:/app
+      - ./openapi:/openapi
+      - e2e-go-cache:/go/cache
+      - e2e-go-mod-cache:/go/pkg/mod
+    environment:
+      NUTMEG_DB_USER: finansu
+      NUTMEG_DB_PASSWORD: password
+      NUTMEG_DB_HOST: db
+      NUTMEG_DB_PORT: 3306
+      NUTMEG_DB_NAME: finansu_db
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: user
+      MINIO_SECRET_KEY: password
+      MINIO_USE_SSL: "false"
+      RESET_PASSWORD_URL: "http://view:3000/reset_password"
+    command: go run main.go
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+      minio:
+        condition: service_started
+
+  view:
+    build: ./view
+    user: root
+    volumes:
+      - ./view:/app
+      - ./openapi:/openapi
+      - e2e-pnpm-store:/app/.pnpm-store
+    environment:
+      NEXT_PUBLIC_APP_ENV: e2e
+      NEXT_PUBLIC_ENDPOINT: minio
+      NEXT_PUBLIC_PORT: 9000
+      NEXT_PUBLIC_BUCKET_NAME: finansu
+      NEXT_PUBLIC_MINIO_ENDPONT: http://minio:9000
+      NEXT_PUBLIC_ACCESS_KEY: user
+      NEXT_PUBLIC_SECRET_KEY: password
+      RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED: false
+    command: sh -c "pnpm install && pnpm exec next dev -H 0.0.0.0"
+    depends_on:
+      api:
+        condition: service_started
+
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.57.0-noble
+    working_dir: /workspace/view/next-project/e2e
+    volumes:
+      - .:/workspace
+      - e2e-node-modules:/workspace/view/next-project/e2e/node_modules
+    environment:
+      BASE_URL: http://view:3000
+      API_URL: http://api:1323
+    command: bash -lc "npm install --no-package-lock && npx playwright test"
+    depends_on:
+      view:
+        condition: service_started
+      api:
+        condition: service_started
+
+volumes:
+  e2e-db-data:
+  e2e-go-cache:
+  e2e-go-mod-cache:
+  e2e-pnpm-store:
+  e2e-node-modules:

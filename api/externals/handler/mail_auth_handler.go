@@ -48,8 +48,10 @@ func (h *Handler) DeleteMailAuthSignout(c echo.Context, params generated.DeleteM
 func (h *Handler) PostMailAuthSignup(c echo.Context, params generated.PostMailAuthSignupParams) error {
 	email := params.Email
 	password := params.Password
-	userID := strconv.Itoa(params.UserId)
-	token, err := h.mailAuthUseCase.SignUp(c.Request().Context(), email, password, userID)
+	name := params.Name
+	bureauID := strconv.Itoa(params.BureauId)
+	roleID := strconv.Itoa(params.RoleId)
+	token, err := h.mailAuthUseCase.SignUp(c.Request().Context(), email, password, name, bureauID, roleID)
 	if err != nil {
 		return err
 	}

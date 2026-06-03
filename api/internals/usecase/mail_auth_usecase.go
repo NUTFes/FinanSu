@@ -12,41 +12,81 @@ import (
 )
 
 type mailAuthUseCase struct {
-	mailAuthRep rep.MailAuthRepository
-	sessionRep  rep.SessionRepository
+	mailAuthRep    rep.MailAuthRepository
+	sessionRep     rep.SessionRepository
+	userRep        rep.UserRepository
+	transactionRep rep.TransactionRepository
 }
 
 type MailAuthUseCase interface {
-	SignUp(context.Context, string, string, string) (domain.Token, error)
+	SignUp(context.Context, string, string, string, string, string) (domain.Token, error)
 	SignIn(context.Context, string, string) (domain.Token, error)
 	SignOut(context.Context, string) error
 	IsSignIn(context.Context, string) (domain.IsSignIn, error)
 }
 
-func NewMailAuthUseCase(mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository) MailAuthUseCase {
-	return &mailAuthUseCase{mailAuthRep: mailAuthRep, sessionRep: sessionRep}
+func NewMailAuthUseCase(
+	mailAuthRep rep.MailAuthRepository,
+	sessionRep rep.SessionRepository,
+	userRep rep.UserRepository,
+	transactionRep rep.TransactionRepository,
+) MailAuthUseCase {
+	return &mailAuthUseCase{
+		mailAuthRep:    mailAuthRep,
+		sessionRep:     sessionRep,
+		userRep:        userRep,
+		transactionRep: transactionRep,
+	}
 }
 
-func (u *mailAuthUseCase) SignUp(c context.Context, email string, password string, userID string) (domain.Token, error) {
+func (u *mailAuthUseCase) SignUp(c context.Context, email string, password string, name string, bureauID string, roleID string) (domain.Token, error) {
 	var token domain.Token
-	// パスワードをハッシュ化
-	hashed, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
-	mailAuthID, err := u.mailAuthRep.CreateMailAuth(c, email, string(hashed), userID)
+
+	tx, err := u.transactionRep.StartTransaction(c)
 	if err != nil {
+		return token, err
+	}
+
+	// パスワードをハッシュ化
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return token, err
+	}
+
+	userID, err := u.userRep.CreateWithTx(c, tx, name, bureauID, roleID)
+	if err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return token, err
+	}
+	userIDStr := strconv.FormatInt(userID, 10)
+
+	mailAuthID, err := u.mailAuthRep.CreateMailAuthWithTx(c, tx, email, string(hashed), userIDStr)
+	if err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
 		return token, err
 	}
 
 	// トークン発行
 	accessToken, err := _makeRandomStr(10)
 	if err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
 		return token, err
 	}
 	// ログイン（セッション開始）
-	err = u.sessionRep.Create(c, strconv.FormatInt(mailAuthID, 10), userID, accessToken)
+	err = u.sessionRep.CreateWithTx(c, tx, strconv.FormatInt(mailAuthID, 10), userIDStr, accessToken)
 	if err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
 		return token, err
 	}
+
+	if err = u.transactionRep.Commit(c, tx); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return token, err
+	}
+
 	token.AccessToken = accessToken
+	token.UserID = int(userID)
 	return token, nil
 }
 
