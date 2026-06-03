@@ -1,11 +1,11 @@
 package test
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"testing"
 
 	"github.com/NUTFes/FinanSu/api/internals/di"
@@ -18,18 +18,15 @@ type signupResponse struct {
 	UserID      int    `json:"userID"`
 }
 
-func signupURL(t *testing.T, baseURL string, values map[string]string) string {
+func postSignup(t *testing.T, baseURL string, values map[string]any) *http.Response {
 	t.Helper()
 
-	u, err := url.Parse(baseURL + "/mail_auth/signup")
+	body, err := json.Marshal(values)
 	require.NoError(t, err)
 
-	q := u.Query()
-	for key, value := range values {
-		q.Set(key, value)
-	}
-	u.RawQuery = q.Encode()
-	return u.String()
+	r, err := http.Post(baseURL+"/mail_auth/signup", "application/json", bytes.NewReader(body))
+	require.NoError(t, err)
+	return r
 }
 
 func countRows(t *testing.T, query string, args ...any) int {
@@ -55,14 +52,13 @@ func TestSignupCreatesUserMailAuthSessionAndCurrentUser(t *testing.T) {
 
 	email := "signup-success@example.com"
 	name := "Signup Success User"
-	r, err := http.Post(signupURL(t, testServer.URL, map[string]string{
+	r := postSignup(t, testServer.URL, map[string]any{
 		"email":     email,
 		"password":  "password123",
 		"name":      name,
-		"bureau_id": "1",
-		"role_id":   "1",
-	}), "application/json", nil)
-	require.NoError(t, err)
+		"bureau_id": 1,
+		"role_id":   1,
+	})
 	defer r.Body.Close()
 
 	body, err := io.ReadAll(r.Body)
@@ -108,14 +104,13 @@ func TestSignupRollsBackUserWhenMailAuthCreateFails(t *testing.T) {
 	require.NoError(t, err)
 
 	name := "Rollback Target User"
-	r, err := http.Post(signupURL(t, testServer.URL, map[string]string{
+	r := postSignup(t, testServer.URL, map[string]any{
 		"email":     email,
 		"password":  "password123",
 		"name":      name,
-		"bureau_id": "1",
-		"role_id":   "1",
-	}), "application/json", nil)
-	require.NoError(t, err)
+		"bureau_id": 1,
+		"role_id":   1,
+	})
 	defer r.Body.Close()
 
 	assert.NotEqual(t, http.StatusOK, r.StatusCode)

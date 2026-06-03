@@ -6,4 +6,9 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type PostMailAuthSignup200 = { [key: string]: unknown };
+export type PostMailAuthSignup200 = {
+  /** アクセストークン */
+  accessToken: string;
+  /** ユーザーID */
+  userID: number;
+};

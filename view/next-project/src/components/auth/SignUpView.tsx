@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { BUREAUS } from '@/constants/bureaus';
+import { postMailAuthSignup } from '@/generated/hooks';
 import { useAuthStore, useUserStore } from '@/store';
-import { signUp } from '@api/signUp';
 import { PrimaryButton } from '@components/common';
 import LoadingButton from '@components/common/LoadingButton';
 import { SignUp, User } from '@type/common';
@@ -40,10 +40,17 @@ export default function SignUpView() {
 
   const postUser = async (data: SignUp) => {
     setIsSignUpNow(true);
-    const signUpUrl: string = process.env.CSR_API_URI + '/mail_auth/signup';
-    const req = await signUp(signUpUrl, data, postUserData);
-    if (req.status === 200) {
-      const res = await req.json();
+
+    try {
+      const req = await postMailAuthSignup({
+        email: data.email,
+        password: data.password,
+        name: postUserData.name,
+        bureau_id: Number(postUserData.bureauID),
+        role_id: Number(postUserData.roleID),
+      });
+      const res = req.data;
+
       // state用のuserのデータ
       const userData: User = {
         id: res.userID,
@@ -59,7 +66,7 @@ export default function SignUpView() {
       setAuth(authData);
       setUser(userData);
       Router.push('/my_page');
-    } else {
+    } catch {
       alert(
         '新規登録に失敗しました。メールアドレスもしくはパスワードがすでに登録されている可能性があります',
       );

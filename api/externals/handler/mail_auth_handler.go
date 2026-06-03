@@ -45,12 +45,17 @@ func (h *Handler) DeleteMailAuthSignout(c echo.Context, params generated.DeleteM
 }
 
 // router.POST(baseURL+"/mail_auth/signup", wrapper.PostMailAuthSignup)
-func (h *Handler) PostMailAuthSignup(c echo.Context, params generated.PostMailAuthSignupParams) error {
-	email := params.Email
-	password := params.Password
-	name := params.Name
-	bureauID := strconv.Itoa(params.BureauId)
-	roleID := strconv.Itoa(params.RoleId)
+func (h *Handler) PostMailAuthSignup(c echo.Context) error {
+	var request generated.PostMailAuthSignupJSONRequestBody
+	if err := c.Bind(&request); err != nil {
+		return err
+	}
+
+	email := request.Email
+	password := request.Password
+	name := request.Name
+	bureauID := strconv.Itoa(request.BureauId)
+	roleID := strconv.Itoa(request.RoleId)
 	token, err := h.mailAuthUseCase.SignUp(c.Request().Context(), email, password, name, bureauID, roleID)
 	if err != nil {
 		return err

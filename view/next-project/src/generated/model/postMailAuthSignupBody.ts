@@ -6,25 +6,15 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type PostMailAuthSignupParams = {
-  /**
-   * email
-   */
+export type PostMailAuthSignupBody = {
+  /** email */
   email: string;
-  /**
-   * password
-   */
+  /** password */
   password: string;
-  /**
-   * name
-   */
+  /** name */
   name: string;
-  /**
-   * bureau_id
-   */
+  /** bureau_id */
   bureau_id: number;
-  /**
-   * role_id
-   */
+  /** role_id */
   role_id: number;
 };

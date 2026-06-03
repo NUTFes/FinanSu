@@ -804,22 +804,22 @@ type DeleteMailAuthSignoutParams struct {
 	AccessToken *string `json:"Access-Token,omitempty"`
 }
 
-// PostMailAuthSignupParams defines parameters for PostMailAuthSignup.
-type PostMailAuthSignupParams struct {
-	// Email email
-	Email string `form:"email" json:"email"`
+// PostMailAuthSignupJSONBody defines parameters for PostMailAuthSignup.
+type PostMailAuthSignupJSONBody struct {
+	// BureauId bureau_id
+	BureauId int `json:"bureau_id"`
 
-	// Password password
-	Password string `form:"password" json:"password"`
+	// Email email
+	Email string `json:"email"`
 
 	// Name name
-	Name string `form:"name" json:"name"`
+	Name string `json:"name"`
 
-	// BureauId bureau_id
-	BureauId int `form:"bureau_id" json:"bureau_id"`
+	// Password password
+	Password string `json:"password"`
 
 	// RoleId role_id
-	RoleId int `form:"role_id" json:"role_id"`
+	RoleId int `json:"role_id"`
 }
 
 // PostPasswordResetRequestParams defines parameters for PostPasswordResetRequest.
@@ -1028,6 +1028,9 @@ type PostIncomesJSONRequestBody = Income
 
 // PutIncomesIdJSONRequestBody defines body for PutIncomesId for application/json ContentType.
 type PutIncomesIdJSONRequestBody = Income
+
+// PostMailAuthSignupJSONRequestBody defines body for PostMailAuthSignup for application/json ContentType.
+type PostMailAuthSignupJSONRequestBody PostMailAuthSignupJSONBody
 
 // PostPasswordResetIdJSONRequestBody defines body for PostPasswordResetId for application/json ContentType.
 type PostPasswordResetIdJSONRequestBody = PasswordResetData
@@ -1291,7 +1294,7 @@ type ServerInterface interface {
 	DeleteMailAuthSignout(ctx echo.Context, params DeleteMailAuthSignoutParams) error
 
 	// (POST /mail_auth/signup)
-	PostMailAuthSignup(ctx echo.Context, params PostMailAuthSignupParams) error
+	PostMailAuthSignup(ctx echo.Context) error
 
 	// (POST /password_reset/request)
 	PostPasswordResetRequest(ctx echo.Context, params PostPasswordResetRequestParams) error
@@ -2750,45 +2753,8 @@ func (w *ServerInterfaceWrapper) DeleteMailAuthSignout(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PostMailAuthSignup(ctx echo.Context) error {
 	var err error
 
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostMailAuthSignupParams
-	// ------------- Required query parameter "email" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "email", ctx.QueryParams(), &params.Email)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter email: %s", err))
-	}
-
-	// ------------- Required query parameter "password" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "password", ctx.QueryParams(), &params.Password)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter password: %s", err))
-	}
-
-	// ------------- Required query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// ------------- Required query parameter "bureau_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "bureau_id", ctx.QueryParams(), &params.BureauId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter bureau_id: %s", err))
-	}
-
-	// ------------- Required query parameter "role_id" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "role_id", ctx.QueryParams(), &params.RoleId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter role_id: %s", err))
-	}
-
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostMailAuthSignup(ctx, params)
+	err = w.Handler.PostMailAuthSignup(ctx)
 	return err
 }
 
