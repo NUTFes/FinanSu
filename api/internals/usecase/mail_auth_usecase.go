@@ -42,15 +42,14 @@ func NewMailAuthUseCase(
 func (u *mailAuthUseCase) SignUp(c context.Context, email string, password string, name string, bureauID string, roleID string) (domain.Token, error) {
 	var token domain.Token
 
-	tx, err := u.transactionRep.StartTransaction(c)
+	// パスワードをハッシュ化
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	if err != nil {
 		return token, err
 	}
 
-	// パスワードをハッシュ化
-	hashed, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	tx, err := u.transactionRep.StartTransaction(c)
 	if err != nil {
-		_ = u.transactionRep.RollBack(c, tx)
 		return token, err
 	}
 
@@ -94,8 +93,12 @@ func (u *mailAuthUseCase) SignIn(c context.Context, email string, password strin
 	var mailAuth = domain.MailAuth{}
 	var token domain.Token
 	// メールアドレスの存在確認
-	row := u.mailAuthRep.FindMailAuthByEmail(c, email)
-	err := row.Scan(
+	row, err := u.mailAuthRep.FindMailAuthByEmail(c, email)
+	if err != nil {
+		return token, err
+	}
+
+	err = row.Scan(
 		&mailAuth.ID,
 		&mailAuth.Email,
 		&mailAuth.Password,
@@ -140,7 +143,11 @@ func (u *mailAuthUseCase) SignOut(c context.Context, accessToken string) error {
 func (u *mailAuthUseCase) IsSignIn(c context.Context, accessToken string) (domain.IsSignIn, error) {
 	var session = domain.Session{}
 	var isSignIn domain.IsSignIn
-	row := u.sessionRep.FindSessionByAccessToken(c, accessToken)
+	row, err := u.sessionRep.FindSessionByAccessToken(c, accessToken)
+	if err != nil {
+		return isSignIn, err
+	}
+
 	_ = row.Scan(
 		&session.ID,
 		&session.AuthID,

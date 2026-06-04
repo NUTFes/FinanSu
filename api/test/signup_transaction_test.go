@@ -117,3 +117,29 @@ func TestSignupRollsBackUserWhenMailAuthCreateFails(t *testing.T) {
 	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM users WHERE name = ?", name))
 	assert.Equal(t, 1, countRows(t, "SELECT COUNT(*) FROM mail_auth WHERE email = ?", email))
 }
+
+func TestSignupReturnsBadRequestWhenRequiredBodyFieldsAreMissing(t *testing.T) {
+	prepareTestDatabase(t)
+
+	serverComponents, err := di.InitializeServer()
+	require.NoError(t, err)
+
+	testServer := httptest.NewServer(serverComponents.Echo)
+	t.Cleanup(func() {
+		testServer.Close()
+		serverComponents.Client.CloseDB()
+	})
+
+	email := "signup-missing-fields@example.com"
+	r := postSignup(t, testServer.URL, map[string]any{
+		"email":    email,
+		"password": "password123",
+		"role_id":  1,
+	})
+	defer r.Body.Close()
+
+	assert.Equal(t, http.StatusBadRequest, r.StatusCode)
+	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM users WHERE name = ''"))
+	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM mail_auth WHERE email = ?", email))
+	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM session"))
+}

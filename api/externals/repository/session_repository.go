@@ -16,7 +16,7 @@ type SessionRepository interface {
 	Create(context.Context, string, string, string) error
 	CreateWithTx(context.Context, *sql.Tx, string, string, string) error
 	Destroy(context.Context, string) error
-	FindSessionByAccessToken(context.Context, string) *sql.Row
+	FindSessionByAccessToken(context.Context, string) (*sql.Row, error)
 	DestroyByUserID(context.Context, string) error
 }
 
@@ -84,13 +84,16 @@ func (r *sessionRepository) Destroy(c context.Context, accessToken string) error
 }
 
 // アクセストークンからセッションを取得
-func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessToken string) *sql.Row {
-	query, args, _ := dialect.From("session").
+func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessToken string) (*sql.Row, error) {
+	query, args, err := dialect.From("session").
 		Prepared(true).
 		Where(goqu.Ex{"access_token": accessToken}).
 		ToSQL()
-	row := r.client.DB().QueryRowContext(c, query, args...)
-	return row
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.DB().QueryRowContext(c, query, args...), nil
 }
 
 // user_idからsessionを削除する

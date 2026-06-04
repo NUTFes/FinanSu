@@ -17,8 +17,8 @@ type mailAuthRepository struct {
 type MailAuthRepository interface {
 	CreateMailAuth(context.Context, string, string, string) (int64, error)
 	CreateMailAuthWithTx(context.Context, *sql.Tx, string, string, string) (int64, error)
-	FindMailAuthByEmail(context.Context, string) *sql.Row
-	FindMailAuthByID(context.Context, string) *sql.Row
+	FindMailAuthByEmail(context.Context, string) (*sql.Row, error)
+	FindMailAuthByID(context.Context, string) (*sql.Row, error)
 	ChangePasswordByUserID(context.Context, string, string) error
 }
 
@@ -69,23 +69,29 @@ func (r *mailAuthRepository) CreateMailAuthWithTx(c context.Context, tx *sql.Tx,
 }
 
 // メールアドレスからmail_authを探してくる
-func (r *mailAuthRepository) FindMailAuthByEmail(c context.Context, email string) *sql.Row {
-	query, args, _ := dialect.From("mail_auth").
+func (r *mailAuthRepository) FindMailAuthByEmail(c context.Context, email string) (*sql.Row, error) {
+	query, args, err := dialect.From("mail_auth").
 		Prepared(true).
 		Where(goqu.Ex{"email": email}).
 		ToSQL()
-	row := r.client.DB().QueryRowContext(c, query, args...)
-	return row
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.DB().QueryRowContext(c, query, args...), nil
 }
 
 // mail_auth_idからmail_authを探してくる
-func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) *sql.Row {
-	query, args, _ := dialect.From("mail_auth").
+func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) (*sql.Row, error) {
+	query, args, err := dialect.From("mail_auth").
 		Prepared(true).
 		Where(goqu.Ex{"id": id}).
 		ToSQL()
-	row := r.client.DB().QueryRowContext(c, query, args...)
-	return row
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.DB().QueryRowContext(c, query, args...), nil
 }
 
 // パスワードの変更

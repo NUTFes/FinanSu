@@ -169,7 +169,11 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 	var row *sql.Row
 	var err error
 	// アクセストークンからmail_authを取得
-	row = u.sessionRep.FindSessionByAccessToken(c, accessToken)
+	row, err = u.sessionRep.FindSessionByAccessToken(c, accessToken)
+	if err != nil {
+		return user, err
+	}
+
 	err = row.Scan(
 		&session.ID,
 		&session.AuthID,
