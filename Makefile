@@ -1,5 +1,5 @@
 # アプリコンテナ=view,api、DBコンテナ=db,minio
-include finansu.env
+-include finansu.env
 
 # 配色
 SHELL      := /bin/bash
