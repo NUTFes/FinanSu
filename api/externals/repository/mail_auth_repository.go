@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -76,7 +75,6 @@ func (r *mailAuthRepository) FindMailAuthByEmail(c context.Context, email string
 		Where(goqu.Ex{"email": email}).
 		ToSQL()
 	row := r.client.DB().QueryRowContext(c, query, args...)
-	fmt.Printf("\x1b[36m%s\n", query)
 	return row
 }
 
@@ -87,7 +85,6 @@ func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) *sql
 		Where(goqu.Ex{"id": id}).
 		ToSQL()
 	row := r.client.DB().QueryRowContext(c, query, args...)
-	fmt.Printf("\x1b[36m%s\n", query)
 	return row
 }
 

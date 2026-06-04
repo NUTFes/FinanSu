@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	goqu "github.com/doug-martin/goqu/v9"
@@ -43,7 +42,6 @@ func (r *sessionRepository) Create(c context.Context, authID string, userID stri
 	if err != nil {
 		return err
 	}
-	fmt.Printf("\x1b[36m%s\n", query)
 	return nil
 }
 
@@ -64,7 +62,6 @@ func (r *sessionRepository) CreateWithTx(c context.Context, tx *sql.Tx, authID s
 	if err != nil {
 		return err
 	}
-	fmt.Printf("\x1b[36m%s\n", query)
 	return nil
 }
 
@@ -83,7 +80,6 @@ func (r *sessionRepository) Destroy(c context.Context, accessToken string) error
 	if err != nil {
 		return err
 	}
-	fmt.Printf("\x1b[36m%s\n", query)
 	return nil
 }
 
@@ -94,7 +90,6 @@ func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessTo
 		Where(goqu.Ex{"access_token": accessToken}).
 		ToSQL()
 	row := r.client.DB().QueryRowContext(c, query, args...)
-	fmt.Printf("\x1b[36m%s\n", query)
 	return row
 }
 
@@ -112,6 +107,5 @@ func (r *sessionRepository) DestroyByUserID(c context.Context, userID string) er
 	if err != nil {
 		return err
 	}
-	fmt.Printf("\x1b[36m%s\n", query)
 	return nil
 }
