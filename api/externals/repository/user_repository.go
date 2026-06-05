@@ -21,9 +21,7 @@ type UserRepository interface {
 	Create(context.Context, string, string, string) (int64, error)
 	CreateWithTx(context.Context, *sql.Tx, string, string, string) (int64, error)
 	Update(context.Context, string, string, string, string) error
-	Destroy(context.Context, string) error
 	DestroyWithTx(context.Context, *sql.Tx, string) error
-	MultiDestroy(context.Context, []int) error
 	MultiDestroyWithTx(context.Context, *sql.Tx, []int) error
 	FindNewRecord(context.Context) (*sql.Row, error)
 	FindByEmail(context.Context, string) (*sql.Row, error)
@@ -135,19 +133,6 @@ func (ur *userRepository) Update(c context.Context, id string, name string, bure
 	return err
 }
 
-// 削除
-func (ur *userRepository) Destroy(c context.Context, id string) error {
-	tx, err := ur.client.DB().BeginTx(c, nil)
-	if err != nil {
-		return err
-	}
-	if err = ur.DestroyWithTx(c, tx, id); err != nil {
-		_ = tx.Rollback()
-		return err
-	}
-	return tx.Commit()
-}
-
 func (ur *userRepository) DestroyWithTx(c context.Context, tx *sql.Tx, id string) error {
 	userQuery, userArgs, err := dialect.Update("users").
 		Prepared(true).
@@ -174,19 +159,6 @@ func (ur *userRepository) DestroyWithTx(c context.Context, tx *sql.Tx, id string
 
 	_, err = tx.ExecContext(c, mailAuthQuery, mailAuthArgs...)
 	return err
-}
-
-// 複数削除
-func (ur *userRepository) MultiDestroy(c context.Context, ids []int) error {
-	tx, err := ur.client.DB().BeginTx(c, nil)
-	if err != nil {
-		return err
-	}
-	if err = ur.MultiDestroyWithTx(c, tx, ids); err != nil {
-		_ = tx.Rollback()
-		return err
-	}
-	return tx.Commit()
 }
 
 func (ur *userRepository) MultiDestroyWithTx(c context.Context, tx *sql.Tx, ids []int) error {

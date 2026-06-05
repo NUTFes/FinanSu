@@ -12,8 +12,9 @@ import (
 )
 
 type userUseCase struct {
-	userRep    rep.UserRepository
-	sessionRep rep.SessionRepository
+	userRep        rep.UserRepository
+	sessionRep     rep.SessionRepository
+	transactionRep rep.TransactionRepository
 }
 
 type UserUseCase interface {
@@ -26,8 +27,8 @@ type UserUseCase interface {
 	GetCurrentUser(context.Context, string) (domain.User, error)
 }
 
-func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository) UserUseCase {
-	return &userUseCase{userRep: userRep, sessionRep: sessionRep}
+func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, transactionRep rep.TransactionRepository) UserUseCase {
+	return &userUseCase{userRep: userRep, sessionRep: sessionRep, transactionRep: transactionRep}
 }
 
 func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
@@ -154,13 +155,39 @@ func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bure
 }
 
 func (u *userUseCase) DestroyUser(c context.Context, id string) error {
-	err := u.userRep.Destroy(c, id)
-	return err
+	tx, err := u.transactionRep.StartTransaction(c)
+	if err != nil {
+		return err
+	}
+
+	if err = u.userRep.DestroyWithTx(c, tx, id); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.transactionRep.Commit(c, tx); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+	return nil
 }
 
 func (u *userUseCase) DestroyMultiUsers(c context.Context, ids []int) error {
-	err := u.userRep.MultiDestroy(c, ids)
-	return err
+	tx, err := u.transactionRep.StartTransaction(c)
+	if err != nil {
+		return err
+	}
+
+	if err = u.userRep.MultiDestroyWithTx(c, tx, ids); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.transactionRep.Commit(c, tx); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+	return nil
 }
 
 func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (domain.User, error) {
