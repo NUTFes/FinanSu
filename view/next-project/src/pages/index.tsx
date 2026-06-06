@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 import { PrimaryButton } from '@/components/common';
-import Link from '@/components/common/Link';
 import SignInView from '@components/auth/SignInView';
 import SignUpView from '@components/auth/SignUpView';
 import LoginLayout from '@components/layout/LoginLayout';
@@ -28,7 +27,7 @@ export default function Home() {
           <div className='my-12 flex flex-col items-center justify-center gap-5'>
             <p className='text-black-600'>登録がまだの方はこちら</p>
             <PrimaryButton onClick={() => setIsMember(!isMember)}>新規登録</PrimaryButton>
-            <Link href='/reset_password/request'>パスワードを忘れた</Link>
+            <p className='text-black-600'>パスワードを忘れた方はSlackまで</p>
           </div>
         </>
       );
