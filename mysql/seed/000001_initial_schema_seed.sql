@@ -56,7 +56,15 @@ VALUES
     ('広報物郵送費', '', 3),
     ('折込チラシ用費', '', 3),
     ('ゲストブッキング費', '', 4),
-    ('ゲスト用菓子折り費', '', 4);
+    ('ルーター', '', 5),
+    ('サーバー', '', 5),
+    ('ドメイン代', '', 6),
+    ('人件費', '', 7),
+    ('人件費', '', 8),
+    ('GM費', '', 5),
+    ('FinanSu費', '', 6),
+    ('お化け費', '', 7),
+    ('ステージ費', '', 8); 
 
 INSERT INTO
     item_budgets (amount, festival_item_id)
@@ -67,7 +75,15 @@ VALUES
     (20000, 4),
     (50000, 5),
     (1500000, 6),
-    (10000, 7);
+    (10000, 7),
+    (20000, 8),
+    (3000, 9),
+    (50000, 10),
+    (50000, 11),
+    (1000, 12),
+    (2000, 13),
+    (4000, 14),
+    (8000, 15);
 
 INSERT INTO
     user_groups (user_id, group_id)
@@ -81,22 +97,42 @@ VALUES
     (1, 7);
 
 INSERT INTO
-    buy_reports (festival_item_id, amount, memo, paid_by)
+    buy_reports (festival_item_id, amount, memo, paid_by, paid_by_user_id)
 VALUES
-    (1, 5000, '', 'テスト太郎'),
-    (1, 4000, '', 'テスト太郎'),
-    (2, 5000, '', 'テスト太郎'),
-    (3, 2000, '', 'テスト2太郎'),
-    (3, 2000, '', 'テスト2太郎'),
-    (3, 2000, '', 'テスト2太郎'),
-    (4, 10000, '', 'テスト3太郎');
+    (1, 5000, '', '技大太郎1', 1),
+    (1, 4000, '', '技大太郎1', 1),
+    (2, 5000, '', '技大太郎1', 1),
+    (3, 2000, '', '技大太郎2', 2),
+    (3, 2000, '', '技大太郎2', 2),
+    (3, 2000, '', '技大太郎2', 2),
+    (4, 10000, '', '技大太郎3', 3),
+    (7, 2000, '', '技大太郎2', 2),
+    (7, 3000, '', '技大太郎2', 2),
+    (8, 20000, '', '技大太郎2', 2), 
+    (10, 50000, '', '技大太郎1', 1),
+    (13, 1000, '', '技大太郎2', 2),
+    (14, 2000, '', '技大太郎1', 1),
+    (15, 1000, '', '技大太郎1', 1),
+    (15, 2000, '', '技大太郎1', 1);
 
 INSERT INTO
     payment_receipts (buy_report_id, bucket_name, file_name, file_type, remark)
 VALUES
     (1, 'payment-receipts', 'receipt-1.jpg', 'image/jpeg', ''),
     (2, 'payment-receipts', 'receipt-2.jpg', 'image/jpeg', ''),
-    (3, 'payment-receipts', 'receipt-3.jpg', 'image/jpeg', '');
+    (3, 'payment-receipts', 'receipt-3.jpg', 'image/jpeg', ''),
+    (4, 'payment-receipts', 'receipt-4.jpg', 'image/jpeg', ''),
+    (5, 'payment-receipts', 'receipt-5.jpg', 'image/jpeg', ''),
+    (6, 'payment-receipts', 'receipt-6.jpg', 'image/jpeg', ''),
+    (7, 'payment-receipts', 'receipt-7.jpg', 'image/jpeg', ''),
+    (8, 'payment-receipts', 'receipt-8.jpg', 'image/jpeg', ''),
+    (9, 'payment-receipts', 'receipt-9.jpg', 'image/jpeg', ''),
+    (10, 'payment-receipts', 'receipt-10.jpg', 'image/jpeg', ''),
+    (11, 'payment-receipts', 'receipt-11.jpg', 'image/jpeg', ''),
+    (12, 'payment-receipts', 'receipt-12.jpg', 'image/jpeg', ''),
+    (13, 'payment-receipts', 'receipt-13.jpg', 'image/jpeg', ''),
+    (14, 'payment-receipts', 'receipt-14.jpg', 'image/jpeg', ''),
+    (15, 'payment-receipts', 'receipt-15.jpg', 'image/jpeg', '');
 
 INSERT INTO
     buy_statuses (buy_report_id, is_packed, is_settled)
@@ -107,7 +143,15 @@ VALUES
     (4, FALSE, FALSE),
     (5, FALSE, FALSE),
     (6, TRUE, FALSE),
-    (7, FALSE, FALSE);
+    (7, FALSE, FALSE),
+    (8, TRUE, FALSE),
+    (9, FALSE, FALSE),
+    (10, TRUE, TRUE),
+    (11, TRUE, TRUE),
+    (12, FALSE, FALSE),
+    (13, TRUE, TRUE),
+    (14, TRUE, FALSE),
+    (15, TRUE, FALSE);
 
 INSERT INTO
     income_expenditure_managements (amount, log_category, year_id, receive_option, is_checked, created_at, updated_at)
@@ -120,7 +164,11 @@ VALUES
     (2000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
     (2000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
     (2000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
-    (10000, "expenditure", 1, NULL, FALSE, NOW(), NOW());
+    (10000, "expenditure", 1, NULL, FALSE, NOW(), NOW()),
+    (20000, "expenditure", 2, NULL, FALSE, NOW(), NOW()),
+    (50000, "expenditure", 2, NULL, FALSE, NOW(), NOW()),
+    (2000, "expenditure", 2, NULL, FALSE, NOW(), NOW()),
+    (100000, "sponsor's income", 2, "transfer", FALSE, NOW(), NOW());
 
 INSERT INTO
     buy_report_income_expenditure_managements (buy_report_id, income_expenditure_management_id, created_at, updated_at)
@@ -131,7 +179,10 @@ VALUES
     (4, 6, NOW(), NOW()), -- buy_reports.id: 4 と income_expenditure_managements.id: 6 の対応
     (5, 7, NOW(), NOW()), -- buy_reports.id: 5 と income_expenditure_managements.id: 7 の対応
     (6, 8, NOW(), NOW()), -- buy_reports.id: 6 と income_expenditure_managements.id: 8 の対応
-    (7, 9, NOW(), NOW());
+    (7, 9, NOW(), NOW()),
+    (10, 10, NOW(), NOW()),
+    (11, 11, NOW(), NOW()),
+    (13, 12, NOW(), NOW());
 
 INSERT INTO
     activities (user_id, is_done, sponsor_id, feature, expense, remark, design, url)
