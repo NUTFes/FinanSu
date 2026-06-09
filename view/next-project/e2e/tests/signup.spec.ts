@@ -21,6 +21,7 @@ async function waitForService(url: string) {
 
 test.beforeAll(async () => {
   await waitForService(`${apiURL}/`);
+  await waitForService(`${process.env.BASE_URL || 'http://view:3000'}/`);
 });
 
 test('新規登録後に current_user が 404 にならず My Page に遷移する', async ({ page }) => {
