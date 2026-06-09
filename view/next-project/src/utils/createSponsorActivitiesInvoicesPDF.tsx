@@ -208,7 +208,10 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
                 <Text style={[styles.text_M, { marginLeft: '5pt', flexShrink: 0 }]}>御中</Text>
               </View>
               <Text style={[styles.text_S, styles.marginBottom]}>
-                ご担当 : {invoiceItem.managerName} 様
+                ご担当 :{' '}
+                {invoiceItem.managerName && invoiceItem.managerName.trim() !== ''
+                  ? `${invoiceItem.managerName} 様`
+                  : ''}
               </Text>
               <Text style={[styles.text_S, styles.underLine]}>
                 件名 : <Text style={styles.text_M}>{invoiceItem.subject || '技大祭企業協賛'}</Text>
@@ -234,7 +237,7 @@ const MyDocument = ({ invoiceItem, deadline, issuedDate }: MyDocumentProps) => {
                   <Text>新潟県長岡市上富岡町1603-1</Text>
                   <Text>長岡技術科学大学内</Text>
                 </View>
-                <Text style={styles.text_S}>E-Mail : nutfes_shogai_kyosan@googlegroups.com</Text>
+                <Text style={styles.text_S}>E-Mail : nutfes_kyosan@googlegroups.com</Text>
                 <Text>担当 : {invoiceItem.fesStuffName}</Text>
               </View>
             </View>

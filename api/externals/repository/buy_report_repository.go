@@ -322,9 +322,17 @@ func applyBuyReportFilters(ds *goqu.SelectDataset, year, financialRecordID, paid
 		conditions["financial_records.id"] = financialRecordID
 	}
 
-	// paid_by_user_idを優先
 	if paidByUserID != "" {
-		conditions["buy_reports.paid_by_user_id"] = paidByUserID
+		ds = ds.Where(
+			goqu.Or(
+				goqu.I("buy_reports.paid_by_user_id").Eq(paidByUserID),
+				goqu.I("buy_reports.paid_by").Eq(
+					dialect.From("users").
+						Select(goqu.I("users.name")).
+						Where(goqu.I("users.id").Eq(paidByUserID)),
+				),
+			),
+		)
 	} else if paidBy != "" {
 		// フォールバック: 文字列で絞り込み
 		conditions["buy_reports.paid_by"] = paidBy

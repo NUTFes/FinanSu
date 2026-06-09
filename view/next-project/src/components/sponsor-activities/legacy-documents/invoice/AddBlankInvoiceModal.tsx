@@ -28,7 +28,7 @@ interface ModalProps {
 
 const defaultAddress = '〒940-2188 新潟県長岡市上富岡町1360-1長岡技術科学大学内';
 const defaultSubject = '技大祭企業協賛';
-const defaultDeadline = '2025-08-29';
+const defaultDeadline = '2026-08-28';
 
 export default function AddBlankInvoiceModal({ setIsOpen, sponsorStyles }: ModalProps) {
   const [form, setForm] = useState({

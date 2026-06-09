@@ -11,5 +11,6 @@ export { default as PurchaseOrderListModal } from './PurchaseOrderListModal';
 export { default as PurchaseReportAddModal } from './PurchaseReportAddModal';
 export { default as PurchaseReportConfirmModal } from './PurchaseReportConfirmModal';
 export { default as PurchaseReportItemNumModal } from './PurchaseReportItemNumModal'; // "PurchaseReport|temNumModal"を修正しました。
+export { default as PurchaseReportSummaryAmounts } from './PurchaseReportSummaryAmounts';
 export { default as ReceiptModal } from './ReceiptModal';
 export { default as CheckSettlementConfirmModal } from './CheckSettlementConfirmModal';

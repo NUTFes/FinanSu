@@ -2327,6 +2327,41 @@ paths:
               schema:
                 type: object
 
+  /users/{user_id}/groups/year/{year}:
+    put:
+      tags:
+        - user
+      operationId: updateUserGroups
+      summary: ユーザー所属部門の差分更新
+      description: userの所属部門を差分更新する。groupIds が空配列の場合は全削除する。
+      parameters:
+        - name: user_id
+          in: path
+          description: userのid
+          required: true
+          schema:
+            type: integer
+        - name: year
+          in: path
+          description: 対象年度
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateUserGroupsRequest"
+      responses:
+        "200":
+          description: 更新後のuser_groupsの状態を返す
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/updateUserGroupsResponse"
+      x-codegen-request-body-name: updateUserGroupsRequest
+
   /years:
     get:
       tags:
@@ -3543,6 +3578,32 @@ components:
         - isDeleted
         - createdAt
         - updatedAt
+
+    updateUserGroupsRequest:
+      type: object
+      required:
+        - groupIds
+      properties:
+        groupIds:
+          type: array
+          description: userに紐付けるdivisionのID一覧。空配列の場合は全削除
+          example: [1, 2, 3]
+          uniqueItems: true
+          items:
+            type: integer
+
+    updateUserGroupsResponse:
+      type: object
+      required:
+        - groupIds
+      properties:
+        groupIds:
+          type: array
+          description: 更新後のuserに紐付いているdivisionのID一覧
+          example: [1, 2, 3]
+          uniqueItems: true
+          items:
+            type: integer
 
     ActivityStatus:
       type: string

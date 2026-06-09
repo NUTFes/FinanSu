@@ -554,6 +554,18 @@ type Total struct {
 	Expense *int `json:"expense,omitempty"`
 }
 
+// UpdateUserGroupsRequest defines model for updateUserGroupsRequest.
+type UpdateUserGroupsRequest struct {
+	// GroupIds userに紐付けるdivisionのID一覧。空配列の場合は全削除
+	GroupIds []int `json:"groupIds"`
+}
+
+// UpdateUserGroupsResponse defines model for updateUserGroupsResponse.
+type UpdateUserGroupsResponse struct {
+	// GroupIds 更新後のuserに紐付いているdivisionのID一覧
+	GroupIds []int `json:"groupIds"`
+}
+
 // User defines model for user.
 type User struct {
 	BureauID  int    `json:"bureauID"`
@@ -1062,6 +1074,9 @@ type PostUploadFileMultipartRequestBody PostUploadFileMultipartBody
 // DeleteUsersDeleteJSONRequestBody defines body for DeleteUsersDelete for application/json ContentType.
 type DeleteUsersDeleteJSONRequestBody = DestroyUserIDs
 
+// UpdateUserGroupsJSONRequestBody defines body for UpdateUserGroups for application/json ContentType.
+type UpdateUserGroupsJSONRequestBody = UpdateUserGroupsRequest
+
 // PostYearsPeriodsJSONRequestBody defines body for PostYearsPeriods for application/json ContentType.
 type PostYearsPeriodsJSONRequestBody = YearPeriods
 
@@ -1400,6 +1415,9 @@ type ServerInterface interface {
 
 	// (PUT /users/{id})
 	PutUsersId(ctx echo.Context, id int, params PutUsersIdParams) error
+	// ユーザー所属部門の差分更新
+	// (PUT /users/{user_id}/groups/year/{year})
+	UpdateUserGroups(ctx echo.Context, userId int, year int) error
 
 	// (GET /years)
 	GetYears(ctx echo.Context) error
@@ -3490,6 +3508,30 @@ func (w *ServerInterfaceWrapper) PutUsersId(ctx echo.Context) error {
 	return err
 }
 
+// UpdateUserGroups converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateUserGroups(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "user_id" -------------
+	var userId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "user_id", ctx.Param("user_id"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", ctx.Param("year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter year: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.UpdateUserGroups(ctx, userId, year)
+	return err
+}
+
 // GetYears converts echo context to params.
 func (w *ServerInterfaceWrapper) GetYears(ctx echo.Context) error {
 	var err error
@@ -3762,6 +3804,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/users/:id", wrapper.DeleteUsersId)
 	router.GET(baseURL+"/users/:id", wrapper.GetUsersId)
 	router.PUT(baseURL+"/users/:id", wrapper.PutUsersId)
+	router.PUT(baseURL+"/users/:user_id/groups/year/:year", wrapper.UpdateUserGroups)
 	router.GET(baseURL+"/years", wrapper.GetYears)
 	router.POST(baseURL+"/years", wrapper.PostYears)
 	router.GET(baseURL+"/years/periods", wrapper.GetYearsPeriods)

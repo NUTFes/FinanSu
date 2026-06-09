@@ -1,9 +1,16 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
+import { BUREAUS } from '@/constants/bureaus';
 import { ROLES } from '@/constants/role';
+import {
+  useGetDivisions,
+  useGetDivisionsUsers,
+  useGetYearsPeriods,
+  useUpdateUserGroups,
+} from '@/generated/hooks';
 import { put } from '@api/user';
-import { Modal, PrimaryButton, CloseButton, Input, Select } from '@components/common';
+import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { Bureau, User } from '@type/common';
 
 interface ModalProps {
@@ -15,8 +22,39 @@ interface ModalProps {
 
 export default function UserEditModal(props: ModalProps) {
   const router = useRouter();
+  const userId = Number(props.id);
 
   const [formData, setFormData] = useState<User>(props.user);
+  const [selectedGroupIds, setSelectedGroupIds] = useState<number[] | null>(null);
+  const isInitializedRef = useRef(false);
+
+  const { data: yearsData } = useGetYearsPeriods();
+  const years = useMemo(() => yearsData?.data ?? [], [yearsData]);
+  const hasAvailableYears = years.length > 0;
+  const latestYear = useMemo(() => {
+    if (years.length === 0) return new Date().getFullYear();
+    return Math.max(...years.map((y) => y.year));
+  }, [years]);
+
+  const { data: allDivisionsData } = useGetDivisions(
+    { year: latestYear },
+    { swr: { enabled: hasAvailableYears } },
+  );
+
+  const { data: userDivisionsData } = useGetDivisionsUsers(
+    { user_id: userId, year: latestYear },
+    { swr: { enabled: hasAvailableYears } },
+  );
+
+  const { trigger: triggerUpdateGroups } = useUpdateUserGroups(userId, latestYear);
+
+  useEffect(() => {
+    if (!userDivisionsData) return;
+    if (isInitializedRef.current) return;
+    isInitializedRef.current = true;
+    const currentIds = (userDivisionsData.data ?? []).map((d) => d.divisionId);
+    setSelectedGroupIds(currentIds);
+  }, [userDivisionsData]);
 
   const handler =
     (input: string) =>
@@ -29,10 +67,48 @@ export default function UserEditModal(props: ModalProps) {
       setFormData({ ...formData, [input]: e.target.value });
     };
 
-  const submitUser = async (data: User, id: number | string) => {
-    const submitUserURL = process.env.CSR_API_URI + '/users/' + id;
-    console.log(data);
-    await put(submitUserURL, data);
+  const divisionsByBureau = useMemo(() => {
+    const divisions = allDivisionsData?.data?.divisions ?? [];
+    const map = new Map<string, typeof divisions>();
+    for (const division of divisions) {
+      if (!division.financialRecord) continue;
+      const list = map.get(division.financialRecord) ?? [];
+      list.push(division);
+      map.set(division.financialRecord, list);
+    }
+    const bureauOrder = new Map(BUREAUS.map((b, i) => [b.name, i]));
+    return Array.from(map.entries()).sort(
+      ([a], [b]) => (bureauOrder.get(a) ?? Infinity) - (bureauOrder.get(b) ?? Infinity),
+    );
+  }, [allDivisionsData]);
+
+  const toggleDivision = (id: number) => {
+    setSelectedGroupIds((prev) => {
+      if (prev === null) return prev;
+      return prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+    });
+  };
+
+  const toggleAllInBureau = (bureauName: string) => {
+    const ids = (divisionsByBureau.find(([name]) => name === bureauName)?.[1] ?? [])
+      .filter((d) => d.id !== undefined)
+      .map((d) => d.id as number);
+    setSelectedGroupIds((prev) => {
+      if (prev === null) return prev;
+      const allSelected = ids.every((id) => prev.includes(id));
+      const others = prev.filter((id) => !ids.includes(id));
+      return allSelected ? others : [...others, ...ids];
+    });
+  };
+
+  const updateUserInfo = async (data: User, id: number | string) => {
+    const url = process.env.CSR_API_URI + '/users/' + id;
+    await put(url, data);
+  };
+
+  const updateUserGroups = async () => {
+    if (selectedGroupIds === null) return;
+    await triggerUpdateGroups({ groupIds: selectedGroupIds });
   };
 
   return (
@@ -70,11 +146,63 @@ export default function UserEditModal(props: ModalProps) {
             ))}
           </Select>
         </div>
+        <p>部門</p>
+        <div className='col-span-4 flex w-full flex-col gap-2'>
+          {divisionsByBureau.map(([bureauName, divisions]) => {
+            const ids = divisions.filter((d) => d.id !== undefined).map((d) => d.id as number);
+            const allSelected =
+              ids.length > 0 &&
+              selectedGroupIds !== null &&
+              ids.every((id) => selectedGroupIds.includes(id));
+            return (
+              <div key={bureauName} className='border-primary-1 rounded-md border p-2'>
+                <div className='mb-1 flex items-center justify-between'>
+                  <span className='text-black-600 text-sm font-medium'>{bureauName}</span>
+                  <button
+                    type='button'
+                    onClick={() => toggleAllInBureau(bureauName)}
+                    className='text-primary-1 text-xs hover:underline'
+                  >
+                    {allSelected ? '全て解除' : '全て選択'}
+                  </button>
+                </div>
+                <div className='flex flex-wrap gap-x-4 gap-y-1'>
+                  {divisions.map((division) =>
+                    division.id !== undefined ? (
+                      <label key={division.id} className='flex cursor-pointer items-center gap-1'>
+                        <input
+                          type='checkbox'
+                          checked={(selectedGroupIds ?? []).includes(division.id)}
+                          onChange={() => toggleDivision(division.id as number)}
+                        />
+                        <span className='text-black-600 text-sm'>{division.name}</span>
+                      </label>
+                    ) : null,
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className='mx-auto mt-10 w-fit'>
         <PrimaryButton
-          onClick={() => {
-            submitUser(formData, props.id);
+          disabled={selectedGroupIds === null}
+          onClick={async () => {
+            try {
+              await updateUserInfo(formData, props.id);
+            } catch (error) {
+              console.error(error);
+              alert('ユーザー情報の更新に失敗しました。');
+              return;
+            }
+            try {
+              await updateUserGroups();
+            } catch (error) {
+              console.error(error);
+              alert('部門グループの更新に失敗しました。');
+              return;
+            }
             router.reload();
           }}
         >

@@ -37,6 +37,7 @@ var RepositoryProviderSet = wire.NewSet(
 	NewTeacherRepository,
 	NewTransactionRepository,
 	NewUserRepository,
+	NewUserGroupRepository,
 	NewYearRepository,
 	NewSponsorshipActivityRepository,
 )

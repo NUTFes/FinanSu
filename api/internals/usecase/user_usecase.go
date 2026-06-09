@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	rep "github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/pkg/errors"
 )
@@ -14,6 +15,9 @@ import (
 type userUseCase struct {
 	userRep        rep.UserRepository
 	sessionRep     rep.SessionRepository
+	userGroupRep   rep.UserGroupRepository
+	divisionRep    rep.DivisionRepository
+	yearRep        rep.YearRepository
 	transactionRep rep.TransactionRepository
 }
 
@@ -25,10 +29,11 @@ type UserUseCase interface {
 	DestroyUser(context.Context, string) error
 	DestroyMultiUsers(context.Context, []int) error
 	GetCurrentUser(context.Context, string) (domain.User, error)
+	UpdateUserGroups(context.Context, int, int, []int) (*generated.UpdateUserGroupsResponse, error)
 }
 
-func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, transactionRep rep.TransactionRepository) UserUseCase {
-	return &userUseCase{userRep: userRep, sessionRep: sessionRep, transactionRep: transactionRep}
+func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, yearRep rep.YearRepository, transactionRep rep.TransactionRepository) UserUseCase {
+	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, yearRep: yearRep, transactionRep: transactionRep}
 }
 
 func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
@@ -232,4 +237,158 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 		return user, err
 	}
 	return user, nil
+}
+
+// ユーザーの所属部門を差分更新する処理のメソッド
+func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int, requestGroupIDs []int) (updatedUserGroupsResponse *generated.UpdateUserGroupsResponse, err error) {
+	updatedUserGroupsResponse = &generated.UpdateUserGroupsResponse{GroupIds: []int{}}
+
+	// リクエスト配列の重複排除
+	uniqueGroupIDs := make([]int, 0, len(requestGroupIDs))
+	seenGroupIDs := make(map[int]struct{}, len(requestGroupIDs))
+	for _, id := range requestGroupIDs {
+		if _, ok := seenGroupIDs[id]; !ok {
+			seenGroupIDs[id] = struct{}{}
+			uniqueGroupIDs = append(uniqueGroupIDs, id)
+		}
+	}
+	requestGroupIDs = uniqueGroupIDs
+
+	// ユーザー存在確認
+	userRow, err := u.userRep.Find(ctx, strconv.Itoa(userID))
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+	var userRecord domain.User
+	if err := userRow.Scan(
+		&userRecord.ID,
+		&userRecord.Name,
+		&userRecord.BureauID,
+		&userRecord.RoleID,
+		&userRecord.IsDeleted,
+		&userRecord.CreatedAt,
+		&userRecord.UpdatedAt,
+	); err != nil {
+		return nil, errors.New("user not found")
+	}
+
+	// 年度存在確認
+	yearRows, err := u.yearRep.All(ctx)
+	if err != nil {
+		return nil, errors.New("year not found")
+	}
+	defer func() {
+		if err := yearRows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+	isYearFound := false
+	for yearRows.Next() {
+		var yearRecord domain.Year
+		if err := yearRows.Scan(&yearRecord.ID, &yearRecord.Year, &yearRecord.CreatedAt, &yearRecord.UpdatedAt); err != nil {
+			return nil, errors.New("year not found")
+		}
+		if yearRecord.Year == year {
+			isYearFound = true
+			break
+		}
+	}
+	if err := yearRows.Err(); err != nil {
+		return nil, errors.New("year not found")
+	}
+	if !isYearFound {
+		return nil, errors.New("year not found")
+	}
+
+	// 指定された年度に存在するグループIDの取得
+	validGroupIdRows, err := u.divisionRep.GetDivisionsYears(ctx, strconv.Itoa(year))
+	if err != nil {
+		return nil, err
+	}
+	validGroupIDs, err := u.scanDivisionIDs(validGroupIdRows)
+	if err != nil {
+		return nil, err
+	}
+
+	// リクエストされた groupIDs が、指定された年度に存在するグループIDの中に全て含まれているかを調べる
+	if len(requestGroupIDs) > 0 {
+		validGroupIDSet := make(map[int]struct{}, len(validGroupIDs))
+		for _, groupID := range validGroupIDs {
+			validGroupIDSet[groupID] = struct{}{}
+		}
+		for _, groupID := range requestGroupIDs {
+			if _, ok := validGroupIDSet[groupID]; !ok {
+				return nil, errors.New("invalid group id")
+			}
+		}
+	}
+
+	// 既存の所属グループIDを取得
+	existingGroupIdRows, err := u.divisionRep.GetDivisionOptionsByUserId(ctx, strconv.Itoa(year), strconv.Itoa(userID))
+	if err != nil {
+		return nil, err
+	}
+	existingGroupIDs, err := u.scanDivisionIDs(existingGroupIdRows)
+	if err != nil {
+		return nil, err
+	}
+
+	// トランザクションを開始
+	tx, err := u.transactionRep.StartTransaction(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = func(tx *sql.Tx) error {
+		// Diff処理
+		groupIDsToDelete, groupIDsToInsert := domain.GroupIDs(existingGroupIDs).Diff(domain.GroupIDs(requestGroupIDs))
+		// 差分に基づいて追加
+		if len(groupIDsToInsert) > 0 {
+			if err := u.userGroupRep.BulkInsert(ctx, tx, userID, groupIDsToInsert); err != nil {
+				return err
+			}
+		}
+		// 差分に基づいて削除
+		if len(groupIDsToDelete) > 0 {
+			if err := u.userGroupRep.BulkDelete(ctx, tx, userID, groupIDsToDelete); err != nil {
+				return err
+			}
+		}
+		return u.transactionRep.Commit(ctx, tx)
+	}(tx)
+
+	if err != nil {
+		if rollbackErr := u.transactionRep.RollBack(ctx, tx); rollbackErr != nil {
+			log.Println(rollbackErr)
+		}
+		return nil, err
+	}
+
+	// グループIDをそのまま返却
+	updatedUserGroupsResponse.GroupIds = requestGroupIDs
+	return updatedUserGroupsResponse, nil
+}
+
+// *sql.Rows から division_id だけを抽出する関数
+func (u *userUseCase) scanDivisionIDs(rows *sql.Rows) ([]int, error) {
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	var divisionIDs []int
+	for rows.Next() {
+		var divisionID int
+		var unusedName string
+		if err := rows.Scan(&divisionID, &unusedName); err != nil {
+			return nil, err
+		}
+		divisionIDs = append(divisionIDs, divisionID)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return divisionIDs, nil
 }
