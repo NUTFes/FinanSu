@@ -20,7 +20,8 @@ const filterData: SponsorActivitiesFilterType = {
   styleIds: [SPONSOR_STYLE.id || 0],
   bureauId: 'all',
   userId: 'all',
-  sponsorId: 'all',
+  activityStatus: 'all',
+  designProgress: 'all',
   feasibilityStatus: 'all',
   selectedSort: 'default',
 };
