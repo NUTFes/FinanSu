@@ -16,9 +16,8 @@ export default function SignUpView() {
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
 
-  const [postUserData, setPostUserData] = useState<User>({
+  const [postUserData, setPostUserData] = useState<Pick<User, 'id' | 'bureauID' | 'roleID'>>({
     id: 0,
-    name: '',
     bureauID: 1,
     roleID: 1,
   });
@@ -33,8 +32,7 @@ export default function SignUpView() {
   });
 
   const userDataHandler =
-    (input: string) =>
-    (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+    (input: 'bureauID' | 'roleID') => (e: React.ChangeEvent<HTMLSelectElement>) => {
       setPostUserData({ ...postUserData, [input]: e.target.value });
     };
 
@@ -45,7 +43,7 @@ export default function SignUpView() {
       const req = await postMailAuthSignup({
         email: data.email,
         password: data.password,
-        name: postUserData.name,
+        name: data.name,
         bureau_id: Number(postUserData.bureauID),
         role_id: Number(postUserData.roleID),
       });
@@ -54,7 +52,7 @@ export default function SignUpView() {
       // state用のuserのデータ
       const userData: User = {
         id: res.userID,
-        name: postUserData.name,
+        name: data.name,
         bureauID: Number(postUserData.bureauID),
         roleID: Number(postUserData.roleID),
       };
@@ -67,9 +65,7 @@ export default function SignUpView() {
       setUser(userData);
       Router.push('/my_page');
     } catch {
-      alert(
-        '新規登録に失敗しました。メールアドレスもしくはパスワードがすでに登録されている可能性があります',
-      );
+      alert('新規登録に失敗しました。このメールアドレスは既に登録されている可能性があります。');
       setIsSignUpNow(false);
     }
   };
@@ -83,8 +79,9 @@ export default function SignUpView() {
             <input
               className='border-b-primary-1 col-span-2 w-full border-b p-1'
               type='text'
-              value={postUserData.name}
-              onChange={userDataHandler('name')}
+              {...register('name', {
+                required: '名前は必須です。',
+              })}
             />
             <p className='md:text-md text-black-300 text-sm whitespace-nowrap'>所属局</p>
             <select
@@ -136,6 +133,7 @@ export default function SignUpView() {
           </div>
         </div>
         <div className='mb-5'>
+          <p className='text-red-500'>{errors.name && errors.name.message}</p>
           <p className='text-red-500'>{errors.email && errors.email.message}</p>
           <p className='text-red-500'>{errors.password && errors.password.message}</p>
           <p className='text-red-500'>

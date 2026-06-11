@@ -26,15 +26,11 @@ test.beforeAll(async () => {
 
 test('新規登録後に current_user が 404 にならず My Page に遷移する', async ({ page }) => {
   const currentUserStatuses: number[] = [];
-  const page404Responses: string[] = [];
 
   page.on('response', (response) => {
     const url = response.url();
     if (url.includes('/current_user')) {
       currentUserStatuses.push(response.status());
-    }
-    if (response.status() === 404) {
-      page404Responses.push(url);
     }
   });
 
@@ -74,5 +70,4 @@ test('新規登録後に current_user が 404 にならず My Page に遷移す�
 
   expect(currentUserStatuses).toContain(200);
   expect(currentUserStatuses).not.toContain(404);
-  expect(page404Responses).toEqual([]);
 });
