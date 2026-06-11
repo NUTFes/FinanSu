@@ -2543,6 +2543,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/ActivityStatus"
+        - name: design_progress
+          in: query
+          description: デザイン進捗ステータス (DesignProgressの値を指定)
+          required: false
+          schema:
+            $ref: "#/components/schemas/DesignProgress"
         - name: feasibility_status
           in: query
           description: 協賛可否ステータス (FeasibilityStatusの値を指定)
