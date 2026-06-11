@@ -128,15 +128,6 @@ export default function SponsorActivities(props: Props) {
     [sponsorStyles],
   );
   const allSponsorStyleIdSet = useMemo(() => new Set(allSponsorStyleIds), [allSponsorStyleIds]);
-  const sponsorIdSetByYear = useMemo(
-    () =>
-      new Set(
-        sponsorsByYear
-          .map((sponsor) => sponsor.id)
-          .filter((sponsorId): sponsorId is number => sponsorId !== undefined),
-      ),
-    [sponsorsByYear],
-  );
 
   const isFiltered = useMemo(() => {
     const isStyleFiltered =
@@ -144,7 +135,8 @@ export default function SponsorActivities(props: Props) {
       filterData.styleIds.some((styleId) => !allSponsorStyleIdSet.has(styleId));
     const isBureauFiltered = filterData.bureauId !== 'all';
     const isUserFiltered = filterData.userId !== 'all';
-    const isSponsorFiltered = filterData.sponsorId !== 'all';
+    const isActivityStatusFiltered = filterData.activityStatus !== 'all';
+    const isDesignProgressFiltered = filterData.designProgress !== 'all';
     const isFeasibilityFiltered = filterData.feasibilityStatus !== 'all';
     const isSorted = filterData.selectedSort !== 'default';
 
@@ -152,7 +144,8 @@ export default function SponsorActivities(props: Props) {
       isStyleFiltered ||
       isBureauFiltered ||
       isUserFiltered ||
-      isSponsorFiltered ||
+      isActivityStatusFiltered ||
+      isDesignProgressFiltered ||
       isFeasibilityFiltered ||
       isSorted
     );
@@ -172,16 +165,6 @@ export default function SponsorActivities(props: Props) {
     () => calculateActivitiesTotalAmount(sponsorshipActivities),
     [sponsorshipActivities],
   );
-
-  useEffect(() => {
-    if (filterData.sponsorId === 'all') return;
-    if (sponsorIdSetByYear.has(filterData.sponsorId)) return;
-
-    dispatch({
-      type: 'set-filter-data',
-      payload: { ...filterData, sponsorId: 'all' },
-    });
-  }, [filterData, sponsorIdSetByYear]);
 
   if (!_hasHydrated) return <Loading />;
   if (!user?.roleID || ![2, 3, 4].includes(user.roleID)) return <Loading />;

@@ -1,7 +1,12 @@
 import { FC, useMemo, useState } from 'react';
 
-import { FeasibilityStatus } from '@/generated/model';
-import { SORT_OPTIONS, SponsorActivitiesFilterType } from '@/utils/sponsorshipActivity';
+import { ActivityStatus, DesignProgress, FeasibilityStatus } from '@/generated/model';
+import {
+  ACTIVITY_STATUS_OPTIONS,
+  DESIGN_PROGRESS_OPTIONS,
+  SORT_OPTIONS,
+  SponsorActivitiesFilterType,
+} from '@/utils/sponsorshipActivity';
 import { CloseButton, Modal, PrimaryButton, SearchSelect, Select, Title } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
 import { Sponsor, SponsorStyle, User } from '@type/common';
@@ -75,13 +80,12 @@ interface BasicFilterSectionProps {
   selectedBureauOption: { value: string; label: string } | null;
   userSelectOptions: { value: string; label: string }[];
   selectedUserOption: { value: string; label: string } | null;
-  sponsorSelectOptions: { value: string; label: string }[];
-  selectedSponsorOption: { value: string; label: string } | null;
   draftFilterData: SponsorActivitiesFilterType;
   onBureauChange: (selected: { value: string; label: string } | null) => void;
   onUserChange: (selected: { value: string; label: string } | null) => void;
-  onSponsorChange: (selected: { value: string; label: string } | null) => void;
   onFeasibilityChange: (value: string) => void;
+  onActivityStatusChange: (value: string) => void;
+  onDesignProgressChange: (value: string) => void;
   onSortChange: (value: string) => void;
 }
 
@@ -90,13 +94,12 @@ const BasicFilterSection: FC<BasicFilterSectionProps> = ({
   selectedBureauOption,
   userSelectOptions,
   selectedUserOption,
-  sponsorSelectOptions,
-  selectedSponsorOption,
   draftFilterData,
   onBureauChange,
   onUserChange,
-  onSponsorChange,
   onFeasibilityChange,
+  onActivityStatusChange,
+  onDesignProgressChange,
   onSortChange,
 }) => (
   <>
@@ -120,16 +123,6 @@ const BasicFilterSection: FC<BasicFilterSectionProps> = ({
         onChange={onUserChange}
       />
     </div>
-    <p>企業名</p>
-    <div className='w-full'>
-      <SearchSelect
-        options={sponsorSelectOptions}
-        value={selectedSponsorOption}
-        placeholder='企業名で検索'
-        noOptionMessage='該当する企業がありません'
-        onChange={onSponsorChange}
-      />
-    </div>
     <p>協賛可否</p>
     <div className='w-full'>
       <Select
@@ -140,6 +133,34 @@ const BasicFilterSection: FC<BasicFilterSectionProps> = ({
         <option value={FeasibilityStatus.possible}>可</option>
         <option value={FeasibilityStatus.impossible}>否</option>
         <option value={FeasibilityStatus.unstarted}>未定</option>
+      </Select>
+    </div>
+    <p>活動ステータス</p>
+    <div className='w-full'>
+      <Select
+        value={draftFilterData.activityStatus}
+        onChange={(e) => onActivityStatusChange(e.target.value)}
+      >
+        <option value='all'>すべて</option>
+        {ACTIVITY_STATUS_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </Select>
+    </div>
+    <p>デザイン進捗</p>
+    <div className='w-full'>
+      <Select
+        value={draftFilterData.designProgress}
+        onChange={(e) => onDesignProgressChange(e.target.value)}
+      >
+        <option value='all'>すべて</option>
+        {DESIGN_PROGRESS_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </Select>
     </div>
     <p>並び替え</p>
@@ -168,11 +189,6 @@ const FilterModal: FC<ModalProps> = (props) => {
         (style): style is SponsorStyle & { id: number } => style.id !== undefined,
       ),
     [sponsorStyles],
-  );
-  const sponsorOptions = useMemo(
-    () =>
-      sponsors.filter((sponsor): sponsor is Sponsor & { id: number } => sponsor.id !== undefined),
-    [sponsors],
   );
 
   // モーダル用の変数
@@ -208,17 +224,6 @@ const FilterModal: FC<ModalProps> = (props) => {
     [filteredUsers],
   );
 
-  const sponsorSelectOptions = useMemo(
-    () => [
-      { value: 'all', label: '企業名で検索' },
-      ...sponsorOptions.map((sponsor) => ({
-        value: String(sponsor.id),
-        label: sponsor.name,
-      })),
-    ],
-    [sponsorOptions],
-  );
-
   const selectedBureauOption = useMemo(
     () =>
       draftFilterData.bureauId === 'all'
@@ -235,16 +240,6 @@ const FilterModal: FC<ModalProps> = (props) => {
         : userSelectOptions.find((option) => option.value === String(draftFilterData.userId)) ||
           null,
     [userSelectOptions, draftFilterData.userId],
-  );
-
-  const selectedSponsorOption = useMemo(
-    () =>
-      draftFilterData.sponsorId === 'all'
-        ? null
-        : sponsorSelectOptions.find(
-            (option) => option.value === String(draftFilterData.sponsorId),
-          ) || null,
-    [sponsorSelectOptions, draftFilterData.sponsorId],
   );
 
   function filterHandler(event: React.FormEvent<HTMLFormElement>) {
@@ -330,8 +325,6 @@ const FilterModal: FC<ModalProps> = (props) => {
               selectedBureauOption={selectedBureauOption}
               userSelectOptions={userSelectOptions}
               selectedUserOption={selectedUserOption}
-              sponsorSelectOptions={sponsorSelectOptions}
-              selectedSponsorOption={selectedSponsorOption}
               draftFilterData={draftFilterData}
               onBureauChange={(selected) => {
                 if (!selected) return;
@@ -356,17 +349,22 @@ const FilterModal: FC<ModalProps> = (props) => {
                   userId: selected.value === 'all' ? 'all' : Number(selected.value),
                 }));
               }}
-              onSponsorChange={(selected) => {
-                if (!selected) return;
-                setDraftFilterData((prev) => ({
-                  ...prev,
-                  sponsorId: selected.value === 'all' ? 'all' : Number(selected.value),
-                }));
-              }}
               onFeasibilityChange={(value) => {
                 setDraftFilterData((prev) => ({
                   ...prev,
                   feasibilityStatus: value === 'all' ? 'all' : (value as FeasibilityStatus),
+                }));
+              }}
+              onActivityStatusChange={(value) => {
+                setDraftFilterData((prev) => ({
+                  ...prev,
+                  activityStatus: value === 'all' ? 'all' : (value as ActivityStatus),
+                }));
+              }}
+              onDesignProgressChange={(value) => {
+                setDraftFilterData((prev) => ({
+                  ...prev,
+                  designProgress: value === 'all' ? 'all' : (value as DesignProgress),
                 }));
               }}
               onSortChange={(value) => {

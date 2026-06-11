@@ -48,6 +48,12 @@ export function useSponsorActivitiesQuery({
     if (filterData.feasibilityStatus !== 'all') {
       params.feasibility_status = filterData.feasibilityStatus;
     }
+    if (filterData.activityStatus !== 'all') {
+      params.activity_status = filterData.activityStatus;
+    }
+    if (filterData.designProgress !== 'all') {
+      params.design_progress = filterData.designProgress;
+    }
     if (filterData.userId !== 'all') {
       params.user_id = filterData.userId;
     }
@@ -81,11 +87,6 @@ export function useSponsorActivitiesQuery({
       if (filterData.bureauId !== 'all') {
         nextActivities = nextActivities.filter(
           (activity) => activity.user?.bureauID === filterData.bureauId,
-        );
-      }
-      if (filterData.sponsorId !== 'all') {
-        nextActivities = nextActivities.filter(
-          (activity) => activity.sponsor?.id === filterData.sponsorId,
         );
       }
 
