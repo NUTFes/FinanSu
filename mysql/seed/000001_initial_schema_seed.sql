@@ -307,10 +307,10 @@ VALUES
 INSERT INTO
     sponsors (name, tel, email, address, representative, created_at, updated_at)
 VALUES
-    ('株式会社test', '03-1234-5678', 'test@example.com', '新潟県長岡市1-1-1', 'test 太郎1', '2025-03-10 10:00:00', '2025-03-10 10:00:00'),
-    ('test物流株式会社', '03-2345-6789', 'test@logistics.example.com', '新潟県長岡市2-2-2', 'test 太郎2', '2025-09-22 11:30:00', '2025-09-22 11:30:00'),
-    ('testクリエイト株式会社', '03-3456-7890', 'test@next-create.example.com', '新潟県長岡市3-3-3', 'test 太郎3', '2026-02-14 09:15:00', '2026-02-14 09:15:00'),
-    ('test企画合同会社', '03-4567-8901', 'contact@test-planning.example.com', '新潟県長岡市4-4-4', 'test 太郎4', '2026-08-01 14:45:00', '2026-08-01 14:45:00');
+    ('株式会社test', '03-1234-5678', 'test@example.com', '新潟県', 'test 太郎1', '2025-03-10 10:00:00', '2025-03-10 10:00:00'),
+    ('test物流株式会社', '03-2345-6789', 'test@logistics.example.com', '新潟県', 'test 太郎2', '2025-09-22 11:30:00', '2025-09-22 11:30:00'),
+    ('testクリエイト株式会社', '03-3456-7890', 'test@next-create.example.com', '新潟県', 'test 太郎3', '2026-02-14 09:15:00', '2026-02-14 09:15:00'),
+    ('test企画合同会社', '03-4567-8901', 'contact@test-planning.example.com', '新潟県', 'test 太郎4', '2026-08-01 14:45:00', '2026-08-01 14:45:00');
 
 -- sponsor_style を追加
 INSERT INTO
