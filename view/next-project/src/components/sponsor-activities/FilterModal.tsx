@@ -9,13 +9,12 @@ import {
 } from '@/utils/sponsorshipActivity';
 import { CloseButton, Modal, PrimaryButton, SearchSelect, Select, Title } from '@components/common';
 import { BUREAUS } from '@constants/bureaus';
-import { Sponsor, SponsorStyle, User } from '@type/common';
+import { SponsorStyle, User } from '@type/common';
 
 interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   sponsorStyles: SponsorStyle[];
   users: User[];
-  sponsors: Sponsor[];
   filterData: SponsorActivitiesFilterType;
   setFilterData: (filterData: SponsorActivitiesFilterType) => void;
 }
@@ -135,7 +134,7 @@ const BasicFilterSection: FC<BasicFilterSectionProps> = ({
         <option value={FeasibilityStatus.unstarted}>未定</option>
       </Select>
     </div>
-    <p>活動ステータス</p>
+    <p>ステータス</p>
     <div className='w-full'>
       <Select
         value={draftFilterData.activityStatus}
@@ -149,7 +148,7 @@ const BasicFilterSection: FC<BasicFilterSectionProps> = ({
         ))}
       </Select>
     </div>
-    <p>デザイン進捗</p>
+    <p>デザイン</p>
     <div className='w-full'>
       <Select
         value={draftFilterData.designProgress}
@@ -181,7 +180,7 @@ const BasicFilterSection: FC<BasicFilterSectionProps> = ({
 );
 
 const FilterModal: FC<ModalProps> = (props) => {
-  const { sponsorStyles, users, sponsors, filterData, setFilterData } = props;
+  const { sponsorStyles, users, filterData, setFilterData } = props;
 
   const styleOptions = useMemo(
     () =>
