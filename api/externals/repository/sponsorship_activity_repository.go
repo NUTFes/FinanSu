@@ -344,6 +344,7 @@ func (r *sponsorshipActivityRepository) Update(ctx context.Context, tx *sql.Tx, 
 			"feasibility_status": activity.FeasibilityStatus,
 			"design_progress":    activity.DesignProgress,
 			"remarks":            activity.Remarks,
+			"updated_at":         goqu.L("CURRENT_TIMESTAMP"),
 		}).
 		Where(goqu.I("id").Eq(activity.ID))
 	query, args, err := dataset.ToSQL()
