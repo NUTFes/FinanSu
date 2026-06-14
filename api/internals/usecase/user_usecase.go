@@ -14,6 +14,7 @@ import (
 
 type userUseCase struct {
 	userRep        rep.UserRepository
+	mailAuthRep    rep.MailAuthRepository
 	sessionRep     rep.SessionRepository
 	userGroupRep   rep.UserGroupRepository
 	divisionRep    rep.DivisionRepository
@@ -32,8 +33,8 @@ type UserUseCase interface {
 	UpdateUserGroups(context.Context, int, int, []int) (*generated.UpdateUserGroupsResponse, error)
 }
 
-func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, yearRep rep.YearRepository, transactionRep rep.TransactionRepository) UserUseCase {
-	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, yearRep: yearRep, transactionRep: transactionRep}
+func NewUserUseCase(userRep rep.UserRepository, mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, yearRep rep.YearRepository, transactionRep rep.TransactionRepository) UserUseCase {
+	return &userUseCase{userRep: userRep, mailAuthRep: mailAuthRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, yearRep: yearRep, transactionRep: transactionRep}
 }
 
 func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
@@ -170,6 +171,16 @@ func (u *userUseCase) DestroyUser(c context.Context, id string) error {
 		return err
 	}
 
+	if err = u.mailAuthRep.UpdateEmailNullByUserIDWithTx(c, tx, id); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.sessionRep.DestroyByUserIDWithTx(c, tx, id); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
 	if err = u.transactionRep.Commit(c, tx); err != nil {
 		_ = u.transactionRep.RollBack(c, tx)
 		return err
@@ -184,6 +195,16 @@ func (u *userUseCase) DestroyMultiUsers(c context.Context, ids []int) error {
 	}
 
 	if err = u.userRep.MultiDestroyWithTx(c, tx, ids); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.mailAuthRep.UpdateEmailNullByUserIDsWithTx(c, tx, ids); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.sessionRep.DestroyByUserIDsWithTx(c, tx, ids); err != nil {
 		_ = u.transactionRep.RollBack(c, tx)
 		return err
 	}

@@ -1,5 +1,11 @@
 USE finansu_db;
 
+INSERT INTO bureaus (id, name)
+VALUES (1, '総務局');
+
+INSERT INTO roles (id, name)
+VALUES (1, 'user');
+
 INSERT INTO years (id, year)
 VALUES (1, 2025);
 

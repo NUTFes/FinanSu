@@ -20,6 +20,8 @@ type MailAuthRepository interface {
 	FindMailAuthByEmail(context.Context, string) (*sql.Row, error)
 	FindMailAuthByID(context.Context, string) (*sql.Row, error)
 	ChangePasswordByUserID(context.Context, string, string) error
+	UpdateEmailNullByUserIDWithTx(context.Context, *sql.Tx, string) error
+	UpdateEmailNullByUserIDsWithTx(context.Context, *sql.Tx, []int) error
 }
 
 func NewMailAuthRepository(client db.Client, crud abstract.Crud) MailAuthRepository {
@@ -106,5 +108,37 @@ func (r *mailAuthRepository) ChangePasswordByUserID(c context.Context, userID st
 	}
 
 	_, err = r.client.DB().ExecContext(c, query, args...)
+	return err
+}
+
+func (r *mailAuthRepository) UpdateEmailNullByUserIDWithTx(c context.Context, tx *sql.Tx, userID string) error {
+	query, args, err := dialect.Update("mail_auth").
+		Prepared(true).
+		Set(goqu.Record{"email": nil}).
+		Where(goqu.Ex{"user_id": userID}).
+		ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(c, query, args...)
+	return err
+}
+
+func (r *mailAuthRepository) UpdateEmailNullByUserIDsWithTx(c context.Context, tx *sql.Tx, userIDs []int) error {
+	if len(userIDs) == 0 {
+		return nil
+	}
+
+	query, args, err := dialect.Update("mail_auth").
+		Prepared(true).
+		Set(goqu.Record{"email": nil}).
+		Where(goqu.I("user_id").In(userIDs)).
+		ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(c, query, args...)
 	return err
 }

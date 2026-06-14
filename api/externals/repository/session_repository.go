@@ -18,6 +18,8 @@ type SessionRepository interface {
 	Destroy(context.Context, string) error
 	FindSessionByAccessToken(context.Context, string) (*sql.Row, error)
 	DestroyByUserID(context.Context, string) error
+	DestroyByUserIDWithTx(context.Context, *sql.Tx, string) error
+	DestroyByUserIDsWithTx(context.Context, *sql.Tx, []int) error
 }
 
 func NewSessionRepository(client db.Client) SessionRepository {
@@ -111,4 +113,34 @@ func (r *sessionRepository) DestroyByUserID(c context.Context, userID string) er
 		return err
 	}
 	return nil
+}
+
+func (r *sessionRepository) DestroyByUserIDWithTx(c context.Context, tx *sql.Tx, userID string) error {
+	query, args, err := dialect.Delete("session").
+		Prepared(true).
+		Where(goqu.Ex{"user_id": userID}).
+		ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(c, query, args...)
+	return err
+}
+
+func (r *sessionRepository) DestroyByUserIDsWithTx(c context.Context, tx *sql.Tx, userIDs []int) error {
+	if len(userIDs) == 0 {
+		return nil
+	}
+
+	query, args, err := dialect.Delete("session").
+		Prepared(true).
+		Where(goqu.I("user_id").In(userIDs)).
+		ToSQL()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(c, query, args...)
+	return err
 }

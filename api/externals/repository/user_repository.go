@@ -144,20 +144,6 @@ func (ur *userRepository) DestroyWithTx(c context.Context, tx *sql.Tx, id string
 	}
 
 	_, err = tx.ExecContext(c, userQuery, userArgs...)
-	if err != nil {
-		return err
-	}
-
-	mailAuthQuery, mailAuthArgs, err := dialect.Update("mail_auth").
-		Prepared(true).
-		Set(goqu.Record{"email": nil}).
-		Where(goqu.Ex{"user_id": id}).
-		ToSQL()
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.ExecContext(c, mailAuthQuery, mailAuthArgs...)
 	return err
 }
 
@@ -176,21 +162,6 @@ func (ur *userRepository) MultiDestroyWithTx(c context.Context, tx *sql.Tx, ids 
 	}
 
 	_, err = tx.ExecContext(c, userQuery, userArgs...)
-	if err != nil {
-		return err
-	}
-
-	mailAuthQuery, mailAuthArgs, err := dialect.Update("mail_auth").
-		Prepared(true).
-		Set(goqu.Record{"email": nil}).
-		Where(goqu.I("user_id").In(ids)).
-		ToSQL()
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.ExecContext(c, mailAuthQuery, mailAuthArgs...)
-
 	return err
 }
 

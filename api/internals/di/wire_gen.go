@@ -71,7 +71,7 @@ func InitializeServer() (*ServerComponents, error) {
 	teacherUseCase := usecase.NewTeacherUseCase(teacherRepository)
 	userGroupRepository := repository.NewUserGroupRepository(client, crud)
 	yearRepository := repository.NewYearRepository(client, crud)
-	userUseCase := usecase.NewUserUseCase(userRepository, sessionRepository, userGroupRepository, divisionRepository, yearRepository, transactionRepository)
+	userUseCase := usecase.NewUserUseCase(userRepository, mailAuthRepository, sessionRepository, userGroupRepository, divisionRepository, yearRepository, transactionRepository)
 	yearUseCase := usecase.NewYearUseCase(yearRepository)
 	sponsorshipActivityRepository := repository.NewSponsorshipActivityRepository(client, crud)
 	sponsorshipActivityUseCase := usecase.NewSponsorshipActivityUseCase(sponsorshipActivityRepository, transactionRepository)

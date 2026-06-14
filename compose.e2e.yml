@@ -87,6 +87,7 @@ services:
       - ./openapi:/openapi
       - e2e-pnpm-store:/app/.pnpm-store
     environment:
+      CI: "true"
       NEXT_PUBLIC_APP_ENV: e2e
       NEXT_PUBLIC_ENDPOINT: minio
       NEXT_PUBLIC_PORT: 9000
@@ -109,7 +110,7 @@ services:
     environment:
       BASE_URL: http://view:3000
       API_URL: http://api:1323
-    command: bash -lc "npm install --no-package-lock && npx playwright test"
+    command: bash -lc "npm ci && npx playwright test"
     depends_on:
       view:
         condition: service_started
