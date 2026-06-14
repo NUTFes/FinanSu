@@ -40,6 +40,8 @@ func RunServer(server *handler.Handler) *echo.Echo {
 	swagger.Servers = nil
 	e.Use(oapimiddleware.OapiRequestValidatorWithOptions(swagger, &oapimiddleware.Options{
 		Skipper: func(c echo.Context) bool {
+			// TODO: OpenAPI定義と既存APIの実装差分を解消し、全体にvalidatorを適用する。
+			// 現状は全APIへ適用すると既存エンドポイントに影響が出るため、signupだけを検証対象にしている。
 			return c.Path() != "/mail_auth/signup" || c.Request().Method != http.MethodPost
 		},
 	}))
