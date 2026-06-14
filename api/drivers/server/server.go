@@ -38,7 +38,11 @@ func RunServer(server *handler.Handler) *echo.Echo {
 		panic(err)
 	}
 	swagger.Servers = nil
-	e.Use(oapimiddleware.OapiRequestValidator(swagger))
+	e.Use(oapimiddleware.OapiRequestValidatorWithOptions(swagger, &oapimiddleware.Options{
+		Skipper: func(c echo.Context) bool {
+			return c.Path() != "/mail_auth/signup" || c.Request().Method != http.MethodPost
+		},
+	}))
 
 	// ルーティング
 
