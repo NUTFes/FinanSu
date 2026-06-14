@@ -5,4 +5,5 @@ package: generated
 generate:
   - server
   - types
+  - embedded-spec
 output: /app/generated/openapi_gen.go

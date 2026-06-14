@@ -7,14 +7,29 @@
  */
 
 export type PostMailAuthSignupBody = {
-  /** email */
+  /**
+   * email
+   * @minLength 1
+   */
   email: string;
-  /** password */
+  /**
+   * password
+   * @minLength 1
+   */
   password: string;
-  /** name */
+  /**
+   * name
+   * @minLength 1
+   */
   name: string;
-  /** bureau_id */
+  /**
+   * bureau_id
+   * @minimum 1
+   */
   bureau_id: number;
-  /** role_id */
+  /**
+   * role_id
+   * @minimum 1
+   */
   role_id: number;
 };

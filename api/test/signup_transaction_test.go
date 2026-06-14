@@ -144,3 +144,69 @@ func TestSignupReturnsBadRequestWhenRequiredBodyFieldsAreMissing(t *testing.T) {
 	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM mail_auth WHERE email = ?", email))
 	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM session"))
 }
+
+func TestSignupReturnsBadRequestWhenBodyViolatesOpenAPISchema(t *testing.T) {
+	prepareTestDatabase(t)
+
+	serverComponents, err := di.InitializeServer()
+	require.NoError(t, err)
+
+	testServer := httptest.NewServer(serverComponents.Echo)
+	t.Cleanup(func() {
+		testServer.Close()
+		serverComponents.Client.CloseDB()
+	})
+
+	tests := []struct {
+		name   string
+		email  string
+		values map[string]any
+	}{
+		{
+			name:  "empty name",
+			email: "signup-empty-name@example.com",
+			values: map[string]any{
+				"email":     "signup-empty-name@example.com",
+				"password":  "password123",
+				"name":      "",
+				"bureau_id": 1,
+				"role_id":   1,
+			},
+		},
+		{
+			name:  "zero bureau id",
+			email: "signup-zero-bureau@example.com",
+			values: map[string]any{
+				"email":     "signup-zero-bureau@example.com",
+				"password":  "password123",
+				"name":      "Zero Bureau User",
+				"bureau_id": 0,
+				"role_id":   1,
+			},
+		},
+		{
+			name:  "zero role id",
+			email: "signup-zero-role@example.com",
+			values: map[string]any{
+				"email":     "signup-zero-role@example.com",
+				"password":  "password123",
+				"name":      "Zero Role User",
+				"bureau_id": 1,
+				"role_id":   0,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			beforeUsers := countRows(t, "SELECT COUNT(*) FROM users")
+			r := postSignup(t, testServer.URL, tt.values)
+			defer r.Body.Close()
+
+			assert.Equal(t, http.StatusBadRequest, r.StatusCode)
+			assert.Equal(t, beforeUsers, countRows(t, "SELECT COUNT(*) FROM users"))
+			assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM mail_auth WHERE email = ?", tt.email))
+			assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM session"))
+		})
+	}
+}

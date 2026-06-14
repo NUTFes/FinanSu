@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/NUTFes/FinanSu/api/generated"
 	"github.com/labstack/echo/v4"
@@ -50,14 +49,6 @@ func (h *Handler) PostMailAuthSignup(c echo.Context) error {
 	var request generated.PostMailAuthSignupJSONRequestBody
 	if err := c.Bind(&request); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid request body")
-	}
-
-	if strings.TrimSpace(request.Email) == "" ||
-		strings.TrimSpace(request.Password) == "" ||
-		strings.TrimSpace(request.Name) == "" ||
-		request.BureauId <= 0 ||
-		request.RoleId <= 0 {
-		return echo.NewHTTPError(http.StatusBadRequest, "email, password, name, bureau_id and role_id are required")
 	}
 
 	email := request.Email

@@ -1569,18 +1569,23 @@ paths:
               properties:
                 email:
                   type: string
+                  minLength: 1
                   description: email
                 password:
                   type: string
+                  minLength: 1
                   description: password
                 name:
                   type: string
+                  minLength: 1
                   description: name
                 bureau_id:
                   type: integer
+                  minimum: 1
                   description: bureau_id
                 role_id:
                   type: integer
+                  minimum: 1
                   description: role_id
       responses:
         "200":
