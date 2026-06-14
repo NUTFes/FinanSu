@@ -1,7 +1,7 @@
 import { SponsorActivitiesFilterType } from '@/utils/sponsorshipActivity';
 import { FilterModal } from '@components/sponsor-activities';
 
-import { SPONSOR, SPONSOR_STYLE, USER } from '../constants';
+import { SPONSOR_STYLE, USER } from '../constants';
 
 import type { Meta, StoryFn } from '@storybook/react';
 
@@ -20,7 +20,8 @@ const filterData: SponsorActivitiesFilterType = {
   styleIds: [SPONSOR_STYLE.id || 0],
   bureauId: 'all',
   userId: 'all',
-  sponsorId: 'all',
+  activityStatus: 'all',
+  designProgress: 'all',
   feasibilityStatus: 'all',
   selectedSort: 'default',
 };
@@ -30,7 +31,6 @@ Primary.args = {
   setIsOpen: () => {},
   sponsorStyles: [SPONSOR_STYLE],
   users: [USER],
-  sponsors: [SPONSOR],
   filterData,
   setFilterData: () => {},
 };
