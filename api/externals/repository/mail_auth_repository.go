@@ -20,8 +20,8 @@ type MailAuthRepository interface {
 	FindMailAuthByEmail(context.Context, string) (*sql.Row, error)
 	FindMailAuthByID(context.Context, string) (*sql.Row, error)
 	ChangePasswordByUserID(context.Context, string, string) error
-	UpdateEmailNullByUserIDWithTx(context.Context, *sql.Tx, string) error
-	UpdateEmailNullByUserIDsWithTx(context.Context, *sql.Tx, []int) error
+	InvalidateEmailByUserIDWithTx(context.Context, *sql.Tx, string) error
+	InvalidateEmailByUserIDsWithTx(context.Context, *sql.Tx, []int) error
 }
 
 func NewMailAuthRepository(client db.Client, crud abstract.Crud) MailAuthRepository {
@@ -111,7 +111,7 @@ func (r *mailAuthRepository) ChangePasswordByUserID(c context.Context, userID st
 	return err
 }
 
-func (r *mailAuthRepository) UpdateEmailNullByUserIDWithTx(c context.Context, tx *sql.Tx, userID string) error {
+func (r *mailAuthRepository) InvalidateEmailByUserIDWithTx(c context.Context, tx *sql.Tx, userID string) error {
 	query, args, err := dialect.Update("mail_auth").
 		Prepared(true).
 		Set(goqu.Record{"email": nil}).
@@ -125,7 +125,7 @@ func (r *mailAuthRepository) UpdateEmailNullByUserIDWithTx(c context.Context, tx
 	return err
 }
 
-func (r *mailAuthRepository) UpdateEmailNullByUserIDsWithTx(c context.Context, tx *sql.Tx, userIDs []int) error {
+func (r *mailAuthRepository) InvalidateEmailByUserIDsWithTx(c context.Context, tx *sql.Tx, userIDs []int) error {
 	if len(userIDs) == 0 {
 		return nil
 	}

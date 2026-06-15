@@ -171,7 +171,7 @@ func (u *userUseCase) DestroyUser(c context.Context, id string) error {
 		return err
 	}
 
-	if err = u.mailAuthRep.UpdateEmailNullByUserIDWithTx(c, tx, id); err != nil {
+	if err = u.mailAuthRep.InvalidateEmailByUserIDWithTx(c, tx, id); err != nil {
 		_ = u.transactionRep.RollBack(c, tx)
 		return err
 	}
@@ -199,7 +199,7 @@ func (u *userUseCase) DestroyMultiUsers(c context.Context, ids []int) error {
 		return err
 	}
 
-	if err = u.mailAuthRep.UpdateEmailNullByUserIDsWithTx(c, tx, ids); err != nil {
+	if err = u.mailAuthRep.InvalidateEmailByUserIDsWithTx(c, tx, ids); err != nil {
 		_ = u.transactionRep.RollBack(c, tx)
 		return err
 	}
