@@ -851,6 +851,9 @@ type GetSponsorshipActivitiesParams struct {
 	// ActivityStatus 活動ステータス (ActivityStatusの値を指定)
 	ActivityStatus *ActivityStatus `form:"activity_status,omitempty" json:"activity_status,omitempty"`
 
+	// DesignProgress デザイン進捗ステータス (DesignProgressの値を指定)
+	DesignProgress *DesignProgress `form:"design_progress,omitempty" json:"design_progress,omitempty"`
+
 	// FeasibilityStatus 協賛可否ステータス (FeasibilityStatusの値を指定)
 	FeasibilityStatus *FeasibilityStatus `form:"feasibility_status,omitempty" json:"feasibility_status,omitempty"`
 
@@ -2956,6 +2959,13 @@ func (w *ServerInterfaceWrapper) GetSponsorshipActivities(ctx echo.Context) erro
 	err = runtime.BindQueryParameter("form", true, false, "activity_status", ctx.QueryParams(), &params.ActivityStatus)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter activity_status: %s", err))
+	}
+
+	// ------------- Optional query parameter "design_progress" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "design_progress", ctx.QueryParams(), &params.DesignProgress)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter design_progress: %s", err))
 	}
 
 	// ------------- Optional query parameter "feasibility_status" -------------

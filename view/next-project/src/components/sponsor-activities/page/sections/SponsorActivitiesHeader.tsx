@@ -92,7 +92,6 @@ export default function SponsorActivitiesHeader({
                 <FilterModal
                   setIsOpen={onSetFilterOpen}
                   sponsorStyles={sponsorStyles}
-                  sponsors={sponsors}
                   users={users}
                   filterData={filterData}
                   setFilterData={onSetFilterData}

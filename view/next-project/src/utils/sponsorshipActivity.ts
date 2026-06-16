@@ -20,7 +20,8 @@ export interface SponsorActivitiesFilterType {
   styleIds: number[];
   bureauId: number | 'all';
   userId: number | 'all';
-  sponsorId: number | 'all';
+  activityStatus: ActivityStatus | 'all';
+  designProgress: DesignProgress | 'all';
   feasibilityStatus: FeasibilityStatus | 'all';
   selectedSort: SponsorActivitiesSortType;
 }
@@ -134,7 +135,8 @@ export const createDefaultSponsorActivitiesFilter = (
       .filter((styleId): styleId is number => styleId !== undefined),
     bureauId: 'all',
     userId: 'all',
-    sponsorId: 'all',
+    activityStatus: 'all',
+    designProgress: 'all',
     feasibilityStatus: 'all',
     selectedSort: 'default',
   };
