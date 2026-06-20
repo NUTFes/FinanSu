@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"strconv"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -121,17 +122,18 @@ func (t *teacherRepository) FindLatestRecord(c context.Context) (*sql.Row, error
 
 // 複数削除
 func (t *teacherRepository) MultiDestroy(c context.Context, ids []int) error {
-	query := "UPDATE teachers SET is_deleted = TRUE WHERE "
+	var query strings.Builder
+	query.WriteString("UPDATE teachers SET is_deleted = TRUE WHERE ")
 	for index, id := range ids {
-		query += "id = " + strconv.Itoa(id)
+		query.WriteString("id = " + strconv.Itoa(id))
 
-		if(index != len(ids)-1){
-			query += " OR "
+		if index != len(ids)-1 {
+			query.WriteString(" OR ")
 		}
 
 	}
 
-	err := t.crud.UpdateDB(c, query)
+	err := t.crud.UpdateDB(c, query.String())
 	if err != nil {
 		return err
 	}

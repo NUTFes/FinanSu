@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
@@ -61,7 +62,7 @@ func (por *purchaseOrderRepository) Create(
 	query := `
 		INSERT INTO
 			purchase_orders (deadline, user_id, expense_id, finance_check)
-		VALUES ('` + deadLine + "'," + userId + "," + expenseId + "," +financeCheck + ")"
+		VALUES ('` + deadLine + "'," + userId + "," + expenseId + "," + financeCheck + ")"
 	return por.crud.UpdateDB(c, query)
 }
 
@@ -196,29 +197,30 @@ func (p *purchaseOrderRepository) AllUserInfoByYear(c context.Context, year stri
 }
 
 func (p *purchaseOrderRepository) NotifySlack(c context.Context, purchaseOrder domain.PurchaseOrder, purchaseItems []domain.PurchaseItem, user domain.User, bureau domain.Bureau, expense domain.Expense) error {
-		token := os.Getenv("BOT_USER_OAUTH_TOKEN")
-		channelName := os.Getenv("CHANNEL_NAME")
+	token := os.Getenv("BOT_USER_OAUTH_TOKEN")
+	channelName := os.Getenv("CHANNEL_NAME")
 
-		//メッセージ作成
-		sendMessage := "購入申請を受け付けました \n"
-		sendMessage += fmt.Sprintf("局・団体： %s", expense.Name) + " \n"
-		sendMessage += fmt.Sprintf("申請者： %s  %s", bureau.Name, user.Name) + " \n"
-		sendMessage += "購入物品 \n"
-		//合計金額
-		sum := 0
-		//購入物品
-		for _, item := range purchaseItems{
-			sum += item.Price*item.Quantity
-			sendMessage += fmt.Sprintf("・%s  %d円  %d個", item.Item, item.Price, item.Quantity) + " \n"
-		}
-		sendMessage += fmt.Sprintf("合計  %d円", sum)
-		client := slack.New(token)
+	//メッセージ作成
+	var sendMessage strings.Builder
+	sendMessage.WriteString("購入申請を受け付けました \n")
+	sendMessage.WriteString(fmt.Sprintf("局・団体： %s", expense.Name) + " \n")
+	sendMessage.WriteString(fmt.Sprintf("申請者： %s  %s", bureau.Name, user.Name) + " \n")
+	sendMessage.WriteString("購入物品 \n")
+	//合計金額
+	sum := 0
+	//購入物品
+	for _, item := range purchaseItems {
+		sum += item.Price * item.Quantity
+		sendMessage.WriteString(fmt.Sprintf("・%s  %d円  %d個", item.Item, item.Price, item.Quantity) + " \n")
+	}
+	sendMessage.WriteString(fmt.Sprintf("合計  %d円", sum))
+	client := slack.New(token)
 
-		_, _, err := client.PostMessage(channelName, slack.MsgOptionText(sendMessage, false))
-		if err != nil {
-			panic(err)
-		}
-		return err
+	_, _, err := client.PostMessage(channelName, slack.MsgOptionText(sendMessage.String(), false))
+	if err != nil {
+		panic(err)
+	}
+	return err
 }
 
 func (p *purchaseOrderRepository) AllUnregisteredUserInfoByYear(c context.Context, year string) (*sql.Rows, error) {
@@ -247,7 +249,7 @@ func (p *purchaseOrderRepository) AllUnregisteredUserInfoByYear(c context.Contex
 		ON
 			orders.id = reports.purchase_order_id
 		WHERE
-			years.year = `+ year +`
+			years.year = ` + year + `
 		AND
 			reports.purchase_order_id IS NULL
 		ORDER BY

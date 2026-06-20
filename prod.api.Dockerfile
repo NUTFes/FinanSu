@@ -1,5 +1,5 @@
 # Build用 コンテナ
-FROM golang:1.25.5-alpine AS builder
+FROM golang:1.26-alpine3.23 AS builder
 WORKDIR /app
 COPY ./api /app
 ENV CGO_ENABLED=0 \
