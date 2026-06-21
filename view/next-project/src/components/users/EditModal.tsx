@@ -13,7 +13,7 @@ import { put } from '@api/user';
 import { CloseButton, Input, Modal, PrimaryButton, Select } from '@components/common';
 import { Bureau, User } from '@type/common';
 
-interface ModalProps {
+export interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   id: number | string;
   bureaus: Bureau[];
