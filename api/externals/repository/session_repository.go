@@ -6,6 +6,7 @@ import (
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	goqu "github.com/doug-martin/goqu/v9"
+	"github.com/doug-martin/goqu/v9/exp"
 )
 
 type sessionRepository struct {
@@ -28,14 +29,7 @@ func NewSessionRepository(client db.Client) SessionRepository {
 
 // 作成
 func (r *sessionRepository) Create(c context.Context, authID string, userID string, accessToken string) error {
-	query, args, err := dialect.Insert("session").
-		Prepared(true).
-		Rows(goqu.Record{
-			"auth_id":      authID,
-			"user_id":      userID,
-			"access_token": accessToken,
-		}).
-		ToSQL()
+	query, args, err := createSessionQuery(authID, userID, accessToken)
 	if err != nil {
 		return err
 	}
@@ -48,14 +42,7 @@ func (r *sessionRepository) Create(c context.Context, authID string, userID stri
 }
 
 func (r *sessionRepository) CreateWithTx(c context.Context, tx *sql.Tx, authID string, userID string, accessToken string) error {
-	query, args, err := dialect.Insert("session").
-		Prepared(true).
-		Rows(goqu.Record{
-			"auth_id":      authID,
-			"user_id":      userID,
-			"access_token": accessToken,
-		}).
-		ToSQL()
+	query, args, err := createSessionQuery(authID, userID, accessToken)
 	if err != nil {
 		return err
 	}
@@ -70,10 +57,7 @@ func (r *sessionRepository) CreateWithTx(c context.Context, tx *sql.Tx, authID s
 // 削除
 func (r *sessionRepository) Destroy(c context.Context, accessToken string) error {
 	// access tokenで該当のsessionを削除
-	query, args, err := dialect.Delete("session").
-		Prepared(true).
-		Where(goqu.Ex{"access_token": accessToken}).
-		ToSQL()
+	query, args, err := deleteSessionQuery(goqu.Ex{"access_token": accessToken})
 	if err != nil {
 		return err
 	}
@@ -100,10 +84,7 @@ func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessTo
 
 // user_idからsessionを削除する
 func (r *sessionRepository) DestroyByUserID(c context.Context, userID string) error {
-	query, args, err := dialect.Delete("session").
-		Prepared(true).
-		Where(goqu.Ex{"user_id": userID}).
-		ToSQL()
+	query, args, err := deleteSessionQuery(goqu.Ex{"user_id": userID})
 	if err != nil {
 		return err
 	}
@@ -116,10 +97,7 @@ func (r *sessionRepository) DestroyByUserID(c context.Context, userID string) er
 }
 
 func (r *sessionRepository) DestroyByUserIDWithTx(c context.Context, tx *sql.Tx, userID string) error {
-	query, args, err := dialect.Delete("session").
-		Prepared(true).
-		Where(goqu.Ex{"user_id": userID}).
-		ToSQL()
+	query, args, err := deleteSessionQuery(goqu.Ex{"user_id": userID})
 	if err != nil {
 		return err
 	}
@@ -133,14 +111,29 @@ func (r *sessionRepository) DestroyByUserIDsWithTx(c context.Context, tx *sql.Tx
 		return nil
 	}
 
-	query, args, err := dialect.Delete("session").
-		Prepared(true).
-		Where(goqu.I("user_id").In(userIDs)).
-		ToSQL()
+	query, args, err := deleteSessionQuery(goqu.I("user_id").In(userIDs))
 	if err != nil {
 		return err
 	}
 
 	_, err = tx.ExecContext(c, query, args...)
 	return err
+}
+
+func createSessionQuery(authID string, userID string, accessToken string) (string, []any, error) {
+	return dialect.Insert("session").
+		Prepared(true).
+		Rows(goqu.Record{
+			"auth_id":      authID,
+			"user_id":      userID,
+			"access_token": accessToken,
+		}).
+		ToSQL()
+}
+
+func deleteSessionQuery(where ...exp.Expression) (string, []any, error) {
+	return dialect.Delete("session").
+		Prepared(true).
+		Where(where...).
+		ToSQL()
 }

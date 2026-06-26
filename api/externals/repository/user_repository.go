@@ -7,6 +7,7 @@ import (
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	goqu "github.com/doug-martin/goqu/v9"
+	"github.com/doug-martin/goqu/v9/exp"
 )
 
 type userRepository struct {
@@ -75,14 +76,7 @@ func (ur *userRepository) FindByIDs(c context.Context, ids []int) (*sql.Rows, er
 
 // 作成
 func (ur *userRepository) Create(c context.Context, name string, bureauID string, roleID string) (int64, error) {
-	query, args, err := dialect.Insert("users").
-		Prepared(true).
-		Rows(goqu.Record{
-			"name":      name,
-			"bureau_id": bureauID,
-			"role_id":   roleID,
-		}).
-		ToSQL()
+	query, args, err := createUserQuery(name, bureauID, roleID)
 	if err != nil {
 		return 0, err
 	}
@@ -95,14 +89,7 @@ func (ur *userRepository) Create(c context.Context, name string, bureauID string
 }
 
 func (ur *userRepository) CreateWithTx(c context.Context, tx *sql.Tx, name string, bureauID string, roleID string) (int64, error) {
-	query, args, err := dialect.Insert("users").
-		Prepared(true).
-		Rows(goqu.Record{
-			"name":      name,
-			"bureau_id": bureauID,
-			"role_id":   roleID,
-		}).
-		ToSQL()
+	query, args, err := createUserQuery(name, bureauID, roleID)
 	if err != nil {
 		return 0, err
 	}
@@ -116,15 +103,14 @@ func (ur *userRepository) CreateWithTx(c context.Context, tx *sql.Tx, name strin
 
 // 編集
 func (ur *userRepository) Update(c context.Context, id string, name string, bureauID string, roleID string) error {
-	query, args, err := dialect.Update("users").
-		Prepared(true).
-		Set(goqu.Record{
+	query, args, err := updateUserQuery(
+		goqu.Record{
 			"name":      name,
 			"bureau_id": bureauID,
 			"role_id":   roleID,
-		}).
-		Where(goqu.Ex{"id": id}).
-		ToSQL()
+		},
+		goqu.Ex{"id": id},
+	)
 	if err != nil {
 		return err
 	}
@@ -134,11 +120,10 @@ func (ur *userRepository) Update(c context.Context, id string, name string, bure
 }
 
 func (ur *userRepository) DestroyWithTx(c context.Context, tx *sql.Tx, id string) error {
-	userQuery, userArgs, err := dialect.Update("users").
-		Prepared(true).
-		Set(goqu.Record{"is_deleted": true}).
-		Where(goqu.Ex{"id": id}).
-		ToSQL()
+	userQuery, userArgs, err := updateUserQuery(
+		goqu.Record{"is_deleted": true},
+		goqu.Ex{"id": id},
+	)
 	if err != nil {
 		return err
 	}
@@ -152,11 +137,10 @@ func (ur *userRepository) MultiDestroyWithTx(c context.Context, tx *sql.Tx, ids 
 		return nil
 	}
 
-	userQuery, userArgs, err := dialect.Update("users").
-		Prepared(true).
-		Set(goqu.Record{"is_deleted": true}).
-		Where(goqu.I("id").In(ids)).
-		ToSQL()
+	userQuery, userArgs, err := updateUserQuery(
+		goqu.Record{"is_deleted": true},
+		goqu.I("id").In(ids),
+	)
 	if err != nil {
 		return err
 	}
@@ -194,4 +178,23 @@ func (ur *userRepository) FindByEmail(c context.Context, email string) (*sql.Row
 	}
 
 	return ur.client.DB().QueryRowContext(c, query, args...), nil
+}
+
+func createUserQuery(name string, bureauID string, roleID string) (string, []any, error) {
+	return dialect.Insert("users").
+		Prepared(true).
+		Rows(goqu.Record{
+			"name":      name,
+			"bureau_id": bureauID,
+			"role_id":   roleID,
+		}).
+		ToSQL()
+}
+
+func updateUserQuery(record goqu.Record, where ...exp.Expression) (string, []any, error) {
+	return dialect.Update("users").
+		Prepared(true).
+		Set(record).
+		Where(where...).
+		ToSQL()
 }
