@@ -138,7 +138,8 @@ func createMailAuthQuery(email string, password string, userID string) (string, 
 		ToSQL()
 }
 
-func updateMailAuthQuery(record goqu.Record, where ...exp.Expression) (string, []any, error) {
+func updateMailAuthQuery(record goqu.Record, first exp.Expression, rest ...exp.Expression) (string, []any, error) {
+	where := append([]exp.Expression{first}, rest...)
 	return dialect.Update("mail_auth").
 		Prepared(true).
 		Set(record).

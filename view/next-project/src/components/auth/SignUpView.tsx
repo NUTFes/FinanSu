@@ -16,8 +16,7 @@ export default function SignUpView() {
   // 新規登録中フラグ
   const [isSignUpNow, setIsSignUpNow] = useState<boolean>(false);
 
-  const [postUserData, setPostUserData] = useState<Pick<User, 'id' | 'bureauID' | 'roleID'>>({
-    id: 0,
+  const [postUserData, setPostUserData] = useState<Pick<User, 'bureauID' | 'roleID'>>({
     bureauID: 1,
     roleID: 1,
   });
@@ -33,7 +32,7 @@ export default function SignUpView() {
 
   const userDataHandler =
     (input: 'bureauID' | 'roleID') => (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setPostUserData({ ...postUserData, [input]: e.target.value });
+      setPostUserData({ ...postUserData, [input]: Number(e.target.value) });
     };
 
   const postUser = async (data: SignUp) => {
@@ -44,8 +43,8 @@ export default function SignUpView() {
         email: data.email,
         password: data.password,
         name: data.name,
-        bureau_id: Number(postUserData.bureauID),
-        role_id: Number(postUserData.roleID),
+        bureau_id: postUserData.bureauID,
+        role_id: postUserData.roleID,
       });
       const res = req.data;
 
@@ -53,8 +52,8 @@ export default function SignUpView() {
       const userData: User = {
         id: res.userID,
         name: data.name,
-        bureauID: Number(postUserData.bureauID),
-        roleID: Number(postUserData.roleID),
+        bureauID: postUserData.bureauID,
+        roleID: postUserData.roleID,
       };
       // state用のauthのデータ
       const authData = {

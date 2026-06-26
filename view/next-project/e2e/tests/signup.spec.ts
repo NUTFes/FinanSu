@@ -8,8 +8,11 @@ async function waitForService(url: string) {
 
   while (Date.now() < deadline) {
     try {
-      await fetch(url);
-      return;
+      const res = await fetch(url);
+      if (res.ok) {
+        return;
+      }
+      lastError = new Error(`HTTP ${res.status}`);
     } catch (error) {
       lastError = error;
     }

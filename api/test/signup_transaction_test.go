@@ -135,6 +135,7 @@ func TestSignupReturnsBadRequestWhenRequiredBodyFieldsAreMissing(t *testing.T) {
 
 	email := "signup-missing-fields@example.com"
 	beforeUsers := countRows(t, "SELECT COUNT(*) FROM users")
+	beforeSessions := countRows(t, "SELECT COUNT(*) FROM session")
 	r := postSignup(t, testServer.URL, map[string]any{
 		"email":    email,
 		"password": "password123",
@@ -145,7 +146,7 @@ func TestSignupReturnsBadRequestWhenRequiredBodyFieldsAreMissing(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, r.StatusCode)
 	assert.Equal(t, beforeUsers, countRows(t, "SELECT COUNT(*) FROM users"))
 	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM mail_auth WHERE email = ?", email))
-	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM session"))
+	assert.Equal(t, beforeSessions, countRows(t, "SELECT COUNT(*) FROM session"))
 }
 
 // 異常系: OpenAPI スキーマに違反する値では BadRequest になり、関連レコードが作成されないことを確認する
@@ -207,13 +208,14 @@ func TestSignupReturnsBadRequestWhenBodyViolatesOpenAPISchema(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			beforeUsers := countRows(t, "SELECT COUNT(*) FROM users")
+			beforeSessions := countRows(t, "SELECT COUNT(*) FROM session")
 			r := postSignup(t, testServer.URL, tt.values)
 			defer r.Body.Close()
 
 			assert.Equal(t, http.StatusBadRequest, r.StatusCode)
 			assert.Equal(t, beforeUsers, countRows(t, "SELECT COUNT(*) FROM users"))
 			assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM mail_auth WHERE email = ?", tt.email))
-			assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM session"))
+			assert.Equal(t, beforeSessions, countRows(t, "SELECT COUNT(*) FROM session"))
 		})
 	}
 }

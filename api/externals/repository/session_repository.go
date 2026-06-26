@@ -131,7 +131,8 @@ func createSessionQuery(authID string, userID string, accessToken string) (strin
 		ToSQL()
 }
 
-func deleteSessionQuery(where ...exp.Expression) (string, []any, error) {
+func deleteSessionQuery(first exp.Expression, rest ...exp.Expression) (string, []any, error) {
+	where := append([]exp.Expression{first}, rest...)
 	return dialect.Delete("session").
 		Prepared(true).
 		Where(where...).

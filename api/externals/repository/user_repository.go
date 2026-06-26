@@ -191,7 +191,8 @@ func createUserQuery(name string, bureauID string, roleID string) (string, []any
 		ToSQL()
 }
 
-func updateUserQuery(record goqu.Record, where ...exp.Expression) (string, []any, error) {
+func updateUserQuery(record goqu.Record, first exp.Expression, rest ...exp.Expression) (string, []any, error) {
+	where := append([]exp.Expression{first}, rest...)
 	return dialect.Update("users").
 		Prepared(true).
 		Set(record).
