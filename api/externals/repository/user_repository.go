@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"strconv"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 	goqu "github.com/doug-martin/goqu/v9"
+	"github.com/doug-martin/goqu/v9/exp"
 )
 
 type userRepository struct {
@@ -19,10 +19,11 @@ type UserRepository interface {
 	All(context.Context) (*sql.Rows, error)
 	Find(context.Context, string) (*sql.Row, error)
 	FindByIDs(context.Context, []int) (*sql.Rows, error)
-	Create(context.Context, string, string, string) error
+	Create(context.Context, string, string, string) (int64, error)
+	CreateWithTx(context.Context, *sql.Tx, string, string, string) (int64, error)
 	Update(context.Context, string, string, string, string) error
-	Destroy(context.Context, string) error
-	MultiDestroy(context.Context, []int) error
+	DestroyWithTx(context.Context, *sql.Tx, string) error
+	MultiDestroyWithTx(context.Context, *sql.Tx, []int) error
 	FindNewRecord(context.Context) (*sql.Row, error)
 	FindByEmail(context.Context, string) (*sql.Row, error)
 }
@@ -33,100 +34,168 @@ func NewUserRepository(c db.Client, ac abstract.Crud) UserRepository {
 
 // 全件取得
 func (ur *userRepository) All(c context.Context) (*sql.Rows, error) {
-	query := "SELECT * FROM users WHERE is_deleted IS FALSE"
-	return ur.crud.Read(c, query)
+	query, args, err := dialect.From("users").
+		Prepared(true).
+		Where(goqu.Ex{"is_deleted": false}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	return ur.client.DB().QueryContext(c, query, args...)
 }
 
 // 1件取得
 func (ur *userRepository) Find(c context.Context, id string) (*sql.Row, error) {
-	query := "SELECT * FROM users WHERE id = " + id
-	return ur.crud.ReadByID(c, query)
+	query, args, err := dialect.From("users").
+		Prepared(true).
+		Where(goqu.Ex{"id": id}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	return ur.client.DB().QueryRowContext(c, query, args...), nil
 }
 
 // 複数件取得
 func (ur *userRepository) FindByIDs(c context.Context, ids []int) (*sql.Rows, error) {
 	ds := dialect.
 		From("users").
+		Prepared(true).
 		Select("users.*").
 		Where(goqu.I("users.id").In(ids))
 
-	query, _, err := ds.ToSQL()
+	query, args, err := ds.ToSQL()
 	if err != nil {
 		return nil, err
 	}
 
-	return ur.crud.Read(c, query)
+	return ur.client.DB().QueryContext(c, query, args...)
 }
 
 // 作成
-func (ur *userRepository) Create(c context.Context, name string, bureauID string, roleID string) error {
-	query := `
-		INSERT INTO
-			users (name, bureau_id, role_id)
-		VALUES ('` + name + "', " + bureauID + ", " + roleID + ")"
-	return ur.crud.UpdateDB(c, query)
+func (ur *userRepository) Create(c context.Context, name string, bureauID string, roleID string) (int64, error) {
+	query, args, err := createUserQuery(name, bureauID, roleID)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := ur.client.DB().ExecContext(c, query, args...)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
+func (ur *userRepository) CreateWithTx(c context.Context, tx *sql.Tx, name string, bureauID string, roleID string) (int64, error) {
+	query, args, err := createUserQuery(name, bureauID, roleID)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := tx.ExecContext(c, query, args...)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
 }
 
 // 編集
 func (ur *userRepository) Update(c context.Context, id string, name string, bureauID string, roleID string) error {
-	query := `
-		UPDATE
-			users
-		SET
-			name = '` + name +
-		"', bureau_id = " + bureauID +
-		", role_id = " + roleID +
-		" WHERE id = " + id
-	return ur.crud.UpdateDB(c, query)
-}
-
-// 削除
-func (ur *userRepository) Destroy(c context.Context, id string) error {
-	query := "UPDATE users SET is_deleted = TRUE WHERE id =" + id
-
-	err := ur.crud.UpdateDB(c, query)
+	query, args, err := updateUserQuery(
+		goqu.Record{
+			"name":      name,
+			"bureau_id": bureauID,
+			"role_id":   roleID,
+		},
+		goqu.Ex{"id": id},
+	)
 	if err != nil {
 		return err
 	}
 
-	query = "UPDATE mail_auth SET email = NULL WHERE user_id =" + id
-	err = ur.crud.UpdateDB(c, query)
-
+	_, err = ur.client.DB().ExecContext(c, query, args...)
 	return err
 }
 
-// 複数削除
-func (ur *userRepository) MultiDestroy(c context.Context, ids []int) error {
-	query := "UPDATE users SET is_deleted = TRUE WHERE "
-	query2 := "UPDATE mail_auth SET email = NULL WHERE "
-	for index, id := range ids {
-		query += "id = " + strconv.Itoa(id)
-		query2 += "user_id = " + strconv.Itoa(id)
-
-		if index != len(ids)-1 {
-			query += " OR "
-			query2 += " OR "
-		}
-
-	}
-
-	err := ur.crud.UpdateDB(c, query)
+func (ur *userRepository) DestroyWithTx(c context.Context, tx *sql.Tx, id string) error {
+	userQuery, userArgs, err := updateUserQuery(
+		goqu.Record{"is_deleted": true},
+		goqu.Ex{"id": id},
+	)
 	if err != nil {
 		return err
 	}
 
-	err = ur.crud.UpdateDB(c, query2)
+	_, err = tx.ExecContext(c, userQuery, userArgs...)
+	return err
+}
 
+func (ur *userRepository) MultiDestroyWithTx(c context.Context, tx *sql.Tx, ids []int) error {
+	if len(ids) == 0 {
+		return nil
+	}
+
+	userQuery, userArgs, err := updateUserQuery(
+		goqu.Record{"is_deleted": true},
+		goqu.I("id").In(ids),
+	)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(c, userQuery, userArgs...)
 	return err
 }
 
 func (ur *userRepository) FindNewRecord(c context.Context) (*sql.Row, error) {
-	query := "SELECT * FROM users WHERE is_deleted IS FALSE ORDER BY id DESC LIMIT 1"
-	return ur.crud.ReadByID(c, query)
+	query, args, err := dialect.From("users").
+		Prepared(true).
+		Where(goqu.Ex{"is_deleted": false}).
+		Order(goqu.I("id").Desc()).
+		Limit(1).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	return ur.client.DB().QueryRowContext(c, query, args...), nil
 }
 
 // 1件取得
 func (ur *userRepository) FindByEmail(c context.Context, email string) (*sql.Row, error) {
-	query := "SELECT * FROM users INNER JOIN mail_auth ON users.id = mail_auth.user_id WHERE is_deleted IS FALSE AND email = '" + email + "'"
-	return ur.crud.ReadByID(c, query)
+	query, args, err := dialect.From("users").
+		Prepared(true).
+		Join(goqu.I("mail_auth"), goqu.On(goqu.I("users.id").Eq(goqu.I("mail_auth.user_id")))).
+		Where(
+			goqu.Ex{"users.is_deleted": false},
+			goqu.Ex{"mail_auth.email": email},
+		).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	return ur.client.DB().QueryRowContext(c, query, args...), nil
+}
+
+func createUserQuery(name string, bureauID string, roleID string) (string, []any, error) {
+	return dialect.Insert("users").
+		Prepared(true).
+		Rows(goqu.Record{
+			"name":      name,
+			"bureau_id": bureauID,
+			"role_id":   roleID,
+		}).
+		ToSQL()
+}
+
+func updateUserQuery(record goqu.Record, first exp.Expression, rest ...exp.Expression) (string, []any, error) {
+	where := append([]exp.Expression{first}, rest...)
+	return dialect.Update("users").
+		Prepared(true).
+		Set(record).
+		Where(where...).
+		ToSQL()
 }

@@ -17,6 +17,10 @@ const apiConfig = {
     SSR_API_URI: 'http://nutfes-finansu-api:1323',
     CSR_API_URI: 'http://localhost:1323',
   },
+  e2e: {
+    SSR_API_URI: 'http://api:1323',
+    CSR_API_URI: 'http://api:1323',
+  },
 };
 
 // 現在の環境に合った設定を展開（該当しない場合はdevelopment設定を利用）

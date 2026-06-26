@@ -7,9 +7,8 @@ toolchain go1.24.1
 require (
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/go-test/deep v1.0.8 // indirect
 	github.com/joho/godotenv v1.5.1
-	github.com/labstack/echo/v4 v4.11.4
+	github.com/labstack/echo/v4 v4.12.0
 	github.com/minio/minio-go/v7 v7.0.83
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/pkg/errors v0.9.1
@@ -46,8 +45,10 @@ require (
 )
 
 require (
+	github.com/getkin/kin-openapi v0.124.0
 	github.com/go-testfixtures/testfixtures/v3 v3.14.0
 	github.com/google/wire v0.6.0
+	github.com/oapi-codegen/echo-middleware v1.0.2
 )
 
 require (
@@ -72,14 +73,21 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-openapi/jsonpointer v0.20.2 // indirect
+	github.com/go-openapi/swag v0.22.8 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/s2a-go v0.1.8 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.4 // indirect
 	github.com/googleapis/gax-go/v2 v2.13.0 // indirect
 	github.com/googleapis/go-sql-spanner v1.7.4 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
+	github.com/invopop/yaml v0.2.0 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
+	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.29.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.54.0 // indirect

@@ -1554,25 +1554,39 @@ paths:
       tags:
         - mail_auth
       description: ユーザー登録
-      parameters:
-        - name: email
-          in: query
-          description: email
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: password
-          required: true
-          schema:
-            type: string
-        - name: user_id
-          in: query
-          description: user_id
-          required: true
-          schema:
-            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+                - bureau_id
+                - role_id
+              properties:
+                email:
+                  type: string
+                  minLength: 1
+                  description: email
+                password:
+                  type: string
+                  minLength: 1
+                  description: password
+                name:
+                  type: string
+                  minLength: 1
+                  description: name
+                bureau_id:
+                  type: integer
+                  minimum: 1
+                  description: bureau_id
+                role_id:
+                  type: integer
+                  minimum: 1
+                  description: role_id
       responses:
         "200":
           description: ユーザー登録完了
@@ -1580,6 +1594,16 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - accessToken
+                  - userID
+                properties:
+                  accessToken:
+                    type: string
+                    description: アクセストークン
+                  userID:
+                    type: integer
+                    description: ユーザーID
       x-codegen-request-body-name: mailAuthSignUp
   /mail_auth/signin:
     post:
