@@ -38,6 +38,7 @@ func countRows(t *testing.T, query string, args ...any) int {
 	return count
 }
 
+// 正常系: サインアップ時に users、mail_auth、session が作成され、発行されたアクセストークンで current_user を取得できることを確認する
 func TestSignupCreatesUserMailAuthSessionAndCurrentUser(t *testing.T) {
 	prepareTestDatabase(t)
 
@@ -87,6 +88,7 @@ func TestSignupCreatesUserMailAuthSessionAndCurrentUser(t *testing.T) {
 	assert.Equal(t, http.StatusOK, currentUserRes.StatusCode)
 }
 
+// 異常系: mail_auth の作成に失敗した場合、同一トランザクション内で作成した users がロールバックされることを確認する
 func TestSignupRollsBackUserWhenMailAuthCreateFails(t *testing.T) {
 	prepareTestDatabase(t)
 
@@ -118,6 +120,7 @@ func TestSignupRollsBackUserWhenMailAuthCreateFails(t *testing.T) {
 	assert.Equal(t, 1, countRows(t, "SELECT COUNT(*) FROM mail_auth WHERE email = ?", email))
 }
 
+// 異常系: 必須項目が不足しているリクエストでは BadRequest になり、users、mail_auth、session が作成されないことを確認する
 func TestSignupReturnsBadRequestWhenRequiredBodyFieldsAreMissing(t *testing.T) {
 	prepareTestDatabase(t)
 
@@ -145,6 +148,7 @@ func TestSignupReturnsBadRequestWhenRequiredBodyFieldsAreMissing(t *testing.T) {
 	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM session"))
 }
 
+// 異常系: OpenAPI スキーマに違反する値では BadRequest になり、関連レコードが作成されないことを確認する
 func TestSignupReturnsBadRequestWhenBodyViolatesOpenAPISchema(t *testing.T) {
 	prepareTestDatabase(t)
 
@@ -163,6 +167,7 @@ func TestSignupReturnsBadRequestWhenBodyViolatesOpenAPISchema(t *testing.T) {
 		values map[string]any
 	}{
 		{
+			// name が空文字の場合にバリデーションエラーになることを確認する
 			name:  "empty name",
 			email: "signup-empty-name@example.com",
 			values: map[string]any{
@@ -174,6 +179,7 @@ func TestSignupReturnsBadRequestWhenBodyViolatesOpenAPISchema(t *testing.T) {
 			},
 		},
 		{
+			// bureau_id が 0 の場合にバリデーションエラーになることを確認する
 			name:  "zero bureau id",
 			email: "signup-zero-bureau@example.com",
 			values: map[string]any{
@@ -185,6 +191,7 @@ func TestSignupReturnsBadRequestWhenBodyViolatesOpenAPISchema(t *testing.T) {
 			},
 		},
 		{
+			// role_id が 0 の場合にバリデーションエラーになることを確認する
 			name:  "zero role id",
 			email: "signup-zero-role@example.com",
 			values: map[string]any{

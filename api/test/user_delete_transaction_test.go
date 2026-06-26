@@ -38,6 +38,7 @@ func nullableEmailByUserID(t *testing.T, userID int) sql.NullString {
 	return email
 }
 
+// 正常系: ユーザー単体削除時に users の論理削除、mail_auth のメール無効化、session 削除が同一トランザクションで実行されることを確認する
 func TestDestroyUserClearsMailAuthAndSessionInTransaction(t *testing.T) {
 	prepareTestDatabase(t)
 
@@ -66,6 +67,7 @@ func TestDestroyUserClearsMailAuthAndSessionInTransaction(t *testing.T) {
 	assert.Equal(t, 0, countRows(t, "SELECT COUNT(*) FROM session WHERE user_id = ?", userID))
 }
 
+// 正常系: ユーザー複数削除時に対象全員の users 論理削除、mail_auth のメール無効化、session 削除が同一トランザクションで実行されることを確認する
 func TestDestroyMultiUsersClearsMailAuthAndSessionInTransaction(t *testing.T) {
 	prepareTestDatabase(t)
 
