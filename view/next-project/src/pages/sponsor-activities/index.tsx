@@ -8,7 +8,6 @@ import { useSponsorsByYear } from '@/hooks/sponsor-activities/useSponsorsByYear'
 import { useCurrentUser, useUserStore } from '@/store';
 import { get } from '@/utils/api/api_methods';
 import {
-  calculateActivitiesTotalAmount,
   createDefaultSponsorActivitiesFilter,
   SponsorActivitiesFilterType,
 } from '@/utils/sponsorshipActivity';
@@ -153,6 +152,7 @@ export default function SponsorActivities(props: Props) {
 
   const {
     activities: sponsorshipActivities,
+    totalAmount,
     isLoading,
     fetchSponsorshipActivities,
   } = useSponsorActivitiesQuery({
@@ -160,11 +160,6 @@ export default function SponsorActivities(props: Props) {
     filterData,
     allSponsorStyleIds,
   });
-
-  const totalAmount = useMemo(
-    () => calculateActivitiesTotalAmount(sponsorshipActivities),
-    [sponsorshipActivities],
-  );
 
   if (!_hasHydrated) return <Loading />;
   if (!user?.roleID || ![2, 3, 4].includes(user.roleID)) return <Loading />;
