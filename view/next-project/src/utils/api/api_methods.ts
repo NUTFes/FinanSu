@@ -1,5 +1,7 @@
+import { authFetch } from './authFetch';
+
 export const get = async (url: string) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -9,7 +11,7 @@ export const get = async (url: string) => {
 };
 
 export const get_with_token = async (url: string, accessToken?: string) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -22,12 +24,12 @@ export const get_with_token = async (url: string, accessToken?: string) => {
 };
 
 export const del = async (url: string) => {
-  const res = await fetch(url, { method: 'DELETE' });
+  const res = await authFetch(url, { method: 'DELETE' });
   return await res.json();
 };
 
 export const post = async (url: string, data: unknown) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -39,7 +41,7 @@ export const post = async (url: string, data: unknown) => {
 };
 
 export const put = async (url: string, data: unknown) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'PUT',
     mode: 'cors',
     headers: {
@@ -51,7 +53,7 @@ export const put = async (url: string, data: unknown) => {
 };
 
 export const multiDel = async (url: string, data: number[]) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'DELETE',
     mode: 'cors',
     headers: {
@@ -63,7 +65,7 @@ export const multiDel = async (url: string, data: number[]) => {
 };
 
 export const get_with_token_valid = async (url: string, accessToken?: string) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
