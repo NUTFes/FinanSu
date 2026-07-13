@@ -860,6 +860,9 @@ type GetSponsorshipActivitiesParams struct {
 	// UserId 担当者ID
 	UserId *int `form:"user_id,omitempty" json:"user_id,omitempty"`
 
+	// BureauId 所属局ID
+	BureauId *int `form:"bureau_id,omitempty" json:"bureau_id,omitempty"`
+
 	// SponsorStyleIds 協賛プランID（複数指定可）
 	SponsorStyleIds *[]int `form:"sponsor_style_ids,omitempty" json:"sponsor_style_ids,omitempty"`
 
@@ -2980,6 +2983,13 @@ func (w *ServerInterfaceWrapper) GetSponsorshipActivities(ctx echo.Context) erro
 	err = runtime.BindQueryParameter("form", true, false, "user_id", ctx.QueryParams(), &params.UserId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "bureau_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "bureau_id", ctx.QueryParams(), &params.BureauId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter bureau_id: %s", err))
 	}
 
 	// ------------- Optional query parameter "sponsor_style_ids" -------------

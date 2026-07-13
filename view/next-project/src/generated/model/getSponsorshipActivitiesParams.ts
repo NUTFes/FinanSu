@@ -36,6 +36,10 @@ export type GetSponsorshipActivitiesParams = {
    */
   user_id?: number;
   /**
+   * 所属局ID
+   */
+  bureau_id?: number;
+  /**
    * 協賛プランID（複数指定可）
    */
   sponsor_style_ids?: number[];

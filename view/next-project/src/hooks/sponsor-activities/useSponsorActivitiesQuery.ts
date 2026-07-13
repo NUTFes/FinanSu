@@ -15,6 +15,7 @@ interface UseSponsorActivitiesQueryParams {
 
 interface UseSponsorActivitiesQueryResult {
   activities: SponsorshipActivity[];
+  totalAmount: number;
   isLoading: boolean;
   fetchSponsorshipActivities: () => Promise<void>;
 }
@@ -25,6 +26,7 @@ export function useSponsorActivitiesQuery({
   allSponsorStyleIds,
 }: UseSponsorActivitiesQueryParams): UseSponsorActivitiesQueryResult {
   const [activities, setActivities] = useState<SponsorshipActivity[]>([]);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const fetchAbortControllerRef = useRef<AbortController | null>(null);
 
@@ -37,6 +39,7 @@ export function useSponsorActivitiesQuery({
 
     if (allSponsorStyleIds.length > 0 && filterData.styleIds.length === 0) {
       setActivities([]);
+      setTotalAmount(0);
       setIsLoading(false);
       return;
     }
@@ -56,6 +59,9 @@ export function useSponsorActivitiesQuery({
     }
     if (filterData.userId !== 'all') {
       params.user_id = filterData.userId;
+    }
+    if (filterData.bureauId !== 'all') {
+      params.bureau_id = filterData.bureauId;
     }
     if (
       filterData.styleIds.length > 0 &&
@@ -82,13 +88,9 @@ export function useSponsorActivitiesQuery({
       const response = await getSponsorshipActivities(params, {
         signal: abortController.signal,
       });
-      let nextActivities = response.data.activities || [];
+      const nextActivities = response.data.activities || [];
 
-      if (filterData.bureauId !== 'all') {
-        nextActivities = nextActivities.filter(
-          (activity) => activity.user?.bureauID === filterData.bureauId,
-        );
-      }
+      setTotalAmount(response.data.totalAmount || 0);
 
       setActivities(
         filterData.selectedSort === 'priceSort' || filterData.selectedSort === 'priceDesSort'
@@ -100,6 +102,7 @@ export function useSponsorActivitiesQuery({
         return;
       }
       setActivities([]);
+      setTotalAmount(0);
     } finally {
       if (fetchAbortControllerRef.current === abortController) {
         setIsLoading(false);
@@ -117,6 +120,7 @@ export function useSponsorActivitiesQuery({
 
   return {
     activities,
+    totalAmount,
     isLoading,
     fetchSponsorshipActivities,
   };

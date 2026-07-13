@@ -2561,6 +2561,12 @@ paths:
           required: false
           schema:
             type: integer
+        - name: bureau_id
+          in: query
+          description: 所属局ID
+          required: false
+          schema:
+            type: integer
         - name: sponsor_style_ids
           in: query
           description: "協賛プランID（複数指定可）"
