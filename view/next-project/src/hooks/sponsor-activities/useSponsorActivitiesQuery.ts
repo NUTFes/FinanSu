@@ -60,6 +60,9 @@ export function useSponsorActivitiesQuery({
     if (filterData.userId !== 'all') {
       params.user_id = filterData.userId;
     }
+    if (filterData.bureauId !== 'all') {
+      params.bureau_id = filterData.bureauId;
+    }
     if (
       filterData.styleIds.length > 0 &&
       filterData.styleIds.length !== allSponsorStyleIds.length
@@ -85,14 +88,9 @@ export function useSponsorActivitiesQuery({
       const response = await getSponsorshipActivities(params, {
         signal: abortController.signal,
       });
-      setTotalAmount(response.data.totalAmount || 0);
-      let nextActivities = response.data.activities || [];
+      const nextActivities = response.data.activities || [];
 
-      if (filterData.bureauId !== 'all') {
-        nextActivities = nextActivities.filter(
-          (activity) => activity.user?.bureauID === filterData.bureauId,
-        );
-      }
+      setTotalAmount(response.data.totalAmount || 0);
 
       setActivities(
         filterData.selectedSort === 'priceSort' || filterData.selectedSort === 'priceDesSort'
