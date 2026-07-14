@@ -39,8 +39,8 @@ func ProvideCrud(client db.Client) abstract.Crud {
 }
 
 // ProvideServer - ServerのProvider
-func ProvideServer(h *handler.Handler) *echo.Echo {
-	return server.RunServer(h)
+func ProvideServer(h *handler.Handler, sessionRepository repository.SessionRepository) *echo.Echo {
+	return server.RunServer(h, sessionRepository)
 }
 
 // ProvideServerComponents - ServerComponentsのProvider

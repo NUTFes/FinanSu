@@ -1,3 +1,5 @@
+import { authFetch } from '@/utils/api/authFetch';
+
 // NOTE: Supports cases where `content-type` is other than `json`
 const getBody = <T>(c: Response | Request): Promise<T> => {
   const contentType = c.headers.get('content-type');
@@ -45,7 +47,7 @@ export const customFetch = async <T>(url: string, options: RequestInit): Promise
   };
 
   const request = new Request(requestUrl, requestInit);
-  const response = await fetch(request);
+  const response = await authFetch(request);
   const data = await getBody<T>(response);
 
   if (!response.ok) {

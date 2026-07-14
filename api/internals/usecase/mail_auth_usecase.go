@@ -37,7 +37,7 @@ func (u *mailAuthUseCase) SignUp(c context.Context, email string, password strin
 	}
 
 	// トークン発行
-	accessToken, err := _makeRandomStr(10)
+	accessToken, err := _makeRandomStr(32)
 	if err != nil {
 		return token, err
 	}
@@ -75,7 +75,7 @@ func (u *mailAuthUseCase) SignIn(c context.Context, email string, password strin
 	}
 
 	// トークン発行
-	accessToken, err := _makeRandomStr(10)
+	accessToken, err := _makeRandomStr(32)
 	if err != nil {
 		return token, err
 	}

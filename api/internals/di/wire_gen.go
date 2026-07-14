@@ -76,7 +76,7 @@ func InitializeServer() (*ServerComponents, error) {
 	sponsorshipActivityRepository := repository.NewSponsorshipActivityRepository(client, crud)
 	sponsorshipActivityUseCase := usecase.NewSponsorshipActivityUseCase(sponsorshipActivityRepository, transactionRepository)
 	handlerHandler := handler.NewHandler(activityUseCase, activityInformationUseCase, activityStyleUseCase, bureauUseCase, buyReportUseCase, campusDonationUseCase, departmentUseCase, divisionUseCase, festivalItemUseCase, financialRecordUseCase, incomeUseCase, incomeExpenditureManagementUseCase, mailAuthUseCase, objectUploadUseCase, passwordResetTokenUseCase, sponsorUseCase, sponsorStyleUseCase, teacherUseCase, userUseCase, yearUseCase, sponsorshipActivityUseCase)
-	echo := ProvideServer(handlerHandler)
+	echo := ProvideServer(handlerHandler, sessionRepository)
 	serverComponents := ProvideServerComponents(client, echo)
 	return serverComponents, nil
 }
@@ -105,8 +105,8 @@ func ProvideCrud(client db.Client) abstract.Crud {
 }
 
 // ProvideServer - ServerのProvider
-func ProvideServer(h *handler.Handler) *echo.Echo {
-	return server.RunServer(h)
+func ProvideServer(h *handler.Handler, sessionRepository repository.SessionRepository) *echo.Echo {
+	return server.RunServer(h, sessionRepository)
 }
 
 // ProvideServerComponents - ServerComponentsのProvider
