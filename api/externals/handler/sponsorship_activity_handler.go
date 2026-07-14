@@ -21,7 +21,7 @@ func (h *Handler) GetSponsorshipActivities(c echo.Context, sponsorshipActivities
 	for _, currentSponsorshipActivity := range retrievedSponsorshipActivities {
 		if currentSponsorshipActivity.SponsorStyles != nil {
 			for _, currentSponsorStyleLink := range *currentSponsorshipActivity.SponsorStyles {
-				if currentSponsorStyleLink.Style != nil {
+				if currentSponsorStyleLink.Style != nil && currentSponsorStyleLink.Category != nil && string(*currentSponsorStyleLink.Category) == "money" {
 					totalAmountOfSponsorStyles += currentSponsorStyleLink.Style.Price
 				}
 			}

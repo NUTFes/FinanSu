@@ -60,6 +60,9 @@ func (r *sponsorshipActivityRepository) FindAll(ctx context.Context, sponsorship
 	if sponsorshipActivitiesSearchParams.UserId != nil {
 		queryDataset = queryDataset.Where(goqu.I("sponsorship_activities.user_id").Eq(*sponsorshipActivitiesSearchParams.UserId))
 	}
+	if sponsorshipActivitiesSearchParams.BureauId != nil {
+		queryDataset = queryDataset.Where(goqu.I("users.bureau_id").Eq(*sponsorshipActivitiesSearchParams.BureauId))
+	}
 	if sponsorshipActivitiesSearchParams.ActivityStatus != nil {
 		queryDataset = queryDataset.Where(goqu.I("sponsorship_activities.activity_status").Eq(string(*sponsorshipActivitiesSearchParams.ActivityStatus)))
 	}
