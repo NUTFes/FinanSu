@@ -163,7 +163,7 @@ export * from './postIncomeExpenditureManagementsCheckIdBody';
 export * from './postMailAuthSignin200';
 export * from './postMailAuthSigninParams';
 export * from './postMailAuthSignup200';
-export * from './postMailAuthSignupParams';
+export * from './postMailAuthSignupBody';
 export * from './postPasswordResetId200';
 export * from './postPasswordResetIdValid200';
 export * from './postPasswordResetIdValidParams';

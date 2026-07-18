@@ -8,6 +8,7 @@ import (
 	"github.com/NUTFes/FinanSu/api/generated"
 	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	oapimiddleware "github.com/oapi-codegen/echo-middleware"
 )
 
 func RunServer(server *handler.Handler) *echo.Echo {
@@ -28,8 +29,21 @@ func RunServer(server *handler.Handler) *echo.Echo {
 
 	// CORS対策
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000", "http://localhost:3001", "127.0.0.1:3001", "http://localhost:8000", "127.0.0.1:8000", "https://finansu.nutfes.net", "https://stg-finansu.nutfes.net"}, // ドメイン
+		AllowOrigins: []string{"http://localhost:3000", "127.0.0.1:3000", "http://view:3000", "http://localhost:3001", "127.0.0.1:3001", "http://localhost:8000", "127.0.0.1:8000", "https://finansu.nutfes.net", "https://stg-finansu.nutfes.net"}, // ドメイン
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+	}))
+
+	swagger, err := generated.GetSwagger()
+	if err != nil {
+		panic(err)
+	}
+	swagger.Servers = nil
+	e.Use(oapimiddleware.OapiRequestValidatorWithOptions(swagger, &oapimiddleware.Options{
+		Skipper: func(c echo.Context) bool {
+			// TODO: OpenAPI定義と既存APIの実装差分を解消し、全体にvalidatorを適用する。
+			// 現状は全APIへ適用すると既存エンドポイントに影響が出るため、signupだけを検証対象にしている。
+			return c.Path() != "/mail_auth/signup" || c.Request().Method != http.MethodPost
+		},
 	}))
 
 	// ルーティング

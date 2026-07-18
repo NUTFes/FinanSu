@@ -111,7 +111,7 @@ import type {
   PostMailAuthSignin200,
   PostMailAuthSigninParams,
   PostMailAuthSignup200,
-  PostMailAuthSignupParams,
+  PostMailAuthSignupBody,
   PostPasswordResetId200,
   PostPasswordResetIdValid200,
   PostPasswordResetIdValidParams,
@@ -4954,65 +4954,50 @@ export type postMailAuthSignupResponseSuccess = postMailAuthSignupResponse200 & 
 };
 export type postMailAuthSignupResponse = postMailAuthSignupResponseSuccess;
 
-export const getPostMailAuthSignupUrl = (params: PostMailAuthSignupParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/mail_auth/signup?${stringifiedParams}`
-    : `/mail_auth/signup`;
+export const getPostMailAuthSignupUrl = () => {
+  return `/mail_auth/signup`;
 };
 
 export const postMailAuthSignup = async (
-  params: PostMailAuthSignupParams,
+  postMailAuthSignupBody: PostMailAuthSignupBody,
   options?: RequestInit,
 ): Promise<postMailAuthSignupResponse> => {
-  return customFetch<postMailAuthSignupResponse>(getPostMailAuthSignupUrl(params), {
+  return customFetch<postMailAuthSignupResponse>(getPostMailAuthSignupUrl(), {
     ...options,
     method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(postMailAuthSignupBody),
   });
 };
 
 export const getPostMailAuthSignupMutationFetcher = (
-  params: PostMailAuthSignupParams,
   options?: SecondParameter<typeof customFetch>,
 ) => {
-  return (_: Key, __: { arg: Arguments }) => {
-    return postMailAuthSignup(params, options);
+  return (_: Key, { arg }: { arg: PostMailAuthSignupBody }) => {
+    return postMailAuthSignup(arg, options);
   };
 };
-export const getPostMailAuthSignupMutationKey = (params: PostMailAuthSignupParams) =>
-  [`/mail_auth/signup`, ...(params ? [params] : [])] as const;
+export const getPostMailAuthSignupMutationKey = () => [`/mail_auth/signup`] as const;
 
 export type PostMailAuthSignupMutationResult = NonNullable<
   Awaited<ReturnType<typeof postMailAuthSignup>>
 >;
 export type PostMailAuthSignupMutationError = unknown;
 
-export const usePostMailAuthSignup = <TError = unknown>(
-  params: PostMailAuthSignupParams,
-  options?: {
-    swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof postMailAuthSignup>>,
-      TError,
-      Key,
-      Arguments,
-      Awaited<ReturnType<typeof postMailAuthSignup>>
-    > & { swrKey?: string };
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
+export const usePostMailAuthSignup = <TError = unknown>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postMailAuthSignup>>,
+    TError,
+    Key,
+    PostMailAuthSignupBody,
+    Awaited<ReturnType<typeof postMailAuthSignup>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof customFetch>;
+}) => {
   const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getPostMailAuthSignupMutationKey(params);
-  const swrFn = getPostMailAuthSignupMutationFetcher(params, requestOptions);
+  const swrKey = swrOptions?.swrKey ?? getPostMailAuthSignupMutationKey();
+  const swrFn = getPostMailAuthSignupMutationFetcher(requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 

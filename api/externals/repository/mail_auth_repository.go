@@ -3,10 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
+	goqu "github.com/doug-martin/goqu/v9"
+	"github.com/doug-martin/goqu/v9/exp"
 )
 
 type mailAuthRepository struct {
@@ -16,9 +17,12 @@ type mailAuthRepository struct {
 
 type MailAuthRepository interface {
 	CreateMailAuth(context.Context, string, string, string) (int64, error)
-	FindMailAuthByEmail(context.Context, string) *sql.Row
-	FindMailAuthByID(context.Context, string) *sql.Row
+	CreateMailAuthWithTx(context.Context, *sql.Tx, string, string, string) (int64, error)
+	FindMailAuthByEmail(context.Context, string) (*sql.Row, error)
+	FindMailAuthByID(context.Context, string) (*sql.Row, error)
 	ChangePasswordByUserID(context.Context, string, string) error
+	InvalidateEmailByUserIDWithTx(context.Context, *sql.Tx, string) error
+	InvalidateEmailByUserIDsWithTx(context.Context, *sql.Tx, []int) error
 }
 
 func NewMailAuthRepository(client db.Client, crud abstract.Crud) MailAuthRepository {
@@ -27,7 +31,12 @@ func NewMailAuthRepository(client db.Client, crud abstract.Crud) MailAuthReposit
 
 // 作成
 func (r *mailAuthRepository) CreateMailAuth(c context.Context, email string, password string, userID string) (int64, error) {
-	result, err := r.client.DB().ExecContext(c, "insert into mail_auth (email, password, user_id) values ('"+email+"','"+password+"',"+userID+")")
+	query, args, err := createMailAuthQuery(email, password, userID)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := r.client.DB().ExecContext(c, query, args...)
 	if err != nil {
 		return 0, err
 	}
@@ -35,24 +44,105 @@ func (r *mailAuthRepository) CreateMailAuth(c context.Context, email string, pas
 	return lastInsertID, err
 }
 
+func (r *mailAuthRepository) CreateMailAuthWithTx(c context.Context, tx *sql.Tx, email string, password string, userID string) (int64, error) {
+	query, args, err := createMailAuthQuery(email, password, userID)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := tx.ExecContext(c, query, args...)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
 // メールアドレスからmail_authを探してくる
-func (r *mailAuthRepository) FindMailAuthByEmail(c context.Context, email string) *sql.Row {
-	query := "select * from mail_auth where email= '" + email + "'"
-	row := r.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row
+func (r *mailAuthRepository) FindMailAuthByEmail(c context.Context, email string) (*sql.Row, error) {
+	query, args, err := dialect.From("mail_auth").
+		Prepared(true).
+		Where(goqu.Ex{"email": email}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.DB().QueryRowContext(c, query, args...), nil
 }
 
 // mail_auth_idからmail_authを探してくる
-func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) *sql.Row {
-	query := "select * from mail_auth where id= " + id
-	row := r.client.DB().QueryRowContext(c, query)
-	fmt.Printf("\x1b[36m%s\n", query)
-	return row
+func (r *mailAuthRepository) FindMailAuthByID(c context.Context, id string) (*sql.Row, error) {
+	query, args, err := dialect.From("mail_auth").
+		Prepared(true).
+		Where(goqu.Ex{"id": id}).
+		ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.DB().QueryRowContext(c, query, args...), nil
 }
 
 // パスワードの変更
 func (r *mailAuthRepository) ChangePasswordByUserID(c context.Context, userID string, password string) error {
-	query := "UPDATE mail_auth SET password = '" + password + "' WHERE user_id = " + userID
-	return r.crud.UpdateDB(c, query)
+	query, args, err := updateMailAuthQuery(
+		goqu.Record{"password": password},
+		goqu.Ex{"user_id": userID},
+	)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.DB().ExecContext(c, query, args...)
+	return err
+}
+
+func (r *mailAuthRepository) InvalidateEmailByUserIDWithTx(c context.Context, tx *sql.Tx, userID string) error {
+	query, args, err := updateMailAuthQuery(
+		goqu.Record{"email": nil},
+		goqu.Ex{"user_id": userID},
+	)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(c, query, args...)
+	return err
+}
+
+func (r *mailAuthRepository) InvalidateEmailByUserIDsWithTx(c context.Context, tx *sql.Tx, userIDs []int) error {
+	if len(userIDs) == 0 {
+		return nil
+	}
+
+	query, args, err := updateMailAuthQuery(
+		goqu.Record{"email": nil},
+		goqu.I("user_id").In(userIDs),
+	)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(c, query, args...)
+	return err
+}
+
+func createMailAuthQuery(email string, password string, userID string) (string, []any, error) {
+	return dialect.Insert("mail_auth").
+		Prepared(true).
+		Rows(goqu.Record{
+			"email":    email,
+			"password": password,
+			"user_id":  userID,
+		}).
+		ToSQL()
+}
+
+func updateMailAuthQuery(record goqu.Record, first exp.Expression, rest ...exp.Expression) (string, []any, error) {
+	where := append([]exp.Expression{first}, rest...)
+	return dialect.Update("mail_auth").
+		Prepared(true).
+		Set(record).
+		Where(where...).
+		ToSQL()
 }

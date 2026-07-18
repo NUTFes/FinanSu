@@ -7,6 +7,9 @@
 
 # testing
 /coverage
+/e2e/node_modules/
+/e2e/test-results/
+/e2e/playwright-report/
 
 # next.js
 /.next/
@@ -35,4 +38,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-

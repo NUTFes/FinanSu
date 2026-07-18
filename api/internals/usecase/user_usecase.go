@@ -13,12 +13,13 @@ import (
 )
 
 type userUseCase struct {
-	userRep         rep.UserRepository
-	sessionRep      rep.SessionRepository
-	userGroupRep    rep.UserGroupRepository
-	divisionRep     rep.DivisionRepository
-	yearRep         rep.YearRepository
-	transactionRepo rep.TransactionRepository
+	userRep        rep.UserRepository
+	mailAuthRep    rep.MailAuthRepository
+	sessionRep     rep.SessionRepository
+	userGroupRep   rep.UserGroupRepository
+	divisionRep    rep.DivisionRepository
+	yearRep        rep.YearRepository
+	transactionRep rep.TransactionRepository
 }
 
 type UserUseCase interface {
@@ -32,8 +33,8 @@ type UserUseCase interface {
 	UpdateUserGroups(context.Context, int, int, []int) (*generated.UpdateUserGroupsResponse, error)
 }
 
-func NewUserUseCase(userRep rep.UserRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, yearRep rep.YearRepository, transactionRepo rep.TransactionRepository) UserUseCase {
-	return &userUseCase{userRep: userRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, yearRep: yearRep, transactionRepo: transactionRepo}
+func NewUserUseCase(userRep rep.UserRepository, mailAuthRep rep.MailAuthRepository, sessionRep rep.SessionRepository, userGroupRep rep.UserGroupRepository, divisionRep rep.DivisionRepository, yearRep rep.YearRepository, transactionRep rep.TransactionRepository) UserUseCase {
+	return &userUseCase{userRep: userRep, mailAuthRep: mailAuthRep, sessionRep: sessionRep, userGroupRep: userGroupRep, divisionRep: divisionRep, yearRep: yearRep, transactionRep: transactionRep}
 }
 
 func (u *userUseCase) GetUsers(c context.Context, ids *[]int) ([]domain.User, error) {
@@ -108,12 +109,12 @@ func (u *userUseCase) GetUserByID(c context.Context, id string) (domain.User, er
 
 func (u *userUseCase) CreateUser(c context.Context, name string, bureauID string, roleID string) (domain.User, error) {
 	latastUser := domain.User{}
-	err := u.userRep.Create(c, name, bureauID, roleID)
+	userID, err := u.userRep.Create(c, name, bureauID, roleID)
 	if err != nil {
 		return latastUser, err
 	}
 
-	row, err := u.userRep.FindNewRecord(c)
+	row, err := u.userRep.Find(c, strconv.FormatInt(userID, 10))
 	if err != nil {
 		return latastUser, err
 	}
@@ -160,13 +161,59 @@ func (u *userUseCase) UpdateUser(c context.Context, id string, name string, bure
 }
 
 func (u *userUseCase) DestroyUser(c context.Context, id string) error {
-	err := u.userRep.Destroy(c, id)
-	return err
+	tx, err := u.transactionRep.StartTransaction(c)
+	if err != nil {
+		return err
+	}
+
+	if err = u.userRep.DestroyWithTx(c, tx, id); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.mailAuthRep.InvalidateEmailByUserIDWithTx(c, tx, id); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.sessionRep.DestroyByUserIDWithTx(c, tx, id); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.transactionRep.Commit(c, tx); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+	return nil
 }
 
 func (u *userUseCase) DestroyMultiUsers(c context.Context, ids []int) error {
-	err := u.userRep.MultiDestroy(c, ids)
-	return err
+	tx, err := u.transactionRep.StartTransaction(c)
+	if err != nil {
+		return err
+	}
+
+	if err = u.userRep.MultiDestroyWithTx(c, tx, ids); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.mailAuthRep.InvalidateEmailByUserIDsWithTx(c, tx, ids); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.sessionRep.DestroyByUserIDsWithTx(c, tx, ids); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+
+	if err = u.transactionRep.Commit(c, tx); err != nil {
+		_ = u.transactionRep.RollBack(c, tx)
+		return err
+	}
+	return nil
 }
 
 func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (domain.User, error) {
@@ -175,7 +222,11 @@ func (u *userUseCase) GetCurrentUser(c context.Context, accessToken string) (dom
 	var row *sql.Row
 	var err error
 	// アクセストークンからmail_authを取得
-	row = u.sessionRep.FindSessionByAccessToken(c, accessToken)
+	row, err = u.sessionRep.FindSessionByAccessToken(c, accessToken)
+	if err != nil {
+		return user, err
+	}
+
 	err = row.Scan(
 		&session.ID,
 		&session.AuthID,
@@ -304,7 +355,7 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int
 	}
 
 	// トランザクションを開始
-	tx, err := u.transactionRepo.StartTransaction(ctx)
+	tx, err := u.transactionRep.StartTransaction(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -324,11 +375,11 @@ func (u *userUseCase) UpdateUserGroups(ctx context.Context, userID int, year int
 				return err
 			}
 		}
-		return u.transactionRepo.Commit(ctx, tx)
+		return u.transactionRep.Commit(ctx, tx)
 	}(tx)
 
 	if err != nil {
-		if rollbackErr := u.transactionRepo.RollBack(ctx, tx); rollbackErr != nil {
+		if rollbackErr := u.transactionRep.RollBack(ctx, tx); rollbackErr != nil {
 			log.Println(rollbackErr)
 		}
 		return nil, err

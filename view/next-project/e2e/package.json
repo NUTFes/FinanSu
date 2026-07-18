@@ -1,0 +1,13 @@
+{
+  "name": "finansu-e2e",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "type-check": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.57.0",
+    "@types/node": "20.19.0",
+    "typescript": "5.9.3"
+  }
+}
