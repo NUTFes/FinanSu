@@ -1,5 +1,5 @@
 # アプリコンテナ=view,api、DBコンテナ=db,minio
-include finansu.env
+-include finansu.env
 
 # 配色
 SHELL      := /bin/bash
@@ -215,6 +215,12 @@ run-test: ## APIテスト実行
 
 run-eslint: ## ESLint実行
 	docker compose exec view pnpm run lint
+
+run-e2e: ## E2Eテスト実行 (DB/API/View/PlaywrightをDocker内で完結)
+	docker compose -f compose.e2e.yml down --volumes --remove-orphans
+	docker compose -f compose.e2e.yml up --build -d db minio migrate seed api view
+	docker compose -f compose.e2e.yml run --rm --no-deps e2e
+	docker compose -f compose.e2e.yml down --volumes --remove-orphans
 
 ##@ クリーンアップ
 del-vol: ## アプリコンテナボリューム削除

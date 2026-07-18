@@ -1,0 +1,36 @@
+name: E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - ".github/workflows/e2e.yml"
+      - "Makefile"
+      - "compose.e2e.yml"
+      - "api/**"
+      - "mysql/**"
+      - "openapi/**"
+      - "view/**"
+      - "my.cnf"
+
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  signup-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run E2E
+        run: make run-e2e
+
+      - name: Cleanup E2E containers
+        if: always()
+        run: docker compose -f compose.e2e.yml down --volumes --remove-orphans
