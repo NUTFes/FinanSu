@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - feat/mitomen/1117/CI-CD-Pipeline
+  workflow_call:
+  workflow_dispatch:
+
+concurrency:
+  group: finansu-ci
+  cancel-in-progress: false
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image_tag: ${{ steps.vars.outputs.image_tag }}
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          token: ${{ secrets.GH_PAT || github.token }}
+
+      - name: Set image tag
+        id: vars
+        run: |
+          echo "image_tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push API
+        uses: docker/build-push-action@v7
+        with:
+          context: ./
+          file: prod.api.Dockerfile
+          push: true
+          tags: ghcr.io/nutfes/finansu/api:${{ steps.vars.outputs.image_tag }}
+          cache-from: type=gha,scope=finansu-api
+          cache-to: type=gha,mode=max,scope=finansu-api
+
+      - name: Build and Push View
+        uses: docker/build-push-action@v7
+        with:
+          context: ./
+          file: prod.view.Dockerfile
+          push: true
+          tags: ghcr.io/nutfes/finansu/view:${{ steps.vars.outputs.image_tag }}
+          cache-from: type=gha,scope=finansu-view
+          cache-to: type=gha,mode=max,scope=finansu-view
+          build-args: |
+            NEXT_PUBLIC_APP_ENV=production
+            NEXT_PUBLIC_MINIO_ENDPONT=${{ secrets.NEXT_PUBLIC_MINIO_ENDPONT }}
