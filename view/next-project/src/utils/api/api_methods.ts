@@ -10,14 +10,19 @@ export const get = async (url: string) => {
   return await res.json();
 };
 
+// 一覧取得用。認証エラー時などレスポンスが配列でない場合は空配列を返す
+export const getList = async <T>(url: string): Promise<T[]> => {
+  const res = await get(url);
+  return Array.isArray(res) ? (res as T[]) : [];
+};
+
 export const get_with_token = async (url: string, accessToken?: string) => {
   const res = await authFetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'access-token': accessToken ? accessToken : localStorage.getItem('access-token') || 'none',
-      client: localStorage.getItem('client') || 'none',
-      uid: localStorage.getItem('uid') || 'none',
+      // 明示指定がない場合は authFetch が store のトークンを付与する
+      ...(accessToken ? { 'Access-Token': accessToken } : {}),
     },
   });
   return await res.json();
@@ -65,14 +70,19 @@ export const multiDel = async (url: string, data: number[]) => {
 };
 
 export const get_with_token_valid = async (url: string, accessToken?: string) => {
-  const res = await authFetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'access-token': accessToken ? accessToken : localStorage.getItem('access-token') || 'none',
-      client: localStorage.getItem('client') || 'none',
-      uid: localStorage.getItem('uid') || 'none',
-    },
-  }).then((response) => response);
-  return res.status === 200;
+  try {
+    const res = await authFetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // 明示指定がない場合は authFetch が store のトークンを付与する
+        ...(accessToken ? { 'Access-Token': accessToken } : {}),
+      },
+    });
+    return res.status === 200;
+  } catch (error) {
+    // ネットワークエラー・CORSエラー時もセッション無効として扱う
+    console.error('Failed to validate session:', error);
+    return false;
+  }
 };

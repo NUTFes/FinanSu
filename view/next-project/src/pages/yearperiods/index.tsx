@@ -6,33 +6,23 @@ import { useEffect } from 'react';
 import OpenAddModalButton from '@/components/yearperiods/OpenAddModalButton';
 import OpenDeleteModalButton from '@/components/yearperiods/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/yearperiods/OpenEditModalButton';
+import { useClientSideData } from '@/hooks/useClientSideData';
 import { useCurrentUser, useUserStore } from '@/store';
-import { get } from '@api/api_methods';
+import { getList } from '@api/api_methods';
 import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
 import { YearPeriod } from '@type/common';
 
-interface Props {
-  yearPeriods: YearPeriod[];
-}
-
-export const getServerSideProps = async () => {
-  const getPeriodURL = process.env.SSR_API_URI + '/years/periods';
-  const periodsRes = await get(getPeriodURL);
-
-  return {
-    props: {
-      yearPeriods: periodsRes,
-    },
-  };
-};
-
-export default function Periods(props: Props) {
-  const { yearPeriods } = props;
+export default function Periods() {
   const router = useRouter();
 
   const user = useCurrentUser();
   const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  const { data, isLoading } = useClientSideData(() =>
+    getList<YearPeriod>(process.env.CSR_API_URI + '/years/periods'),
+  );
+  const yearPeriods = data ?? [];
 
   const formatYearPeriods =
     yearPeriods &&
@@ -57,6 +47,7 @@ export default function Periods(props: Props) {
 
   if (!_hasHydrated) return <Loading />;
   if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
+  if (isLoading) return <Loading />;
 
   return (
     <MainLayout>
@@ -72,7 +63,7 @@ export default function Periods(props: Props) {
           </div>
         </div>
         <div className='hidden justify-end md:flex'>
-          <OpenAddModalButton yearPeriods={props.yearPeriods}>年度登録</OpenAddModalButton>
+          <OpenAddModalButton yearPeriods={yearPeriods}>年度登録</OpenAddModalButton>
         </div>
         <div className='mb-2 p-5'>
           <table className='mb-5 w-full table-auto border-collapse'>

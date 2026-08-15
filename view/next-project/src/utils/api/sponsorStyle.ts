@@ -1,7 +1,9 @@
 import { SponsorStyle } from '@type/common';
 
+import { authFetch } from './authFetch';
+
 export const post = async (url: string, data: SponsorStyle) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -13,7 +15,7 @@ export const post = async (url: string, data: SponsorStyle) => {
 };
 
 export const put = async (url: string, data: SponsorStyle) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'PUT',
     mode: 'cors',
     headers: {

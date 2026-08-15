@@ -1,7 +1,9 @@
 import { SponsorActivity } from '@type/common';
 
+import { authFetch } from './authFetch';
+
 export const post = async (url: string, data: SponsorActivity) => {
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -14,7 +16,7 @@ export const post = async (url: string, data: SponsorActivity) => {
 
 export const put = async (url: string, data: SponsorActivity) => {
   console.log('putUrl: ', url);
-  const res = await fetch(url, {
+  const res = await authFetch(url, {
     method: 'PUT',
     mode: 'cors',
     headers: {
@@ -38,7 +40,7 @@ export const getByFiler = async (
   const styleIdsURL = postStyleIds.map((id) => `sponsor_style_id=${id}`).join('&');
   const keywordURL = `keyword=${keyword}`;
   const getURL = `${url}?${isDoneURL}&${styleIdsURL}&${keywordURL}`;
-  const res = await fetch(getURL, {
+  const res = await authFetch(getURL, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

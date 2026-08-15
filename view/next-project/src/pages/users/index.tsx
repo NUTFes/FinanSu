@@ -1,44 +1,35 @@
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import OpenDeleteModalButton from '@/components/users/OpenDeleteModalButton';
+import { useClientSideData } from '@/hooks/useClientSideData';
 import { useCurrentUser, useUserStore } from '@/store';
-import { get } from '@api/api_methods';
+import { getList } from '@api/api_methods';
 import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout/MainLayout';
 import OpenEditModalButton from '@components/users/OpenEditModalButton';
 import { ROLES } from '@constants/role';
 import { Bureau, User } from '@type/common';
 
-interface Props {
-  users: User[];
-  bureaus: Bureau[];
-}
-
-export const getServerSideProps = async () => {
-  const getUserURL = process.env.SSR_API_URI + '/users';
-  const getBureausURL = process.env.SSR_API_URI + '/bureaus';
-  const userRes = await get(getUserURL);
-  const bureauRes = await get(getBureausURL);
-
-  return {
-    props: {
-      users: userRes,
-      bureaus: bureauRes,
-    },
-  };
-};
-
-export default function Users(props: Props) {
-  const { users, bureaus } = props;
+export default function Users() {
   const router = useRouter();
 
   const user = useCurrentUser();
   const _hasHydrated = useUserStore((state) => state._hasHydrated);
   const [selectedBureau, setSelectedBureau] = useState(0);
-  const [filterUsers, setFilterUsers] = useState<User[]>(users);
+
+  const { data, isLoading } = useClientSideData(async () => {
+    const [userRes, bureauRes] = await Promise.all([
+      getList<User>(process.env.CSR_API_URI + '/users'),
+      getList<Bureau>(process.env.CSR_API_URI + '/bureaus'),
+    ]);
+    return { users: userRes, bureaus: bureauRes };
+  });
+  const users = useMemo(() => data?.users ?? [], [data]);
+  const bureaus = useMemo(() => data?.bureaus ?? [], [data]);
+  const [filterUsers, setFilterUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (!_hasHydrated) return;
@@ -64,6 +55,7 @@ export default function Users(props: Props) {
 
   if (!_hasHydrated) return <Loading />;
   if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
+  if (isLoading) return <Loading />;
 
   return (
     <MainLayout>

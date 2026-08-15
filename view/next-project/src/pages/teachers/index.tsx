@@ -1,44 +1,32 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { useClientSideData } from '@/hooks/useClientSideData';
 import { useCurrentUser } from '@/store';
-import { get } from '@api/api_methods';
-import { Card, Title } from '@components/common';
+import { getList } from '@api/api_methods';
+import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/teacher/OpenAddModalButton';
 import OpenDeleteModalButton from '@components/teacher/OpenDeleteModalButton';
 import OpenEditModalButton from '@components/teacher/OpenEditModalButton';
 import { Department, Teacher, User } from '@type/common';
 
-interface Props {
-  teachers: Teacher[];
-  departments: Department[];
-}
+const ALL_DEPARTMENTS: Department = { id: 0, name: '全て' };
 
-export const getServerSideProps = async () => {
-  const getTeacherURL = process.env.SSR_API_URI + '/teachers';
-  const getDepartmentURL = process.env.SSR_API_URI + '/departments';
-  const teacherRes = await get(getTeacherURL);
-  const departmentRes = await get(getDepartmentURL);
-  return {
-    props: {
-      teachers: teacherRes,
-      departments: departmentRes,
-    },
-  };
-};
-export default function TeachersList(props: Props) {
-  const { teachers } = props;
-  const departments = [
-    {
-      id: 0,
-      name: '全て',
-    },
-    ...props.departments,
-  ];
+export default function TeachersList() {
+  const { data, isLoading } = useClientSideData(async () => {
+    const [teacherRes, departmentRes] = await Promise.all([
+      getList<Teacher>(process.env.CSR_API_URI + '/teachers'),
+      getList<Department>(process.env.CSR_API_URI + '/departments'),
+    ]);
+    return { teachers: teacherRes, departments: departmentRes };
+  });
+  const teachers = useMemo(() => data?.teachers ?? [], [data]);
+  const fetchedDepartments = useMemo(() => data?.departments ?? [], [data]);
+  const departments = useMemo(() => [ALL_DEPARTMENTS, ...fetchedDepartments], [fetchedDepartments]);
   const [selectedDepartment, setSelectedDepartment] = useState<Department | undefined>(
-    departments[0],
+    ALL_DEPARTMENTS,
   );
 
   const user = useCurrentUser();
@@ -48,7 +36,7 @@ export default function TeachersList(props: Props) {
     currentUser?.roleID === 3 ||
     currentUser?.id === 4
   );
-  const [filterTeachers, setFilterTeachers] = useState<Teacher[]>(teachers);
+  const [filterTeachers, setFilterTeachers] = useState<Teacher[]>([]);
 
   const [deleteTeachers, setDeleteTeachers] = useState<{ teachers: Teacher[]; ids: number[] }>({
     teachers: [],
@@ -68,8 +56,9 @@ export default function TeachersList(props: Props) {
             return teacher.departmentID === selectedDepartment?.id;
           });
     setFilterTeachers(newFilterTeachers);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDepartment]);
+  }, [selectedDepartment, teachers]);
+
+  if (isLoading) return <Loading />;
 
   return (
     <MainLayout>
@@ -101,7 +90,7 @@ export default function TeachersList(props: Props) {
             </select>
           </div>
           <div className='hidden justify-end md:flex'>
-            <OpenAddModalButton departments={props.departments}>教員登録</OpenAddModalButton>
+            <OpenAddModalButton departments={fetchedDepartments}>教員登録</OpenAddModalButton>
           </div>
         </div>
         <div className='mb-2 overflow-scroll p-5'>
@@ -174,7 +163,7 @@ export default function TeachersList(props: Props) {
                           id={teacher.id || 0}
                           teacher={teacher}
                           isDisabled={isDisabled}
-                          departments={props.departments}
+                          departments={fetchedDepartments}
                         />
                       </div>
                     </td>
@@ -208,7 +197,7 @@ export default function TeachersList(props: Props) {
         </div>
       </Card>
       <div className='fixed right-4 bottom-4 md:hidden'>
-        <OpenAddModalButton departments={props.departments} />
+        <OpenAddModalButton departments={fetchedDepartments} />
       </div>
     </MainLayout>
   );

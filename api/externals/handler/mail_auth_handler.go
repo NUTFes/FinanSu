@@ -12,6 +12,9 @@ import (
 func (h *Handler) GetMailAuthIsSignin(c echo.Context, params generated.GetMailAuthIsSigninParams) error {
 	// headerからトークンを取得する
 	accessToken := params.AccessToken
+	if accessToken == nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "access token is required")
+	}
 	isSignIn, err := h.mailAuthUseCase.IsSignIn(c.Request().Context(), *accessToken)
 	if err != nil {
 		return nil
@@ -36,6 +39,9 @@ func (h *Handler) PostMailAuthSignin(c echo.Context, params generated.PostMailAu
 func (h *Handler) DeleteMailAuthSignout(c echo.Context, params generated.DeleteMailAuthSignoutParams) error {
 	// headerからトークンを取得する
 	accessToken := params.AccessToken
+	if accessToken == nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "access token is required")
+	}
 	err := h.mailAuthUseCase.SignOut(c.Request().Context(), *accessToken)
 	if err != nil {
 		return err

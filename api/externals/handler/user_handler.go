@@ -79,6 +79,9 @@ func (h *Handler) PutUsersId(c echo.Context, id int, params generated.PutUsersId
 // ログインユーザーの取得
 func (h *Handler) GetCurrentUser(c echo.Context, params generated.GetCurrentUserParams) error {
 	// headerからトークンを取得する
+	if params.AccessToken == nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "access token is required")
+	}
 	user, err := h.userUseCase.GetCurrentUser(c.Request().Context(), *params.AccessToken)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, user)

@@ -1,5 +1,7 @@
 import { PurchaseItem } from '@type/common';
 
+import { authFetch } from './authFetch';
+
 export const post = async (url: string, data: PurchaseItem) => {
   const item: string = data.item;
   const price: number = data.price;
@@ -24,7 +26,7 @@ export const post = async (url: string, data: PurchaseItem) => {
     purchaseOrderId +
     '&finance_check=' +
     financeCheck;
-  const res = await fetch(postUrl, {
+  const res = await authFetch(postUrl, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -59,7 +61,7 @@ export const put = async (url: string, data: PurchaseItem) => {
     purchaseOrderId +
     '&finance_check=' +
     financeCheck;
-  const res = await fetch(putUrl, {
+  const res = await authFetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
     headers: {

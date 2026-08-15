@@ -1,11 +1,13 @@
 import { User } from '@type/common';
 
+import { authFetch } from './authFetch';
+
 export const post = async (url: string, data: User) => {
   const name = data.name;
   const bureauID = data.bureauID;
   const roleID = data.roleID;
   const postUrl = url + '?name=' + name + '&bureau_id=' + bureauID + '&role_id=' + roleID;
-  const res = await fetch(postUrl, {
+  const res = await authFetch(postUrl, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -22,7 +24,7 @@ export const put = async (url: string, data: User) => {
   const bureauID = data.bureauID;
   const roleID = data.roleID;
   const putUrl = url + '?name=' + name + '&bureau_id=' + bureauID + '&role_id=' + roleID;
-  const res = await fetch(putUrl, {
+  const res = await authFetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
     headers: {

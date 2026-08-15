@@ -1,11 +1,13 @@
 import { Budget, Expense } from '@type/common';
 
+import { authFetch } from './authFetch';
+
 export const post = async (url: string, data: Budget) => {
   const price = data.price;
   const yearID = data.yearID;
   const sourceID = data.sourceID;
   const postUrl = url + '?price=' + price + '&year_id=' + yearID + '&source_id=' + sourceID;
-  const res = await fetch(postUrl, {
+  const res = await authFetch(postUrl, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -20,7 +22,7 @@ export const postExpenses = async (url: string, data: Expense) => {
   const name = data.name;
   const yearID = data.yearID;
   const postUrl = url + '?name=' + name + '&year_id=' + yearID;
-  const res = await fetch(postUrl, {
+  const res = await authFetch(postUrl, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -36,7 +38,7 @@ export const put = async (url: string, data: Budget) => {
   const yearID = data.yearID;
   const sourceID = data.sourceID;
   const putUrl = url + '?price=' + price + '&year_id=' + yearID + '&source_id=' + sourceID;
-  const res = await fetch(putUrl, {
+  const res = await authFetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
     headers: {
@@ -52,7 +54,7 @@ export const expensePut = async (url: string, data: Expense) => {
   const totalPrice = data.totalPrice;
   const yearID = data.yearID;
   const putUrl = url + '?name=' + name + '&total_price=' + totalPrice + '&year_id=' + yearID;
-  const res = await fetch(putUrl, {
+  const res = await authFetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
     headers: {
@@ -68,7 +70,7 @@ export const expensePost = async (url: string, data: Omit<Expense, 'totalPrice'>
   const name = data.name;
   const yearID = data.yearID;
   const postUrl = url + '?name=' + name + '&year_id=' + yearID;
-  const res = await fetch(postUrl, {
+  const res = await authFetch(postUrl, {
     method: 'POST',
     mode: 'cors',
     headers: {

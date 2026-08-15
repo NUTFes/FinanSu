@@ -3,9 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"time"
+
 	"github.com/NUTFes/FinanSu/api/drivers/db"
 	"github.com/NUTFes/FinanSu/api/internals/domain"
 )
+
+// セッションの有効期間。ログイン(セッション作成)からこの期間を過ぎたトークンは無効になる
+const sessionLifetime = 7 * 24 * time.Hour
 
 type sessionRepository struct {
 	client db.Client
@@ -46,8 +51,8 @@ func (r *sessionRepository) Destroy(c context.Context, accessToken string) error
 
 // アクセストークンからセッションを取得
 func (r *sessionRepository) FindSessionByAccessToken(c context.Context, accessToken string) *sql.Row {
-	query := "select * from session where access_token = ?"
-	row := r.client.DB().QueryRowContext(c, query, accessToken)
+	query := "select * from session where access_token = ? and created_at > DATE_SUB(NOW(), INTERVAL ? SECOND)"
+	row := r.client.DB().QueryRowContext(c, query, accessToken, int64(sessionLifetime.Seconds()))
 	return row
 }
 
@@ -57,8 +62,10 @@ func (r *sessionRepository) FindActiveUserByAccessToken(c context.Context, acces
 		SELECT u.id, u.name, u.bureau_id, u.role_id, u.is_deleted, u.created_at, u.updated_at
 		FROM session s
 		INNER JOIN users u ON u.id = s.user_id
-		WHERE s.access_token = ? AND u.is_deleted = FALSE
-		LIMIT 1`, accessToken).Scan(
+		WHERE s.access_token = ?
+			AND s.created_at > DATE_SUB(NOW(), INTERVAL ? SECOND)
+			AND u.is_deleted = FALSE
+		LIMIT 1`, accessToken, int64(sessionLifetime.Seconds())).Scan(
 		&user.ID, &user.Name, &user.BureauID, &user.RoleID, &user.IsDeleted, &user.CreatedAt, &user.UpdatedAt,
 	)
 	return user, err
