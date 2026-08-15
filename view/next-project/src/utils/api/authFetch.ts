@@ -9,7 +9,9 @@ export const authFetch = async (input: RequestInfo | URL, init: RequestInit = {}
   const headers = new Headers(input instanceof Request ? input.headers : undefined);
   new Headers(init.headers).forEach((value, key) => headers.set(key, value));
 
-  if (!isPublicRequest(url)) {
+  // 呼び出し側が明示的にトークンを指定している場合はそれを優先する
+  // (ログイン直後など、store にまだ新しいトークンが入っていないケースがあるため)
+  if (!isPublicRequest(url) && !headers.has('Access-Token')) {
     const accessToken = useAuthStore.getState().accessToken;
     if (accessToken) headers.set('Access-Token', accessToken);
   }

@@ -5,33 +5,23 @@ import { useEffect } from 'react';
 
 import OpenDeleteModalButton from '@/components/sponsorstyles/OpenDeleteModalButton';
 import OpenEditModalButton from '@/components/sponsorstyles/OpenEditModalButton';
+import { useClientSideData } from '@/hooks/useClientSideData';
 import { useCurrentUser, useUserStore } from '@/store';
-import { get } from '@api/api_methods';
+import { getList } from '@api/api_methods';
 import { Card, Loading, Title } from '@components/common';
 import MainLayout from '@components/layout/MainLayout';
 import OpenAddModalButton from '@components/sponsorstyles/OpenAddModalButton';
 import { SponsorStyle } from '@type/common';
 
-interface Props {
-  sponsorstyles: SponsorStyle[];
-}
-
-export const getServerSideProps = async () => {
-  const getSponsorstylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
-  const sponsorstylesRes = await get(getSponsorstylesUrl);
-
-  return {
-    props: {
-      sponsorstyles: sponsorstylesRes,
-    },
-  };
-};
-export default function SponsorStyleList(props: Props) {
-  const sponsorStyleList: SponsorStyle[] = props.sponsorstyles;
-
+export default function SponsorStyleList() {
   const router = useRouter();
   const user = useCurrentUser();
   const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  const { data, isLoading } = useClientSideData(() =>
+    getList<SponsorStyle>(process.env.CSR_API_URI + '/sponsorstyles'),
+  );
+  const sponsorStyleList: SponsorStyle[] = data ?? [];
 
   useEffect(() => {
     if (!_hasHydrated) return;
@@ -46,6 +36,7 @@ export default function SponsorStyleList(props: Props) {
 
   if (!_hasHydrated) return <Loading />;
   if (!user?.roleID || (user.roleID !== 2 && user.roleID !== 3)) return <Loading />;
+  if (isLoading) return <Loading />;
 
   return (
     <MainLayout>

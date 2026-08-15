@@ -5,8 +5,9 @@ import { Loading } from '@/components/common';
 import SponsorActivitiesLayout from '@/components/sponsor-activities/page/SponsorActivitiesLayout';
 import { useSponsorActivitiesQuery } from '@/hooks/sponsor-activities/useSponsorActivitiesQuery';
 import { useSponsorsByYear } from '@/hooks/sponsor-activities/useSponsorsByYear';
+import { useClientSideData } from '@/hooks/useClientSideData';
 import { useCurrentUser, useUserStore } from '@/store';
-import { get } from '@/utils/api/api_methods';
+import { getList } from '@/utils/api/api_methods';
 import {
   calculateActivitiesTotalAmount,
   createDefaultSponsorActivitiesFilter,
@@ -48,41 +49,28 @@ function sponsorActivitiesReducer(
   }
 }
 
-export async function getServerSideProps() {
-  const getYearPeriodUrl = process.env.SSR_API_URI + '/years/periods';
-  const periodsRes = await get(getYearPeriodUrl);
-  const yearPeriods = Array.isArray(periodsRes) ? periodsRes : [];
-  const getSponsorStylesUrl = process.env.SSR_API_URI + '/sponsorstyles';
-  const getSponsorsUrl =
-    process.env.SSR_API_URI +
-    '/sponsors/periods/' +
-    (yearPeriods.length > 0
-      ? String(yearPeriods[yearPeriods.length - 1].year)
-      : String(new Date().getFullYear()));
-  const getUsersUrl = process.env.SSR_API_URI + '/users';
-
-  const [sponsorStylesRes, sponsorsRes, usersRes] = await Promise.all([
-    get(getSponsorStylesUrl),
-    get(getSponsorsUrl),
-    get(getUsersUrl),
-  ]);
-
-  return {
-    props: {
-      sponsorStyles: Array.isArray(sponsorStylesRes) ? sponsorStylesRes : [],
-      sponsors: Array.isArray(sponsorsRes) ? sponsorsRes : [],
-      users: Array.isArray(usersRes) ? usersRes : [],
-      yearPeriods,
-    },
-  };
-}
-
-export default function SponsorActivities(props: Props) {
-  const { sponsorStyles, sponsors, users, yearPeriods } = props;
-
+// 認証が必要なエンドポイントのため、SSR ではなくクライアント側でデータを取得する。
+// useReducer の初期値が取得結果に依存するので、取得完了後に本体をマウントする
+export default function SponsorActivitiesPage() {
   const router = useRouter();
   const user = useCurrentUser();
   const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  const { data, isLoading } = useClientSideData<Props>(async () => {
+    const yearPeriods = await getList<YearPeriod>(process.env.CSR_API_URI + '/years/periods');
+    const targetYear =
+      yearPeriods.length > 0
+        ? String(yearPeriods[yearPeriods.length - 1].year)
+        : String(new Date().getFullYear());
+
+    const [sponsorStyles, sponsors, users] = await Promise.all([
+      getList<SponsorStyle>(process.env.CSR_API_URI + '/sponsorstyles'),
+      getList<Sponsor>(process.env.CSR_API_URI + '/sponsors/periods/' + targetYear),
+      getList<User>(process.env.CSR_API_URI + '/users'),
+    ]);
+
+    return { sponsorStyles, sponsors, users, yearPeriods };
+  });
 
   useEffect(() => {
     if (!_hasHydrated) return;
@@ -94,6 +82,16 @@ export default function SponsorActivities(props: Props) {
       router.push('/my_page');
     }
   }, [_hasHydrated, user?.roleID, router]);
+
+  if (!_hasHydrated) return <Loading />;
+  if (!user?.roleID || ![2, 3, 4].includes(user.roleID)) return <Loading />;
+  if (isLoading || !data) return <Loading />;
+
+  return <SponsorActivities {...data} />;
+}
+
+function SponsorActivities(props: Props) {
+  const { sponsorStyles, sponsors, users, yearPeriods } = props;
 
   const selectableYearPeriods = useMemo(
     () =>
@@ -165,9 +163,6 @@ export default function SponsorActivities(props: Props) {
     () => calculateActivitiesTotalAmount(sponsorshipActivities),
     [sponsorshipActivities],
   );
-
-  if (!_hasHydrated) return <Loading />;
-  if (!user?.roleID || ![2, 3, 4].includes(user.roleID)) return <Loading />;
 
   return (
     <SponsorActivitiesLayout

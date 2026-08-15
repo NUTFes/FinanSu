@@ -66,11 +66,15 @@ func (u *mailAuthUseCase) SignIn(c context.Context, email string, password strin
 	if err != nil {
 		return token, errors.New("メールアドレスが存在しません")
 	}
-	if err = u.sessionRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID))); err != nil {
+	// パスワードがあっているか確認
+	// (パスワード検証前にセッションを破棄すると、メールアドレスを知っているだけで
+	//  対象ユーザを強制ログアウトさせられてしまうため、必ず検証を先に行う)
+	if err = bcrypt.CompareHashAndPassword([]byte(mailAuth.Password), []byte(password)); err != nil {
 		return token, err
 	}
-	// パスワードがあっているか確認
-	if err = bcrypt.CompareHashAndPassword([]byte(mailAuth.Password), []byte(password)); err != nil {
+
+	// 既存のセッションを破棄してから新しいセッションを発行する
+	if err = u.sessionRep.DestroyByUserID(c, strconv.Itoa(int(mailAuth.UserID))); err != nil {
 		return token, err
 	}
 

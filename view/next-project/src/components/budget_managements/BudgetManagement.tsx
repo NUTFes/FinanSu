@@ -42,7 +42,7 @@ export default function BudgetManagement(props: Props) {
   const [selectedYear, setSelectedYear] = useState<Year>(
     // 本番環境では、2025のyear_idを1にします
     //TODO: マジックナンバーみたいになってるから後でいい感じにしましょう
-    years ? years[years.length - 1] : { id: 1, year: 2025 },
+    years?.[years.length - 1] ?? { id: 1, year: 2025 },
   );
 
   const financialRecordsParams: GetFinancialRecordsParams = {

@@ -1,5 +1,7 @@
 import { Teacher } from '@type/common';
 
+import { authFetch } from './authFetch';
+
 export const post = async (url: string, data: Teacher) => {
   const name = data.name;
   const position = data.position;
@@ -21,7 +23,7 @@ export const post = async (url: string, data: Teacher) => {
     isBlack +
     '&remark=' +
     remark;
-  const res = await fetch(postUrl, {
+  const res = await authFetch(postUrl, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -53,7 +55,7 @@ export const put = async (url: string, data: Teacher) => {
     isBlack +
     '&remark=' +
     remark;
-  const res = await fetch(putUrl, {
+  const res = await authFetch(putUrl, {
     method: 'PUT',
     mode: 'cors',
     headers: {
