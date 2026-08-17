@@ -7,10 +7,14 @@ import (
 	"strings"
 
 	"github.com/NUTFes/FinanSu/api/externals/repository"
+	"github.com/NUTFes/FinanSu/api/internals/domain"
 	"github.com/labstack/echo/v4"
 )
 
-const AuthenticatedUserContextKey = "authenticatedUser"
+// AuthenticatedUserContextKey は domain パッケージに定義されている。
+// server パッケージは handler パッケージを import しているため、ここに定数を
+// 置いたままだとハンドラ側から参照した際に import 循環が発生してしまう。
+const AuthenticatedUserContextKey = domain.AuthenticatedUserContextKey
 
 // 認証不要なエンドポイント
 // パスだけで判定すると `GET /users` のような保護対象まで公開してしまうため、

@@ -2,7 +2,18 @@ import { useAuthStore } from '@/store/authStore';
 
 const publicPaths = ['/mail_auth/signin', '/mail_auth/signup', '/password_reset/'];
 
-const isPublicRequest = (url: string) => publicPaths.some((path) => url.includes(path));
+// pathname だけを見て判定する。クエリパラメータやハッシュに公開パスの文字列が
+// 含まれる場合 (例: `?redirect=/mail_auth/signin`) に誤って公開リクエストと
+// 判定され、Access-Token が付与されなくなるのを防ぐため。
+const isPublicRequest = (urlStr: string) => {
+  try {
+    const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+    const { pathname } = new URL(urlStr, base);
+    return publicPaths.some((path) => pathname.includes(path));
+  } catch {
+    return publicPaths.some((path) => urlStr.includes(path));
+  }
+};
 
 export const authFetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
   const url = input instanceof Request ? input.url : input.toString();
