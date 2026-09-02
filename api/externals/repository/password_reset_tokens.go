@@ -3,17 +3,18 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"net/smtp"
 	"os"
 	"time"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/mail"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type passwordResetTokenRepository struct {
-	client db.Client
-	crud   abstract.Crud
+	client     db.Client
+	crud       abstract.Crud
+	mailClient mail.Client
 }
 
 type PasswordResetTokenRepository interface {
@@ -29,8 +30,8 @@ type PasswordResetTokenRepository interface {
 	SendResetEmail(context.Context, string, string, string, string) error
 }
 
-func NewPasswordResetTokenRepository(c db.Client, ac abstract.Crud) PasswordResetTokenRepository {
-	return &passwordResetTokenRepository{c, ac}
+func NewPasswordResetTokenRepository(c db.Client, ac abstract.Crud, mc mail.Client) PasswordResetTokenRepository {
+	return &passwordResetTokenRepository{c, ac, mc}
 }
 
 // 全件取得
@@ -78,14 +79,13 @@ func (pr *passwordResetTokenRepository) CreateWithTime(c context.Context, userID
 	query := `
 			INSERT INTO
 				password_reset_tokens (user_id, token, created_at, updated_at)
-			VALUES (` + userID + ", '"+ token + "', '" +formatTime+"', '"+formatTime+"')"
+			VALUES (` + userID + ", '" + token + "', '" + formatTime + "', '" + formatTime + "')"
 	return pr.crud.UpdateDB(c, query)
 }
 
-
 // 編集
 func (pr *passwordResetTokenRepository) Update(c context.Context, id string, userID string, token string) error {
-	query := "UPDATE password_reset_tokens SET user_id = " + userID + ", token = '"+ token +"' WHERE id = " + id
+	query := "UPDATE password_reset_tokens SET user_id = " + userID + ", token = '" + token + "' WHERE id = " + id
 	return pr.crud.UpdateDB(c, query)
 }
 
@@ -101,37 +101,20 @@ func (pr *passwordResetTokenRepository) DestroyByUserID(c context.Context, userI
 	return pr.crud.UpdateDB(c, query)
 }
 
-
 // リセットメール送信
-func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context,id string, name string, email string, token string) error {
+func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context, id string, name string, email string, token string) error {
 	mailSender := os.Getenv("NUTMEG_MAIL_SENDER")
-	mailPassword := os.Getenv("NUTMEG_MAIL_PASSWORD")
-	resetPageUrl := os.Getenv("RESET_PASSWORD_URL")+"/" + id + "/?token=" +token
+	resetPageUrl := os.Getenv("RESET_PASSWORD_URL") + "/" + id + "/?token=" + token
 
-	message := []byte("From: FinanSu <" + mailSender + ">\r\n" + 
-		"Subject: 【FinanSu】パスワード再設定メール\r\n\r\n" + 
-		name + " 様\n\n" +
-		"情報局 FinanSu 担当です。\r\n\r\n" + 
-		"パスワードの再設定のご依頼を受け付けました。下記の再設定ページにアクセスし、新しいパスワードを設定してください。\n" +
-		"※パスワードリセットの申請に心当たりがない場合は、以降の対応は不要となります。\n\n" +
-		resetPageUrl + "\r\n\n" +
-		"なお、URLの有効期限は本メールが送信されてから60分間とさせていただきます。\r\n\n" + 
-		"どうぞよろしくお願い申し上げます。\r\n\r\n" +
-		"情報局 FinanSu担当 \r\n\n"+
-		"※このメールは送信専用です\r\n")
+	html := name + " 様<br><br>" +
+		"情報局 FinanSu 担当です。<br><br>" +
+		"パスワードの再設定のご依頼を受け付けました。下記の再設定ページにアクセスし、新しいパスワードを設定してください。<br>" +
+		"※パスワードリセットの申請に心当たりがない場合は、以降の対応は不要となります。<br><br>" +
+		"<a href=\"" + resetPageUrl + "\">" + resetPageUrl + "</a><br><br>" +
+		"なお、URLの有効期限は本メールが送信されてから60分間とさせていただきます。<br><br>" +
+		"どうぞよろしくお願い申し上げます。<br><br>" +
+		"情報局 FinanSu担当<br><br>" +
+		"※このメールは送信専用です"
 
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-
-	auth := smtp.PlainAuth("", mailSender, mailPassword, smtpHost)
-
-	emails := []string{email}
-
-	// メール送信
-	err := smtp.SendMail(smtpHost + ":" + smtpPort, auth, mailSender, emails, message)
-	if err != nil {
-		return err
-	}
-
-	return err
+	return pr.mailClient.Send(c, mailSender, []string{email}, "【FinanSu】パスワード再設定メール", html)
 }

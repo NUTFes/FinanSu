@@ -8,6 +8,7 @@ package di
 
 import (
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/mail"
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/handler"
@@ -61,7 +62,8 @@ func InitializeServer() (*ServerComponents, error) {
 	userRepository := repository.NewUserRepository(client, crud)
 	mailAuthUseCase := usecase.NewMailAuthUseCase(mailAuthRepository, sessionRepository, userRepository, transactionRepository)
 	objectUploadUseCase := usecase.NewObjectUploadUseCase(objectHandleRepository)
-	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud)
+	mailClient := ProvideMailClient()
+	passwordResetTokenRepository := repository.NewPasswordResetTokenRepository(client, crud, mailClient)
 	passwordResetTokenUseCase := usecase.NewPasswordResetTokenUseCase(passwordResetTokenRepository, userRepository, mailAuthRepository)
 	sponsorRepository := repository.NewSponsorRepository(client, crud)
 	sponsorUseCase := usecase.NewSponsorUseCase(sponsorRepository)
@@ -97,6 +99,11 @@ func ProvideDBClient() (db.Client, error) {
 // ProvideMinioClient - MinioClientのProvider
 func ProvideMinioClient() (mc.Client, error) {
 	return mc.InitMinioClient()
+}
+
+// ProvideMailClient - MailClientのProvider
+func ProvideMailClient() mail.Client {
+	return mail.NewClient()
 }
 
 // ProvideCrud - AbstractCrudのProvider
