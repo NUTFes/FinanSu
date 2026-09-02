@@ -12,7 +12,7 @@ ENV GOOS=linux
 ENV TZ=Asia/Tokyo
 
 RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.2.0 && \
-    go install github.com/air-verse/air@latest
+    go install github.com/air-verse/air@v1.67.1
 
 USER gouser
 
