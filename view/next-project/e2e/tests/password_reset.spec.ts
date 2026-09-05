@@ -33,8 +33,7 @@ test('パスワードリセット申請後に再設定メール送信の完了�
   await page.goto('/reset_password/request');
 
   const requestPromise = page.waitForRequest(
-    (request) =>
-      request.url().includes('/password_reset/request') && request.method() === 'POST',
+    (request) => request.url().includes('/password_reset/request') && request.method() === 'POST',
   );
 
   await page.getByPlaceholder('test@example.com').fill(email);
