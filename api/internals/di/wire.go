@@ -5,6 +5,7 @@ package di
 
 import (
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/mail"
 	"github.com/NUTFes/FinanSu/api/drivers/mc"
 	"github.com/NUTFes/FinanSu/api/drivers/server"
 	"github.com/NUTFes/FinanSu/api/externals/handler"
@@ -33,6 +34,11 @@ func ProvideMinioClient() (mc.Client, error) {
 	return mc.InitMinioClient()
 }
 
+// ProvideMailClient - MailClientのProvider
+func ProvideMailClient() mail.Client {
+	return mail.NewMailClient()
+}
+
 // ProvideCrud - AbstractCrudのProvider
 func ProvideCrud(client db.Client) abstract.Crud {
 	return abstract.NewCrud(client)
@@ -57,6 +63,7 @@ func InitializeServer() (*ServerComponents, error) {
 		// 基盤Provider群
 		ProvideDBClient,
 		ProvideMinioClient,
+		ProvideMailClient,
 		ProvideCrud,
 
 		// 各層のProviderセット
