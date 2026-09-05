@@ -3,17 +3,18 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"net/smtp"
 	"os"
 	"time"
 
 	"github.com/NUTFes/FinanSu/api/drivers/db"
+	"github.com/NUTFes/FinanSu/api/drivers/mail"
 	"github.com/NUTFes/FinanSu/api/externals/repository/abstract"
 )
 
 type passwordResetTokenRepository struct {
-	client db.Client
-	crud   abstract.Crud
+	client     db.Client
+	crud       abstract.Crud
+	mailClient mail.Client
 }
 
 type PasswordResetTokenRepository interface {
@@ -29,8 +30,8 @@ type PasswordResetTokenRepository interface {
 	SendResetEmail(context.Context, string, string, string, string) error
 }
 
-func NewPasswordResetTokenRepository(c db.Client, ac abstract.Crud) PasswordResetTokenRepository {
-	return &passwordResetTokenRepository{c, ac}
+func NewPasswordResetTokenRepository(c db.Client, ac abstract.Crud, mc mail.Client) PasswordResetTokenRepository {
+	return &passwordResetTokenRepository{c, ac, mc}
 }
 
 // 全件取得
@@ -103,35 +104,18 @@ func (pr *passwordResetTokenRepository) DestroyByUserID(c context.Context, userI
 
 
 // リセットメール送信
-func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context,id string, name string, email string, token string) error {
-	mailSender := os.Getenv("NUTMEG_MAIL_SENDER")
-	mailPassword := os.Getenv("NUTMEG_MAIL_PASSWORD")
-	resetPageUrl := os.Getenv("RESET_PASSWORD_URL")+"/" + id + "/?token=" +token
+func (pr *passwordResetTokenRepository) SendResetEmail(c context.Context, id string, name string, email string, token string) error {
+	resetPageUrl := os.Getenv("RESET_PASSWORD_URL") + "/" + id + "/?token=" + token
 
-	message := []byte("From: FinanSu <" + mailSender + ">\r\n" + 
-		"Subject: 【FinanSu】パスワード再設定メール\r\n\r\n" + 
-		name + " 様\n\n" +
-		"情報局 FinanSu 担当です。\r\n\r\n" + 
+	body := name + " 様\n\n" +
+		"情報局 FinanSu 担当です。\n\n" +
 		"パスワードの再設定のご依頼を受け付けました。下記の再設定ページにアクセスし、新しいパスワードを設定してください。\n" +
 		"※パスワードリセットの申請に心当たりがない場合は、以降の対応は不要となります。\n\n" +
-		resetPageUrl + "\r\n\n" +
-		"なお、URLの有効期限は本メールが送信されてから60分間とさせていただきます。\r\n\n" + 
-		"どうぞよろしくお願い申し上げます。\r\n\r\n" +
-		"情報局 FinanSu担当 \r\n\n"+
-		"※このメールは送信専用です\r\n")
+		resetPageUrl + "\n\n" +
+		"なお、URLの有効期限は本メールが送信されてから60分間とさせていただきます。\n\n" +
+		"どうぞよろしくお願い申し上げます。\n\n" +
+		"情報局 FinanSu担当 \n\n" +
+		"※このメールは送信専用です\n"
 
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-
-	auth := smtp.PlainAuth("", mailSender, mailPassword, smtpHost)
-
-	emails := []string{email}
-
-	// メール送信
-	err := smtp.SendMail(smtpHost + ":" + smtpPort, auth, mailSender, emails, message)
-	if err != nil {
-		return err
-	}
-
-	return err
+	return pr.mailClient.SendMail(email, "【FinanSu】パスワード再設定メール", body)
 }
